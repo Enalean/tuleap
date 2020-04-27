@@ -64,10 +64,11 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
         }
     }
 
-    public function burning_parrot_get_javascript_files(array $params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function burning_parrot_get_javascript_files(array $params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
-            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+            $core_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
             $params['javascript_files'][] = $this->getAssets()->getFileURL('pluginsadministration.js');
         }
     }

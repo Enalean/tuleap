@@ -259,7 +259,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $this->addHook('site_admin_option_hook');
         $this->addHook(BurningParrotCompatiblePageEvent::NAME);
         $this->addHook(Event::BURNING_PARROT_GET_STYLESHEETS);
-        $this->addHook(Event::BURNING_PARROT_GET_JAVASCRIPT_FILES);
         $this->addHook(PermissionPerGroupDisplayEvent::NAME);
         $this->addHook(Event::SYSTEM_EVENT_GET_TYPES_FOR_DEFAULT_QUEUE);
         $this->addHook(User_ForgeUserGroupPermissionsFactory::GET_PERMISSION_DELEGATION);
@@ -440,13 +439,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         if ($this->currentRequestIsForPlugin()) {
             echo $this->getAssets()->getHTMLSnippet('tracker.js');
-        }
-    }
-
-    public function burning_parrot_get_javascript_files(array $params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath() . '/config.php') === 0) {
-            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
         }
     }
 

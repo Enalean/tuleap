@@ -89,7 +89,12 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
 
         switch ($request->get('action')) {
             case 'manage-allowed-projects':
-                $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
+                $GLOBALS['HTML']->addJavascriptAsset(
+                    new \Tuleap\Layout\JavascriptAsset(
+                        new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core'),
+                        'manage-allowed-projects-on-resource.js'
+                    )
+                );
 
                 $presenter     = $this->getManageAllowedProjectsPresenter($request);
                 $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
