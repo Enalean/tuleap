@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
@@ -36,7 +35,7 @@ final class JavascriptAsset
 
     public function __construct(IncludeAssets $assets, string $script_name)
     {
-        $this->assets = $assets;
+        $this->assets      = $assets;
         $this->script_name = $script_name;
     }
 

@@ -65,8 +65,8 @@ final class PasswordPolicyDisplayController implements DispatchableWithRequest
 
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(__DIR__ . "/../../../www/assets/core", "/assets/core"),
-                "site-admin/password-policy.js"
+                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
+                'site-admin/password-policy.js'
             )
         );
 
