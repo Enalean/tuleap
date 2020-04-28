@@ -343,13 +343,29 @@ function ExecutionService(
             if (!user_uuid_exists) {
                 execution.viewed_by.push(user);
             }
-            let field = document.getElementById("execution_" + execution_id);
+
+            waitForFieldBeforeLoadRTE(execution);
+        }
+    }
+
+    function waitForFieldBeforeLoadRTE(execution) {
+        let field = document.getElementById("execution_" + execution.id);
+        if (field) {
             loadRTE(field, execution);
+        } else {
+            setTimeout(function () {
+                waitForFieldBeforeLoadRTE(execution);
+            }, 30);
         }
     }
 
     function loadRTE(field, execution) {
         let additional_options = {};
+        let instance = CKEDITOR.instances["execution_" + execution.id];
+        if (instance) {
+            CKEDITOR.remove(instance);
+        }
+
         if (execution.upload_url) {
             additional_options = {
                 extraPlugins: "uploadimage",
@@ -373,7 +389,6 @@ function ExecutionService(
             language: document.body.dataset.userLocale,
             ...additional_options,
         };
-
         self.editor = CKEDITOR.inline(field, config);
         self.editor.on("change", function () {
             execution.results = self.editor.getData();
