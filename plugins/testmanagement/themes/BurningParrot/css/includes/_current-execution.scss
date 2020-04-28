@@ -138,6 +138,7 @@
 
 .current-test-latest-result {
     display: flex;
+    flex: 0 0 auto;
     background-blend-mode: overlay, normal;
     mix-blend-mode: normal;
     color: $tlp-ui-white;
@@ -195,7 +196,8 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-comment {
-    width: 100%;
+    // 240px = width of 4 buttons and their margin)
+    width: calc(100% - 240px);
     min-height: 50px;
     max-height: 200px;
     padding: 8px 12px;
@@ -233,6 +235,7 @@ execution-with-steps.current-test-content {
 }
 
 .current-test-result {
+    flex: 0 0 auto;
     width: 50px;
     height: 50px;
     margin: 0 0 0 $tlp-half-spacing;

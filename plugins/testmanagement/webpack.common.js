@@ -48,9 +48,20 @@ const webpack_config_for_angular = {
     },
     module: {
         rules: [
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
+            {
+                test: /\.js$/,
+                include: /node_modules\/(?:parse5|is-plain-obj)\/.*/,
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: webpack_configurator.babel_options_ie11,
+                    },
+                ],
+            },
             webpack_configurator.rule_ng_cache_loader,
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,
