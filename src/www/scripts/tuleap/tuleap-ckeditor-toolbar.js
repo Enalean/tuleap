@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean SAS - 2017. All rights reserved
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,10 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || {};
-tuleap.ckeditor = tuleap.ckeditor || {};
+/* global module:readonly */
 
-tuleap.ckeditor.config = {
+const config = {
     toolbar: [
         ["Bold", "Italic"],
         ["NumberedList", "BulletedList", "-", "Blockquote", "Styles", "Format"],
@@ -34,3 +35,13 @@ tuleap.ckeditor.config = {
     ],
     disableNativeSpellChecker: false,
 };
+
+if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
+    module.exports = {
+        config: config,
+    };
+} else {
+    var tuleap = tuleap || {};
+    tuleap.ckeditor = tuleap.ckeditor || {};
+    tuleap.ckeditor.config = config;
+}

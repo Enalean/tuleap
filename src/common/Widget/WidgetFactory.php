@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -11,11 +11,11 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace Tuleap\Widget;
@@ -32,7 +32,6 @@ use User_ForgeUserGroupPermission_ProjectApproval;
 use User_ForgeUserGroupPermissionsManager;
 use UserManager;
 use Widget;
-use Widget_Contacts;
 use Widget_MyAdmin;
 use Widget_MyArtifacts;
 use Widget_MyBookmarks;
@@ -40,7 +39,6 @@ use Widget_MyImageViewer;
 use Widget_MyLatestSvnCommits;
 use Widget_MyMonitoredForums;
 use Widget_MyMonitoredFp;
-use Widget_MyProjects;
 use Widget_MyRss;
 use Widget_MySystemEvent;
 use Widget_ProjectDescription;
@@ -91,7 +89,7 @@ class WidgetFactory
 
         switch ($widget_name) {
             case 'myprojects':
-                $widget = new Widget_MyProjects();
+                $widget = new MyProjects();
                 break;
             case 'mybookmarks':
                 $widget = new Widget_MyBookmarks();
@@ -168,7 +166,7 @@ class WidgetFactory
                 $widget = new Widget_ProjectImageViewer();
                 break;
             case 'projectcontacts':
-                $widget = new Widget_Contacts();
+                $widget = new ProjectContacts();
                 break;
             case Note\ProjectNote::NAME:
                 $widget = new Note\ProjectNote(

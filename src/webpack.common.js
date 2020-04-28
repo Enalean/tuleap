@@ -197,6 +197,7 @@ const webpack_config_for_burning_parrot_code = {
         "account/security": "./scripts/account/security.ts",
         "account/timezone": "./scripts/account/timezone.ts",
         "dashboards/dashboard": "./scripts/dashboards/dashboard.js",
+        "dashboards/widget-contact-modal": "./scripts/dashboards/widgets/contact-modal.js",
         "widget-project-heartbeat": "./scripts/dashboards/widgets/project-heartbeat/index.js",
         "access-denied-error": "./scripts/BurningParrot/src/access-denied-error.js",
         "burning-parrot": "./scripts/BurningParrot/src/index.js",

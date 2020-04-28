@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Layout\IncludeAssets;
+namespace Tuleap\Widget;
 
-require_once('Widget.class.php');
+use Tuleap\Layout\IncludeAssets;
 
 /**
 * Widget_Contacts
@@ -28,7 +28,7 @@ require_once('Widget.class.php');
 * Allows users to send message to all administrators of a project
 *
 */
-class Widget_Contacts extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
+class ProjectContacts extends \Widget
 {
 
     public function __construct()
@@ -36,31 +36,26 @@ class Widget_Contacts extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaratio
         parent::__construct('projectcontacts');
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $GLOBALS['Language']->getText('widget_project_contacts', 'title');
     }
 
-    public function getContent()
+    public function getContent(): string
     {
-        $request  = HTTPRequest::instance();
+        $request  = \HTTPRequest::instance();
         $group_id = $request->get('group_id');
-        $pm       = ProjectManager::instance();
+        $pm       = \ProjectManager::instance();
         $project  = $pm->getProject($group_id);
 
-        $token     = new CSRFSynchronizerToken('');
-        $presenter = new MassmailFormPresenter(
+        $token     = new \CSRFSynchronizerToken('');
+        $presenter = new \MassmailFormPresenter(
             $token,
             $GLOBALS['Language']->getText('contact_admins', 'title', array($project->getPublicName())),
             '/include/massmail_to_project_admins.php'
         );
-        $template_factory = TemplateRendererFactory::build();
+        $template_factory = \TemplateRendererFactory::build();
         $renderer         = $template_factory->getRenderer($presenter->getTemplateDir());
-
-        $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
-        $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('ckeditor.js'));
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/tuleap-ckeditor-toolbar.js');
-        $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/widgets/contact-modal.js');
 
         $html  = '<a href="javascript:;" ';
         $html .= 'class="massmail-project-member-link project_home_contact_admins" ';
@@ -74,8 +69,18 @@ class Widget_Contacts extends Widget //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return $html;
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return $GLOBALS['Language']->getText('widget_description_project_contacts', 'description');
+    }
+
+    public function getJavascriptDependencies(): array
+    {
+        $assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        return [
+            ['file' => $assets->getFileURL('ckeditor.js')],
+            ['file' => '/scripts/tuleap/tuleap-ckeditor-toolbar.js'],
+            ['file' => $assets->getFileURL('dashboards/widget-contact-modal.js')],
+        ];
     }
 }
