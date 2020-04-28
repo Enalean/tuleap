@@ -51,7 +51,8 @@ function removePlanningButton(): void {
 
 export function displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce(): void {
     const submit_button = document.getElementById("ad-service-submit");
-    if (!submit_button || !submit_button.dataset.canUseExplicitBacklog) {
+
+    if (!submit_button) {
         return;
     }
 

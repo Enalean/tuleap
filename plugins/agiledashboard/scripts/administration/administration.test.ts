@@ -80,7 +80,6 @@ describe("administration", () => {
         it("does nothing if explicit backlog is not used", () => {
             const { submit_without_modal, submit_with_modal } = createLocalButtonElement();
 
-            submit_without_modal.dataset.canUseExplicitBacklog = "0";
             submit_without_modal.dataset.ExplicitBacklogValue = "0";
 
             displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();
@@ -93,7 +92,6 @@ describe("administration", () => {
         it("uses the default button when switch to backlog usage have never been hit", () => {
             const { submit_without_modal, submit_with_modal } = createLocalButtonElement();
 
-            submit_without_modal.dataset.canUseExplicitBacklog = "0";
             submit_without_modal.dataset.ExplicitBacklogValue = "0";
 
             displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();
@@ -110,7 +108,6 @@ describe("administration", () => {
                 form_element_switch_to_explicit_backlog,
             } = createLocalButtonElement();
 
-            submit_without_modal.dataset.canUseExplicitBacklog = "1";
             submit_without_modal.dataset.ExplicitBacklogValue = "1";
 
             displayButtonSaveWithModalWhenSwitchHasBeenClickedAtLeastOnce();

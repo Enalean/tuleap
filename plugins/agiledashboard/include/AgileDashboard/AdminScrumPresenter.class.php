@@ -66,11 +66,6 @@ class AdminScrumPresenter
     /**
      * @var bool
      */
-    public $must_display_explicit_top_backlog_switch;
-
-    /**
-     * @var bool
-     */
     public $has_workflow_action_add_to_top_backlog_defined;
 
     /**
@@ -93,7 +88,6 @@ class AdminScrumPresenter
         $additional_content,
         bool $explicit_top_backlog_enabled,
         bool $has_workflow_action_add_to_top_backlog_defined,
-        bool $user_lab_feature,
         array $additional_scrum_sections_controllers
     ) {
         $this->plannings                                   = $plannings;
@@ -118,7 +112,6 @@ class AdminScrumPresenter
         }
 
         $this->explicit_top_backlog_enabled              = $explicit_top_backlog_enabled;
-        $this->must_display_explicit_top_backlog_switch  = (bool) $explicit_top_backlog_enabled || $user_lab_feature;
         $this->has_workflow_action_add_to_top_backlog_defined = $has_workflow_action_add_to_top_backlog_defined;
         $this->additional_scrum_sections_controllers          = $additional_scrum_sections_controllers;
     }

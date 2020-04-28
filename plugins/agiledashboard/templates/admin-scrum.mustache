@@ -88,27 +88,29 @@
                             {{{ content }}}
                         {{/ additional_scrum_sections_controllers }}
 
-                        {{# must_display_explicit_top_backlog_switch }}
-                            <input type="hidden" name="use-explicit-top-backlog" value="0">
-                            <div class="tlp-form-element">
-                                <label class="tlp-label" for="use-explicit-top-backlog">
-                                    <i class="fa fa-flask"></i> {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
-                                </label>
-                                <div class="tlp-switch">
-                                    <input type="checkbox"
-                                           id="use-explicit-top-backlog"
-                                           class="tlp-switch-checkbox"
-                                           name="use-explicit-top-backlog"
-                                           value="1"
-                                        {{# explicit_top_backlog_enabled }} checked {{/ explicit_top_backlog_enabled }}
-                                    >
-                                    <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden="true"></label>
-                                </div>
-                                <p class="tlp-text-warning">
-                                    <i class="fa fa-warning"></i> {{# dgettext }}tuleap-agiledashboard | This is an experimental feature. It's explained <a href="https://tuleap.net/plugins/tracker/?aid=13997">here</a>.{{/ dgettext }}
-                                </p>
+                        <input type="hidden" name="use-explicit-top-backlog" value="0">
+                        <div class="tlp-form-element">
+                            <label class="tlp-label" for="use-explicit-top-backlog">
+                                {{# dgettext }}tuleap-agiledashboard | Explicit top backlog{{/ dgettext }}
+                            </label>
+                            <div class="tlp-switch">
+                                <input type="checkbox"
+                                       id="use-explicit-top-backlog"
+                                       class="tlp-switch-checkbox"
+                                       name="use-explicit-top-backlog"
+                                       value="1"
+                                    {{# explicit_top_backlog_enabled }} checked {{/ explicit_top_backlog_enabled }}
+                                >
+                                <label for="use-explicit-top-backlog" class="tlp-switch-button" aria-hidden="true"></label>
                             </div>
-                        {{/ must_display_explicit_top_backlog_switch }}
+                            <p class="tlp-text-info">
+                                <i class="fa fa-info-circle"></i>
+                                {{# dgettext }}tuleap-agiledashboard | Explicit backlog allows to select, item per item, what goes in Scrum top backlog.{{/ dgettext }}
+                                    <a href="/doc/en/user-guide/agile-dashboard.html?#explicit-backlog">
+                                        {{# dgettext }}tuleap-agiledashboard | See documentation for more details. {{/ dgettext }}
+                                    </a>
+                            </p>
+                        </div>
 
                     </section>
 
@@ -117,7 +119,6 @@
                         <button type="submit"
                                 class="tlp-button-primary submit-without-modal"
                                 id="ad-service-submit"
-                                data-can-use-explicit-backlog="{{ must_display_explicit_top_backlog_switch }}"
                         >
                             <i class="fa fa-save tlp-button-icon"></i> {{# dgettext }}tuleap-agiledashboard | Save{{/ dgettext }}
                         </button>
