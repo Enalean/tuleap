@@ -55,7 +55,7 @@ class TrackerXmlImportConfig implements TrackerImportConfig
         $this->import_timestamp   = $import_time->getTimestamp();
     }
 
-    public function getPathToXml(): string
+    public function getXMLFileName(): string
     {
         return $this->file_name;
     }

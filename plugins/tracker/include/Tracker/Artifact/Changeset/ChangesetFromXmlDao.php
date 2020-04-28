@@ -28,7 +28,7 @@ use Tuleap\DB\DataAccessObject;
 class ChangesetFromXmlDao extends DataAccessObject
 {
     public function saveChangesetIsCreatedFromXml(
-        string $path_to_xml,
+        string $xml_file_name,
         int $import_timestamp,
         int $user_id,
         int $changeset_id
@@ -38,7 +38,7 @@ class ChangesetFromXmlDao extends DataAccessObject
             $changeset_id,
             $user_id,
             $import_timestamp,
-            $path_to_xml
+            $xml_file_name
         );
     }
 
