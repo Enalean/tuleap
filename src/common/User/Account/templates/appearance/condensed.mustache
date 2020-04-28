@@ -1,11 +1,23 @@
 <div class="tlp-form-element">
     <label class="tlp-label">{{# gettext }}Display density{{/ gettext }}</label>
     <label class="tlp-label tlp-radio">
-        <input type="radio" name="display_density" value="" {{^ is_condensed }}checked{{/ is_condensed }}>
+        <input
+            type="radio"
+            name="display_density"
+            value=""
+            {{^ is_condensed }}checked{{/ is_condensed }}
+            data-test="user-prefs-display-density-comfortable"
+        >
         {{# gettext }}Comfortable{{/ gettext }}
     </label>
     <label class="tlp-label tlp-radio">
-        <input type="radio" name="display_density" value="condensed" {{# is_condensed }}checked{{/ is_condensed }}>
+        <input
+            type="radio"
+            name="display_density"
+            value="condensed"
+            {{# is_condensed }}checked{{/ is_condensed }}
+            data-test="user-prefs-display-density-condensed"
+        >
         {{# gettext }}Condensed{{/ gettext }}
     </label>
 </div>
