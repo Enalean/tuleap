@@ -104,6 +104,8 @@ const webpack_for_vue_plus_typescript = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
+            // gettext-init.js needs Babel
+            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
         ],
