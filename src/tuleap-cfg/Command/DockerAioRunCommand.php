@@ -96,8 +96,8 @@ class DockerAioRunCommand extends Command
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output);
 
-            $postfix = new Postfix();
-            $postfix->setup($output);
+            $postfix = new Postfix($this->process_factory);
+            $postfix->setup($output, 'tuleap.local');
 
             $supervisord = new Supervisord(...Supervisord::UNITS);
             $supervisord->run($output);

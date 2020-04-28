@@ -86,9 +86,13 @@ final class StartContainerCommand extends Command
         $version_presenter = VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence());
         $output->writeln(sprintf('<info>Start init sequence for %s</info>', $version_presenter->getFullDescriptiveVersion()));
         try {
+            $tuleap_fqdn = $this->getStringFromEnvironment('TULEAP_FQDN');
+            if ($tuleap_fqdn === '') {
+                throw new \RuntimeException('TULEAP_FQDN environment variable must be set');
+            }
             $tuleap = new Tuleap($this->process_factory);
             if (! $this->data_persistence->isThereAnyData()) {
-                $this->installTuleap($output, $tuleap);
+                $this->installTuleap($output, $tuleap, $tuleap_fqdn);
                 $this->data_persistence->store($output);
                 $this->data_persistence->restore($output);
             } else {
@@ -96,13 +100,13 @@ final class StartContainerCommand extends Command
                 $tuleap->update($output);
             }
             $realtime = new Realtime(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
-            $realtime->setup($this->getStringFromEnvironment('TULEAP_FQDN'));
+            $realtime->setup($tuleap_fqdn);
 
             $rsyslog = new Rsyslog();
             $rsyslog->setup($output);
 
-            $postfix = new Postfix();
-            $postfix->setup($output);
+            $postfix = new Postfix($this->process_factory);
+            $postfix->setup($output, $tuleap_fqdn);
 
             $supervisord = new Supervisord(
                 Supervisord::UNIT_CROND,
@@ -126,14 +130,14 @@ final class StartContainerCommand extends Command
         return 1;
     }
 
-    private function installTuleap(OutputInterface $output, Tuleap $tuleap): void
+    private function installTuleap(OutputInterface $output, Tuleap $tuleap, string $tuleap_fqdn): void
     {
         $ssh_daemon = new SSHDaemon($this->process_factory);
 
         $ssh_daemon->startDaemon($output);
         $tuleap->setup(
             $output,
-            $this->getStringFromEnvironment('TULEAP_FQDN'),
+            $tuleap_fqdn,
             $this->getStringFromEnvironment('DB_HOST'),
             $this->getStringFromEnvironment('DB_ADMIN_USER'),
             $this->getStringFromEnvironment('DB_ADMIN_PASSWORD'),

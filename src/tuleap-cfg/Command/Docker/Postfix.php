@@ -24,15 +24,47 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\Docker;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use TuleapCfg\Command\ProcessFactory;
 
 final class Postfix
 {
-    public function setup(OutputInterface $output): void
+    private const ENV_RELAYHOST = 'TULEAP_EMAIL_RELAYHOST';
+    private const ENV_ADMIN_EMAIL = 'TULEAP_EMAIL_ADMIN';
+
+    /**
+     * @var ProcessFactory
+     */
+    private $process_factory;
+
+    public function __construct(ProcessFactory $process_factory)
+    {
+        $this->process_factory = $process_factory;
+    }
+
+    public function setup(OutputInterface $output, string $tuleap_fqdn): void
     {
         $output->writeln('Setup Postfix');
-        $file_path = '/etc/postfix/main.cf';
-        $content = file_get_contents($file_path);
-        $new_content = preg_replace('/^inet_interfaces = localhost$/m', 'inet_interfaces = all', $content);
-        file_put_contents($file_path, $new_content);
+
+        touch('/etc/aliases.codendi');
+        $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', sprintf('myhostname = %s', $tuleap_fqdn)])->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', 'inet_interfaces = all'])->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', 'recipient_delimiter = +'])->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', 'alias_maps = hash:/etc/aliases,hash:/etc/aliases.codendi'])->mustRun();
+        $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', 'alias_database = hash:/etc/aliases,hash:/etc/aliases.codendi'])->mustRun();
+
+        $relayhost = getenv(self::ENV_RELAYHOST);
+        if ($relayhost !== false) {
+            $this->process_factory->getProcessWithoutTimeout(['/usr/sbin/postconf', '-e', sprintf('relayhost = %s', $relayhost)])->mustRun();
+        }
+
+        $admin_email = getenv(self::ENV_ADMIN_EMAIL);
+        if ($admin_email !== false) {
+            $fd = fopen('/etc/aliases', 'ab+');
+            fwrite($fd, sprintf("\n%s: %s\n", \BackendAliases::ADMIN_ALIAS, $admin_email));
+            fclose($fd);
+        }
+
+
+        $this->process_factory->getProcessWithoutTimeout(['/usr/bin/newaliases'])->mustRun();
     }
 }

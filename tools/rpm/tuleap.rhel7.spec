@@ -572,7 +572,7 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/codendi
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/codendi/DELETED
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/pub
-
+%{__ln_s} %{APP_DATA_DIR}/ftp/codendi $RPM_BUILD_ROOT/%{APP_DATA_DIR}/ftp/tuleap
 
 # Install systemd Unit
 %{__install} -d $RPM_BUILD_ROOT/%{_unitdir}
@@ -996,6 +996,7 @@ fi
 %dir %attr(0711, root, root) %{APP_DATA_DIR}/ftp/codendi
 %dir %attr(0750, %{APP_USER}, %{APP_USER}) %{APP_DATA_DIR}/ftp/codendi/DELETED
 %dir %attr(0755, %{ftpadmin_user}, %{ftpadmin_group}) %{APP_DATA_DIR}/ftp/pub
+%{APP_DATA_DIR}/ftp/tuleap
 
 # Executables (/usr/bin)
 %attr(00755,%{APP_USER},%{APP_USER}) %{_bindir}/tuleap
