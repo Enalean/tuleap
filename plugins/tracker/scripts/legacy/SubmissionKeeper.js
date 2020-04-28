@@ -50,10 +50,8 @@ tuleap.trackers = tuleap.trackers || {};
                     return;
                 }
 
-                const submit_art_form_buttons = artifact_form.querySelectorAll("[type=submit]");
-
-                for (let button of submit_art_form_buttons) {
-                    button.addEventListener("click", () => {
+                artifact_form.querySelectorAll("[type=submit]").forEach(function (button) {
+                    button.addEventListener("click", function () {
                         if (self.isArtifactSubmittable()) {
                             if (button.name === "submit_and_stay") {
                                 setSubmitAndStayOption(artifact_form);
@@ -62,7 +60,7 @@ tuleap.trackers = tuleap.trackers || {};
                             artifact_form.submit();
                         }
                     });
-                }
+                });
             }
         },
 
