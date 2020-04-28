@@ -81,6 +81,7 @@ final class SetupMysqlInitCommandTest extends TestCase
         $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
         require($this->base_dir . '/etc/tuleap/conf/database.inc');
         $this->assertEquals('192.0.2.1', $sys_dbhost);
+        $this->assertEquals(3306, $sys_dbport);
         $this->assertEquals('tuleap', $sys_dbname);
         $this->assertEquals('tuleapadm', $sys_dbuser);
         $this->assertEquals('a complex password', $sys_dbpasswd);
@@ -88,6 +89,24 @@ final class SetupMysqlInitCommandTest extends TestCase
         $this->assertEquals('0', $sys_enablessl);
         $this->assertEquals('/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem', $sys_db_ssl_ca);
         $this->assertEquals('0', $sys_db_ssl_verify_cert);
+    }
+
+    public function testItWritesConfigurationFileWithSpecifiedPort(): void
+    {
+        $this->command_tester->execute([
+            '--skip-database'  => true,
+            '--host'           => '192.0.2.1',
+            '--port'           => '3307',
+            '--admin-password' => 'welcome0',
+            '--app-password'   => 'a complex password',
+        ]);
+
+        $this->assertEquals(0, $this->command_tester->getStatusCode());
+        $this->assertEmpty($this->command_tester->getDisplay());
+
+        $this->assertFileExists($this->base_dir . '/etc/tuleap/conf/database.inc');
+        require($this->base_dir . '/etc/tuleap/conf/database.inc');
+        $this->assertEquals(3307, $sys_dbport);
     }
 
     public function testItWritesConfigurationFileWithGivenValuesEnableSSL(): void

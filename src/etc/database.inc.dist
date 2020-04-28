@@ -20,6 +20,7 @@
 
 // Please specify your database details here:
 $sys_dbhost='localhost';
+$sys_dbport=3306;
 $sys_dbname='%sys_dbname%';
 $sys_dbuser='%sys_dbuser%';
 $sys_dbpasswd='%sys_dbpasswd%';

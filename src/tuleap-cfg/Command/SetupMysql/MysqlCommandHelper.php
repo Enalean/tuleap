@@ -26,6 +26,7 @@ namespace TuleapCfg\Command\SetupMysql;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Tuleap\DB\DBConfig;
 
 final class MysqlCommandHelper
 {
@@ -51,7 +52,7 @@ final class MysqlCommandHelper
     {
         $command
             ->addOption(self::OPT_HOST, '', InputOption::VALUE_REQUIRED, 'MySQL server host', 'localhost')
-            ->addOption(self::OPT_PORT, '', InputOption::VALUE_REQUIRED, 'MySQL server port', 3306)
+            ->addOption(self::OPT_PORT, '', InputOption::VALUE_REQUIRED, 'MySQL server port', DBConfig::DEFAULT_MYSQL_PORT)
             ->addOption(self::OPT_SSL, '', InputOption::VALUE_REQUIRED, sprintf('Use an encrypted connection. Possible values: `%s` (default), `%s` or `%s`', ConnectionManager::SSL_NO_SSL, ConnectionManager::SSL_NO_VERIFY, ConnectionManager::SSL_VERIFY_CA), ConnectionManager::SSL_NO_SSL)
             ->addOption(self::OPT_SSL_CA, '', InputOption::VALUE_REQUIRED, sprintf('When %s is set to %s or %s you should provide the path to CA file', self::OPT_SSL, ConnectionManager::SSL_NO_VERIFY, ConnectionManager::SSL_VERIFY_CA), ConnectionManager::DEFAULT_CA_FILE_PATH);
         return $command;

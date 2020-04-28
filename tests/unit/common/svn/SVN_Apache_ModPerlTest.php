@@ -111,8 +111,6 @@ class SVN_Apache_ModPerlTest extends TestCase
         $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
-
-        $this->assertDoesNotMatchRegularExpression('/AuthMYSQLEnable/', $conf);
     }
 
     public function testDSNWithSSLDBWithoutCertificateValidation(): void
@@ -126,8 +124,29 @@ class SVN_Apache_ModPerlTest extends TestCase
         $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
 
         $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
+    }
 
-        $this->assertDoesNotMatchRegularExpression('/AuthMYSQLEnable/', $conf);
+    public function testDSNWithCustomPort(): void
+    {
+        ForgeConfig::set('sys_dbname', 'tuleap');
+        ForgeConfig::set('sys_dbhost', 'db-server.example.com');
+        ForgeConfig::set('sys_dbport', 3307);
+        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+
+        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307"', $conf);
+    }
+
+    public function testDSNWithCustomPortAndSSL(): void
+    {
+        ForgeConfig::set('sys_dbname', 'tuleap');
+        ForgeConfig::set('sys_dbhost', 'db-server.example.com');
+        ForgeConfig::set('sys_dbport', 3307);
+        ForgeConfig::set('sys_enablessl', '1');
+        ForgeConfig::set('sys_db_ssl_ca', '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem');
+        ForgeConfig::set('sys_db_ssl_verify_cert', '1');
+        $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
+
+        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
     }
 
     public function testItDoesntHaveRedis(): void

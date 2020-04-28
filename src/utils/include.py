@@ -68,6 +68,9 @@ def db_connect():
     load_local_config(db_config_file)
     connect_args = dict(db=sys_dbname, host=sys_dbhost, user=sys_dbuser, passwd=sys_dbpasswd)
 
+    if 'sys_dbport' in globals():
+        connect_args['port'] = sys_dbport
+
     if sys_enablessl == '1':
         # Due to MySQLdb limitations, we cannot enforce certificate trust
         # see https://mysqlclient.readthedocs.io/user_guide.html 'ssl' section

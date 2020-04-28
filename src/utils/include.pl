@@ -56,6 +56,9 @@ sub db_connect {
             $dbopt .= ';mysql_ssl_ca_file='.$sys_db_ssl_ca;
         }
 	}
+    if ($sys_dbport) {
+        $dbopt .= ';port='.$sys_dbport;
+    }
 	$dbh ||= DBI->connect("DBI:mysql:$sys_dbname:$sys_dbhost$dbopt", "$sys_dbuser", "$sys_dbpasswd");
 
         #Connect with UTF-8 encoding
