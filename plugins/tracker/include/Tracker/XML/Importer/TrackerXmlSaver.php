@@ -41,6 +41,6 @@ class TrackerXmlSaver
             chgrp($file_system_folder, ForgeConfig::get('sys_http_user'));
         }
 
-        $xml->asXML($import_config->getPathToXml());
+        $xml->asXML($file_system_folder . $import_config->getXMLFileName());
     }
 }

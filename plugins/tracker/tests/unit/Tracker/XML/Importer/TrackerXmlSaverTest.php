@@ -25,25 +25,26 @@ namespace Tuleap\Tracker\XML\Importer;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tuleap\TemporaryTestDirectory;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerXmlImportConfig;
 
 final class TrackerXmlSaverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use TemporaryTestDirectory;
 
     public function testItStoresXmlUsedAsFile(): void
     {
-        $tmp_dir = vfsStream::setup();
+        $tmp_dir = $this->getTmpDir();
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
         $xml_saver = new TrackerXmlSaver();
         $config    = Mockery::mock(TrackerXmlImportConfig::class);
-        $config->shouldReceive('getFileSystemFolder')->once()->andReturn($tmp_dir->url());
-        $config->shouldReceive('getPathToXml')->once()->andReturn($tmp_dir->url() . "/save_file");
+        $config->shouldReceive('getFileSystemFolder')->once()->andReturn($tmp_dir);
+        $config->shouldReceive('getXMLFileName')->once()->andReturn("save_file.xml");
         $xml_saver->storeUsedXmlForTrackersCreation($config, $root);
     }
 }
