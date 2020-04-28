@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use SimpleXMLElement;
+use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -59,6 +60,11 @@ class FieldChangeXMLExporter
                 'value',
                 $value
             );
+        } elseif ($mapping->getType() === Tracker_FormElement_Field_Float::TYPE) {
+            $field_change_node = $changeset_node->addChild('field_change');
+            $field_change_node->addAttribute('type', 'float');
+            $field_change_node->addAttribute('field_name', $mapping->getFieldName());
+            $field_change_node->addChild('value', $value);
         }
     }
 
