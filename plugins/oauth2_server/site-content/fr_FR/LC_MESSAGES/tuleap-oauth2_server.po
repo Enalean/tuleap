@@ -65,8 +65,14 @@ msgstr "Autoriser l'application"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Client secret copied!"
+msgstr "Secret client copié !"
+
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Copy the client secret"
+msgstr "Copier le secret client"
 
 msgid "Delegate access to Tuleap resources"
 msgstr "Déléguer l'accès aux ressources de Tuleap"

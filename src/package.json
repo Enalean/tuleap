@@ -5,6 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
+    "@webcomponents/custom-elements": "^1.4.1",
     "ckeditor": "4.11.1",
     "core-js": "^3.5.0",
     "css.escape": "^1.5.1",

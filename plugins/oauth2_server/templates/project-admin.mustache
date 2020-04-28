@@ -21,7 +21,21 @@
                                 {{ client_id }}
                             {{/ dgettext }}
                         </p>
-                        <p><strong>{{ client_secret }}</strong></p>
+                        <p>
+                            <code><strong>{{ client_secret }}</strong></code>
+                            <copy-to-clipboard
+                                    value="{{ client_secret }}"
+                                    class="oauth2-server-copy-secret"
+                                    aria-label="{{# dgettext }} tuleap-oauth2_server | Copy the client secret{{/ dgettext }}"
+                            >
+                                <span class="tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }} tuleap-oauth2_server | Copy the client secret{{/ dgettext }}">
+                                    <i class="fa fa-fw fa-copy" aria-hidden="true"></i>
+                                </span>
+                                <span class="tlp-tooltip tlp-tooltip-right oauth2-server-copy-secret-hide" data-tlp-tooltip="{{# dgettext }} tuleap-oauth2_server | Client secret copied!{{/ dgettext }}">
+                                    <i class="fa fa-fw fa-check" aria-hidden="true"></i>
+                                </span>
+                            </copy-to-clipboard>
+                        </p>
                     </div>
                 {{/ last_created_app }}
                 <div class="tlp-table-actions">

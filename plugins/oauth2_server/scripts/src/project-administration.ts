@@ -31,6 +31,8 @@ import {
     buildRegenerationReplaceBallback,
     hiddenInputReplaceCallback,
 } from "./replacers";
+import "../../../../src/scripts/tuleap/custom-elements/custom-elements-polyfill-ie11";
+import "../../../../src/scripts/tuleap/custom-elements/copy-to-clipboard";
 
 const ADD_BUTTON_ID = "oauth2-server-add-client-button";
 
@@ -83,4 +85,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             paragraphReplaceCallback: buildRegenerationReplaceBallback(gettext_provider),
         },
     });
+    handleCopyClientSecretToClipboard();
 });
+
+function toggleCopySecretElementVisibility(element: Element): void {
+    if (element.classList.contains("oauth2-server-copy-secret-hide")) {
+        element.classList.remove("oauth2-server-copy-secret-hide");
+    } else {
+        element.classList.add("oauth2-server-copy-secret-hide");
+    }
+}
+
+function handleCopyClientSecretToClipboard(): void {
+    document
+        .querySelectorAll("copy-to-clipboard.oauth2-server-copy-secret")
+        .forEach((element: Element) => {
+            let already_copied = false;
+            element.addEventListener("copied-to-clipboard", () => {
+                if (already_copied) {
+                    return;
+                }
+                already_copied = true;
+                const children = [...element.children];
+                children.forEach(toggleCopySecretElementVisibility);
+                setTimeout(() => {
+                    children.forEach(toggleCopySecretElementVisibility);
+                    already_copied = false;
+                }, 2000);
+            });
+        });
+}

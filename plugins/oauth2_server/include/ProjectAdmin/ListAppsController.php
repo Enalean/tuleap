@@ -25,6 +25,7 @@ namespace Tuleap\OAuth2Server\ProjectAdmin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\Layout\BaseLayout;
+use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Admin\Routing\AdministrationLayoutHelper;
 use Tuleap\Project\Admin\Routing\LayoutHelper;
@@ -82,6 +83,7 @@ final class ListAppsController implements DispatchableWithRequest, DispatchableW
     {
         ServiceInstrumentation::increment(\oauth2_serverPlugin::SERVICE_NAME_INSTRUMENTATION);
         $layout->includeFooterJavascriptFile($this->assets->getFileURL('project-administration.js'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->assets, 'project-administration-style'));
         $callback = function (\Project $project, \PFUser $user): void {
             $this->renderer->renderToPage(
                 'project-admin',

@@ -58,6 +58,14 @@
     }
 }
 
+.user-preferences-copy-secret {
+    cursor: pointer;
+}
+
+.user-preferences-copy-secrets-hide {
+    display: none;
+}
+
 @media screen and (max-width: (1000px + $tlp-double-spacing)) {
     .user-preferences-frame {
         max-width: none;

@@ -48,9 +48,11 @@ describe("QueryEditor", () => {
     describe("mounted()", () => {
         it("When the code mirror instance's value changes, then the writing report is updated", () => {
             // eslint-disable-next-line no-undef
-            global.document.body.createTextRange = () => {
+            global.document.createRange = () => {
                 return {
                     getBoundingClientRect: () => {},
+                    setEnd: () => {},
+                    setStart: () => {},
                     getClientRects() {
                         return { length: 0 };
                     },
