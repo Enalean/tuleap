@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery;
+use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -184,6 +185,38 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 2,
+                $jira_field->isRequired(),
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
+
+    public function testJiraFloatFieldIsMappedToFloatField(): void
+    {
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'String Field',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:float'
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_custom_fieldset,
+                Tracker_FormElement_Field_Float::TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                3,
                 $jira_field->isRequired(),
                 $collection
             ]

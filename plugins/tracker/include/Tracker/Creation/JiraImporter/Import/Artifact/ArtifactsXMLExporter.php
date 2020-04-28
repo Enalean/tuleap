@@ -174,7 +174,7 @@ class ArtifactsXMLExporter
                     $this->field_change_xml_exporter->exportFieldChange(
                         $mapping,
                         $changeset_node,
-                        $value
+                        (string) $value
                     );
                 }
             }

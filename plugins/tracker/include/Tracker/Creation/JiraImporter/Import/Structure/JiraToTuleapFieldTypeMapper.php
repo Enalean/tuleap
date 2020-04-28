@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
+use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_String;
 use Tracker_FormElement_Field_Text;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -124,12 +125,23 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
+                        Tracker_FormElement_Field_Float::TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        3,
+                        $required,
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'priority':
                 case 'status':
                 case 'creator':
                 case 'updated':
                 case 'created':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
                 case 'com.atlassian.jira.toolkit:message': //edit message
