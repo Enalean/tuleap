@@ -49,13 +49,13 @@ class JiraToTuleapFieldTypeMapper
 
     public function exportFieldToXml(
         JiraFieldAPIRepresentation $jira_field,
-        string $required,
         SimpleXMLElement $jira_atf_fieldset,
         SimpleXMLElement $jira_custom_fieldset,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $id               = $jira_field->getId();
         $jira_field_label = $jira_field->getLabel();
+        $required         = $jira_field->isRequired();
 
         // ignore this jira always there mapping who is created like a custom one
         if ($jira_field_label === "Flagged") {

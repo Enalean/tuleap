@@ -89,11 +89,13 @@ final class JiraFieldRetrieverTest extends TestCase
         $this->assertEquals("summary", $system_field_representation->getId());
         $this->assertEquals("Summary", $system_field_representation->getLabel());
         $this->assertNotNull($system_field_representation->getSchema());
+        $this->assertTrue($system_field_representation->isRequired());
 
         $custom_field_representation = $result['custom_01'];
         $this->assertEquals("custom_01", $custom_field_representation->getId());
         $this->assertEquals("[opt] Last updator", $custom_field_representation->getLabel());
         $this->assertNotNull($custom_field_representation->getSchema());
+        $this->assertFalse($custom_field_representation->isRequired());
     }
 
     public function testReturnsAnEmptyArrayWhenNoFieldFound(): void

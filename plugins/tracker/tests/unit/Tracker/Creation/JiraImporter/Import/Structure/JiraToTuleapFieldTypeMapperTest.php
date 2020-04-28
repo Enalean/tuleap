@@ -74,6 +74,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $jira_field = new JiraFieldAPIRepresentation(
             'summary',
             'Summary',
+            true,
             'summary'
         );
 
@@ -87,14 +88,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 1,
-                "1",
+                $jira_field->isRequired(),
                 $collection
             ]
         );
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            "1",
             $this->jira_atf_fieldset,
             $this->jira_custom_fieldset,
             $collection
@@ -106,6 +106,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $jira_field = new JiraFieldAPIRepresentation(
             'description',
             'Description',
+            false,
             'description'
         );
 
@@ -119,14 +120,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 2,
-                "1",
+                $jira_field->isRequired(),
                 $collection
             ]
         );
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            "1",
             $this->jira_atf_fieldset,
             $this->jira_custom_fieldset,
             $collection
@@ -138,6 +138,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $jira_field = new JiraFieldAPIRepresentation(
             'fieldid',
             'String Field',
+            false,
             'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
         );
 
@@ -151,14 +152,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 1,
-                "1",
+                $jira_field->isRequired(),
                 $collection
             ]
         );
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            "1",
             $this->jira_atf_fieldset,
             $this->jira_custom_fieldset,
             $collection
@@ -170,6 +170,7 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $jira_field = new JiraFieldAPIRepresentation(
             'fieldid',
             'Text Field',
+            false,
             'com.atlassian.jira.plugin.system.customfieldtypes:textarea'
         );
 
@@ -183,14 +184,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 2,
-                "1",
+                $jira_field->isRequired(),
                 $collection
             ]
         );
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            "1",
             $this->jira_atf_fieldset,
             $this->jira_custom_fieldset,
             $collection

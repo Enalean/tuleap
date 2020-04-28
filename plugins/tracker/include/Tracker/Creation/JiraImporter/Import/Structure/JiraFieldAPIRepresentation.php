@@ -43,14 +43,21 @@ class JiraFieldAPIRepresentation
      */
     private $schema;
 
+    /**
+     * @var bool
+     */
+    private $required;
+
     public function __construct(
         string $id,
         string $label,
+        bool $required,
         ?string $schema
     ) {
-        $this->id = $id;
-        $this->label = $label;
-        $this->schema = $schema;
+        $this->id       = $id;
+        $this->label    = $label;
+        $this->required = $required;
+        $this->schema   = $schema;
     }
 
     public static function buildFromAPIResponseAndID(string $jira_field_id, array $jira_field): self
@@ -65,6 +72,7 @@ class JiraFieldAPIRepresentation
         return new self(
             $jira_field_id,
             $jira_field['name'],
+            $jira_field['required'],
             $schema
         );
     }
@@ -82,5 +90,10 @@ class JiraFieldAPIRepresentation
     public function getSchema(): ?string
     {
         return $this->schema;
+    }
+
+    public function isRequired(): bool
+    {
+        return $this->required;
     }
 }

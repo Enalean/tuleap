@@ -67,7 +67,7 @@ class FieldXmlExporter
         string $label,
         string $jira_field_id,
         int $rank,
-        string $required,
+        bool $required,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $field = $parent_node->addChild('formElement');
@@ -78,7 +78,9 @@ class FieldXmlExporter
         $field->addAttribute('rank', (string) $rank);
         $field->addAttribute('use_it', "1");
 
-        $field->addAttribute('required', $required);
+        if ($required) {
+            $field->addAttribute('required', '1');
+        }
 
         $this->cdata_section_factory->insert($field, 'name', $name);
         $this->cdata_section_factory->insert($field, 'label', $label);

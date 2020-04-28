@@ -181,7 +181,7 @@ class JiraXmlExporter
             "Artifact id",
             self::JIRA_ARTIFACT_ID_FIELD_ID,
             1,
-            "0",
+            false,
             $this->jira_field_mapping_collection
         );
 
@@ -192,7 +192,7 @@ class JiraXmlExporter
             "Link to original artifact",
             self::JIRA_LINK_FIELD_ID,
             2,
-            "0",
+            false,
             $this->jira_field_mapping_collection
         );
 
@@ -239,7 +239,6 @@ class JiraXmlExporter
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
-                '1',
                 $node_jira_atf_form_elements,
                 $node_jira_custom_form_elements,
                 $this->jira_field_mapping_collection
