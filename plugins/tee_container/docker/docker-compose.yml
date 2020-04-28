@@ -14,6 +14,7 @@ services:
     depends_on:
       - db
       - redis
+      - mailhog
     environment:
       - TULEAP_FQDN=tuleap.local
       - DB_HOST=db
@@ -21,6 +22,8 @@ services:
       - DB_ADMIN_PASSWORD=welcome0
       - TULEAP_FPM_SESSION_MODE=redis
       - TULEAP_REDIS_SERVER=redis
+      - TULEAP_EMAIL_RELAYHOST=mailhog:1025
+#      - TULEAP_EMAIL_ADMIN=someone@example.com
 #      - TULEAP_REDIS_PORT=6380
 #      - TULEAP_REDIS_PASSWORD=some_password
 #      - TULEAP_REDIS_USE_TLS=1
@@ -38,6 +41,9 @@ services:
     volumes:
       - redis-data:/data
     command: redis-server --appendonly yes
+
+  mailhog:
+    image: mailhog/mailhog
 
 volumes:
   tuleap-data:
