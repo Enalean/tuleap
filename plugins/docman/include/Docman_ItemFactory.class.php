@@ -107,7 +107,7 @@ class Docman_ItemFactory
     /**
      * @return Docman_Item|null|void
      */
-    public function getItemFromRow(&$row)
+    public function getItemFromRow(array $row)
     {
         $item = null;
         switch ($row['item_type']) {

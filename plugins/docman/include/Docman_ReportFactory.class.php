@@ -301,10 +301,8 @@ class Docman_ReportFactory
         $itemArray = array();
         $itemFactory = new Docman_ItemFactory($this->groupId);
         $dao = $this->getDao();
-        $dar = $dao->searchItemsInReports($this->groupId, $reportId);
-        while ($dar->valid()) {
-            $itemArray[] = $itemFactory->getItemFromRow($dar->current());
-            $dar->next();
+        foreach ($dao->searchItemsInReports($this->groupId, $reportId) as $row) {
+            $itemArray[] = $itemFactory->getItemFromRow($row);
         }
         return $itemArray;
     }
