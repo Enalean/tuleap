@@ -91,7 +91,6 @@ class Notification extends Pane
         );
         $html    .= $this->getPluginNotifications();
         $assets = new IncludeAssets(__DIR__ . "/../../../../../../src/www/assets/git", "/assets/git");
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
         $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('repo-admin-notifications.js'));
 
         return $html;

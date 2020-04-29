@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import tuleap from "tuleap";
+import { loadUserAndUgroupAutocompleter } from "../../../src/scripts/tuleap/user-and-ugroup-autocompleter";
 
 document.addEventListener("DOMContentLoaded", function () {
     var input = document.querySelector("#add_mail");
@@ -26,5 +26,5 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    tuleap.loadUserAndUgroupAutocompleter(input);
+    loadUserAndUgroupAutocompleter(input);
 });

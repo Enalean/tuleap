@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,14 +17,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { loadUserAndUgroupAutocompleter } from "../../../src/scripts/tuleap/user-and-ugroup-autocompleter";
-
-document.addEventListener("DOMContentLoaded", function () {
-    var input = document.querySelector("#listeners_to_add");
-
-    if (!input) {
-        return;
-    }
-
-    loadUserAndUgroupAutocompleter(input);
-});
+import "./notifications";
+import "./notifications-popover";

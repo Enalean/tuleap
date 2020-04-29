@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2017-2018. All rights reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -34,6 +34,7 @@ use Tuleap\Tracker\Notifications\UsersToNotifyDao;
 use Tuleap\User\InvalidEntryInAutocompleterCollection;
 use Tuleap\User\RequestFromAutocompleter;
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_NotificationsManager
 {
 
@@ -278,7 +279,7 @@ class Tracker_NotificationsManager
         echo '</form></fieldset>';
     }
 
-    protected function displayAdminNotifications_Toggle()
+    protected function displayAdminNotifications_Toggle() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $renderer = $this->getNotificationsRenderer();
         $notifications_level = $this->tracker->getNotificationsLevel();
@@ -312,7 +313,7 @@ class Tracker_NotificationsManager
         );
     }
 
-    private function displayAdminNotifications_Global()
+    private function displayAdminNotifications_Global() //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         echo '<h3><a name="GlobalEmailNotification"></a>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'global_mail_notif') . ' ' .
         help_button('tracker.html#e-mail-notification') . '</h3>';
@@ -327,7 +328,8 @@ class Tracker_NotificationsManager
                 $this->notification_list_builder->getNotificationsPresenter($notifs, $this->addresses_builder)
             )
         );
-        $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
+        $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/trackers', '/assets/trackers');
+        $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('tracker-admin.js'));
     }
 
     private function displayAdminNotificationUnsubcribers()
