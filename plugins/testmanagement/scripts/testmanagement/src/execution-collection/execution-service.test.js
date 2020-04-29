@@ -31,7 +31,6 @@ describe("ExecutionService", () => {
         ExecutionRestService,
         SharedPropertiesService,
         editor,
-        ckeditorSetData,
         ckeditorInlineSpy,
         ckeditorRemoveSpy,
         setAttributeSpy,
@@ -423,9 +422,6 @@ describe("ExecutionService", () => {
                 destroy: jest.fn(),
                 showNotification: jest.fn(),
             };
-
-            ckeditorSetData = {};
-            ckeditorSetData.setData = () => "";
         });
         it("Given that campaign, when I update an execution, then it's updated with new values and campaign with correct numbers", function () {
             var campaign = {
@@ -466,7 +462,6 @@ describe("ExecutionService", () => {
 
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
-            ExecutionService.editor = ckeditorSetData;
             ExecutionService.updateTestExecution(execution_to_save);
 
             expect(ExecutionService.executions[4].status).toEqual("failed");
@@ -503,7 +498,6 @@ describe("ExecutionService", () => {
 
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
-            ExecutionService.editor = ckeditorSetData;
             ExecutionService.updateTestExecution(execution_to_save);
 
             expect(ExecutionService.campaign).not.toEqual(campaign_copy);
@@ -560,7 +554,6 @@ describe("ExecutionService", () => {
 
             ExecutionService.campaign = campaign;
             ExecutionService.executions = executions;
-            ExecutionService.editor = ckeditorSetData;
             ExecutionService.updateTestExecution(execution_to_save, updated_by);
 
             expect(ExecutionService.executions[4].definition.description).toEqual("Version A");

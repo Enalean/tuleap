@@ -347,6 +347,7 @@ function ExecutionDetailCtrl(
                     data,
                     SharedPropertiesService.getCurrentUser()
                 );
+                ExecutionService.clearEditor(execution);
                 resetTimer();
             })
             .catch(function (response) {

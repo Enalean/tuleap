@@ -63,6 +63,7 @@ function ExecutionService(
         removeTestExecution,
         removeTestExecutionWithoutUpdateCampaignStatus,
         updateTestExecution,
+        clearEditor,
         getUsedUploadedFilesIds,
         updatePresenceOnCampaign,
         removeAllPresencesOnCampaign,
@@ -246,11 +247,9 @@ function ExecutionService(
             execution.userCanReloadTestBecauseDefinitionIsUpdated = () => {
                 delete execution.userCanReloadTestBecauseDefinitionIsUpdated;
                 updateTestExecutionNow(execution, execution_updated);
-                clearEditor(execution);
             };
         } else {
             updateTestExecutionNow(execution, execution_updated);
-            clearEditor(execution);
         }
     }
 
