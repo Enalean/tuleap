@@ -164,6 +164,7 @@ describe("ExecutionDetailController -", () => {
         beforeEach(() => {
             jest.spyOn(SharedPropertiesService, "getCurrentUser").mockReturnValue(user);
             jest.spyOn(ExecutionService, "updateTestExecution").mockImplementation(() => {});
+            jest.spyOn(ExecutionService, "clearEditor").mockImplementation(() => {});
             jest.spyOn(ExecutionRestService, "putTestExecution").mockReturnValue(
                 $q.when(execution)
             );
@@ -187,6 +188,7 @@ describe("ExecutionDetailController -", () => {
                     []
                 );
                 expect(ExecutionService.updateTestExecution).toHaveBeenCalledWith(execution, user);
+                expect(ExecutionService.clearEditor).toHaveBeenCalledWith(execution);
                 expect($scope.timer.execution_time).toEqual(0);
             });
 
