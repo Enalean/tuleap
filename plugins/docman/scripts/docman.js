@@ -844,6 +844,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             class: "docman_item_option_newversion",
             title: this.docman.options.language.action_newversion,
         });
+        a.setAttribute("data-test", "new-version");
         var title_txt = document.createTextNode(this.docman.options.language.action_newversion);
         a.appendChild(title_txt);
         return this._createLi(a);
@@ -874,6 +875,7 @@ Object.extend(com.xerox.codendi.Menu.prototype, {
             class: "docman_item_option_history",
             title: this.docman.options.language.action_history,
         });
+        a.setAttribute("data-test", "history");
         var title_txt = document.createTextNode(this.docman.options.language.action_history);
         a.appendChild(title_txt);
         return this._createLi(a);

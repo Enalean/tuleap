@@ -14,7 +14,14 @@
             <div class="tlp-form-element">
                 <label class="tlp-label" for="account-remember-me">{{# gettext }}Enable "remember me" so your session is kept open and you don't have to login too often.{{/ gettext }}</label>
                 <div class="tlp-switch">
-                    <input type="checkbox" id="account-remember-me" class="tlp-switch-checkbox" name="account-remember-me" value="1" {{# remember_me_activated }}checked{{/ remember_me_activated }}>
+                    <input type="checkbox"
+                           id="account-remember-me"
+                           data-test="account-remember-me"
+                           class="tlp-switch-checkbox"
+                           name="account-remember-me"
+                           value="1"
+                           {{# remember_me_activated }}checked{{/ remember_me_activated }}
+                    >
                     <label for="account-remember-me" class="tlp-switch-button" aria-hidden="true"></label>
                 </div>
             </div>

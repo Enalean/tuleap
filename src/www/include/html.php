@@ -682,7 +682,7 @@ function html_trash_image($alt)
 function html_trash_link($link, $warn, $alt)
 {
     $purifier = Codendi_HTMLPurifier::instance();
-    return '<a href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' . html_trash_image($alt) . '</a>';
+    return '<a data-test="html_trash_link" href="' . $link . '" onClick="return confirm(\'' . $purifier->purify($warn, CODENDI_PURIFIER_JS_QUOTE) . '\')">' . html_trash_image($alt) . '</a>';
 }
 
 /**

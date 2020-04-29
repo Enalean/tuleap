@@ -72,7 +72,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
             $content .= '     <input type="hidden" name="action" value="delete" />';
         }
         $content .= '     <input type="hidden" name="id" value="' . $this->item->getId() . '" />';
-        $content .= '     <input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-docman', 'Yes, I am sure!') . '" />';
+        $content .= '     <input type="submit" tabindex="2" data-test="confirm-deletion" name="confirm" value="' . dgettext('tuleap-docman', 'Yes, I am sure!') . '" />';
         $content .= '     <input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-docman', 'No, I do not want to delete it') . '" />';
         $content .= '</div>';
         $content .= '</div>';

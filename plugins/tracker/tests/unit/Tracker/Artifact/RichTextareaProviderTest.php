@@ -111,6 +111,7 @@ class RichTextareaProviderTest extends TestCase
         name="input-name"
         required
             data-artifact-id="123"
+        data-test="input-name"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 
@@ -160,6 +161,7 @@ EOL
             data-upload-max-size="1024"
             data-artifact-id="123"
             data-help-id="input-id-help"
+        data-test="input-name"
 >input-value</textarea>
 <div class="muted tracker-richtexteditor-help" id="input-id-help"></div>
 

@@ -32,6 +32,8 @@ function getSummaryFieldId(tracker_id) {
 }
 
 function clearCodeMirror() {
+    // ignore for code mirror
+    // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".CodeMirror").then((el) => {
         const unwrap = Cypress.dom.unwrap(el)[0];
         unwrap.CodeMirror.setValue("");
@@ -41,6 +43,8 @@ function clearCodeMirror() {
 function findArtifactsWithExpertQuery(query) {
     clearCodeMirror();
 
+    // ignore for code mirror
+    // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".CodeMirror-code").type(query);
     cy.get("[data-test=expert-query-submit-button]").click();
 }

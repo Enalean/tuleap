@@ -2602,6 +2602,16 @@ msgstr ""
 "email."
 
 #, php-format
+msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this document</a>."
+msgstr ""
+"Vous pouvez <a href=\"%1$s\" data-test=\"%s\">supprimer ce document</a>."
+
+#, php-format
+msgid "You can <a href=\"%1$s\" data-test=\"%s\">delete this folder</a>."
+msgstr ""
+"Vous pouvez <a href=\"%1$s\" data-test=\"%s\">supprimer ce dossier</a>."
+
+#, php-format
 msgid "You can <a href=\"%1$s\">copy this document</a>."
 msgstr "Vous pouvez <a href=\"%1$s\">copier ce document</a>."
 
@@ -2630,14 +2640,6 @@ msgstr "Vous pouvez <a href=\"%1$s\">couper ce document</a>."
 #, php-format
 msgid "You can <a href=\"%1$s\">cut this folder</a>."
 msgstr "Vous pouvez <a href=\"%1$s\">couper ce dossier</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">delete this document</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">supprimer ce document</a>."
-
-#, php-format
-msgid "You can <a href=\"%1$s\">delete this folder</a>."
-msgstr "Vous pouvez <a href=\"%1$s\">supprimer ce dossier</a>."
 
 #, php-format
 msgid ""

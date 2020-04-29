@@ -18,6 +18,7 @@
                             type="button"
                             class="tlp-button-primary tlp-table-actions-element"
                             id="generate-svn-token-button"
+                            data-test="generate-svn-token-button"
                             data-target-modal-id="svn-tokens-generate-modal"
                     >
                         <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Generate an SVN token{{/ gettext }}
@@ -25,6 +26,7 @@
                     {{# has_svn_tokens }}
                         <button type="submit"
                                 id="button-revoke-svn-tokens"
+                                data-test="button-revoke-svn-tokens"
                                 name="revoke-svn-tokens"
                                 class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
                                 disabled
@@ -96,14 +98,25 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="svn-token-description">{{# gettext }}Token comment{{/ gettext }}</label>
-                <textarea id="svn-token-description" name="svn-token-description" rows="5" class="tlp-textarea"
-                          placeholder="{{# gettext }}My comment so I won't forget the purpose of this token...{{/ gettext }}"></textarea>
+                <textarea id="svn-token-description"
+                          name="svn-token-description"
+                          data-test="svn-token-description"
+                          rows="5"
+                          class="tlp-textarea"
+                          placeholder="{{# gettext }}My comment so I won't forget the purpose of this token...{{/ gettext }}"
+                ></textarea>
             </div>
 
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action" id="generate-new-svn-token-button">{{# gettext }}Generate new token{{/ gettext }}</button>
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    id="generate-new-svn-token-button"
+                    data-test="generate-new-svn-token-button"
+            >
+                {{# gettext }}Generate new token{{/ gettext }}
+            </button>
         </div>
     </form>
 </div>

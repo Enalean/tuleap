@@ -118,10 +118,26 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
                 ['default_url' => $this->url],
                 ['action' => 'confirmDelete', 'id' => $this->item->getId()]
             );
+
+            $data_test = "delete-item-" . $this->item->getId();
             if (is_a($this->item, 'Docman_Folder')) {
-                $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">delete this folder</a>.'), $delete_url);
+                $content .= sprintf(
+                    dgettext(
+                        'tuleap-docman',
+                        'You can <a href="%1$s" data-test="%s">delete this folder</a>.'
+                    ),
+                    $delete_url,
+                    $data_test
+                );
             } else {
-                $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">delete this document</a>.'), $delete_url);
+                $content .= sprintf(
+                    dgettext(
+                        'tuleap-docman',
+                        'You can <a href="%1$s" data-test="%s">delete this document</a>.'
+                    ),
+                    $delete_url,
+                    $data_test
+                );
             }
         }
         $content .= '</dd>';

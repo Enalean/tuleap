@@ -66,8 +66,13 @@ describe("TTM campaign", () => {
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
             ).click();
+
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-search__field").type("ProjectMember{enter}");
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-result-user").click();
+
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
             cy.get("[data-test=project-admin-submit-add-member]").click();
@@ -224,6 +229,8 @@ describe("TTM campaign", () => {
                     );
                     cy.get("[data-test=view-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
+                        // ignore rule for image stored in ckeditor
+                        // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("img").should("have.attr", "src").should("include", "blank.gif");
                         cy.get("[data-dismiss=modal]").first().click();
                     });

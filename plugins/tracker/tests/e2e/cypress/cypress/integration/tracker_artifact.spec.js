@@ -270,7 +270,7 @@ describe("Tracker artifacts", function () {
                     });
                 });
 
-            cy.get("#tracker_followup_comment_new").type(
+            cy.get("[data-test=artifact_followup_comment]").type(
                 "This my freshly created artifact. Hope nobody has edited it in the meantime!"
             );
 

@@ -29,13 +29,18 @@ describe("SVN", () => {
                 cy.visit(`/plugins/svn/?group_id=${project_id}`);
                 cy.title().should("contain", "SVN");
 
+                // ignore rule for viewvc content
+                // eslint-disable-next-line cypress/require-data-selectors
                 cy.get("a", { timeout: 30000 }).contains("sample").click();
-
+                // eslint-disable-next-line cypress/require-data-selectors
                 cy.get(".tuleap-viewvc-body")
                     .should("be.visible")
                     .within(() => {
+                        // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("a").contains("branches");
+                        // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("a").contains("tags");
+                        // eslint-disable-next-line cypress/require-data-selectors
                         cy.get("a").contains("trunk");
                     });
             });
