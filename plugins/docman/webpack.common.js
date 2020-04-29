@@ -19,9 +19,14 @@
 
 const path = require("path");
 const webpack_configurator = require("../../tools/utils/scripts/webpack-configurator.js");
+const context = __dirname;
+const output = webpack_configurator.configureOutput(
+    path.resolve(__dirname, "../../src/www/assets/docman/")
+);
 
 let entry_points = {
     null: "null_entry",
+    notifications: "./scripts/notifications.js",
     "default-style": "./themes/default/css/style.scss",
 };
 
@@ -36,12 +41,17 @@ for (const color of colors) {
 module.exports = [
     {
         entry: entry_points,
-        context: path.resolve(__dirname),
-        output: webpack_configurator.configureOutput(
-            path.resolve(__dirname, "../../src/www/assets/docman/")
-        ),
+        context,
+        output,
+        externals: {
+            jquery: "jQuery",
+        },
         module: {
-            rules: [webpack_configurator.rule_scss_loader, webpack_configurator.rule_css_assets],
+            rules: [
+                webpack_configurator.rule_scss_loader,
+                webpack_configurator.rule_css_assets,
+                webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
+            ],
         },
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
@@ -51,7 +61,6 @@ module.exports = [
                     "./scripts/docman.js",
                     "./scripts/embedded_file.js",
                     "./scripts/ApprovalTableReminder.js",
-                    "./scripts/notifications.js",
                 ],
             }),
             webpack_configurator.getManifestPlugin(),

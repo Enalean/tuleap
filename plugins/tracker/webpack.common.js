@@ -89,6 +89,7 @@ const webpack_for_vue_plus_typescript = {
     entry: {
         "tracker-creation": "./scripts/tracker-creation/index.ts",
         "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
+        "tracker-admin": "./scripts/tracker-admin/index.js",
     },
     context,
     output,
@@ -104,7 +105,6 @@ const webpack_for_vue_plus_typescript = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            // gettext-init.js needs Babel
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_easygettext_loader,
             webpack_configurator.rule_vue_loader,
@@ -161,8 +161,6 @@ const config_for_legacy_scripts = {
                 "./scripts/legacy/TrackerCollapseFieldset.js",
                 "./scripts/legacy/CopyArtifact.js",
                 "./scripts/legacy/tracker-report-nature-column.js",
-                "./scripts/legacy/tracker-admin-notifications.js",
-                "./scripts/legacy/tracker-admin-notifications-popover.js",
                 "./scripts/legacy/tracker-webhooks.js",
             ],
         }),

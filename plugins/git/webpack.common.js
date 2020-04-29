@@ -67,6 +67,7 @@ const webpack_config_for_vanilla = {
     externals: {
         tlp: "tlp",
         tuleap: "tuleap",
+        jquery: "jQuery",
     },
     module: {
         rules: [

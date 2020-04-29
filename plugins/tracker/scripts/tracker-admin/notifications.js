@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tuleap:readonly */
+import {
+    loadUserAndUgroupAutocompleter,
+    enableAutocompleter,
+    addDataToAutocompleter,
+    resetPlaceholder,
+} from "../../../../src/scripts/tuleap/user-and-ugroup-autocompleter";
 
 document.addEventListener("DOMContentLoaded", function () {
     var add_button_global_notif = document.getElementById("tracker-global-notifications-add"),
@@ -55,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hideEditMode();
             add_row_global_notif.classList.remove("tracker-global-notifications-row-add-hidden");
             add_button_global_notif.classList.add("tracker-global-notifications-add-hidden");
-            tuleap.resetPlaceholder("#add_email");
+            resetPlaceholder("#add_email");
         });
     }
 
@@ -63,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function () {
         add_button_unsubscriber.addEventListener("click", function () {
             add_row_unsubscriber.classList.remove("tracker-unsubscriber-row-add-hidden");
             add_button_unsubscriber.classList.add("tracker-unsubcriber-add-hidden");
-            tuleap.resetPlaceholder("#add_unsubscriber");
+            resetPlaceholder("#add_unsubscriber");
         });
     }
 
@@ -112,11 +117,11 @@ document.addEventListener("DOMContentLoaded", function () {
             selected_ugroups = JSON.parse(input.dataset.ugroups),
             selected_users = JSON.parse(input.dataset.users),
             selected_emails = JSON.parse(input.dataset.emails);
-        tuleap.addDataToAutocompleter(
+        addDataToAutocompleter(
             input,
             selected_ugroups.concat(selected_users).concat(selected_emails)
         );
-        tuleap.enableAutocompleter(input);
+        enableAutocompleter(input);
     }
 
     function initializeAutocompleter(input_id) {
@@ -127,8 +132,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         [].forEach.call(inputs, function (input) {
-            tuleap.loadUserAndUgroupAutocompleter(input);
-            tuleap.addDataToAutocompleter(input);
+            loadUserAndUgroupAutocompleter(input);
+            addDataToAutocompleter(input);
         });
     }
 });

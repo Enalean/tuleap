@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-201*. All rights reserved
+ * Copyright (c) Enalean, 2013-Present. All rights reserved
  * Copyright (c) STMicroelectronics, 2006. All Rights Reserved.
  *
  * Originally written by Nicolas Terray, 2006
@@ -27,6 +27,7 @@ use Tuleap\Docman\Notifications\NotificationListPresenter;
 
 require_once('Docman_View_ItemDetailsSection.class.php');
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetailsSection
 {
     /**
@@ -112,7 +113,8 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
             );
 
             $content .= '</fieldset>';
-            $GLOBALS['Response']->includeFooterJavascriptFile('/scripts/tuleap/user-and-ugroup-autocompleter.js');
+            $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../../src/www/assets/docman', '/assets/docman');
+            $GLOBALS['Response']->includeFooterJavascriptFile($assets->getFileURL('notifications.js'));
         }
         return $content;
     }

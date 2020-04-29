@@ -17,31 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global require:readonly module:readonly */
-
-var escaper;
-var jQuery;
-if (typeof module !== "undefined" && typeof module.exports !== "undefined") {
-    escaper = require("./escaper").escaper;
-    jQuery = require("jquery");
-
-    module.exports = {
-        loadUserAndUgroupAutocompleter: loadUserAndUgroupAutocompleter,
-        addDataToAutocompleter: addDataToAutocompleter,
-        enableAutocompleter: enableAutocompleter,
-        resetPlaceholder: resetPlaceholder,
-    };
-} else {
-    var tuleap = window.tuleap || {};
-
-    escaper = tuleap.escaper;
-    jQuery = window.jQuery;
-
-    tuleap.addDataToAutocompleter = addDataToAutocompleter;
-    tuleap.enableAutocompleter = enableAutocompleter;
-    tuleap.resetPlaceholder = resetPlaceholder;
-    tuleap.loadUserAndUgroupAutocompleter = loadUserAndUgroupAutocompleter;
-}
+import { escaper } from "./escaper";
+import jQuery from "jquery";
 
 function formatItem(item) {
     var type = item.type ? item.type : "other";
@@ -60,17 +37,9 @@ function formatUser(user) {
         return escaper.html(user.text);
     }
 
-    return (
-        /*eslint-disable no-multi-str */
-        '<div class="avatar autocompleter-avatar"> \
-            ' +
-        (user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "") +
-        " \
-        </div> \
-        " +
-        escaper.html(user.text)
-        /*eslint-enable no-multi-str */
-    );
+    const avatar = user.has_avatar ? '<img src="' + escaper.html(user.avatar_url) + '">' : "";
+    const escaped_text = escaper.html(user.text);
+    return `<div class="avatar autocompleter-avatar">${avatar}</div>${escaped_text}`;
 }
 
 function createSearchChoice(term, data) {
@@ -86,19 +55,19 @@ function createSearchChoice(term, data) {
     }
 }
 
-function addDataToAutocompleter(input, items) {
+export function addDataToAutocompleter(input, items) {
     jQuery(input).select2("data", items);
 }
 
-function enableAutocompleter(input) {
+export function enableAutocompleter(input) {
     jQuery(input).select2("enable", true);
 }
 
-function resetPlaceholder(input) {
+export function resetPlaceholder(input) {
     jQuery(input).select2("val", null);
 }
 
-function loadUserAndUgroupAutocompleter(input) {
+export function loadUserAndUgroupAutocompleter(input) {
     if (!input) {
         return;
     }
