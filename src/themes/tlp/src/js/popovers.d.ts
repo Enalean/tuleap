@@ -24,7 +24,7 @@ interface Popover {
 export function createPopover(
     popover_trigger: Element,
     popover_content: Element,
-    options?: PopperOptions & { anchor?: Element }
+    options?: PopperOptions & { anchor?: Element; trigger?: "click" | "hover" }
 ): Popover;
 
 interface FilterTable {

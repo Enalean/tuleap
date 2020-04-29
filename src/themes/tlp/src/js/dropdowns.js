@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 import { findClosestElement } from "./dom-walker.js";
 
 const TRANSITION_DURATION = 75;
-const ESCAPE_CODE = 27;
 
 const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
 const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
@@ -28,7 +27,7 @@ const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
 const CLASS_TLP_DROPDOWN_MENU = "tlp-dropdown-menu";
 const CLASS_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
 
-export default (trigger, options) => new Dropdown(trigger, options);
+export const dropdown = (trigger, options) => new Dropdown(trigger, options);
 
 class Dropdown {
     constructor(trigger, options = { keyboard: true }) {
@@ -112,7 +111,7 @@ class Dropdown {
 
         if (this.keyboard) {
             document.addEventListener("keyup", (event) => {
-                if (event.keyCode !== ESCAPE_CODE) {
+                if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
                     return;
                 }
 
@@ -149,3 +148,5 @@ class Dropdown {
         }
     }
 }
+
+const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";

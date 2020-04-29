@@ -26,11 +26,11 @@ export * from "./fetch-wrapper.js";
 
 export { default as locale } from "./default_locale.js";
 
-export { default as modal } from "./modal.js";
+export { modal } from "./modal.js";
 
-export { default as dropdown } from "./dropdowns.js";
+export { dropdown } from "./dropdowns.js";
 
-export { default as createPopover } from "./popovers.js";
+export { createPopover } from "./popovers.js";
 
 export { default as filterInlineTable } from "./filter-inline-table.js";
 

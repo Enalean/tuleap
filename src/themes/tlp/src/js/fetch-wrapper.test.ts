@@ -18,21 +18,12 @@
  */
 
 import * as wrapper from "./fetch-wrapper";
-
-function mockFetchSuccess(return_json, headers = {}) {
-    window.fetch.mockImplementation(() =>
-        Promise.resolve({
-            headers,
-            ok: true,
-            json: () => Promise.resolve(return_json),
-        })
-    );
-}
+import { mockFetchSuccess } from "../../mocks/tlp-fetch-mock-helper";
 
 describe(`fetch-wrapper`, () => {
+    let globalFetch: jest.SpyInstance;
     beforeEach(() => {
-        // eslint-disable-next-line jest/prefer-spy-on
-        window.fetch = jest.fn();
+        window.fetch = globalFetch = jest.fn();
     });
 
     afterEach(() => {
@@ -43,7 +34,7 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-get";
 
         it(`will query the given URL with GET`, async () => {
-            mockFetchSuccess({ value: 1 });
+            mockFetchSuccess(globalFetch, { return_json: { value: 1 } });
 
             const response = await wrapper.get(url);
             const json = await response.json();
@@ -65,7 +56,7 @@ describe(`fetch-wrapper`, () => {
                 "R&D": 91,
                 Jwahar: false,
             };
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
             await wrapper.get(url, { params });
 
@@ -75,15 +66,14 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`, async () => {
-            const options = {
-                cache: "force-cache",
-                redirect: "error",
-            };
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
-            await wrapper.get(url, options);
+            await wrapper.get(url, { cache: "force-cache", redirect: "error" });
 
-            expect(window.fetch).toHaveBeenCalledWith(url, expect.objectContaining(options));
+            expect(window.fetch).toHaveBeenCalledWith(
+                url,
+                expect.objectContaining({ cache: "force-cache", redirect: "error" })
+            );
         });
 
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
@@ -91,10 +81,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.get(url)).rejects.toEqual(expected_error);
         });
     });
@@ -102,13 +92,16 @@ describe(`fetch-wrapper`, () => {
     describe(`recursiveGet()`, () => {
         const url = "https://example.com/fetch-wrapper-recursive-get";
 
-        function mockFetchSuccessForRecursiveGet(return_json, total) {
-            mockFetchSuccess(return_json, {
-                get(name) {
-                    if (name !== "X-PAGINATION-SIZE") {
-                        return null;
-                    }
-                    return total;
+        function mockFetchSuccessForRecursiveGet(return_json: unknown, total: string): void {
+            mockFetchSuccess(globalFetch, {
+                return_json,
+                headers: {
+                    get(name): string | null {
+                        if (name !== "X-PAGINATION-SIZE") {
+                            return null;
+                        }
+                        return total;
+                    },
                 },
             });
         }
@@ -138,17 +131,13 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given Fetch parameters like "cache" or "redirect", it will pass them to Fetch`, async () => {
-            const options = {
-                cache: "force-cache",
-                redirect: "error",
-            };
             mockFetchSuccessForRecursiveGet({}, "0");
 
-            await wrapper.recursiveGet(url, options);
+            await wrapper.recursiveGet(url, { cache: "force-cache", redirect: "error" });
 
             expect(window.fetch).toHaveBeenCalledWith(
                 expect.any(String),
-                expect.objectContaining(options)
+                expect.objectContaining({ cache: "force-cache", redirect: "error" })
             );
         });
 
@@ -198,12 +187,7 @@ describe(`fetch-wrapper`, () => {
 
         it(`When the route does not return a X-PAGINATION-SIZE header,
             it will throw`, async () => {
-            mockFetchSuccess(
-                {},
-                {
-                    get: () => null,
-                }
-            );
+            mockFetchSuccess(globalFetch, { headers: { get: (): null => null } });
 
             await expect(wrapper.recursiveGet(url)).rejects.toThrow(
                 "No X-PAGINATION-SIZE field in the header."
@@ -215,20 +199,20 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.recursiveGet(url)).rejects.toEqual(expected_error);
         });
 
         describe(`when the route provides a X-PAGINATION-SIZE header
             and there are more entries to fetch`, () => {
-            function mockSuccessiveCalls(return_json) {
-                window.fetch.mockImplementationOnce(() => {
+            function mockSuccessiveCalls(return_json: unknown): void {
+                globalFetch.mockImplementationOnce(() => {
                     return {
                         headers: {
-                            get(name) {
+                            get(name: string): string | null {
                                 if (name !== "X-PAGINATION-SIZE") {
                                     return null;
                                 }
@@ -236,7 +220,7 @@ describe(`fetch-wrapper`, () => {
                             },
                         },
                         ok: true,
-                        json: () => Promise.resolve(return_json),
+                        json: (): Promise<unknown> => Promise.resolve(return_json),
                     };
                 });
             }
@@ -256,8 +240,8 @@ describe(`fetch-wrapper`, () => {
                 const expected_results_in_order = batch_A.concat(batch_B).concat(batch_C);
                 expect(results).toEqual(expected_results_in_order);
 
-                expect(window.fetch.mock.calls.length).toBe(3);
-                const [, ...later_calls] = window.fetch.mock.calls;
+                expect(globalFetch.mock.calls.length).toBe(3);
+                const [, ...later_calls] = globalFetch.mock.calls;
                 later_calls.forEach((call) => {
                     const [, second_parameter] = call;
                     expect(second_parameter.params.limit).toEqual(2);
@@ -266,6 +250,12 @@ describe(`fetch-wrapper`, () => {
             });
 
             it(`will call getCollectionCallback for each batch`, async () => {
+                interface ObjectWithID {
+                    id: number;
+                }
+                interface Collection {
+                    collection: [ObjectWithID];
+                }
                 const first_batch = { collection: [{ id: 11 }, { id: 25 }] };
                 const second_batch = { collection: [{ id: 26 }, { id: 27 }] };
                 const third_batch = { collection: [{ id: 28 }, { id: 40 }] };
@@ -273,7 +263,7 @@ describe(`fetch-wrapper`, () => {
                 mockSuccessiveCalls(second_batch);
                 mockSuccessiveCalls(third_batch);
 
-                const results = await wrapper.recursiveGet(url, {
+                const results = await wrapper.recursiveGet<Collection, ObjectWithID>(url, {
                     params: { limit: 2 },
                     getCollectionCallback: ({ collection }) => collection,
                 });
@@ -294,7 +284,7 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-put";
 
         it(`will query the given URL with PUT and return Fetch's response`, async () => {
-            mockFetchSuccess("success");
+            mockFetchSuccess(globalFetch, { return_json: "success" });
             const result = await wrapper.put(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
@@ -308,7 +298,7 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
@@ -327,10 +317,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.put(url)).rejects.toEqual(expected_error);
         });
     });
@@ -339,7 +329,7 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-patch";
 
         it(`will query the given URL with PATCH and return Fetch's response`, async () => {
-            mockFetchSuccess("success");
+            mockFetchSuccess(globalFetch, { return_json: "success" });
             const result = await wrapper.patch(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
@@ -353,7 +343,7 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
@@ -372,10 +362,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.patch(url)).rejects.toEqual(expected_error);
         });
     });
@@ -384,7 +374,7 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-post";
 
         it(`will query the given URL with POST and return Fetch's response`, async () => {
-            mockFetchSuccess("success");
+            mockFetchSuccess(globalFetch, { return_json: "success" });
             const result = await wrapper.post(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
@@ -398,7 +388,7 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given a "body" and a "content-type" header, it will pass them to Fetch`, async () => {
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
             const expected_options = {
                 headers: { "content-type": "application/json" },
@@ -417,10 +407,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.post(url)).rejects.toEqual(expected_error);
         });
     });
@@ -429,7 +419,7 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-del";
 
         it(`will query the given URL with DELETE and return Fetch's response`, async () => {
-            mockFetchSuccess("success");
+            mockFetchSuccess(globalFetch, { return_json: "success" });
             const result = await wrapper.del(url);
 
             expect(window.fetch).toHaveBeenCalledWith(
@@ -443,12 +433,14 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given Fetch parameters like "redirect", it will pass them to Fetch`, async () => {
-            const options = { redirect: "error" };
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
-            await wrapper.del(url, options);
+            await wrapper.del(url, { redirect: "error" });
 
-            expect(window.fetch).toHaveBeenCalledWith(url, expect.objectContaining(options));
+            expect(window.fetch).toHaveBeenCalledWith(
+                url,
+                expect.objectContaining({ redirect: "error" })
+            );
         });
 
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
@@ -456,10 +448,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.del(url)).rejects.toEqual(expected_error);
         });
     });
@@ -468,12 +460,15 @@ describe(`fetch-wrapper`, () => {
         const url = "https://example.com/fetch-wrapper-options";
 
         it(`will query the given URL with OPTIONS and return Fetch's response`, async () => {
-            mockFetchSuccess("success", {
-                get(name) {
-                    if (name !== "X-PAGINATION-SIZE") {
-                        return null;
-                    }
-                    return "2";
+            mockFetchSuccess(globalFetch, {
+                return_json: "success",
+                headers: {
+                    get(name): string | null {
+                        if (name !== "X-PAGINATION-SIZE") {
+                            return null;
+                        }
+                        return "2";
+                    },
                 },
             });
             const result = await wrapper.options(url);
@@ -489,12 +484,14 @@ describe(`fetch-wrapper`, () => {
         });
 
         it(`given Fetch parameters like "redirect", it will pass them to Fetch`, async () => {
-            const options = { redirect: "error" };
-            mockFetchSuccess();
+            mockFetchSuccess(globalFetch);
 
-            await wrapper.options(url, options);
+            await wrapper.options(url, { redirect: "error" });
 
-            expect(window.fetch).toHaveBeenCalledWith(url, expect.objectContaining(options));
+            expect(window.fetch).toHaveBeenCalledWith(
+                url,
+                expect.objectContaining({ redirect: "error" })
+            );
         });
 
         it(`when the route fails, it will return a rejected promise with the error`, async () => {
@@ -502,10 +499,10 @@ describe(`fetch-wrapper`, () => {
                 ok: false,
                 statusText: "Not found",
             };
-            window.fetch.mockImplementation(() => Promise.resolve(expected_response));
+            globalFetch.mockImplementation(() => Promise.resolve(expected_response));
 
             const expected_error = new Error("Not found");
-            expected_error.response = expected_response;
+            Object.assign(expected_error, { response: expected_response });
             await expect(wrapper.options(url)).rejects.toEqual(expected_error);
         });
     });
