@@ -33,6 +33,7 @@ describe("ExecutionService", () => {
         editor,
         ckeditorSetData,
         ckeditorInlineSpy,
+        ckeditorRemoveSpy,
         setAttributeSpy,
         ckeditor_field,
         ExecutionService;
@@ -705,11 +706,18 @@ describe("ExecutionService", () => {
                 showNotification: jest.fn(),
             };
 
+            let instance = {
+                execution_4: "oui",
+            };
+
             ckeditorInlineSpy = jest.fn(() => editor);
+            ckeditorRemoveSpy = jest.fn(() => "");
             setAttributeSpy = jest.spyOn(document, "getElementById");
             ckeditor_field = document.createElement("ckeditor");
             setAttributeSpy.mockReturnValue(ckeditor_field);
             CKEDITOR.inline = ckeditorInlineSpy;
+            CKEDITOR.instances = instance;
+            CKEDITOR.remove = ckeditorRemoveSpy;
         });
         it("Given that executions with no users on, when I user views a test, then there is user on", function () {
             var executions = {
@@ -738,6 +746,8 @@ describe("ExecutionService", () => {
             ExecutionService.viewTestExecution(4, user);
 
             expect(ckeditorInlineSpy).toHaveBeenCalled();
+            expect(ckeditorRemoveSpy).toHaveBeenCalled();
+
             expect(ExecutionService.executions[4].viewed_by).toEqual(results);
         });
 
