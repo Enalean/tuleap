@@ -233,7 +233,6 @@ final class TrackerXmlImportTest extends TestCase
             </project>'
         );
 
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
@@ -255,7 +254,6 @@ final class TrackerXmlImportTest extends TestCase
             </project>'
         );
 
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
         $this->tracker_xml_importer->import($this->configuration, $this->project, $xml_input, $this->mapping_registery, '', $this->user);
     }
 
@@ -371,7 +369,6 @@ final class TrackerXmlImportTest extends TestCase
                 </trackers>
             </project>'
         );
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
 
         $expected_tracker_mapping = ['T101' => null];
 
@@ -593,7 +590,6 @@ final class TrackerXmlImportTest extends TestCase
         $this->mockTracker103();
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->with(2);
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
 
         $result = $this->tracker_xml_importer->import(
             $this->configuration,
@@ -631,8 +627,6 @@ final class TrackerXmlImportTest extends TestCase
         $this->mapping_from_existing_tracker->shouldReceive('getXmlFieldsMapping')->once()->andReturns([]);
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->with(2);
-
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
 
         $result = $this->tracker_xml_importer->import(
             $this->configuration,
@@ -682,8 +676,6 @@ final class TrackerXmlImportTest extends TestCase
             ]
         );
 
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
-
         $this->tracker_xml_importer->import(
             $this->configuration,
             $this->project,
@@ -708,8 +700,6 @@ final class TrackerXmlImportTest extends TestCase
 
         $this->hierarchy_dao->shouldReceive('updateChildren')->never();
 
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
-
         $this->tracker_xml_importer->import(
             $this->configuration,
             $this->project,
@@ -727,8 +717,6 @@ final class TrackerXmlImportTest extends TestCase
 
         $this->mockCreateAlwaysThereTrackers();
         $this->mockTracker103();
-
-        $this->tracker_xml_saver->shouldReceive('storeUsedXmlForTrackersCreation')->once();
 
         $this->tracker_xml_importer->import(
             $this->configuration,

@@ -21,41 +21,22 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Artifact\XMLImport;
-
-use DateTimeImmutable;
-use PFUser;
-use Project;
-
-class TrackerXmlImportConfig implements TrackerImportConfig
+class b202004291558_remove_filename_from_tracker_xml_changeset extends ForgeUpgrade_Bucket //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    /**
-     * @var int
-     */
-    private $user_id;
-    /**
-     * @var int
-     */
-    private $import_timestamp;
-
-    public function __construct(Project $project, PFUser $user, DateTimeImmutable $import_time)
+    public function description(): string
     {
-        $this->user_id          = (int) $user->getId();
-        $this->import_timestamp = $import_time->getTimestamp();
+        return 'update table plugin_tracker_changeset_from_xml remove xml_filename.';
     }
 
-    public function getUserId(): int
+    public function preUp(): void
     {
-        return $this->user_id;
+        $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
     }
 
-    public function getImportTimestamp(): int
+    public function up(): void
     {
-        return $this->import_timestamp;
-    }
+        $sql = "alter table plugin_tracker_changeset_from_xml drop column xml_filename";
 
-    public function isFromXml(): bool
-    {
-        return true;
+        $this->db->alterTable('plugin_tracker_changeset_from_xml', 'tuleap', 'xml_filename', $sql);
     }
 }

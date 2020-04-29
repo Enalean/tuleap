@@ -108,7 +108,6 @@ class ArtifactChangesetSaver
                     assert($import_config instanceof TrackerXmlImportConfig);
 
                     $this->changeset_from_xml_dao->saveChangesetIsCreatedFromXml(
-                        $import_config->getXMLFileName(),
                         $import_config->getImportTimestamp(),
                         $import_config->getUserId(),
                         (int) $changeset_id
