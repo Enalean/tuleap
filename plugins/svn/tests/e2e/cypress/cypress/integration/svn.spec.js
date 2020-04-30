@@ -57,9 +57,10 @@ describe("SVN", function () {
         });
 
         it("repository created by REST API should have a correct history", function () {
+            const now = Date.now();
             const payload = {
                 project_id: parseInt(this.svn_project_id, 10),
-                name: "repo01",
+                name: "repo01" + now,
                 settings: {
                     commit_rules: {
                         is_reference_mandatory: true,
@@ -93,20 +94,20 @@ describe("SVN", function () {
             cy.visit("/project/admin/?group_id=" + this.svn_project_id);
             cy.get("[data-test=project-history]").click({ force: true });
             cy.get("[data-test=project-history-results]").then((history) => {
-                const wrap = cy.wrap(history);
-                wrap.should("contain", "repo01");
-                wrap.should("contain", "mandatory_reference: true");
-                wrap.should("contain", "commit_message_can_change: false");
-                wrap.should("contain", "/tags1");
-                wrap.should("contain", "/tags2");
-                wrap.should("contain", "/tags/whitelist1");
-                wrap.should("contain", "/tags/whitelist2");
-                wrap.should("contain", "@members = rw");
-                wrap.should("contain", "@admins = rw");
-                wrap.should("contain", "/trunk");
-                wrap.should("contain", "foo@example.com, bar@example.com");
-                wrap.should("contain", "admin, ProjectAdministrator");
-                wrap.should("contain", "project_members");
+                cy.wrap(history)
+                    .should("contain", "repo01")
+                    .should("contain", "mandatory_reference: true")
+                    .should("contain", "commit_message_can_change: false")
+                    .should("contain", "/tags1")
+                    .should("contain", "/tags2")
+                    .should("contain", "/tags/whitelist1")
+                    .should("contain", "/tags/whitelist2")
+                    .should("contain", "@members = rw")
+                    .should("contain", "@admins = rw")
+                    .should("contain", "/trunk")
+                    .should("contain", "foo@example.com, bar@example.com")
+                    .should("contain", "admin, ProjectAdministrator")
+                    .should("contain", "project_members");
             });
         });
     });
