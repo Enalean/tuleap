@@ -44,9 +44,11 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
         $exporter->exportFieldChange(
             $mapping,
             $changeset_node,
+            $submitted_on,
             '4.5'
         );
 
@@ -56,5 +58,56 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertSame("float", (string) $field_change_node['type']);
         $this->assertSame("Number", (string) $field_change_node['field_name']);
         $this->assertSame("4.5", (string) $field_change_node->value);
+    }
+
+    public function testItExportsTheUpdateDateAsSubmittedOnDateInXML(): void
+    {
+        $exporter = new FieldChangeXMLExporter(
+            new XML_SimpleXMLCDATAFactory()
+        );
+
+        $mapping = new FieldMapping(
+            'update',
+            'Fupdate',
+            'Updated',
+            'lud'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            '2020-04-21T09:31:44.481+0200'
+        );
+
+        $this->assertSame("2020-04-21T09:31:44.481+0200", (string) $submitted_on);
+    }
+
+    public function testItDoesNotUpdateTheSubmissionDateWhenUpdatedDataIsNotProvided(): void
+    {
+        $exporter = new FieldChangeXMLExporter(
+            new XML_SimpleXMLCDATAFactory()
+        );
+
+        $mapping = new FieldMapping(
+            'number',
+            'Fnumber',
+            'Number',
+            'float'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on format="ISO8601">2020-04-29T08:45:46+02:00</submitted_on>');
+
+        $exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            '4.5'
+        );
+
+        $this->assertSame("2020-04-29T08:45:46+02:00", (string) $submitted_on);
     }
 }

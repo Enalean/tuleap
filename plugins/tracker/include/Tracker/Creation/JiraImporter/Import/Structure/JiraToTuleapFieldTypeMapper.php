@@ -140,7 +140,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'priority':
                 case 'status':
                 case 'creator':
-                case 'updated':
                 case 'created':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
@@ -158,6 +157,7 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
                 case 'com.atlassian.jira.toolkit:attachments':
                 case 'comment':
+                case 'updated': // this is not a Tuleap field, handled during artifact import.
                 case 'com.pyxis.greenhopper.jira:jsw-issue-color':
                 case 'com.pyxis.greenhopper.jira:gh-epic-color':
                 case 'aggregatetimespent':

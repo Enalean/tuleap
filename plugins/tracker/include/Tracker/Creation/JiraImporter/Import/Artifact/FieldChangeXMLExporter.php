@@ -42,8 +42,12 @@ class FieldChangeXMLExporter
         $this->simplexml_cdata_factory = $simplexml_cdata_factory;
     }
 
-    public function exportFieldChange(FieldMapping $mapping, SimpleXMLElement $changeset_node, string $value): void
-    {
+    public function exportFieldChange(
+        FieldMapping $mapping,
+        SimpleXMLElement $changeset_node,
+        SimpleXMLElement $node_submitted_on,
+        string $value
+    ): void {
         if ($mapping->getType() === Tracker_FormElement_Field_String::TYPE) {
             $this->exportStringFieldChange(
                 $changeset_node,
@@ -65,6 +69,8 @@ class FieldChangeXMLExporter
             $field_change_node->addAttribute('type', 'float');
             $field_change_node->addAttribute('field_name', $mapping->getFieldName());
             $field_change_node->addChild('value', $value);
+        } elseif ($mapping->getType() === \Tracker_FormElement_Field_LastUpdateDate::TYPE) {
+            $node_submitted_on[0] = $value;
         }
     }
 

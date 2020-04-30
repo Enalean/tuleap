@@ -46,6 +46,7 @@ class JiraXmlExporter
     public const JIRA_LINK_FIELD_NAME        = "jira_artifact_url";
     public const JIRA_SUMMARY_FIELD_NAME     = "summary";
     public const JIRA_DESCRIPTION_FIELD_NAME = "description";
+    public const JIRA_UPDATED_ON_NAME        = "updated";
 
     public const JIRA_LINK_FIELD_ID        = "jira_artifact_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
@@ -195,6 +196,18 @@ class JiraXmlExporter
             false,
             $this->jira_field_mapping_collection
         );
+
+        $this->field_xml_exporter->exportField(
+            $node_jira_atf_form_elements,
+            \Tracker_FormElement_Field_LastUpdateDate::TYPE,
+            self::JIRA_UPDATED_ON_NAME,
+            "Last update date",
+            self::JIRA_UPDATED_ON_NAME,
+            5,
+            false,
+            $this->jira_field_mapping_collection
+        );
+
 
         $this->exportJiraField(
             $node_jira_atf_form_elements,
