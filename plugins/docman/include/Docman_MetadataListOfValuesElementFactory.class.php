@@ -128,10 +128,15 @@ class Docman_MetadataListOfValuesElementFactory
         if ($mdLabel == 'status') {
             $lst = $this->getStatusList();
             return $lst;
-        } else {
-            $builder = new MetadataListOfValuesElementListBuilder($this->getDao());
-            return $builder->build($id, $onlyActive);
         }
+
+        if (! $id) {
+            return [];
+        }
+
+        $builder = new MetadataListOfValuesElementListBuilder($this->getDao());
+
+        return $builder->build($id, $onlyActive);
     }
 
     public function getIteratorByFieldId($id, $mdLabel, $onlyActive)
