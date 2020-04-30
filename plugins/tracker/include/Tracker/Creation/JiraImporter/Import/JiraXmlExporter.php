@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -177,34 +176,37 @@ class JiraXmlExporter
 
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
-            Tracker_FormElement_Field_ArtifactId::TYPE,
+            Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
             "artifact id",
             "Artifact id",
             self::JIRA_ARTIFACT_ID_FIELD_ID,
             1,
             false,
+            [],
             $this->jira_field_mapping_collection
         );
 
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
-            Tracker_FormElement_Field_String::TYPE,
+            Tracker_FormElementFactory::FIELD_STRING_TYPE,
             self::JIRA_LINK_FIELD_NAME,
             "Link to original artifact",
             self::JIRA_LINK_FIELD_ID,
             2,
             false,
+            [],
             $this->jira_field_mapping_collection
         );
 
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
-            \Tracker_FormElement_Field_LastUpdateDate::TYPE,
+            Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
             self::JIRA_UPDATED_ON_NAME,
             "Last update date",
             self::JIRA_UPDATED_ON_NAME,
             5,
             false,
+            [],
             $this->jira_field_mapping_collection
         );
 

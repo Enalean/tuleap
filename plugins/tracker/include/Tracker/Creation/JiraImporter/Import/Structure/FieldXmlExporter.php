@@ -60,6 +60,9 @@ class FieldXmlExporter
         return $fieldset_node->addChild('formElements');
     }
 
+    /**
+     * @param array<string, string> $properties
+     */
     public function exportField(
         \SimpleXMLElement $parent_node,
         string $type,
@@ -68,6 +71,7 @@ class FieldXmlExporter
         string $jira_field_id,
         int $rank,
         bool $required,
+        array $properties,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $field = $parent_node->addChild('formElement');
@@ -84,6 +88,11 @@ class FieldXmlExporter
 
         $this->cdata_section_factory->insert($field, 'name', $name);
         $this->cdata_section_factory->insert($field, 'label', $label);
+
+        foreach ($properties as $property_name => $property_value) {
+            $properties_node = $field->addChild("properties");
+            $properties_node->addAttribute($property_name, $property_value);
+        }
 
         $jira_field_mapping_collection->addMapping(
             new FieldMapping(

@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use Mockery;
-use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
@@ -117,12 +116,13 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 $fieldset_xml,
-                Tracker_FormElement_Field_ArtifactId::TYPE,
+                Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
                 Mockery::type('string'),
                 Mockery::type('string'),
                 Mockery::type('string'),
                 1,
                 Mockery::type('bool'),
+                Mockery::type('array'),
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -130,12 +130,13 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 $fieldset_xml,
-                Tracker_FormElement_Field_String::TYPE,
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 Mockery::type('string'),
                 Mockery::type('string'),
                 Mockery::type('string'),
                 2,
                 Mockery::type('bool'),
+                Mockery::type('array'),
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -143,12 +144,13 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 $fieldset_xml,
-                \Tracker_FormElement_Field_LastUpdateDate::TYPE,
+                Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
                 Mockery::type('string'),
                 Mockery::type('string'),
                 Mockery::type('string'),
                 5,
                 Mockery::type('bool'),
+                Mockery::type('array'),
                 $this->jira_field_mapping_collection
             ]
         )->once();

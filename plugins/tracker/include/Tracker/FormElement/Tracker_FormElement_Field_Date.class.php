@@ -28,7 +28,6 @@ use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 {
-
     public const DEFAULT_VALUE_TYPE_TODAY    = 0;
     public const DEFAULT_VALUE_TYPE_REALDATE = 1;
 

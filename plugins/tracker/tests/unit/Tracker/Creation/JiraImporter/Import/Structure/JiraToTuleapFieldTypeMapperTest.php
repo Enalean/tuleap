@@ -24,14 +24,14 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery;
-use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
-final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
+final class JiraToTuleapFieldTypeMapperTest extends TestCase
 {
-    use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var \SimpleXMLElement
@@ -84,12 +84,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_atf_fieldset,
-                Tracker_FormElement_Field_String::TYPE,
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 1,
                 $jira_field->isRequired(),
+                [],
                 $collection
             ]
         );
@@ -116,12 +117,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_atf_fieldset,
-                Tracker_FormElement_Field_Text::TYPE,
+                Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 2,
                 $jira_field->isRequired(),
+                [],
                 $collection
             ]
         );
@@ -148,12 +150,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_custom_fieldset,
-                Tracker_FormElement_Field_String::TYPE,
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 1,
                 $jira_field->isRequired(),
+                [],
                 $collection
             ]
         );
@@ -180,12 +183,13 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_custom_fieldset,
-                Tracker_FormElement_Field_Text::TYPE,
+                Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 2,
                 $jira_field->isRequired(),
+                [],
                 $collection
             ]
         );
@@ -212,12 +216,48 @@ final class JiraToTuleapFieldTypeMapperTest extends \PHPUnit\Framework\TestCase
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
                 $this->jira_custom_fieldset,
-                Tracker_FormElement_Field_Float::TYPE,
+                Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
                 3,
                 $jira_field->isRequired(),
+                [],
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
+
+    public function testJiraDatepickerFieldIsMappedToDateField(): void
+    {
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'Datepicker Field',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:datepicker'
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_custom_fieldset,
+                Tracker_FormElementFactory::FIELD_DATE_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                4,
+                $jira_field->isRequired(),
+                [
+                    'display_time' => '0'
+                ],
                 $collection
             ]
         );
