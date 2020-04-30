@@ -57,8 +57,10 @@
                     {{# has_access_keys }}
                         <tbody>
                         {{# access_keys }}
-                            <tr>
-                                <td class="access-key-checkbox-cell"><input type="checkbox" name="access-keys-selected[]" value="{{ id }}"/></td>
+                            <tr data-test="user-prefs-personal-access-key">
+                                <td class="access-key-checkbox-cell">
+                                    <input data-test="user-prefs-personal-access-key-checkbox" type="checkbox" name="access-keys-selected[]" value="{{ id }}"/>
+                                </td>
                                 <td class="access-key-date">{{ creation_date }}</td>
                                 <td class="access-key-date">
                                     {{# last_used_on }}{{ last_used_on }}{{/ last_used_on }}
@@ -125,7 +127,7 @@
                 <label class="tlp-label">{{# gettext }}Access key scopes{{/ gettext }} <i class="fa fa-asterisk"></i></label>
                 {{# access_key_scopes }}
                     <label class="tlp-label tlp-checkbox">
-                        <input type="checkbox" name="access-key-scopes[]" value="{{ identifier }}"> {{ name }}
+                        <input type="checkbox" name="access-key-scopes[]" value="{{ identifier }}" data-test="user-prefs-personal-access-key-scope-option"> {{ name }}
                     </label>
                     <p class="tlp-text-info">{{ description }}</p>
                 {{/ access_key_scopes }}

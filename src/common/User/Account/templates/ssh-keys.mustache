@@ -41,7 +41,12 @@
                         {{# ssh_keys_list }}
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="ssh_key_selected[]" value="{{ ssh_key_number }}"/>
+                                    <input
+                                        type="checkbox"
+                                        name="ssh_key_selected[]"
+                                        value="{{ ssh_key_number }}"
+                                        data-test="user-prefs-remove-ssh-key-checkbox"
+                                    />
                                 </td>
                                 <td data-ssh_key_value="{{ ssh_key_value }}">
                                     {{ ssh_key_ellipsis_value }}

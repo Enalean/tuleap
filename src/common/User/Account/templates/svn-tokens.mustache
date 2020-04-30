@@ -47,8 +47,10 @@
                     {{# has_svn_tokens }}
                         <tbody>
                         {{# svn_tokens }}
-                            <tr>
-                                <td class="svn-token-checkbox-cell"><input type="checkbox" name="svn-tokens-selected[]" value="{{ id }}"/></td>
+                            <tr data-test="user-prefs-svn-token">
+                                <td class="svn-token-checkbox-cell" data-test="user-prefs-revoke-svn-token-checkbox">
+                                    <input type="checkbox" name="svn-tokens-selected[]" value="{{ id }}"/>
+                                </td>
                                 <td class="svn-token-date">{{ generated_date }}</td>
                                 <td class="svn-token-date">{{ last_used_on }}</td>
                                 <td>{{ last_used_by }}</td>
