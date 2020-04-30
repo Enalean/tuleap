@@ -84,8 +84,10 @@ $CLI_command_collector->addCommand(
     ConfigSetCommand::NAME,
     static function () use ($event_manager): ConfigSetCommand {
         return new ConfigSetCommand(
-            new ConfigDao(),
-            $event_manager
+            new \Tuleap\Config\ConfigSet(
+                $event_manager,
+                new ConfigDao()
+            )
         );
     }
 );

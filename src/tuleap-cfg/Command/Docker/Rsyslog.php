@@ -24,18 +24,43 @@ declare(strict_types=1);
 namespace TuleapCfg\Command\Docker;
 
 use Symfony\Component\Console\Output\OutputInterface;
+use Webimpress\SafeWriter\FileWriter;
 
 final class Rsyslog
 {
+    private const ENV_LOG_SERVER = 'TULEAP_LOG_SERVER';
+
     /**
      * @see https://www.projectatomic.io/blog/2014/09/running-syslog-within-a-docker-container/
      *      https://github.com/rsyslog/rsyslog-docker/blob/master/base/centos7/Dockerfile
      */
-    public function setup(OutputInterface $output): void
+    public function setup(OutputInterface $output, string $tuleap_fqdn): void
     {
         $output->writeln('Setup Rsyslog');
-        unlink('/etc/rsyslog.d/listen.conf');
-        unlink('/etc/rsyslog.conf');
-        copy(__DIR__ . '/../../../../tools/docker/tuleap-aio-c7/rsyslog.conf', '/etc/rsyslog.conf');
+        if (file_exists('/etc/rsyslog.d/listen.conf')) {
+            unlink('/etc/rsyslog.d/listen.conf');
+        }
+        if (file_exists('/etc/rsyslog.conf')) {
+            unlink('/etc/rsyslog.conf');
+        }
+
+        $log_server = getenv(self::ENV_LOG_SERVER);
+        if ($log_server !== false) {
+            copy(__DIR__ . '/../../resources/rsyslog/rsyslog-logforward.conf', '/etc/rsyslog.conf');
+            $logforward = str_replace(
+                [
+                    '%tuleap_fqdn%',
+                    '%log-server%',
+                ],
+                [
+                    $tuleap_fqdn,
+                    $log_server
+                ],
+                file_get_contents(__DIR__ . '/../../resources/rsyslog/logforward.conf')
+            );
+            FileWriter::writeFile('/etc/rsyslog.d/logforward.conf', $logforward, 0644);
+        } else {
+            copy(__DIR__ . '/../../resources/rsyslog/rsyslog.conf', '/etc/rsyslog.conf');
+        }
     }
 }

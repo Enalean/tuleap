@@ -38,7 +38,7 @@ class GetWhitelistedKeys implements Dispatchable
     public const NAME = 'getWhitelistedKeys';
 
     /**
-     * @var array
+     * @var array<string, bool>
      */
     private $white_listed_keys = [
         \ProjectManager::CONFIG_PROJECT_APPROVAL => true,
@@ -62,16 +62,21 @@ class GetWhitelistedKeys implements Dispatchable
         UserSuspensionManager::CONFIG_INACTIVE_EMAIL => true
     ];
 
-    public function addPluginsKeys($key_name)
+    public function addPluginsKeys(string $key_name): void
     {
         $this->white_listed_keys[$key_name] = true;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getWhiteListedKeys()
+    public function getWhiteListedKeys(): array
     {
-        return $this->white_listed_keys;
+        return array_keys($this->white_listed_keys);
+    }
+
+    public function isKeyWhiteListed(string $key): bool
+    {
+        return isset($this->white_listed_keys[$key]);
     }
 }
