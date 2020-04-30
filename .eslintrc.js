@@ -208,7 +208,11 @@ module.exports = {
                 "cypress/globals": true
             },
             rules: {
-                "cypress/require-data-selectors": "error"
+                "cypress/require-data-selectors": "error",
+                "cypress/no-unnecessary-waiting": "error",
+                "cypress/no-assigning-return-values": "error",
+                "cypress/assertion-before-screenshot": "error",
+                "cypress/no-force": "warn"
             }
         }
     ]
