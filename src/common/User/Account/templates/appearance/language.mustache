@@ -2,7 +2,13 @@
     <label class="tlp-label">{{# gettext }}Language{{/ gettext }}</label>
     {{# languages }}
         <label class="tlp-label tlp-radio">
-            <input type="radio" name="language_id" value="{{ id }}" {{# is_checked }}checked{{/ is_checked }}>
+            <input
+                type="radio"
+                name="language_id"
+                value="{{ id }}"
+                {{# is_checked }}checked{{/ is_checked }}
+                data-test="user-prefs-language-selector-{{ id }}"
+            >
             {{ label }}
         </label>
     {{/ languages }}

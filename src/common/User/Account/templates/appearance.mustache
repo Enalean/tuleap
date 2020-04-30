@@ -1,5 +1,5 @@
 <div class="user-preferences">
-    <h1 class="user-preferences-title">
+    <h1 class="user-preferences-title" data-test="user-preferences-title">
         {{# gettext }}Preferences{{/ gettext }}
     </h1>
     <div class="user-preferences-container">
@@ -31,7 +31,7 @@
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
 
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary" data-test="user-prefs-appearance-section-submit">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>

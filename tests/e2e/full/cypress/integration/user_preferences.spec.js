@@ -248,4 +248,124 @@ describe("User preferences", () => {
             });
         });
     });
+
+    describe("in the [Appearance & Language] tab", () => {
+        beforeEach(() => {
+            cy.visit("/account/appearance");
+        });
+
+        describe("in the language section", () => {
+            it("the user can set French as his language", () => {
+                cy.get("[data-test=user-prefs-language-selector-fr_FR]").click();
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-language-selector-fr_FR]").should("be.checked");
+                cy.get("[data-test=user-preferences-title]").contains("Préférences");
+            });
+
+            it("the user can set English as his language", () => {
+                cy.get("[data-test=user-prefs-language-selector-en_US]").click();
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+
+                assertFeedbackContainsMessage("Les préférences utilisateur ont été mises à jour");
+
+                cy.get("[data-test=user-prefs-language-selector-en_US]").should("be.checked");
+                cy.get("[data-test=user-preferences-title]").contains("Preferences");
+            });
+        });
+
+        describe("in the Theme color section", () => {
+            function assertColorPreviewIs(color_name) {
+                cy.get("[data-test=user-preferences-section-appearance-preview]").should(
+                    "have.class",
+                    `user-preferences-section-appearance-preview-${color_name}`
+                );
+            }
+
+            it("the user can change the theme color of Tuleap", () => {
+                const available_colors = ["blue", "green", "grey", "orange", "purple", "red"];
+
+                available_colors.forEach((color) => {
+                    cy.get("[data-test=user-preferences-color-selector]").select(color, {
+                        force: true,
+                    });
+                    assertColorPreviewIs(color);
+                    cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                    assertFeedbackContainsMessage("User preferences successfully updated");
+
+                    // eslint-disable-next-line cypress/require-data-selectors
+                    cy.get("body").should("have.class", `theme-${color}`);
+                    cy.get("[data-test=user-preferences-color-selector]").should(
+                        "have.value",
+                        color
+                    );
+                });
+            });
+        });
+
+        describe("the user can set the display density", () => {
+            it("to the condensed mode", () => {
+                cy.get("[data-test=user-prefs-display-density-condensed]").click();
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").should("have.class", "theme-condensed");
+            });
+
+            it("to the comfortable mode", () => {
+                cy.get("[data-test=user-prefs-display-density-comfortable]").click();
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                // eslint-disable-next-line cypress/require-data-selectors
+                cy.get("body").should("not.have.class", "theme-condensed");
+            });
+        });
+
+        describe("in the Enable accessibility mode", () => {
+            it("the user can enable the option", () => {
+                cy.get("[data-test=user-preferences-accessibility-selector]").click();
+                cy.get("[data-test=user-preferences-section-appearance-preview]").should(
+                    "not.have.class",
+                    `user-preferences-section-appearance-preview-without-accessibility`
+                );
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-preferences-accessibility-selector]").should("be.checked");
+                cy.get("[data-user-has-accessibility-mode]").contains(1);
+            });
+
+            it("the user can disable the option", () => {
+                cy.get("[data-test=user-preferences-accessibility-selector]").click();
+                cy.get("[data-test=user-preferences-section-appearance-preview]").should(
+                    "have.class",
+                    `user-preferences-section-appearance-preview-without-accessibility`
+                );
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-preferences-accessibility-selector]").should(
+                    "not.be.checked"
+                );
+                cy.get("[data-user-has-accessibility-mode]").contains(0);
+            });
+        });
+
+        describe("in the username display section", () => {
+            it("the user can choose the way usernames are displayed", () => {
+                cy.get("[data-test=user-prefs-username-display-format-select]").select("2");
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-username-display-format-select]").should(
+                    "have.value",
+                    "2"
+                );
+            });
+        });
+    });
 });
