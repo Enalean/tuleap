@@ -19,6 +19,7 @@
                                             class="tlp-button-primary tlp-button-outline tlp-button-small account-information-avatar-button"
                                             title="{{# gettext }}Change avatar{{/ gettext }}"
                                             id="account-information-avatar-button"
+                                            data-test="account-information-avatar-button"
                                             data-target-modal-id="account-information-avatar-modal"
                                     >
                                         <i class="tlp-button-icon fa fa-pencil account-information-avatar-button-icon"></i>
@@ -45,6 +46,7 @@
                                         <input type="text"
                                                class="tlp-input"
                                                id="realname"
+                                               data-test="user-real-name"
                                                name="realname"
                                                value="{{ real_name }}"
                                                placeholder="Fox Mulder"
@@ -64,7 +66,17 @@
                                 {{# can_change_email }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="email">{{# gettext }}Email{{/ gettext }} <i class="fa fa-asterisk"></i></label>
-                                        <input type="email" class="tlp-input" id="email" name="email" value="{{ email }}" size="50" placeholder="fox@example.com" autocomplete="email" required>
+                                        <input type="email"
+                                               class="tlp-input"
+                                               id="email"
+                                               name="email"
+                                               data-test="user-email"
+                                               value="{{ email }}"
+                                               size="50"
+                                               placeholder="fox@example.com"
+                                               autocomplete="email"
+                                               required
+                                        >
                                         {{# change_email_pending }}
                                         <p
                                             class="tlp-text-warning"
@@ -90,7 +102,12 @@
                                 {{# timezone }}
                                     <div class="tlp-form-element">
                                         <label class="tlp-label" for="timezone">{{# gettext }}Timezone{{/ gettext }}</label>
-                                        <select class="tlp-select tlp-select-adjusted" id="timezone" name="timezone" data-placeholder="{{ placeholder }}">
+                                        <select class="tlp-select tlp-select-adjusted"
+                                                id="timezone"
+                                                name="timezone"
+                                                data-placeholder="{{ placeholder }}"
+                                                data-test="user-timezone"
+                                        >
                                             {{^ has_one_selected }}
                                                 <option></option>
                                             {{/ has_one_selected }}
@@ -158,12 +175,14 @@
                         <input type="file"
                                name="avatar"
                                id="account-information-avatar-modal-select-file"
+                               data-test="account-information-avatar-modal-select-file"
                                class="account-information-avatar-modal-select-file"
                                accept="image/*">
                     </span>
                     <button type="button"
                             class="tlp-button-secondary"
                             id="account-information-avatar-modal-use-default-button"
+                            data-test="account-information-avatar-modal-use-default-button"
                     >
                         <i class="fa fa-trash-o tlp-button-icon"></i>
                         {{# gettext }}Use default avatar{{/gettext}}

@@ -50,7 +50,10 @@ describe("Project admin", function () {
             cy.get(
                 "[data-test=project-admin-members-add-user-select] + .select2-container"
             ).click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-search__field").type("ProjectMember{enter}");
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-result-user").click();
             cy.get('[data-test="project-admin-submit-add-member"]').click();
 
@@ -62,7 +65,7 @@ describe("Project admin", function () {
         it("should verify that icon for project visibility is correct", function () {
             cy.visitProjectService("project-admin-test", "Admin");
 
-            cy.get(".project-sidebar-title-icon").then(($icon) => {
+            cy.get("[data-test=project-icon]").then(($icon) => {
                 expect($icon[0].className).to.contains("fa-unlock");
             });
         });

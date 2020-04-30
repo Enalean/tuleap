@@ -303,7 +303,7 @@ class Docman_MetadataHtmlString extends Docman_MetadataHtml
             $value = $this->md->getDefaultValue();
         }
         $value = $this->hp->purify($value);
-        $field = '<input type="text" class="text_field" name="' . $this->_getFieldName() . '" value="' . $value . '" id="' . $this->md->getLabel() . '" />';
+        $field = '<input type="text" class="text_field" name="' . $this->_getFieldName() . '" value="' . $value . '" id="' . $this->md->getLabel() . '" data-test="' . $this->md->getLabel() . '"  />';
         return $field;
     }
 }

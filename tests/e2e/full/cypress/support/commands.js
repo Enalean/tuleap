@@ -33,39 +33,39 @@ Cypress.Commands.overwrite("visit", (originalFn, url, options = {}) => {
 
 Cypress.Commands.add("ProjectAdministratorLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("ProjectAdministrator");
-    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+    cy.get("[data-test=form_loginname]").type("ProjectAdministrator");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("projectMemberLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("ProjectMember");
-    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+    cy.get("[data-test=form_loginname]").type("ProjectMember");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("platformAdminLogin", () => {
     cy.visit("/");
 
-    cy.get("#form_loginname").type("admin");
-    cy.get("#form_pw").type("welcome0{enter}");
+    cy.get("[data-test=form_loginname]").type("admin");
+    cy.get("[data-test=form_pw]").type("welcome0{enter}");
 });
 
 Cypress.Commands.add("RestrictedMemberLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("RestrictedMember");
-    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+    cy.get("[data-test=form_loginname]").type("RestrictedMember");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("RestrictedRegularUserLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("RestrictedRegularUser");
-    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+    cy.get("[data-test=form_loginname]").type("RestrictedRegularUser");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("heisenbergLogin", () => {
     cy.visit("/");
-    cy.get("#form_loginname").type("heisenberg");
-    cy.get("#form_pw").type("Correct Horse Battery Staple{enter}");
+    cy.get("[data-test=form_loginname]").type("heisenberg");
+    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
 });
 
 Cypress.Commands.add("userLogout", () => {
@@ -109,7 +109,7 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
     cy.get("[data-test=platform-administration-link]").click();
     cy.get("[data-test=global_access_right]").click({ force: true });
 
-    cy.get('[type="radio"]').check("restricted");
+    cy.get("[data-test=access_mode-restricted]").check();
 
     cy.get("[data-test=update_forge_access_button]").click({ force: true });
 

@@ -58,8 +58,10 @@ describe("Project Milestones Widget", function () {
             cy.get("[data-test=myprojectmilestone]").click();
 
             cy.get("[data-test=select-project-milestones-widget] + .select2-container").click();
+            // ignore rule for select2
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(".select2-search__field").type("ProjectMilestones{enter}");
-
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get(
                 "#select2-select-project-milestones-widget-results .select2-results__option--highlighted"
             ).click();

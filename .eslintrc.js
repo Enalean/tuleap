@@ -122,7 +122,7 @@ module.exports = {
                     methods: ["sanitize", "render", "getPOFileFromLocale"]
                 }
             }
-        ]
+        ],
     },
     overrides: [
         {
@@ -206,6 +206,9 @@ module.exports = {
             files: ["tests/e2e/**/*.js", "plugins/**/tests/e2e/**/**/*.js"],
             env: {
                 "cypress/globals": true
+            },
+            rules: {
+                "cypress/require-data-selectors": "error"
             }
         }
     ]

@@ -165,7 +165,8 @@ final class DisplayAccountInformationControllerTest extends TestCase
             []
         );
         $output = ob_get_clean();
-        $this->assertStringContainsString('name="email" value="alice@example.com"', $output);
+        $this->assertStringContainsString('name="email"', $output);
+        $this->assertStringContainsString('value="alice@example.com"', $output);
     }
 
     public function testItRendersThePageWithEmailReadOnly(): void
@@ -179,6 +180,7 @@ final class DisplayAccountInformationControllerTest extends TestCase
         );
         $output = ob_get_clean();
         $this->assertStringContainsString('<p>alice@example.com</p>', $output);
-        $this->assertStringNotContainsString('name="email" value="alice@example.com"', $output);
+        $this->assertStringNotContainsString('name="email"', $output);
+        $this->assertStringNotContainsString('value="alice@example.com"', $output);
     }
 }

@@ -38,15 +38,15 @@ describe("User preferences", () => {
 
         describe("User is able to", () => {
             it("Change his name", () => {
-                cy.get("#realname").clear().type("Heisenberg");
+                cy.get("[data-test=user-real-name]").clear().type("Heisenberg");
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
-                cy.get("#realname").should("have.value", "Heisenberg");
+                cy.get("[data-test=user-real-name]").should("have.value", "Heisenberg");
                 assertFeedbackContainsMessage("Real name successfully updated");
             });
 
             it("Change his email address", () => {
-                cy.get("#email").clear().type("heisenberg@vamonos-pest.us");
+                cy.get("[data-test=user-email]").clear().type("heisenberg@vamonos-pest.us");
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
                 cy.get("[data-test=user-prefs-email-need-confirmation-warning]").contains(
@@ -58,16 +58,16 @@ describe("User preferences", () => {
             });
 
             it("Change his timezone", () => {
-                cy.get("#timezone").select("America/Denver", { force: true });
+                cy.get("[data-test=user-timezone]").select("America/Denver", { force: true });
                 cy.get("[data-test=user-prefs-submit-button]").click();
 
-                cy.get("#timezone").should("have.value", "America/Denver");
+                cy.get("[data-test=user-timezone]").should("have.value", "America/Denver");
                 assertFeedbackContainsMessage("Timezone successfully updated");
             });
 
             it("Change his avatar", () => {
-                cy.get("#account-information-avatar-button").click();
-                cy.get("#account-information-avatar-modal-select-file")
+                cy.get("[data-test=account-information-avatar-button]").click();
+                cy.get("[data-test=account-information-avatar-modal-select-file]")
                     .uploadFixtureFile("heisenberg.jpg", "image/jpg")
                     .trigger("change", { force: true });
 
@@ -76,8 +76,8 @@ describe("User preferences", () => {
             });
 
             it("Change his current avatar for the default one", () => {
-                cy.get("#account-information-avatar-button").click();
-                cy.get("#account-information-avatar-modal-use-default-button").click();
+                cy.get("[data-test=account-information-avatar-button]").click();
+                cy.get("[data-test=account-information-avatar-modal-use-default-button]").click();
                 cy.get("[data-test=user-prefs-save-avatar-button]").click();
 
                 assertFeedbackContainsMessage("Avatar changed!");
@@ -87,9 +87,9 @@ describe("User preferences", () => {
 
     describe("in the [Security] Tab", () => {
         function typePasswords(current_password, new_password) {
-            cy.get("#current_password").type(current_password);
-            cy.get("#form_pw").type(new_password);
-            cy.get("#repeat_new_password").type(new_password);
+            cy.get("[data-test=current_password]").type(current_password);
+            cy.get("[data-test=new_password]").type(new_password);
+            cy.get("[data-test=repeat_new_password]").type(new_password);
         }
 
         beforeEach(() => {
@@ -116,7 +116,7 @@ describe("User preferences", () => {
         });
 
         it("the user can activate the 'remember me' option", () => {
-            cy.get("#account-remember-me").click({ force: true });
+            cy.get("[data-test=account-remember-me]").click({ force: true });
 
             assertFeedbackContainsMessage("User preferences successfully updated");
             assertFeedbackContainsMessage(
@@ -131,41 +131,35 @@ describe("User preferences", () => {
         });
 
         it("allows user to receive emails about site updates and security notices", () => {
-            const site_update_checkbox = "[data-test=user-prefs-site-updates]";
-
-            cy.get(site_update_checkbox).click();
+            cy.get("[data-test=user-prefs-site-updates]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
 
-            cy.get(site_update_checkbox).should("have.checked", "checked");
+            cy.get("[data-test=user-prefs-site-updates]").should("have.checked", "checked");
 
             assertFeedbackContainsMessage("User preferences successfully updated");
         });
 
         it("allows user to receive community mailings", () => {
-            const community_mailing_checkbox = "[data-test=user-prefs-community-mailing]";
-
-            cy.get(community_mailing_checkbox).click();
+            cy.get("[data-test=user-prefs-community-mailing]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
 
-            cy.get(community_mailing_checkbox).should("have.checked", "checked");
+            cy.get("[data-test=user-prefs-community-mailing]").should("have.checked", "checked");
 
             assertFeedbackContainsMessage("User preferences successfully updated");
         });
 
         it("allows user to change the format of the tracker emails to text", () => {
-            const text_format_radio_button = "[data-test=user-prefs-text-format]";
-            cy.get(text_format_radio_button).click();
+            cy.get("[data-test=user-prefs-text-format]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
-            cy.get(text_format_radio_button).should("have.checked", "checked");
+            cy.get("[data-test=user-prefs-text-format]").should("have.checked", "checked");
 
             assertFeedbackContainsMessage("Email format preference successfully updated");
         });
 
         it("allows user to change the format of the tracker emails to HTML", () => {
-            const html_format_radio_button = "[data-test=user-prefs-html-format]";
-            cy.get(html_format_radio_button).click();
+            cy.get("[data-test=user-prefs-html-format]").click();
             cy.get("[data-test=user-prefs-update-notification]").click();
-            cy.get(html_format_radio_button).should("have.checked", "checked");
+            cy.get("[data-test=user-prefs-html-format]").should("have.checked", "checked");
 
             assertFeedbackContainsMessage("Email format preference successfully updated");
         });
@@ -178,10 +172,10 @@ describe("User preferences", () => {
 
         describe("in the SSH keys section", () => {
             it("the user can add his public SSH key", () => {
-                cy.get("#add-ssh-key-button").click();
+                cy.get("[data-test=add-ssh-key-button]").click();
                 cy.fixture("heisenberg.pub", "utf-8").then((heisenberg_public_ssh_key) => {
-                    cy.get("#ssh-key").type(heisenberg_public_ssh_key);
-                    cy.get("#submit-new-ssh-key-button").click();
+                    cy.get("[data-test=ssh-key]").type(heisenberg_public_ssh_key);
+                    cy.get("[data-test=submit-new-ssh-key-button]").click();
                     assertFeedbackContainsMessage(
                         "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
                     );
@@ -192,7 +186,7 @@ describe("User preferences", () => {
 
             it("the user can remove his public SSH key", () => {
                 cy.get("[data-test=user-prefs-remove-ssh-key-checkbox]").click();
-                cy.get("#remove-ssh-keys-button").click();
+                cy.get("[data-test=remove-ssh-keys-button]").click();
 
                 assertFeedbackContainsMessage(
                     "SSH key(s) updated in database, will be propagated on filesystem in a few minutes, please be patient."
@@ -204,13 +198,15 @@ describe("User preferences", () => {
 
         describe("in the personal access key section", () => {
             it("the user can generate a personal access key", () => {
-                cy.get("#generate-access-key-button").click();
-                cy.get("#access-key-description").type("An access key for GIT and REST");
+                cy.get("[data-test=generate-access-key-button]").click();
+                cy.get("[data-test=access-key-description]").type("An access key for GIT and REST");
                 cy.get("[data-test=user-prefs-personal-access-key-scope-option]").click({
                     multiple: true,
                 });
-                cy.get("#access-key-expiration-date-picker").type("2099-12-31", { force: true });
-                cy.get("#generate-new-access-key-button").click();
+                cy.get("[data-test=access-key-expiration-date-picker]").type("2099-12-31", {
+                    force: true,
+                });
+                cy.get("[data-test=generate-new-access-key-button]").click();
 
                 cy.get("[data-test=user-prefs-add-personal-access-key-feedback]").contains(
                     "Here is your new access key. Please make sure to copy it, you won't be able to see it again!"
@@ -221,7 +217,7 @@ describe("User preferences", () => {
 
             it("the user can revoke his personal access key", () => {
                 cy.get("[data-test=user-prefs-personal-access-key-checkbox]").click();
-                cy.get("#button-revoke-access-tokens").click();
+                cy.get("[data-test=button-revoke-access-tokens]").click();
 
                 assertFeedbackContainsMessage("Access keys have been successfully deleted.");
 
@@ -231,9 +227,9 @@ describe("User preferences", () => {
 
         describe("in the SVN Tokens section", () => {
             it("the user is able to create a SVN token", () => {
-                cy.get("#generate-svn-token-button").click();
-                cy.get("#svn-token-description").type("My handsome SVN token");
-                cy.get("#generate-new-svn-token-button").click();
+                cy.get("[data-test=generate-svn-token-button]").click();
+                cy.get("[data-test=svn-token-description]").type("My handsome SVN token");
+                cy.get("[data-test=generate-new-svn-token-button]").click();
 
                 cy.get("[data-test=user-prefs-add-svn-token-feedback]").contains(
                     "Here is your new SVN token. Please make sure you copy it, you won't be able to see it again!"
@@ -245,7 +241,7 @@ describe("User preferences", () => {
 
             it("the user is able to revoke his SVN tokens", () => {
                 cy.get("[data-test=user-prefs-revoke-svn-token-checkbox]").click();
-                cy.get("#button-revoke-svn-tokens").click();
+                cy.get("[data-test=button-revoke-svn-tokens]").click();
                 cy.get("[data-test=user-prefs-svn-token]").should("have.length", 0);
 
                 assertFeedbackContainsMessage("SVN tokens have been successfully deleted");

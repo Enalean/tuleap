@@ -84,6 +84,8 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                         ['default_url' => $this->url],
                         ['action' => 'confirmDelete', 'id' => $this->item->getId(), 'version' => $versions[$key]->getNumber()]
                     );
+                    $delete_version = "delete-" . $this->item->getId() . "-" . $versions[$key]->getNumber();
+
                     $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                     $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
@@ -108,7 +110,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     } else {
                         $content .= '<td></td>';
                     }
-                    $content .= '<td align="center"><a href="' . $delete . '"><img src="' . util_get_image_theme("ic/trash.png") . '" height="16" width="16" border="0"></a></td>';
+                    $content .= '<td align="center"><a href="' . $delete . '" data-test="' . $delete_version . '"><img src="' . util_get_image_theme("ic/trash.png") . '" height="16" width="16" border="0"></a></td>';
                     $content .= '</tr>';
                 }
                 $content .= '</table>';

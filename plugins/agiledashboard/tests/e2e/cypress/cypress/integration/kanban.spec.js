@@ -76,6 +76,8 @@ describe("Kanban for the Agile Dashboard service", () => {
                     cy.wait("@post_kanban_item");
                 });
 
+            // need to escape for drag and drop only works on body and global body seems erased by angular
+            // eslint-disable-next-line cypress/require-data-selectors
             cy.get("body").type("{esc}");
 
             cy.contains("[data-test=kanban-column-header-wip-count]", "3");

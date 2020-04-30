@@ -16,8 +16,8 @@
         <input type="hidden" name="{{ csrf_token_name }}" value="{{ csrf_token_value }}">
         <input type="hidden" name="prompt" value="{{ prompt_parameter }}">
 
-        <input type="text" id="form_loginname" name="form_loginname" placeholder="{{ account_login_name }}" value="{{ form_loginname }}"  required autofocus autocomplete="username">
-        <input type="password" id="form_pw" name="form_pw" placeholder="{{ account_login_password }}" value="" required autocomplete="current-password">
+        <input type="text" id="form_loginname" name="form_loginname" data-test="form_loginname"  placeholder="{{ account_login_name }}" value="{{ form_loginname }}"  required autofocus autocomplete="username">
+        <input type="password" id="form_pw" name="form_pw" data-test="form_pw" placeholder="{{ account_login_password }}" value="" required autocomplete="current-password">
 
         <button type="submit" name="login" class="btn btn-primary">{{ account_login_login_btn }}</button>
 

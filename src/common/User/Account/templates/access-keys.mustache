@@ -18,6 +18,7 @@
                             type="button"
                             class="tlp-button-primary tlp-table-actions-element"
                             id="generate-access-key-button"
+                            data-test="generate-access-key-button"
                             data-target-modal-id="access-keys-generate-modal"
                     >
                         <i class="tlp-button-icon fa fa-plus"></i> {{# gettext }}Generate new key{{/ gettext }}
@@ -25,6 +26,7 @@
                     {{# has_access_keys }}
                         <button type="submit"
                                 id="button-revoke-access-tokens"
+                                data-test="button-revoke-access-tokens"
                                 name="revoke-access-tokens"
                                 class="tlp-button-danger tlp-button-outline tlp-table-actions-element"
                                 disabled
@@ -119,8 +121,13 @@
 
             <div class="tlp-form-element">
                 <label class="tlp-label" for="access-key-description">{{# gettext }}Access key description{{/ gettext }}</label>
-                <textarea id="access-key-description" name="access-key-description" rows="5" class="tlp-textarea"
-                          placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"></textarea>
+                <textarea id="access-key-description"
+                          data-test="access-key-description"
+                          name="access-key-description"
+                          rows="5"
+                          class="tlp-textarea"
+                          placeholder="{{# gettext }}What's this access key for?{{/ gettext }}"
+                ></textarea>
             </div>
 
             <div class="tlp-form-element">
@@ -137,7 +144,13 @@
                 <label for="access-key-expiration-date-picker" class="tlp-label">{{# gettext }}Access key expiration date{{/ gettext }}</label>
                 <div class="tlp-form-element tlp-form-element-prepend">
                     <span class="tlp-prepend"><i class="fa fa-calendar"></i></span>
-                    <input name="access-key-expiration-date" type="text" id="access-key-expiration-date-picker" class="tlp-input tlp-input-date" size="11">
+                    <input name="access-key-expiration-date"
+                           type="text"
+                           id="access-key-expiration-date-picker"
+                           data-test="access-key-expiration-date-picker"
+                           class="tlp-input tlp-input-date"
+                           size="11"
+                    >
                 </div>
                 <p class="tlp-text-info">
                     {{# gettext }}The key will expire at the end of the selected date. Keep it empty if you don't want that this key will expire.{{/ gettext }}
@@ -146,7 +159,14 @@
         </div>
         <div class="tlp-modal-footer">
             <button type="button" class="tlp-button-primary tlp-button-outline tlp-modal-action" data-dismiss="modal">{{# gettext }}Cancel{{/ gettext }}</button>
-            <button type="submit" class="tlp-button-primary tlp-modal-action" id="generate-new-access-key-button" disabled>{{# gettext }}Generate new key{{/ gettext }}</button>
+            <button type="submit"
+                    class="tlp-button-primary tlp-modal-action"
+                    id="generate-new-access-key-button"
+                    data-test="generate-new-access-key-button"
+                    disabled
+            >
+                {{# gettext }}Generate new key{{/ gettext }}
+            </button>
         </div>
     </form>
 </div>

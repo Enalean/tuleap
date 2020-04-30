@@ -43,7 +43,7 @@ describe("Docman", function () {
                 cy.visit(`/plugins/docman/?group_id=${this.docman_project_id}`);
                 cy.get("[data-test=document-switch-to-old-ui]").click();
 
-                cy.get(".toolbar").contains("Admin").click();
+                cy.get("[data-test=toolbar]").contains("Admin").click();
                 cy.contains("Manage Properties")
                     .should("have.attr", "href")
                     .as("manage_properties_url");
@@ -59,10 +59,13 @@ describe("Docman", function () {
 
                 cy.contains("New document").click();
                 cy.get("[data-test=create_document_next]").click();
-                cy.get("#title").type("my document title");
-                cy.get('[type="radio"]').check("4");
+                cy.get("[data-test=title]").type("my document title");
+                cy.get("[data-test=item_type_4]").check();
+
+                // ignore rule for ckeditor
+                // eslint-disable-next-line cypress/require-data-selectors
                 cy.get(".cke_wysiwyg_frame").type("my content");
-                cy.get("#docman_new_form").submit();
+                cy.get("[data-test=docman_new_form]").submit();
 
                 cy.get("[data-test=feedback]").contains(
                     '"my custom property" is required, please fill the field.'
@@ -92,7 +95,7 @@ describe("Docman", function () {
 
             it("remove a property", function () {
                 cy.visit(this.manage_properties_url);
-                cy.get('[href*="action=admin_delete_metadata"]').click();
+                cy.get("[data-test=html_trash_link]").click();
 
                 cy.get("[data-test=feedback]").contains(
                     '"my custom property" successfully deleted'
@@ -104,7 +107,7 @@ describe("Docman", function () {
             it("create an embed document", function () {
                 cy.contains("New document").click();
                 cy.get("[data-test=create_document_next]").click();
-                cy.get("#title").type("my document title");
+                cy.get("[data-test=title]").type("my document title");
 
                 cy.on("uncaught:exception", (err) => {
                     // the message bellow is only thown by ckeditor, if any other js exception is thrown
@@ -115,11 +118,11 @@ describe("Docman", function () {
                     return false;
                 });
 
-                cy.get('[type="radio"]').check("4");
+                cy.get("[data-test=item_type_4]").check();
                 cy.window().then((win) => {
                     win.CKEDITOR.instances.embedded_content.setData("<p>my content</p>");
                 });
-                cy.get("#docman_new_form").submit();
+                cy.get("[data-test=docman_new_form]").submit();
 
                 cy.get("[data-test=feedback]").contains("Document successfully created.");
                 cy.contains("my document title").click();
@@ -133,7 +136,7 @@ describe("Docman", function () {
                 cy.get(
                     `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
                 ).click();
-                cy.get(".docman_item_menu").contains("New version").click();
+                cy.get("[data-test=new-version]").click();
                 cy.get("[data-test=docman_changelog]").type("new version");
 
                 cy.get("[data-test=docman_create_new_version]").click();
@@ -145,9 +148,9 @@ describe("Docman", function () {
                 cy.get(
                     `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
                 ).click();
-                cy.get(".docman_item_menu").contains("History").click();
-                cy.get('[href*="action=confirmDelete"]').first().click();
-                cy.get('[name="confirm"]').click();
+                cy.get("[data-test=history]").click();
+                cy.get(`[data-test=delete-${this.embedded_document_id}-2]`).click();
+                cy.get("[data-test=confirm-deletion]").click();
 
                 cy.get("[data-test=feedback]").contains("successfully deleted");
             });
@@ -156,9 +159,9 @@ describe("Docman", function () {
                 cy.get(
                     `[data-test=document_item][data-test-document-id=${this.embedded_document_id}]`
                 ).click();
-                cy.get(".docman_item_menu").contains("History").click();
-                cy.get('[href*="action=confirmDelete"]').first().click();
-                cy.get('[name="confirm"]').click();
+                cy.get("[data-test=history]").click();
+                cy.get(`[data-test=delete-${this.embedded_document_id}-1]`).click();
+                cy.get("[data-test=confirm-deletion]").click();
 
                 cy.get("[data-test=feedback]").contains(
                     "Cannot delete last version of a file. If you want to continue, please delete the document itself."
@@ -172,7 +175,7 @@ describe("Docman", function () {
                 cy.get("[data-test=document_type]").select("1");
                 cy.get("[data-test=create_document_next]").click();
 
-                cy.get("#title").type("my folder name");
+                cy.get("[data-test=title]").type("my folder name");
 
                 cy.get("[data-test=docman_create]").click();
 
