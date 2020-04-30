@@ -18,7 +18,13 @@
                         <p>{{# gettext }}Tuleap experimental features in preview mode for bleeding edge users. Only use it if you know what you are doing.{{/ gettext }}</p>
                         <div class="tlp-form-element">
                             <label class="tlp-label tlp-checkbox">
-                                <input type="checkbox" name="lab_features" value="1" {{# lab_features_checked }}checked{{/ lab_features_checked }}>
+                                <input
+                                    type="checkbox"
+                                    name="lab_features"
+                                    value="1"
+                                    {{# lab_features_checked }}checked{{/ lab_features_checked }}
+                                    data-test="user-prefs-lab-mode-checkbox"
+                                >
                                 {{# gettext }}Enable lab mode{{/ gettext }}
                             </label>
                         </div>
@@ -28,7 +34,7 @@
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
 
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary" data-test="user-prefs-experimental-tab-submit-button">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>

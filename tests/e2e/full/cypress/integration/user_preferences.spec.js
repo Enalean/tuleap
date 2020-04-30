@@ -368,4 +368,103 @@ describe("User preferences", () => {
             });
         });
     });
+
+    describe("in the [Edition & CSV] tab", () => {
+        beforeEach(() => {
+            cy.visit("/account/edition");
+        });
+
+        describe("in the default tracker text fields format section", () => {
+            it("the user can choose the HTML format", () => {
+                cy.get("[data-test=user-prefs-tracker-default-format-html]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-tracker-default-format-html]").should("be.checked");
+            });
+
+            it("the user can choose the Text format", () => {
+                cy.get("[data-test=user-prefs-tracker-default-format-text]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-tracker-default-format-text]").should("be.checked");
+            });
+        });
+
+        describe("in the CSV separator section", () => {
+            it("the user can choose Semicolon separators", () => {
+                cy.get("[data-test=user-prefs-csv-separator-semicolon]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-csv-separator-semicolon]").should("be.checked");
+            });
+
+            it("the user can choose Tab separators", () => {
+                cy.get("[data-test=user-prefs-csv-separator-tab]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-csv-separator-tab]").should("be.checked");
+            });
+
+            it("the user can choose Comma separators", () => {
+                cy.get("[data-test=user-prefs-csv-separator-comma]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-csv-separator-comma]").should("be.checked");
+            });
+        });
+
+        describe("in the CSV date format section", () => {
+            it("the user can choose the day/month/year date format", () => {
+                cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-csv-dateformat-day-month-year]").should("be.checked");
+            });
+
+            it("the user can choose the month/day/year format", () => {
+                cy.get("[data-test=user-prefs-csv-dateformat-month-day-year]").click();
+                cy.get("[data-test=user-prefs-edition-tab-submit-button]").click();
+
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-csv-dateformat-month-day-year]").should("be.checked");
+            });
+        });
+    });
+
+    describe("in the [Experimental] tab", () => {
+        beforeEach(() => {
+            cy.visit("account/experimental");
+        });
+
+        it("the user can activate the lab mode", () => {
+            cy.get("[data-test=user-prefs-lab-mode-checkbox]").click();
+            cy.get("[data-test=user-prefs-experimental-tab-submit-button]").click();
+
+            assertFeedbackContainsMessage("User preferences successfully updated");
+
+            cy.get("[data-test=user-prefs-lab-mode-checkbox]").should("be.checked");
+        });
+
+        it("the user can deactivate the lab mode", () => {
+            cy.get("[data-test=user-prefs-lab-mode-checkbox]").click();
+            cy.get("[data-test=user-prefs-experimental-tab-submit-button]").click();
+
+            assertFeedbackContainsMessage("User preferences successfully updated");
+
+            cy.get("[data-test=user-prefs-lab-mode-checkbox]").should("not.be.checked");
+        });
+    });
 });

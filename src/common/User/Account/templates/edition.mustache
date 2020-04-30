@@ -21,6 +21,7 @@
                             <label class="tlp-label tlp-radio">
                                 <input type="radio"
                                        name="user_text_default_format"
+                                       data-test="user-prefs-tracker-default-format-html"
                                        value="html"
                                        {{# user_text_default_format_html }}checked{{/ user_text_default_format_html }}>
                                 HTML
@@ -28,6 +29,7 @@
                             <label class="tlp-label tlp-radio">
                                 <input type="radio"
                                        name="user_text_default_format"
+                                       data-test="user-prefs-tracker-default-format-text"
                                        value="text"
                                        {{# user_text_default_format_text }}checked{{/ user_text_default_format_text }}>
                                 {{# gettext }}Text{{/ gettext }}
@@ -37,15 +39,33 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label">{{# gettext }}CSV separator{{/ gettext }}</label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="user_csv_separator" value="comma" {{# user_csv_separator_comma }}checked{{/ user_csv_separator_comma }}>
+                                <input
+                                    type="radio"
+                                    name="user_csv_separator"
+                                    data-test="user-prefs-csv-separator-comma"
+                                    value="comma"
+                                    {{# user_csv_separator_comma }}checked{{/ user_csv_separator_comma }}
+                                >
                                 {{# gettext }}Comma{{/ gettext }}
                             </label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="user_csv_separator" value="semicolon" {{# user_csv_separator_semicolon }}checked{{/ user_csv_separator_semicolon }}>
+                                <input
+                                    type="radio"
+                                    name="user_csv_separator"
+                                    data-test="user-prefs-csv-separator-semicolon"
+                                    value="semicolon"
+                                    {{# user_csv_separator_semicolon }}checked{{/ user_csv_separator_semicolon }}
+                                >
                                 {{# gettext }}Semicolon{{/ gettext }}
                             </label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="user_csv_separator" value="tab" {{# user_csv_separator_tab }}checked{{/ user_csv_separator_tab }}>
+                                <input
+                                    type="radio"
+                                    name="user_csv_separator"
+                                   data-test="user-prefs-csv-separator-tab"
+                                    value="tab"
+                                    {{# user_csv_separator_tab }}checked{{/ user_csv_separator_tab }}
+                                >
                                 {{# gettext }}Tab{{/ gettext }}
                             </label>
                         </div>
@@ -53,11 +73,23 @@
                         <div class="tlp-form-element">
                             <label class="tlp-label">{{# gettext }}CSV date format{{/ gettext }}</label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="user_csv_dateformat" value="month_day_year" {{# user_csv_dateformat_mmddyyyy }}checked{{/ user_csv_dateformat_mmddyyyy }}>
+                                <input
+                                    type="radio"
+                                    name="user_csv_dateformat"
+                                    data-test="user-prefs-csv-dateformat-month-day-year"
+                                    value="month_day_year"
+                                    {{# user_csv_dateformat_mmddyyyy }}checked{{/ user_csv_dateformat_mmddyyyy }}
+                                >
                                 <code>MM/DD/YYYY</code> {{# gettext }}(month/day/year){{/ gettext }}
                             </label>
                             <label class="tlp-label tlp-radio">
-                                <input type="radio" name="user_csv_dateformat" value="day_month_year" {{# user_csv_dateformat_ddmmyyyy }}checked{{/ user_csv_dateformat_ddmmyyyy }}>
+                                <input
+                                    type="radio"
+                                    name="user_csv_dateformat"
+                                    data-test="user-prefs-csv-dateformat-day-month-year"
+                                    value="day_month_year"
+                                    {{# user_csv_dateformat_ddmmyyyy }}checked{{/ user_csv_dateformat_ddmmyyyy }}
+                                >
                                 <code>DD/MM/YYYY</code> {{# gettext }}(day/month/year){{/ gettext }}
                             </label>
                         </div>
@@ -68,7 +100,7 @@
                             {{> csrf_token_input }}
                         {{/ csrf_token }}
 
-                        <button type="submit" class="tlp-button-primary">
+                        <button type="submit" class="tlp-button-primary" data-test="user-prefs-edition-tab-submit-button">
                             <i class="fa fa-floppy-o tlp-button-icon"></i> {{# gettext }}Update{{/ gettext }}
                         </button>
                     </section>
