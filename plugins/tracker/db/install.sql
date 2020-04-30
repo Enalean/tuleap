@@ -308,8 +308,7 @@ DROP TABLE IF EXISTS plugin_tracker_changeset_from_xml;
 CREATE TABLE plugin_tracker_changeset_from_xml(
    changeset_id INT(11) NOT NULL PRIMARY KEY,
    user_id INT(11) NOT NULL,
-   timestamp INT(11) NOT NULL,
-   xml_filename VARCHAR(50)
+   timestamp INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_changeset_value;

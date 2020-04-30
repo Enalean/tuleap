@@ -28,17 +28,15 @@ use Tuleap\DB\DataAccessObject;
 class ChangesetFromXmlDao extends DataAccessObject
 {
     public function saveChangesetIsCreatedFromXml(
-        string $xml_file_name,
         int $import_timestamp,
         int $user_id,
         int $changeset_id
     ): void {
         $this->getDB()->run(
-            'INSERT INTO plugin_tracker_changeset_from_xml (changeset_id, user_id, timestamp, xml_filename) VALUES (?, ?, ?, ?)',
+            'INSERT INTO plugin_tracker_changeset_from_xml (changeset_id, user_id, timestamp) VALUES (?, ?, ?)',
             $changeset_id,
             $user_id,
-            $import_timestamp,
-            $xml_file_name
+            $import_timestamp
         );
     }
 
