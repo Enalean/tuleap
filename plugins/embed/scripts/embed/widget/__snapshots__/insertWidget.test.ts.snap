@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`insertEmbed Includes embed after the div 1`] = `
+<body>
+  <div>
+    See mockup 
+    <a
+      href="https://example.com"
+    />
+    .
+  </div>
+  <iframe />
+</body>
+`;
+
+exports[`insertEmbed Includes embed after the h1 1`] = `
+<body>
+  <h1>
+    See mockup 
+    <a
+      href="https://example.com"
+    />
+    .
+  </h1>
+  <iframe />
+  <p>
+    Plop
+  </p>
+</body>
+`;
+
+exports[`insertEmbed Includes embed after the paragraph 1`] = `
+<body>
+  <p>
+    See mockup 
+    <a
+      href="https://example.com"
+    />
+    .
+  </p>
+  <iframe />
+</body>
+`;
+
+exports[`insertEmbed Includes embed after the paragraph even if it is deep in the hierarchy 1`] = `
+<body>
+  <div>
+    See mockup 
+    <b>
+      <i>
+        <span>
+          <a
+            href="https://example.com"
+          />
+        </span>
+      </i>
+    </b>
+    .
+  </div>
+  <iframe />
+</body>
+`;
+
+exports[`insertEmbed Includes embed inside the body 1`] = `
+<body>
+  See mockup 
+  <a
+    href="https://example.com"
+  />
+  .
+  <br />
+  <iframe />
+</body>
+`;
+
+exports[`insertEmbed Includes embed inside the li 1`] = `
+<body>
+  <ul>
+    <li>
+      See mockup 
+      <a
+        href="https://example.com"
+      />
+      .
+      <br />
+      <iframe />
+    </li>
+  </ul>
+</body>
+`;
+
+exports[`insertEmbed Includes embed inside the section 1`] = `
+<body>
+  <section>
+    See mockup 
+    <a
+      href="https://example.com"
+    />
+    .
+    <br />
+    <iframe />
+  </section>
+</body>
+`;
+
+exports[`insertEmbed Includes embed inside the td 1`] = `
+<body>
+  <table>
+    <tbody>
+      <tr>
+        <td>
+          See mockup 
+          <a
+            href="https://example.com"
+          />
+          .
+          <br />
+          <iframe />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+`;

@@ -1,0 +1,20 @@
+Embed
+=====
+
+Purpose
+-------
+
+This plugin is here to provide enhanced capabilities on top of artifacts.
+
+For example some designers may want to share their Figma mockup in a user story.
+Usually they include the link to the Figma. This forces readers to leave the
+context of the artifact.
+
+Once activated, the current plugin will detect such url and will _embed_ the given
+figma directly in the artifact for a direct preview.
+
+Limitations
+-----------
+
+* 0nly artifacts are supported.
+* Only Figma service is supported. It is planned to support other services later (like Codepen, Giphy, …). Please get in touch with us to express your interest.
