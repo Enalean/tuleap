@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\ParentOfArtifactCollection;
 use Tuleap\Tracker\Artifact\View\Nature;
@@ -118,7 +119,6 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
     protected function displayHeader()
     {
-        $hp          = Codendi_HTMLPurifier::instance();
         $title = sprintf(
             '%s - %s #%d',
             substr($this->artifact->getTitle() ?? '', 0, 64),
@@ -138,6 +138,11 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
                 $this->artifact->getDescription()
             )
         ];
+        $event = new GetAdditionalJavascriptFilesForArtifactDisplay();
+        $this->event_manager->dispatch($event);
+        foreach ($event->getFileURLs() as $file_url) {
+            $GLOBALS['HTML']->includeFooterJavascriptFile($file_url);
+        }
         $this->tracker->displayHeader($this->layout, $title, $breadcrumbs, $toolbar, $params);
     }
 
