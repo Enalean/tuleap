@@ -1,6 +1,9 @@
 {
   "author": "Enalean Team",
   "name": "tuleap",
+  "engines": {
+    "node": "12.16.1"
+  },
   "homepage": "https://tuleap.org",
   "license": "GPL-2.0-or-later",
   "private": true,
