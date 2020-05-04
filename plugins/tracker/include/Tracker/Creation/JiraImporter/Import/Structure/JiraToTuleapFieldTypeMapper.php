@@ -155,6 +155,21 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
+                        Tracker_FormElementFactory::FIELD_DATE_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        4,
+                        $required,
+                        [
+                            'display_time' => '1'
+                        ],
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'priority':
                 case 'status':
                 case 'creator':
@@ -163,7 +178,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
                 case 'com.atlassian.jira.toolkit:message': //edit message
                 case 'resolutiondate':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:grouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
