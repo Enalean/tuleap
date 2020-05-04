@@ -209,8 +209,8 @@
     display: flex;
     flex-direction: column;
 
-    &:not(:first-child) {
-        margin: 0 0 0 $tlp-double-spacing;
+    &:first-child {
+        margin: 0 $tlp-x-large-spacing 0 0;
     }
 
     > span:first-child {

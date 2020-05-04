@@ -66,7 +66,7 @@
     display: none;
 }
 
-@media screen and (max-width: (1000px + $tlp-double-spacing)) {
+@media screen and (max-width: (1000px + $tlp-medium-spacing)) {
     .user-preferences-frame {
         max-width: none;
         margin: 0;

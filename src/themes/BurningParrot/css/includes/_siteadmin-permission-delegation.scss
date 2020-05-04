@@ -17,12 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#siteadmin-permission-delegation-add-group {
-    margin: $tlp-double-spacing 0 0;
-}
-
 .tlp-tabs > #siteadmin-permission-delegation-add-group {
-    margin: 11px 0 11px $tlp-double-spacing;
+    margin: 11px 0 11px $tlp-large-spacing;
 }
 
 #siteadmin-permission-delegation-group-actions {
@@ -62,7 +58,7 @@
 
 #siteadmin-permission-delegation-group-details-users-empty,
 #siteadmin-permission-delegation-group-details-perms-empty {
-    padding: $tlp-double-spacing $tlp-half-spacing;
+    padding: $tlp-large-spacing;
     background: $tlp-theme-background-color;
     color: transparentize($tlp-theme-color, .7);
     font-style: italic;

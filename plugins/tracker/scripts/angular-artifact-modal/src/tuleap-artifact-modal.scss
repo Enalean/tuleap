@@ -117,9 +117,9 @@ fieldset {
             order: 3;
         }
 
-        > .tuleap-artifact-modal-followups-add-form {
+        > .artifact-modal-followups-add-form {
             order: 2;
-            margin: 0 0 $tlp-double-spacing;
+            margin: 0 0 $tlp-x-large-spacing;
         }
     }
 }
@@ -138,7 +138,7 @@ fieldset {
     flex: 0 0 auto;
     order: 3;
     width: 100%;
-    margin: $tlp-double-spacing 0 0;
+    margin: $tlp-x-large-spacing 0 0;
 }
 
 .artifact-modal-text-label-with-format {
@@ -175,7 +175,7 @@ fieldset {
 }
 
 .tuleap-artifact-modal-followups-comment {
-    margin: 0 0 $tlp-double-spacing;
+    margin: 0 0 $tlp-large-spacing;
 
     &:last-child {
         margin: 0;

@@ -81,14 +81,13 @@
 .gerrit-server-info-row {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 0 $tlp-spacing;
 
     &:last-child {
         margin: 0;
     }
 
     > .tlp-property {
-        margin: 0 $tlp-double-spacing 0 0;
+        margin: 0 $tlp-x-large-spacing $tlp-medium-spacing 0;
     }
 }
 

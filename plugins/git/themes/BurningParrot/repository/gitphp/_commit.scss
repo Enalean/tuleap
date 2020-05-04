@@ -49,11 +49,15 @@
 
 .git-repository-commit-info {
     display: flex;
-    flex-wrap: wrap;
+    align-items: flex-start;
+
+    @media screen and (max-width: 1000px) {
+        flex-direction: column;
+    }
 }
 
 .git-repository-commit-metadata {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
 }
 
 .git-repository-commit-metadata-properties {
@@ -65,17 +69,23 @@
     margin: 0;
 
     &:first-child {
-        margin: 0 $tlp-double-spacing $tlp-spacing 0;
+        margin: 0 $tlp-x-large-spacing $tlp-spacing 0;
     }
 }
 
 .git-repository-commit-description {
     min-width: 300px;
-    margin: 0 $tlp-double-spacing $tlp-spacing 0;
-    padding: 0 0 0 $tlp-half-spacing;
+    margin: 0 $tlp-x-large-spacing 0 0;
+    padding: 0 0 0 $tlp-spacing;
     border-left: 2px solid $tlp-theme-color;
     white-space: pre-wrap;
+
+    @media screen and (max-width: 1000px) {
+        width: 100%;
+        margin: 0 0 $tlp-medium-spacing;
+    }
 }
+
 
 .git-repository-commit-reference {
     font-size: 12px;
@@ -103,7 +113,7 @@
 }
 
 .git-repository-commit-metadata-changes {
-    margin: 0 0 $tlp-double-spacing;
+    margin: 0 0 $tlp-large-spacing;
     font-size: 24px;
 }
 

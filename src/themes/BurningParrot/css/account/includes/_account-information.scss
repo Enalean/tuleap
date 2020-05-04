@@ -32,7 +32,7 @@ $avatar-size: 100px;
     position: relative;
     width: $avatar-size;
     height: $avatar-size;
-    margin: 0 $tlp-double-spacing 0 $tlp-spacing;
+    margin: 0 $tlp-large-spacing 0 $tlp-medium-spacing;
 }
 
 .account-information-avatar-button {
@@ -49,7 +49,7 @@ $avatar-size: 100px;
 }
 
 .account-information-submit {
-    padding: $tlp-spacing $tlp-spacing $tlp-spacing ($tlp-double-spacing * 2 + $avatar-size);
+    padding: $tlp-spacing $tlp-spacing $tlp-spacing ($tlp-spacing + $tlp-medium-spacing + $tlp-large-spacing + $avatar-size);
 }
 
 .account-information-avatar-modal-body {
