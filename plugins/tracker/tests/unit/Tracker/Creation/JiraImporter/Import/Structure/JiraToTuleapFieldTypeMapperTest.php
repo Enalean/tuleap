@@ -269,4 +269,39 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $collection
         );
     }
+
+    public function testJiraDatetimeFieldIsMappedToDateFieldWithTimeDisplayed(): void
+    {
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'Datepicker Field',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:datetime'
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_custom_fieldset,
+                Tracker_FormElementFactory::FIELD_DATE_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                4,
+                $jira_field->isRequired(),
+                [
+                    'display_time' => '1'
+                ],
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
 }
