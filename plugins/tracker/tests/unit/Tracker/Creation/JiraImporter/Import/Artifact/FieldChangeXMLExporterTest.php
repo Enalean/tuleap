@@ -26,16 +26,30 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporterTest extends TestCase
 {
-    public function testItExportsFloatChangeInXML(): void
+    /**
+     * @var FieldChangeXMLExporter
+     */
+    private $exporter;
+
+    protected function setUp(): void
     {
-        $exporter = new FieldChangeXMLExporter(
+        parent::setUp();
+
+        $this->exporter = new FieldChangeXMLExporter(
+            new FieldChangeDateBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            ),
             new XML_SimpleXMLCDATAFactory()
         );
+    }
 
+    public function testItExportsFloatChangeInXML(): void
+    {
         $mapping = new FieldMapping(
             'number',
             'Fnumber',
@@ -45,7 +59,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $exporter->exportFieldChange(
+        $this->exporter->exportFieldChange(
             $mapping,
             $changeset_node,
             $submitted_on,
@@ -62,10 +76,6 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItExportsTheUpdateDateAsSubmittedOnDateInXML(): void
     {
-        $exporter = new FieldChangeXMLExporter(
-            new XML_SimpleXMLCDATAFactory()
-        );
-
         $mapping = new FieldMapping(
             'update',
             'Fupdate',
@@ -75,7 +85,7 @@ class FieldChangeXMLExporterTest extends TestCase
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $exporter->exportFieldChange(
+        $this->exporter->exportFieldChange(
             $mapping,
             $changeset_node,
             $submitted_on,
@@ -87,10 +97,6 @@ class FieldChangeXMLExporterTest extends TestCase
 
     public function testItDoesNotUpdateTheSubmissionDateWhenUpdatedDataIsNotProvided(): void
     {
-        $exporter = new FieldChangeXMLExporter(
-            new XML_SimpleXMLCDATAFactory()
-        );
-
         $mapping = new FieldMapping(
             'number',
             'Fnumber',
@@ -101,7 +107,7 @@ class FieldChangeXMLExporterTest extends TestCase
         $changeset_node = new SimpleXMLElement('<changeset/>');
         $submitted_on = new SimpleXMLElement('<submitted_on format="ISO8601">2020-04-29T08:45:46+02:00</submitted_on>');
 
-        $exporter->exportFieldChange(
+        $this->exporter->exportFieldChange(
             $mapping,
             $changeset_node,
             $submitted_on,

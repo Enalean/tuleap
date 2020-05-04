@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -51,6 +52,9 @@ class ArtifactsXMLExporterTest extends TestCase
             new XML_SimpleXMLCDATAFactory(),
             $user_manager,
             new FieldChangeXMLExporter(
+                new FieldChangeDateBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                ),
                 new XML_SimpleXMLCDATAFactory()
             )
         );
@@ -127,6 +131,9 @@ class ArtifactsXMLExporterTest extends TestCase
             new XML_SimpleXMLCDATAFactory(),
             $user_manager,
             new FieldChangeXMLExporter(
+                new FieldChangeDateBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                ),
                 new XML_SimpleXMLCDATAFactory()
             )
         );
