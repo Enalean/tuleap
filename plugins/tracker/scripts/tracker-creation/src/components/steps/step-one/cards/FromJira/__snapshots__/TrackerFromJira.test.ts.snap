@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`TrackerFromJira renders the component 1`] = `
-<div
+<form
   class="card-content"
 >
   <!---->
@@ -12,9 +12,8 @@ exports[`TrackerFromJira renders the component 1`] = `
    
   <button
     class="tlp-button-primary create-from-jira-button"
-    data-test="create-from-jira"
     disabled="disabled"
-    type="button"
+    type="submit"
   >
     <span
       data-current-language="en_US"
@@ -24,8 +23,8 @@ exports[`TrackerFromJira renders the component 1`] = `
     </span>
      
     <i
-      class="fa tlp-button-icon-right fa-connect"
+      class="fa tlp-button-icon-right"
     />
   </button>
-</div>
+</form>
 `;

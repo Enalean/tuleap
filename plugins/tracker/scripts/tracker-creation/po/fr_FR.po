@@ -21,6 +21,9 @@ msgstr "1"
 msgid "2"
 msgstr "2"
 
+msgid "API Token"
+msgstr "Jeton d'API"
+
 msgid "Avoid spaces and punctuation"
 msgstr "Évitez les espaces et la ponctuation"
 
@@ -153,9 +156,6 @@ msgid ""
 msgstr ""
 "Le modèle de l'outil de suivi que vous sélectionnez fournit des champs "
 "préconfigurés, des permissions, des règles de transitions ..."
-
-msgid "Token"
-msgstr "Jeton"
 
 msgid "Tracker"
 msgstr "Outil de suivi"
