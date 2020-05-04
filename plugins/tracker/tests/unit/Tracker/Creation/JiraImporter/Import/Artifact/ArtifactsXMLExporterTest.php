@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -67,7 +67,7 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElement_Field_String::TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
         );
         $jira_project_id = 'project';
@@ -143,7 +143,7 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElement_Field_String::TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
         );
         $jira_project_id = 'project';

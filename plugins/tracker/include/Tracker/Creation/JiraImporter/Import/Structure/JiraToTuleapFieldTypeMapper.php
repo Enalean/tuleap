@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
-use Tracker_FormElement_Field_Float;
-use Tracker_FormElement_Field_String;
-use Tracker_FormElement_Field_Text;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
 class JiraToTuleapFieldTypeMapper
@@ -80,60 +78,80 @@ class JiraToTuleapFieldTypeMapper
                 case 'summary':
                     $this->field_xml_exporter->exportField(
                         $jira_atf_fieldset,
-                        Tracker_FormElement_Field_String::TYPE,
+                        Tracker_FormElementFactory::FIELD_STRING_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         1,
                         $required,
+                        [],
                         $jira_field_mapping_collection
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
                     $this->field_xml_exporter->exportField(
                         $jira_custom_fieldset,
-                        Tracker_FormElement_Field_String::TYPE,
+                        Tracker_FormElementFactory::FIELD_STRING_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         1,
                         $required,
+                        [],
                         $jira_field_mapping_collection
                     );
                     break;
                 case 'description':
                     $this->field_xml_exporter->exportField(
                         $jira_atf_fieldset,
-                        Tracker_FormElement_Field_Text::TYPE,
+                        Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         2,
                         $required,
+                        [],
                         $jira_field_mapping_collection
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
                     $this->field_xml_exporter->exportField(
                         $jira_custom_fieldset,
-                        Tracker_FormElement_Field_Text::TYPE,
+                        Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         2,
                         $required,
+                        [],
                         $jira_field_mapping_collection
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
                     $this->field_xml_exporter->exportField(
                         $jira_custom_fieldset,
-                        Tracker_FormElement_Field_Float::TYPE,
+                        Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         3,
                         $required,
+                        [],
+                        $jira_field_mapping_collection
+                    );
+                    break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
+                        Tracker_FormElementFactory::FIELD_DATE_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        4,
+                        $required,
+                        [
+                            'display_time' => '0'
+                        ],
                         $jira_field_mapping_collection
                     );
                     break;
@@ -144,7 +162,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
                 case 'com.atlassian.jira.toolkit:message': //edit message
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
                 case 'resolutiondate':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':

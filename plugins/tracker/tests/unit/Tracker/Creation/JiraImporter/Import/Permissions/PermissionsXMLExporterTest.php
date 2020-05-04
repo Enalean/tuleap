@@ -25,8 +25,7 @@ namespace Tracker\Creation\JiraImporter\Import\Permissions;
 
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
-use Tracker_FormElement_Field_ArtifactId;
-use Tracker_FormElement_Field_String;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -42,7 +41,7 @@ class PermissionsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElement_Field_String::TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
         );
 
@@ -84,7 +83,7 @@ class PermissionsXMLExporterTest extends TestCase
                 'artifact_id',
                 'Fartifact_id',
                 'Artifact Id',
-                Tracker_FormElement_Field_ArtifactId::TYPE
+                Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE
             )
         );
 
@@ -114,7 +113,7 @@ class PermissionsXMLExporterTest extends TestCase
                 'jira_artifact_url',
                 'Fjira_artifact_url',
                 'Link to original artifact',
-                Tracker_FormElement_Field_String::TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
         );
 

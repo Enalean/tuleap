@@ -29,6 +29,12 @@ require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 
 class Tracker_FormElementFactory
 {
+    public const FIELD_STRING_TYPE           = 'string';
+    public const FIELD_TEXT_TYPE             = 'text';
+    public const FIELD_FLOAT_TYPE            = 'float';
+    public const FIELD_DATE_TYPE             = 'date';
+    public const FIELD_LAST_UPDATE_DATE_TYPE = 'lud';
+    public const FIELD_ARTIFACT_ID_TYPE      = 'aid';
 
     /**
      * Cache formElements
@@ -46,27 +52,27 @@ class Tracker_FormElementFactory
     private $cache_used_form_elements_by_tracker_and_type = array();
 
     // Please use unique key for each element
-    protected $classnames             = array(
-        'string'   => 'Tracker_FormElement_Field_String',
-        'text'     => 'Tracker_FormElement_Field_Text',
+    protected $classnames = array(
+        self::FIELD_STRING_TYPE  => 'Tracker_FormElement_Field_String',
+        self::FIELD_TEXT_TYPE    => 'Tracker_FormElement_Field_Text',
+        self::FIELD_FLOAT_TYPE   => 'Tracker_FormElement_Field_Float',
+        self::FIELD_DATE_TYPE    => 'Tracker_FormElement_Field_Date',
         'sb'       => 'Tracker_FormElement_Field_Selectbox',
         'msb'      => 'Tracker_FormElement_Field_MultiSelectbox',
         'rb'       => 'Tracker_FormElement_Field_Radiobutton',
         'cb'       => 'Tracker_FormElement_Field_Checkbox',
-        'date'     => 'Tracker_FormElement_Field_Date',
         'file'     => 'Tracker_FormElement_Field_File',
         'int'      => 'Tracker_FormElement_Field_Integer',
-        'float'    => 'Tracker_FormElement_Field_Float',
         'tbl'      => 'Tracker_FormElement_Field_OpenList',
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',
         'perm'     => 'Tracker_FormElement_Field_PermissionsOnArtifact',
         'shared'   => 'Tracker_FormElement_Shared',
     );
 
-    protected $special_classnames     = array(
-        'aid'       => 'Tracker_FormElement_Field_ArtifactId',
+    protected $special_classnames = array(
+        self::FIELD_LAST_UPDATE_DATE_TYPE  => 'Tracker_FormElement_Field_LastUpdateDate',
+        self::FIELD_ARTIFACT_ID_TYPE       => 'Tracker_FormElement_Field_ArtifactId',
         'atid'      => 'Tracker_FormElement_Field_PerTrackerArtifactId',
-        'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
         'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
         'luby'      => 'Tracker_FormElement_Field_LastModifiedBy',
         'subon'     => 'Tracker_FormElement_Field_SubmittedOn',

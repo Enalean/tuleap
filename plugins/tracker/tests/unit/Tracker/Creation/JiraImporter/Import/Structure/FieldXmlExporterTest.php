@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tracker_FormElementFactory;
 
 final class FieldXmlExporterTest extends TestCase
 {
@@ -74,12 +75,13 @@ final class FieldXmlExporterTest extends TestCase
 
         $this->exporter->exportField(
             $parent_node,
-            \Tracker_FormElement_Field_String::TYPE,
+            Tracker_FormElementFactory::FIELD_STRING_TYPE,
             "name",
             "Label",
             "Summary",
             1,
             true,
+            [],
             $collection
         );
 
