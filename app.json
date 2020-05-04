@@ -1,0 +1,11 @@
+{
+    "name": "tuleap",
+    "description": "A Nodejs app",
+    "repository": "https://github.com/Enalean/tuleap.git",
+    "logo": "https://node-js-sample.herokuapp.com/node.png",
+    "keywords": [
+        "node",
+        "express",
+        "static"
+    ]
+}
