@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporter
@@ -42,12 +43,19 @@ class FieldChangeXMLExporter
      */
     private $field_change_date_builder;
 
+    /**
+     * @var FieldChangeStringBuilder
+     */
+    private $field_change_string_builder;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
+        FieldChangeStringBuilder $field_change_string_builder,
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory
     ) {
-        $this->simplexml_cdata_factory   = $simplexml_cdata_factory;
-        $this->field_change_date_builder = $field_change_date_builder;
+        $this->simplexml_cdata_factory     = $simplexml_cdata_factory;
+        $this->field_change_date_builder   = $field_change_date_builder;
+        $this->field_change_string_builder = $field_change_string_builder;
     }
 
     public function exportFieldChange(
@@ -57,7 +65,7 @@ class FieldChangeXMLExporter
         string $value
     ): void {
         if ($mapping->getType() === Tracker_FormElementFactory::FIELD_STRING_TYPE) {
-            $this->exportStringFieldChange(
+            $this->field_change_string_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
                 $value
@@ -86,18 +94,5 @@ class FieldChangeXMLExporter
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
             $node_submitted_on[0] = $value;
         }
-    }
-
-    public function exportStringFieldChange(SimpleXMLElement $changeset_node, string $field_name, string $value): void
-    {
-        $field_change_node = $changeset_node->addChild('field_change');
-        $field_change_node->addAttribute('type', Tracker_FormElementFactory::FIELD_STRING_TYPE);
-        $field_change_node->addAttribute('field_name', $field_name);
-
-        $this->simplexml_cdata_factory->insert(
-            $field_change_node,
-            'value',
-            $value
-        );
     }
 }

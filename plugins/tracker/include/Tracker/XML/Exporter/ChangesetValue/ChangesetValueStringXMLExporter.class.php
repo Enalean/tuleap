@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter
 {
+    /**
+     * @var FieldChangeStringBuilder
+     */
+    private $field_change_string_builder;
+
+    public function __construct(FieldChangeStringBuilder $field_change_string_builder)
+    {
+        $this->field_change_string_builder = $field_change_string_builder;
+    }
 
     protected function getFieldChangeType()
     {
-        return 'string';
+        return Tracker_FormElementFactory::FIELD_STRING_TYPE;
     }
 
     public function export(
@@ -32,11 +43,10 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter extend
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
-        $field_change = $this->createFieldChangeNodeInChangesetNode(
-            $changeset_value,
-            $changeset_xml
+        $this->field_change_string_builder->build(
+            $changeset_xml,
+            $changeset_value->getField()->getName(),
+            $changeset_value->getText()
         );
-        $cdata_factory = new XML_SimpleXMLCDATAFactory();
-        $cdata_factory->insert($field_change, 'value', $changeset_value->getText());
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter;
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
@@ -45,7 +46,11 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFileXMLExporter($file_info_xml_exporter),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueFloatXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueIntegerXMLExporter(),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueStringXMLExporter(
+                new FieldChangeStringBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                )
+            ),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter($user_xml_exporter),

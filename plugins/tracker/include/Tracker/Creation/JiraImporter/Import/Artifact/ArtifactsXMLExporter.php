@@ -29,6 +29,7 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -54,16 +55,23 @@ class ArtifactsXMLExporter
      */
     private $field_change_xml_exporter;
 
+    /**
+     * @var FieldChangeStringBuilder
+     */
+    private $field_change_string_builder;
+
     public function __construct(
         ClientWrapper $wrapper,
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         UserManager $user_manager,
-        FieldChangeXMLExporter $field_change_xml_exporter
+        FieldChangeXMLExporter $field_change_xml_exporter,
+        FieldChangeStringBuilder $field_change_string_builder
     ) {
-        $this->wrapper                   = $wrapper;
-        $this->simplexml_cdata_factory   = $simplexml_cdata_factory;
-        $this->user_manager              = $user_manager;
-        $this->field_change_xml_exporter = $field_change_xml_exporter;
+        $this->wrapper                     = $wrapper;
+        $this->simplexml_cdata_factory     = $simplexml_cdata_factory;
+        $this->user_manager                = $user_manager;
+        $this->field_change_xml_exporter   = $field_change_xml_exporter;
+        $this->field_change_string_builder = $field_change_string_builder;
     }
 
     public function exportArtifacts(
@@ -162,7 +170,7 @@ class ArtifactsXMLExporter
             $changeset_node->addChild('comments');
 
             $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($artifact['key']);
-            $this->field_change_xml_exporter->exportStringFieldChange(
+            $this->field_change_string_builder->build(
                 $changeset_node,
                 JiraXmlExporter::JIRA_LINK_FIELD_NAME,
                 $jira_link
