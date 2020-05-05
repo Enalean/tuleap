@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,23 +20,34 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
+namespace Tuleap\Document\Config\Admin;
 
 use CSRFSynchronizerToken;
-use Feedback;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollectionBuilder;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
+use Tuleap\Request\ForbiddenException;
 
-class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
+class FilesDownloadLimitsAdminController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
+    public const URL = \DocmanPlugin::ADMIN_BASE_URL . '/files-download-limits';
+
     /**
      * @var AdminPageRenderer
      */
     private $admin_page_renderer;
+    /**
+     * @var FileDownloadLimitsBuilder
+     */
+    private $limits_builder;
+    /**
+     * @var CSRFSynchronizerToken
+     */
+    private $token;
     /**
      * @var DocmanSettingsTabsPresenterCollectionBuilder
      */
@@ -44,40 +55,41 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
 
     public function __construct(
         AdminPageRenderer $admin_page_renderer,
+        FileDownloadLimitsBuilder $limits_builder,
+        CSRFSynchronizerToken $token,
         DocmanSettingsTabsPresenterCollectionBuilder $tabs_presenter_collection_builder
     ) {
         $this->admin_page_renderer               = $admin_page_renderer;
+        $this->limits_builder                    = $limits_builder;
+        $this->token                             = $token;
         $this->tabs_presenter_collection_builder = $tabs_presenter_collection_builder;
     }
 
-    /**
-     * Is able to process a request routed by FrontRouter
-     *
-     * @param array $variables
-     */
+    public static function buildSelf(): self
+    {
+        return new FilesDownloadLimitsAdminController(
+            new AdminPageRenderer(),
+            new FileDownloadLimitsBuilder(),
+            new CSRFSynchronizerToken(self::URL),
+            new DocmanSettingsTabsPresenterCollectionBuilder(\EventManager::instance())
+        );
+    }
+
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         if (! $request->getCurrentUser()->isSuperUser()) {
-            $layout->addFeedback(
-                Feedback::ERROR,
-                dgettext('tuleap-docman', 'You should be site administrator to access this page')
-            );
-            $layout->redirect('/');
-
-            return;
+            throw new ForbiddenException();
         }
 
-        $csrf_token = new CSRFSynchronizerToken($request->getFromServer('REQUEST_URI'));
-
         $this->admin_page_renderer->renderANoFramedPresenter(
-            dgettext('tuleap-docman', 'Document settings'),
+            \dgettext('tuleap-docman', 'Document settings'),
             __DIR__ . '/../../../templates',
-            'document-settings',
-            new DocmanFilesUploadLimitsAdminPresenter(
-                $csrf_token,
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING),
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING),
-                $this->tabs_presenter_collection_builder->build()
+            'files-download-limits',
+            new FilesDownloadLimitsAdminPresenter(
+                $this->token,
+                $this->limits_builder->build(),
+                $this->tabs_presenter_collection_builder->build(),
+                self::URL
             )
         );
     }

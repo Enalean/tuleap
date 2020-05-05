@@ -18,10 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
 use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
+use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
+use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\PermissionDeniedDocumentMailSender;
@@ -56,6 +59,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         $this->addHook(ExternalLinkRedirector::NAME);
         $this->addHook(ServiceUrlCollector::NAME);
         $this->addHook(DocmanLinkProvider::NAME);
+        $this->addHook(DocmanSettingsTabsPresenterCollection::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -99,7 +103,7 @@ class documentPlugin extends Plugin // phpcs:ignore
         );
     }
 
-    public function collectRoutesEvent(CollectRoutesEvent $event)
+    public function collectRoutesEvent(CollectRoutesEvent $event): void
     {
         $event->getRouteCollector()->addGroup('/plugins/document', function (FastRoute\RouteCollector $r) {
             $r->post(
@@ -108,6 +112,18 @@ class documentPlugin extends Plugin // phpcs:ignore
             );
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
+        $event->getRouteCollector()->addRoute(['GET'], \DocmanPlugin::ADMIN_BASE_URL . "/files-download-limits", $this->getRouteHandler('routeGetDocumentSettings'));
+        $event->getRouteCollector()->addRoute(['POST'], \DocmanPlugin::ADMIN_BASE_URL . "/files-download-limits", $this->getRouteHandler('routePostDocumentSettings'));
+    }
+
+    public function routeGetDocumentSettings(): FilesDownloadLimitsAdminController
+    {
+        return FilesDownloadLimitsAdminController::buildSelf();
+    }
+
+    public function routePostDocumentSettings(): FilesDownloadLimitsAdminSaveController
+    {
+        return FilesDownloadLimitsAdminSaveController::buildSelf();
     }
 
     public function externalLinksManager(ExternalLinksManager $collector)
@@ -177,5 +193,12 @@ class documentPlugin extends Plugin // phpcs:ignore
     {
         $project = $link_provider->getProject();
         $link_provider->replaceProvider(new DocumentLinkProvider(HTTPRequest::instance()->getServerUrl(), $project));
+    }
+
+    public function docmanSettingsTabsPresenterCollection(DocmanSettingsTabsPresenterCollection $collection): void
+    {
+        $collection->add(
+            new \Tuleap\Document\Config\Admin\FileDownloadTabPresenter()
+        );
     }
 }

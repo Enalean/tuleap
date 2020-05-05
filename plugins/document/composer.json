@@ -2,7 +2,7 @@
   "name": "tuleap/plugin-document",
   "autoload": {
     "psr-4": {
-      "Tuleap\\Document\\": "include/"
+      "Tuleap\\Document\\": ["include/", "tests/unit"]
     }
   },
   "config": {

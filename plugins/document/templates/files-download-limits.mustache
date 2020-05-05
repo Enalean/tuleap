@@ -1,0 +1,89 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-document | Document{{/ dgettext }}</h1>
+
+    <nav class="tlp-tabs">
+        {{# tabs }}
+            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}">{{ label }}</a>
+        {{/ tabs }}
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <form class="tlp-pane" method="POST" action="/admin/document/files-download-limits">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-download"></i>
+                        {{# dgettext }}tuleap-document | File download limits{{/ dgettext }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>{{# dgettext }}tuleap-document | Those settings applies when downloading a folder as a zip archive.{{/ dgettext }}</p>
+
+                    <div class="tlp-form-element">
+                        <label for="file-max-size" class="tlp-label">
+                            {{# dgettext }}
+                                tuleap-document
+                                | Maximum file size of the archive
+                            {{/ dgettext }}
+                        </label>
+                        <div class="tlp-form-element tlp-form-element-append">
+                            <input
+                                    id="file-max-size"
+                                    class="tlp-input"
+                                    name="max-archive-size"
+                                    type="number"
+                                    min="1"
+                                    size="5"
+                                    value="{{ max_archive_size }}"
+                                    placeholder="2000"
+                            >
+                            <span class="tlp-append tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }}tuleap-document | Megabytes{{/ dgettext }}">
+                                {{# dgettext }}tuleap-document | MB {{/ dgettext }}
+                            </span>
+                        </div>
+                        <p class="tlp-text-info">
+                            {{# dgettext }} tuleap-document | This limit prevents a user to download a folder which total size exceeds x MB.{{/ dgettext }}
+                        </p>
+                    </div>
+
+                    <div class="tlp-form-element">
+                        <label for="file-max-size" class="tlp-label">
+                            {{# dgettext }}
+                                tuleap-document
+                                | Warning threshold
+                            {{/ dgettext }}
+                        </label>
+                        <div class="tlp-form-element tlp-form-element-append">
+                            <input
+                                    id="file-max-size"
+                                    class="tlp-input"
+                                    name="warning-threshold"
+                                    type="number"
+                                    min="1"
+                                    size="5"
+                                    value="{{ warning_threshold }}"
+                                    placeholder="50"
+                            >
+                            <span class="tlp-append tlp-tooltip tlp-tooltip-right" data-tlp-tooltip="{{# dgettext }}tuleap-document | Megabytes{{/ dgettext }}">
+                                {{# dgettext }}tuleap-document | MB {{/ dgettext }}
+                            </span>
+                        </div>
+                        <p class="tlp-text-info">
+                            {{# dgettext }} tuleap-document | Above this limit, the archive is considered big enough to display a warning to the user. The archive can still be downloaded.{{/ dgettext }}
+                        </p>
+                    </div>
+
+                    <div class="tlp-pane-section-submit">
+                        <button class="tlp-button-primary" type="submit">
+                            <i class="fa fa-save tlp-button-icon"></i>
+                            {{# dgettext }} tuleap-document | Save settings {{/ dgettext }}
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</div>
