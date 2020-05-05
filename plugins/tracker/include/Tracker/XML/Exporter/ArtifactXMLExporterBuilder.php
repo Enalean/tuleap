@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,7 @@ use Tuleap\Tracker\XML\Exporter\ChangesetValue\ChangesetValueComputedXMLExporter
 use Tuleap\Tracker\XML\Exporter\ChangesetValue\ExternalExporterCollector;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use Tuleap\Tracker\XML\Exporter\FileInfoXMLExporter;
 
 class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
@@ -51,7 +52,11 @@ class Tracker_XML_Exporter_ArtifactXMLExporterBuilder
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(),
+            new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
+                new FieldChangeTextBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                )
+            ),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValuePermissionsOnArtifactXMLExporter(),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter($user_xml_exporter),
             new Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporter($user_xml_exporter),

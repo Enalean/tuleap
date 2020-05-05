@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
@@ -43,7 +45,12 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporterTes
     protected function setUp(): void
     {
         $this->field         = Mockery::spy(Tracker_FormElement_Field_File::class)->shouldReceive('getName')->andReturn('textarea')->getMock();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter();
+        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueTextXMLExporter(
+            new FieldChangeTextBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            )
+        );
+
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');
 

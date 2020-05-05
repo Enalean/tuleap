@@ -25,19 +25,15 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use DateTimeImmutable;
 use SimpleXMLElement;
+use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
-use XML_SimpleXMLCDATAFactory;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
 class FieldChangeXMLExporter
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simplexml_cdata_factory;
-
     /**
      * @var FieldChangeDateBuilder
      */
@@ -48,14 +44,19 @@ class FieldChangeXMLExporter
      */
     private $field_change_string_builder;
 
+    /**
+     * @var FieldChangeTextBuilder
+     */
+    private $field_change_text_builder;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
-        XML_SimpleXMLCDATAFactory $simplexml_cdata_factory
+        FieldChangeTextBuilder $field_change_text_builder
     ) {
-        $this->simplexml_cdata_factory     = $simplexml_cdata_factory;
         $this->field_change_date_builder   = $field_change_date_builder;
         $this->field_change_string_builder = $field_change_string_builder;
+        $this->field_change_text_builder   = $field_change_text_builder;
     }
 
     public function exportFieldChange(
@@ -71,14 +72,11 @@ class FieldChangeXMLExporter
                 $value
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_TEXT_TYPE) {
-            $field_change_node = $changeset_node->addChild('field_change');
-            $field_change_node->addAttribute('type', 'text');
-            $field_change_node->addAttribute('field_name', $mapping->getFieldName());
-
-            $this->simplexml_cdata_factory->insert(
-                $field_change_node,
-                'value',
-                $value
+            $this->field_change_text_builder->build(
+                $changeset_node,
+                $mapping->getFieldName(),
+                $value,
+                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FLOAT_TYPE) {
             $field_change_node = $changeset_node->addChild('field_change');
