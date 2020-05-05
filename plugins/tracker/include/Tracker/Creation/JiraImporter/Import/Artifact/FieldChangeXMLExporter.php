@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
+use DateTimeImmutable;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporter
@@ -35,9 +37,17 @@ class FieldChangeXMLExporter
      */
     private $simplexml_cdata_factory;
 
-    public function __construct(XML_SimpleXMLCDATAFactory $simplexml_cdata_factory)
-    {
-        $this->simplexml_cdata_factory = $simplexml_cdata_factory;
+    /**
+     * @var FieldChangeDateBuilder
+     */
+    private $field_change_date_builder;
+
+    public function __construct(
+        FieldChangeDateBuilder $field_change_date_builder,
+        XML_SimpleXMLCDATAFactory $simplexml_cdata_factory
+    ) {
+        $this->simplexml_cdata_factory   = $simplexml_cdata_factory;
+        $this->field_change_date_builder = $field_change_date_builder;
     }
 
     public function exportFieldChange(
@@ -68,11 +78,11 @@ class FieldChangeXMLExporter
             $field_change_node->addAttribute('field_name', $mapping->getFieldName());
             $field_change_node->addChild('value', $value);
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_DATE_TYPE) {
-            $field_change_node = $changeset_node->addChild('field_change');
-            $field_change_node->addAttribute('type', 'date');
-            $field_change_node->addAttribute('field_name', $mapping->getFieldName());
-            $value_node = $field_change_node->addChild('value', $value);
-            $value_node->addAttribute("format", "ISO8601");
+            $this->field_change_date_builder->build(
+                $changeset_node,
+                $mapping->getFieldName(),
+                new DateTimeImmutable($value)
+            );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
             $node_submitted_on[0] = $value;
         }

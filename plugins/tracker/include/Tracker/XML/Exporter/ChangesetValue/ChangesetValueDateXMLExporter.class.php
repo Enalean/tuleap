@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,12 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+
 class Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter extends Tracker_XML_Exporter_ChangesetValue_ChangesetValueXMLExporter
 {
+    /**
+     * @var FieldChangeDateBuilder
+     */
+    private $field_change_date_builder;
+
+    public function __construct(FieldChangeDateBuilder $field_change_date_builder)
+    {
+        $this->field_change_date_builder = $field_change_date_builder;
+    }
 
     protected function getFieldChangeType()
     {
-        return 'date';
+        return Tracker_FormElementFactory::FIELD_DATE_TYPE;
     }
 
     public function export(
@@ -32,16 +43,14 @@ class Tracker_XML_Exporter_ChangesetValue_ChangesetValueDateXMLExporter extends 
         Tracker_Artifact $artifact,
         Tracker_Artifact_ChangesetValue $changeset_value
     ) {
-        $field_change = $this->createFieldChangeNodeInChangesetNode(
-            $changeset_value,
-            $changeset_xml
-        );
-        $cdata_factory = new XML_SimpleXMLCDATAFactory();
-        $cdata_factory->insertWithAttributes(
-            $field_change,
-            'value',
-            date('c', $changeset_value->getTimestamp()),
-            ['format' => 'ISO8601']
+        assert($changeset_value instanceof Tracker_Artifact_ChangesetValue_Date);
+
+        $changeset_date_time = (new DateTimeImmutable())->setTimestamp((int) $changeset_value->getTimestamp());
+
+        $this->field_change_date_builder->build(
+            $changeset_xml,
+            $changeset_value->getField()->getName(),
+            $changeset_date_time
         );
     }
 }
