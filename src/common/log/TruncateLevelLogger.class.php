@@ -105,16 +105,6 @@ class TruncateLevelLogger implements \Psr\Log\LoggerInterface
         }
     }
 
-    public function createLogFileForAppUser($file_path)
-    {
-        if (! is_file($file_path)) {
-            $http_user = ForgeConfig::get('sys_http_user');
-            touch($file_path);
-            chown($file_path, $http_user);
-            chgrp($file_path, $http_user);
-        }
-    }
-
     public function emergency($message, array $context = array())
     {
         $this->logger->emergency($message, $context);
