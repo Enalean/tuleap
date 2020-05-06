@@ -62,9 +62,7 @@ describe("TrackerFromJira", () => {
         wrapper.vm.$data.credentials = credentials;
         await wrapper.vm.$nextTick();
 
-        const button = wrapper.find("[data-test=create-from-jira]");
-
-        button.trigger("click");
+        wrapper.trigger("submit");
 
         await wrapper.vm.$nextTick();
 

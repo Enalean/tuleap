@@ -21,35 +21,50 @@
 <template>
     <div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="jira_url" v-translate>Your Jira server url</label>
+            <label class="tlp-label" for="jira-url" name="jira-url" v-translate>
+                Your Jira server url
+            </label>
             <input
                 type="url"
-                id="jira_url"
-                placeholder="https://jira_server.com"
+                id="jira-url"
+                name="jira-url"
+                placeholder="https://jira.example.com"
                 v-model="value.server_url"
                 pattern="https?://.+"
                 class="tlp-input"
             />
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="username" v-translate>User email</label>
-            <input
-                type="text"
-                id="username"
-                placeholder="Bob@example.com"
-                v-model="value.user_email"
-                class="tlp-input"
-            />
+            <label class="tlp-label" for="jira-email" name="jira-email" v-translate>
+                User email
+            </label>
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend">@</span>
+                <input
+                    type="text"
+                    id="jira-email"
+                    name="jira-email"
+                    placeholder="Bob@example.com"
+                    v-model="value.user_email"
+                    class="tlp-input"
+                />
+            </div>
         </div>
         <div class="tlp-form-element">
-            <label class="tlp-label" for="token" v-translate>Token</label>
-            <input
-                type="text"
-                id="token"
-                placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
-                v-model="value.token"
-                class="tlp-input"
-            />
+            <label class="tlp-label" for="jira-token" name="jira-token" v-translate>
+                API Token
+            </label>
+            <div class="tlp-form-element tlp-form-element-prepend">
+                <span class="tlp-prepend"><i class="fa fa-key"></i></span>
+                <input
+                    type="password"
+                    id="jira-token"
+                    name="jira-token"
+                    placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
+                    v-model="value.token"
+                    class="tlp-input"
+                />
+            </div>
         </div>
     </div>
 </template>

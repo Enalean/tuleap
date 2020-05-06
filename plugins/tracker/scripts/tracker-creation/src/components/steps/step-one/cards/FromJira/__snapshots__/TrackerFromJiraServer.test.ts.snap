@@ -8,17 +8,23 @@ exports[`TrackerFromJiraServer renders the component 1`] = `
     <label
       class="tlp-label"
       data-current-language="en_US"
-      data-msgid="Your Jira server url"
-      for="jira_url"
+      data-msgid="
+            Your Jira server url
+        "
+      for="jira-url"
+      name="jira-url"
     >
-      Your Jira server url
+      
+            Your Jira server url
+        
     </label>
      
     <input
       class="tlp-input"
-      id="jira_url"
+      id="jira-url"
+      name="jira-url"
       pattern="https?://.+"
-      placeholder="https://jira_server.com"
+      placeholder="https://jira.example.com"
       type="url"
     />
   </div>
@@ -29,18 +35,34 @@ exports[`TrackerFromJiraServer renders the component 1`] = `
     <label
       class="tlp-label"
       data-current-language="en_US"
-      data-msgid="User email"
-      for="username"
+      data-msgid="
+            User email
+        "
+      for="jira-email"
+      name="jira-email"
     >
-      User email
+      
+            User email
+        
     </label>
      
-    <input
-      class="tlp-input"
-      id="username"
-      placeholder="Bob@example.com"
-      type="text"
-    />
+    <div
+      class="tlp-form-element tlp-form-element-prepend"
+    >
+      <span
+        class="tlp-prepend"
+      >
+        @
+      </span>
+       
+      <input
+        class="tlp-input"
+        id="jira-email"
+        name="jira-email"
+        placeholder="Bob@example.com"
+        type="text"
+      />
+    </div>
   </div>
    
   <div
@@ -49,18 +71,36 @@ exports[`TrackerFromJiraServer renders the component 1`] = `
     <label
       class="tlp-label"
       data-current-language="en_US"
-      data-msgid="Token"
-      for="token"
+      data-msgid="
+            API Token
+        "
+      for="jira-token"
+      name="jira-token"
     >
-      Token
+      
+            API Token
+        
     </label>
      
-    <input
-      class="tlp-input"
-      id="token"
-      placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
-      type="text"
-    />
+    <div
+      class="tlp-form-element tlp-form-element-prepend"
+    >
+      <span
+        class="tlp-prepend"
+      >
+        <i
+          class="fa fa-key"
+        />
+      </span>
+       
+      <input
+        class="tlp-input"
+        id="jira-token"
+        name="jira-token"
+        placeholder="ToKeNGLsLC1wY4j6qiuk61kFX"
+        type="password"
+      />
+    </div>
   </div>
 </div>
 `;

@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="card-content">
+    <form class="card-content" v-on:submit.stop.prevent="checkConnexionIsReady">
         <div
             class="tlp-alert-danger"
             data-test="jira-fail-load-project"
@@ -29,18 +29,16 @@
         </div>
         <tracker-from-jira-server v-if="should_display_connection" v-bind:value="credentials" />
         <button
-            type="button"
+            type="submit"
             class="tlp-button-primary create-from-jira-button"
-            data-test="create-from-jira"
-            v-on:click="checkConnexionIsReady"
             v-bind:disabled="should_be_disabled"
             v-if="should_display_connection"
         >
             <span v-translate>Connect</span>
-            <i v-bind:class="icon_class"></i>
+            <i class="fa tlp-button-icon-right" v-bind:class="icon_class"></i>
         </button>
         <tracker-from-jira-project v-else-if="project_list" v-bind:project_list="project_list" />
-    </div>
+    </form>
 </template>
 
 <script lang="ts">
@@ -112,10 +110,10 @@ export default class TrackerFromJira extends Vue {
 
     get icon_class(): string {
         if (this.is_loading) {
-            return "fa tlp-button-icon-right fa-spinner";
+            return "fa-circle-o-notch fa-spinner";
         }
 
-        return "fa tlp-button-icon-right fa-connect";
+        return "";
     }
 
     get should_be_disabled(): boolean {
