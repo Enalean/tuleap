@@ -55,7 +55,8 @@ $tlp-fontawesome-icons: (
     hierarchy-plus: '\f024',
     user-pencil: '\f025',
     gerrit: '\f026',
-    tuleap: '\f027'
+    tuleap: '\f027',
+    zip-download: '\f028'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
