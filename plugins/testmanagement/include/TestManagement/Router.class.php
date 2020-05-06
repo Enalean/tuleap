@@ -331,7 +331,7 @@ class Router
     {
         return new StartTestManagementController(
             $this->tracker_factory,
-            new BackendLogger(),
+            BackendLogger::getDefaultLogger(),
             TrackerXmlImport::build(
                 new XMLImportHelper(UserManager::instance())
             ),
