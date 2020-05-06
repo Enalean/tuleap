@@ -29,6 +29,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
@@ -49,14 +50,21 @@ class FieldChangeXMLExporter
      */
     private $field_change_text_builder;
 
+    /**
+     * @var FieldChangeFloatBuilder
+     */
+    private $field_change_float_builder;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
-        FieldChangeTextBuilder $field_change_text_builder
+        FieldChangeTextBuilder $field_change_text_builder,
+        FieldChangeFloatBuilder $field_change_float_builder
     ) {
         $this->field_change_date_builder   = $field_change_date_builder;
         $this->field_change_string_builder = $field_change_string_builder;
         $this->field_change_text_builder   = $field_change_text_builder;
+        $this->field_change_float_builder  = $field_change_float_builder;
     }
 
     public function exportFieldChange(
@@ -79,10 +87,11 @@ class FieldChangeXMLExporter
                 Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FLOAT_TYPE) {
-            $field_change_node = $changeset_node->addChild('field_change');
-            $field_change_node->addAttribute('type', 'float');
-            $field_change_node->addAttribute('field_name', $mapping->getFieldName());
-            $field_change_node->addChild('value', $value);
+            $this->field_change_float_builder->build(
+                $changeset_node,
+                $mapping->getFieldName(),
+                $value
+            );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_DATE_TYPE) {
             $this->field_change_date_builder->build(
                 $changeset_node,
