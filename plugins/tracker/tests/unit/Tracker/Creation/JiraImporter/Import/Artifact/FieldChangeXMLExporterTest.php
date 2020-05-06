@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -51,34 +52,11 @@ class FieldChangeXMLExporterTest extends TestCase
             ),
             new FieldChangeTextBuilder(
                 new XML_SimpleXMLCDATAFactory()
+            ),
+            new FieldChangeFloatBuilder(
+                new XML_SimpleXMLCDATAFactory()
             )
         );
-    }
-
-    public function testItExportsFloatChangeInXML(): void
-    {
-        $mapping = new FieldMapping(
-            'number',
-            'Fnumber',
-            'Number',
-            'float'
-        );
-
-        $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
-            '4.5'
-        );
-
-        $this->assertNotNull($changeset_node->field_change);
-        $field_change_node = $changeset_node->field_change;
-
-        $this->assertSame("float", (string) $field_change_node['type']);
-        $this->assertSame("Number", (string) $field_change_node['field_name']);
-        $this->assertSame("4.5", (string) $field_change_node->value);
     }
 
     public function testItExportsTheUpdateDateAsSubmittedOnDateInXML(): void
