@@ -27,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporterTest extends TestCase
@@ -42,6 +43,9 @@ class FieldChangeXMLExporterTest extends TestCase
 
         $this->exporter = new FieldChangeXMLExporter(
             new FieldChangeDateBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            ),
+            new FieldChangeStringBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
             new XML_SimpleXMLCDATAFactory()

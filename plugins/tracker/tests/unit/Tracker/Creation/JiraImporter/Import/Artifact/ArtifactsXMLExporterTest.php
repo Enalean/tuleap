@@ -35,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -55,6 +56,12 @@ class ArtifactsXMLExporterTest extends TestCase
                 new FieldChangeDateBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 ),
+                new FieldChangeStringBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                ),
+                new XML_SimpleXMLCDATAFactory(),
+            ),
+            new FieldChangeStringBuilder(
                 new XML_SimpleXMLCDATAFactory()
             )
         );
@@ -134,8 +141,14 @@ class ArtifactsXMLExporterTest extends TestCase
                 new FieldChangeDateBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 ),
+                new FieldChangeStringBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                ),
                 new XML_SimpleXMLCDATAFactory()
-            )
+            ),
+            new FieldChangeStringBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            ),
         );
 
         $user = Mockery::mock(PFUser::class);
