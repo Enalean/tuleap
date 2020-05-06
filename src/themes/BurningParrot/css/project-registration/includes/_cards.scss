@@ -127,5 +127,9 @@ $card-border-margin: 150px;
         &:nth-child(even) {
             margin: 0 0 $tlp-spacing;
         }
+
+        &:last-child {
+            margin: 0;
+        }
     }
 }

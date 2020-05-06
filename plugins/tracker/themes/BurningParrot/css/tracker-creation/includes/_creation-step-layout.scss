@@ -20,7 +20,7 @@
 .tracker-creation-step {
     display: flex;
     max-width: 1400px;
-    margin: $tlp-double-spacing auto 0;
+    margin: 0 auto;
 
     @media screen and (max-width: $creation-tiny-screen-width) {
         margin: 0;
@@ -39,12 +39,12 @@
 
         @media screen and (max-width: $creation-small-screen-width) {
             width: 35%;
-            margin: 80px $tlp-double-spacing 0 0;
+            margin: 80px $tlp-large-spacing 0 0;
         }
 
         @media screen and (max-width: $creation-tiny-screen-width) {
             width: 300px;
-            margin: 0 0 $tlp-spacing;
+            margin: 0 0 $tlp-medium-spacing;
         }
     }
 
@@ -62,7 +62,7 @@
 }
 
 .tracker-creation-step-info {
-    margin: 0 0 $tlp-spacing 0;
+    margin: 0 0 $tlp-x-large-spacing;
 
     p {
         margin: 0;
@@ -72,7 +72,7 @@
 .tracker-creation-step-info-label {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-spacing 0;
+    margin: 0 0 $tlp-small-spacing 0;
 }
 
 .tracker-creation-step-label {
@@ -105,10 +105,10 @@
     display: flex;
 
     .tlp-property {
-        margin: 0 0 $tlp-spacing $tlp-double-spacing;
+        margin: 0 0 $tlp-large-spacing $tlp-x-large-spacing;
 
         &:first-child {
-            margin: 0 0 $tlp-spacing 0;
+            margin: 0 0 $tlp-large-spacing;
         }
     }
 
@@ -120,16 +120,20 @@
 #tracker-creation-form {
     width: 600px;
 
+    .tlp-form-element {
+        margin: 0 0 $tlp-large-spacing;
+    }
+
     #tracker-creation-xml-file-selector {
         display: none;
     }
 
     > .tracker-creation-form-element-group {
         display: flex;
-        margin: 0 0 $tlp-spacing 0;
+        margin: 0 0 $tlp-large-spacing 0;
 
         > .tlp-form-element {
-            margin: 0 0 0 $tlp-double-spacing;
+            margin: 0 0 0 $tlp-x-large-spacing;
 
             &:first-child {
                 margin: 0;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,7 +19,14 @@
 
 $tlp-density: $tlp-density-condensed;
 
-$tlp-spacing: 15px;
-$tlp-half-spacing: $tlp-spacing / 2;
-$tlp-double-spacing: $tlp-spacing * 2;
-$tlp-title-spacing: 20px;
+$tlp-half-spacing: 6px;
+$tlp-spacing: 12px;
+$tlp-double-spacing: 18px;
+
+$tlp-title-spacing: 30px;
+
+$tlp-small-spacing: 6px;
+$tlp-medium-spacing: 12px;
+$tlp-large-spacing: 18px;
+$tlp-x-large-spacing: 24px;
+$tlp-jumbo-spacing: 36px;

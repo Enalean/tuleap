@@ -271,7 +271,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
     &.tlp-select-small {
         height: $tlp-form-element-small-height;
-        padding: 0 ($tlp-form-element-small-padding-horizontal * 2 $tlp-form-element-select-small-background-size) 0 $tlp-form-element-small-padding-horizontal;
+        padding: 0 ($tlp-form-element-small-padding-horizontal * 2 + $tlp-form-element-select-small-background-size) 0 $tlp-form-element-small-padding-horizontal;
         background: $tlp-form-element-background url('../images/tlp-select-small-background.png') no-repeat;
         background-position: right $tlp-form-element-small-padding-horizontal center;
         font-size: $tlp-form-element-small-font-size;

@@ -31,10 +31,10 @@
     width: 100%;
 
     > .git-repository-shortlog-day {
-        margin: $tlp-spacing 0;
+        margin: $tlp-large-spacing 0 $tlp-small-spacing;
 
         &:first-child {
-            margin: 0 0 $tlp-spacing;
+            margin: 0 0 $tlp-small-spacing;
         }
     }
 
@@ -45,7 +45,7 @@
 }
 
 .git-repository-shortlog-day {
-    margin: $tlp-double-spacing $tlp-spacing $tlp-half-spacing;
+    margin: $tlp-large-spacing $tlp-spacing 0;
 }
 
 .git-repository-commit-card {

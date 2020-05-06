@@ -22,7 +22,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 .user-profile {
     display: flex;
     justify-content: center;
-    padding: $tlp-double-spacing;
+    padding: $tlp-jumbo-spacing;
     border-bottom: 5px solid $tlp-theme-color;
     background: $tlp-theme-sidebar-background-color;
     color: $tlp-ui-white;
@@ -110,7 +110,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: $tlp-double-spacing;
+    padding: $tlp-x-large-spacing;
 }
 
 .user-profile-has-projects {

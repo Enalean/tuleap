@@ -97,7 +97,7 @@ $nav-margin: 30px;
         }
 
         .tlp-framed {
-            box-shadow: inset 0 0 0 20px transparentize($theme-color, .8);
+            box-shadow: inset 0 0 0 16px transparentize($theme-color, .8);
         }
 
         .tlp-framed-vertically::before {

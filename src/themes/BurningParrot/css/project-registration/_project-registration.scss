@@ -22,11 +22,11 @@
 @import './includes/services';
 
 $illustration-width: 319px;
-$illustration-spacing: (2 * $tlp-double-spacing);
+$illustration-spacing: (2 * $tlp-large-spacing);
 $title-margin-left: $illustration-width + $illustration-spacing;
 
 .project-registration {
-    padding: $tlp-double-spacing $tlp-double-spacing 100px;
+    padding: $tlp-x-large-spacing $tlp-x-large-spacing 100px;
     background: linear-gradient(180deg, $tlp-ui-white 0, $tlp-theme-background-color 400px);
 }
 
@@ -53,7 +53,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .project-registration-templates {
-    margin: 0 0 $tlp-spacing;
+    margin: $tlp-x-large-spacing 0 $tlp-medium-spacing;
 }
 
 .register-new-project-section-badge {
@@ -84,7 +84,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
         bottom: 0;
         left: 0;
         width: 100vw;
-        padding: $tlp-spacing $tlp-double-spacing;
+        padding: $tlp-large-spacing;
         animation: footerAppear ease-out 150ms;
         border-top: 0;
         background: transparentize($tlp-ui-white, .1);
@@ -121,11 +121,11 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     }
 
     .project-registration-title {
-        margin: $tlp-double-spacing 0 $tlp-spacing;
+        margin: $tlp-large-spacing 0 $tlp-spacing;
     }
 
     .register-new-project-boxes {
-        margin: $tlp-double-spacing 0 0;
+        margin: $tlp-medium-spacing 0 0;
     }
 
     .register-new-project-list {

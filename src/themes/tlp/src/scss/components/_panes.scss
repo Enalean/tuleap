@@ -101,7 +101,7 @@
     justify-content: center;
 
     &:not(.tlp-pane-section) {
-        margin: $tlp-double-spacing 0 0;
+        margin: $tlp-large-spacing 0 0;
     }
 
     > [class*='tlp-button'] {

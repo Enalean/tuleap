@@ -34,8 +34,9 @@
 }
 
 .edit-kanban-label-form,
-.edit-kanban-column-configuration {
-    margin: 0 0 $tlp-double-spacing;
+.edit-kanban-column-configuration,
+.edit-kanban-tracker-reports {
+    margin: 0 0 $tlp-x-large-spacing;
 }
 
 .edit-kanban-column-list,
@@ -133,9 +134,4 @@
 
 .edit-kanban-column-settings {
     display: flex;
-}
-
-.edit-kanban-tracker-reports {
-    margin: 0 0 $tlp-double-spacing;
-
 }
