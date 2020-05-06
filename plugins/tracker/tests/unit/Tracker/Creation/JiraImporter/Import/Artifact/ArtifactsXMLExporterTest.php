@@ -36,6 +36,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -43,15 +44,32 @@ class ArtifactsXMLExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    public function testItExportsArtifacts(): void
-    {
-        $wrapper      = Mockery::mock(ClientWrapper::class);
-        $user_manager = Mockery::mock(UserManager::class);
+    /**
+     * @var ArtifactsXMLExporter
+     */
+    private $exporter;
 
-        $exporter = new ArtifactsXMLExporter(
-            $wrapper,
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     */
+    private $wrapper;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     */
+    private $user_manager;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->wrapper      = Mockery::mock(ClientWrapper::class);
+        $this->user_manager = Mockery::mock(UserManager::class);
+
+        $this->exporter = new ArtifactsXMLExporter(
+            $this->wrapper,
             new XML_SimpleXMLCDATAFactory(),
-            $user_manager,
+            $this->user_manager,
             new FieldChangeXMLExporter(
                 new FieldChangeDateBuilder(
                     new XML_SimpleXMLCDATAFactory()
@@ -59,17 +77,22 @@ class ArtifactsXMLExporterTest extends TestCase
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 ),
-                new XML_SimpleXMLCDATAFactory(),
+                new FieldChangeTextBuilder(
+                    new XML_SimpleXMLCDATAFactory()
+                )
             ),
             new FieldChangeStringBuilder(
                 new XML_SimpleXMLCDATAFactory()
             )
         );
+    }
 
+    public function testItExportsArtifacts(): void
+    {
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getUserName')->andReturn('user01');
 
-        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
         $tracker_node = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -85,7 +108,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $wrapper->shouldReceive('getUrl')->andReturn([
+        $this->wrapper->shouldReceive('getUrl')->andReturn([
             'startAt' => 0,
             'maxResults' => 50,
             'total' => 7,
@@ -117,7 +140,7 @@ class ArtifactsXMLExporterTest extends TestCase
             ]
         ]);
 
-        $exporter->exportArtifacts(
+        $this->exporter->exportArtifacts(
             $tracker_node,
             $mapping_collection,
             $jira_base_url,
@@ -130,31 +153,10 @@ class ArtifactsXMLExporterTest extends TestCase
 
     public function testItExportsArtifactsPaginated(): void
     {
-        $wrapper      = Mockery::mock(ClientWrapper::class);
-        $user_manager = Mockery::mock(UserManager::class);
-
-        $exporter = new ArtifactsXMLExporter(
-            $wrapper,
-            new XML_SimpleXMLCDATAFactory(),
-            $user_manager,
-            new FieldChangeXMLExporter(
-                new FieldChangeDateBuilder(
-                    new XML_SimpleXMLCDATAFactory()
-                ),
-                new FieldChangeStringBuilder(
-                    new XML_SimpleXMLCDATAFactory()
-                ),
-                new XML_SimpleXMLCDATAFactory()
-            ),
-            new FieldChangeStringBuilder(
-                new XML_SimpleXMLCDATAFactory()
-            ),
-        );
-
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getUserName')->andReturn('user01');
 
-        $user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
         $tracker_node = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -170,7 +172,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $wrapper->shouldReceive('getUrl')->andReturn(
+        $this->wrapper->shouldReceive('getUrl')->andReturn(
             [
                 'startAt' => 0,
                 'maxResults' => 1,
@@ -211,7 +213,7 @@ class ArtifactsXMLExporterTest extends TestCase
             ]
         );
 
-        $exporter->exportArtifacts(
+        $this->exporter->exportArtifacts(
             $tracker_node,
             $mapping_collection,
             $jira_base_url,

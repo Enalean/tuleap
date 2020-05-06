@@ -39,6 +39,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -148,7 +149,9 @@ class JiraXmlExporter
                     new FieldChangeStringBuilder(
                         new XML_SimpleXMLCDATAFactory()
                     ),
-                    new XML_SimpleXMLCDATAFactory()
+                    new FieldChangeTextBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    )
                 ),
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
