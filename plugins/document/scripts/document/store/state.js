@@ -34,6 +34,8 @@ const state = {
     user_can_create_wiki: false,
     max_files_dragndrop: 1,
     max_size_upload: 1,
+    warning_threshold: 50,
+    max_archive_size: 2000,
     files_uploads_list: [],
     embedded_are_allowed: false,
     is_loading_currently_previewed_item: false,

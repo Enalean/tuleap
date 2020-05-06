@@ -26,6 +26,7 @@ use CSRFSynchronizerToken;
 use HTTPRequest;
 use Project;
 use TemplateRendererFactory;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -44,11 +45,19 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
      * @var \DocmanPluginInfo
      */
     private $docman_plugin_info;
+    /**
+     * @var FileDownloadLimitsBuilder
+     */
+    private $file_download_limits_builder;
 
-    public function __construct(DocumentTreeProjectExtractor $project_extractor, \DocmanPluginInfo $docman_plugin_info)
-    {
-        $this->project_extractor  = $project_extractor;
-        $this->docman_plugin_info = $docman_plugin_info;
+    public function __construct(
+        DocumentTreeProjectExtractor $project_extractor,
+        \DocmanPluginInfo $docman_plugin_info,
+        FileDownloadLimitsBuilder $file_download_limits_builder
+    ) {
+        $this->project_extractor            = $project_extractor;
+        $this->docman_plugin_info           = $docman_plugin_info;
+        $this->file_download_limits_builder = $file_download_limits_builder;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -77,7 +86,8 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
                 $is_item_status_used,
                 $is_obsolescence_date_used,
                 (bool) $this->docman_plugin_info->getPropertyValueForName('only_siteadmin_can_delete'),
-                new CSRFSynchronizerToken('plugin-document')
+                new CSRFSynchronizerToken('plugin-document'),
+                $this->file_download_limits_builder->build()
             )
         );
 
@@ -85,7 +95,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     }
 
     /**
-     * @param array       $variables
+     * @param array $variables
      *
      * @throws NotFoundException
      */
@@ -97,6 +107,7 @@ class DocumentTreeController implements DispatchableWithRequest, DispatchableWit
     private function isHardcodedMetadataUsed(Project $project, string $label): bool
     {
         $docman_setting_bo = new \Docman_SettingsBo($project->getID());
+
         return $docman_setting_bo->getMetadataUsage($label) === "1";
     }
 

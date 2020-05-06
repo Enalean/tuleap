@@ -49,6 +49,8 @@ function initApp(
         user_can_create_wiki,
         max_files_dragndrop,
         max_size_upload,
+        warning_threshold,
+        max_archive_size,
         embedded_are_allowed,
         is_deletion_allowed,
         is_item_status_metadata_used,
@@ -63,6 +65,8 @@ function initApp(
     state.user_can_create_wiki = user_can_create_wiki;
     state.max_files_dragndrop = max_files_dragndrop;
     state.max_size_upload = max_size_upload;
+    state.warning_threshold = warning_threshold;
+    state.max_archive_size = max_archive_size;
     state.embedded_are_allowed = embedded_are_allowed;
     state.is_deletion_allowed = is_deletion_allowed;
     state.is_item_status_metadata_used = is_item_status_metadata_used;
