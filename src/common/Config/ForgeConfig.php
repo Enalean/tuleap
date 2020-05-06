@@ -54,6 +54,16 @@ class ForgeConfig
         return $local_inc_file_path;
     }
 
+    public static function loadDatabaseInc(): string
+    {
+        $database_config_file = self::get('db_config_file');
+        if (! file_exists($database_config_file)) {
+            throw new RuntimeException('Database configuration file cannot be read, did you loadLocalIn first ?');
+        }
+        self::loadFromFile($database_config_file);
+        return $database_config_file;
+    }
+
     public static function loadFromFile($file)
     {
         self::load(new ConfigValueFileProvider($file));

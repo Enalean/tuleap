@@ -32,6 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
 use Tuleap\BuildVersion\VersionPresenter;
 use TuleapCfg\Command\Docker\DataPersistence;
+use TuleapCfg\Command\Docker\LogToSyslog;
 use TuleapCfg\Command\Docker\Postfix;
 use TuleapCfg\Command\Docker\Realtime;
 use TuleapCfg\Command\Docker\Rsyslog;
@@ -99,14 +100,18 @@ final class StartContainerCommand extends Command
                 $this->data_persistence->restore($output);
                 $tuleap->update($output);
             }
-            $realtime = new Realtime(new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]));
+            $console_logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
+            $realtime = new Realtime($console_logger);
             $realtime->setup($tuleap_fqdn);
 
             $rsyslog = new Rsyslog();
-            $rsyslog->setup($output);
+            $rsyslog->setup($output, $tuleap_fqdn);
 
             $postfix = new Postfix($this->process_factory);
             $postfix->setup($output, $tuleap_fqdn);
+
+            $log_to_syslog = new LogToSyslog($console_logger);
+            $log_to_syslog->configure();
 
             $supervisord = new Supervisord(
                 Supervisord::UNIT_CROND,

@@ -26,7 +26,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
     public const CONFIG_LOGGER = 'sys_logger';
 
-    private const CONFIG_LOGGER_SYSLOG = 'syslog';
+    public const CONFIG_LOGGER_SYSLOG = 'syslog';
 
     public const FILENAME = 'codendi_syslog';
 

@@ -38,9 +38,9 @@ date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 // Defines all of the settings first (hosts, databases, etc.)
 $local_inc = ForgeConfig::loadLocalInc();
+$GLOBALS['db_config_file'] = ForgeConfig::loadDatabaseInc();
 require($local_inc);
 require($GLOBALS['db_config_file']);
-ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/development.inc.dist');
     ForgeConfig::loadFromFile(dirname($local_inc) . '/development.inc');

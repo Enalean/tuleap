@@ -37,6 +37,8 @@ use TuleapCfg\Command\Docker\Tuleap;
 
 class DockerAioRunCommand extends Command
 {
+    private const TULEAP_FQDN = 'tuleap.local';
+
     private const PERSISTENT_DATA = [
         '/etc/pki/tls/private/localhost.key.pem',
         '/etc/pki/tls/certs/localhost.cert.pem',
@@ -94,10 +96,10 @@ class DockerAioRunCommand extends Command
                 $this->shutdownMysql($output, $mysql_daemon);
             }
             $rsyslog = new Rsyslog();
-            $rsyslog->setup($output);
+            $rsyslog->setup($output, self::TULEAP_FQDN);
 
             $postfix = new Postfix($this->process_factory);
-            $postfix->setup($output, 'tuleap.local');
+            $postfix->setup($output, self::TULEAP_FQDN);
 
             $supervisord = new Supervisord(...Supervisord::UNITS);
             $supervisord->run($output);
@@ -118,7 +120,7 @@ class DockerAioRunCommand extends Command
 
         $mysql_daemon = $this->initializeMysqlDataStore($output);
         $ssh_daemon->startDaemon($output);
-        $tuleap->setup($output, 'tuleap.local', 'localhost', 'root', (string) getenv('MYSQL_ROOT_PASSWORD'));
+        $tuleap->setup($output, self::TULEAP_FQDN, 'localhost', 'root', (string) getenv('MYSQL_ROOT_PASSWORD'));
         $this->shutdownMysql($output, $mysql_daemon);
         $ssh_daemon->shutdownDaemon($output);
     }
