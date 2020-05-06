@@ -318,7 +318,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             return;
         }
 
-        $logger = new BackendLogger();
+        $logger = BackendLogger::getDefaultLogger();
 
         $config_creator = new FirstConfigCreator(
             $config,
