@@ -80,6 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
         propsData: {
             user_id,
             project_id,
+            project_name,
             user_is_admin,
             user_can_create_wiki,
             date_time_format,

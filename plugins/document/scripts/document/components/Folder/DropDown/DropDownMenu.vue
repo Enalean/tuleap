@@ -79,6 +79,14 @@
         <copy-item v-bind:item="item" />
         <paste-item v-bind:destination="item" />
 
+        <template v-if="is_item_a_folder(item)">
+            <drop-down-separator />
+            <download-folder-as-zip
+                data-test="document-dropdown-download-folder-as-zip"
+                v-bind:item="item"
+            />
+        </template>
+
         <slot name="delete-item-separator" v-if="is_deletion_allowed" />
         <slot name="delete-item" />
     </div>
@@ -89,6 +97,7 @@ import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
+import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 
 export default {
     name: "DropDownMenu",
@@ -97,6 +106,7 @@ export default {
         CutItem,
         CopyItem,
         PasteItem,
+        DownloadFolderAsZip,
     },
     props: {
         isInFolderEmptyState: Boolean,
@@ -114,7 +124,7 @@ export default {
     },
     computed: {
         ...mapState(["project_id", "is_deletion_allowed"]),
-        ...mapGetters(["is_item_an_empty_document"]),
+        ...mapGetters(["is_item_an_empty_document", "is_item_a_folder"]),
     },
     methods: {
         getUrlForPane(pane_name) {

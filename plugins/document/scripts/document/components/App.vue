@@ -59,6 +59,7 @@ export default {
     props: {
         user_id: Number,
         project_id: Number,
+        project_name: String,
         user_is_admin: Boolean,
         user_can_create_wiki: Boolean,
         date_time_format: String,
@@ -99,6 +100,7 @@ export default {
         this.$store.commit("initApp", [
             this.user_id,
             this.project_id,
+            this.project_name,
             this.user_is_admin,
             this.date_time_format,
             this.$gettext("Documents"),

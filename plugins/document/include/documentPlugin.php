@@ -27,6 +27,7 @@ use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
+use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
@@ -99,6 +100,13 @@ class documentPlugin extends Plugin // phpcs:ignore
         );
     }
 
+    public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer
+    {
+        return new DocumentFolderZipStreamer(
+            $this->getProjectExtractor()
+        );
+    }
+
     public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
     {
         return new PermissionDeniedDocumentMailSender(
@@ -113,6 +121,10 @@ class documentPlugin extends Plugin // phpcs:ignore
             $r->post(
                 '/PermissionDeniedRequestMessage/{project_id:\d+}',
                 $this->getRouteHandler('routeSendRequestMail')
+            );
+            $r->get(
+                '/{project_name:[A-z0-9-]+}/folders/{folder_id:\d+}/download-folder-as-zip',
+                $this->getRouteHandler('routeDownloadFolderAsZip')
             );
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
