@@ -2,7 +2,9 @@
     <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-docman | Document{{/ dgettext }}</h1>
 
     <nav class="tlp-tabs">
-        <a class="tlp-tab tlp-tab-active" href="/admin/document/files-upload-limits">{{# dgettext }}tuleap-docman | File upload limits{{/ dgettext }}</a>
+        {{# tabs }}
+            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}">{{ label }}</a>
+        {{/ tabs }}
     </nav>
 
     <div class="tlp-framed-horizontally">
