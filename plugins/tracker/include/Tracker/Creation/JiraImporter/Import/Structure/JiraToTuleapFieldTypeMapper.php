@@ -177,7 +177,7 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:readonlyfield':
                 case 'com.atlassian.jira.toolkit:viewmessage': //view message
                 case 'com.atlassian.jira.toolkit:message': //edit message
-                case 'resolutiondate':
+                case 'resolutiondate': // this field is not always displayed in issue view, always created.
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:grouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':

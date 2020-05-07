@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
@@ -34,9 +36,9 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 
-final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
+final class JiraXmlExporterTest extends TestCase
 {
-    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XmlReportExporter
@@ -117,12 +119,12 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
             [
                 $fieldset_xml,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-                Mockery::type('string'),
-                Mockery::type('string'),
-                Mockery::type('string'),
+                "artifact id",
+                "Artifact id",
+                "artifact_id",
                 1,
-                Mockery::type('bool'),
-                Mockery::type('array'),
+                false,
+                [],
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -131,12 +133,12 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
             [
                 $fieldset_xml,
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                Mockery::type('string'),
-                Mockery::type('string'),
-                Mockery::type('string'),
+                "jira_artifact_url",
+                "Link to original artifact",
+                "jira_artifact_url",
                 2,
-                Mockery::type('bool'),
-                Mockery::type('array'),
+                false,
+                [],
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -145,12 +147,28 @@ final class JiraXmlExporterTest extends \PHPUnit\Framework\TestCase
             [
                 $fieldset_xml,
                 Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
-                Mockery::type('string'),
-                Mockery::type('string'),
-                Mockery::type('string'),
+                "updated",
+                "Last update date",
+                "updated",
                 5,
-                Mockery::type('bool'),
-                Mockery::type('array'),
+                false,
+                [],
+                $this->jira_field_mapping_collection
+            ]
+        )->once();
+
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $fieldset_xml,
+                Tracker_FormElementFactory::FIELD_DATE_TYPE,
+                "resolutiondate",
+                "Resolved",
+                "resolutiondate",
+                6,
+                false,
+                [
+                    'display_time' => '1'
+                ],
                 $this->jira_field_mapping_collection
             ]
         )->once();
