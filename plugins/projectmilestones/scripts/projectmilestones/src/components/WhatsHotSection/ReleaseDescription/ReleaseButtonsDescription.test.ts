@@ -97,7 +97,7 @@ describe("ReleaseButtonsDescription", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         const ttm_element = wrapper.get("[data-test=pane-link-testmgmt]");
         expect(ttm_element.attributes("href")).toEqual("/plugin/testmanagement/project/6");
-        expect(ttm_element.text()).toEqual("Test Campaigns");
+        expect(ttm_element.attributes("data-tlp-tooltip")).toEqual("Test Campaigns");
         expect(wrapper.get("[data-test=pane-icon-testmgmt]").classes()).toContain(
             "fa-external-link"
         );
@@ -109,7 +109,7 @@ describe("ReleaseButtonsDescription", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         const taskboard_element = wrapper.get("[data-test=pane-link-taskboard]");
         expect(taskboard_element.attributes("href")).toEqual("/taskboard/project/6");
-        expect(taskboard_element.text()).toEqual("Taskboard");
+        expect(taskboard_element.attributes("data-tlp-tooltip")).toEqual("Taskboard");
         expect(wrapper.get("[data-test=pane-icon-taskboard]").classes()).toContain(
             "fa-tlp-taskboard"
         );

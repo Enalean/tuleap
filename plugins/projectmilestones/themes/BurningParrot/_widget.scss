@@ -28,6 +28,12 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 @import 'release-chart';
 @import 'release-toggle-badges-sprints';
 
+.dashboard-widget-content-dashboardprojectmilestone {
+    margin: 0;
+    padding: $tlp-medium-spacing;
+    overflow-x: initial;
+}
+
 .project-release-label {
     display: inline-block;
     position: relative;
@@ -86,15 +92,16 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-time-stripe-icon {
     display: flex;
+    position: relative;
     z-index: 2;
-    top: 1px;
-    left: 4px;
+    top: -1px;
+    left: -1px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
     width: 16px;
     height: 16px;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     border-radius: 50%;
     background: $tlp-theme-color;
     color: $tlp-ui-white;
@@ -102,12 +109,13 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-other-releases .releases-link {
+    color: $tlp-ui-dimmed;
     font-size: 16px;
 }
 
 .releases-link {
     display: inline-block;
-    color: $tlp-theme-color;
+    color: $tlp-ui-dimmed;
     font-size: 16px;
 }
 
