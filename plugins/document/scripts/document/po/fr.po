@@ -166,6 +166,9 @@ msgstr "Documents"
 msgid "Download"
 msgstr "Télécharger"
 
+msgid "Download as zip"
+msgstr "Télécharger au format zip"
+
 msgid "Draft"
 msgstr "Brouillon"
 

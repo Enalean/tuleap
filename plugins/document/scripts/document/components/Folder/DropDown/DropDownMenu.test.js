@@ -36,6 +36,7 @@ describe("DropDownMenu", () => {
             });
         };
         store.getters.is_item_an_empty_document = () => false;
+        store.getters.is_item_a_folder = () => false;
     });
 
     describe("Approval table menu option -", () => {
@@ -66,6 +67,43 @@ describe("DropDownMenu", () => {
                 },
             });
             expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeTruthy();
+        });
+    });
+
+    describe("Download folder as zip", () => {
+        it("Displays the button if the item is a folder", async () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 69,
+                    title: "NSFW",
+                    type: "folder",
+                },
+            });
+
+            store.getters.is_item_a_folder = () => true;
+
+            await wrapper.vm.$nextTick();
+
+            expect(
+                wrapper.contains("[data-test=document-dropdown-download-folder-as-zip]")
+            ).toBeTruthy();
+        });
+
+        it("Does not display the button if the item is not a folder", async () => {
+            const wrapper = dropdown_menu_factory({
+                item: {
+                    id: 4,
+                    title: "my item title",
+                    type: "file",
+                    can_user_manage: false,
+                },
+            });
+
+            await wrapper.vm.$nextTick();
+
+            expect(
+                wrapper.contains("[data-test=document-dropdown-download-folder-as-zip]")
+            ).toBeFalsy();
         });
     });
 });

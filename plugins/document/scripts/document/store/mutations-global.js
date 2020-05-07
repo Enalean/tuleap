@@ -43,6 +43,7 @@ function initApp(
     [
         user_id,
         project_id,
+        project_name,
         user_is_admin,
         date_time_format,
         root_title,
@@ -59,6 +60,7 @@ function initApp(
 ) {
     state.user_id = user_id;
     state.project_id = project_id;
+    state.project_name = project_name;
     state.is_user_administrator = user_is_admin;
     state.date_time_format = date_time_format;
     state.root_title = root_title;
