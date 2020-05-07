@@ -22,16 +22,18 @@ namespace Tuleap\BotMattermost;
 
 use BackendLogger;
 use ForgeConfig;
+use Psr\Log\LoggerInterface;
 use TruncateLevelLogger;
+use Tuleap\Log\LogForwarderTrait;
 
-class BotMattermostLogger extends TruncateLevelLogger
+class BotMattermostLogger implements LoggerInterface
 {
+    use LogForwarderTrait;
+
+    private const LOGGER_NAME = 'botMattermost_syslog';
 
     public function __construct()
     {
-        parent::__construct(
-            new BackendLogger(ForgeConfig::get('codendi_log') . '/botMattermost_syslog'),
-            ForgeConfig::get('sys_logger_level')
-        );
+        $this->logger = BackendLogger::getDefaultLogger(self::LOGGER_NAME);
     }
 }
