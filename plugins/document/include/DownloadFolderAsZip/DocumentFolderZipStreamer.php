@@ -31,6 +31,7 @@ use Tuleap\Request\DispatchableWithProject;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
+use ZipStream\Exception\OverflowException;
 use ZipStream\Option\Archive;
 use ZipStream\ZipStream;
 
@@ -41,10 +42,17 @@ class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispatchable
      */
     private $project_extractor;
 
+    /**
+     * @var ZipStreamerLoggingHelper
+     */
+    private $error_logging_helper;
+
     public function __construct(
-        DocumentTreeProjectExtractor $project_extractor
+        DocumentTreeProjectExtractor $project_extractor,
+        ZipStreamerLoggingHelper $error_logging_helper
     ) {
-        $this->project_extractor = $project_extractor;
+        $this->project_extractor    = $project_extractor;
+        $this->error_logging_helper = $error_logging_helper;
     }
 
     /**
@@ -106,10 +114,14 @@ class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispatchable
         $factory->getItemTree($folder, $user, false, true);
 
         $folder->accept(
-            new ZipStreamFolderFilesVisitor($zip),
+            new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper),
             ['path' => '', 'base_folder_id' => $folder->getId()]
         );
 
-        $zip->finish();
+        try {
+            $zip->finish();
+        } catch (OverflowException $e) {
+            $this->error_logging_helper->logOverflowExceptionError($folder);
+        }
     }
 }

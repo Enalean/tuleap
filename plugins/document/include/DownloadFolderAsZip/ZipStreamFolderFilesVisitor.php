@@ -30,6 +30,8 @@ use Docman_Item;
 use Docman_Link;
 use Docman_Wiki;
 use Tuleap\Docman\Item\ItemVisitor;
+use ZipStream\Exception\FileNotFoundException;
+use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
 
 final class ZipStreamFolderFilesVisitor implements ItemVisitor
@@ -39,9 +41,15 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
      */
     private $zip;
 
-    public function __construct(ZipStream $zip)
+    /**
+     * @var ZipStreamerLoggingHelper
+     */
+    private $error_logging_helper;
+
+    public function __construct(ZipStream $zip, ZipStreamerLoggingHelper $error_logging_helper)
     {
-        $this->zip = $zip;
+        $this->zip                  = $zip;
+        $this->error_logging_helper = $error_logging_helper;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []): void
@@ -74,7 +82,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         $name          = $item->getTitle();
         $document_path = $params['path'];
 
-        $this->zip->addFileFromPath($document_path . '/' . $name, $fs_path);
+        $this->addFileToArchive($item, $document_path . '/' . $name, $fs_path);
     }
 
     public function visitEmbeddedFile(Docman_EmbeddedFile $item, array $params = []): void
@@ -83,7 +91,7 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         $name          = $item->getTitle();
         $document_path = $params['path'];
 
-        $this->zip->addFileFromPath($document_path . '/' . $name . '.html', $fs_path);
+        $this->addFileToArchive($item, $document_path . '/' . $name . '.html', $fs_path);
     }
 
     public function visitEmpty(Docman_Empty $item, array $params = []): void
@@ -107,5 +115,16 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
         }
 
         return $params;
+    }
+
+    private function addFileToArchive(Docman_Item $item, string $name, string $fs_path): void
+    {
+        try {
+            $this->zip->addFileFromPath($name, $fs_path);
+        } catch (FileNotFoundException $e) {
+            $this->error_logging_helper->logFileNotFoundException($item, $fs_path);
+        } catch (FileNotReadableException $e) {
+            $this->error_logging_helper->logFileNotReadableException($item, $fs_path);
+        }
     }
 }
