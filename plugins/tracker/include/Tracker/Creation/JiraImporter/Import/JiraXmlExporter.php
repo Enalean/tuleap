@@ -46,12 +46,12 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
-    public const JIRA_LINK_FIELD_NAME        = "jira_artifact_url";
+    public const JIRA_LINK_FIELD_NAME        = "jira_issue_url";
     public const JIRA_SUMMARY_FIELD_NAME     = "summary";
     public const JIRA_DESCRIPTION_FIELD_NAME = "description";
     public const JIRA_UPDATED_ON_NAME        = "updated";
 
-    public const JIRA_LINK_FIELD_ID        = "jira_artifact_url";
+    public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
 
     /**
@@ -208,7 +208,7 @@ class JiraXmlExporter
             $node_jira_atf_form_elements,
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
             self::JIRA_LINK_FIELD_NAME,
-            "Link to original artifact",
+            "Link to original issue",
             self::JIRA_LINK_FIELD_ID,
             2,
             false,

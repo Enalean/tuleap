@@ -110,9 +110,9 @@ class PermissionsXMLExporterTest extends TestCase
         $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new FieldMapping(
-                'jira_artifact_url',
-                'Fjira_artifact_url',
-                'Link to original artifact',
+                'jira_issue_url',
+                'Fjira_issue_url',
+                'Link to original issue',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
         );
@@ -129,7 +129,7 @@ class PermissionsXMLExporterTest extends TestCase
 
         $read_permission_node = $permissions_node->permission[0];
         $this->assertSame("field", (string) $read_permission_node['scope']);
-        $this->assertSame("Fjira_artifact_url", (string) $read_permission_node['REF']);
+        $this->assertSame("Fjira_issue_url", (string) $read_permission_node['REF']);
         $this->assertSame("UGROUP_ANONYMOUS", (string) $read_permission_node['ugroup']);
         $this->assertSame("PLUGIN_TRACKER_FIELD_READ", (string) $read_permission_node['type']);
     }

@@ -61,7 +61,7 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
       <translate-stub
         tag="span"
       >
-        Tracker
+        Issue type
       </translate-stub>
     </label>
      
@@ -73,11 +73,11 @@ exports[`TrackerFromJiraProject renders the component 1`] = `
     >
       <option
         data-current-language="en_US"
-        data-msgid="Choose a tracker..."
+        data-msgid="Choose an issue type..."
         selected="selected"
         value=""
       >
-        Choose a tracker...
+        Choose an issue type...
       </option>
        
     </select>
