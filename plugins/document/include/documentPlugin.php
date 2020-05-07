@@ -25,6 +25,7 @@ use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\PermissionDeniedDocumentMailSender;
@@ -89,10 +90,13 @@ class documentPlugin extends Plugin // phpcs:ignore
         return ['docman'];
     }
 
-
     public function routeGet(): DocumentTreeController
     {
-        return new DocumentTreeController($this->getProjectExtractor(), $this->getOldPluginInfo());
+        return new DocumentTreeController(
+            $this->getProjectExtractor(),
+            $this->getOldPluginInfo(),
+            new FileDownloadLimitsBuilder()
+        );
     }
 
     public function routeSendRequestMail(): PermissionDeniedDocumentMailSender
