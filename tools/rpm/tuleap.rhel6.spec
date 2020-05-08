@@ -406,13 +406,6 @@ Provides: tuleap-api-explorer, restler-api-explorer
 %description plugin-api-explorer
 %{summary}.
 
-%package plugin-embed
-Summary: Embed various services in artifacts
-Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}
-%description plugin-embed
-%{summary}.
-
 %if %{with enterprise}
 
 %package plugin-crosstracker
@@ -1431,11 +1424,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/api_explorer
 %{APP_DIR}/src/www/assets/api-explorer
-
-%files plugin-embed
-%defattr(-,root,root,-)
-%{APP_DIR}/plugins/embed
-%{APP_DIR}/src/www/assets/embed
 
 %if %{with enterprise}
 
