@@ -28,6 +28,7 @@ use Tuleap\Docman\ApprovalTable\ApprovalTableRetriever;
 use Tuleap\Docman\ApprovalTable\ApprovalTableStateMapper;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\MetadataRepresentationBuilder;
 use Tuleap\Docman\REST\v1\Metadata\UnknownMetadataException;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsBuilder;
@@ -136,7 +137,8 @@ class ItemRepresentationBuilder
         ?FilePropertiesRepresentation $file_properties = null,
         ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties = null,
         ?LinkPropertiesRepresentation $link_properties = null,
-        ?WikiPropertiesRepresentation $wiki_properties = null
+        ?WikiPropertiesRepresentation $wiki_properties = null,
+        ?FolderPropertiesRepresentation $folder_properties = null
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
         $owner_representation = new MinimalUserRepresentation();
@@ -176,7 +178,8 @@ class ItemRepresentationBuilder
             $file_properties,
             $embedded_file_properties,
             $link_properties,
-            $wiki_properties
+            $wiki_properties,
+            $folder_properties
         );
 
         return $item_representation;

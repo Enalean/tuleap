@@ -209,6 +209,31 @@ class DocmanItemsTest extends DocmanTestExecutionHelper
     }
 
     /**
+     * @depends testGetRootId
+     */
+    public function testGetFolderWithSize(int $root_id): void
+    {
+        $root_folder = $this->loadRootFolderContent($root_id);
+        $folder_to_download = $this->findItemByTitle($root_folder, 'Download me as a zip');
+
+        $request  = $this->client->get('docman_items/' . $folder_to_download['id'] . '/?with_size=true');
+        $response = $this->getResponse(
+            $request,
+            REST_TestDataBuilder::TEST_BOT_USER_NAME
+        );
+
+        $folder = $response->json();
+
+        $this->assertEquals(
+            $folder['folder_properties'],
+            [
+                'total_size' => 6,
+                'nb_files' => 3
+            ]
+        );
+    }
+
+    /**
      * @depends testGetDocumentItemsForAdminUser
      */
     public function testGetAllItemParents(array $items): void

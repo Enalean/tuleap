@@ -28,7 +28,6 @@ use Tuleap\Docman\Version\Version;
  */
 class Docman_Version implements Version
 {
-
     public function __construct($data = null)
     {
         $this->id        = null;
@@ -39,7 +38,7 @@ class Docman_Version implements Version
         $this->changeLog = null;
         $this->date      = null;
         $this->filename  = null;
-        $this->filesize  = null;
+        $this->filesize  = 0;
         $this->filetype  = null;
         $this->path      = null;
         $this->_content  = null;
@@ -135,12 +134,15 @@ class Docman_Version implements Version
         $this->filename = $filename;
     }
 
+    /**
+     * @var int
+     */
     public $filesize;
-    public function getFilesize()
+    public function getFilesize(): int
     {
         return $this->filesize;
     }
-    public function setFilesize($filesize)
+    public function setFilesize(int $filesize)
     {
         $this->filesize = $filesize;
     }
