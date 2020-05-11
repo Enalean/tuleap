@@ -56,7 +56,7 @@
         >
             <label class="tlp-label" for="tracker_name">
                 <i class="fa fa-spin fa-spinner" v-if="is_loading" />
-                <translate>Tracker</translate>
+                <translate>Issue type</translate>
             </label>
             <select
                 class="tlp-select"
@@ -66,7 +66,7 @@
                 v-if="!is_loading"
                 v-on:change="selectTracker($event.target.value)"
             >
-                <option value="" selected v-translate>Choose a tracker...</option>
+                <option value="" selected v-translate>Choose an issue type...</option>
                 <option
                     v-for="tracker in from_jira_data.tracker_list"
                     v-bind:value="JSON.stringify(tracker)"

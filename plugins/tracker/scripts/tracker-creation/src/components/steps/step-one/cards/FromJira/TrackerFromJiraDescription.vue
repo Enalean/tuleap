@@ -22,7 +22,7 @@
         <h4 class="card-title" v-translate>From Jira</h4>
         <div class="card-description">
             <span class="card-description-content" v-translate>
-                Create your new tracker and import its artifacts from Jira server
+                Create your new tracker and import its issues from Jira server
             </span>
         </div>
     </div>

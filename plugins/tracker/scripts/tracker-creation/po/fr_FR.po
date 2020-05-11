@@ -39,6 +39,9 @@ msgstr "Choisissez un point de départ"
 msgid "Choose a tracker..."
 msgstr "Choisissez un outil de suivi ..."
 
+msgid "Choose an issue type..."
+msgstr "Choisissez un type de ticket ..."
+
 msgid "Choose one tracker template among ones available in your platform."
 msgstr ""
 "Choisissez un modèle d'outil de suivi parmi ceux disponibles sur votre plate-"
@@ -59,9 +62,9 @@ msgstr "Créer un nouvel outil de suivi"
 msgid "Create my tracker"
 msgstr "Créer mon outil de suivi"
 
-msgid "Create your new tracker and import its artifacts from Jira server"
+msgid "Create your new tracker and import its issues from Jira server"
 msgstr ""
-"Créez votre nouvel outil de suivi et importez ses artefacts depuis un "
+"Créez votre nouvel outil de suivi et importez ses tickets depuis un "
 "serveur Jira"
 
 msgid "Create your new tracker based on a tracker template XML file."
@@ -100,6 +103,9 @@ msgstr "Depuis Jira"
 
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre outil de suivi quelques infos de base"
+
+msgid "Issue type"
+msgstr "Type de ticket"
 
 msgid "My %{ tracker_name } tracker description..."
 msgstr "Ma description de l'outil de suivi %{ tracker_name } ..."
@@ -156,9 +162,6 @@ msgid ""
 msgstr ""
 "Le modèle de l'outil de suivi que vous sélectionnez fournit des champs "
 "préconfigurés, des permissions, des règles de transitions ..."
-
-msgid "Tracker"
-msgstr "Outil de suivi"
 
 msgid "Tracker XML file"
 msgstr "Fichier XML"
