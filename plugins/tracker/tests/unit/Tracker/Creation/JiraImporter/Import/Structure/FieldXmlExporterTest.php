@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -26,15 +26,13 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
+use XML_SimpleXMLCDATAFactory;
 
 final class FieldXmlExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @var \XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_section_factory;
     /**
      * @var FieldXmlExporter
      */
@@ -42,8 +40,10 @@ final class FieldXmlExporterTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->cdata_section_factory = new \XML_SimpleXMLCDATAFactory();
-        $this->exporter              = new FieldXmlExporter($this->cdata_section_factory);
+        $this->exporter = new FieldXmlExporter(
+            new XML_SimpleXMLCDATAFactory(),
+            new FieldNameFormatter()
+        );
     }
 
     public function testItExportsAFieldset(): void

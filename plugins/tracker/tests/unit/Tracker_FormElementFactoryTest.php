@@ -172,13 +172,6 @@ final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //
         $this->assertNull($this->factory->getFieldById(789), 'Field does not exist');
     }
 
-    public function testDeductNameFromLabel(): void
-    {
-        $label = 'titi est dans la brouSSe avec ro,min"ééééet';
-        $label = $this->factory->deductNameFromLabel($label);
-        $this->assertEquals('titi_est_dans_la_brousse_avec_rominet', $label);
-    }
-
     public function testDisplayCreateFormShouldDisplayAForm(): void
     {
         $content = $this->whenIDisplayCreateFormElement();
