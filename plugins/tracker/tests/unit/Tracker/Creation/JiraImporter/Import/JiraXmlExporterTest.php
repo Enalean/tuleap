@@ -119,7 +119,7 @@ final class JiraXmlExporterTest extends TestCase
             [
                 $fieldset_xml,
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-                "artifact id",
+                "artifact_id",
                 "Artifact id",
                 "artifact_id",
                 1,
@@ -133,9 +133,9 @@ final class JiraXmlExporterTest extends TestCase
             [
                 $fieldset_xml,
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
-                "jira_artifact_url",
-                "Link to original artifact",
-                "jira_artifact_url",
+                "jira_issue_url",
+                "Link to original issue",
+                "jira_issue_url",
                 2,
                 false,
                 [],
