@@ -98,7 +98,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
-        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new FieldMapping(
@@ -112,37 +112,42 @@ class ArtifactsXMLExporterTest extends TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->shouldReceive('getUrl')->andReturn([
-            'startAt' => 0,
-            'maxResults' => 50,
-            'total' => 7,
-            'issues' => [
+        $this->wrapper
+            ->shouldReceive('getUrl')
+            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->andReturn(
                 [
-                    'id' => '10042',
-                    'self' => 'https://jira_instance/rest/api/latest/issue/10042',
-                    'key' => 'key01',
-                    'fields' => [
-                        'summary' => 'summary01',
-                        'issuetype' =>
+                    'startAt'    => 0,
+                    'maxResults' => 50,
+                    'total'      => 7,
+                    'issues'     => [
                         [
-                            'id' => '10004'
-                        ]
-                    ]
-                ],
-                [
-                    'id' => '10043',
-                    'self' => 'https://jira_instance/rest/api/latest/issue/10043',
-                    'key' => 'key02',
-                    'fields' => [
-                        'summary' => 'summary02',
-                        'issuetype' =>
+                            'id'     => '10042',
+                            'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                            'key'    => 'key01',
+                            'fields' => [
+                                'summary'   => 'summary01',
+                                'issuetype' =>
+                                    [
+                                        'id' => '10004'
+                                    ]
+                            ]
+                        ],
                         [
-                            'id' => '10004'
+                            'id'     => '10043',
+                            'self'   => 'https://jira_instance/rest/api/latest/issue/10043',
+                            'key'    => 'key02',
+                            'fields' => [
+                                'summary'   => 'summary02',
+                                'issuetype' =>
+                                    [
+                                        'id' => '10004'
+                                    ]
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]);
+            );
 
         $this->exporter->exportArtifacts(
             $tracker_node,
@@ -162,7 +167,7 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
 
-        $tracker_node = new SimpleXMLElement('<tracker/>');
+        $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
         $mapping_collection->addMapping(
             new FieldMapping(
@@ -176,46 +181,55 @@ class ArtifactsXMLExporterTest extends TestCase
         $jira_base_url   = 'URLinstance';
         $jira_issue_name = 'Story';
 
-        $this->wrapper->shouldReceive('getUrl')->andReturn(
-            [
-                'startAt' => 0,
-                'maxResults' => 1,
-                'total' => 2,
-                'issues' => [
-                    [
-                        'id' => '10042',
-                        'self' => 'https://jira_instance/rest/api/latest/issue/10042',
-                        'key' => 'key01',
-                        'fields' => [
-                            'summary' => 'summary01',
-                            'issuetype' =>
-                            [
-                                'id' => '10004'
+        $this->wrapper
+            ->shouldReceive('getUrl')
+            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields')
+            ->andReturn(
+                [
+                    'startAt'    => 0,
+                    'maxResults' => 1,
+                    'total'      => 2,
+                    'issues'     => [
+                        [
+                            'id'     => '10042',
+                            'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                            'key'    => 'key01',
+                            'fields' => [
+                                'summary'   => 'summary01',
+                                'issuetype' =>
+                                    [
+                                        'id' => '10004'
+                                    ]
                             ]
                         ]
                     ]
                 ]
-            ],
-            [
-                'startAt' => 1,
-                'maxResults' => 1,
-                'total' => 2,
-                'issues' => [
-                    [
-                        'id' => '10043',
-                        'self' => 'https://jira_instance/rest/api/latest/issue/10043',
-                        'key' => 'key02',
-                        'fields' => [
-                            'summary' => 'summary02',
-                            'issuetype' =>
-                            [
-                                'id' => '10004'
+            );
+
+        $this->wrapper
+            ->shouldReceive('getUrl')
+            ->with('/search?jql=project%3Dproject+AND+issuetype%3DStory&fields=%2Aall&expand=renderedFields&startAt=1&maxResults=1')
+            ->andReturn(
+                [
+                    'startAt'    => 1,
+                    'maxResults' => 1,
+                    'total'      => 2,
+                    'issues'     => [
+                        [
+                            'id'     => '10043',
+                            'self'   => 'https://jira_instance/rest/api/latest/issue/10043',
+                            'key'    => 'key02',
+                            'fields' => [
+                                'summary'   => 'summary02',
+                                'issuetype' =>
+                                    [
+                                        'id' => '10004'
+                                    ]
                             ]
                         ]
                     ]
                 ]
-            ]
-        );
+            );
 
         $this->exporter->exportArtifacts(
             $tracker_node,

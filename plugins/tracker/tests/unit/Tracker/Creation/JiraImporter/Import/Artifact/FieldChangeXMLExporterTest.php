@@ -74,7 +74,8 @@ class FieldChangeXMLExporterTest extends TestCase
             $mapping,
             $changeset_node,
             $submitted_on,
-            '2020-04-21T09:31:44.481+0200'
+            '2020-04-21T09:31:44.481+0200',
+            'mercredi 4:45 PM'
         );
 
         $this->assertSame("2020-04-21T09:31:44.481+0200", (string) $submitted_on);
@@ -96,9 +97,39 @@ class FieldChangeXMLExporterTest extends TestCase
             $mapping,
             $changeset_node,
             $submitted_on,
+            '4.5',
             '4.5'
         );
 
         $this->assertSame("2020-04-29T08:45:46+02:00", (string) $submitted_on);
+    }
+
+    public function testItExportsTheRenderedValueOfTextFieldsAsHTMLFormat(): void
+    {
+        $mapping = new FieldMapping(
+            'description',
+            'Fdescription',
+            'Description',
+            'text'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $this->exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
+            "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
+        );
+
+        $this->assertEquals(
+            <<<EOX
+            <field_change type="text" field_name="Description"><value format="html"><![CDATA[<h1><a name="Coin"></a>Coin</h1>
+
+            <p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>]]></value></field_change>
+            EOX,
+            $changeset_node->field_change->asXML()
+        );
     }
 }
