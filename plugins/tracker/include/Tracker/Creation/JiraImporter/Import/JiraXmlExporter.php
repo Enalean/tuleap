@@ -196,7 +196,7 @@ class JiraXmlExporter
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
             Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-            "artifact id",
+            self::JIRA_ARTIFACT_ID_FIELD_ID,
             "Artifact id",
             self::JIRA_ARTIFACT_ID_FIELD_ID,
             1,
