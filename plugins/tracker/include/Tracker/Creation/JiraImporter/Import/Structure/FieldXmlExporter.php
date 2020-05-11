@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
 use Tracker_FormElement_Container_Fieldset;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldXmlExporter
@@ -34,9 +35,17 @@ class FieldXmlExporter
      */
     private $cdata_section_factory;
 
-    public function __construct(XML_SimpleXMLCDATAFactory $cdata_section_factory)
-    {
+    /**
+     * @var FieldNameFormatter
+     */
+    private $field_name_formatter;
+
+    public function __construct(
+        XML_SimpleXMLCDATAFactory $cdata_section_factory,
+        FieldNameFormatter $field_name_formatter
+    ) {
         $this->cdata_section_factory = $cdata_section_factory;
+        $this->field_name_formatter  = $field_name_formatter;
     }
 
     public function exportFieldsetWithName(
@@ -86,7 +95,9 @@ class FieldXmlExporter
             $field->addAttribute('required', '1');
         }
 
-        $this->cdata_section_factory->insert($field, 'name', $name);
+        $formatted_name = $this->field_name_formatter->getFormattedName($name);
+        $this->cdata_section_factory->insert($field, 'name', $formatted_name);
+
         $this->cdata_section_factory->insert($field, 'label', $label);
 
         foreach ($properties as $property_name => $property_value) {
@@ -98,7 +109,7 @@ class FieldXmlExporter
             new FieldMapping(
                 $jira_field_id,
                 $xml_id,
-                $name,
+                $formatted_name,
                 $type
             )
         );

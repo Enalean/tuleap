@@ -22,6 +22,7 @@
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Tracker\FormElement\Event\ImportExternalElement;
 use Tuleap\Tracker\FormElement\Field\Shareable\PropagatePropertiesDao;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\FormElement\View\Admin\FilterFormElementsThatCanBeCreatedForTracker;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 
@@ -1197,27 +1198,12 @@ class Tracker_FormElementFactory
 
     /**
      * format a tracker field short name
-     * @todo move this function in a utility class
      * @param string $label
      * @return string
      */
-    public function deductNameFromLabel($label)
+    private function deductNameFromLabel($label)
     {
-        $normalizeChars = array(
-            'Š' => 'S', 'š' => 's', 'Ð' => 'Dj','Ž' => 'Z', 'ž' => 'z', 'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A',
-            'Å' => 'A', 'Æ' => 'A', 'Ç' => 'C', 'È' => 'E', 'É' => 'E', 'Ê' => 'E', 'Ë' => 'E', 'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
-            'Ï' => 'I', 'Ñ' => 'N', 'Ò' => 'O', 'Ó' => 'O', 'Ô' => 'O', 'Õ' => 'O', 'Ö' => 'O', 'Ø' => 'O', 'Ù' => 'U', 'Ú' => 'U',
-            'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss','à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
-            'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
-            'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
-            'ú' => 'u', 'û' => 'u', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f'
-        );
-        $label = strtolower(trim($label));
-        $label = preg_replace('/[^\w\d_ -]/si', '', $label);
-        //replace any space char with _
-        $label = preg_replace('/\s+/', '_', $label);
-        $label = strtr($label, $normalizeChars);
-        return $label;
+        return (new FieldNameFormatter())->getFormattedName($label);
     }
 
     /**

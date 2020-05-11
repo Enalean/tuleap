@@ -37,6 +37,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -127,12 +128,17 @@ class JiraXmlExporter
 
         $wrapper = ClientWrapper::build($jira_credentials);
 
-        $field_xml_exporter = new FieldXmlExporter(new XML_SimpleXMLCDATAFactory());
+        $field_xml_exporter = new FieldXmlExporter(
+            new XML_SimpleXMLCDATAFactory(),
+            new FieldNameFormatter()
+        );
+
         $jira_field_mapper  = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector);
 
         return new self(
             new FieldXmlExporter(
-                $cdata_factory
+                $cdata_factory,
+                new FieldNameFormatter()
             ),
             $error_collector,
             new JiraFieldRetriever($wrapper),
