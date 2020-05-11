@@ -86,71 +86,100 @@ class ArtifactsXMLExporter
             return;
         }
 
-        $url = "/search?jql=project=" . urlencode($jira_project_id) . " AND issuetype=" . urlencode($jira_issue_type_name) . "&fields=*all";
-        $jira_artifacts_response = $this->wrapper->getUrl($url);
-
-        if (! $jira_artifacts_response) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
-        }
+        $jira_issues_response = $this->getIssues($jira_project_id, $jira_issue_type_name, null, null);
 
         $artifacts_node = $tracker_node->addChild('artifacts');
 
         $this->exportBatchOfIssuesInArtifactXMLFormat(
             $user,
             $artifacts_node,
-            $jira_artifacts_response,
+            $jira_issues_response,
             $jira_base_url,
             $jira_field_mapping_collection
         );
 
         $count_loop = 1;
-        $total      = (int) $jira_artifacts_response['total'];
-        $is_last    = $total <= (int) $jira_artifacts_response['maxResults'];
+        $total      = (int) $jira_issues_response['total'];
+        $is_last    = $total <= (int) $jira_issues_response['maxResults'];
         while (! $is_last) {
-            $max_results = $jira_artifacts_response['maxResults'];
-            $offset      = $jira_artifacts_response['maxResults'] * $count_loop;
+            $max_results = $jira_issues_response['maxResults'];
+            $start_at    = $jira_issues_response['maxResults'] * $count_loop;
 
-            $url = "/search?jql=project=" . urlencode($jira_project_id) . " AND issuetype=" . urlencode($jira_issue_type_name) . "&fields=*all" .
-                "&startAt=" . urlencode((string) $offset) . "&maxResults=" . urlencode((string) $max_results);
-
-            $jira_artifacts_response = $this->wrapper->getUrl($url);
-            if (! $jira_artifacts_response) {
-                throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
-            }
+            $jira_issues_response = $this->getIssues($jira_project_id, $jira_issue_type_name, $start_at, $max_results);
 
             $this->exportBatchOfIssuesInArtifactXMLFormat(
                 $user,
                 $artifacts_node,
-                $jira_artifacts_response,
+                $jira_issues_response,
                 $jira_base_url,
                 $jira_field_mapping_collection
             );
 
-            $is_last = (int) $jira_artifacts_response['total'] <=
-                ((int) $jira_artifacts_response['startAt'] + (int) $jira_artifacts_response['maxResults']);
+            $is_last = (int) $jira_issues_response['total'] <=
+                ((int) $jira_issues_response['startAt'] + (int) $jira_issues_response['maxResults']);
             $count_loop++;
         }
+    }
+
+    private function getIssues(
+        string $jira_project_id,
+        string $jira_issue_type_name,
+        ?int $start_at,
+        ?int $max_results
+    ): array {
+        $jira_artifacts_response = $this->wrapper->getUrl(
+            $this->getUrl($jira_project_id, $jira_issue_type_name, $start_at, $max_results)
+        );
+
+        if (! $jira_artifacts_response) {
+            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssuesException();
+        }
+
+        return $jira_artifacts_response;
+    }
+
+    private function getUrl(
+        string $jira_project_id,
+        string $jira_issue_type_name,
+        ?int $start_at,
+        ?int $max_results
+    ): string {
+        $params = [
+            'jql'    => 'project=' . $jira_project_id . ' AND issuetype=' . $jira_issue_type_name,
+            'fields' => '*all',
+            'expand' => 'renderedFields'
+        ];
+
+        if ($start_at !== null) {
+            $params['startAt'] = $start_at;
+        }
+
+        if ($max_results !== null) {
+            $params['maxResults'] = $max_results;
+        }
+
+        return '/search?' . http_build_query($params);
     }
 
     private function exportBatchOfIssuesInArtifactXMLFormat(
         PFUser $user,
         SimpleXMLElement $artifacts_node,
-        array $jira_artifacts_response,
+        array $jira_issues_response,
         string $jira_base_url,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
-        if (! isset($jira_artifacts_response['issues'])) {
+        if (! isset($jira_issues_response['issues'])) {
             return;
         }
 
-        $jira_artifacts = $jira_artifacts_response['issues'];
-        if (count($jira_artifacts) === 0) {
+        $jira_issues = $jira_issues_response['issues'];
+        if (count($jira_issues) === 0) {
             return;
         }
 
-        foreach ($jira_artifacts as $artifact) {
+        foreach ($jira_issues as $issue) {
             $artifact_node = $artifacts_node->addChild('artifact');
-            $artifact_node->addAttribute('id', $artifact['id']);
+            $artifact_node->addAttribute('id', $issue['id']);
             $changeset_node = $artifact_node->addChild('changeset');
 
             $this->simplexml_cdata_factory->insertWithAttributes(
@@ -160,7 +189,7 @@ class ArtifactsXMLExporter
                 $format = ['format' => 'username']
             );
 
-            $node_submitted_on =  $this->simplexml_cdata_factory->insertWithAttributes(
+            $node_submitted_on = $this->simplexml_cdata_factory->insertWithAttributes(
                 $changeset_node,
                 'submitted_on',
                 date('c', (new \DateTimeImmutable())->getTimestamp()),
@@ -169,21 +198,23 @@ class ArtifactsXMLExporter
 
             $changeset_node->addChild('comments');
 
-            $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($artifact['key']);
+            $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue['key']);
             $this->field_change_string_builder->build(
                 $changeset_node,
                 JiraXmlExporter::JIRA_LINK_FIELD_NAME,
                 $jira_link
             );
 
-            foreach ($artifact['fields'] as $key => $value) {
-                $mapping = $jira_field_mapping_collection->getMappingFromJiraField($key);
+            foreach ($issue['fields'] as $key => $value) {
+                $rendered_value = $issue['renderedFields'][$key] ?? null;
+                $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
                 if ($mapping !== null && $value !== null) {
                     $this->field_change_xml_exporter->exportFieldChange(
                         $mapping,
                         $changeset_node,
                         $node_submitted_on,
-                        (string) $value
+                        (string) $value,
+                        $rendered_value
                     );
                 }
             }

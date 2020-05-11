@@ -67,11 +67,15 @@ class FieldChangeXMLExporter
         $this->field_change_float_builder  = $field_change_float_builder;
     }
 
+    /**
+     * @param mixed|null $rendered_value
+     */
     public function exportFieldChange(
         FieldMapping $mapping,
         SimpleXMLElement $changeset_node,
         SimpleXMLElement $node_submitted_on,
-        string $value
+        string $value,
+        $rendered_value
     ): void {
         if ($mapping->getType() === Tracker_FormElementFactory::FIELD_STRING_TYPE) {
             $this->field_change_string_builder->build(
@@ -83,8 +87,8 @@ class FieldChangeXMLExporter
             $this->field_change_text_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
-                $value,
-                Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+                (string) $rendered_value,
+                Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FLOAT_TYPE) {
             $this->field_change_float_builder->build(
