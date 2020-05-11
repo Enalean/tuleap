@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,20 +22,30 @@ namespace Tuleap\LDAP;
 
 use BackendLogger;
 use ForgeConfig;
-use TruncateLevelLogger;
+use Psr\Log\LoggerInterface;
+use Tuleap\Log\LogForwarderTrait;
 
-class LdapLogger extends TruncateLevelLogger
+final class LdapLogger implements LoggerInterface
 {
+    use LogForwarderTrait;
+
+    private const LOGGER_NAME = 'ldap_syslog';
 
     public function __construct()
     {
-        $file_path = ForgeConfig::get('codendi_log') . '/ldap_syslog';
+        if (ForgeConfig::get(BackendLogger::CONFIG_LOGGER) !== BackendLogger::CONFIG_LOGGER_SYSLOG) {
+            $this->createLogFileForAppUser(ForgeConfig::get('codendi_log') . '/' . self::LOGGER_NAME);
+        }
+        $this->logger = BackendLogger::getDefaultLogger(self::LOGGER_NAME);
+    }
 
-        $this->createLogFileForAppUser($file_path);
-
-        parent::__construct(
-            new BackendLogger($file_path),
-            ForgeConfig::get('sys_logger_level')
-        );
+    private function createLogFileForAppUser(string $file_path): void
+    {
+        if (! is_file($file_path)) {
+            $http_user = ForgeConfig::get('sys_http_user');
+            touch($file_path);
+            chown($file_path, $http_user);
+            chgrp($file_path, $http_user);
+        }
     }
 }
