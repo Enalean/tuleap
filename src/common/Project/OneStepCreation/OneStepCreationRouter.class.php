@@ -19,6 +19,7 @@
  */
 
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
+use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
 
 /**
@@ -69,7 +70,8 @@ class Project_OneStepCreation_OneStepCreationRouter //phpcs:ignore PSR1.Classes.
             $this->custom_description_factory,
             $this->trove_cat_factory,
             $csrf_token,
-            $this->permission_checker
+            $this->permission_checker,
+            $this->getProjectCreationNotifier()
         );
 
         if ($request->get('create_project')) {
@@ -77,5 +79,19 @@ class Project_OneStepCreation_OneStepCreationRouter //phpcs:ignore PSR1.Classes.
         } else {
             $controller->index();
         }
+    }
+
+    private function getProjectCreationNotifier(): ProjectCreationNotifier
+    {
+        return new ProjectCreationNotifier(
+            new TuleapRegisterMail(
+                new MailPresenterFactory(),
+                TemplateRendererFactory::build()->getRenderer(
+                    ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+                ),
+                "mail-project-register-admin"
+            ),
+            BackendLogger::getDefaultLogger()
+        );
     }
 }

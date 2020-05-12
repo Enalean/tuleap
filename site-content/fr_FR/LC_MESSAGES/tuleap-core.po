@@ -1162,6 +1162,10 @@ msgstr "Nouveau mot de passe"
 msgid "New personal access key"
 msgstr "Nouvelle clé personnelle d'accès"
 
+#, php-format
+msgid "New project registered: %s"
+msgstr "Nouveau projet enregistré : %s"
+
 msgid "News"
 msgstr "Annonces"
 
