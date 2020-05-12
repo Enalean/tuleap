@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -30,6 +30,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeSelectBoxBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
@@ -55,26 +56,34 @@ class FieldChangeXMLExporter
      */
     private $field_change_float_builder;
 
+    /**
+     * @var FieldChangeSelectBoxBuilder
+     */
+    private $field_change_select_box_builder;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
         FieldChangeTextBuilder $field_change_text_builder,
-        FieldChangeFloatBuilder $field_change_float_builder
+        FieldChangeFloatBuilder $field_change_float_builder,
+        FieldChangeSelectBoxBuilder $field_change_select_box_builder
     ) {
-        $this->field_change_date_builder   = $field_change_date_builder;
-        $this->field_change_string_builder = $field_change_string_builder;
-        $this->field_change_text_builder   = $field_change_text_builder;
-        $this->field_change_float_builder  = $field_change_float_builder;
+        $this->field_change_date_builder       = $field_change_date_builder;
+        $this->field_change_string_builder     = $field_change_string_builder;
+        $this->field_change_text_builder       = $field_change_text_builder;
+        $this->field_change_float_builder      = $field_change_float_builder;
+        $this->field_change_select_box_builder = $field_change_select_box_builder;
     }
 
     /**
      * @param mixed|null $rendered_value
+     * @param mixed $value
      */
     public function exportFieldChange(
         FieldMapping $mapping,
         SimpleXMLElement $changeset_node,
         SimpleXMLElement $node_submitted_on,
-        string $value,
+        $value,
         $rendered_value
     ): void {
         if ($mapping->getType() === Tracker_FormElementFactory::FIELD_STRING_TYPE) {
@@ -94,13 +103,19 @@ class FieldChangeXMLExporter
             $this->field_change_float_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
-                $value
+                (string) $value
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_DATE_TYPE) {
             $this->field_change_date_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
                 new DateTimeImmutable($value)
+            );
+        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
+            $this->field_change_select_box_builder->build(
+                $changeset_node,
+                $mapping->getFieldName(),
+                $value
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
             $node_submitted_on[0] = $value;

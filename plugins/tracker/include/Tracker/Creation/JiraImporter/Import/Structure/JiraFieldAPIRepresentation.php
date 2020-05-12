@@ -48,16 +48,23 @@ class JiraFieldAPIRepresentation
      */
     private $required;
 
+    /**
+     * @var JiraFieldAPIAllowedValueRepresentation[]
+     */
+    private $bound_values;
+
     public function __construct(
         string $id,
         string $label,
         bool $required,
-        ?string $schema
+        ?string $schema,
+        array $bound_values
     ) {
-        $this->id       = $id;
-        $this->label    = $label;
-        $this->required = $required;
-        $this->schema   = $schema;
+        $this->id           = $id;
+        $this->label        = $label;
+        $this->required     = $required;
+        $this->schema       = $schema;
+        $this->bound_values = $bound_values;
     }
 
     public static function buildFromAPIResponseAndID(string $jira_field_id, array $jira_field): self
@@ -69,11 +76,19 @@ class JiraFieldAPIRepresentation
             $schema = $jira_field['schema']['custom'];
         }
 
+        $bound_values = [];
+        if (isset($jira_field['allowedValues'])) {
+            foreach ($jira_field['allowedValues'] as $jira_field_allowed_value) {
+                $bound_values[] = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponse($jira_field_allowed_value);
+            }
+        }
+
         return new self(
             $jira_field_id,
             $jira_field['name'],
             $jira_field['required'],
-            $schema
+            $schema,
+            $bound_values
         );
     }
 
@@ -95,5 +110,10 @@ class JiraFieldAPIRepresentation
     public function isRequired(): bool
     {
         return $this->required;
+    }
+
+    public function getBoundValues(): array
+    {
+        return $this->bound_values;
     }
 }

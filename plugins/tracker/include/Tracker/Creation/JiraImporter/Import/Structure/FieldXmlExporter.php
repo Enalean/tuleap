@@ -71,6 +71,7 @@ class FieldXmlExporter
 
     /**
      * @param array<string, string> $properties
+     * @param JiraFieldAPIAllowedValueRepresentation[] $bound_values
      */
     public function exportField(
         \SimpleXMLElement $parent_node,
@@ -81,6 +82,7 @@ class FieldXmlExporter
         int $rank,
         bool $required,
         array $properties,
+        array $bound_values,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $field = $parent_node->addChild('formElement');
@@ -103,6 +105,20 @@ class FieldXmlExporter
         foreach ($properties as $property_name => $property_value) {
             $properties_node = $field->addChild("properties");
             $properties_node->addAttribute($property_name, $property_value);
+        }
+
+        if (count($bound_values) > 0) {
+            $bind_node = $field->addChild("bind");
+            $bind_node->addAttribute("type", "static");
+            $bind_node->addAttribute("is_rank_alpha", "0");
+
+            $items_node = $bind_node->addChild("items");
+            foreach ($bound_values as $value) {
+                $item_node = $items_node->addChild("item");
+                $item_node->addAttribute("ID", "V" . $value->getId());
+                $item_node->addAttribute("label", $value->getName());
+                $item_node->addAttribute("is_hidden", "0");
+            }
         }
 
         $jira_field_mapping_collection->addMapping(

@@ -28,6 +28,7 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeSelectBoxBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use XML_SimpleXMLCDATAFactory;
@@ -54,6 +55,9 @@ class FieldChangeXMLExporterTest extends TestCase
                 new XML_SimpleXMLCDATAFactory()
             ),
             new FieldChangeFloatBuilder(
+                new XML_SimpleXMLCDATAFactory()
+            ),
+            new FieldChangeSelectBoxBuilder(
                 new XML_SimpleXMLCDATAFactory()
             )
         );

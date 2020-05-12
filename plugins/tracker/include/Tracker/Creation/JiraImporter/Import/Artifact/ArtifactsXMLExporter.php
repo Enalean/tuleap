@@ -213,7 +213,7 @@ class ArtifactsXMLExporter
                         $mapping,
                         $changeset_node,
                         $node_submitted_on,
-                        (string) $value,
+                        $value,
                         $rendered_value
                     );
                 }
