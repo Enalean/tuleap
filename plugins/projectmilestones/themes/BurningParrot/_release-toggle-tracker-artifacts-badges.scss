@@ -22,45 +22,45 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-number-artifact {
     flex: 0 0 auto;
-    margin: 0 $tlp-double-spacing 0 0;
+    margin: 0 $tlp-x-large-spacing 0 0;
 }
 
 .release-number-artifacts-tracker {
     display: flex;
     align-items: center;
-    height: $tlp-double-spacing;
     margin: 0 0 $tlp-half-spacing;
 
+    &:last-child {
+        margin: 0;
+    }
 }
 
 .release-number-artifacts-value {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: $tlp-double-spacing;
-    height: $tlp-double-spacing;
+    width: 42px;
+    height: 42px;
     margin: 0 5px 0 0;
     border-radius: 50%;
-    font-size: 19px;
+    font-size: 22px;
     font-weight: 600;
 }
 
-.release-number-artifacts-text {
-    max-width: 130px;
-    height: 18px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line selector-no-qualifying-type
+    width: 34px;
+    height: 34px;
+    font-size: 18px;
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {
     .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-value {
-        border: 1px solid map-get($colors, 'secondary');
-        background: transparentize(map-get($colors, 'secondary'), .5);
-        color: map-get($colors, 'primary');
+        border: 1px solid transparentize(map-get($colors, 'primary'), .4);
+        background: transparentize(map-get($colors, 'primary'), .9);
+        color: map-get($colors, 'text');
     }
 
     .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-text {
-        color: map-get($colors, 'primary');
+        color: map-get($colors, 'text');
     }
 }
