@@ -25,12 +25,33 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-header.disabled {
     border-bottom-color: transparent;
-    opacity: .5;
-    color: $tlp-ui-dimmed;
     cursor: not-allowed;
 
-    .project-release-whats-hot-icon {
-        background: $tlp-ui-dimmed;
+    > .project-release-title,
+    > .project-release-date {
+        @keyframes blinkText {
+            from {
+                color: mix($tlp-ui-dimmed, $tlp-ui-white, 30%);
+            }
+
+            to {
+                color: mix($tlp-ui-dimmed, $tlp-ui-white, 5%);
+            }
+        }
+        animation: blinkText 750ms linear infinite alternate;
+    }
+
+    > .project-release-whats-hot-icon {
+        @keyframes blinkIcon {
+            from {
+                background: mix($tlp-ui-dimmed, $tlp-ui-white, 30%);
+            }
+
+            to {
+                background: mix($tlp-ui-dimmed, $tlp-ui-white, 5%);
+            }
+        }
+        animation: blinkIcon 750ms linear infinite alternate;
     }
 }
 
@@ -53,16 +74,18 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-release-header {
     display: flex;
     align-items: baseline;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 (-$tlp-medium-spacing) $tlp-spacing 0;
     padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
     overflow: hidden;
-    background: linear-gradient(to right, transparent 0%, transparentize($tlp-swatch-firemist-silver-secondary, .6) 50%);
+    background: linear-gradient(to right, transparent, transparentize($tlp-theme-background-color, .4) 50%);
     cursor: pointer;
 }
 
 .project-release-whats-hot-icon {
     display: flex;
+    position: relative;
     z-index: 2;
+    top: -2px;
     flex: 0 0 auto;
     align-items: center;
     justify-content: center;
@@ -187,7 +210,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-remaining-disabled {
-    width: 220px + $tlp-spacing;
+    width: 80px;
 }
 
 .closed-release-header-badge {

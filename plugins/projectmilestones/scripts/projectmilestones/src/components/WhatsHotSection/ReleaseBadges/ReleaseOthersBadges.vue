@@ -43,6 +43,18 @@
                 Initial effort: N/A
             </translate>
         </div>
+        <release-buttons-description v-bind:release_data="release_data">
+            <a
+                v-if="get_planning_link"
+                v-bind:href="get_planning_link"
+                data-test="planning-link"
+                class="release-planning-link release-planning-link-item tlp-tooltip tlp-tooltip-top"
+                v-bind:data-tlp-tooltip="release_planning_link_label"
+                v-bind:aria-label="release_planning_link_label"
+            >
+                <i class="release-description-link-icon fa fa-sign-in" aria-hidden="true"></i>
+            </a>
+        </release-buttons-description>
     </div>
 </template>
 
@@ -50,11 +62,19 @@
 import { Component, Prop } from "vue-property-decorator";
 import Vue from "vue";
 import { MilestoneData } from "../../../type";
+import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescription.vue";
+import { State } from "vuex-class";
 
-@Component
+@Component({
+    components: { ReleaseButtonsDescription },
+})
 export default class ReleaseOthersBadges extends Vue {
     @Prop()
     readonly release_data!: MilestoneData;
+    @State
+    readonly user_can_view_sub_milestones_planning!: boolean;
+    @State
+    readonly project_id!: number;
 
     get capacity_exists(): boolean {
         if (!this.release_data.capacity) {
@@ -68,6 +88,38 @@ export default class ReleaseOthersBadges extends Vue {
             return false;
         }
         return this.release_data.initial_effort > 0;
+    }
+
+    get get_planning_link(): string | null {
+        if (
+            !this.user_can_view_sub_milestones_planning ||
+            this.release_data.resources.milestones.accept.trackers.length === 0
+        ) {
+            return null;
+        }
+
+        return (
+            "/plugins/agiledashboard/?group_id=" +
+            encodeURIComponent(this.project_id) +
+            "&planning_id=" +
+            encodeURIComponent(this.release_data.planning.id) +
+            "&action=show&aid=" +
+            encodeURIComponent(this.release_data.id) +
+            "&pane=planning-v2"
+        );
+    }
+
+    get release_planning_link_label(): string {
+        const submilestone_tracker = this.release_data.resources.milestones.accept.trackers[0];
+        let label = submilestone_tracker.label;
+
+        if (!submilestone_tracker) {
+            label = "";
+        }
+
+        return this.$gettextInterpolate(this.$gettext("%{label_submilestone} Planning"), {
+            label_submilestone: label,
+        });
     }
 }
 </script>

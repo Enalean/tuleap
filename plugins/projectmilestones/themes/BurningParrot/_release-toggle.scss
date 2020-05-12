@@ -42,6 +42,13 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     flex-wrap: wrap;
     align-items: flex-start;
     margin: 0 0 $tlp-half-spacing;
+
+    .tlp-pane-subtitle {
+        margin: 0;
+        color: $tlp-ui-dimmed;
+        font-size: 15px;
+        line-height: normal;
+    }
 }
 
 .release-description {
@@ -53,9 +60,9 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-description-link-icon {
-    margin: 0 5px 0 0;
+    margin: 0 2px 0 0;
     color: $tlp-theme-color;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .release-description-link {
@@ -65,15 +72,17 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-planning-link {
-    margin: 0 0 0 $tlp-half-spacing;
+    align-self: baseline;
+    margin: 0 $tlp-medium-spacing 0 0;
+    font-size: 14px;
+
+    &:last-child {
+        margin: 0;
+    }
 }
 
 .release-planning-link-item:hover {
     text-decoration: none;
-}
-
-.release-planning-link-item-text:hover {
-    text-decoration: underline;
 }
 
 .release-description-row {

@@ -18,16 +18,16 @@
  */
 
 $border-width-px: 13px;
-$heigh-bar-px: 35px;
-$top-compress-icon-px: 15px;
+$heigh-bar-px: 32px;
+$top-compress-icon-px: 6px;
 @if $tlp-density == $tlp-density-condensed {
     $border-width-px: 11px;
-    $heigh-bar-px: 28px;
-    $top-compress-icon-px: 5px;
+    $heigh-bar-px: 26px;
+    $top-compress-icon-px: 4px;
 }
 
 $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
-$width-bar-left-sprints: 17px;
+$width-bar-left-sprints: 16px;
 
 .project-release-infos-badges .project-release-info-badge-open-sprint {
     position: relative;
@@ -39,7 +39,7 @@ $width-bar-left-sprints: 17px;
     content: '';
     position: absolute;
     z-index: 2;
-    top: round($tlp-half-spacing) + 1;
+    top: 11px;
     left: -25px;
     width: 25px;
     height: 2px;
@@ -51,17 +51,17 @@ $width-bar-left-sprints: 17px;
     display: flex;
     position: relative;
     z-index: 3;
-    top: round(($tlp-half-spacing - 1) / 2);
-    left: -14px;
-    flex-direction: row;
+    top: 5px;
+    left: -15px;
+    flex: 0 0 auto;
     align-items: center;
-    align-self: start;
     justify-content: center;
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: $tlp-theme-color;
     color: $tlp-ui-white;
+    line-height: normal;
 
     &::before {
         content: '';
@@ -78,6 +78,8 @@ $width-bar-left-sprints: 17px;
 
     &::before {
         content: '\f065'; //fa-expand
+        position: relative;
+        top: -1px;
         font-size: .6rem;
     }
 }
@@ -113,7 +115,7 @@ $width-bar-left-sprints: 17px;
 .on-open-sprints-details .project-release-info-badge-open-sprint {
     display: flex;
     width: calc(100% - #{$width-bar-left-sprints});
-    margin: 0 0 $tlp-spacing 0;
+    margin: 0 0 $tlp-small-spacing 0;
     border-radius: 15px 0 0 15px;
     cursor: default;
 }
@@ -125,31 +127,27 @@ $width-bar-left-sprints: 17px;
     white-space: nowrap;
 }
 
-.project-release-infos-badges hr {
-    width: 100%;
-    color: $tlp-ui-border-light;
-}
-
 .project-release-open-sprint-badges {
     display: inline-flex;
     margin: 0 0 0 #{- $width-bar-left-sprints};
 }
 
 .project-release-badges-open-closed.open-badges-sprints .project-release-open-sprint-badges {
-    margin: 0 $tlp-double-spacing 0 #{- $width-bar-left-sprints};
+    margin: 0 0 0 #{- $width-bar-left-sprints};
 }
 
 .milestone-badges-sprints-separator {
+    width: calc(100% + #{$tlp-medium-spacing} + (#{$tlp-medium-spacing} + 6px));
     height: 1px;
-    margin: 0 0 $tlp-spacing;
+    margin: $tlp-small-spacing (-$tlp-medium-spacing) $tlp-medium-spacing (-$tlp-medium-spacing - 6px);
     border: 0;
-    background-color: $tlp-ui-border-light;
-    color: $tlp-ui-border-light;
+    background: linear-gradient(to right, $timeline-color, $tlp-ui-border-normal);
 }
 
 .project-release-closed-sprint-badge {
     position: relative;
     width: min-content;
+    margin: 0;
     background: $tlp-ui-border-dark;
     color: $tlp-ui-dimmed;
 }
@@ -158,7 +156,7 @@ $width-bar-left-sprints: 17px;
     content: '';
     position: absolute;
     z-index: 2;
-    top: round($tlp-half-spacing) + 1;
+    top: 11px;
     left: -25px;
     width: 25px;
     height: 2px;
@@ -169,10 +167,10 @@ $width-bar-left-sprints: 17px;
     content: '';
     position: absolute;
     z-index: 2;
-    top: round(($tlp-half-spacing - 3) / 2);
+    top: 4px;
     left: -32px;
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     background: $tlp-ui-dimmed;
 }
@@ -201,8 +199,8 @@ $width-bar-left-sprints: 17px;
     left: 4px;
     align-items: center;
     justify-content: center;
-    width: 17px;
-    height: 17px;
+    width: 16px;
+    height: 16px;
     margin: -$tlp-spacing 0;
     background: transparent;
     color: $tlp-ui-white;
@@ -245,7 +243,7 @@ $width-bar-left-sprints: 17px;
 }
 
 .project-release-badge-open-sprint-buttons {
-    margin: calc(#{$tlp-half-spacing} / 2) 0 0 0;
+    margin: calc(#{$tlp-half-spacing} / 2) 0 0 $tlp-large-spacing;
 }
 
 .project-release-infos-badges-all-sprint-badges {
@@ -258,9 +256,9 @@ $width-bar-left-sprints: 17px;
         content: '';
         position: absolute;
         z-index: 2;
-        top: round($tlp-half-spacing) + 2px;
-        left: 11px;
-        width: 2px;
+        top: 12px;
+        left: 10px;
+        width: 4px;
         height: calc(100% - #{$heigh-bar-px});
         background: $tlp-theme-color;
     }
@@ -271,9 +269,22 @@ $width-bar-left-sprints: 17px;
         z-index: 2;
         top: calc(calc(100% - 25px) / 2);
         left: 4px;
-        width: 17px;
-        height: 17px;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
         background: $tlp-theme-color;
+
+        @if $tlp-density == $tlp-density-condensed {
+            top: calc(calc(100% - 19px) / 2);
+        }
+    }
+}
+
+.project-release-badges-capacity-effort {
+    display: flex;
+    align-items: baseline;
+
+    > .release-description-link {
+        margin: 0 0 0 $tlp-small-spacing;
     }
 }

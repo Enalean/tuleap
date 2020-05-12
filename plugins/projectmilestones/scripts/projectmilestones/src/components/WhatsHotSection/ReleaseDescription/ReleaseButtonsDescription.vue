@@ -23,34 +23,38 @@
             v-if="get_overview_link"
             v-bind:href="get_overview_link"
             data-test="overview-link"
-            class="release-planning-link-item"
+            class="release-planning-link release-planning-link-item tlp-tooltip tlp-tooltip-top"
+            v-bind:data-tlp-tooltip="$gettext('Overview')"
+            v-bind:aria-label="$gettext('Overview')"
         >
-            <i class="release-description-link-icon fa fa-bar-chart"></i>
-            <span class="release-planning-link-item-text"><translate>Overview</translate></span>
+            <i class="release-description-link-icon fa fa-bar-chart" aria-hidden="true"></i>
         </a>
         <slot></slot>
         <a
             v-if="get_cardwall_link"
             v-bind:href="get_cardwall_link"
             data-test="cardwall-link"
-            class="release-planning-link release-planning-link-item"
+            class="release-planning-link release-planning-link-item tlp-tooltip tlp-tooltip-top"
+            v-bind:data-tlp-tooltip="$gettext('Cardwall')"
+            v-bind:aria-label="$gettext('Cardwall')"
         >
-            <i class="release-description-link-icon fa fa-table"></i>
-            <span class="release-planning-link-item-text"><translate>Cardwall</translate></span>
+            <i class="release-description-link-icon fa fa-table" aria-hidden="true"></i>
         </a>
         <a
             v-for="pane in get_additional_panes"
             v-bind:key="pane.identifier"
             v-bind:href="pane.uri"
             v-bind:data-test="`pane-link-${pane.identifier}`"
-            class="release-planning-link release-planning-link-item"
+            class="release-planning-link release-planning-link-item tlp-tooltip tlp-tooltip-top"
+            v-bind:data-tlp-tooltip="pane.title"
+            v-bind:aria-label="pane.title"
         >
             <i
                 class="release-description-link-icon fa"
                 v-bind:data-test="`pane-icon-${pane.identifier}`"
                 v-bind:class="pane.icon_name"
+                aria-hidden="true"
             ></i>
-            <span class="release-planning-link-item-text">{{ pane.title }}</span>
         </a>
     </div>
 </template>
