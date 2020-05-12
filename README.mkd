@@ -1,6 +1,6 @@
 # What's Tuleap?
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/Enalean/tuleap)
 
 **Tuleap Open ALM** is a Libre and Open Source tool for end to end traceability of application and system developments.
 
