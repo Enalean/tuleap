@@ -28,9 +28,10 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeSelectBoxBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporterTest extends TestCase
@@ -57,8 +58,9 @@ class FieldChangeXMLExporterTest extends TestCase
             new FieldChangeFloatBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
-            new FieldChangeSelectBoxBuilder(
-                new XML_SimpleXMLCDATAFactory()
+            new FieldChangeListBuilder(
+                new XML_SimpleXMLCDATAFactory(),
+                UserXMLExporter::build()
             )
         );
     }
@@ -135,5 +137,35 @@ class FieldChangeXMLExporterTest extends TestCase
             EOX,
             $changeset_node->field_change->asXML()
         );
+    }
+
+    public function testItExportsTheSelectedValueInASelectBoxField(): void
+    {
+        $mapping = new FieldMapping(
+            'sb',
+            'Fsb',
+            'Select Box',
+            'sb'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $this->exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            [
+                'self' => 'URL/rest/api/2/priority/3',
+                'iconUrl' => 'URL/images/icons/priorities/medium.svg',
+                'name' => 'Medium',
+                'id' => '3',
+            ],
+            null
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertCount(1, $field_change_node->value);
+        $this->assertSame("3", (string) $field_change_node->value[0]);
     }
 }
