@@ -26,11 +26,12 @@ namespace TuleapCfg\Command\Docker;
 use BackendLogger;
 use Psr\Log\LoggerInterface;
 use Tuleap\Config\ConfigSet;
+use Tuleap\Log\LogToSyslog as LogToSyslogAlias;
 use Webimpress\SafeWriter\FileWriter;
 
 final class LogToSyslog
 {
-    private const ENV_LOGGER = 'TULEAP_LOGGER';
+    private const ENV_LOGGER           = 'TULEAP_LOGGER';
 
     /**
      * @var LoggerInterface
@@ -44,7 +45,7 @@ final class LogToSyslog
 
     public function configure(): void
     {
-        if (getenv(self::ENV_LOGGER) !== BackendLogger::CONFIG_LOGGER_SYSLOG) {
+        if (getenv(self::ENV_LOGGER) !== LogToSyslogAlias::CONFIG_LOGGER_SYSLOG) {
             return;
         }
         \ForgeConfig::loadLocalInc();
@@ -58,7 +59,7 @@ final class LogToSyslog
     {
         $this->logger->info('Syslog: configure tuleap');
         $config_set = new ConfigSet(\EventManager::instance(), new \ConfigDao());
-        $config_set->set(BackendLogger::CONFIG_LOGGER, BackendLogger::CONFIG_LOGGER_SYSLOG);
+        $config_set->set(BackendLogger::CONFIG_LOGGER, LogToSyslogAlias::CONFIG_LOGGER_SYSLOG);
     }
 
     private function nginx(): void

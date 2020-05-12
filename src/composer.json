@@ -42,6 +42,7 @@
   "require": {
     "embed/embed": "^3.3",
     "ezyang/htmlpurifier": "^4.10",
+    "graylog2/gelf-php": "^1.6",
     "gumlet/php-image-resize": "^1.9",
     "http-interop/http-factory-guzzle": "^1.0",
     "laminas/laminas-cache": "^2.8",

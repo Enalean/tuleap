@@ -18,17 +18,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Monolog\Handler\SyslogHandler;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
+use Tuleap\Log\LogToFiles;
+use Tuleap\Log\LogToGraylog2;
+use Tuleap\Log\LogToSyslog;
 
 class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
-    public const CONFIG_LOGGER = 'sys_logger';
+    public const CONFIG_LOGGER          = 'sys_logger';
 
-    public const CONFIG_LOGGER_SYSLOG = 'syslog';
-
-    public const FILENAME = 'codendi_syslog';
+    public const FILENAME              = 'codendi_syslog';
 
     private $filepath;
 
@@ -37,34 +37,40 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
         $this->filepath = empty($filename) ? ForgeConfig::get('codendi_log') . '/' . self::FILENAME : $filename;
     }
 
+    public static function isLogHandlerToFiles(): bool
+    {
+        return ForgeConfig::get(self::CONFIG_LOGGER, LogToFiles::CONFIG_LOGGER_FILES) === LogToFiles::CONFIG_LOGGER_FILES;
+    }
+
     public static function getDefaultLogger(string $name = 'default'): LoggerInterface
     {
-        if (ForgeConfig::get(self::CONFIG_LOGGER) === self::CONFIG_LOGGER_SYSLOG) {
+        $message_to_log = null;
+        try {
+            $handler = ForgeConfig::get(self::CONFIG_LOGGER, LogToFiles::CONFIG_LOGGER_FILES);
+
             $logger = new \Monolog\Logger(self::convertLoggerFileNameToTopic($name));
-            $stream_handler = new SyslogHandler(
-                'tuleap',
-                LOG_USER,
-                \Monolog\Logger::toMonologLevel(self::getPSR3LoggerLevel()),
-            );
-            // Format borrowed from AbstractSyslogHandler::getDefaultFormatter
-            // I considered creating a TuleapSyslogHandler to avoid duplication but I thought that the inheritance of
-            // concrete class would hurt us more than a small duplication.
-            // History will judge :D
-            $line_formatter = new \Monolog\Formatter\LineFormatter('%channel%.%level_name%: %message% %context% %extra%');
-            $line_formatter->includeStacktraces();
-            $stream_handler->setFormatter($line_formatter);
-            $logger->pushHandler($stream_handler);
-            return $logger;
+            if ($handler === LogToGraylog2::CONFIG_LOGGER_GRAYLOG2) {
+                return (new LogToGraylog2())->configure(
+                    $logger,
+                    \Monolog\Logger::toMonologLevel(self::getPSR3LoggerLevel()),
+                );
+            }
+            if ($handler === LogToSyslog::CONFIG_LOGGER_SYSLOG) {
+                return (new LogToSyslog())->configure(
+                    $logger,
+                    \Monolog\Logger::toMonologLevel(self::getPSR3LoggerLevel()),
+                );
+            }
+        } catch (\Tuleap\Log\UnableToSetupHandlerException $exception) {
+            $message_to_log = $exception->getMessage();
         }
-        if ($name === 'default') {
-            $logger = new BackendLogger();
-        } else {
-            $logger = new BackendLogger(ForgeConfig::get('codendi_log') . '/' . $name);
+
+        $logger = (new LogToFiles())->getLogger($name);
+        if ($message_to_log !== null) {
+            $logger->warning($message_to_log);
         }
-        return new TruncateLevelLogger(
-            $logger,
-            ForgeConfig::get('sys_logger_level')
-        );
+
+        return $logger;
     }
 
     private static function convertLoggerFileNameToTopic(string $name): string
@@ -72,7 +78,7 @@ class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
         return str_replace(['.log', '_syslog'], '', $name);
     }
 
-    private static function getPSR3LoggerLevel()
+    private static function getPSR3LoggerLevel(): string
     {
         $level = ForgeConfig::get('sys_logger_level');
         if (! $level || $level === 'warn') {

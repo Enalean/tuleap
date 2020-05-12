@@ -33,7 +33,7 @@ final class ArchiveLogger implements LoggerInterface
 
     public function __construct()
     {
-        if (ForgeConfig::get(BackendLogger::CONFIG_LOGGER) !== BackendLogger::CONFIG_LOGGER_SYSLOG) {
+        if (BackendLogger::isLogHandlerToFiles()) {
             $this->createLogFileForAppUser(ForgeConfig::get('codendi_log') . '/' . self::LOGGER_NAME);
         }
         $this->logger = BackendLogger::getDefaultLogger(self::LOGGER_NAME);
