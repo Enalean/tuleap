@@ -27,6 +27,7 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
 class TrackerCreationPresenterBuilder
@@ -48,10 +49,15 @@ class TrackerCreationPresenterBuilder
      * @var DefaultTemplatesCollectionBuilder
      */
     private $default_templates_collection_builder;
+    /**
+     * @var PendingJiraImportDao
+     */
+    private $pending_jira_import_dao;
 
     public function __construct(
         ProjectManager $project_manager,
         TrackerDao $tracker_dao,
+        PendingJiraImportDao $pending_jira_import_dao,
         TrackerFactory $tracker_factory,
         DefaultTemplatesCollectionBuilder $default_templates_collection_builder
     ) {
@@ -59,6 +65,7 @@ class TrackerCreationPresenterBuilder
         $this->tracker_dao                          = $tracker_dao;
         $this->tracker_factory                      = $tracker_factory;
         $this->default_templates_collection_builder = $default_templates_collection_builder;
+        $this->pending_jira_import_dao              = $pending_jira_import_dao;
     }
 
     public function build(\Project $current_project, \CSRFSynchronizerToken $csrf, \PFUser $user): TrackerCreationPresenter
@@ -114,6 +121,11 @@ class TrackerCreationPresenterBuilder
         foreach ($trackers as $tracker) {
             $existing_trackers['names'][] = strtolower($tracker['name']);
             $existing_trackers['shortnames'][] = strtolower($tracker['item_name']);
+        }
+
+        foreach ($this->pending_jira_import_dao->searchByProjectId((int) $project->getID()) as $row) {
+            $existing_trackers['names'][] = strtolower($row['tracker_name']);
+            $existing_trackers['shortnames'][] = strtolower($row['tracker_shortname']);
         }
 
         return $existing_trackers;

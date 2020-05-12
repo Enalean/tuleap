@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use TrackerFactory;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 final class TrackerCreationDataCheckerTest extends TestCase
@@ -49,17 +49,21 @@ final class TrackerCreationDataCheckerTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\ReferenceManager
      */
     private $reference_manager;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
+     */
+    private $pending_jira_dao;
 
     protected function setUp(): void
     {
         $this->reference_manager = \Mockery::mock(\ReferenceManager::class);
         $this->tracker_dao       = \Mockery::mock(\TrackerDao::class);
+        $this->pending_jira_dao  = \Mockery::mock(PendingJiraImportDao::class);
         $this->tracker_factory   = \Mockery::mock(\TrackerFactory::class);
-        $this->checker           = new TrackerCreationDataChecker($this->reference_manager, $this->tracker_dao, $this->tracker_factory);
-        $this->tracker_factory   = \Mockery::mock(TrackerFactory::class);
         $this->checker           = new TrackerCreationDataChecker(
             $this->reference_manager,
             $this->tracker_dao,
+            $this->pending_jira_dao,
             $this->tracker_factory
         );
     }
@@ -72,6 +76,8 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
         $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(false);
 
         $this->checker->checkAtProjectCreation(
@@ -165,6 +171,8 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
 
         $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(false);
         $this->checker->checkAtProjectCreation(
@@ -248,8 +256,70 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(true);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
         $this->expectException(TrackerIsInvalidException::class);
         $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
+
+        $this->checker->checkAtProjectCreation(
+            $project_id,
+            $public_name,
+            $shortname
+        );
+    }
+
+    public function testItThrowsAnExceptionIfShortNameAlreadyExistsInPendingJiraImport(): void
+    {
+        $project_id  = 101;
+        $public_name = "New bugs";
+        $shortname   = "new_bugs";
+
+        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(true);
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('The tracker short name new_bugs is already used. Please use another one.');
+
+        $this->checker->checkAtProjectCreation(
+            $project_id,
+            $public_name,
+            $shortname
+        );
+    }
+
+    public function testItThrowsAnExceptionIfNameAlreadyExists(): void
+    {
+        $project_id  = 101;
+        $public_name = "New bugs";
+        $shortname   = "new_bugs";
+
+        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(true);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
+
+        $this->checker->checkAtProjectCreation(
+            $project_id,
+            $public_name,
+            $shortname
+        );
+    }
+
+    public function testItThrowsAnExceptionIfNameAlreadyExistsInPendingJiraImport(): void
+    {
+        $project_id  = 101;
+        $public_name = "New bugs";
+        $shortname   = "new_bugs";
+
+        $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
+        $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(true);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
+        $this->expectException(TrackerIsInvalidException::class);
+        $this->expectExceptionMessage('The tracker name New bugs is already used. Please use another one.');
 
         $this->checker->checkAtProjectCreation(
             $project_id,
@@ -266,6 +336,8 @@ final class TrackerCreationDataCheckerTest extends TestCase
 
         $this->tracker_dao->shouldReceive('isShortNameExists')->andReturn(false);
         $this->tracker_dao->shouldReceive('doesTrackerNameAlreadyExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerNameExist')->andReturn(false);
+        $this->pending_jira_dao->shouldReceive('doesTrackerShortNameExist')->andReturn(false);
 
         $this->reference_manager->shouldReceive('_isKeywordExists')->andReturn(true);
         $this->expectException(TrackerIsInvalidException::class);

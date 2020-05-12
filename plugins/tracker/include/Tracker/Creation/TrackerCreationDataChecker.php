@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation;
 use Tracker;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerCreationDataChecker
@@ -42,15 +43,21 @@ class TrackerCreationDataChecker
      * @var \TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var PendingJiraImportDao
+     */
+    private $pending_jira_import_dao;
 
     public function __construct(
         \ReferenceManager $reference_manager,
         TrackerDao $tracker_dao,
+        PendingJiraImportDao $pending_jira_import_dao,
         \TrackerFactory $tracker_factory
     ) {
-        $this->reference_manager = $reference_manager;
-        $this->tracker_dao       = $tracker_dao;
-        $this->tracker_factory   = $tracker_factory;
+        $this->reference_manager       = $reference_manager;
+        $this->tracker_dao             = $tracker_dao;
+        $this->tracker_factory         = $tracker_factory;
+        $this->pending_jira_import_dao = $pending_jira_import_dao;
     }
 
     public static function build(): self
@@ -58,6 +65,7 @@ class TrackerCreationDataChecker
         return new TrackerCreationDataChecker(
             \ReferenceManager::instance(),
             new TrackerDao(),
+            new PendingJiraImportDao(),
             TrackerFactory::instance()
         );
     }
@@ -135,12 +143,14 @@ class TrackerCreationDataChecker
 
     public function doesShortNameExists(string $shortname, int $project_id): bool
     {
-        return $this->tracker_dao->isShortNameExists($shortname, $project_id);
+        return $this->tracker_dao->isShortNameExists($shortname, $project_id) ||
+            $this->pending_jira_import_dao->doesTrackerShortNameExist($shortname, $project_id);
     }
 
     private function doesNameExistsForProject(string $name, int $project_id): bool
     {
-        return $this->tracker_dao->doesTrackerNameAlreadyExist($name, $project_id);
+        return $this->tracker_dao->doesTrackerNameAlreadyExist($name, $project_id) ||
+            $this->pending_jira_import_dao->doesTrackerNameExist($name, $project_id);
     }
 
     /**

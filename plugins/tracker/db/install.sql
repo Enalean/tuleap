@@ -974,6 +974,24 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_new_layout_modal_user (
     user_id INT(11) PRIMARY KEY
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
+CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
+    id INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    created_on INT(11) UNSIGNED NOT NULL,
+    project_id INT(11) NOT NULL,
+    user_id INT(11) NOT NULL,
+    jira_server TEXT NOT NULL,
+    jira_user_email TEXT NOT NULL,
+    encrypted_jira_token BLOB NOT NULL,
+    jira_project_id TEXT NOT NULL,
+    jira_issue_type_name TEXT NOT NULL,
+    tracker_name TEXT NOT NULL,
+    tracker_shortname TEXT NOT NULL,
+    tracker_color VARCHAR(64) NOT NULL,
+    tracker_description TEXT NOT NULL,
+    INDEX idx_project_id(project_id)
+) ENGINE=InnoDB;
+
 -- Enable service for project 100
 INSERT INTO service(group_id, label, description, short_name, link, is_active, is_used, scope, rank)
        VALUES      ( 100, 'plugin_tracker:service_lbl_key', 'plugin_tracker:service_desc_key', 'plugin_tracker', '/plugins/tracker/?group_id=$group_id', 1, 1, 'system', 151);

@@ -23,6 +23,7 @@ use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Event\Events\ProjectProviderEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupRepresentationBuilder;
 use Tuleap\Tracker\Admin\GlobalAdminController;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
@@ -848,17 +849,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
     private function informUserOfOngoingMigrations(Project $project)
     {
-        if ($this->getTV3MigrationManager()->thereAreMigrationsOngoingForProject($project)) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tv3_being_migrated'));
-            $this->informUntruncatedEmailWillBeSent($project);
-        }
+        $feedback_notifier = new \Tuleap\Tracker\Creation\OngoingCreationFeedbackNotifier(
+            $this->getTV3MigrationManager(),
+            $this->getPendingJiraCreationDao()
+        );
+        $feedback_notifier->informUserOfOngoingMigrations($project, $GLOBALS['Response']);
     }
 
-    private function informUntruncatedEmailWillBeSent(Project $project)
+    private function getPendingJiraCreationDao(): PendingJiraImportDao
     {
-        if ($project->getTruncatedEmailsUsage()) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'untruncated_migration_email'));
-        }
+        return new PendingJiraImportDao();
     }
 
     protected function displayCSVImportOverview($project, $group_id, $user)
