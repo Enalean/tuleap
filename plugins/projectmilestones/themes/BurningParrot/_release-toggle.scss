@@ -46,8 +46,11 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     .tlp-pane-subtitle {
         margin: 0;
         color: $tlp-ui-dimmed;
-        font-size: 15px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: normal;
         line-height: normal;
+        text-transform: none;
     }
 }
 
