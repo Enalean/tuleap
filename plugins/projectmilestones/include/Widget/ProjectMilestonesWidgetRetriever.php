@@ -76,7 +76,7 @@ class ProjectMilestonesWidgetRetriever
         if ($project) {
             try {
                 $this->project_access_checker->checkUserCanAccessProject($user, $project);
-                return sprintf(dgettext('tuleap-projectmilestones', '%s Project Milestones'), $project->getPublicName());
+                return sprintf(dgettext('tuleap-projectmilestones', '%s Milestones'), $project->getPublicName());
             } catch (\Project_AccessException $e) {
                 return dgettext('tuleap-projectmilestones', 'Project Milestones');
             }
