@@ -33,6 +33,8 @@ use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PrioritizedList;
+use ZipStream\Exception\FileNotFoundException;
+use ZipStream\Exception\FileNotReadableException;
 use ZipStream\ZipStream;
 
 class ZipStreamFolderFilesVisitorTest extends TestCase
@@ -44,19 +46,60 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
      */
     private $zip;
 
+    /**
+     * @var ZipStreamerLoggingHelper|M\LegacyMockInterface|M\MockInterface
+     */
+    private $error_logging_helper;
+
     protected function setUp(): void
     {
-        $this->zip = M::mock(ZipStream::class);
+        $this->zip                  = M::mock(ZipStream::class);
+        $this->error_logging_helper = M::mock(ZipStreamerLoggingHelper::class);
     }
 
     public function testItStreamsAllFilesInTheFolderKeepingItsStructure(): void
     {
-        $visitor = new ZipStreamFolderFilesVisitor($this->zip);
+        $visitor = new ZipStreamFolderFilesVisitor(
+            $this->zip,
+            $this->error_logging_helper
+        );
 
         $root_folder = $this->getRootFolderWithItems();
 
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/a file.pdf', '/path/to/file');
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
+
+        $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
+    }
+
+    public function testItLogsTheFileNotFoundError(): void
+    {
+        $visitor = new ZipStreamFolderFilesVisitor(
+            $this->zip,
+            $this->error_logging_helper
+        );
+
+        $root_folder = $this->getRootFolderWithItems();
+
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
+        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotFoundException::class);
+        $this->error_logging_helper->shouldReceive('logFileNotFoundException');
+
+        $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
+    }
+
+    public function testItLogsTheFileNotReadableError(): void
+    {
+        $visitor = new ZipStreamFolderFilesVisitor(
+            $this->zip,
+            $this->error_logging_helper
+        );
+
+        $root_folder = $this->getRootFolderWithItems();
+
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
+        $this->zip->shouldReceive('addFileFromPath')->andThrow(FileNotReadableException::class);
+        $this->error_logging_helper->shouldReceive('logFileNotReadableException');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
