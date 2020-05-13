@@ -193,12 +193,26 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
                     $this->field_xml_exporter->exportField(
-                        $jira_atf_fieldset,
+                        $jira_custom_fieldset,
                         Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
                         5,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection
+                    );
+                    break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
+                    $this->field_xml_exporter->exportField(
+                        $jira_custom_fieldset,
+                        Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        6,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -218,7 +232,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
                 case 'com.atlassian.jira.toolkit:attachments':
                 case 'comment':
                 case 'updated': // this is not a Tuleap field, handled during artifact import.

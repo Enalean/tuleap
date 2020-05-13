@@ -38,6 +38,7 @@ class Tracker_FormElementFactory
     public const FIELD_ARTIFACT_ID_TYPE      = 'aid';
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
+    public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
 
     /**
      * Cache formElements
@@ -56,13 +57,13 @@ class Tracker_FormElementFactory
 
     // Please use unique key for each element
     protected $classnames = array(
-        self::FIELD_STRING_TYPE       => 'Tracker_FormElement_Field_String',
-        self::FIELD_TEXT_TYPE         => 'Tracker_FormElement_Field_Text',
-        self::FIELD_FLOAT_TYPE        => 'Tracker_FormElement_Field_Float',
-        self::FIELD_DATE_TYPE         => 'Tracker_FormElement_Field_Date',
-        self::FIELD_SELECT_BOX_TYPE   => 'Tracker_FormElement_Field_Selectbox',
-        self::FIELD_RADIO_BUTTON_TYPE => 'Tracker_FormElement_Field_Radiobutton',
-        'msb'      => 'Tracker_FormElement_Field_MultiSelectbox',
+        self::FIELD_STRING_TYPE           => 'Tracker_FormElement_Field_String',
+        self::FIELD_TEXT_TYPE             => 'Tracker_FormElement_Field_Text',
+        self::FIELD_FLOAT_TYPE            => 'Tracker_FormElement_Field_Float',
+        self::FIELD_DATE_TYPE             => 'Tracker_FormElement_Field_Date',
+        self::FIELD_SELECT_BOX_TYPE       => 'Tracker_FormElement_Field_Selectbox',
+        self::FIELD_RADIO_BUTTON_TYPE     => 'Tracker_FormElement_Field_Radiobutton',
+        self::FIELD_MULTI_SELECT_BOX_TYPE => 'Tracker_FormElement_Field_MultiSelectbox',
         'cb'       => 'Tracker_FormElement_Field_Checkbox',
         'file'     => 'Tracker_FormElement_Field_File',
         'int'      => 'Tracker_FormElement_Field_Integer',

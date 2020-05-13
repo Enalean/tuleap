@@ -197,4 +197,42 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame("10005", (string) $field_change_node->value[0]);
     }
+
+    public function testItExportsTheSelectedValuesInAMultiSelectboxField(): void
+    {
+        $mapping = new FieldMapping(
+            'msb',
+            'Fmsb',
+            'Multi Select Box',
+            'msb'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $this->exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            [
+                [
+                    'self' => 'URL/rest/api/2/customFieldOption/10009',
+                    'value' => 'multi1',
+                    'id' => '10009'
+                ],
+                [
+                    'self' => 'URL/rest/api/2/customFieldOption/10010',
+                    'value' => 'multi2',
+                    'id' => '10010'
+                ]
+
+            ],
+            null
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertCount(2, $field_change_node->value);
+        $this->assertSame("10009", (string) $field_change_node->value[0]);
+        $this->assertSame("10010", (string) $field_change_node->value[1]);
+    }
 }
