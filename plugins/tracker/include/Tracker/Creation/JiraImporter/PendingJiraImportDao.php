@@ -42,6 +42,7 @@ class PendingJiraImportDao extends DataAccessObject
         return $this->getDB()->insert(
             'plugin_tracker_pending_jira_import',
             [
+                'created_on'           => (new \DateTimeImmutable())->getTimestamp(),
                 'project_id'           => $project_id,
                 'user_id'              => $user_id,
                 'jira_server'          => $jira_server,
@@ -87,5 +88,25 @@ class PendingJiraImportDao extends DataAccessObject
         );
 
         return $exists !== false;
+    }
+
+    public function deleteExpiredImports(int $expiration_timestamp): void
+    {
+        $this->getDB()->run(
+            'DELETE
+                FROM plugin_tracker_pending_jira_import
+                WHERE created_on <= ?',
+            $expiration_timestamp
+        );
+    }
+
+    public function searchExpiredImports(int $expiration_timestamp): array
+    {
+        return $this->getDB()->run(
+            'SELECT *
+                FROM plugin_tracker_pending_jira_import
+                WHERE created_on <= ?',
+            $expiration_timestamp
+        );
     }
 }

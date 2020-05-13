@@ -1,0 +1,18 @@
+{{# dgettext }}
+    tuleap-tracker |
+    The jira import initiated on %s is in queue since too long. It seems that something prevented its execution. It has been canceled. |
+    {{ localized_created_on }}
+{{/ dgettext }}
+
+
+{{# dgettext }}
+    tuleap-tracker |
+    Please try again or contact your administrator.
+{{/ dgettext }}
+
+
+* {{# dgettext }} tuleap-tracker | Jira server{{/ dgettext }}: {{ jira_server }}
+* {{# dgettext }} tuleap-tracker | Jira project id{{/ dgettext }}: {{ jira_project_id }}
+* {{# dgettext }} tuleap-tracker | Jira issue type{{/ dgettext }}: {{ jira_issue_type_name }}
+* {{# dgettext }} tuleap-tracker | Tracker name{{/ dgettext }}: {{ tracker_name }}
+* {{# dgettext }} tuleap-tracker | Tracker shortname{{/ dgettext }}: {{ tracker_shortname }}

@@ -989,7 +989,8 @@ CREATE TABLE IF NOT EXISTS plugin_tracker_pending_jira_import (
     tracker_shortname TEXT NOT NULL,
     tracker_color VARCHAR(64) NOT NULL,
     tracker_description TEXT NOT NULL,
-    INDEX idx_project_id(project_id)
+    INDEX idx_project_id(project_id),
+    INDEX idx_created_on(created_on)
 ) ENGINE=InnoDB;
 
 -- Enable service for project 100
