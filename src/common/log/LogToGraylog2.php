@@ -34,6 +34,8 @@ use Monolog\Handler\GelfHandler;
 use Monolog\Logger;
 use Monolog\Processor\IntrospectionProcessor;
 use Psr\Log\LoggerInterface;
+use Tuleap\BuildVersion\FlavorFinderFromFilePresence;
+use Tuleap\BuildVersion\VersionPresenter;
 
 final class LogToGraylog2
 {
@@ -60,6 +62,7 @@ final class LogToGraylog2
 
         $logger->pushProcessor(new IntrospectionProcessor());
         $logger->pushProcessor(new IncludeBacktraceProcessor());
+        $logger->pushProcessor(new TuleapIdentifierProcessor(VersionPresenter::fromFlavorFinder(new FlavorFinderFromFilePresence())));
 
         return $logger;
     }
