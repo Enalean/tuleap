@@ -23,6 +23,7 @@ use Tuleap\Authentication\Scope\AuthenticationScopeBuilderFromClassNames;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Dashboard\User\AtUserCreationDefaultWidgetsCreator;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -81,9 +82,11 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -2006,6 +2009,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new TrackerCreationPresenterBuilder(
                 $this->getProjectManager(),
                 new TrackerDao(),
+                new PendingJiraImportDao(),
                 \TrackerFactory::instance(),
                 new DefaultTemplatesCollectionBuilder(\EventManager::instance())
             ),
@@ -2022,7 +2026,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             \ProjectManager::instance(),
             TrackerCreator::build(),
             $this->getTrackerCreationPermissionChecker(),
-            new DefaultTemplatesCollectionBuilder(\EventManager::instance())
+            new DefaultTemplatesCollectionBuilder(\EventManager::instance()),
+            new AsyncJiraScheduler(new KeyFactory(), new PendingJiraImportDao())
         );
     }
 
@@ -2146,5 +2151,6 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
         $event->addPluginsKeys(TrackerCreationPresenter::DISPLAY_JIRA_IMPORTER);
+        $event->addPluginsKeys(AsyncJiraScheduler::CONFIG_NAME);
     }
 }

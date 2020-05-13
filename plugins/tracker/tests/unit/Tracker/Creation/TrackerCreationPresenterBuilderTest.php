@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerDao;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
 final class TrackerCreationPresenterBuilderTest extends TestCase
@@ -69,17 +70,24 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DefaultTemplatesCollection
      */
     private $default_templates_collection_builder;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingJiraImportDao
+     */
+    private $pending_jira_dao;
 
     protected function setUp(): void
     {
         $this->default_templates_collection_builder = \Mockery::mock(DefaultTemplatesCollectionBuilder::class);
 
-        $this->project_manager = \Mockery::mock(ProjectManager::class);
-        $this->tracker_dao     = \Mockery::mock(TrackerDao::class);
-        $this->tracker_factory = \Mockery::mock(\TrackerFactory::class);
+        $this->project_manager  = \Mockery::mock(ProjectManager::class);
+        $this->tracker_dao      = \Mockery::mock(TrackerDao::class);
+        $this->pending_jira_dao = \Mockery::mock(PendingJiraImportDao::class);
+        $this->tracker_factory  = \Mockery::mock(\TrackerFactory::class);
+
         $this->builder         = new TrackerCreationPresenterBuilder(
             $this->project_manager,
             $this->tracker_dao,
+            $this->pending_jira_dao,
             $this->tracker_factory,
             $this->default_templates_collection_builder
         );
@@ -160,6 +168,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(101);
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
+        $this->pending_jira_dao->shouldReceive('searchByProjectId')->andReturn([]);
         $this->current_user->shouldReceive('getProjects')->andReturn([]);
 
         $this->default_templates_collection_builder
@@ -190,6 +199,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $project->shouldReceive('getID')->andReturn(101);
         $this->project_manager->shouldReceive('getSiteTemplates')->andReturn([$project]);
         $this->tracker_dao->shouldReceive('searchByGroupId')->andReturn([]);
+        $this->pending_jira_dao->shouldReceive('searchByProjectId')->andReturn([]);
         $this->current_user->shouldReceive('getProjects')->andReturn([]);
 
         $collection = new DefaultTemplatesCollection();
@@ -255,6 +265,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 ]
             ]
         );
+        $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(101)->andReturn([]);
 
         $this->default_templates_collection_builder
             ->shouldReceive('build')
@@ -307,10 +318,18 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 ]
             ]
         );
+        $this->pending_jira_dao->shouldReceive('searchByProjectId')->with(104)->andReturn(
+            [
+                [
+                    'tracker_name'      => 'Pending tracker from Jira',
+                    'tracker_shortname' => 'from_jira'
+                ]
+            ]
+        );
 
         $expected_list_of_existing_trackers = [
-            'names'      => ['bugs', 'epics'],
-            'shortnames' => ['bugz', 'epico']
+            'names'      => ['bugs', 'epics', 'pending tracker from jira'],
+            'shortnames' => ['bugz', 'epico', 'from_jira'],
         ];
 
         $trackers_from_other_projects = [

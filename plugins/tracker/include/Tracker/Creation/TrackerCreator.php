@@ -34,6 +34,7 @@ use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use Tuleap\XML\MappingsRegistry;
 use UserManager;
@@ -91,6 +92,7 @@ class TrackerCreator
             new TrackerCreationDataChecker(
                 \ReferenceManager::instance(),
                 new \TrackerDao(),
+                new PendingJiraImportDao(),
                 TrackerFactory::instance()
             ),
             new XML_SimpleXMLCDATAFactory()
