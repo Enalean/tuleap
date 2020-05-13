@@ -162,6 +162,9 @@ class PendingJiraImportBuilderTest extends TestCase
             'project_id'           => 42,
             'user_id'              => 103,
             'jira_project_id'      => '',
+            'jira_user_email'      => '',
+            'encrypted_jira_token' => '',
+            'tracker_color'        => '',
         ];
     }
 }

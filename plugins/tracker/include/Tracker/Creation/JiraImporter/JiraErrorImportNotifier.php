@@ -28,7 +28,7 @@ use trackerPlugin;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
 
-class CancellationOfJiraImportNotifier
+class JiraErrorImportNotifier
 {
     /**
      * @var MailNotificationBuilder
@@ -60,11 +60,11 @@ class CancellationOfJiraImportNotifier
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
     }
 
-    public function warnUserAboutDeletion(PendingJiraImport $pending_jira_import): void
+    public function warnUserAboutError(PendingJiraImport $pending_jira_import, string $message): void
     {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $pending_jira_import->getUser()->getLocale(),
-            function () use ($pending_jira_import) {
+            function () use ($pending_jira_import, $message) {
                 $hp       = \Codendi_HTMLPurifier::instance();
                 $base_url = $this->base_url_builder->build();
 
@@ -78,7 +78,7 @@ class CancellationOfJiraImportNotifier
                     '<a href="' . $link . '" />' . dgettext('tuleap-tracker', 'Trackers') . '</a>',
                 ];
 
-                $subject = dgettext('tuleap-tracker', 'Cancellation of your Jira import');
+                $subject = dgettext('tuleap-tracker', 'Error in your Jira import');
 
                 $mail_enhancer = new MailEnhancer();
                 $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
@@ -94,6 +94,7 @@ class CancellationOfJiraImportNotifier
                     'jira_issue_type_name' => $pending_jira_import->getJiraIssueTypeName(),
                     'tracker_name'         => $pending_jira_import->getTrackerName(),
                     'tracker_shortname'    => $pending_jira_import->getTrackerShortname(),
+                    'message'              => $message,
                     'title'                => $subject,
                 ];
 
@@ -101,8 +102,8 @@ class CancellationOfJiraImportNotifier
                     $project,
                     [$pending_jira_import->getUser()->getEmail()],
                     $subject,
-                    $this->renderer->renderToString('notification-cancel-html', $presenter),
-                    $this->renderer->renderToString('notification-cancel-text', $presenter),
+                    $this->renderer->renderToString('notification-error-html', $presenter),
+                    $this->renderer->renderToString('notification-error-text', $presenter),
                     $link,
                     trackerPlugin::TRUNCATED_SERVICE_NAME,
                     $mail_enhancer

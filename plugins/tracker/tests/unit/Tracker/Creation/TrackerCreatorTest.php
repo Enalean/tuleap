@@ -28,17 +28,11 @@ use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
-use XML_SimpleXMLCDATAFactory;
+use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 
 final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\XML_SimpleXMLCDATAFactory
-     */
-    private $xml_cdata_factory;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerCreationDataChecker
@@ -61,28 +55,32 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImport
      */
     private $tracker_xml_import;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FromJiraTrackerCreator
+     */
+    private $from_jira_tracker_creator;
 
     protected function setUp(): void
     {
-        $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
-        $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
-        $this->xml_error_displayer   = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
-        $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
-        $this->xml_cdata_factory     = new XML_SimpleXMLCDATAFactory();
+        $this->tracker_xml_import        = Mockery::mock(TrackerXmlImport::class);
+        $this->tracker_factory           = Mockery::mock(TrackerFactory::class);
+        $this->xml_error_displayer       = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
+        $this->creation_data_checker     = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->from_jira_tracker_creator = Mockery::mock(FromJiraTrackerCreator::class);
 
         $this->creator = new TrackerCreator(
             $this->tracker_xml_import,
             $this->tracker_factory,
             $this->xml_error_displayer,
             $this->creation_data_checker,
-            $this->xml_cdata_factory
+            $this->from_jira_tracker_creator,
         );
     }
 
     public function testItCreateTrackerFromXml(): void
     {
         $project = Mockery::mock(\Project::class);
-        $tracker    = Mockery::mock(Tracker::class);
+        $tracker = Mockery::mock(Tracker::class);
         $this->tracker_xml_import->shouldReceive('createFromXMLFileWithInfo')->withArgs(
             [
                 $project,
@@ -170,39 +168,37 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
     public function testItDuplicatedATrackerFromJira(): void
     {
         $project = Mockery::mock(\Project::class);
-        $project->shouldReceive('getID')->andReturn(101);
+        $user    = Mockery::mock(\PFUser::class);
+        $token   = new ConcealedString("azerty123");
 
-        $this->creation_data_checker->shouldReceive('checkAtProjectCreation')->once();
+        $this->from_jira_tracker_creator
+            ->shouldReceive('createFromJira')
+            ->with(
+                $project,
+                "my new tracker",
+                "my_tracker",
+                "inca-silver",
+                $token,
+                "user@example.com",
+                "https://example.com",
+                "Jira project",
+                "Story",
+                $user
+            )
+            ->once()
+            ->andReturn(Mockery::mock(Tracker::class));
 
-        $creator = Mockery::mock(
-            TrackerCreator::class,
-            [
-                $this->tracker_xml_import,
-                $this->tracker_factory,
-                $this->xml_error_displayer,
-                $this->creation_data_checker,
-                $this->xml_cdata_factory
-            ]
-        )->makePartial()->shouldAllowMockingProtectedMethods();
-
-        $jira_exporter = Mockery::mock(JiraXmlExporter::class);
-        $creator->shouldReceive('getJiraExporter')->andReturn($jira_exporter);
-
-        $jira_exporter->shouldReceive('exportJiraToXml')->once();
-        $this->tracker_xml_import->shouldReceive('import')->once()->andReturn([1]);
-        $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));
-
-        $creator->createFromJira(
+        $this->creator->createFromJira(
             $project,
             "my new tracker",
             "my_tracker",
             "inca-silver",
-            new ConcealedString("azerty123"),
+            $token,
             "user@example.com",
             "https://example.com",
             "Jira project",
             "Story",
-            Mockery::mock(\PFUser::class)
+            $user
         );
     }
 }

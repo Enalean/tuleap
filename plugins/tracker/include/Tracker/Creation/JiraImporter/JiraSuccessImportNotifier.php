@@ -24,11 +24,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use MailEnhancer;
 use MailNotificationBuilder;
+use Tracker;
 use trackerPlugin;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
 
-class CancellationOfJiraImportNotifier
+class JiraSuccessImportNotifier
 {
     /**
      * @var MailNotificationBuilder
@@ -60,25 +61,26 @@ class CancellationOfJiraImportNotifier
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
     }
 
-    public function warnUserAboutDeletion(PendingJiraImport $pending_jira_import): void
+    public function warnUserAboutSuccess(PendingJiraImport $pending_jira_import, Tracker $tracker): void
     {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $pending_jira_import->getUser()->getLocale(),
-            function () use ($pending_jira_import) {
+            function () use ($pending_jira_import, $tracker) {
                 $hp       = \Codendi_HTMLPurifier::instance();
                 $base_url = $this->base_url_builder->build();
 
-                $project = $pending_jira_import->getProject();
-                $link    = $base_url . '/plugins/tracker?' . http_build_query(['group_id' => $project->getID()]);
+                $project       = $pending_jira_import->getProject();
+                $project_link  = $base_url . '/projects/' . urlencode($project->getUnixNameLowerCase());
+                $trackers_link = $base_url . '/plugins/tracker/?' . http_build_query(['group_id' => $project->getID()]);
+                $link          = $base_url . '/plugins/tracker/?' . http_build_query(['tracker' => $tracker->getId()]);
 
                 $breadcrumbs = [
-                    '<a href="' . $base_url . '/projects/' . urlencode($project->getUnixNameLowerCase()) . '" />' .
-                    $hp->purify($project->getPublicName()) .
-                    '</a>',
-                    '<a href="' . $link . '" />' . dgettext('tuleap-tracker', 'Trackers') . '</a>',
+                    '<a href="' . $project_link . '">' . $hp->purify($project->getPublicName()) . '</a>',
+                    '<a href="' . $trackers_link . '">' . dgettext('tuleap-tracker', 'Trackers') . '</a>',
+                    '<a href="' . $link . '">' . $tracker->getName() . '</a>',
                 ];
 
-                $subject = dgettext('tuleap-tracker', 'Cancellation of your Jira import');
+                $subject = dgettext('tuleap-tracker', 'Jira import is finished');
 
                 $mail_enhancer = new MailEnhancer();
                 $mail_enhancer->addPropertiesToLookAndFeel('breadcrumbs', $breadcrumbs);
@@ -89,11 +91,8 @@ class CancellationOfJiraImportNotifier
                         $pending_jira_import->getUser()->getLanguage(),
                         $pending_jira_import->getCreatedOn()->getTimestamp()
                     ),
-                    'jira_server'          => $pending_jira_import->getJiraServer(),
-                    'jira_project_id'      => $pending_jira_import->getJiraProjectId(),
-                    'jira_issue_type_name' => $pending_jira_import->getJiraIssueTypeName(),
-                    'tracker_name'         => $pending_jira_import->getTrackerName(),
-                    'tracker_shortname'    => $pending_jira_import->getTrackerShortname(),
+                    'link'                 => $link,
+                    'tracker_name'         => $tracker->getName(),
                     'title'                => $subject,
                 ];
 
@@ -101,8 +100,8 @@ class CancellationOfJiraImportNotifier
                     $project,
                     [$pending_jira_import->getUser()->getEmail()],
                     $subject,
-                    $this->renderer->renderToString('notification-cancel-html', $presenter),
-                    $this->renderer->renderToString('notification-cancel-text', $presenter),
+                    $this->renderer->renderToString('notification-success-html', $presenter),
+                    $this->renderer->renderToString('notification-success-text', $presenter),
                     $link,
                     trackerPlugin::TRUNCATED_SERVICE_NAME,
                     $mail_enhancer

@@ -23,8 +23,18 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Psr\Log\LoggerInterface;
+use SodiumException;
+use Tracker_Exception;
+use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
+use Tuleap\Cryptography\Exception\InvalidCiphertextException;
+use Tuleap\Cryptography\KeyFactory;
+use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
+use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
+use Tuleap\Tracker\TrackerIsInvalidException;
+use UserManager;
+use XML_ParseException;
 
 class JiraRunner
 {
@@ -37,18 +47,48 @@ class JiraRunner
      */
     private $logger;
     /**
+     * @var FromJiraTrackerCreator
+     */
+    private $tracker_creator;
+    /**
      * @var PendingJiraImportDao
      */
     private $dao;
+    /**
+     * @var JiraSuccessImportNotifier
+     */
+    private $success_notifier;
+    /**
+     * @var JiraErrorImportNotifier
+     */
+    private $error_notifier;
+    /**
+     * @var KeyFactory
+     */
+    private $key_factory;
+    /**
+     * @var UserManager
+     */
+    private $user_manager;
 
     public function __construct(
         LoggerInterface $logger,
         QueueFactory $queue_factory,
-        PendingJiraImportDao $dao
+        KeyFactory $key_factory,
+        FromJiraTrackerCreator $tracker_creator,
+        PendingJiraImportDao $dao,
+        JiraSuccessImportNotifier $success_notifier,
+        JiraErrorImportNotifier $error_notifier,
+        UserManager $user_manager
     ) {
         $this->logger           = $logger;
         $this->queue_factory    = $queue_factory;
+        $this->key_factory      = $key_factory;
+        $this->tracker_creator  = $tracker_creator;
         $this->dao              = $dao;
+        $this->success_notifier = $success_notifier;
+        $this->error_notifier   = $error_notifier;
+        $this->user_manager     = $user_manager;
     }
 
     public function queueJiraImportEvent(int $pending_jira_import_id): void
@@ -68,7 +108,53 @@ class JiraRunner
 
     public function processAsyncJiraImport(PendingJiraImport $pending_import): void
     {
-        $this->dao->deleteById($pending_import->getId());
-        $this->logger->error('Not implemented yet');
+        try {
+            $this->dao->deleteById($pending_import->getId());
+
+            $user = $this->user_manager->forceLogin($pending_import->getUser()->getName());
+            if (! $user->isAlive()) {
+                $this->logger->error('Unable to log in as the user who originated the event');
+                return;
+            }
+
+            $token = SymmetricCrypto::decrypt(
+                $pending_import->getEncryptedJiraToken(),
+                $this->key_factory->getEncryptionKey()
+            );
+
+            $tracker = $this->tracker_creator->createFromJira(
+                $pending_import->getProject(),
+                $pending_import->getTrackerName(),
+                $pending_import->getTrackerShortname(),
+                $pending_import->getTrackerColor(),
+                $token,
+                $pending_import->getJiraUser(),
+                $pending_import->getJiraServer(),
+                $pending_import->getJiraProjectId(),
+                $pending_import->getJiraIssueTypeName(),
+                $pending_import->getUser()
+            );
+            $this->success_notifier->warnUserAboutSuccess($pending_import, $tracker);
+        } catch (InvalidCiphertextException | CannotPerformIOOperationException | SodiumException $exception) {
+            $message = $exception->getMessage();
+            if ($message) {
+                $this->logger->error($message);
+            }
+            $this->logError($pending_import, 'Unable to access to the token to do the import.');
+        } catch (XML_ParseException $exception) {
+            $this->logError($pending_import, 'Unable to parse the XML used to import from Jira.');
+        } catch (JiraConnectionException $exception) {
+            $this->logError($pending_import, $exception->getI18nMessage());
+        } catch (Tracker_Exception | TrackerCreationHasFailedException | TrackerIsInvalidException $exception) {
+            $this->logError($pending_import, $exception->getMessage());
+        } finally {
+            $this->user_manager->setCurrentUser($this->user_manager->getUserAnonymous());
+        }
+    }
+
+    private function logError(PendingJiraImport $pending_import, string $message): void
+    {
+        $this->logger->error($message);
+        $this->error_notifier->warnUserAboutError($pending_import, $message);
     }
 }
