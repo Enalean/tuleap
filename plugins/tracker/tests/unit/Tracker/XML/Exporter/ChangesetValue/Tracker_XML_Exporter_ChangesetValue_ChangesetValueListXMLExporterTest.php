@@ -20,6 +20,8 @@
 
 declare(strict_types=1);
 
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTest extends \PHPUnit\Framework\TestCase
 {
@@ -43,8 +45,11 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporterTes
     protected function setUp(): void
     {
         parent::setUp();
-        $this->exporter      = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
-            \Mockery::spy(\UserXMLExporter::class)
+        $this->exporter = new Tracker_XML_Exporter_ChangesetValue_ChangesetValueListXMLExporter(
+            new FieldChangeListBuilder(
+                new XML_SimpleXMLCDATAFactory(),
+                \Mockery::spy(\UserXMLExporter::class)
+            )
         );
         $this->artifact_xml  = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><artifact />');
         $this->changeset_xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><changeset />');

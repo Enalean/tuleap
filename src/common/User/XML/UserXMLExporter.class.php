@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+//phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UserXMLExporter
 {
 
@@ -35,6 +36,14 @@ class UserXMLExporter
     {
         $this->user_manager = $user_manager;
         $this->collection   = $collection;
+    }
+
+    public static function build(): self
+    {
+        return new self(
+            UserManager::instance(),
+            new UserXMLExportedCollection(new XML_RNGValidator(), new XML_SimpleXMLCDATAFactory())
+        );
     }
 
     public function exportUser(PFUser $user, SimpleXMLElement $members_node, $child_name)

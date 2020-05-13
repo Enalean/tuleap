@@ -26,11 +26,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use DateTimeImmutable;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
+use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeSelectBoxBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 
@@ -57,22 +58,22 @@ class FieldChangeXMLExporter
     private $field_change_float_builder;
 
     /**
-     * @var FieldChangeSelectBoxBuilder
+     * @var FieldChangeListBuilder
      */
-    private $field_change_select_box_builder;
+    private $field_change_list_builder;
 
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
         FieldChangeTextBuilder $field_change_text_builder,
         FieldChangeFloatBuilder $field_change_float_builder,
-        FieldChangeSelectBoxBuilder $field_change_select_box_builder
+        FieldChangeListBuilder $field_change_list_builder
     ) {
-        $this->field_change_date_builder       = $field_change_date_builder;
-        $this->field_change_string_builder     = $field_change_string_builder;
-        $this->field_change_text_builder       = $field_change_text_builder;
-        $this->field_change_float_builder      = $field_change_float_builder;
-        $this->field_change_select_box_builder = $field_change_select_box_builder;
+        $this->field_change_date_builder   = $field_change_date_builder;
+        $this->field_change_string_builder = $field_change_string_builder;
+        $this->field_change_text_builder   = $field_change_text_builder;
+        $this->field_change_float_builder  = $field_change_float_builder;
+        $this->field_change_list_builder   = $field_change_list_builder;
     }
 
     /**
@@ -112,10 +113,16 @@ class FieldChangeXMLExporter
                 new DateTimeImmutable($value)
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
-            $this->field_change_select_box_builder->build(
+            assert(is_array($value));
+            $value_ids = [
+                $value['id']
+            ];
+
+            $this->field_change_list_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
-                $value
+                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                $value_ids
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
             $node_submitted_on[0] = $value;
