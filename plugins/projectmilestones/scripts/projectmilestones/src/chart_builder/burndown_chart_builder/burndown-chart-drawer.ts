@@ -20,6 +20,7 @@
 
 import { max } from "d3-array";
 import { select } from "d3-selection";
+import { curveMonotoneX } from "d3-shape";
 import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
 import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builders/chart-dates-service";
 import { BurndownData } from "../../type";
@@ -102,7 +103,13 @@ function createBurndownChart(
         }).formatTicks();
 
         removeAllLabelsOverlapsOthersLabels(svg_burndown);
-        drawCurve(svg_burndown, { x_scale, y_scale }, displayable_data, "remaining_effort");
+        drawCurve(
+            svg_burndown,
+            { x_scale, y_scale },
+            displayable_data,
+            "remaining_effort",
+            curveMonotoneX
+        );
 
         const last_point = getLastData(displayable_data);
         if (!last_point) {

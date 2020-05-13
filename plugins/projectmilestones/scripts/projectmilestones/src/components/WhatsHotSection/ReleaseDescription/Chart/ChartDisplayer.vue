@@ -21,11 +21,11 @@
     <div>
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
         <div v-else-if="!has_rest_error">
-            <div v-if="burndown_exists">
+            <div v-if="burndown_exists" class="release-chart-row-element">
                 <h2 class="tlp-pane-subtitle">{{ burndown_label }}</h2>
                 <burndown-displayer v-bind:release_data="release_data" />
             </div>
-            <div v-if="burnup_exists" data-test="burnup-exists">
+            <div v-if="burnup_exists" class="release-chart-row-element" data-test="burnup-exists">
                 <h2 class="tlp-pane-subtitle project-milestones-chart-label">{{ burnup_label }}</h2>
                 <burnup-displayer v-bind:release_data="release_data" />
             </div>

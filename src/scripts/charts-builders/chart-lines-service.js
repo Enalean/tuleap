@@ -55,8 +55,9 @@ function drawIdealLine(container, { x_scale, y_scale }, { line_start, line_end }
     ideal_line.append("path").datum(coordinates).attr("d", ideal_line_generator);
 }
 
-function drawCurve(container, { x_scale, y_scale }, dataset, line_name) {
+function drawCurve(container, { x_scale, y_scale }, dataset, line_name, interpolation) {
     const lines = line()
+        .curve(interpolation)
         .x(({ date }) => x_scale(date))
         .y((point) => y_scale(point[line_name]));
 

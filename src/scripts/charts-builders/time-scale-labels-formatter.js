@@ -40,7 +40,7 @@ export class TimeScaleLabelsFormatter {
             month: gettext_provider.gettext("MMM YYYY"),
             week: gettext_provider.gettext("WW"),
             /// Week format prefix. Chart ticks will be rendered like W01 for week 01, W02 for week 02 and so on.
-            week_prefix: gettext_provider.gettext("W %s"),
+            week_prefix: gettext_provider.gettext("W%s"),
         };
 
         Object.assign(this, {

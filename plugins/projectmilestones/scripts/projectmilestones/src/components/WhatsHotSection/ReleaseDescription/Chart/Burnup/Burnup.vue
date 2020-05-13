@@ -45,10 +45,10 @@ export default class Burnup extends Vue {
             graph_width: container_width,
             graph_height: container_height,
             margins: {
-                top: 25,
+                top: 10,
                 right: 30,
-                bottom: 30,
-                left: 35,
+                bottom: 20,
+                left: 25,
             },
         };
     }

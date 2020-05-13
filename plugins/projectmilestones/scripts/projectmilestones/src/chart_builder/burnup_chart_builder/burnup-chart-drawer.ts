@@ -27,6 +27,7 @@ import { getDaysToDisplay } from "../../../../../../../src/scripts/charts-builde
 import { max } from "d3-array";
 import { buildGraphScales } from "../../../../../../../src/scripts/charts-builders/line-chart-scales-factory";
 import { select } from "d3-selection";
+import { curveMonotoneX } from "d3-shape";
 import {
     drawCurve,
     drawIdealLine,
@@ -99,8 +100,14 @@ function createBurnupChart(
 
         addScaleLines(svg_burnup, coordinates_scale_lines);
 
-        drawCurve(svg_burnup, { x_scale, y_scale }, displayable_data, "total");
-        drawCurve(svg_burnup, { x_scale, y_scale }, displayable_data, "progression");
+        drawCurve(svg_burnup, { x_scale, y_scale }, displayable_data, "total", curveMonotoneX);
+        drawCurve(
+            svg_burnup,
+            { x_scale, y_scale },
+            displayable_data,
+            "progression",
+            curveMonotoneX
+        );
     }
 
     function getLastDataTotal(): number {

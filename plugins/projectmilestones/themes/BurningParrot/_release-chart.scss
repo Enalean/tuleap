@@ -24,6 +24,14 @@
     padding: 0 0 0 $tlp-small-spacing;
 }
 
+.release-chart-row-element {
+    margin: 0 0 $tlp-medium-spacing;
+
+    &:last-child {
+        margin: 0;
+    }
+}
+
 .release-chart-container {
     position: relative;
     padding-top: calc(45% + 20px);
@@ -35,11 +43,23 @@
     left: 0;
     width: 100%;
     height: 100%;
+
+    .chart-curve-remaining-effort,
+    .chart-curve-total,
+    .chart-curve-progression {
+        stroke-width: 2px;
+    }
+
+    .chart-y-axis > .tick > text,
+    .chart-x-axis > .tick > text {
+        opacity: .8;
+        color: $tlp-ui-dimmed;
+    }
 }
 
 .release-line-scale,
 .release-chart .ideal-line > path {
-    stroke-width: 2px;
+    stroke-width: 1px;
     stroke: $tlp-ui-border-normal;
     fill: transparent;
 }
@@ -73,8 +93,9 @@
     }
 }
 
-.project-milestones-chart-label {
-    margin: $tlp-medium-spacing 0 $tlp-medium-spacing 0;
+.release-widget-pie-chart-ttm-slice > path {
+    stroke-width: 1.5px;
+    stroke: $tlp-ui-white;
 }
 
 .release-widget-pie-chart-ttm-slice-blocked {
@@ -83,7 +104,7 @@
     }
 
     > text {
-        fill: darken($blocked, 10%);
+        fill: $blocked;
     }
 }
 
@@ -93,7 +114,7 @@
     }
 
     > text {
-        fill: darken($notrun, 10%);
+        fill: $notrun;
     }
 }
 
@@ -103,7 +124,7 @@
     }
 
     > text {
-        fill: darken($passed, 10%);
+        fill: $passed;
     }
 }
 
@@ -113,19 +134,20 @@
     }
 
     > text {
-        fill: darken($failed, 10%);
+        fill: $failed;
     }
 }
 
 .release-widget-pie-chart-ttm-slice-text {
-    font-size: 20px;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .release-widget-pie-chart-ttm-legend {
-    width: 100px;
+    padding: 0 0 0 $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 12px;
-    line-height: 18px;
+    line-height: 20px;
     cursor: default;
 }
 
@@ -141,9 +163,10 @@
 
 .release-widget-pie-chart-ttm-legend-color-span {
     flex: 0 0 auto;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     margin: 0 5px 0 0;
+    transition: transform ease-out 75ms;
     border-radius: 50%;
     opacity: .8;
 
@@ -166,10 +189,8 @@
 
 .release-widget-pie-chart-ttm-legend-selected {
     font-weight: 600;
-}
 
-.release-ttm-section {
-    width: 200 + $tlp-x-large-spacing;
-    margin: 0 $tlp-medium-spacing 0 auto;
-    padding: 0 0 0 $tlp-small-spacing;
+    > .release-widget-pie-chart-ttm-legend-color-span {
+        transform: scale(1.2);
+    }
 }

@@ -127,7 +127,7 @@ exports[`BurnupChartDrawer createBurnupChart When the chart is created, Then the
     />
     <path
       class="chart-curve-total"
-      d="M20,23.75L20,23.75"
+      d="M20,23.75Z"
     />
     <path
       class="chart-curve-progression"
