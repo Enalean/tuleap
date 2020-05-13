@@ -82,6 +82,7 @@ final class FieldXmlExporterTest extends TestCase
             1,
             true,
             [],
+            [],
             $collection
         );
 

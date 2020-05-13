@@ -85,6 +85,7 @@ class JiraToTuleapFieldTypeMapper
                         1,
                         $required,
                         [],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -98,6 +99,7 @@ class JiraToTuleapFieldTypeMapper
                         1,
                         $required,
                         [],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -111,6 +113,7 @@ class JiraToTuleapFieldTypeMapper
                         2,
                         $required,
                         [],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -124,6 +127,7 @@ class JiraToTuleapFieldTypeMapper
                         2,
                         $required,
                         [],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -137,6 +141,7 @@ class JiraToTuleapFieldTypeMapper
                         3,
                         $required,
                         [],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -152,6 +157,7 @@ class JiraToTuleapFieldTypeMapper
                         [
                             'display_time' => '0'
                         ],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
@@ -167,10 +173,24 @@ class JiraToTuleapFieldTypeMapper
                         [
                             'display_time' => '1'
                         ],
+                        $jira_field->getBoundValues(),
                         $jira_field_mapping_collection
                     );
                     break;
                 case 'priority':
+                    $this->field_xml_exporter->exportField(
+                        $jira_atf_fieldset,
+                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        5,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'status':
                 case 'creator':
                 case 'created':

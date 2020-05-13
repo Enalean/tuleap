@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -125,6 +125,7 @@ final class JiraXmlExporterTest extends TestCase
                 1,
                 false,
                 [],
+                [],
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -139,6 +140,7 @@ final class JiraXmlExporterTest extends TestCase
                 2,
                 false,
                 [],
+                [],
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -152,6 +154,7 @@ final class JiraXmlExporterTest extends TestCase
                 "updated",
                 5,
                 false,
+                [],
                 [],
                 $this->jira_field_mapping_collection
             ]
@@ -169,6 +172,7 @@ final class JiraXmlExporterTest extends TestCase
                 [
                     'display_time' => '1'
                 ],
+                [],
                 $this->jira_field_mapping_collection
             ]
         )->once();

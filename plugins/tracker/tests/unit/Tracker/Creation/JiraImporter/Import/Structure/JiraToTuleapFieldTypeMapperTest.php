@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -76,7 +76,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'summary',
             'Summary',
             true,
-            'summary'
+            'summary',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -90,6 +91,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 1,
                 $jira_field->isRequired(),
+                [],
                 [],
                 $collection
             ]
@@ -109,7 +111,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'description',
             'Description',
             false,
-            'description'
+            'description',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -123,6 +126,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 2,
                 $jira_field->isRequired(),
+                [],
                 [],
                 $collection
             ]
@@ -142,7 +146,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'fieldid',
             'String Field',
             false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
+            'com.atlassian.jira.plugin.system.customfieldtypes:textfield',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -156,6 +161,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 1,
                 $jira_field->isRequired(),
+                [],
                 [],
                 $collection
             ]
@@ -175,7 +181,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'fieldid',
             'Text Field',
             false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:textarea'
+            'com.atlassian.jira.plugin.system.customfieldtypes:textarea',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -189,6 +196,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 2,
                 $jira_field->isRequired(),
+                [],
                 [],
                 $collection
             ]
@@ -208,7 +216,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'fieldid',
             'String Field',
             false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:float'
+            'com.atlassian.jira.plugin.system.customfieldtypes:float',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -222,6 +231,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 3,
                 $jira_field->isRequired(),
+                [],
                 [],
                 $collection
             ]
@@ -241,7 +251,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'fieldid',
             'Datepicker Field',
             false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:datepicker'
+            'com.atlassian.jira.plugin.system.customfieldtypes:datepicker',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -258,6 +269,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 [
                     'display_time' => '0'
                 ],
+                [],
                 $collection
             ]
         );
@@ -276,7 +288,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             'fieldid',
             'Datepicker Field',
             false,
-            'com.atlassian.jira.plugin.system.customfieldtypes:datetime'
+            'com.atlassian.jira.plugin.system.customfieldtypes:datetime',
+            []
         );
 
         $collection = new FieldMappingCollection();
@@ -293,6 +306,53 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 [
                     'display_time' => '1'
                 ],
+                [],
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
+
+    public function testJiraPriorityFieldIsMappedToSelectBoxField(): void
+    {
+        $bound_values = [
+            new JiraFieldAPIAllowedValueRepresentation(
+                1,
+                'value01'
+            ),
+            new JiraFieldAPIAllowedValueRepresentation(
+                2,
+                'value02'
+            )
+        ];
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            'fieldid',
+            'Priorité',
+            false,
+            'priority',
+            $bound_values
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_atf_fieldset,
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                5,
+                $jira_field->isRequired(),
+                [],
+                $bound_values,
                 $collection
             ]
         );

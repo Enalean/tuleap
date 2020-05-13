@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeSelectBoxBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
 use UserManager;
@@ -162,6 +163,9 @@ class JiraXmlExporter
                     ),
                     new FieldChangeFloatBuilder(
                         new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeSelectBoxBuilder(
+                        new XML_SimpleXMLCDATAFactory()
                     )
                 ),
                 new FieldChangeStringBuilder(
@@ -208,6 +212,7 @@ class JiraXmlExporter
             1,
             false,
             [],
+            [],
             $this->jira_field_mapping_collection
         );
 
@@ -220,6 +225,7 @@ class JiraXmlExporter
             2,
             false,
             [],
+            [],
             $this->jira_field_mapping_collection
         );
 
@@ -231,6 +237,7 @@ class JiraXmlExporter
             self::JIRA_UPDATED_ON_NAME,
             5,
             false,
+            [],
             [],
             $this->jira_field_mapping_collection
         );
@@ -246,6 +253,7 @@ class JiraXmlExporter
             [
                 'display_time' => '1'
             ],
+            [],
             $this->jira_field_mapping_collection
         );
 
