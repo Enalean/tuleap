@@ -360,8 +360,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             throw new Tracker_Report_InvalidRESTCriterionException("Invalid format for criterion field '$this->name' ($this->id)");
         }
 
-        $available_field_values = $this->getAllValues();
-        $criterias              = array();
+        $criterias = [];
 
         foreach ($values_to_match as $value_to_match) {
             if (! is_numeric($value_to_match)) {
@@ -369,10 +368,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             }
 
             if ($value_to_match == self::NONE_VALUE) {
-                continue;
-            }
-
-            if (! isset($available_field_values[$value_to_match])) {
                 continue;
             }
 

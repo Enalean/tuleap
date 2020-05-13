@@ -456,25 +456,6 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
         $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
     }
 
-    public function testItIgnoresInvalidFieldValues(): void
-    {
-        $criteria = Mockery::mock(Tracker_Report_Criteria::class);
-        $report   = Mockery::mock(Tracker_Report::class);
-        $criteria->shouldReceive('getReport')->andReturn($report);
-        $report->shouldReceive('getId')->andReturn(1);
-
-        $rest_criteria_value = [
-            Tracker_Report_REST::VALUE_PROPERTY_NAME    => '106',
-            Tracker_Report_REST::OPERATOR_PROPERTY_NAME => Tracker_Report_REST::OPERATOR_CONTAINS
-        ];
-
-        $set = $this->list_field->setCriteriaValueFromREST($criteria, $rest_criteria_value);
-        $this->assertFalse($set);
-
-        $res = $this->list_field->getCriteriaValue($criteria);
-        $this->assertCount(0, $res);
-    }
-
     public function testItAddsACriterion(): void
     {
         $this->bind->shouldReceive('getAllValues')->andReturn(array(101 => 101, 102 => 102, 103 => 103));
