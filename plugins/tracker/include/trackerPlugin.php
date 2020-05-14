@@ -33,9 +33,13 @@ use Tuleap\Glyph\GlyphLocationsCollector;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
+use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Instrument\Prometheus\CollectTuleapComputedMetrics;
+use Tuleap\Language\LocaleSwitcher;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Mail\MailFilter;
+use Tuleap\Mail\MailLogger;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Admin\TemplatePresenter;
@@ -45,6 +49,8 @@ use Tuleap\Project\Event\ProjectRegistrationActivateService;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
 use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectAccessChecker;
+use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
@@ -83,9 +89,11 @@ use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
+use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportCleaner;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
@@ -1636,13 +1644,43 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $deletions_remover = new ArtifactsDeletionRemover(new ArtifactsDeletionDAO());
         $deletions_remover->deleteOutdatedArtifactsDeletions();
 
+        $current_time = new \DateTimeImmutable();
+
         $cleaner = new FileUploadCleaner(
             $logger,
             new FileOngoingUploadDao(),
             Tracker_FormElementFactory::instance(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
-        $cleaner->deleteDanglingFilesToUpload(new \DateTimeImmutable());
+        $cleaner->deleteDanglingFilesToUpload($current_time);
+
+        $pending_jira_cleaner = new PendingJiraImportCleaner(
+            $logger,
+            new PendingJiraImportDao(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
+            ProjectManager::instance(),
+            UserManager::instance(),
+            new CancellationOfJiraImportNotifier(
+                new MailNotificationBuilder(
+                    new MailBuilder(
+                        TemplateRendererFactory::build(),
+                        new MailFilter(
+                            UserManager::instance(),
+                            new ProjectAccessChecker(
+                                PermissionsOverrider_PermissionsOverriderManager::instance(),
+                                new RestrictedUserCanAccessProjectVerifier(),
+                                EventManager::instance()
+                            ),
+                            new MailLogger()
+                        )
+                    )
+                ),
+                new InstanceBaseURLBuilder(),
+                new LocaleSwitcher(),
+                TemplateRendererFactory::build(),
+            )
+        );
+        $pending_jira_cleaner->deleteDanglingPendingJiraImports($current_time);
     }
 
     /**

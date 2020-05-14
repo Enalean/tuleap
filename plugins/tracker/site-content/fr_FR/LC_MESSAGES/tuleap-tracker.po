@@ -282,6 +282,9 @@ msgstr "Peut soumettre"
 msgid "Cancel"
 msgstr "Annuler"
 
+msgid "Cancellation of your Jira import"
+msgstr "Annulation de votre import Jira"
+
 msgid "Canned responses"
 msgstr "Réponses types"
 
@@ -489,6 +492,15 @@ msgstr ""
 msgid "Invalid tracker template."
 msgstr "Le modèle d'outil de suivi selectionné est invalide"
 
+msgid "Jira issue type"
+msgstr "Type de tickets Jira"
+
+msgid "Jira project id"
+msgstr "Id du projet Jira"
+
+msgid "Jira server"
+msgstr "Serveur Jira"
+
 msgid "Last push"
 msgstr "Dernier push"
 
@@ -668,6 +680,9 @@ msgid ""
 msgstr ""
 "Merci d'activer le lien entre artéfacts \"_is_child\" afin de pouvoir "
 "définir une hiérarchie entre outils de suivi."
+
+msgid "Please try again or contact your administrator."
+msgstr "Merci d'essayer à nouveau ou alors contactez votre administrateur."
 
 msgid "Preview"
 msgstr "Prévisualisation"
@@ -1060,6 +1075,13 @@ msgstr ""
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
 
+msgid ""
+"The jira import initiated on %s is in queue since too long. It seems that "
+"something prevented its execution. It has been canceled."
+msgstr ""
+"L'import Jira initié le %s est en attente depuis trop longtemps. Il "
+"semblerait que quelque chose a empêché son exécution. Il a été annulé."
+
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
 msgstr ""
@@ -1377,6 +1399,9 @@ msgstr "Administration globale des outils de suivi"
 msgid "Tracker hierarchy"
 msgstr "Hiérarchie de l'outil de suivi"
 
+msgid "Tracker name"
+msgstr "Nom de l'outil de suivi"
+
 msgid "Tracker permissions"
 msgstr "Permissions de l'outil de suivi"
 
@@ -1385,6 +1410,9 @@ msgstr "Rendu d'un tracker"
 
 msgid "Tracker service is disabled."
 msgstr "Le service tracker est désactivé."
+
+msgid "Tracker shortname"
+msgstr "Nom court de l'outil de suivi"
 
 msgid "Tracker shortname length must be inferior to 25 characters."
 msgstr ""
