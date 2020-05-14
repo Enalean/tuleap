@@ -127,6 +127,19 @@ class FieldChangeXMLExporter
                 Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 $value_ids
             );
+        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE) {
+            assert(is_array($value));
+            $value_ids = [];
+            foreach ($value as $value_from_api) {
+                $value_ids[] = $value_from_api['id'];
+            }
+
+            $this->field_change_list_builder->build(
+                $changeset_node,
+                $mapping->getFieldName(),
+                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                $value_ids
+            );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
             $node_submitted_on[0] = $value;
         }
