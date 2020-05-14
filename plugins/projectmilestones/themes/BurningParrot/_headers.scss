@@ -129,7 +129,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-remaining-value {
-    margin: 0 3px 0 0;
+    margin: 0 2px 0 0;
     color: $tlp-theme-color;
     font-size: 16px;
     font-weight: 600;
@@ -161,7 +161,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-remaining-icon {
     align-self: center;
-    margin: 0 7px 0 0;
+    margin: 0 5px 0 0;
     opacity: .9;
     color: $tlp-ui-dimmed;
     font-size: 12px;
@@ -216,6 +216,5 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .closed-release-header-badge {
     display: flex;
     align-items: baseline;
-    width: 110px;
-    margin: 0 0 5px $tlp-half-spacing;
+    margin: 0 0 5px $tlp-medium-spacing;
 }
