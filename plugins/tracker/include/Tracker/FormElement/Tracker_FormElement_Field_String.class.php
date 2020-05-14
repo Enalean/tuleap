@@ -144,7 +144,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
             return $this->getNoValueLabel();
         }
 
-        return $value;
+        return '<div class="tracker-string-field-value">' . $value . '</div>';
     }
 
 

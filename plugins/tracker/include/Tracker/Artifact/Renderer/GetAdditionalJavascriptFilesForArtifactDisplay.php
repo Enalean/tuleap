@@ -1,5 +1,6 @@
+<?php
 /**
- * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,24 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tuleap-common-theme-basepath: '../../../www/themes/common/';
+declare(strict_types=1);
 
-@import '../../../www/themes/common/css/bootstrap-tuleap-22d39b3.min.css';
-@import '../../../www/themes/common/css/bootstrap-tuleap-responsive-22d39b3.min.css';
-@import '../../common/css/utils/utils';
-@import './variables-common';
 
-$fa-font-path: '../../tlp/src/fonts/font-awesome-4.7.0/fonts';
-@import '../../tlp/src/fonts/font-awesome-4.7.0/scss/font-awesome';
+namespace Tuleap\Tracker\Artifact\Renderer;
 
-$tlp-font-basepath: '../../tlp/src';
-@import '../../tlp/src/fonts/tlp-font/tlp-font';
+use Tuleap\Event\Dispatchable;
 
-html,
-body {
-    height: 100%;
-}
+class GetAdditionalJavascriptFilesForArtifactDisplay implements Dispatchable
+{
+    public const NAME = 'getAdditionalJavascriptFilesForArtifactDisplay';
 
-iframe {
-    box-sizing: border-box;
+    /**
+     * @var string[]
+     */
+    private $file_urls = [];
+
+    /**
+     * @return string[]
+     */
+    public function getFileUrls(): array
+    {
+        return $this->file_urls;
+    }
+
+    public function add(string $file_url): void
+    {
+        $this->file_urls[] = $file_url;
+    }
 }

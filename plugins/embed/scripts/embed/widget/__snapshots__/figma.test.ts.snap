@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`figma insertFigma insert an iframe 1`] = `
+<body>
+  <a
+    href="https://figma-url.example.com"
+  />
+  <br />
+  <iframe
+    allowfullscreen=""
+    height="450"
+    referrerpolicy="same-origin"
+    sandbox="allow-scripts allow-same-origin"
+    src="https://www.figma.com/embed?embed_host=tuleap&url=https%3A%2F%2Ffigma-url.example.com%2F"
+    width="100%"
+  />
+</body>
+`;
