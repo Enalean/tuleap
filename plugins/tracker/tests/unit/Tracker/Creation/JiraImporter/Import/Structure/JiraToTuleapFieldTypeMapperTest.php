@@ -456,4 +456,50 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $collection
         );
     }
+
+    public function testJiraSelectFieldIsMappedToSelectBoxField(): void
+    {
+        $bound_values = [
+            new JiraFieldAPIAllowedValueRepresentation(
+                1,
+                'value01'
+            ),
+            new JiraFieldAPIAllowedValueRepresentation(
+                2,
+                'value02'
+            )
+        ];
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            'selectid',
+            'Select Single',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:select',
+            $bound_values
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_custom_fieldset,
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                5,
+                $jira_field->isRequired(),
+                [],
+                $bound_values,
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
 }
