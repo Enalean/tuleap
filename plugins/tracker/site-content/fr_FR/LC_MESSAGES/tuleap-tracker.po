@@ -814,6 +814,13 @@ msgstr "@comments ne peut pas être comparé à NOW()."
 msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr "@comments ne peut pas être comparé à OPEN()."
 
+msgid ""
+"The Jira import initiated on %s is in queue since too long. It seems that "
+"something prevented its execution. It has been canceled."
+msgstr ""
+"L'import Jira initié le %s est en attente depuis trop longtemps. Il "
+"semblerait que quelque chose a empêché son exécution. Il a été annulé."
+
 #, php-format
 msgid "The artifact #%d is not located in an active project."
 msgstr "L'artéfact #%d ne se trouve pas dans un projet actif."
@@ -1074,13 +1081,6 @@ msgstr ""
 #, php-format
 msgid "The integer field '%s' cannot be compared to the string value '%s'."
 msgstr "Le champ entier '%s' ne peut pas être comparé à la chaîne '%s'."
-
-msgid ""
-"The jira import initiated on %s is in queue since too long. It seems that "
-"something prevented its execution. It has been canceled."
-msgstr ""
-"L'import Jira initié le %s est en attente depuis trop longtemps. Il "
-"semblerait que quelque chose a empêché son exécution. Il a été annulé."
 
 #, php-format
 msgid "The list field '%s' cannot be compared to MYSELF() for anonymous users."
