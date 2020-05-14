@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Cryptography\ConcealedString;
 use Tuleap\User\Password\Reset\ExpiredTokenException;
 
 require_once __DIR__ . '/../include/pre.php';
@@ -64,7 +65,8 @@ if (
     && $request->existAndNonEmpty('form_pw')
     && !strcmp($request->get('form_pw'), $request->get('form_pw2'))
 ) {
-    $user->setPassword($request->get('form_pw'));
+    $new_password = new ConcealedString((string) $request->get('form_pw'));
+    $user->setPassword($new_password);
 
     $reset_token_revoker = new \Tuleap\User\Password\Reset\Revoker($reset_token_dao);
     $reset_token_revoker->revokeTokens($user);
