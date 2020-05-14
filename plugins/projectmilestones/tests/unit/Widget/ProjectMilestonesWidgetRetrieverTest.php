@@ -121,7 +121,7 @@ class ProjectMilestonesWidgetRetrieverTest extends TestCase
         $this->project_access_checker->shouldReceive('checkUserCanAccessProject')->once();
         $title = $this->retriever->getTitle($this->project, $this->user);
 
-        $this->assertStringContainsString('MyProject Project Milestones', $title);
+        $this->assertStringContainsString('MyProject Milestones', $title);
     }
 
     public function testGetGenericTitleWhenNoProject(): void
