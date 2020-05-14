@@ -25,24 +25,29 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
-use Project;
-use ProjectManager;
 use Psr\Log\LoggerInterface;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
-use UserManager;
 
 class PendingJiraImportCleanerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
-    private $project_manager;
-    private $user_manager;
-    private $user;
-    private $project;
-    private $dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportBuilder
+     */
+    private $builder;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CancellationOfJiraImportNotifier
+     */
     private $notifier;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PendingJiraImportDao
+     */
+    private $dao;
+    /**
+     * @var PendingJiraImportCleaner
+     */
     private $cleaner;
 
     protected function setUp(): void
@@ -52,17 +57,13 @@ class PendingJiraImportCleanerTest extends TestCase
 
         $this->notifier        = Mockery::mock(CancellationOfJiraImportNotifier::class);
         $this->dao             = Mockery::mock(PendingJiraImportDao::class);
-        $this->project         = Mockery::mock(Project::class);
-        $this->user            = Mockery::mock(PFUser::class);
-        $this->user_manager    = Mockery::mock(UserManager::class);
-        $this->project_manager = Mockery::mock(ProjectManager::class);
+        $this->builder         = Mockery::mock(PendingJiraImportBuilder::class);
 
         $this->cleaner = new PendingJiraImportCleaner(
             $logger,
             $this->dao,
             new DBTransactionExecutorPassthrough(),
-            $this->project_manager,
-            $this->user_manager,
+            $this->builder,
             $this->notifier
         );
     }
@@ -72,149 +73,65 @@ class PendingJiraImportCleanerTest extends TestCase
         $current_time       = new DateTimeImmutable('2020-05-13');
         $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
 
+        $jira_import_row_1 = $this->anExpiredImportRow('jira 1');
+        $jira_import_row_2 = $this->anExpiredImportRow('jira 2');
         $this->dao->shouldReceive('searchExpiredImports')
             ->with($expected_timestamp)
             ->once()
             ->andReturn([
-                $this->anExpiredImport('jira 1'),
-                $this->anExpiredImport('jira 2')
+                $jira_import_row_1,
+                $jira_import_row_2,
             ]);
 
+        $jira_import_1 = Mockery::mock(PendingJiraImport::class);
+        $jira_import_2 = Mockery::mock(PendingJiraImport::class);
+        $this->builder
+            ->shouldReceive('buildFromRow')
+            ->with($jira_import_row_1)
+            ->andReturn($jira_import_1);
+        $this->builder
+            ->shouldReceive('buildFromRow')
+            ->with($jira_import_row_2)
+            ->andReturn($jira_import_2);
+
         $this->dao->shouldReceive('deleteExpiredImports')
             ->with($expected_timestamp)
             ->once();
 
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => true
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
-
         $this->notifier
             ->shouldReceive('warnUserAboutDeletion')
-            ->with(Mockery::on(function (PendingJiraImport $import) {
-                return $import->getJiraProjectId() === 'jira 1';
-            }))
+            ->with($jira_import_1)
             ->once();
         $this->notifier
             ->shouldReceive('warnUserAboutDeletion')
-            ->with(Mockery::on(function (PendingJiraImport $import) {
-                return $import->getJiraProjectId() === 'jira 2';
-            }))
+            ->with($jira_import_2)
             ->once();
 
         $this->cleaner->deleteDanglingPendingJiraImports($current_time);
     }
 
-    public function testItDoesNotWarnUserIfProjectIsNotActive(): void
+    public function testItDoesNotWarnUserIfPendingJiraImportCannotBeBuilt(): void
     {
         $current_time       = new DateTimeImmutable('2020-05-13');
         $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
 
+        $jira_import_row = $this->anExpiredImportRow();
         $this->dao->shouldReceive('searchExpiredImports')
             ->with($expected_timestamp)
             ->once()
-            ->andReturn([$this->anExpiredImport()]);
+            ->andReturn([
+                $jira_import_row,
+            ]);
+
+        $jira_import = Mockery::mock(PendingJiraImport::class);
+        $this->builder
+            ->shouldReceive('buildFromRow')
+            ->with($jira_import_row)
+            ->andThrow(UnableToBuildPendingJiraImportException::class);
 
         $this->dao->shouldReceive('deleteExpiredImports')
             ->with($expected_timestamp)
             ->once();
-
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => false
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
-
-        $this->notifier
-            ->shouldReceive('warnUserAboutDeletion')
-            ->never();
-
-        $this->cleaner->deleteDanglingPendingJiraImports($current_time);
-    }
-
-    public function testItDoesNotWarnUserIfProjectIsNotValid(): void
-    {
-        $current_time       = new DateTimeImmutable('2020-05-13');
-        $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
-
-        $this->dao->shouldReceive('searchExpiredImports')
-            ->with($expected_timestamp)
-            ->once()
-            ->andReturn([$this->anExpiredImport()]);
-
-        $this->dao->shouldReceive('deleteExpiredImports')
-            ->with($expected_timestamp)
-            ->once();
-
-        $this->project->shouldReceive(
-            [
-                'isError'  => true,
-                'isActive' => true
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => true,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
-
-        $this->notifier
-            ->shouldReceive('warnUserAboutDeletion')
-            ->never();
-
-        $this->cleaner->deleteDanglingPendingJiraImports($current_time);
-    }
-
-    public function testItDoesNotWarnUserIfUserIsNotAlive(): void
-    {
-        $current_time       = new DateTimeImmutable('2020-05-13');
-        $expected_timestamp = (new DateTimeImmutable('2020-05-12'))->getTimestamp();
-
-        $this->dao->shouldReceive('searchExpiredImports')
-            ->with($expected_timestamp)
-            ->once()
-            ->andReturn([$this->anExpiredImport()]);
-
-        $this->dao->shouldReceive('deleteExpiredImports')
-            ->with($expected_timestamp)
-            ->once();
-
-        $this->project->shouldReceive(
-            [
-                'isError'  => false,
-                'isActive' => true
-            ]
-        );
-        $this->project_manager->shouldReceive('getProject')->andReturn($this->project);
-
-        $this->user->shouldReceive(
-            [
-                'isAlive' => false,
-            ]
-        );
-        $this->user_manager->shouldReceive('getUserById')->andReturn($this->user);
 
         $this->notifier
             ->shouldReceive('warnUserAboutDeletion')
@@ -226,7 +143,7 @@ class PendingJiraImportCleanerTest extends TestCase
     /**
      * @return array
      */
-    private function anExpiredImport(string $jira_project = 'jira project'): array
+    private function anExpiredImportRow(string $jira_project = 'jira project'): array
     {
         return [
             'created_on'           => 0,

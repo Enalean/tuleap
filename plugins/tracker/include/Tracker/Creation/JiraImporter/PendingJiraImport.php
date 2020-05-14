@@ -60,8 +60,13 @@ class PendingJiraImport
      * @var string
      */
     private $tracker_shortname;
+    /**
+     * @var int
+     */
+    private $id;
 
     public function __construct(
+        int $id,
         Project $project,
         PFUser $user,
         DateTimeImmutable $created_on,
@@ -71,31 +76,15 @@ class PendingJiraImport
         string $tracker_name,
         string $tracker_shortname
     ) {
-        $this->project = $project;
-        $this->user = $user;
-        $this->created_on = $created_on;
-        $this->jira_server = $jira_server;
-        $this->jira_project_id = $jira_project_id;
+        $this->id                   = $id;
+        $this->project              = $project;
+        $this->user                 = $user;
+        $this->created_on           = $created_on;
+        $this->jira_server          = $jira_server;
+        $this->jira_project_id      = $jira_project_id;
         $this->jira_issue_type_name = $jira_issue_type_name;
-        $this->tracker_name = $tracker_name;
-        $this->tracker_shortname = $tracker_shortname;
-    }
-
-    /**
-     * @param array{created_on: int, jira_server: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string} $row
-     */
-    public static function buildFromRow(Project $project, PFUser $user, array $row): self
-    {
-        return new self(
-            $project,
-            $user,
-            (new \DateTimeImmutable())->setTimestamp($row['created_on']),
-            $row['jira_server'],
-            $row['jira_project_id'],
-            $row['jira_issue_type_name'],
-            $row['tracker_name'],
-            $row['tracker_shortname'],
-        );
+        $this->tracker_name         = $tracker_name;
+        $this->tracker_shortname    = $tracker_shortname;
     }
 
     public function getProject(): Project
@@ -136,5 +125,10 @@ class PendingJiraImport
     public function getTrackerShortname(): string
     {
         return $this->tracker_shortname;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

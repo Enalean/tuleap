@@ -39,7 +39,7 @@ class PendingJiraImportDao extends DataAccessObject
         string $tracker_color,
         string $tracker_description
     ): int {
-        return $this->getDB()->insert(
+        return (int) $this->getDB()->insertReturnId(
             'plugin_tracker_pending_jira_import',
             [
                 'created_on'           => (new \DateTimeImmutable())->getTimestamp(),
@@ -63,6 +63,17 @@ class PendingJiraImportDao extends DataAccessObject
         return $this->getDB()->run(
             'SELECT * FROM plugin_tracker_pending_jira_import WHERE project_id = ?',
             $project_id
+        );
+    }
+
+    /**
+     * @return mixed
+     */
+    public function searchById(int $id)
+    {
+        return $this->getDB()->row(
+            'SELECT * FROM plugin_tracker_pending_jira_import WHERE id = ?',
+            $id
         );
     }
 
@@ -108,5 +119,12 @@ class PendingJiraImportDao extends DataAccessObject
                 WHERE created_on <= ?',
             $expiration_timestamp
         );
+    }
+
+    public function deleteById(int $id): void
+    {
+        $this->getDB()->delete('plugin_tracker_pending_jira_import', [
+            'id' => $id
+        ]);
     }
 }

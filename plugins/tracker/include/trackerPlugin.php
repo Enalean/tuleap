@@ -56,6 +56,7 @@ use Tuleap\Project\XML\Export\NoArchive;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportNotValidException;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
+use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 use Tuleap\Request\CurrentPage;
 use Tuleap\Request\DispatchableWithRequest;
@@ -88,11 +89,14 @@ use Tuleap\Tracker\Artifact\MailGateway\MailGatewayConfigDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Config\ConfigController;
 use Tuleap\Tracker\Creation\DefaultTemplatesCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
+use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportCleaner;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
@@ -1594,6 +1598,13 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function workerEvent(WorkerEvent $event)
     {
+        AsynchronousJiraRunner::addListener(
+            $event,
+            new QueueFactory($event->getLogger()),
+            new PendingJiraImportDao(),
+            new PendingJiraImportBuilder(ProjectManager::instance(), $this->getUserManager()),
+        );
+
         AsynchronousActionsRunner::addListener($event);
 
         $logger = new WrapperLogger(BackendLogger::getDefaultLogger(), self::class);
@@ -1602,7 +1613,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new PendingArtifactRemovalDao(),
             $logger,
             $this->getUserManager(),
-            new \Tuleap\Queue\QueueFactory($logger)
+            new QueueFactory($logger)
         );
         $async_artifact_archive_runner->addListener($event);
     }
@@ -1658,23 +1669,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $logger,
             new PendingJiraImportDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
-            ProjectManager::instance(),
-            UserManager::instance(),
+            new PendingJiraImportBuilder(ProjectManager::instance(), UserManager::instance()),
             new CancellationOfJiraImportNotifier(
-                new MailNotificationBuilder(
-                    new MailBuilder(
-                        TemplateRendererFactory::build(),
-                        new MailFilter(
-                            UserManager::instance(),
-                            new ProjectAccessChecker(
-                                PermissionsOverrider_PermissionsOverriderManager::instance(),
-                                new RestrictedUserCanAccessProjectVerifier(),
-                                EventManager::instance()
-                            ),
-                            new MailLogger()
-                        )
-                    )
-                ),
+                $this->getMailNotificationBuilder(),
                 new InstanceBaseURLBuilder(),
                 new LocaleSwitcher(),
                 TemplateRendererFactory::build(),
@@ -2059,13 +2056,26 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $user_manager = UserManager::instance();
 
+        $logger = BackendLogger::getDefaultLogger();
+
+        $tracker_creator = TrackerCreator::build();
+
         return new TrackerCreationProcessorController(
             $user_manager,
             \ProjectManager::instance(),
-            TrackerCreator::build(),
+            $tracker_creator,
             $this->getTrackerCreationPermissionChecker(),
             new DefaultTemplatesCollectionBuilder(\EventManager::instance()),
-            new AsyncJiraScheduler(new KeyFactory(), new PendingJiraImportDao())
+            new AsyncJiraScheduler(
+                $logger,
+                new KeyFactory(),
+                new PendingJiraImportDao(),
+                new JiraRunner(
+                    $logger,
+                    new QueueFactory($logger),
+                    new PendingJiraImportDao(),
+                )
+            )
         );
     }
 
@@ -2190,5 +2200,23 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $event->addPluginsKeys(TrackerCreationPresenter::DISPLAY_JIRA_IMPORTER);
         $event->addPluginsKeys(AsyncJiraScheduler::CONFIG_NAME);
+    }
+
+    private function getMailNotificationBuilder(): MailNotificationBuilder
+    {
+        return new MailNotificationBuilder(
+            new MailBuilder(
+                TemplateRendererFactory::build(),
+                new MailFilter(
+                    UserManager::instance(),
+                    new ProjectAccessChecker(
+                        PermissionsOverrider_PermissionsOverriderManager::instance(),
+                        new RestrictedUserCanAccessProjectVerifier(),
+                        EventManager::instance()
+                    ),
+                    new MailLogger()
+                )
+            )
+        );
     }
 }

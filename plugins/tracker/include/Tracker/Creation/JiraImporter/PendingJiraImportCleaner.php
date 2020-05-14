@@ -24,10 +24,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use DateInterval;
 use DateTimeImmutable;
-use ProjectManager;
 use Psr\Log\LoggerInterface;
 use Tuleap\DB\DBTransactionExecutor;
-use UserManager;
 
 class PendingJiraImportCleaner
 {
@@ -44,32 +42,26 @@ class PendingJiraImportCleaner
      */
     private $transaction_executor;
     /**
-     * @var ProjectManager
-     */
-    private $project_manager;
-    /**
-     * @var UserManager
-     */
-    private $user_manager;
-    /**
      * @var CancellationOfJiraImportNotifier
      */
     private $notifier;
+    /**
+     * @var PendingJiraImportBuilder
+     */
+    private $builder;
 
     public function __construct(
         LoggerInterface $logger,
         PendingJiraImportDao $dao,
         DBTransactionExecutor $transaction_executor,
-        ProjectManager $project_manager,
-        UserManager $user_manager,
+        PendingJiraImportBuilder $builder,
         CancellationOfJiraImportNotifier $notifier
     ) {
-        $this->logger                    = $logger;
-        $this->dao                       = $dao;
-        $this->transaction_executor      = $transaction_executor;
-        $this->project_manager           = $project_manager;
-        $this->user_manager              = $user_manager;
-        $this->notifier                  = $notifier;
+        $this->logger               = $logger;
+        $this->dao                  = $dao;
+        $this->transaction_executor = $transaction_executor;
+        $this->builder              = $builder;
+        $this->notifier             = $notifier;
     }
 
     public function deleteDanglingPendingJiraImports(DateTimeImmutable $current_time): void
@@ -82,28 +74,15 @@ class PendingJiraImportCleaner
                 $expired_imports = $this->dao->searchExpiredImports($expiration_timestamp);
                 $this->logger->info('Found ' . count($expired_imports) . ' expired imports.');
                 foreach ($expired_imports as $import) {
-                    $this->warnUserAboutDeletion($import);
+                    try {
+                        $pending_jira_import = $this->builder->buildFromRow($import);
+                        $this->notifier->warnUserAboutDeletion($pending_jira_import);
+                    } catch (UnableToBuildPendingJiraImportException $exception) {
+                        // silently ignore it
+                    }
                 }
                 $this->dao->deleteExpiredImports($expiration_timestamp);
             }
         );
-    }
-
-    /**
-     * @param array{project_id: int, user_id: int, created_on: int, jira_server: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string} $expired_import
-     */
-    private function warnUserAboutDeletion(array $expired_import): void
-    {
-        $project = $this->project_manager->getProject($expired_import['project_id']);
-        if ($project->isError() || ! $project->isActive()) {
-            return;
-        }
-
-        $user = $this->user_manager->getUserById($expired_import['user_id']);
-        if (! $user || ! $user->isAlive()) {
-            return;
-        }
-
-        $this->notifier->warnUserAboutDeletion(PendingJiraImport::buildFromRow($project, $user, $expired_import));
     }
 }

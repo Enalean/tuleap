@@ -23,9 +23,12 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Project;
+use Psr\Log\LoggerInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
 class AsyncJiraScheduler
 {
@@ -36,14 +39,28 @@ class AsyncJiraScheduler
      */
     private $key_factory;
     /**
-     * @var \Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao
+     * @var PendingJiraImportDao
      */
     private $dao;
+    /**
+     * @var JiraRunner
+     */
+    private $actions_runner;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(KeyFactory $key_factory, PendingJiraImportDao $dao)
-    {
-        $this->key_factory = $key_factory;
-        $this->dao         = $dao;
+    public function __construct(
+        LoggerInterface $logger,
+        KeyFactory $key_factory,
+        PendingJiraImportDao $dao,
+        JiraRunner $actions_runner
+    ) {
+        $this->key_factory    = $key_factory;
+        $this->dao            = $dao;
+        $this->actions_runner = $actions_runner;
+        $this->logger         = $logger;
     }
 
     public function shouldCreationBeAsynchronous(): bool
@@ -51,6 +68,9 @@ class AsyncJiraScheduler
         return (bool) \ForgeConfig::get(self::CONFIG_NAME) === true;
     }
 
+    /**
+     * @throws TrackerCreationHasFailedException
+     */
     public function scheduleCreation(
         Project $project,
         \PFUser $user,
@@ -64,8 +84,14 @@ class AsyncJiraScheduler
         string $tracker_color,
         string $tracker_description
     ): void {
-        $encryption_key = $this->key_factory->getEncryptionKey();
-        $this->dao->create(
+        try {
+            $encryption_key = $this->key_factory->getEncryptionKey();
+        } catch (CannotPerformIOOperationException $exception) {
+            $this->logger->error('Unable to schedule the import of Jira: ' . $exception->getMessage());
+            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
+        }
+
+        $id = $this->dao->create(
             (int) $project->getID(),
             (int) $user->getId(),
             $jira_server,
@@ -78,5 +104,10 @@ class AsyncJiraScheduler
             $tracker_color,
             $tracker_description
         );
+        if (! $id) {
+            $this->logger->error('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.');
+            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
+        }
+        $this->actions_runner->queueJiraImportEvent($id);
     }
 }
