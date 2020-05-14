@@ -112,7 +112,10 @@ class FieldChangeXMLExporter
                 $mapping->getFieldName(),
                 new DateTimeImmutable($value)
             );
-        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
+        } elseif (
+            $mapping->getType() === Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE ||
+            $mapping->getType() === Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE
+        ) {
             assert(is_array($value));
             $value_ids = [
                 $value['id']

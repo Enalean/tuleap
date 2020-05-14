@@ -191,6 +191,20 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
+                    $this->field_xml_exporter->exportField(
+                        $jira_atf_fieldset,
+                        Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        5,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection
+                    );
+                    break;
                 case 'status':
                 case 'creator':
                 case 'created':
@@ -200,7 +214,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'resolutiondate': // this field is not always displayed in issue view, always created.
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:grouppicker':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:select':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':

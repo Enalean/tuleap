@@ -168,4 +168,33 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame("3", (string) $field_change_node->value[0]);
     }
+
+    public function testItExportsTheSelectedValueInARadioButtonField(): void
+    {
+        $mapping = new FieldMapping(
+            'rb',
+            'Frb',
+            'Radio Buttons',
+            'rb'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $this->exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            [
+                'self' => 'URL/rest/api/2/customFieldOption/10005',
+                'value' => 'test',
+                'id' => '10005'
+            ],
+            null
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertCount(1, $field_change_node->value);
+        $this->assertSame("10005", (string) $field_change_node->value[0]);
+    }
 }

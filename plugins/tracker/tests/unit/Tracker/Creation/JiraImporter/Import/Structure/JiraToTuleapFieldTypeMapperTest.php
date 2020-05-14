@@ -364,4 +364,50 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             $collection
         );
     }
+
+    public function testJiraRadioButtonsFieldIsMappedToRadioButtonField(): void
+    {
+        $bound_values = [
+            new JiraFieldAPIAllowedValueRepresentation(
+                1,
+                'value01'
+            ),
+            new JiraFieldAPIAllowedValueRepresentation(
+                2,
+                'value02'
+            )
+        ];
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            'radiobuttonsid',
+            'Radio buttons',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons',
+            $bound_values
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->jira_atf_fieldset,
+                Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                5,
+                $jira_field->isRequired(),
+                [],
+                $bound_values,
+                $collection
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->jira_atf_fieldset,
+            $this->jira_custom_fieldset,
+            $collection
+        );
+    }
 }
