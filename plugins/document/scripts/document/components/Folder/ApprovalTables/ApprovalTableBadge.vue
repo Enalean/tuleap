@@ -30,6 +30,7 @@
 
 <script>
 import { extractApprovalTableData } from "../../../helpers/approval-table-helper.js";
+import { APPROVAL_APPROVED, APPROVAL_NOT_YET, APPROVAL_REJECTED } from "../../../constants.js";
 
 export default {
     props: {
@@ -48,17 +49,20 @@ export default {
         has_an_approval_table() {
             return this.item.approval_table;
         },
+        translated_approval_states_map() {
+            const approval_states_map = {};
+
+            approval_states_map[this.$gettext("Approved")] = APPROVAL_APPROVED;
+            approval_states_map[this.$gettext("Not yet")] = APPROVAL_NOT_YET;
+            approval_states_map[this.$gettext("Rejected")] = APPROVAL_REJECTED;
+
+            return approval_states_map;
+        },
     },
     mounted() {
         if (this.item.approval_table) {
-            const translated_approval_states = {
-                "Not yet": this.$gettext("Not yet"),
-                Approved: this.$gettext("Approved"),
-                Rejected: this.$gettext("Rejected"),
-            };
-
             this.approval_data = extractApprovalTableData(
-                translated_approval_states,
+                this.translated_approval_states_map,
                 this.item.approval_table.approval_state,
                 this.isInFolderContentRow
             );

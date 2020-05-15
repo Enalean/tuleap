@@ -41,8 +41,6 @@ export const FILE_UPLOAD_UNKNOWN_ERROR = "unknown error";
 export const APPROVAL_NOT_YET = "Not yet";
 export const APPROVAL_APPROVED = "Approved";
 export const APPROVAL_REJECTED = "Rejected";
-export const APPROVAL_DECLINED = "Declined";
-export const APPROVAL_COMMENTED = "Commented";
 
 export const USER_CANNOT_PROPAGATE_DELETION_TO_WIKI_SERVICE = null;
 
