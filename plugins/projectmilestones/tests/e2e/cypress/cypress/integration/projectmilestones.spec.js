@@ -33,8 +33,10 @@ describe("Project Milestones Widget", function () {
             cy.get("[data-test=dashboardprojectmilestone]").click();
             cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
-            cy.get("[data-test=dashboard-widget-dashboardprojectmilestone]");
-            cy.contains("ProjectMilestones Widget Project Milestones");
+            cy.get("[data-test=dashboard-widget-dashboardprojectmilestone]").should(
+                "contain",
+                "ProjectMilestones Widget Milestones"
+            );
 
             cy.getProjectId("projectmilestones-dashboard").then((project_id) => {
                 cy.route(`/api/v1/projects/${project_id}/milestones?limit=*&offset=*&query=*`).as(
@@ -67,8 +69,10 @@ describe("Project Milestones Widget", function () {
             ).click();
             cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
-            cy.get("[data-test=dashboard-widget-myprojectmilestone]");
-            cy.contains("ProjectMilestones Widget Project Milestones");
+            cy.get("[data-test=dashboard-widget-myprojectmilestone]").should(
+                "contain",
+                "ProjectMilestones Widget Milestones"
+            );
 
             cy.getProjectId("projectmilestones-dashboard").then((project_id) => {
                 cy.route(`/api/v1/projects/${project_id}/milestones?limit=*&offset=*&query=*`).as(
