@@ -24,6 +24,7 @@ use BackendLogger;
 use ForgeConfig;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LogLevel;
+use TruncateLevelLogger;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 
@@ -68,6 +69,8 @@ class BackendLoggerTest extends TestCase
     {
         $logger = BackendLogger::getDefaultLogger();
 
+        $this->assertInstanceOf(TruncateLevelLogger::class, $logger);
+
         $logger->info('foo');
 
         $this->assertStringContainsString('[info] foo', file_get_contents($this->getTmpDir() . '/codendi_syslog'));
@@ -79,5 +82,23 @@ class BackendLoggerTest extends TestCase
         $logger = BackendLogger::getDefaultLogger();
 
         $this->assertInstanceOf(\Monolog\Logger::class, $logger);
+    }
+
+    public function testItReturnsTheFileBaseLogger(): void
+    {
+        ForgeConfig::set('sys_logger', 'files');
+        $logger = BackendLogger::getDefaultLogger();
+
+        $this->assertInstanceOf(TruncateLevelLogger::class, $logger);
+    }
+
+    public function testItReturnsFileLoggerWhenCannotConfigure(): void
+    {
+        ForgeConfig::set('sys_logger', 'graylog2');
+        $logger = BackendLogger::getDefaultLogger();
+
+        $logger->info('foo');
+        $this->assertStringContainsString('[warning] Unable to setup logger handler graylog2', file_get_contents($this->getTmpDir() . '/codendi_syslog'));
+        $this->assertStringContainsString('[info] foo', file_get_contents($this->getTmpDir() . '/codendi_syslog'));
     }
 }

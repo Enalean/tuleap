@@ -78,7 +78,7 @@ class ForgeConfig
      * Get the $name configuration variable
      *
      * @param $name    string the variable name
-     * @param $default mixed  the value to return if the variable is not set in the configuration. TODO: read in the local.inc.dist
+     * @param $default mixed  the value to return if the variable is not set in the configuration
      *
      * @return mixed
      */
@@ -86,6 +86,14 @@ class ForgeConfig
     {
         if (self::exists($name)) {
             return self::$conf_stack[0][$name];
+        }
+        return $default;
+    }
+
+    public static function getInt(string $name, int $default = 0): int
+    {
+        if (self::exists($name)) {
+            return (int) self::$conf_stack[0][$name];
         }
         return $default;
     }

@@ -27,6 +27,7 @@ use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
 use Tuleap\layout\HomePage\NewsCollectionBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionBuilder;
+use Tuleap\Log\LogToGraylog2;
 use Tuleap\Project\DefaultProjectVisibilityRetriever;
 use Tuleap\Project\Registration\ProjectRegistrationPresenterBuilder;
 use Tuleap\User\UserSuspensionManager;
@@ -50,16 +51,20 @@ class GetWhitelistedKeys implements Dispatchable
         \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
         ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
         Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
-        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER => true,
-        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS => true,
-        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS => true,
-        DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME => true,
-        ServiceControl::FORGECONFIG_INIT_MODE => true,
-        UserSuspensionManager::CONFIG_NOTIFICATION_DELAY => true,
-        MyProjects::CONFIG_DISABLE_CONTACT => true,
+        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER                                    => true,
+        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS                                     => true,
+        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS                         => true,
+        DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME                         => true,
+        ServiceControl::FORGECONFIG_INIT_MODE                                          => true,
+        UserSuspensionManager::CONFIG_NOTIFICATION_DELAY                               => true,
+        MyProjects::CONFIG_DISABLE_CONTACT                                             => true,
         ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
-        BackendLogger::CONFIG_LOGGER => true,
-        UserSuspensionManager::CONFIG_INACTIVE_EMAIL => true
+        BackendLogger::CONFIG_LOGGER                                                   => true,
+        UserSuspensionManager::CONFIG_INACTIVE_EMAIL                                   => true,
+        LogToGraylog2::CONFIG_GRAYLOG2_SERVER                                          => true,
+        LogToGraylog2::CONFIG_GRAYLOG2_PORT                                            => true,
+        LogToGraylog2::CONFIG_GRAYLOG2_SSL                                             => true,
+        LogToGraylog2::CONFIG_GRAYLOG2_DEBUG                                           => true,
     ];
 
     public function addPluginsKeys(string $key_name): void
