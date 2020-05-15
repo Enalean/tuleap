@@ -35,13 +35,12 @@ use ZipStream\Exception\OverflowException;
 use ZipStream\Option\Archive;
 use ZipStream\ZipStream;
 
-class DocumentFolderZipStreamer implements DispatchableWithRequest, DispatchableWithProject
+final class DocumentFolderZipStreamer implements DispatchableWithRequest, DispatchableWithProject
 {
     /**
      * @var DocumentTreeProjectExtractor
      */
     private $project_extractor;
-
     /**
      * @var ZipStreamerLoggingHelper
      */
@@ -112,12 +111,14 @@ class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispatchable
 
         $factory = \Docman_FolderFactory::instance($project->getID());
         $factory->getItemTree($folder, $user, false, true);
+        $errors_listing_builder = new ErrorsListingBuilder();
 
         $folder->accept(
-            new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper),
+            new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper, $errors_listing_builder),
             ['path' => '', 'base_folder_id' => $folder->getId()]
         );
 
+        $errors_listing_builder->addErrorsFileIfAnyToArchive($zip);
         try {
             $zip->finish();
         } catch (OverflowException $e) {

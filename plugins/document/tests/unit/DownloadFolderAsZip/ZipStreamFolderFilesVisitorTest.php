@@ -61,7 +61,8 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
     {
         $visitor = new ZipStreamFolderFilesVisitor(
             $this->zip,
-            $this->error_logging_helper
+            $this->error_logging_helper,
+            new ErrorsListingBuilder()
         );
 
         $root_folder = $this->getRootFolderWithItems();
@@ -76,7 +77,8 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
     {
         $visitor = new ZipStreamFolderFilesVisitor(
             $this->zip,
-            $this->error_logging_helper
+            $this->error_logging_helper,
+            new ErrorsListingBuilder()
         );
 
         $root_folder = $this->getRootFolderWithItems();
@@ -92,7 +94,8 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
     {
         $visitor = new ZipStreamFolderFilesVisitor(
             $this->zip,
-            $this->error_logging_helper
+            $this->error_logging_helper,
+            new ErrorsListingBuilder()
         );
 
         $root_folder = $this->getRootFolderWithItems();
@@ -108,14 +111,14 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
     {
         $visitor = new ZipStreamFolderFilesVisitor(
             $this->zip,
-            $this->error_logging_helper
+            $this->error_logging_helper,
+            new ErrorsListingBuilder()
         );
 
         $root_folder = $this->getRootFolderWithItems(true);
 
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
         $this->zip->shouldReceive('addFileFromPath')->with('/my files/a file.pdf', '/path/to/file');
-
         $this->error_logging_helper->shouldReceive('logCorruptedFile');
 
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
