@@ -31,6 +31,7 @@ use Tuleap\Docman\Item\ItemVisitor;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesFullRepresentation;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\EmbeddedFilePropertiesMinimalRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Links\LinkPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
 use Tuleap\Docman\View\DocmanViewURLBuilder;
@@ -83,7 +84,9 @@ class ItemRepresentationVisitor implements ItemVisitor
             ItemRepresentation::TYPE_FOLDER,
             null,
             null,
-            null
+            null,
+            null,
+            $this->buildFolderProperties($item, $params)
         );
     }
 
@@ -253,5 +256,23 @@ class ItemRepresentationVisitor implements ItemVisitor
     private function isADirectAccessToDocument(array $params): bool
     {
         return isset($params['is_a_direct_access']) && (bool) $params['is_a_direct_access'] === true;
+    }
+
+    private function buildFolderProperties(Docman_Folder $item, array $params): ?FolderPropertiesRepresentation
+    {
+        if (! isset($params['with_size']) || $params['with_size'] === false) {
+            return null;
+        }
+
+        $this->item_factory->getItemTree(
+            $item,
+            $params['current_user'],
+            false,
+            true
+        );
+        $folder_size_representation = new FolderPropertiesRepresentation();
+        $folder_size_representation->build($item);
+
+        return $folder_size_representation;
     }
 }

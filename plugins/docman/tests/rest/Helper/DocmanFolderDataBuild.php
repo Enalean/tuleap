@@ -182,4 +182,52 @@ class DocmanFolderDataBuild
 
         $this->common_builder->createAdminOnlyItem($folder_delete_id, 'DELETE FO RO', PLUGIN_DOCMAN_ITEM_TYPE_FOLDER);
     }
+
+    public function createFolderToDownload($docman_root)
+    {
+        $folder_id = $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $docman_root->getId(),
+            'Download me as a zip',
+            PLUGIN_DOCMAN_ITEM_TYPE_FOLDER
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'Empty item',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMPTY
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'File item',
+            PLUGIN_DOCMAN_ITEM_TYPE_FILE
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'Link item',
+            PLUGIN_DOCMAN_ITEM_TYPE_LINK,
+            "https://example.test"
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'Embedded file item',
+            PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE
+        );
+
+        $this->common_builder->createItemWithVersion(
+            $this->docman_user_id,
+            $folder_id,
+            'Wiki item',
+            PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            '',
+            'MyWikiPage'
+        );
+    }
 }

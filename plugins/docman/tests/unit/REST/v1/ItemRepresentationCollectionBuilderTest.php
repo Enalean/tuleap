@@ -30,6 +30,7 @@ use Mockery;
 use PFUser;
 use Tuleap\Docman\Item\PaginatedDocmanItemCollection;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
@@ -192,7 +193,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             null,
             null,
             null,
-            null
+            null,
+            new FolderPropertiesRepresentation()
         );
 
         $version_data_item3   = [
@@ -204,7 +206,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'changeLog' => null,
             'date'      => null,
             'filename'  => 'item B',
-            'filesize'  => null,
+            'filesize'  => 48000,
             'filetype'  => 'application/pdf',
             'path'      => null,
             '_content'  => null,
@@ -245,11 +247,12 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             $file_properties,
             null,
             null,
+            null,
             null
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_item1, $user, ItemRepresentation::TYPE_FOLDER, null, null, null])
+            ->withArgs([$docman_item1, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
             ->andReturns($representation1);
 
         $this->item_version_factory->shouldReceive('getCurrentVersionForItem')
@@ -287,7 +290,7 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             'title'       => 'folder 2',
             'user_id'     => 101,
             'update_date' => 1542099693,
-            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_WIKI,
+            'item_type'   => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER,
             'parent_id'   => 1
         ];
         $dar_item        = [
@@ -347,7 +350,8 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             null,
             null,
             null,
-            null
+            null,
+            new FolderPropertiesRepresentation()
         );
         $representation2 = new ItemRepresentation();
         $representation2->build(
@@ -378,14 +382,15 @@ class ItemRepresentationCollectionBuilderTest extends \PHPUnit\Framework\TestCas
             null,
             null,
             null,
-            null
+            null,
+            new FolderPropertiesRepresentation()
         );
 
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_folder1, $user, ItemRepresentation::TYPE_FOLDER, null, null, null])
+            ->withArgs([$docman_folder1, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
                                           ->andReturns($representation1);
         $this->item_representation_builder->shouldReceive('buildItemRepresentation')
-            ->withArgs([$docman_folder2, $user, ItemRepresentation::TYPE_FOLDER, null, null, null])
+            ->withArgs([$docman_folder2, $user, ItemRepresentation::TYPE_FOLDER, null, null, null, null, null])
                                           ->andReturns($representation2);
 
         $representation = $this->item_representation_collection_builder->buildParents($item, $user, $project, 50, 0);

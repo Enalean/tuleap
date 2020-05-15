@@ -92,11 +92,36 @@ class ItemRepresentationVisitorTest extends TestCase
                 ItemRepresentation::TYPE_FOLDER,
                 null,
                 null,
+                null,
+                null,
                 null
             ]
         )->once();
 
         $this->item_visitor->visitFolder($item, $params);
+    }
+
+    public function testItVisitAFolderAndReturnsItsSize(): void
+    {
+        $folder  = Mockery::mock(\Docman_Folder::class);
+        $user = Mockery::mock(\PFUser::class);
+        $params  = [
+            'current_user' => $user,
+            'with_size' => true
+        ];
+
+        $this->item_factory->shouldReceive('getItemTree')->with(
+            $folder,
+            $user,
+            false,
+            true
+        );
+
+        $folder->shouldReceive('accept');
+
+        $this->item_representation_builder->shouldReceive('buildItemRepresentation')->once();
+
+        $this->item_visitor->visitFolder($folder, $params);
     }
 
     public function testItVisitAWiki(): void

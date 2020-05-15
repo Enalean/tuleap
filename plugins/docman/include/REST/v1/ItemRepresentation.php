@@ -23,6 +23,7 @@ namespace Tuleap\Docman\REST\v1;
 use Codendi_HTMLPurifier;
 use Tuleap\Docman\REST\v1\EmbeddedFiles\IEmbeddedFilePropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Files\FilePropertiesRepresentation;
+use Tuleap\Docman\REST\v1\Folders\FolderPropertiesRepresentation;
 use Tuleap\Docman\REST\v1\Metadata\ItemMetadataRepresentation;
 use Tuleap\Docman\REST\v1\Permissions\DocmanItemPermissionsForGroupsRepresentation;
 use Tuleap\Docman\REST\v1\Wiki\WikiPropertiesRepresentation;
@@ -149,6 +150,11 @@ class ItemRepresentation
      */
     public $permissions_for_groups;
 
+    /**
+     * @var FolderPropertiesRepresentation | null
+     */
+    public $folder_properties;
+
     public function build(
         \Docman_Item $item,
         Codendi_HTMLPurifier $purifier,
@@ -166,7 +172,8 @@ class ItemRepresentation
         ?FilePropertiesRepresentation $file_properties,
         ?IEmbeddedFilePropertiesRepresentation $embedded_file_properties,
         ?LinkPropertiesRepresentation $link_properties,
-        ?WikiPropertiesRepresentation $wiki_properties
+        ?WikiPropertiesRepresentation $wiki_properties,
+        ?FolderPropertiesRepresentation $folder_properties
     ) {
         $this->id                         = JsonCast::toInt($item->getId());
         $this->title                      = $item->getTitle();
@@ -189,6 +196,7 @@ class ItemRepresentation
         $this->has_approval_table         = $has_approval_table;
         $this->is_approval_table_enabled  = $is_approval_table_enabled;
         $this->permissions_for_groups     = $permissions_for_groups;
+        $this->folder_properties          = $folder_properties;
 
         $parent_id = JsonCast::toInt($item->getParentId());
 

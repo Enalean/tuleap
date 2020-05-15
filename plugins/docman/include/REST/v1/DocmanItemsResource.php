@@ -92,6 +92,15 @@ class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the folder
+     * @param bool $with_size <b>Only for folders</b>. When true, the size of the folder is returned in the representation.
+     *
+     * <div class="tlp-alert-info">
+     *     Please note
+     *     <ul>
+     *         <li>The size of a folder is computed on the documents of type "file", that is to say files and embedded files.</li>
+     *         <li>The number of files is the sum of the number of files, embedded files and folders.</li>
+     *     </ul>
+     * </div>
      *
      * @return ItemRepresentation
      *
@@ -99,7 +108,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      */
-    public function getId($id)
+    public function getId($id, bool $with_size = false)
     {
         $this->checkAccess();
         $this->sendAllowHeaders();
@@ -107,9 +116,23 @@ class DocmanItemsResource extends AuthenticatedResource
         $items_request = $this->request_builder->buildFromItemId($id);
         $item          = $items_request->getItem();
 
+        if ($with_size === true && ! ($item instanceof \Docman_Folder)) {
+            throw new I18NRestException(
+                400,
+                dgettext('tuleap-docman', 'with_size = true only works with folders.')
+            );
+        }
+
         $representation_visitor = $this->getItemRepresentationVisitor($items_request);
         try {
-            return $item->accept($representation_visitor, ['current_user' => $items_request->getUser(), 'is_a_direct_access' => true]);
+            return $item->accept(
+                $representation_visitor,
+                [
+                    'current_user' => $items_request->getUser(),
+                    'is_a_direct_access' => true,
+                    'with_size' => $with_size
+                ]
+            );
         } catch (UnknownMetadataException $exception) {
             throw new RestException(
                 500,

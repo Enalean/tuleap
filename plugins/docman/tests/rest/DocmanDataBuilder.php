@@ -52,13 +52,13 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
      *         Root
      *          +
      *          |
-     *    +-----+-----+--------------+--------+-------+-------+
-     *    |           |              |        |       |       |
-     *    +           +              +        +       +       +
-     *  Folder       File         Embedded   Link   Wiki     Empty
-     *    +           +              +        +       +       +
-     *    |           |              |        |       |       |
-     *   ...         ...            ...      ...     ...     ...
+     *    +-----+-----+----------+--------+-------+-------+--------------+
+     *    |           |          |        |       |       |              |
+     *    +           +          +        +       +       +              +
+     *  Folder       File     Embedded   Link   Wiki     Empty  Download me as a zip
+     *    +           +          +        +       +       +              +
+     *    |           |          |        |       |       |              |
+     *   ...         ...        ...      ...     ...     ...            ...
      */
     private function addContent(): void
     {
@@ -83,5 +83,8 @@ class DocmanDataBuilder extends DocmanDataBuildCommon
 
         $folder_builder = new DocmanFolderDataBuild($common_builder);
         $folder_builder->createFolderWithContent($docman_root);
+
+        $folder_to_download_builder = new DocmanFolderDataBuild($common_builder);
+        $folder_to_download_builder->createFolderToDownload($docman_root);
     }
 }
