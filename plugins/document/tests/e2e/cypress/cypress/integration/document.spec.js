@@ -43,9 +43,15 @@ describe("Document new UI", () => {
     });
 
     context("Docman items", () => {
-        it("user can manipulate folders", () => {
+        before(() => {
             cy.visitProjectService("document-project", "Documents");
+        });
 
+        beforeEach(() => {
+            disableSpecificErrorThrownByCkeditor();
+        });
+
+        it("user can manipulate folders", () => {
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-drop-down-button]").click();
 
@@ -79,10 +85,6 @@ describe("Document new UI", () => {
         });
 
         it("user can manipulate empty document", () => {
-            cy.visitProjectService("document-project", "Documents");
-
-            disableSpecificErrorThrownByCkeditor();
-
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
             });
@@ -111,10 +113,6 @@ describe("Document new UI", () => {
         });
 
         it("user can manipulate links", () => {
-            cy.visitProjectService("document-project", "Documents");
-
-            disableSpecificErrorThrownByCkeditor();
-
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
             });
@@ -155,8 +153,6 @@ describe("Document new UI", () => {
         });
 
         it("user should be able to manipulate wiki page", () => {
-            disableSpecificErrorThrownByCkeditor();
-
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
             });
@@ -197,10 +193,6 @@ describe("Document new UI", () => {
         });
 
         it("user should be able to create an embedded file", () => {
-            cy.visitProjectService("document-project", "Documents");
-
-            disableSpecificErrorThrownByCkeditor();
-
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-item-action-new-button]").click();
             });
@@ -231,6 +223,83 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-confirm-deletion-button]").click();
 
             cy.get("[data-test=document-tree-content]").should("not.exist");
+        });
+
+        it(`user can download a folder as a zip archive`, function () {
+            // Create a folder
+            cy.get("[data-test=document-header-actions]").within(() => {
+                cy.get("[data-test=document-drop-down-button]").click();
+                cy.get("[data-test=document-new-folder-creation-button]").click();
+            });
+
+            cy.get("[data-test=document-new-folder-modal]").within(() => {
+                cy.get("[data-test=document-new-item-title]").type("Folder download");
+                cy.get("[data-test=document-modal-submit-button]").click();
+            });
+
+            // Create an embedded file in this folder
+            cy.get("[data-test=document-tree-content]")
+                .contains("tr", "Folder download")
+                .as("folder_download_row")
+                .within(() => {
+                    cy.get("[data-test=dropdown-button]")
+                        // Force the button to be visible for cypress
+                        .invoke("css", "visibility", "visible")
+                        .as("folder_download_dropdown")
+                        .click();
+                });
+            // Force the dropdown to be visible for cypress
+            cy.get("[data-test=dropdown-menu]").invoke("css", "visibility", "visible");
+            cy.get("[data-test=document-new-item]").click();
+            cy.get("[data-test=document-new-item-modal]").within(() => {
+                cy.get("[data-test=embedded]").click();
+                cy.get("[data-test=document-new-item-title]").type("Embedded file");
+
+                cy.window().then((win) => {
+                    win.CKEDITOR.instances["document-new-item-embedded"].setData(
+                        `<strong>Our deeds determine us, as much as we determine our deeds.</strong>`
+                    );
+                });
+
+                cy.get("[data-test=document-modal-submit-button]").click();
+            });
+
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("@folder_download_dropdown").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("@folder_download_row").within(() => {
+                cy.get("[data-test=document-dropdown-download-folder-as-zip]").click();
+            });
+            cy.get("[data-test=document-folder-confirm-archive-download").within(() => {
+                cy.get("[data-test=confirm-download-archive-button]").then((link) => {
+                    // Verify the link to download the folder. We cannot click it, otherwise the browser
+                    // will ask "Where to save this file ?" and stop the test.
+                    const download_uri = link.attr("href");
+                    expect(download_uri).to.match(
+                        /^\/plugins\/document\/document-project\/folders\/\d+\/download-folder-as-zip$/
+                    );
+
+                    cy.request({
+                        url: download_uri,
+                    }).then((response) => {
+                        expect(response.status).to.equal(200);
+                        expect(response.headers["content-type"]).to.equal("application/x-zip");
+                        expect(response.headers["content-disposition"]).to.equal(
+                            "attachment; filename*=UTF-8''Folder%20download.zip"
+                        );
+                    });
+                    // Close the modal
+                    cy.get("[data-test=close-confirm-archive-download-modal]").click();
+                });
+            });
+            // Delete the folder for repeatability
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("@folder_download_dropdown").click();
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("@folder_download_row").within(() => {
+                cy.get("[data-test=document-dropdown-delete]").click();
+            });
+            cy.get("[data-test=document-confirm-deletion-button]").click();
         });
     });
 });
