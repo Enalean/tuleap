@@ -75,4 +75,15 @@ class ZipStreamerLoggingHelper
             )
         );
     }
+
+    public function logCorruptedFile(\Docman_File $item): void
+    {
+        $this->logger->error(
+            sprintf(
+                'File corrupted, no current version found: %s (id: %d)',
+                $item->getTitle(),
+                $item->getId()
+            )
+        );
+    }
 }

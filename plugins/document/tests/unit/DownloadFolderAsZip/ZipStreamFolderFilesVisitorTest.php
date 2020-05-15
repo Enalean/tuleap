@@ -104,6 +104,23 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
         $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
     }
 
+    public function testItLogsCorruptedFiles(): void
+    {
+        $visitor = new ZipStreamFolderFilesVisitor(
+            $this->zip,
+            $this->error_logging_helper
+        );
+
+        $root_folder = $this->getRootFolderWithItems(true);
+
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/an embedded file.html', '/path/to/embedded');
+        $this->zip->shouldReceive('addFileFromPath')->with('/my files/a file.pdf', '/path/to/file');
+
+        $this->error_logging_helper->shouldReceive('logCorruptedFile');
+
+        $root_folder->accept($visitor, ['path' => '', 'base_folder_id' => $root_folder->getId()]);
+    }
+
     /**
      * Returns a Docman_Folder with the following structure:
      *
@@ -117,7 +134,7 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
      *  |  | [an embedded file]
      *
      */
-    private function getRootFolderWithItems(): Docman_Folder
+    private function getRootFolderWithItems(bool $does_contain_corrupted_file = false): Docman_Folder
     {
         $root_folder = new Docman_Folder(
             [
@@ -143,15 +160,19 @@ class ZipStreamFolderFilesVisitorTest extends TestCase
             )
         );
 
+        $root_folder_children = [
+            new Docman_Link(['item_id' => 1, 'title' => 'a link', 'link_url' => 'https://link.com']),
+            new Docman_Empty(['item_id' => 2, 'title' => 'an empty item']),
+            new Docman_Wiki(['item_id' => 3, 'title' => 'a wiki', 'wiki_page' => 'wikis for dummies']),
+            $subfolder
+        ];
+
+        if ($does_contain_corrupted_file) {
+            $root_folder_children[] = new Docman_File(['item_id' => 7, 'title' => 'corrupted file.png']);
+        }
+
         $root_folder->setItems(
-            new PrioritizedList(
-                [
-                    new Docman_Link(['item_id' => 1, 'title' => 'a link', 'link_url' => 'https://link.com']),
-                    new Docman_Empty(['item_id' => 2, 'title' => 'an empty item']),
-                    new Docman_Wiki(['item_id' => 3, 'title' => 'a wiki', 'wiki_page' => 'wikis for dummies']),
-                    $subfolder
-                ]
-            )
+            new PrioritizedList($root_folder_children)
         );
 
         return $root_folder;
