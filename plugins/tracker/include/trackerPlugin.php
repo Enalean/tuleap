@@ -93,8 +93,11 @@ use Tuleap\Tracker\Creation\JiraImporter\AsynchronousJiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
+use Tuleap\Tracker\Creation\JiraImporter\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
+use Tuleap\Tracker\Creation\JiraImporter\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportCleaner;
@@ -1598,11 +1601,18 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function workerEvent(WorkerEvent $event)
     {
+        $user_manager = $this->getUserManager();
+
         AsynchronousJiraRunner::addListener(
             $event,
             new QueueFactory($event->getLogger()),
+            new KeyFactory(),
             new PendingJiraImportDao(),
-            new PendingJiraImportBuilder(ProjectManager::instance(), $this->getUserManager()),
+            new PendingJiraImportBuilder(ProjectManager::instance(), $user_manager),
+            FromJiraTrackerCreator::build(),
+            $this->getJiraSuccessImportNotifier(),
+            $this->getJiraErrorImportNotifier(),
+            $user_manager
         );
 
         AsynchronousActionsRunner::addListener($event);
@@ -1612,7 +1622,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $async_artifact_archive_runner = new AsynchronousArtifactsDeletionActionsRunner(
             new PendingArtifactRemovalDao(),
             $logger,
-            $this->getUserManager(),
+            $user_manager,
             new QueueFactory($logger)
         );
         $async_artifact_archive_runner->addListener($event);
@@ -2073,7 +2083,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new JiraRunner(
                     $logger,
                     new QueueFactory($logger),
+                    new KeyFactory(),
+                    FromJiraTrackerCreator::build(),
                     new PendingJiraImportDao(),
+                    $this->getJiraSuccessImportNotifier(),
+                    $this->getJiraErrorImportNotifier(),
+                    $user_manager
                 )
             )
         );
@@ -2217,6 +2232,26 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new MailLogger()
                 )
             )
+        );
+    }
+
+    private function getJiraSuccessImportNotifier(): JiraSuccessImportNotifier
+    {
+        return new JiraSuccessImportNotifier(
+            $this->getMailNotificationBuilder(),
+            new InstanceBaseURLBuilder(),
+            new LocaleSwitcher(),
+            TemplateRendererFactory::build(),
+        );
+    }
+
+    private function getJiraErrorImportNotifier(): JiraErrorImportNotifier
+    {
+        return new JiraErrorImportNotifier(
+            $this->getMailNotificationBuilder(),
+            new InstanceBaseURLBuilder(),
+            new LocaleSwitcher(),
+            TemplateRendererFactory::build(),
         );
     }
 }

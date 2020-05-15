@@ -328,6 +328,9 @@ msgstr "Confirmer la suppression"
 msgid "Congratulations!"
 msgstr "Félicitations !"
 
+msgid "Congratulations! The Jira import initiated on %s has just finished."
+msgstr "Félicitations ! L'import Jira initié le %s vient de se terminer."
+
 msgid "Continue configuration"
 msgstr "Poursuivre la configuration"
 
@@ -406,6 +409,9 @@ msgstr "Date de fin"
 
 msgid "Error during parsing expert query"
 msgstr "Erreur pendant l'analyse de la requête experte"
+
+msgid "Error in your Jira import"
+msgstr "Erreur lors de votre import Jira"
 
 msgid "Fail to retrieve the full collection of issues in selected tracker."
 msgstr ""
@@ -491,6 +497,12 @@ msgstr ""
 
 msgid "Invalid tracker template."
 msgstr "Le modèle d'outil de suivi selectionné est invalide"
+
+msgid "It encountered the following error:"
+msgstr "L'erreur suivante a été remontée :"
+
+msgid "Jira import is finished"
+msgstr "L'import Jira est terminé"
 
 msgid "Jira issue type"
 msgstr "Type de tickets Jira"
@@ -815,11 +827,15 @@ msgid "The @comments metadata cannot be compared to OPEN()."
 msgstr "@comments ne peut pas être comparé à OPEN()."
 
 msgid ""
+"The Jira import initiated on %s cannot be completed. It has been canceled."
+msgstr "L'import Jira initié le %s ne peut pas être fait. Il a été annulé."
+
+msgid ""
 "The Jira import initiated on %s is in queue since too long. It seems that "
 "something prevented its execution. It has been canceled."
 msgstr ""
 "L'import Jira initié le %s est en attente depuis trop longtemps. Il "
-"semblerait que quelque chose a empêché son exécution. Il a été annulé."
+"semblerait que quelque chose ait empêché son exécution. Il a été annulé."
 
 #, php-format
 msgid "The artifact #%d is not located in an active project."
@@ -1573,6 +1589,9 @@ msgid ""
 msgstr ""
 "Vous pouvez définir plusieurs webhooks qui seront envoyés après chaque "
 "création et édition d'artéfact."
+
+msgid "You can retrieve the imported data here:"
+msgstr "Vous pouvez retrouver les données importées ici :"
 
 msgid ""
 "You can use variables to customize the sender field. The available variables "

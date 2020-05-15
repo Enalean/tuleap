@@ -2,15 +2,18 @@
 
 {{# dgettext }}
     tuleap-tracker |
-    The Jira import initiated on %s is in queue since too long. It seems that something prevented its execution. It has been canceled. |
+    The Jira import initiated on %s cannot be completed. It has been canceled. |
     {{ localized_created_on }}
 {{/ dgettext }}
 
 
 {{# dgettext }}
     tuleap-tracker |
-    Please try again or contact your administrator.
+    It encountered the following error:
 {{/ dgettext }}
+
+
+{{ message }}
 
 
 * {{# dgettext }} tuleap-tracker | Jira server{{/ dgettext }}: {{ jira_server }}

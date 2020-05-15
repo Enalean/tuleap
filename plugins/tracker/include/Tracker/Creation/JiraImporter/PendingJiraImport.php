@@ -61,9 +61,21 @@ class PendingJiraImport
      */
     private $tracker_shortname;
     /**
+     * @var string
+     */
+    private $tracker_color;
+    /**
+     * @var string
+     */
+    private $jira_user;
+    /**
      * @var int
      */
     private $id;
+    /**
+     * @var string
+     */
+    private $encrypted_jira_token;
 
     public function __construct(
         int $id,
@@ -71,20 +83,26 @@ class PendingJiraImport
         PFUser $user,
         DateTimeImmutable $created_on,
         string $jira_server,
+        string $jira_user,
+        string $encrypted_jira_token,
         string $jira_project_id,
         string $jira_issue_type_name,
         string $tracker_name,
-        string $tracker_shortname
+        string $tracker_shortname,
+        string $tracker_color
     ) {
         $this->id                   = $id;
         $this->project              = $project;
         $this->user                 = $user;
         $this->created_on           = $created_on;
         $this->jira_server          = $jira_server;
+        $this->jira_user            = $jira_user;
         $this->jira_project_id      = $jira_project_id;
         $this->jira_issue_type_name = $jira_issue_type_name;
         $this->tracker_name         = $tracker_name;
         $this->tracker_shortname    = $tracker_shortname;
+        $this->tracker_color        = $tracker_color;
+        $this->encrypted_jira_token = $encrypted_jira_token;
     }
 
     public function getProject(): Project
@@ -127,8 +145,23 @@ class PendingJiraImport
         return $this->tracker_shortname;
     }
 
+    public function getTrackerColor(): string
+    {
+        return $this->tracker_color;
+    }
+
+    public function getJiraUser(): string
+    {
+        return $this->jira_user;
+    }
+
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getEncryptedJiraToken(): string
+    {
+        return $this->encrypted_jira_token;
     }
 }

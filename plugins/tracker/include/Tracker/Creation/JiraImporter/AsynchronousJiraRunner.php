@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
 
@@ -52,8 +53,13 @@ class AsynchronousJiraRunner
     public static function addListener(
         WorkerEvent $event,
         QueueFactory $queue_factory,
+        KeyFactory $key_factory,
         PendingJiraImportDao $dao,
-        PendingJiraImportBuilder $builder
+        PendingJiraImportBuilder $builder,
+        FromJiraTrackerCreator $tracker_creator,
+        JiraSuccessImportNotifier $success_notifier,
+        JiraErrorImportNotifier $error_notifier,
+        \UserManager $user_manager
     ): void {
         if ($event->getEventName() !== self::TOPIC) {
             return;
@@ -63,7 +69,12 @@ class AsynchronousJiraRunner
             new JiraRunner(
                 $event->getLogger(),
                 $queue_factory,
+                $key_factory,
+                $tracker_creator,
                 $dao,
+                $success_notifier,
+                $error_notifier,
+                $user_manager
             ),
             $dao,
             $builder
@@ -83,7 +94,7 @@ class AsynchronousJiraRunner
         }
 
         $pending_import_row = $this->dao->searchById((int) $message['pending_jira_import_id']);
-        if ($pending_import_row === false) {
+        if (! $pending_import_row) {
             $event->getLogger()->error(
                 'Not able to process an event ' . $event->getEventName(
                 ) . ', the pending jira import #' . $message['pending_jira_import_id'] . ' ' .

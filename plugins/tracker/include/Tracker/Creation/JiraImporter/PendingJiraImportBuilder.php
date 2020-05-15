@@ -45,7 +45,7 @@ class PendingJiraImportBuilder
     }
 
     /**
-     * @param array{id: int, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, encrypted_jira_token: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string} $row
+     * @param array{id: int, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, encrypted_jira_token: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string, tracker_color: string} $row
      *
      * @throws UnableToBuildPendingJiraImportException
      */
@@ -67,10 +67,13 @@ class PendingJiraImportBuilder
             $user,
             (new \DateTimeImmutable())->setTimestamp($row['created_on']),
             $row['jira_server'],
+            $row['jira_user_email'],
+            $row['encrypted_jira_token'],
             $row['jira_project_id'],
             $row['jira_issue_type_name'],
             $row['tracker_name'],
-            $row['tracker_shortname']
+            $row['tracker_shortname'],
+            $row['tracker_color'],
         );
     }
 }
