@@ -41,6 +41,7 @@
                 <release-badges-displayer
                     v-bind:release_data="displayed_release"
                     v-bind:is-open="isOpen"
+                    v-bind:is-past-release="isPastRelease"
                 />
                 <release-description v-bind:release_data="displayed_release" />
             </div>

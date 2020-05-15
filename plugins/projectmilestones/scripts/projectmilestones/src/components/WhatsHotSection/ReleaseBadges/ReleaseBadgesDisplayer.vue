@@ -23,6 +23,7 @@
             v-if="open_sprints_exist"
             v-bind:release_data="release_data"
             v-bind:is-open="isOpen"
+            v-bind:is-past-release="isPastRelease"
         />
         <release-badges-displayer-if-only-closed-sprints
             v-else
@@ -55,6 +56,8 @@ export default class ReleaseBadgesDisplayer extends Vue {
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isOpen!: boolean;
+    @Prop()
+    readonly isPastRelease!: boolean;
 
     get open_sprints_exist(): boolean {
         return openSprintsExist(this.release_data);

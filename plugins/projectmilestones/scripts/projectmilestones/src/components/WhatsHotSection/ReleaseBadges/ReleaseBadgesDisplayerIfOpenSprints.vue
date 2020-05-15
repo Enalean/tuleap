@@ -33,6 +33,7 @@
                 <release-badges-all-sprints
                     v-if="!open_sprints_details"
                     v-bind:release_data="release_data"
+                    v-bind:is-past-release="isPastRelease"
                     v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
                     data-test="badge-sprint"
                 />
@@ -41,6 +42,7 @@
                     v-for="sprint in release_data.open_sprints"
                     v-bind:key="sprint.id"
                     v-bind:sprint_data="sprint"
+                    v-bind:is-past-release="isPastRelease"
                 />
             </div>
             <i
@@ -87,6 +89,8 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     readonly release_data!: MilestoneData;
     @Prop()
     readonly isOpen!: boolean;
+    @Prop()
+    readonly isPastRelease!: boolean;
     @State
     readonly user_can_view_sub_milestones_planning!: boolean;
 
