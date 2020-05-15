@@ -147,36 +147,21 @@ class TrackerCreationProcessorController implements DispatchableWithRequest, Dis
                 $jira_tracker_object  = json_decode($request->get('jira_tracker_name'), true);
                 $jira_issue_type_name = (string) $jira_tracker_object['name'];
 
-                if ($this->async_jira_scheduler->shouldCreationBeAsynchronous()) {
-                    $this->async_jira_scheduler->scheduleCreation(
-                        $project,
-                        $user,
-                        $jira_server,
-                        $jira_user,
-                        $jira_token,
-                        $jira_project_id,
-                        $jira_issue_type_name,
-                        (string) $tracker_name,
-                        (string) $tracker_shortname,
-                        (string) $tracker_color,
-                        (string) $tracker_description
-                    );
-                    $this->redirectToListOfTrackers($project);
-
-                    return;
-                }
-                $tracker = $this->tracker_creator->createFromJira(
+                $this->async_jira_scheduler->scheduleCreation(
                     $project,
+                    $user,
+                    $jira_server,
+                    $jira_user,
+                    $jira_token,
+                    $jira_project_id,
+                    $jira_issue_type_name,
                     (string) $tracker_name,
                     (string) $tracker_shortname,
                     (string) $tracker_color,
-                    $jira_token,
-                    $jira_user,
-                    $jira_server,
-                    $jira_project_id,
-                    $jira_issue_type_name,
-                    $user
+                    (string) $tracker_description
                 );
+                $this->redirectToListOfTrackers($project);
+                return;
             } else {
                 $file    = $_FILES;
                 $tracker = $this->tracker_creator->createTrackerFromXml(

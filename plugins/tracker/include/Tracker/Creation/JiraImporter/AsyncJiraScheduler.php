@@ -32,8 +32,6 @@ use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 
 class AsyncJiraScheduler
 {
-    public const CONFIG_NAME = 'asynchronous_jira_creation';
-
     /**
      * @var KeyFactory
      */
@@ -45,7 +43,7 @@ class AsyncJiraScheduler
     /**
      * @var JiraRunner
      */
-    private $actions_runner;
+    private $jira_runner;
     /**
      * @var LoggerInterface
      */
@@ -55,17 +53,12 @@ class AsyncJiraScheduler
         LoggerInterface $logger,
         KeyFactory $key_factory,
         PendingJiraImportDao $dao,
-        JiraRunner $actions_runner
+        JiraRunner $jira_runner
     ) {
-        $this->key_factory    = $key_factory;
-        $this->dao            = $dao;
-        $this->actions_runner = $actions_runner;
-        $this->logger         = $logger;
-    }
-
-    public function shouldCreationBeAsynchronous(): bool
-    {
-        return (bool) \ForgeConfig::get(self::CONFIG_NAME) === true;
+        $this->key_factory = $key_factory;
+        $this->dao         = $dao;
+        $this->jira_runner = $jira_runner;
+        $this->logger      = $logger;
     }
 
     /**
@@ -84,6 +77,11 @@ class AsyncJiraScheduler
         string $tracker_color,
         string $tracker_description
     ): void {
+        if (! $this->jira_runner->canBeProcessedAsynchronously()) {
+            $this->logger->error('Unable to schedule the import of Jira: misconfiguration of the platform to queue the event.');
+            throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
+        }
+
         try {
             $encryption_key = $this->key_factory->getEncryptionKey();
         } catch (CannotPerformIOOperationException $exception) {
@@ -105,9 +103,11 @@ class AsyncJiraScheduler
             $tracker_description
         );
         if (! $id) {
-            $this->logger->error('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.');
+            $this->logger->error(
+                'Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.'
+            );
             throw new TrackerCreationHasFailedException('Unable to schedule the import of Jira');
         }
-        $this->actions_runner->queueJiraImportEvent($id);
+        $this->jira_runner->queueJiraImportEvent($id);
     }
 }

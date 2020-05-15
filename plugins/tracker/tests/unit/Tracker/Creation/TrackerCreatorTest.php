@@ -27,8 +27,6 @@ use Mockery;
 use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 
 final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
 {
@@ -50,15 +48,10 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
      */
     private $tracker_factory;
-
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerXmlImport
      */
     private $tracker_xml_import;
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FromJiraTrackerCreator
-     */
-    private $from_jira_tracker_creator;
 
     protected function setUp(): void
     {
@@ -66,14 +59,12 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
         $this->tracker_factory           = Mockery::mock(TrackerFactory::class);
         $this->xml_error_displayer       = Mockery::mock(TrackerCreatorXmlErrorDisplayer::class);
         $this->creation_data_checker     = Mockery::mock(TrackerCreationDataChecker::class);
-        $this->from_jira_tracker_creator = Mockery::mock(FromJiraTrackerCreator::class);
 
         $this->creator = new TrackerCreator(
             $this->tracker_xml_import,
             $this->tracker_factory,
             $this->xml_error_displayer,
             $this->creation_data_checker,
-            $this->from_jira_tracker_creator,
         );
     }
 
@@ -162,43 +153,6 @@ final class TrackerCreatorTest extends \PHPUnit\Framework\TestCase
             "peggy-pink",
             "101",
             Mockery::mock(\PFUser::class)
-        );
-    }
-
-    public function testItDuplicatedATrackerFromJira(): void
-    {
-        $project = Mockery::mock(\Project::class);
-        $user    = Mockery::mock(\PFUser::class);
-        $token   = new ConcealedString("azerty123");
-
-        $this->from_jira_tracker_creator
-            ->shouldReceive('createFromJira')
-            ->with(
-                $project,
-                "my new tracker",
-                "my_tracker",
-                "inca-silver",
-                $token,
-                "user@example.com",
-                "https://example.com",
-                "Jira project",
-                "Story",
-                $user
-            )
-            ->once()
-            ->andReturn(Mockery::mock(Tracker::class));
-
-        $this->creator->createFromJira(
-            $project,
-            "my new tracker",
-            "my_tracker",
-            "inca-silver",
-            $token,
-            "user@example.com",
-            "https://example.com",
-            "Jira project",
-            "Story",
-            $user
         );
     }
 }
