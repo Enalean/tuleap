@@ -60,6 +60,12 @@
             data-test="document-permissions-item-modal"
             v-if="Object.keys(item_to_update_permissions).length > 0"
         />
+        <download-folder-size-threshold-exceeded-modal
+            v-if="current_folder_size !== null"
+            v-bind:size="current_folder_size"
+            v-on:download-as-zip-modal-closed="hideDownloadFolderModals()"
+            data-test="document-folder-size-threshold-exceeded"
+        />
     </div>
 </template>
 
@@ -97,6 +103,11 @@ export default {
             import(
                 /* webpackChunkName: "document-permissions-update-modal" */ "./Permissions/PermissionsUpdateModal.vue"
             ),
+        "download-folder-size-threshold-exceeded-modal": () =>
+            import(
+                /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
+                "./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
+            ),
     },
     data() {
         return {
@@ -106,6 +117,7 @@ export default {
             updated_metadata: null,
             item_to_delete: null,
             item_to_update_permissions: {},
+            current_folder_size: null,
         };
     },
     computed: {
@@ -131,12 +143,20 @@ export default {
         EventBus.$on("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$on("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$on("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        EventBus.$on(
+            "show-max-archive-size-threshold-exceeded-modal",
+            this.showMaxArchiveSizeThresholdExceededErrorModal
+        );
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
         EventBus.$off("show-confirm-item-deletion-modal", this.showDeleteItemModal);
         EventBus.$off("show-update-item-metadata-modal", this.showUpdateItemMetadataModal);
         EventBus.$off("show-update-permissions-modal", this.showUpdateItemPermissionsModal);
+        EventBus.$off(
+            "show-max-archive-size-threshold-exceeded-modal",
+            this.showMaxArchiveSizeThresholdExceededErrorModal
+        );
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -193,8 +213,14 @@ export default {
                     );
             }
         },
+        showMaxArchiveSizeThresholdExceededErrorModal(event) {
+            this.current_folder_size = event.detail.current_folder_size;
+        },
         hideDeleteItemModal() {
             this.item_to_delete = null;
+        },
+        hideDownloadFolderModals() {
+            this.current_folder_size = null;
         },
         showUpdateItemPermissionsModal(event) {
             this.item_to_update_permissions = event.detail.current_item;

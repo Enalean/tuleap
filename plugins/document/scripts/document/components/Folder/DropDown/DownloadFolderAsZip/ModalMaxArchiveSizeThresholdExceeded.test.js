@@ -17,34 +17,45 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
-import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
-import localVue from "../../../helpers/local-vue.js";
-import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
+import localVue from "../../../../helpers/local-vue.js";
+import ModalSizeThresholdExceeded from "./ModalMaxArchiveSizeThresholdExceeded.vue";
 
-describe("DownloadFolderAsZip", () => {
+describe("ModalSizeThresholdExceeded", () => {
     function getWrapper() {
-        const state = { project_name: "tuleap-documentation" };
+        const state = { project_name: "tuleap-documentation", max_archive_size: 1 };
         const store_options = { state };
         const store = createStoreMock(store_options);
 
-        return shallowMount(DownloadFolderAsZip, {
+        return shallowMount(ModalSizeThresholdExceeded, {
             localVue,
             propsData: {
-                item: {
-                    id: 10,
-                    type: "folder",
-                },
+                size: 1050000,
             },
             mocks: { $store: store },
         });
     }
 
-    it("Generates the link to the zip archive of the folder", () => {
+    it("shows itself when it is mounted", () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.find("[data-test=download-as-zip-button]").attributes().href).toBe(
-            "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
-        );
+        expect(wrapper.classes("tlp-modal-shown")).toBe(true);
+    });
+
+    it("displays the size of the folder in MB", () => {
+        const wrapper = getWrapper();
+
+        expect(wrapper.vm.size_in_MB).toEqual("1.05");
+    });
+
+    it("Emits an event when it is closed", () => {
+        const wrapper = getWrapper();
+
+        wrapper
+            .find("[data-test=close-max-archive-size-threshold-exceeded-modal]")
+            .trigger("click");
+
+        expect(wrapper.emitted("download-as-zip-modal-closed").length).toBe(1);
     });
 });

@@ -55,6 +55,7 @@ import {
     updateFolderMetadata,
     updateMetadata,
     updatePermissions,
+    getFolderProperties,
 } from "./actions.js";
 import * as load_ascendant_hierarchy from "./actions-helpers/load-ascendant-hierarchy.js";
 import * as load_folder_content from "./actions-helpers/load-folder-content.js";
@@ -2743,6 +2744,51 @@ describe("Store actions", () => {
 
             await expect(loadDocument(context, 3)).rejects.toBeDefined();
             expect(getItem).toHaveBeenCalled();
+        });
+    });
+
+    describe("getFolderProperties", () => {
+        it("Given a folder item, it's properties are fetched and returned", async () => {
+            const getItemWithSize = jest.spyOn(rest_querier, "getItemWithSize").mockReturnValue(
+                Promise.resolve({
+                    id: 3,
+                    title: "Project Documentation",
+                    folder_properties: {
+                        total_size: 102546950,
+                        nb_files: 27,
+                    },
+                })
+            );
+
+            const properties = await getFolderProperties(context, [
+                {
+                    id: 3,
+                    title: "Project Documentation",
+                },
+            ]);
+
+            expect(getItemWithSize).toHaveBeenCalled();
+            expect(properties).toEqual({
+                total_size: 102546950,
+                nb_files: 27,
+            });
+        });
+
+        it("Handles errors when it fails", async () => {
+            const getItemWithSize = jest
+                .spyOn(rest_querier, "getItemWithSize")
+                .mockReturnValue(Promise.reject("error"));
+
+            await expect(
+                getFolderProperties(context, [
+                    {
+                        id: 3,
+                        title: "Project Documentation",
+                    },
+                ])
+            ).rejects.toBeDefined();
+
+            expect(getItemWithSize).toHaveBeenCalled();
         });
     });
 });

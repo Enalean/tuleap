@@ -71,6 +71,7 @@ import {
     putWikiPermissions,
     removeUserPreferenceForEmbeddedDisplay,
     setNarrowModeForEmbeddedDisplay,
+    getItemWithSize,
 } from "../api/rest-querier.js";
 
 import {
@@ -953,5 +954,16 @@ export const createNewVersionFromEmpty = async (context, [selected_type, item, i
         context.commit("updateCurrentItemForQuickLokDisplay", updated_item);
     } catch (exception) {
         await handleErrorsForModal(context, exception);
+    }
+};
+
+export const getFolderProperties = async (context, [folder_item]) => {
+    try {
+        const { folder_properties } = await getItemWithSize(folder_item.id);
+
+        return folder_properties;
+    } catch (exception) {
+        await handleErrors(context, exception);
+        return null;
     }
 };
