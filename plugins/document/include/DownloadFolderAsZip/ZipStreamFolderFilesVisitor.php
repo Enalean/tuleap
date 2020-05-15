@@ -41,21 +41,28 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
      * @var ZipStream
      */
     private $zip;
-
     /**
      * @var ZipStreamerLoggingHelper
      */
     private $error_logging_helper;
+    /**
+     * @var ErrorsListingBuilder
+     */
+    private $errors_listing_builder;
 
-    public function __construct(ZipStream $zip, ZipStreamerLoggingHelper $error_logging_helper)
-    {
-        $this->zip                  = $zip;
-        $this->error_logging_helper = $error_logging_helper;
+    public function __construct(
+        ZipStream $zip,
+        ZipStreamerLoggingHelper $error_logging_helper,
+        ErrorsListingBuilder $errors_listing_builder
+    ) {
+        $this->zip                    = $zip;
+        $this->error_logging_helper   = $error_logging_helper;
+        $this->errors_listing_builder = $errors_listing_builder;
     }
 
     public function visitFolder(Docman_Folder $item, array $params = []): void
     {
-        $items = $item->getAllItems();
+        $items    = $item->getAllItems();
         $iterator = $items->iterator();
 
         while ($iterator->valid()) {
@@ -128,10 +135,13 @@ final class ZipStreamFolderFilesVisitor implements ItemVisitor
             );
         } catch (FileNotFoundException $e) {
             $this->error_logging_helper->logFileNotFoundException($item, $fs_path);
+            $this->errors_listing_builder->addBadFilePath($name);
         } catch (FileNotReadableException $e) {
             $this->error_logging_helper->logFileNotReadableException($item, $fs_path);
+            $this->errors_listing_builder->addBadFilePath($name);
         } catch (DocmanFileCorruptedException $e) {
             $this->error_logging_helper->logCorruptedFile($item);
+            $this->errors_listing_builder->addBadFilePath($name);
         }
     }
 
