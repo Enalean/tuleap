@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
@@ -61,7 +62,8 @@ class FieldChangeXMLExporterTest extends TestCase
             new FieldChangeListBuilder(
                 new XML_SimpleXMLCDATAFactory(),
                 UserXMLExporter::build()
-            )
+            ),
+            new StatusValuesTransformer()
         );
     }
 
@@ -234,5 +236,44 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(2, $field_change_node->value);
         $this->assertSame("10009", (string) $field_change_node->value[0]);
         $this->assertSame("10010", (string) $field_change_node->value[1]);
+    }
+
+    public function testItExportsTheStatusValuesInASelectboxFieldWithTransformedIDs(): void
+    {
+        $mapping = new FieldMapping(
+            'status',
+            'Fstatus',
+            'status',
+            'sb'
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $submitted_on = new SimpleXMLElement('<submitted_on/>');
+        $this->exporter->exportFieldChange(
+            $mapping,
+            $changeset_node,
+            $submitted_on,
+            [
+                'self' => 'URL/rest/api/2/status/10001',
+                'description' =>  '',
+                'iconUrl' => 'URL',
+                'name' => 'Done',
+                'id' => '10001',
+                'statusCategory' =>
+                    [
+                        'self' => 'URL/rest/api/2/statuscategory/3',
+                        'id' => 3,
+                        'key' => 'done',
+                        'colorName' => 'green',
+                        'name' => 'Done'
+                    ]
+            ],
+            null
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame("list", (string) $field_change_node['type']);
+        $this->assertCount(1, $field_change_node->value);
+        $this->assertSame("9010001", (string) $field_change_node->value);
     }
 }

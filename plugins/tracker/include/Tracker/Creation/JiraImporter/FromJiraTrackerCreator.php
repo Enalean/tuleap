@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use BackendLogger;
 use Project;
 use Tracker;
 use Tracker_Exception;
@@ -75,7 +76,7 @@ class FromJiraTrackerCreator
     public static function build(): self
     {
         $user_finder        = new XMLImportHelper(UserManager::instance());
-        $tracker_xml_import = TrackerXmlImport::build($user_finder);
+        $tracker_xml_import = TrackerXmlImport::build($user_finder, BackendLogger::getDefaultLogger());
 
         return new self(
             $tracker_xml_import,

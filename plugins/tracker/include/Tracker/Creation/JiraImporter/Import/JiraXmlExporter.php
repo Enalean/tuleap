@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -35,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
@@ -54,6 +55,7 @@ class JiraXmlExporter
     public const JIRA_DESCRIPTION_FIELD_NAME = "description";
     public const JIRA_UPDATED_ON_NAME        = "updated";
     public const JIRA_RESOLUTION_DATE_NAME   = "resolutiondate";
+    public const JIRA_STATUS_NAME            = "status";
 
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
@@ -168,7 +170,8 @@ class JiraXmlExporter
                     new FieldChangeListBuilder(
                         new XML_SimpleXMLCDATAFactory(),
                         UserXMLExporter::build()
-                    )
+                    ),
+                    new StatusValuesTransformer()
                 ),
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
@@ -184,7 +187,7 @@ class JiraXmlExporter
     public function exportJiraToXml(
         SimpleXMLElement $node_tracker,
         string $jira_base_url,
-        string $jira_project_id,
+        string $jira_project_key,
         string $jira_issue_type_name
     ): void {
         $form_elements = $node_tracker->addChild('formElements');
@@ -259,10 +262,26 @@ class JiraXmlExporter
             $this->jira_field_mapping_collection
         );
 
+        $this->field_xml_exporter->exportField(
+            $node_jira_atf_form_elements,
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            self::JIRA_STATUS_NAME,
+            "Status",
+            self::JIRA_STATUS_NAME,
+            7,
+            false,
+            [],
+            $this->jira_field_retriever->getStatusesForProjectAndIssueType(
+                $jira_project_key,
+                $jira_issue_type_name
+            ),
+            $this->jira_field_mapping_collection
+        );
+
         $this->exportJiraField(
             $node_jira_atf_form_elements,
             $node_jira_custom_form_elements,
-            $jira_project_id,
+            $jira_project_key,
             $jira_issue_type_name
         );
 
@@ -281,7 +300,7 @@ class JiraXmlExporter
             $node_tracker,
             $this->jira_field_mapping_collection,
             $jira_base_url,
-            $jira_project_id,
+            $jira_project_key,
             $jira_issue_type_name
         );
 
