@@ -100,41 +100,26 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBe(false);
+
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_new_version_modal();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
-            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBe(true);
         });
+
         it(`Loads delete modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBe(false);
+
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showDeleteItemModal(event);
             await wrapper.vm.$nextTick();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
-            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBe(true);
         });
 
         it(`Loads update metadata modal`, async () => {
@@ -142,21 +127,13 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBe(false);
+
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemMetadataModal(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_update_metadata_modal();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
-            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBe(true);
         });
 
         it(`Loads permission modal`, async () => {
@@ -164,20 +141,11 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBe(false);
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
             await wrapper.vm.$nextTick();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeTruthy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
-            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBe(true);
         });
 
         it("Loads the folder size threshold exceeded error modal", async () => {
@@ -185,20 +153,16 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")).toBe(
+                false
+            );
+
             const event = { detail: { current_folder_size: 100000 } };
             wrapper.vm.showMaxArchiveSizeThresholdExceededErrorModal(event);
             await wrapper.vm.$nextTick();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeTruthy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
-            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")).toBe(
+                true
+            );
         });
 
         it("Loads the folder size warning modal", async () => {
@@ -206,24 +170,14 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            const event = {
-                detail: {
-                    current_folder_size: 100000,
-                    folder_href: "/download/folder/here",
-                },
-            };
+            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBe(false);
 
+            const event = {
+                detail: { current_folder_size: 100000, folder_href: "/download/folder/here" },
+            };
             wrapper.vm.showArchiveSizeWarningModal(event);
             await wrapper.vm.$nextTick();
-
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
-            expect(
-                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
-            ).toBeFalsy();
-            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBeTruthy();
+            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBe(true);
         });
     });
 });
