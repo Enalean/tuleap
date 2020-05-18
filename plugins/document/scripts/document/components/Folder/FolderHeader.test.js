@@ -45,6 +45,7 @@ describe("FolderHeader", () => {
             permissionsUpdateModal: "<div></div>",
             confirmDeletionModal: "<div></div>",
             CreateNewVersionEmptyModal: "<div></div>",
+            downloadFolderSizeThresholdExceededModal: "<div></div>",
         };
 
         factory = (props = {}) => {
@@ -93,7 +94,7 @@ describe("FolderHeader", () => {
     });
 
     describe("Modal loading -", () => {
-        it(`Load new item version modal`, async () => {
+        it(`Loads new item version modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
@@ -107,8 +108,11 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
         });
-        it(`Load delete modal`, async () => {
+        it(`Loads delete modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
@@ -121,9 +125,12 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeTruthy();
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
         });
 
-        it(`Load update metadata modal`, async () => {
+        it(`Loads update metadata modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
@@ -137,9 +144,12 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeTruthy();
             expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
         });
 
-        it(`Load permission modal`, async () => {
+        it(`Loads permission modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
             store.state.current_folder = { id: 20 };
 
@@ -152,6 +162,27 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeTruthy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
+        });
+
+        it("Loads the folder size threshold exceeded error modal", async () => {
+            store.state.is_loading_ascendant_hierarchy = false;
+            store.state.current_folder = { id: 20 };
+
+            const wrapper = factory();
+            const event = { detail: { current_folder_size: 100000 } };
+            wrapper.vm.showMaxArchiveSizeThresholdExceededErrorModal(event);
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeTruthy();
         });
     });
 });

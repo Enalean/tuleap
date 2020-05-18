@@ -92,7 +92,7 @@ class DocmanItemsResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id Id of the folder
-     * @param bool $with_size <b>Only for folders</b>. When true, the size of the folder is returned in the representation.
+     * @param bool $with_size <b>Only for folders</b>. When true, the size of the folder in Bytes is returned in the representation.
      *
      * <div class="tlp-alert-info">
      *     Please note

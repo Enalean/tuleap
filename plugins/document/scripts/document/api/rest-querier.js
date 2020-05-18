@@ -88,6 +88,7 @@ export {
     postNewLinkVersionFromEmpty,
     postNewEmbeddedFileVersionFromEmpty,
     postNewFileVersionFromEmpty,
+    getItemWithSize,
 };
 
 async function getDocumentManagerServiceInformation(project_id) {
@@ -800,6 +801,12 @@ async function postNewFileVersionFromEmpty(item_id, dropped_file) {
             file_size: dropped_file.size,
         }),
     });
+
+    return response.json();
+}
+
+async function getItemWithSize(folder_id) {
+    const response = await get(`/api/docman_items/${encodeURIComponent(folder_id)}?with_size=true`);
 
     return response.json();
 }

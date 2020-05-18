@@ -112,6 +112,12 @@ msgstr "Description des changements"
 msgid "Close"
 msgstr "Fermer"
 
+msgid ""
+"Contact your administrator or try to reorganize this folder, then try again."
+msgstr ""
+"Contactez votre administrateur ou essayez de réorganiser ce dossier, puis "
+"réessayez à nouveau."
+
 msgid "Content"
 msgstr "Contenu"
 
@@ -231,6 +237,9 @@ msgstr "Aller au dossier parent"
 msgid "Go to the wiki page"
 msgstr "Aller à la page wiki"
 
+msgid "Got it"
+msgstr "J'ai compris"
+
 msgid "History"
 msgstr "Historique"
 
@@ -277,6 +286,12 @@ msgstr "Le contenu du mail est requis"
 
 msgid "Manager"
 msgstr "Gestionnaire"
+
+msgid "Maximum archive size allowed: %{ max_archive_size } MB"
+msgstr "Taille maximum de l'archive autorisée : %{ max_archive_size } Mo"
+
+msgid "Maximum archive size threshold exceeded"
+msgstr "Seuil de taille maximum de l'archive dépassé"
 
 msgid "My content..."
 msgstr "Mon contenu..."
@@ -415,6 +430,9 @@ msgstr "Envoyer un Email"
 msgid "Show error details"
 msgstr "Voir les détails de l'erreur"
 
+msgid "Size of the archive to be downloaded: %{ size_in_MB } MB"
+msgstr "Taille de l'archive à télécharger: %{ size_in_MB } Mo"
+
 msgid "Some files are being uploaded, click here to see the whole list."
 msgstr ""
 "Des fichiers sont en cours de téléversement, cliquez ici pour voir la liste "
@@ -458,6 +476,14 @@ msgstr[1] ""
 "Les objets que vous avez déposé contiennent un objet qui n'est pas un "
 "fichier. Si vous voulez téléverser un dossier, nous vous conseillons de "
 "d'abord créer un nouveau dossier, puis d'y téléverser son contenu."
+
+msgid ""
+"The size of the zip file you are attempting to download is exceeding the "
+"threshold\n"
+"            defined by the site administrators."
+msgstr ""
+"La taille du fichier zip que vous tentez de télécharger dépasse le seuil "
+"défini par les administrateurs du site."
 
 msgid "There is no upload in progress"
 msgstr "Il n'y a aucun téléversement en cours"

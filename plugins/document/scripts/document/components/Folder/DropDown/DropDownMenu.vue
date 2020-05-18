@@ -97,7 +97,7 @@ import CutItem from "./CutItem.vue";
 import CopyItem from "./CopyItem.vue";
 import PasteItem from "./PasteItem.vue";
 import DropDownSeparator from "./DropDownSeparator.vue";
-import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
+import DownloadFolderAsZip from "./DownloadFolderAsZip/DownloadFolderAsZip.vue";
 
 export default {
     name: "DropDownMenu",
