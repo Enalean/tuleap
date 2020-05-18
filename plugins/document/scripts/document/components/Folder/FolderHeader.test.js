@@ -46,6 +46,7 @@ describe("FolderHeader", () => {
             confirmDeletionModal: "<div></div>",
             CreateNewVersionEmptyModal: "<div></div>",
             downloadFolderSizeThresholdExceededModal: "<div></div>",
+            downloadFolderSizeWarningModal: "<div></div>",
         };
 
         factory = (props = {}) => {
@@ -111,6 +112,9 @@ describe("FolderHeader", () => {
             expect(
                 wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
             ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
+            ).toBeFalsy();
         });
         it(`Loads delete modal`, async () => {
             store.state.is_loading_ascendant_hierarchy = false;
@@ -127,6 +131,9 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
             expect(
                 wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
             ).toBeFalsy();
         });
 
@@ -147,6 +154,9 @@ describe("FolderHeader", () => {
             expect(
                 wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
             ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
+            ).toBeFalsy();
         });
 
         it(`Loads permission modal`, async () => {
@@ -164,6 +174,9 @@ describe("FolderHeader", () => {
             expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeTruthy();
             expect(
                 wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
             ).toBeFalsy();
         });
 
@@ -183,6 +196,34 @@ describe("FolderHeader", () => {
             expect(
                 wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
             ).toBeTruthy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-size-warning-modal]")
+            ).toBeFalsy();
+        });
+
+        it("Loads the folder size warning modal", async () => {
+            store.state.is_loading_ascendant_hierarchy = false;
+            store.state.current_folder = { id: 20 };
+
+            const wrapper = factory();
+            const event = {
+                detail: {
+                    current_folder_size: 100000,
+                    folder_href: "/download/folder/here",
+                },
+            };
+
+            wrapper.vm.showArchiveSizeWarningModal(event);
+            await wrapper.vm.$nextTick();
+
+            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBeFalsy();
+            expect(
+                wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")
+            ).toBeFalsy();
+            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBeTruthy();
         });
     });
 });

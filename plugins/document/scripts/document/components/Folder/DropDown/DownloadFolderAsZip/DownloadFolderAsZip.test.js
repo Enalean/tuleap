@@ -28,7 +28,11 @@ describe("DownloadFolderAsZip", () => {
     let store;
 
     function getWrapper() {
-        const state = { project_name: "tuleap-documentation", max_archive_size: 1 };
+        const state = {
+            project_name: "tuleap-documentation",
+            max_archive_size: 1,
+            warning_threshold: 0.5,
+        };
         const store_options = { state };
         store = createStoreMock(store_options);
 
@@ -67,6 +71,32 @@ describe("DownloadFolderAsZip", () => {
                 detail: { current_folder_size: 2000000 },
             }
         );
+    });
+
+    it("Opens the warning modal when the size exceeds the warning_threshold", async () => {
+        const wrapper = getWrapper();
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+
+        jest.spyOn(store, "dispatch").mockReturnValue(
+            Promise.resolve({
+                total_size: 600000,
+            })
+        );
+
+        wrapper.trigger("click");
+
+        await Vue.nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+            { id: 10, type: "folder" },
+        ]);
+        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+            detail: {
+                current_folder_size: 600000,
+                folder_href:
+                    "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
+            },
+        });
     });
 
     it("Downloads the zip", async () => {
