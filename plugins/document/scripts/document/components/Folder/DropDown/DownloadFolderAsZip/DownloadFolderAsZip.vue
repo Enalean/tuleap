@@ -92,7 +92,11 @@ export default {
                 return;
             }
 
-            window.location.assign(this.folder_href);
+            EventBus.$emit("show-download-archive-confirm-modal", {
+                detail: {
+                    folder_href: this.folder_href,
+                },
+            });
         },
     },
 };

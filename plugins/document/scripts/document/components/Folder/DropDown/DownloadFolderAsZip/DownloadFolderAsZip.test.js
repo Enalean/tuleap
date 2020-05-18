@@ -99,13 +99,9 @@ describe("DownloadFolderAsZip", () => {
         });
     });
 
-    it("Downloads the zip", async () => {
+    it("Opens the confirm modal", async () => {
         const wrapper = getWrapper();
-
-        delete window.location;
-        window.location = {
-            assign: jest.fn(),
-        };
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
@@ -120,8 +116,11 @@ describe("DownloadFolderAsZip", () => {
         expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
-        expect(window.location.assign).toHaveBeenCalledWith(
-            "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
-        );
+        expect(event_bus_emit).toHaveBeenCalledWith("show-download-archive-confirm-modal", {
+            detail: {
+                folder_href:
+                    "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
+            },
+        });
     });
 });

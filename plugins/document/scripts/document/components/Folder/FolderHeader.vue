@@ -73,6 +73,12 @@
             v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-warning-modal"
         />
+        <download-folder-confirm-modal
+            v-if="folder_to_download_href"
+            v-bind:folder-href="folder_to_download_href"
+            v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
+            data-test="document-folder-confirm-archive-download"
+        />
     </div>
 </template>
 
@@ -120,6 +126,11 @@ export default {
                 /* webpackChunkName: "document-download-folder-size-warning-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
             ),
+        "download-folder-confirm-modal": () =>
+            import(
+                /* webpackChunkName: "document-download-folder-confirm-modal" */
+                "./DropDown/DownloadFolderAsZip/ModalConfirmArchiveDownload.vue"
+            ),
     },
     data() {
         return {
@@ -131,6 +142,7 @@ export default {
             item_to_update_permissions: {},
             current_folder_size: null,
             folder_above_warning_threshold_props: null,
+            folder_to_download_href: null,
         };
     },
     computed: {
@@ -161,6 +173,7 @@ export default {
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
         EventBus.$on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        EventBus.$on("show-download-archive-confirm-modal", this.showDownloadArchiveConfirmModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
@@ -172,6 +185,7 @@ export default {
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
         EventBus.$off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        EventBus.$off("show-download-archive-confirm-modal", this.showDownloadArchiveConfirmModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -228,6 +242,9 @@ export default {
                     );
             }
         },
+        showDownloadArchiveConfirmModal(event) {
+            this.folder_to_download_href = event.detail.folder_href;
+        },
         showMaxArchiveSizeThresholdExceededErrorModal(event) {
             this.current_folder_size = event.detail.current_folder_size;
         },
@@ -243,6 +260,7 @@ export default {
         hideDownloadFolderModals() {
             this.current_folder_size = null;
             this.folder_above_warning_threshold_props = null;
+            this.folder_to_download_href = null;
         },
         showUpdateItemPermissionsModal(event) {
             this.item_to_update_permissions = event.detail.current_item;

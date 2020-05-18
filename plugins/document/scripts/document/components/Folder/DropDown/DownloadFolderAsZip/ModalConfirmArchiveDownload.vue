@@ -19,13 +19,13 @@
 
 <template>
     <div
-        class="tlp-modal tlp-modal-warning"
+        class="tlp-modal tlp-modal-info"
         role="dialog"
-        aria-labelledby="modal-archive-size-warning-label"
+        aria-labelledby="modal-confirm-download-archive-label"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="modal-archive-size-warning-label" v-translate>
-                Archive size warning threshold reached
+            <h1 class="tlp-modal-title" id="modal-confirm-download-archive-label" v-translate>
+                Confirmation needed
             </h1>
             <div
                 class="tlp-modal-close"
@@ -39,29 +39,19 @@
             </div>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate="{ warning_threshold }">
-                The archive you want to download has a size greater than %{ warning_threshold } MB.
-            </p>
             <p v-translate>
-                Depending on the speed of your network, it can take some time to complete. Do you
-                want to continue?
+                Every sub-folder, file and embedded file in this folder will be downloaded as a zip
+                archive.
             </p>
-            <div
-                class="tlp-alert-warning"
-                data-test="download-as-zip-folder-size-warning"
-                v-translate="{ size_in_MB }"
-            >
-                Size of the archive to be downloaded: %{ size_in_MB } MB
-            </div>
             <warning-about-archive-errors />
         </div>
         <div class="tlp-modal-footer">
             <button
                 type="button"
-                class="tlp-button-warning tlp-button-outline tlp-modal-action"
+                class="tlp-button-info tlp-button-outline tlp-modal-action"
                 data-dismiss="modal"
                 v-on:click="close()"
-                data-test="close-archive-size-warning"
+                data-test="close-confirm-archive-download-modal"
                 v-translate
             >
                 Cancel
@@ -70,27 +60,25 @@
                 type="button"
                 download
                 v-bind:href="folderHref"
-                class="tlp-button-warning tlp-button-primary tlp-modal-action"
+                class="tlp-button-info tlp-button-primary tlp-modal-action"
                 data-dismiss="modal"
                 v-on:click="close()"
-                data-test="confirm-download-archive-button-despite-size-warning"
+                data-test="confirm-download-archive-button"
                 v-translate
             >
-                Download anyway
+                Download
             </a>
         </div>
     </div>
 </template>
 <script>
-import { mapState } from "vuex";
 import { modal } from "tlp";
 import WarningAboutArchiveErrors from "./WarningAboutArchiveErrors.vue";
 
 export default {
-    name: "ModalArchiveSizeWarning",
+    name: "ModalConfirmArchiveDownload",
     components: { WarningAboutArchiveErrors },
     props: {
-        size: Number,
         folderHref: String,
     },
     data() {
@@ -102,13 +90,6 @@ export default {
         this.modal = modal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();
-    },
-    computed: {
-        ...mapState(["warning_threshold"]),
-        size_in_MB() {
-            const size_in_mb = this.size / Math.pow(10, 6);
-            return Number.parseFloat(size_in_mb).toFixed(2);
-        },
     },
     methods: {
         close() {

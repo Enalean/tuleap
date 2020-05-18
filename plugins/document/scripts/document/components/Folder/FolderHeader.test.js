@@ -47,6 +47,7 @@ describe("FolderHeader", () => {
             CreateNewVersionEmptyModal: "<div></div>",
             downloadFolderSizeThresholdExceededModal: "<div></div>",
             downloadFolderSizeWarningModal: "<div></div>",
+            downloadFolderConfirmModal: "<div></div>",
         };
 
         factory = (props = {}) => {
@@ -178,6 +179,25 @@ describe("FolderHeader", () => {
             wrapper.vm.showArchiveSizeWarningModal(event);
             await wrapper.vm.$nextTick();
             expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBe(true);
+        });
+
+        it("Loads the confirm archive downloading modal", async () => {
+            store.state.is_loading_ascendant_hierarchy = false;
+            store.state.current_folder = { id: 20 };
+
+            const wrapper = factory();
+            expect(wrapper.contains("[data-test=document-folder-confirm-archive-download]")).toBe(
+                false
+            );
+
+            const event = {
+                detail: { folder_href: "/download/folder/here" },
+            };
+            wrapper.vm.showDownloadArchiveConfirmModal(event);
+            await wrapper.vm.$nextTick();
+            expect(wrapper.contains("[data-test=document-folder-confirm-archive-download]")).toBe(
+                true
+            );
         });
     });
 });
