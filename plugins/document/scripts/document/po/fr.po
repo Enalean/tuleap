@@ -100,6 +100,9 @@ msgstr "Tables d'approbation"
 msgid "Approved"
 msgstr "Approuvé"
 
+msgid "Archive size warning threshold reached"
+msgstr "Seuil d'avertissement de taille d'archive atteint"
+
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -157,6 +160,14 @@ msgstr "Propriétés par défaut"
 msgid "Delete"
 msgstr "Supprimer"
 
+msgid ""
+"Depending on the speed of your network, it can take some time to complete. "
+"Do you\n"
+"            want to continue?"
+msgstr ""
+"En fonction de la vitesse de votre réseau, cela peut prendre un certain "
+"temps. Voulez-vous continuer ?"
+
 msgid "Description"
 msgstr "Description"
 
@@ -171,6 +182,9 @@ msgstr "Documents"
 
 msgid "Download"
 msgstr "Télécharger"
+
+msgid "Download anyway"
+msgstr "Télécharger quand même"
 
 msgid "Download as zip"
 msgstr "Télécharger au format zip"
@@ -446,6 +460,12 @@ msgstr "Statut"
 
 msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
+
+msgid ""
+"The archive you want to download has a size greater than "
+"%{ warning_threshold } MB."
+msgstr ""
+"L'archive à télécharger a une taille supérieure à %{ warning_threshold } Mo."
 
 msgid "The current date is the same or before the obsolescence date"
 msgstr "La date actuelle est la même ou antérieure à la date d'obsolescence"

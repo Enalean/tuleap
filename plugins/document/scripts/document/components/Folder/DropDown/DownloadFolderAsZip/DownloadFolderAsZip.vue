@@ -50,7 +50,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["project_name", "max_archive_size"]),
+        ...mapState(["project_name", "max_archive_size", "warning_threshold"]),
         folder_href() {
             return `/plugins/document/${this.project_name}/folders/${encodeURIComponent(
                 this.item.id
@@ -76,6 +76,17 @@ export default {
             if (total_size > max_archive_size_in_Bytes) {
                 EventBus.$emit("show-max-archive-size-threshold-exceeded-modal", {
                     detail: { current_folder_size: total_size },
+                });
+
+                return;
+            }
+
+            if (total_size > this.warning_threshold * Math.pow(10, 6)) {
+                EventBus.$emit("show-archive-size-warning-modal", {
+                    detail: {
+                        current_folder_size: total_size,
+                        folder_href: this.folder_href,
+                    },
                 });
 
                 return;

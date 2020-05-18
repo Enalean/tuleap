@@ -66,6 +66,13 @@
             v-on:download-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-threshold-exceeded"
         />
+        <download-folder-size-warning-modal
+            v-if="folder_above_warning_threshold_props"
+            v-bind:size="folder_above_warning_threshold_props.folder_size"
+            v-bind:folder-href="folder_above_warning_threshold_props.folder_href"
+            v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
+            data-test="document-folder-size-warning-modal"
+        />
     </div>
 </template>
 
@@ -108,6 +115,11 @@ export default {
                 /* webpackChunkName: "document-download-folder-size-exceeded-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalMaxArchiveSizeThresholdExceeded.vue"
             ),
+        "download-folder-size-warning-modal": () =>
+            import(
+                /* webpackChunkName: "document-download-folder-size-warning-modal" */
+                "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
+            ),
     },
     data() {
         return {
@@ -118,6 +130,7 @@ export default {
             item_to_delete: null,
             item_to_update_permissions: {},
             current_folder_size: null,
+            folder_above_warning_threshold_props: null,
         };
     },
     computed: {
@@ -147,6 +160,7 @@ export default {
             "show-max-archive-size-threshold-exceeded-modal",
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
+        EventBus.$on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
@@ -157,6 +171,7 @@ export default {
             "show-max-archive-size-threshold-exceeded-modal",
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
+        EventBus.$off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -216,11 +231,18 @@ export default {
         showMaxArchiveSizeThresholdExceededErrorModal(event) {
             this.current_folder_size = event.detail.current_folder_size;
         },
+        showArchiveSizeWarningModal(event) {
+            this.folder_above_warning_threshold_props = {
+                folder_size: event.detail.current_folder_size,
+                folder_href: event.detail.folder_href,
+            };
+        },
         hideDeleteItemModal() {
             this.item_to_delete = null;
         },
         hideDownloadFolderModals() {
             this.current_folder_size = null;
+            this.folder_above_warning_threshold_props = null;
         },
         showUpdateItemPermissionsModal(event) {
             this.item_to_update_permissions = event.detail.current_item;
