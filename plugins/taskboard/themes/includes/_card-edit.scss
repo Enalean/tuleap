@@ -85,16 +85,21 @@
 }
 
 .taskboard-card.taskboard-card-editable:not(.taskboard-card-edit-mode) {
+    $assignee-avatar-size: 25px;
+    $additional-size-to-hide-assignee: 1px;
+    $card-info-margin-right: 5px;
+    $assignee-negative-margin: -3px;
+
     > .taskboard-card-edit-trigger {
         @include pencil-background(var(--secondary-color, #{$tlp-ui-white}));
         display: flex;
         position: absolute;
         z-index: 10;
-        top: 6px;
-        right: 9px;
+        top: $tlp-half-spacing + $assignee-negative-margin - $additional-size-to-hide-assignee;
+        right: $tlp-half-spacing - $additional-size-to-hide-assignee;
         justify-content: center;
-        width: 27px;
-        height: 27px;
+        width: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
+        height: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
         transition: opacity ease-in-out 100ms;
         border-radius: 50%;
         opacity: 0;
@@ -109,7 +114,7 @@
     }
 
     &.taskboard-card-with-accessibility > .taskboard-card-edit-trigger {
-        right: 24px;
+        right: $tlp-spacing + $card-info-margin-right - $additional-size-to-hide-assignee;
     }
 
     &:hover {
