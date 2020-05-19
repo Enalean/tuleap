@@ -19,9 +19,12 @@
 
 namespace Tuleap\Project\REST\v1;
 
+use BackendLogger;
 use Event;
 use EventManager;
+use ForgeConfig;
 use Luracast\Restler\RestException;
+use MailPresenterFactory;
 use PaginatedWikiPagesFactory;
 use PFUser;
 use Project;
@@ -31,7 +34,9 @@ use ProjectCreator;
 use ProjectManager;
 use ProjectUGroup;
 use ProjectXMLImporter;
+use Psr\Log\LoggerInterface;
 use ServiceManager;
+use TemplateRendererFactory;
 use Tuleap\Label\Label;
 use Tuleap\Label\PaginatedCollectionsOfLabelsBuilder;
 use Tuleap\Label\REST\LabelRepresentation;
@@ -51,6 +56,7 @@ use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\Label\LabelDao;
 use Tuleap\Project\Label\LabelsCurlyCoatedRetriever;
 use Tuleap\Project\PaginatedProjects;
+use Tuleap\Project\ProjectCreationNotifier;
 use Tuleap\Project\ProjectDescriptionMandatoryException;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\Project\Registration\ProjectRegistrationUserPermissionChecker;
@@ -73,6 +79,7 @@ use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
+use TuleapRegisterMail;
 use UGroupManager;
 use URLVerification;
 use User_ForgeUserGroupPermissionsDao;
@@ -190,7 +197,23 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(400, $exception->getMessage());
         }
 
+        $this->getProjectCreationNotifier()->notifySiteAdmin($project);
+
         return $this->getProjectRepresentation($project, $user);
+    }
+
+    private function getProjectCreationNotifier(): ProjectCreationNotifier
+    {
+        return new ProjectCreationNotifier(
+            new TuleapRegisterMail(
+                new MailPresenterFactory(),
+                TemplateRendererFactory::build()->getRenderer(
+                    ForgeConfig::get('codendi_dir') . '/src/templates/mail/'
+                ),
+                "mail-project-register-admin"
+            ),
+            $this->getBackendLogger()
+        );
     }
 
     /**
@@ -1255,6 +1278,11 @@ class ProjectResource extends AuthenticatedResource
         return new UserGroupQueryParameterParser($this->json_decoder);
     }
 
+    private function getBackendLogger(): LoggerInterface
+    {
+        return BackendLogger::getDefaultLogger();
+    }
+
     private function getRestProjectCreator(): RestProjectCreator
     {
         return new RestProjectCreator(
@@ -1262,7 +1290,7 @@ class ProjectResource extends AuthenticatedResource
             ProjectCreator::buildSelfRegularValidation(),
             new XMLFileContentRetriever(),
             ServiceManager::instance(),
-            \BackendLogger::getDefaultLogger(),
+            $this->getBackendLogger(),
             new XML_RNGValidator(),
             ProjectXMLImporter::build(
                 new XMLImportHelper(UserManager::instance()),
