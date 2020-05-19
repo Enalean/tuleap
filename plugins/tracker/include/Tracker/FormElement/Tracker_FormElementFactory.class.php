@@ -1546,7 +1546,7 @@ class Tracker_FormElementFactory
                         'tracker_id'        => $tracker->getId(),
                         'parent_id'         => null,
                         'name'              => null,
-                        'label'             => null,
+                        'label'             => '',
                         'description'       => null,
                         'use_it'            => null,
                         'scope'             => null,
