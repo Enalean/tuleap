@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -63,28 +63,5 @@ class JiraFieldRetriever
         }
 
         return $fields_by_id;
-    }
-
-    public function getStatusesForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name): array
-    {
-        $statuses_url     = "project/" . urlencode($jira_project_key) . "/statuses";
-        $statuses_content = $this->wrapper->getUrl($statuses_url);
-
-        $statuses_representation = [];
-        if ($statuses_content === null) {
-            return $statuses_representation;
-        }
-
-        foreach ($statuses_content as $statuses_content_per_issue_type) {
-            if ($statuses_content_per_issue_type['name'] !== $jira_issue_type_name) {
-                continue;
-            }
-
-            foreach ($statuses_content_per_issue_type['statuses'] as $status) {
-                $statuses_representation[] = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status);
-            }
-        }
-
-        return $statuses_representation;
     }
 }

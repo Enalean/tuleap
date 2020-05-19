@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\unit\Tracker\Creation\JiraImporter\Import\Semantic;
 
+use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
@@ -30,10 +32,13 @@ use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 class SemanticsXMLExporterTest extends TestCase
 {
     use GlobalLanguageMock;
+    use MockeryPHPUnitIntegration;
 
     public function testExportsTheSemantics(): void
     {
@@ -55,15 +60,37 @@ class SemanticsXMLExporterTest extends TestCase
                 Tracker_FormElementFactory::FIELD_TEXT_TYPE
             )
         );
+        $mapping->addMapping(
+            new FieldMapping(
+                'status',
+                'Fstatus',
+                'status',
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+            )
+        );
+
+        $collection = Mockery::mock(StatusValuesCollection::class);
+
+        $collection->shouldReceive('getOpenValues')->andReturn([
+            new JiraFieldAPIAllowedValueRepresentation(
+                9010001,
+                'To Do'
+            ),
+            new JiraFieldAPIAllowedValueRepresentation(
+                9000003,
+                'In Progress'
+            ),
+        ]);
 
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(
             $tracker_node,
-            $mapping
+            $mapping,
+            $collection
         );
 
         $this->assertNotNull($tracker_node->semantics);
-        $this->assertCount(2, $tracker_node->semantics->children());
+        $this->assertCount(3, $tracker_node->semantics->children());
 
         $semantic_title_node = $tracker_node->semantics->semantic[0];
         $this->assertSame("title", (string) $semantic_title_node['type']);
@@ -72,6 +99,11 @@ class SemanticsXMLExporterTest extends TestCase
         $semantic_description_node = $tracker_node->semantics->semantic[1];
         $this->assertSame("description", (string) $semantic_description_node['type']);
         $this->assertSame("Fdescription", (string) $semantic_description_node->field['REF']);
+
+        $semantic_status_node = $tracker_node->semantics->semantic[2];
+        $this->assertSame("status", (string) $semantic_status_node['type']);
+        $this->assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
+        $this->assertCount(2, $semantic_status_node->open_values->children());
     }
 
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void
@@ -82,7 +114,8 @@ class SemanticsXMLExporterTest extends TestCase
         $exporter = new SemanticsXMLExporter();
         $exporter->exportSemantics(
             $tracker_node,
-            $mapping
+            $mapping,
+            Mockery::mock(StatusValuesCollection::class)
         );
 
         $this->assertNotNull($tracker_node->semantics);
