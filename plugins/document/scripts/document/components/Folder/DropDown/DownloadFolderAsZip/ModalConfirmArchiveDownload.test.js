@@ -20,18 +20,17 @@
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../../helpers/local-vue.js";
-import ModalArchiveSizeWarningModal from "./ModalArchiveSizeWarning.vue";
+import ModalConfirmArchiveDownload from "./ModalConfirmArchiveDownload.vue";
 
-describe("ModalArchiveSizeWarningModal", () => {
+describe("ModalConfirmArchiveDownload", () => {
     function getWrapper() {
         const state = { project_name: "tuleap-documentation", warning_threshold: 1 };
         const store_options = { state };
         const store = createStoreMock(store_options);
 
-        return shallowMount(ModalArchiveSizeWarningModal, {
+        return shallowMount(ModalConfirmArchiveDownload, {
             localVue,
             propsData: {
-                size: 1050000,
                 folderHref: "/download/me/here",
             },
             mocks: { $store: store },
@@ -44,25 +43,17 @@ describe("ModalArchiveSizeWarningModal", () => {
         expect(wrapper.classes("tlp-modal-shown")).toBe(true);
     });
 
-    it("displays the size of the folder in MB", () => {
-        const wrapper = getWrapper();
-
-        expect(wrapper.vm.size_in_MB).toEqual("1.05");
-    });
-
     it("Emits an event when it is closed", () => {
         const wrapper = getWrapper();
 
-        wrapper.find("[data-test=close-archive-size-warning]").trigger("click");
+        wrapper.find("[data-test=close-confirm-archive-download-modal]").trigger("click");
 
         expect(wrapper.emitted("download-folder-as-zip-modal-closed").length).toBe(1);
     });
 
     it("The [Download] button is a link to the archive, the modal is closed when it is clicked", () => {
         const wrapper = getWrapper();
-        const confirm_button = wrapper.find(
-            "[data-test=confirm-download-archive-button-despite-size-warning]"
-        );
+        const confirm_button = wrapper.find("[data-test=confirm-download-archive-button]");
 
         expect(confirm_button.attributes("href")).toEqual("/download/me/here");
         confirm_button.trigger("click");
