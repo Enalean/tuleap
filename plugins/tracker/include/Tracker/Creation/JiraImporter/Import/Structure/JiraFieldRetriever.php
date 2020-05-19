@@ -40,9 +40,9 @@ class JiraFieldRetriever
     /**
      * @return JiraFieldAPIRepresentation[]
      */
-    public function getAllJiraFields(string $jira_project_id, string $jira_issue_type_name): array
+    public function getAllJiraFields(string $jira_project_key, string $jira_issue_type_name): array
     {
-        $meta_url = "issue/createmeta?projectKeys=" . urlencode($jira_project_id) .
+        $meta_url = "issue/createmeta?projectKeys=" . urlencode($jira_project_key) .
             "&issuetypeNames=" . urlencode($jira_issue_type_name) . "&expand=projects.issuetypes.fields";
 
         $project_meta_content = $this->wrapper->getUrl($meta_url);
@@ -63,5 +63,28 @@ class JiraFieldRetriever
         }
 
         return $fields_by_id;
+    }
+
+    public function getStatusesForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name): array
+    {
+        $statuses_url     = "project/" . urlencode($jira_project_key) . "/statuses";
+        $statuses_content = $this->wrapper->getUrl($statuses_url);
+
+        $statuses_representation = [];
+        if ($statuses_content === null) {
+            return $statuses_representation;
+        }
+
+        foreach ($statuses_content as $statuses_content_per_issue_type) {
+            if ($statuses_content_per_issue_type['name'] !== $jira_issue_type_name) {
+                continue;
+            }
+
+            foreach ($statuses_content_per_issue_type['statuses'] as $status) {
+                $statuses_representation[] = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status);
+            }
+        }
+
+        return $statuses_representation;
     }
 }

@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 
@@ -173,6 +174,28 @@ final class JiraXmlExporterTest extends TestCase
                     'display_time' => '1'
                 ],
                 [],
+                $this->jira_field_mapping_collection
+            ]
+        )->once();
+
+        $statuses = [
+            new JiraFieldAPIAllowedValueRepresentation(
+                9000003,
+                'In Progress'
+            )
+        ];
+        $this->jira_field_retriever->shouldReceive('getStatusesForProjectAndIssueType')->once()->andReturn($statuses);
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $fieldset_xml,
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                "status",
+                "Status",
+                "status",
+                7,
+                false,
+                [],
+                $statuses,
                 $this->jira_field_mapping_collection
             ]
         )->once();

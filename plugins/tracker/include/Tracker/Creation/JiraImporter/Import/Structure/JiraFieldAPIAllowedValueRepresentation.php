@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
+
 /**
  * @psalm-immutable
  */
@@ -56,6 +58,18 @@ class JiraFieldAPIAllowedValueRepresentation
         } elseif (isset($jira_field_allowed_value['value'])) {
             $allowed_value_name = (string) $jira_field_allowed_value['value'];
         }
+
+        return new self(
+            $allowed_value_id,
+            $allowed_value_name
+        );
+    }
+
+    public static function buildFromAPIResponseStatuses(array $status): self
+    {
+        $status_value_transformer = new StatusValuesTransformer();
+        $allowed_value_id         = $status_value_transformer->transformJiraStatusValue((int) $status['id']);
+        $allowed_value_name       = (string) $status['name'];
 
         return new self(
             $allowed_value_id,

@@ -28,7 +28,9 @@ use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
@@ -62,18 +64,25 @@ class FieldChangeXMLExporter
      */
     private $field_change_list_builder;
 
+    /**
+     * @var StatusValuesTransformer
+     */
+    private $status_values_transformer;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
         FieldChangeTextBuilder $field_change_text_builder,
         FieldChangeFloatBuilder $field_change_float_builder,
-        FieldChangeListBuilder $field_change_list_builder
+        FieldChangeListBuilder $field_change_list_builder,
+        StatusValuesTransformer $status_values_transformer
     ) {
         $this->field_change_date_builder   = $field_change_date_builder;
         $this->field_change_string_builder = $field_change_string_builder;
         $this->field_change_text_builder   = $field_change_text_builder;
         $this->field_change_float_builder  = $field_change_float_builder;
         $this->field_change_list_builder   = $field_change_list_builder;
+        $this->status_values_transformer   = $status_values_transformer;
     }
 
     /**
@@ -120,6 +129,12 @@ class FieldChangeXMLExporter
             $value_ids = [
                 $value['id']
             ];
+
+            if ($mapping->getFieldName() === JiraXmlExporter::JIRA_STATUS_NAME) {
+                $value_ids = [
+                    $this->status_values_transformer->transformJiraStatusValue((int) $value['id'])
+                ];
+            }
 
             $this->field_change_list_builder->build(
                 $changeset_node,
