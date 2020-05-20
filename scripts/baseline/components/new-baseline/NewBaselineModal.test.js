@@ -31,10 +31,7 @@ import { createStoreMock } from "../../support/store-wrapper.test-helper";
 
 describe("NewBaselineModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
-    const information_message_selector = '[data-test-type="information_message"]';
-    const spinner_selector = '[data-test-type="spinner"]';
     const cancel_selector = '[data-test-action="cancel"]';
-    const submit_selector = '[data-test-action="submit"]';
 
     let createBaseline;
     let $store;
@@ -71,7 +68,7 @@ describe("NewBaselineModal", () => {
     });
 
     it("shows skeleton", () => {
-        expect(wrapper.contains(MilestonesSelectSkeleton)).toBeTruthy();
+        expect(wrapper.findComponent(MilestonesSelectSkeleton).exists()).toBeTruthy();
     });
 
     describe("when getOpenMilestones() fail", () => {
@@ -81,15 +78,15 @@ describe("NewBaselineModal", () => {
         });
 
         it("shows error message", () => {
-            expect(wrapper.contains(error_message_selector)).toBeTruthy();
+            expect(wrapper.find(error_message_selector).exists()).toBeTruthy();
         });
 
         it("shows information message", () => {
-            expect(wrapper.contains(information_message_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="information_message"]').exists()).toBeTruthy();
         });
 
         it("does not show skeleton", () => {
-            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
+            expect(wrapper.findComponent(MilestonesSelectSkeleton).exists()).toBeFalsy();
         });
     });
 
@@ -100,19 +97,21 @@ describe("NewBaselineModal", () => {
         });
 
         it("does not show error message", () => {
-            expect(wrapper.contains(error_message_selector)).toBeFalsy();
+            expect(wrapper.find(error_message_selector).exists()).toBeFalsy();
         });
 
         it("does not show skeleton", () => {
-            expect(wrapper.contains(MilestonesSelectSkeleton)).toBeFalsy();
+            expect(wrapper.findComponent(MilestonesSelectSkeleton).exists()).toBeFalsy();
         });
 
         it("shows a list of milestones", () => {
-            expect(wrapper.contains(MilestonesSelect)).toBeTruthy();
+            expect(wrapper.findComponent(MilestonesSelect).exists()).toBeTruthy();
         });
 
         it("passes milestones returned by getOpenMilestones() to MilestoneList", () => {
-            expect(wrapper.get(MilestonesSelect).props().milestones).toEqual([a_milestone]);
+            expect(wrapper.findComponent(MilestonesSelect).props().milestones).toEqual([
+                a_milestone,
+            ]);
         });
     });
 
@@ -131,12 +130,14 @@ describe("NewBaselineModal", () => {
         });
 
         it("shows spinner", () => {
-            expect(wrapper.contains(spinner_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="spinner"]').exists()).toBeTruthy();
         });
 
         it("disables buttons", () => {
             expect(wrapper.get(cancel_selector).attributes("disabled")).toEqual("disabled");
-            expect(wrapper.get(submit_selector).attributes("disabled")).toEqual("disabled");
+            expect(wrapper.get('[data-test-action="submit"]').attributes("disabled")).toEqual(
+                "disabled"
+            );
         });
 
         describe("when createBaseline() fail", () => {

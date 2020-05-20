@@ -57,15 +57,15 @@ describe("BaselinesList", () => {
         beforeEach(() => ($store.state.baselines.are_baselines_loading = true));
 
         it("does not show any baseline", () => {
-            expect(wrapper.contains(Baseline)).toBeFalsy();
+            expect(wrapper.findComponent(Baseline).exists()).toBeFalsy();
         });
 
         it("shows baseline skeleton", () => {
-            expect(wrapper.contains(BaselineSkeleton)).toBeTruthy();
+            expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
-            expect(wrapper.contains(empty_baseline_selector)).toBeFalsy();
+            expect(wrapper.find(empty_baseline_selector).exists()).toBeFalsy();
         });
     });
 
@@ -79,16 +79,16 @@ describe("BaselinesList", () => {
             });
 
             it("shows as many baselines as given", () => {
-                let baselines = wrapper.findAll(Baseline);
+                let baselines = wrapper.findAllComponents(Baseline);
                 expect(baselines.length).toBe(3);
             });
 
             it("does not show baseline skeleton", () => {
-                expect(wrapper.contains(BaselineSkeleton)).toBeFalsy();
+                expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeFalsy();
             });
 
             it("does not show a message that specifies an empty state", () => {
-                expect(wrapper.contains(empty_baseline_selector)).toBeFalsy();
+                expect(wrapper.find(empty_baseline_selector).exists()).toBeFalsy();
             });
         });
 
@@ -99,15 +99,15 @@ describe("BaselinesList", () => {
             });
 
             it("does not show baselines", () => {
-                expect(wrapper.contains(Baseline)).toBeFalsy();
+                expect(wrapper.findComponent(Baseline).exists()).toBeFalsy();
             });
 
             it("does not show baseline skeleton", () => {
-                expect(wrapper.contains(BaselineSkeleton)).toBeFalsy();
+                expect(wrapper.findComponent(BaselineSkeleton).exists()).toBeFalsy();
             });
 
             it("shows a message that specifies an empty state", () => {
-                expect(wrapper.contains(empty_baseline_selector)).toBeTruthy();
+                expect(wrapper.find(empty_baseline_selector).exists()).toBeTruthy();
             });
         });
     });

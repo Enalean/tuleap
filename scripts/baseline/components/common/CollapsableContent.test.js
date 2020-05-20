@@ -24,7 +24,6 @@ import CollapsableContent from "./CollapsableContent.vue";
 
 describe("CollapsableContent", () => {
     const toggle_selector = '[data-test-action="toggle-expand-collapse"]';
-    const default_slot_selector = '[data-test-type="default-slot"]';
     const header_slot_selector = '[data-test-type="header-slot"]';
 
     let wrapper;
@@ -40,11 +39,13 @@ describe("CollapsableContent", () => {
     });
 
     it("shows header slot", () => {
-        expect(wrapper.get(header_slot_selector).isVisible()).toBeTruthy();
+        expect(wrapper.get(header_slot_selector).exists()).toBeTruthy();
     });
 
     it("shows default slot", () => {
-        expect(wrapper.get(default_slot_selector).isVisible()).toBeTruthy();
+        expect(
+            wrapper.get("[data-test=collapsible-slot]").element.style.getPropertyValue("display")
+        ).not.toEqual("none");
     });
 
     describe("when toggle expand/collapse", () => {
@@ -54,11 +55,15 @@ describe("CollapsableContent", () => {
         });
 
         it("still shows header slot", () => {
-            expect(wrapper.get(header_slot_selector).isVisible()).toBeTruthy();
+            expect(wrapper.get(header_slot_selector).exists()).toBeTruthy();
         });
 
         it("hides default slot", () => {
-            expect(wrapper.get(default_slot_selector).isVisible()).toBeFalsy();
+            expect(
+                wrapper
+                    .get("[data-test=collapsible-slot]")
+                    .element.style.getPropertyValue("display")
+            ).toEqual("none");
         });
 
         describe("when toggle expand/collapse again", () => {
@@ -68,7 +73,11 @@ describe("CollapsableContent", () => {
             });
 
             it("shows default slot", () => {
-                expect(wrapper.get(default_slot_selector).isVisible()).toBeTruthy();
+                expect(
+                    wrapper
+                        .get("[data-test=collapsible-slot]")
+                        .element.style.getPropertyValue("display")
+                ).not.toEqual("none");
             });
         });
     });

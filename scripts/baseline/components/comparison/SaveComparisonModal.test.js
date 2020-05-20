@@ -29,7 +29,6 @@ import { create } from "../../support/factories";
 
 describe("SaveComparisonModal", () => {
     const error_message_selector = '[data-test-type="error-message"]';
-    const spinner_selector = '[data-test-type="spinner"]';
 
     let createComparison;
     let $router;
@@ -56,7 +55,7 @@ describe("SaveComparisonModal", () => {
     });
 
     it("does not show error message", () => {
-        expect(wrapper.contains(error_message_selector)).toBeFalsy();
+        expect(wrapper.find(error_message_selector).exists()).toBeFalsy();
     });
 
     describe("saveComparison()", () => {
@@ -74,7 +73,7 @@ describe("SaveComparisonModal", () => {
         });
 
         it("shows spinner", () => {
-            expect(wrapper.contains(spinner_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="spinner"]').exists()).toBeTruthy();
         });
 
         describe("when createComparison() fail", () => {
@@ -84,7 +83,7 @@ describe("SaveComparisonModal", () => {
             });
 
             it("shows an error message", () => {
-                expect(wrapper.contains(error_message_selector)).toBeTruthy();
+                expect(wrapper.find(error_message_selector).exists()).toBeTruthy();
             });
         });
 

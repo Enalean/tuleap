@@ -72,7 +72,7 @@ describe("NewComparisonModal", () => {
             beforeEach(() => wrapper.setData({ base_baseline_id: 2 }));
 
             it("shows no baseline to compare message", () => {
-                expect(wrapper.contains(no_baseline_to_compare_message_selector)).toBeTruthy();
+                expect(wrapper.find(no_baseline_to_compare_message_selector).exists()).toBeTruthy();
             });
         });
 
@@ -80,7 +80,7 @@ describe("NewComparisonModal", () => {
             beforeEach(() => wrapper.setData({ base_baseline_id: 1 }));
 
             it("does not show no baseline to compare message", () => {
-                expect(wrapper.contains(no_baseline_to_compare_message_selector)).toBeFalsy();
+                expect(wrapper.find(no_baseline_to_compare_message_selector).exists()).toBeFalsy();
             });
 
             it("shows all baselines on same artifact", () => {

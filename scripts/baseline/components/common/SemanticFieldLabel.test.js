@@ -25,8 +25,6 @@ import SemanticFieldLabel from "./SemanticFieldLabel.vue";
 import store_options from "../../store/store_options";
 
 describe("SemanticFieldLabel", () => {
-    const skeleton_selector = '[data-test-type="skeleton"]';
-
     let $store;
     let wrapper;
 
@@ -60,7 +58,7 @@ describe("SemanticFieldLabel", () => {
         });
 
         it("shows only skeleton", () => {
-            expect(wrapper.contains(skeleton_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="skeleton"]').exists()).toBeTruthy();
 
             expect(wrapper.text()).toEqual("");
         });

@@ -88,11 +88,11 @@ describe("MilestonesSelect", () => {
         });
 
         it("does not show any milestone", () => {
-            expect(wrapper.contains("milestone_selector")).toBeFalsy();
+            expect(wrapper.find("milestone_selector").exists()).toBeFalsy();
         });
 
         it("shows information message", () => {
-            expect(wrapper.contains('[data-test-type="empty-milestones"]')).toBeTruthy();
+            expect(wrapper.find('[data-test-type="empty-milestones"]').exists()).toBeTruthy();
         });
     });
 });

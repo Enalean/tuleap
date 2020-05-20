@@ -84,6 +84,6 @@ describe("Comparison", () => {
     });
 
     it("shows base baseline as milestone", () => {
-        expect(wrapper.get(ArtifactLink).vm.artifact).toEqual(base_baseline_artifact);
+        expect(wrapper.findComponent(ArtifactLink).vm.artifact).toEqual(base_baseline_artifact);
     });
 });

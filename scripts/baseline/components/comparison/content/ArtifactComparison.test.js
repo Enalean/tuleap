@@ -57,11 +57,11 @@ describe("ArtifactComparison", () => {
     });
 
     it("does not show depth limit message", () => {
-        expect(wrapper.contains(DepthLimitReachedMessage)).toBeFalsy();
+        expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeFalsy();
     });
 
     it("shows artifacts list comparison", () => {
-        expect(wrapper.contains(ArtifactsListComparison)).toBeTruthy();
+        expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeTruthy();
     });
 
     describe("when artifacts does not have linked artifact", () => {
@@ -75,11 +75,11 @@ describe("ArtifactComparison", () => {
         });
 
         it("does not show depth limit message", () => {
-            expect(wrapper.contains(DepthLimitReachedMessage)).toBeFalsy();
+            expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeFalsy();
         });
 
         it("does not show artifacts list comparison", () => {
-            expect(wrapper.contains(ArtifactsListComparison)).toBeFalsy();
+            expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeFalsy();
         });
     });
 
@@ -95,7 +95,7 @@ describe("ArtifactComparison", () => {
         });
 
         it("shows depth limit message", () => {
-            expect(wrapper.contains(DepthLimitReachedMessage)).toBeTruthy();
+            expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeTruthy();
         });
     });
 });

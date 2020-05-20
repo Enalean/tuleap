@@ -37,10 +37,10 @@ describe("ActionButton", () => {
     });
 
     it("does not show spinner", () => {
-        expect(wrapper.contains(spinner_selector)).toBeFalsy();
+        expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
     });
     it("shows icon", () => {
-        expect(wrapper.contains(".fa-delete")).toBeTruthy();
+        expect(wrapper.find(".fa-delete").exists()).toBeTruthy();
     });
     it("enables button", () => {
         expect(wrapper.get(button_selector).attributes().disabled).toBeFalsy();
@@ -58,7 +58,7 @@ describe("ActionButton", () => {
         beforeEach(() => wrapper.setProps({ loading: true }));
 
         it("shows spinner", () => {
-            expect(wrapper.contains(spinner_selector)).toBeTruthy();
+            expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
         });
     });
 

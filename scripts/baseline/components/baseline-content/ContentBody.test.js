@@ -29,10 +29,6 @@ describe("ContentBody", () => {
     let $store;
     let wrapper;
 
-    const empty_artifact_message_selector = '[data-test-type="empty-artifact-message"]';
-    const all_artifacts_filtered_message_selector =
-        '[data-test-type="all-artifacts-filtered-message"]';
-
     beforeEach(() => {
         $store = createStoreMock(
             {
@@ -57,7 +53,7 @@ describe("ContentBody", () => {
     describe("when no first depth artifacts", () => {
         beforeEach(() => ($store.state.current_baseline.first_depth_artifacts = []));
         it("shows empty artifact message", () => {
-            expect(wrapper.contains(empty_artifact_message_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="empty-artifact-message"]').exists()).toBeTruthy();
         });
     });
 
@@ -73,7 +69,9 @@ describe("ContentBody", () => {
         describe("when all artifacts hidden", () => {
             beforeEach(() => ($store.getters["current_baseline/filterArtifacts"] = () => []));
             it("shows all artifacts filtered message", () => {
-                expect(wrapper.contains(all_artifacts_filtered_message_selector)).toBeTruthy();
+                expect(
+                    wrapper.find('[data-test-type="all-artifacts-filtered-message"]').exists()
+                ).toBeTruthy();
             });
         });
 
@@ -86,8 +84,10 @@ describe("ContentBody", () => {
             );
 
             it("shows all visible artifacts", () => {
-                expect(wrapper.contains(ArtifactsList)).toBeTruthy();
-                expect(wrapper.get(ArtifactsList).props().artifacts).toEqual(filtered_artifacts);
+                expect(wrapper.findComponent(ArtifactsList).exists()).toBeTruthy();
+                expect(wrapper.findComponent(ArtifactsList).props().artifacts).toEqual(
+                    filtered_artifacts
+                );
             });
         });
     });

@@ -37,6 +37,6 @@ describe("ArtifactBadge", () => {
     });
 
     it("shows tlp badge custom class", () => {
-        expect(wrapper.contains(".tlp-badge-blue-cyan")).toBeTruthy();
+        expect(wrapper.find(".tlp-badge-blue-cyan").exists()).toBeTruthy();
     });
 });

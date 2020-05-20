@@ -53,15 +53,15 @@ describe("ComparisonsList", () => {
         beforeEach(() => ($store.state.comparisons.is_loading = true));
 
         it("does not show any comparison", () => {
-            expect(wrapper.contains(Comparison)).toBeFalsy();
+            expect(wrapper.findComponent(Comparison).exists()).toBeFalsy();
         });
 
         it("shows body table skeleton", () => {
-            expect(wrapper.contains(ComparisonSkeleton)).toBeTruthy();
+            expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeTruthy();
         });
 
         it("does not show a message that specifies an empty state", () => {
-            expect(wrapper.contains(empty_comparison_selector)).toBeFalsy();
+            expect(wrapper.find(empty_comparison_selector).exists()).toBeFalsy();
         });
     });
 
@@ -75,15 +75,15 @@ describe("ComparisonsList", () => {
             });
 
             it("shows comparisons", () => {
-                expect(wrapper.contains(Comparison)).toBeTruthy();
+                expect(wrapper.findComponent(Comparison).exists()).toBeTruthy();
             });
 
             it("does not show body table skeleton", () => {
-                expect(wrapper.contains(ComparisonSkeleton)).toBeFalsy();
+                expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeFalsy();
             });
 
             it("does not show a message that specifies an empty state", () => {
-                expect(wrapper.contains(empty_comparison_selector)).toBeFalsy();
+                expect(wrapper.find(empty_comparison_selector).exists()).toBeFalsy();
             });
         });
 
@@ -94,15 +94,15 @@ describe("ComparisonsList", () => {
             });
 
             it("does not show comparisons", () => {
-                expect(wrapper.contains(Comparison)).toBeFalsy();
+                expect(wrapper.findComponent(Comparison).exists()).toBeFalsy();
             });
 
             it("does not show body table skeleton", () => {
-                expect(wrapper.contains(ComparisonSkeleton)).toBeFalsy();
+                expect(wrapper.findComponent(ComparisonSkeleton).exists()).toBeFalsy();
             });
 
             it("shows a message that specifies an empty state", () => {
-                expect(wrapper.contains(empty_comparison_selector)).toBeTruthy();
+                expect(wrapper.find(empty_comparison_selector).exists()).toBeTruthy();
             });
         });
     });

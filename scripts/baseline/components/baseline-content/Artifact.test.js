@@ -82,7 +82,7 @@ describe("Artifact", () => {
         });
 
         it("shows artifact descriptions", () => {
-            expect(wrapper.contains(artifact_description_selector)).toBeTruthy();
+            expect(wrapper.find(artifact_description_selector).exists()).toBeTruthy();
         });
     });
 
@@ -96,7 +96,7 @@ describe("Artifact", () => {
 
         it("does not show description", () => {
             expect(
-                wrapper.get(artifact_fields_selector).contains(artifact_description_selector)
+                wrapper.get(artifact_fields_selector).find(artifact_description_selector).exists()
             ).toBeFalsy();
         });
     });
@@ -109,7 +109,7 @@ describe("Artifact", () => {
         });
 
         it("shows artifact status", () => {
-            expect(wrapper.contains(artifact_status_selector)).toBeTruthy();
+            expect(wrapper.find(artifact_status_selector).exists()).toBeTruthy();
         });
     });
 
@@ -123,7 +123,7 @@ describe("Artifact", () => {
 
         it("does not show status", () => {
             expect(
-                wrapper.get(artifact_fields_selector).contains(artifact_status_selector)
+                wrapper.get(artifact_fields_selector).find(artifact_status_selector).exists()
             ).toBeFalsy();
         });
     });
@@ -132,11 +132,11 @@ describe("Artifact", () => {
         beforeEach(() => wrapper.setProps({ artifact: artifact_where_limit_reached }));
 
         it("shows depth limit reached message", () => {
-            expect(wrapper.contains(DepthLimitReachedMessage)).toBeTruthy();
+            expect(wrapper.findComponent(DepthLimitReachedMessage).exists()).toBeTruthy();
         });
 
         it("does not show linked artifact", () => {
-            expect(wrapper.contains(ArtifactsList)).toBeFalsy();
+            expect(wrapper.findComponent(ArtifactsList).exists()).toBeFalsy();
         });
     });
 
@@ -153,8 +153,8 @@ describe("Artifact", () => {
             );
 
             it("shows only visible linked artifacts", () => {
-                expect(wrapper.contains(ArtifactsList)).toBeTruthy();
-                expect(wrapper.get(ArtifactsList).props().artifacts).toEqual(
+                expect(wrapper.findComponent(ArtifactsList).exists()).toBeTruthy();
+                expect(wrapper.findComponent(ArtifactsList).props().artifacts).toEqual(
                     filtered_linked_artifacts
                 );
             });

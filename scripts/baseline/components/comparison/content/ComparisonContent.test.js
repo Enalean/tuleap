@@ -63,7 +63,7 @@ describe("ComparisonContent", () => {
             $store.state.comparison.compared_to.first_depth_artifacts = [];
         });
         it("shows artifacts list comparison", () => {
-            expect(wrapper.contains(ArtifactsListComparison)).toBeTruthy();
+            expect(wrapper.findComponent(ArtifactsListComparison).exists()).toBeTruthy();
         });
     });
 
@@ -74,7 +74,7 @@ describe("ComparisonContent", () => {
         });
         it("shows artifacts list comparison", () => {
             expect(
-                wrapper.contains('[data-test-type="no-comparison-available-message"]')
+                wrapper.find('[data-test-type="no-comparison-available-message"]').exists()
             ).toBeTruthy();
         });
     });

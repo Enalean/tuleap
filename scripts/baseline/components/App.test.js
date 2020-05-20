@@ -53,14 +53,14 @@ describe("App", () => {
     describe("With notification", () => {
         beforeEach(() => ($store.state.dialog_interface.notification = create("notification")));
         it("Show notification", () => {
-            expect(wrapper.contains(Notification)).toBeTruthy();
+            expect(wrapper.findComponent(Notification).exists()).toBeTruthy();
         });
     });
 
     describe("Without notification", () => {
         beforeEach(() => ($store.state.dialog_interface.notification = null));
         it("Show notification", () => {
-            expect(wrapper.contains(Notification)).toBeFalsy();
+            expect(wrapper.findComponent(Notification).exists()).toBeFalsy();
         });
     });
 });

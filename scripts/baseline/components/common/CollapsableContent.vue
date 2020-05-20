@@ -32,7 +32,7 @@
         </a>
         <slot name="header" />
 
-        <div v-show="!is_collapsed">
+        <div v-show="!is_collapsed" data-test="collapsible-slot">
             <slot />
         </div>
     </div>

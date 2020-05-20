@@ -37,6 +37,6 @@ describe("ArtifactsList", () => {
     });
 
     it("shows as many artifacts as given", () => {
-        expect(wrapper.findAll(Artifact).length).toEqual(3);
+        expect(wrapper.findAllComponents(Artifact).length).toEqual(3);
     });
 });

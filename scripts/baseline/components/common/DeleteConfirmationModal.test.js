@@ -48,7 +48,7 @@ describe("DeleteConfirmationModal", () => {
     });
 
     it("does not show spinner", () => {
-        expect(wrapper.contains(spinner_selector)).toBeFalsy();
+        expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
     });
     it("enables confirm button", () => {
         expect(wrapper.get(confirm_selector).attributes().disabled).toBeUndefined();
@@ -61,7 +61,7 @@ describe("DeleteConfirmationModal", () => {
         });
 
         it("shows spinner", () => {
-            expect(wrapper.contains(spinner_selector)).toBeTruthy();
+            expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
         });
         it("disables confirm button", () => {
             expect(wrapper.get(confirm_selector).attributes().disabled).toEqual("disabled");
@@ -79,7 +79,7 @@ describe("DeleteConfirmationModal", () => {
         });
 
         it("does not show spinner any more", () => {
-            expect(wrapper.contains(spinner_selector)).toBeFalsy();
+            expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
         });
         it("enables confirm button", () => {
             expect(wrapper.get(confirm_selector).attributes().disabled).toBeUndefined();
