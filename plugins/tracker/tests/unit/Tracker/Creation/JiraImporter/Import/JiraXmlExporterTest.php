@@ -27,6 +27,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
@@ -36,6 +37,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 final class JiraXmlExporterTest extends TestCase
 {
@@ -84,8 +86,20 @@ final class JiraXmlExporterTest extends TestCase
      */
     private $semantics_xml_exporter;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValuesCollection
+     */
+    private $status_values_collection;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
+     */
+    private $wrapper;
+
     protected function setUp(): void
     {
+        $this->wrapper = Mockery::mock(ClientWrapper::class);
+
         $this->field_xml_exporter            = Mockery::mock(FieldXmlExporter::class);
         $this->jira_field_retriever          = Mockery::mock(JiraFieldRetriever::class);
         $error_collector                     = new ErrorCollector();
@@ -95,6 +109,9 @@ final class JiraXmlExporterTest extends TestCase
         $this->permissions_xml_exporter      = Mockery::mock(PermissionsXMLExporter::class);
         $this->artifacts_xml_exporter        = Mockery::mock(ArtifactsXMLExporter::class);
         $this->semantics_xml_exporter        = Mockery::mock(SemanticsXMLExporter::class);
+        $this->status_values_collection      = new StatusValuesCollection(
+            $this->wrapper
+        );
 
         $this->jira_exporter = new JiraXmlExporter(
             $this->field_xml_exporter,
@@ -105,7 +122,8 @@ final class JiraXmlExporterTest extends TestCase
             $this->jira_field_mapping_collection,
             $this->permissions_xml_exporter,
             $this->artifacts_xml_exporter,
-            $this->semantics_xml_exporter
+            $this->semantics_xml_exporter,
+            $this->status_values_collection
         );
     }
 
@@ -184,7 +202,11 @@ final class JiraXmlExporterTest extends TestCase
                 'In Progress'
             )
         ];
-        $this->jira_field_retriever->shouldReceive('getStatusesForProjectAndIssueType')->once()->andReturn($statuses);
+
+        $this->wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
+            $this->getStatusesAPIResponse()
+        );
+
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 $fieldset_xml,
@@ -195,7 +217,11 @@ final class JiraXmlExporterTest extends TestCase
                 7,
                 false,
                 [],
-                $statuses,
+                Mockery::on(function (array $statuses) {
+                    $status = $statuses[0];
+                    assert($status instanceof JiraFieldAPIAllowedValueRepresentation);
+                    return $status->getId() === 9000003 && $status->getName() === "In Progress";
+                }),
                 $this->jira_field_mapping_collection
             ]
         )->once();
@@ -207,5 +233,34 @@ final class JiraXmlExporterTest extends TestCase
 
         $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
         $this->jira_exporter->exportJiraToXml($trackers_xml, "URLinstance", "TEST", "Story");
+    }
+
+    private function getStatusesAPIResponse(): array
+    {
+        return [
+            [
+                'self' => 'URL/rest/api/latest/issuetype/10002',
+                'id' => '10002' ,
+                'name' => 'Story' ,
+                'subtask' => false,
+                'statuses' => [
+                    [
+                        'self' => 'URL/rest/api/latest/status/3',
+                        'description' => 'This issue is being actively worked on at the moment by the assignee.',
+                        'iconUrl' => 'URL/images/icons/statuses/inprogress.png',
+                        'name' => 'In Progress',
+                        'untranslatedName' => 'In Progress',
+                        'id' => '3',
+                        'statusCategory' => [
+                            'self' => 'URL/rest/api/latest/statuscategory/4',
+                            'id' => 4,
+                            'key' => 'indeterminate',
+                            'colorName' => 'yellow',
+                            'name' => 'In Progress'
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }

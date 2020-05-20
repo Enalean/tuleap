@@ -35,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
@@ -101,6 +102,11 @@ class JiraXmlExporter
      */
     private $semantics_xml_exporter;
 
+    /**
+     * @var StatusValuesCollection
+     */
+    private $status_values_collection;
+
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
@@ -110,7 +116,8 @@ class JiraXmlExporter
         FieldMappingCollection $field_mapping_collection,
         PermissionsXMLExporter $permissions_xml_exporter,
         ArtifactsXMLExporter $artifacts_xml_exporter,
-        SemanticsXMLExporter $semantics_xml_exporter
+        SemanticsXMLExporter $semantics_xml_exporter,
+        StatusValuesCollection $status_values_collection
     ) {
         $this->field_xml_exporter            = $field_xml_exporter;
         $this->error_collector               = $error_collector;
@@ -121,6 +128,7 @@ class JiraXmlExporter
         $this->permissions_xml_exporter      = $permissions_xml_exporter;
         $this->artifacts_xml_exporter        = $artifacts_xml_exporter;
         $this->semantics_xml_exporter        = $semantics_xml_exporter;
+        $this->status_values_collection      = $status_values_collection;
     }
 
     public static function build(
@@ -177,7 +185,10 @@ class JiraXmlExporter
                     new XML_SimpleXMLCDATAFactory()
                 )
             ),
-            new SemanticsXMLExporter()
+            new SemanticsXMLExporter(),
+            new StatusValuesCollection(
+                $wrapper
+            )
         );
     }
 
@@ -262,6 +273,11 @@ class JiraXmlExporter
             $this->jira_field_mapping_collection
         );
 
+        $this->status_values_collection->initCollectionForProjectAndIssueType(
+            $jira_project_key,
+            $jira_issue_type_name
+        );
+
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
@@ -271,10 +287,7 @@ class JiraXmlExporter
             7,
             false,
             [],
-            $this->jira_field_retriever->getStatusesForProjectAndIssueType(
-                $jira_project_key,
-                $jira_issue_type_name
-            ),
+            $this->status_values_collection->getAllValues(),
             $this->jira_field_mapping_collection
         );
 
@@ -285,7 +298,11 @@ class JiraXmlExporter
             $jira_issue_type_name
         );
 
-        $this->semantics_xml_exporter->exportSemantics($node_tracker, $this->jira_field_mapping_collection);
+        $this->semantics_xml_exporter->exportSemantics(
+            $node_tracker,
+            $this->jira_field_mapping_collection,
+            $this->status_values_collection
+        );
 
         $node_tracker->addChild('rules');
         $this->report_exporter->exportReports($node_tracker, $this->jira_field_mapping_collection);
