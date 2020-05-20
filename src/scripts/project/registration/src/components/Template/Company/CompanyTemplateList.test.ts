@@ -55,7 +55,7 @@ describe("CompanyTemplateList", () => {
 
         it(`display nothing when company hasn't defined any templates`, () => {
             expect(
-                wrapper.contains("[data-test=project-registration-company-template-title]")
+                wrapper.find("[data-test=project-registration-company-template-title]").exists()
             ).toBe(false);
         });
     });
@@ -98,8 +98,8 @@ describe("CompanyTemplateList", () => {
         });
 
         it(`spawns the component and sub component`, () => {
-            expect(wrapper.contains(TemplateCardContent)).toBe(true);
-            expect(wrapper.findAll(TemplateCardContent)).toHaveLength(2);
+            expect(wrapper.findComponent(TemplateCardContent).exists()).toBe(true);
+            expect(wrapper.findAllComponents(TemplateCardContent)).toHaveLength(2);
         });
 
         it(`displays the company name if the platform name is not Tuleap`, async () => {

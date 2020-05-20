@@ -64,8 +64,8 @@ describe(`BaseSiteAdminEditModal`, () => {
     });
 
     it(`When the modal is not shown, it does not instanciate service components`, () => {
-        const project_service = wrapper.find(InEditionCustomService);
-        const system_service = wrapper.find(EditableSystemService);
+        const project_service = wrapper.findComponent(InEditionCustomService);
+        const system_service = wrapper.findComponent(EditableSystemService);
         expect(project_service.exists()).toBe(false);
         expect(system_service.exists()).toBe(false);
     });
@@ -76,7 +76,7 @@ describe(`BaseSiteAdminEditModal`, () => {
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();
 
-            const project_service = wrapper.find(InEditionCustomService);
+            const project_service = wrapper.findComponent(InEditionCustomService);
             expect(project_service.exists()).toBe(true);
         });
 
@@ -85,7 +85,7 @@ describe(`BaseSiteAdminEditModal`, () => {
             wrapper.vm.show(fake_button);
             await wrapper.vm.$nextTick();
 
-            const system_service = wrapper.find(EditableSystemService);
+            const system_service = wrapper.findComponent(EditableSystemService);
             expect(system_service.exists()).toBe(true);
         });
     });

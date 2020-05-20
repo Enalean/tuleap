@@ -82,7 +82,7 @@ describe(`FormatSelector`, () => {
             required = true;
             const wrapper = getInstance();
 
-            expect(wrapper.contains(".fa-asterisk")).toBe(true);
+            expect(wrapper.find(".fa-asterisk").exists()).toBe(true);
         });
     });
 });

@@ -86,7 +86,7 @@ describe("TestManagementDisplayer", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         wrapper.setData({ is_loading: true });
 
-        expect(wrapper.contains("[data-test=loading-data]")).toBe(true);
+        expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
     });
 
     it("When there is a rest error, Then the error is displayed", async () => {
@@ -122,7 +122,7 @@ describe("TestManagementDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(TestManagement)).toBe(true);
+        expect(wrapper.findComponent(TestManagement).exists()).toBe(true);
     });
 
     it("When there is no tests, Then TestManagement component is not rendered", async () => {
@@ -145,6 +145,6 @@ describe("TestManagementDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(TestManagement)).toBe(false);
+        expect(wrapper.findComponent(TestManagement).exists()).toBe(false);
     });
 });

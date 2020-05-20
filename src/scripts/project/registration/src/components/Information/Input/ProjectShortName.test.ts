@@ -55,7 +55,9 @@ describe("ProjectShortName", () => {
                 is_in_edit_mode: false,
             };
             const wrapper = await createWrapper(data);
-            expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(false);
+            expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
+                false
+            );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-hidden-section",
@@ -70,7 +72,9 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
 
-            expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(false);
+            expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
+                false
+            );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-edit-section",
@@ -85,7 +89,9 @@ describe("ProjectShortName", () => {
             };
             const wrapper = await createWrapper(data);
 
-            expect(wrapper.contains("[data-test=project-shortname-slugified-section]")).toBe(true);
+            expect(wrapper.find("[data-test=project-shortname-slugified-section]").exists()).toBe(
+                true
+            );
             expect(wrapper.get("[data-test=project-shortname-edit-section]").classes()).toEqual([
                 "tlp-form-element",
                 "project-short-name-hidden-section",

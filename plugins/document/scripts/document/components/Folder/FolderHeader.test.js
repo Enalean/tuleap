@@ -41,14 +41,14 @@ describe("FolderHeader", () => {
 
         store = createStoreMock(general_store);
 
-        const dynamic_import_stubs = {
-            permissionsUpdateModal: "<div></div>",
-            confirmDeletionModal: "<div></div>",
-            CreateNewVersionEmptyModal: "<div></div>",
-            downloadFolderSizeThresholdExceededModal: "<div></div>",
-            downloadFolderSizeWarningModal: "<div></div>",
-            downloadFolderConfirmModal: "<div></div>",
-        };
+        const dynamic_import_stubs = [
+            "confirm-deletion-modal",
+            "permissions-update-modal",
+            "create-new-item-version-modal",
+            "download-folder-size-threshold-exceeded-modal",
+            "download-folder-size-warning-modal",
+            "download-folder-confirm-modal",
+        ];
 
         factory = (props = {}) => {
             return shallowMount(FolderHeader, {
@@ -83,7 +83,9 @@ describe("FolderHeader", () => {
             store.getters.is_folder_empty = true;
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-folder-harder-search-box")).toBeFalsy();
+            expect(
+                wrapper.find("[data-test=document-folder-harder-search-box]").exists()
+            ).toBeFalsy();
         });
         it(`Display search box, when folder has content`, () => {
             store.state.is_loading_ascendant_hierarchy = false;
@@ -91,7 +93,9 @@ describe("FolderHeader", () => {
             store.getters.is_folder_empty = false;
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-folder-harder-search-box")).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=document-folder-harder-search-box]").exists()
+            ).toBeTruthy();
         });
     });
 
@@ -101,13 +105,13 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBe(false);
+            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(false);
 
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showCreateNewItemVersionModal(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_new_version_modal();
-            expect(wrapper.contains("[data-test=document-new-version-modal]")).toBe(true);
+            expect(wrapper.find("[data-test=document-new-version-modal]").exists()).toBe(true);
         });
 
         it(`Loads delete modal`, async () => {
@@ -115,12 +119,12 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBe(false);
+            expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(false);
 
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showDeleteItemModal(event);
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-delete-item-modal]")).toBe(true);
+            expect(wrapper.find("[data-test=document-delete-item-modal]").exists()).toBe(true);
         });
 
         it(`Loads update metadata modal`, async () => {
@@ -128,13 +132,13 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBe(false);
+            expect(wrapper.find("[data-test=document-update-metadata-modal]").exists()).toBe(false);
 
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemMetadataModal(event);
             await wrapper.vm.$nextTick();
             await wrapper.vm.shown_update_metadata_modal();
-            expect(wrapper.contains("[data-test=document-update-metadata-modal]")).toBe(true);
+            expect(wrapper.find("[data-test=document-update-metadata-modal]").exists()).toBe(true);
         });
 
         it(`Loads permission modal`, async () => {
@@ -142,11 +146,13 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBe(false);
+            expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(
+                false
+            );
             const event = { detail: { current_item: { type: TYPE_EMPTY } } };
             wrapper.vm.showUpdateItemPermissionsModal(event);
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-permissions-item-modal]")).toBe(true);
+            expect(wrapper.find("[data-test=document-permissions-item-modal]").exists()).toBe(true);
         });
 
         it("Loads the folder size threshold exceeded error modal", async () => {
@@ -154,16 +160,16 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")).toBe(
-                false
-            );
+            expect(
+                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
+            ).toBe(false);
 
             const event = { detail: { current_folder_size: 100000 } };
             wrapper.vm.showMaxArchiveSizeThresholdExceededErrorModal(event);
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-folder-size-threshold-exceeded]")).toBe(
-                true
-            );
+            expect(
+                wrapper.find("[data-test=document-folder-size-threshold-exceeded]").exists()
+            ).toBe(true);
         });
 
         it("Loads the folder size warning modal", async () => {
@@ -171,14 +177,18 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBe(false);
+            expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
+                false
+            );
 
             const event = {
                 detail: { current_folder_size: 100000, folder_href: "/download/folder/here" },
             };
             wrapper.vm.showArchiveSizeWarningModal(event);
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-folder-size-warning-modal]")).toBe(true);
+            expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
+                true
+            );
         });
 
         it("Loads the confirm archive downloading modal", async () => {
@@ -186,18 +196,18 @@ describe("FolderHeader", () => {
             store.state.current_folder = { id: 20 };
 
             const wrapper = factory();
-            expect(wrapper.contains("[data-test=document-folder-confirm-archive-download]")).toBe(
-                false
-            );
+            expect(
+                wrapper.find("[data-test=document-folder-confirm-archive-download]").exists()
+            ).toBe(false);
 
             const event = {
                 detail: { folder_href: "/download/folder/here" },
             };
             wrapper.vm.showDownloadArchiveConfirmModal(event);
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-folder-confirm-archive-download]")).toBe(
-                true
-            );
+            expect(
+                wrapper.find("[data-test=document-folder-confirm-archive-download]").exists()
+            ).toBe(true);
         });
     });
 });

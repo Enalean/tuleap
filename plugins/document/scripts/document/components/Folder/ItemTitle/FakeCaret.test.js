@@ -49,7 +49,7 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeFalsy();
+        expect(wrapper.find(".fa-fw").exists()).toBeFalsy();
     });
 
     it(`Given item has only documents as siblings,
@@ -69,7 +69,7 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeFalsy();
+        expect(wrapper.find(".fa-fw").exists()).toBeFalsy();
     });
 
     it(`Given item has at least one folder as sibling,
@@ -89,7 +89,7 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeTruthy();
+        expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
 
     it(`Given item has no siblings,
@@ -110,7 +110,7 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeTruthy();
+        expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
 
     it(`Given item has only documents as siblings,
@@ -131,7 +131,7 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeTruthy();
+        expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
 
     it(`Given item has at least one folder as siblings,
@@ -152,6 +152,6 @@ describe("FakeCaret", () => {
         });
         const wrapper = shallowMount(FakeCaret, { store, ...component_options });
 
-        expect(wrapper.contains(".fa-fw")).toBeTruthy();
+        expect(wrapper.find(".fa-fw").exists()).toBeTruthy();
     });
 });

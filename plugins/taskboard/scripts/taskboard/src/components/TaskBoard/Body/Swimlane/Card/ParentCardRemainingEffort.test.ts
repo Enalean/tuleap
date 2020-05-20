@@ -59,7 +59,7 @@ describe("ParentCardRemainingEffort", () => {
         const wrapper = await getWrapper({ value: 666, is_in_edit_mode: true } as RemainingEffort);
 
         expect(wrapper.text()).toBe("");
-        expect(wrapper.contains(EditRemainingEffort)).toBe(true);
+        expect(wrapper.findComponent(EditRemainingEffort).exists()).toBe(true);
     });
 
     it("is a focusable button if remaining effort can be updated", async () => {
@@ -91,12 +91,12 @@ describe("ParentCardRemainingEffort", () => {
     it("displays nothing if the parent card has no remaining effort field", async () => {
         const wrapper = await getWrapper(null);
 
-        expect(wrapper.isEmpty()).toBe(true);
+        expect(wrapper.html()).toEqual("");
     });
 
     it("displays nothing if the parent card has no remaining effort value", async () => {
         const wrapper = await getWrapper({ value: null } as RemainingEffort);
 
-        expect(wrapper.isEmpty()).toBe(true);
+        expect(wrapper.html()).toEqual("");
     });
 });

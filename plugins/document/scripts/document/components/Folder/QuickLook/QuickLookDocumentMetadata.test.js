@@ -59,8 +59,8 @@ describe("QuickLookDocumentMetadata", () => {
 
         const wrapper = metadata_factory({ item });
 
-        expect(wrapper.contains("[data-test='additional-metadata-left-list']")).toBeTruthy();
-        expect(wrapper.contains("[data-test='additional-metadata-right-list']")).toBeTruthy();
+        expect(wrapper.find("[data-test='additional-metadata-left-list']").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test='additional-metadata-right-list']").exists()).toBeTruthy();
     });
 
     it(`Given document has hardocded metadata
@@ -78,8 +78,8 @@ describe("QuickLookDocumentMetadata", () => {
 
         const wrapper = metadata_factory({ item });
 
-        expect(wrapper.contains("[data-test='additional-metadata-left-list']")).toBeFalsy();
-        expect(wrapper.contains("[data-test='additional-metadata-right-list']")).toBeFalsy();
+        expect(wrapper.find("[data-test='additional-metadata-left-list']").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test='additional-metadata-right-list']").exists()).toBeFalsy();
     });
 
     it(`Given folder,
@@ -96,8 +96,8 @@ describe("QuickLookDocumentMetadata", () => {
         };
 
         const wrapper = metadata_factory({ item });
-        expect(wrapper.contains("[data-test='additional-metadata-left-list']")).toBeFalsy();
-        expect(wrapper.contains("[data-test='additional-metadata-right-list']")).toBeFalsy();
+        expect(wrapper.find("[data-test='additional-metadata-left-list']").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test='additional-metadata-right-list']").exists()).toBeFalsy();
     });
 
     it(`Given item is a file
@@ -117,7 +117,7 @@ describe("QuickLookDocumentMetadata", () => {
         };
 
         const wrapper = metadata_factory({ item });
-        expect(wrapper.contains("[data-test='docman-file-size']")).toBeTruthy();
+        expect(wrapper.find("[data-test='docman-file-size']").exists()).toBeTruthy();
     });
 
     it(`Given item has an approval table,
@@ -138,7 +138,7 @@ describe("QuickLookDocumentMetadata", () => {
 
         const wrapper = metadata_factory({ item });
         expect(
-            wrapper.contains("[data-test='docman-item-approval-table-status-badge']")
+            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists()
         ).toBeTruthy();
     });
 
@@ -158,7 +158,7 @@ describe("QuickLookDocumentMetadata", () => {
 
         const wrapper = metadata_factory({ item });
         expect(
-            wrapper.contains("[data-test='docman-item-approval-table-status-badge']")
+            wrapper.find("[data-test='docman-item-approval-table-status-badge']").exists()
         ).toBeFalsy();
     });
 });

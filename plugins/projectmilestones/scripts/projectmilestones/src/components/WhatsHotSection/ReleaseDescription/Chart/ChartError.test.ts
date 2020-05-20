@@ -64,9 +64,9 @@ describe("ChartError", () => {
     it("When there are 3 errors, Then error caused by 'under calculation' is not displayed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(true);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(true);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
     });
 
     it("When there are an error on start date and duration, Then they are displayed", async () => {
@@ -80,9 +80,9 @@ describe("ChartError", () => {
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(true);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(true);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
     });
 
     it("When there are an error on start date and calculation, Then only error on start date is displayed", async () => {
@@ -97,9 +97,9 @@ describe("ChartError", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(true);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
     });
 
     it("When there are an error on duration and calculation, Then only error on duration is displayed", async () => {
@@ -113,9 +113,9 @@ describe("ChartError", () => {
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(true);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(false);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
     });
 
     it("When there are only an error on calculation, Then it is displayed", async () => {
@@ -129,9 +129,9 @@ describe("ChartError", () => {
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(true);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(false);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
     });
 
     it("When there are only an error on duration, Then it is displayed", async () => {
@@ -145,9 +145,9 @@ describe("ChartError", () => {
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(true);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(false);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(false);
     });
 
     it("When there are only an error on start date, Then it is displayed", async () => {
@@ -161,8 +161,8 @@ describe("ChartError", () => {
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=error-duration]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-calculation]")).toBe(false);
-        expect(wrapper.contains("[data-test=error-start-date]")).toBe(true);
+        expect(wrapper.find("[data-test=error-duration]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-calculation]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=error-start-date]").exists()).toBe(true);
     });
 });

@@ -64,15 +64,15 @@ describe("ReleaseBadgesDisplayerIfOnlyClosedSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(true);
-            expect(wrapper.contains(ReleaseOthersBadges)).toBe(true);
+            expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(true);
+            expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);
         });
         it("If the user can't see sprints' tracker, Then ReleaseBadgesClosedSprints is not rendered", async () => {
             store_options.state.user_can_view_sub_milestones_planning = false;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(false);
-            expect(wrapper.contains(ReleaseOthersBadges)).toBe(true);
+            expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
+            expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);
         });
     });
 });

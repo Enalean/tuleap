@@ -59,15 +59,15 @@ describe("TaskBoardHeader", () => {
         });
 
         const children = wrapper.findAll("*");
-        expect(children.at(1).is(".taskboard-cell-swimlane-header")).toBe(true);
+        expect(children.at(1).classes("taskboard-cell-swimlane-header")).toBe(true);
 
-        expect(children.at(2).is(ExpandedHeaderCell)).toBe(true);
+        expect(children.at(2).findComponent(ExpandedHeaderCell).exists()).toBe(true);
         expect(children.at(2).props("column")).toStrictEqual(todo);
 
-        expect(children.at(3).is(ExpandedHeaderCell)).toBe(true);
+        expect(children.at(3).findComponent(ExpandedHeaderCell).exists()).toBe(true);
         expect(children.at(3).props("column")).toStrictEqual(ongoing);
 
-        expect(children.at(4).is(CollapsedHeaderCell)).toBe(true);
+        expect(children.at(4).findComponent(CollapsedHeaderCell).exists()).toBe(true);
         expect(children.at(4).props("column")).toStrictEqual(done);
     });
 });

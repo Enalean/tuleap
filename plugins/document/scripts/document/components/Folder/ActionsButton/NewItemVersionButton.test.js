@@ -172,7 +172,7 @@ describe("CreateNewItemVersionButton", () => {
             },
         });
 
-        expect(wrapper.contains("[data-test=document-new-item-version-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-folder-update-button]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-new-item-version-button]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-folder-update-button]").exists()).toBeFalsy();
     });
 });

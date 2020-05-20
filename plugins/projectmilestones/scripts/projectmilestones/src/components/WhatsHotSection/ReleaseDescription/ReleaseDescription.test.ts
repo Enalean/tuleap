@@ -127,12 +127,12 @@ describe("ReleaseDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(ChartDisplayer)).toBe(true);
+        expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
     });
 
     it("When plugin testmanagement is activated, Then TestManagementDisplayer is rendered", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(TestManagementDisplayer)).toBe(true);
+        expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(true);
     });
 
     it("When plugin testmanagement is disabled, Then TestManagementDisplayer is not rendered", async () => {
@@ -156,6 +156,6 @@ describe("ReleaseDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(TestManagementDisplayer)).toBe(false);
+        expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(false);
     });
 });

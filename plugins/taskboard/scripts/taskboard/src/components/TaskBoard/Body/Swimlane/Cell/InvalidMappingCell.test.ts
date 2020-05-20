@@ -117,6 +117,6 @@ describe(`InvalidMappingCell`, () => {
     it(`Allows to add cards`, () => {
         const wrapper = createWrapper({ card: { id: 43 } as Card } as Swimlane, false, true);
 
-        expect(wrapper.contains(AddCard)).toBe(true);
+        expect(wrapper.findComponent(AddCard).exists()).toBe(true);
     });
 });

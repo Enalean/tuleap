@@ -53,27 +53,27 @@ describe("Given a timetracking overview widget", () => {
 
     it("When trackers times are available, then table is displayed", () => {
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=empty-cell]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-row]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=user-list-component]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=empty-cell]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=table-action]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=user-list-component]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=tfoot]").exists()).toBeTruthy();
     });
 
     it("When trackers times sum not equal zero, then table with rows is displayed and an error feedback is not displayed", () => {
         store_options.getters.is_sum_of_times_equals_zero = false;
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=empty-cell]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-row]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=tfoot]")).toBeTruthy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=empty-cell]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=table-action]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=tfoot]").exists()).toBeTruthy();
     });
 
     it("When trackers times sum equal zero and void trackers are hidden, then table with empty cell is displayed and an error feedback is not displayed", () => {
@@ -81,42 +81,42 @@ describe("Given a timetracking overview widget", () => {
         store_options.state.are_void_trackers_hidden = true;
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=empty-cell]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=table-row]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-action]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=tfoot]")).toBeFalsy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=empty-cell]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=table-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-action]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=tfoot]").exists()).toBeFalsy();
     });
 
     it("When trackers times are not available, then table is displayed and an error feedback is not displayed", () => {
         store_options.state.trackers_times = [];
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=empty-cell]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=table-row]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-action]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=tfoot]")).toBeFalsy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=empty-cell]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=table-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-action]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=tfoot]").exists()).toBeFalsy();
     });
 
     it("When widget is loading, then a spinner is displayed", () => {
         store_options.state.is_loading = true;
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeTruthy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeTruthy();
     });
 
     it("When results can't be displayed, then table is not displayed", () => {
         store_options.getters.can_results_be_displayed = false;
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeFalsy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeFalsy();
     });
 
     it("When results can't be displayed, then danger's div is displayed and table is not displayed", () => {
@@ -125,14 +125,14 @@ describe("Given a timetracking overview widget", () => {
         store_options.getters.has_error = true;
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=overview-table]")).toBeFalsy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=overview-table]").exists()).toBeFalsy();
     });
 
     it("When no users, then user list is not displayed", () => {
         store_options.state.users = [];
         const wrapper = getTimeTrackingOverviewTableInstance(store_options);
 
-        expect(wrapper.contains("[data-test=user-list-component]")).toBeFalsy();
+        expect(wrapper.find("[data-test=user-list-component]").exists()).toBeFalsy();
     });
 });

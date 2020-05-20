@@ -29,6 +29,6 @@ describe("App", () => {
         });
     });
     it("Spawns the app", () => {
-        expect(factory.contains("[data-test=project-registration]")).toBe(true);
+        expect(factory.find("[data-test=project-registration]").exists()).toBe(true);
     });
 });

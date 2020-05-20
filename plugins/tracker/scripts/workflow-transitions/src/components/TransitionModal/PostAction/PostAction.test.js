@@ -137,8 +137,8 @@ describe("PostAction", () => {
 
     describe("Spawning of the component", () => {
         it("displays the content of the PostAction component", () => {
-            expect(wrapper.contains("[data-test=post-action-action-card]")).toBe(true);
-            expect(wrapper.contains(AddToBacklogPostActionOption)).toBe(true);
+            expect(wrapper.find("[data-test=post-action-action-card]").exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogPostActionOption).exists()).toBe(true);
         });
     });
 });

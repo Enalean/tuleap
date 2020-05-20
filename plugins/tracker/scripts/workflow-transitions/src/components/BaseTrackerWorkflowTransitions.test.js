@@ -49,21 +49,20 @@ describe("BaseTrackerWorkflowTransitions", () => {
 
     afterEach(() => store.reset());
 
-    const tracker_load_error_message_selector = '[data-test-type="tracker-load-error-message"]';
-    const tracker_load_spinner_selector = '[data-test-type="tracker-load-spinner"]';
-
     describe("when tracker load failed", () => {
         beforeEach(() => {
             store.state.is_current_tracker_load_failed = true;
         });
 
         it("shows tracker load error message", () => {
-            expect(wrapper.contains(tracker_load_error_message_selector)).toBeTruthy();
+            expect(
+                wrapper.find('[data-test-type="tracker-load-error-message"]').exists()
+            ).toBeTruthy();
         });
         it("does not show anything else", () => {
-            expect(wrapper.contains(FirstConfigurationSections)).toBeFalsy();
-            expect(wrapper.contains(HeaderSection)).toBeFalsy();
-            expect(wrapper.contains(TransitionsMatrixSection)).toBeFalsy();
+            expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeFalsy();
+            expect(wrapper.findComponent(HeaderSection).exists()).toBeFalsy();
+            expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeFalsy();
         });
     });
 
@@ -74,12 +73,12 @@ describe("BaseTrackerWorkflowTransitions", () => {
         });
 
         it("shows tracker load spinner", () => {
-            expect(wrapper.contains(tracker_load_spinner_selector)).toBeTruthy();
+            expect(wrapper.find('[data-test-type="tracker-load-spinner"]').exists()).toBeTruthy();
         });
         it("does not show anything else", () => {
-            expect(wrapper.contains(FirstConfigurationSections)).toBeFalsy();
-            expect(wrapper.contains(HeaderSection)).toBeFalsy();
-            expect(wrapper.contains(TransitionsMatrixSection)).toBeFalsy();
+            expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeFalsy();
+            expect(wrapper.findComponent(HeaderSection).exists()).toBeFalsy();
+            expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeFalsy();
         });
     });
 
@@ -103,18 +102,22 @@ describe("BaseTrackerWorkflowTransitions", () => {
             it("and there is a selectbox field, then it shows first configuration", () => {
                 store.getters.has_selectbox_fields = true;
 
-                expect(wrapper.contains(FirstConfigurationSections)).toBeTruthy();
+                expect(wrapper.findComponent(FirstConfigurationSections).exists()).toBeTruthy();
             });
 
             it("does not show rules enforcement warning", () => {
-                expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeFalsy();
+                expect(
+                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists()
+                ).toBeFalsy();
             });
 
             it("when base field is not configured and there is no selectbox field, then it shows that first configuration is impossible", async () => {
                 store.getters.has_selectbox_fields = false;
                 await wrapper.vm.$nextTick();
 
-                expect(wrapper.contains(FirstConfigurationImpossibleWarning)).toBeTruthy();
+                expect(
+                    wrapper.findComponent(FirstConfigurationImpossibleWarning).exists()
+                ).toBeTruthy();
             });
         });
 
@@ -127,11 +130,13 @@ describe("BaseTrackerWorkflowTransitions", () => {
                 );
             });
             it("shows configuration header and matrix", () => {
-                expect(wrapper.contains(HeaderSection)).toBeTruthy();
-                expect(wrapper.contains(TransitionsMatrixSection)).toBeTruthy();
+                expect(wrapper.findComponent(HeaderSection).exists()).toBeTruthy();
+                expect(wrapper.findComponent(TransitionsMatrixSection).exists()).toBeTruthy();
             });
             it("shows rules enforcement warning", () => {
-                expect(wrapper.contains(TransitionRulesEnforcementWarning)).toBeTruthy();
+                expect(
+                    wrapper.findComponent(TransitionRulesEnforcementWarning).exists()
+                ).toBeTruthy();
             });
         });
     });

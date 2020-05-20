@@ -52,7 +52,7 @@ describe("DocumentTitleLockInfo", () => {
             isDisplayingItem: true,
         });
 
-        expect(wrapper.contains("[data-test=document-lock-information]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-lock-information]").exists()).toBeFalsy();
     });
 
     it(`Given document is locked
@@ -74,7 +74,7 @@ describe("DocumentTitleLockInfo", () => {
             isDisplayingItem: true,
         });
 
-        expect(wrapper.contains("[data-test=document-lock-information]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-lock-information]").exists()).toBeTruthy();
     });
 
     it(`Given document is displayed in item view
@@ -96,9 +96,9 @@ describe("DocumentTitleLockInfo", () => {
             isDisplayingInHeader: true,
         });
 
-        expect(wrapper.contains(".document-display-lock")).toBeTruthy();
-        expect(wrapper.contains(".document-display-lock-icon")).toBeTruthy();
-        expect(wrapper.contains(".document-tree-item-toggle-quicklook-lock-icon")).toBeFalsy();
+        expect(wrapper.find(".document-display-lock").exists()).toBeTruthy();
+        expect(wrapper.find(".document-display-lock-icon").exists()).toBeTruthy();
+        expect(wrapper.find(".document-tree-item-toggle-quicklook-lock-icon").exists()).toBeFalsy();
     });
 
     it(`Given document is displayed in tree view
@@ -120,8 +120,10 @@ describe("DocumentTitleLockInfo", () => {
             isDisplayingInHeader: false,
         });
 
-        expect(wrapper.contains(".document-display-lock")).toBeFalsy();
-        expect(wrapper.contains(".document-display-lock-icon")).toBeFalsy();
-        expect(wrapper.contains(".document-tree-item-toggle-quicklook-lock-icon")).toBeTruthy();
+        expect(wrapper.find(".document-display-lock").exists()).toBeFalsy();
+        expect(wrapper.find(".document-display-lock-icon").exists()).toBeFalsy();
+        expect(
+            wrapper.find(".document-tree-item-toggle-quicklook-lock-icon").exists()
+        ).toBeTruthy();
     });
 });

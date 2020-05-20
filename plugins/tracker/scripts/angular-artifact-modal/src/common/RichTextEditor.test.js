@@ -243,7 +243,7 @@ describe(`RichTextEditor`, () => {
                 const wrapper = getInstance();
                 const help = wrapper.get("[data-test=help]");
 
-                expect(help.isVisible()).toBe(true);
+                expect(help.exists()).toBe(true);
             });
 
             describe(`when CKEditor instance is ready`, () => {

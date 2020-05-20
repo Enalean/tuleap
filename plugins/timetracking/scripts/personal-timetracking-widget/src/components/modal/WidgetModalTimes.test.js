@@ -46,12 +46,12 @@ describe("Given a personal timetracking widget modal", () => {
 
     it("When current artifact is not empty, then modal content should be displayed", () => {
         const wrapper = getWidgetModalTimesInstance(store_options);
-        expect(wrapper.contains("[data-test=modal-content]")).toBeTruthy();
+        expect(wrapper.find("[data-test=modal-content]").exists()).toBeTruthy();
     });
 
     it("When current artifact is empty, then modal content should not be displayed", () => {
         store_options.getters.current_artifact = null;
         const wrapper = getWidgetModalTimesInstance(store_options);
-        expect(wrapper.contains("[data-test=modal-content]")).toBeFalsy();
+        expect(wrapper.find("[data-test=modal-content]").exists()).toBeFalsy();
     });
 });

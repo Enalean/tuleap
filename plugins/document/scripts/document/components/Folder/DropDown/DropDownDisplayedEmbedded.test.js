@@ -50,35 +50,39 @@ describe("DropDownDisplayedEmbedded", () => {
         store.state.currently_previewed_item.user_can_write = true;
         store.state.currently_previewed_item.parent_id = 102;
         const wrapper = factory();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-delete-item]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-dropdown-separator]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-separator]").exists()).toBeTruthy();
     });
 
     it(`Given user can write item, and given folder is root folder
         Then he can update its properties but he can not delete ir`, () => {
         store.state.currently_previewed_item.user_can_write = true;
         const wrapper = factory();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-delete-item]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-dropdown-separator]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()
+        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-separator]").exists()).toBeTruthy();
     });
 
     it(`Given user has read permission on item
         Then he can't manage document`, () => {
         store.state.currently_previewed_item.user_can_write = false;
         const wrapper = factory();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-dropdown-menu-unlock-item]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-update-properties]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-delete-item]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-dropdown-separator]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-unlock-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-update-properties]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-item]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-separator]").exists()).toBeFalsy();
     });
 });

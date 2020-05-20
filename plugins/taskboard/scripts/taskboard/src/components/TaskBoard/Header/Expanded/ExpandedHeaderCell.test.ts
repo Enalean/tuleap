@@ -110,7 +110,7 @@ describe("ExpandedHeaderCell", () => {
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
-        expect(wrapper.contains(WrongColorPopover)).toBe(false);
+        expect(wrapper.findComponent(WrongColorPopover).exists()).toBe(false);
     });
 
     it("displays a cell with legacy color to admin users", () => {
@@ -128,6 +128,6 @@ describe("ExpandedHeaderCell", () => {
         });
 
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
-        expect(wrapper.contains(WrongColorPopover)).toBe(true);
+        expect(wrapper.findComponent(WrongColorPopover).exists()).toBe(true);
     });
 });

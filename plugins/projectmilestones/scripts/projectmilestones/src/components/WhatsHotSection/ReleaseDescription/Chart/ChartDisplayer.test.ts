@@ -90,7 +90,7 @@ describe("ChartDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(BurndownDisplayer)).toBe(true);
+        expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
     });
 
     it("When the charts are recovering, Then component BurndownDisplayer is rendered", async () => {
@@ -149,8 +149,8 @@ describe("ChartDisplayer", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains(BurndownDisplayer)).toBe(true);
-        expect(wrapper.contains("[data-test=burnup-exists]")).toBe(true);
+        expect(wrapper.findComponent(BurndownDisplayer).exists()).toBe(true);
+        expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(true);
     });
 
     it("When the burnup doesn't exist, Then there is nothing", async () => {
@@ -174,7 +174,7 @@ describe("ChartDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=burnup-exists]")).toBe(false);
+        expect(wrapper.find("[data-test=burnup-exists]").exists()).toBe(false);
     });
 
     it("When the burndown doesn't yet exist, Then there is a spinner", async () => {
@@ -194,7 +194,7 @@ describe("ChartDisplayer", () => {
         wrapper.setData({ is_loading: true });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains("[data-test=loading-data]")).toBe(true);
+        expect(wrapper.find("[data-test=loading-data]").exists()).toBe(true);
     });
 
     it("When there is a rest error, Then the error is displayed", async () => {

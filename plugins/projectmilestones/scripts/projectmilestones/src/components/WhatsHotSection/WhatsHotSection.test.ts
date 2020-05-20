@@ -61,7 +61,7 @@ describe("What'sHotSection", () => {
     it("When there are no current milestones, then ReleaseDisplayer Component is not allowed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=current-milestones-test]")).toBe(false);
+        expect(wrapper.find("[data-test=current-milestones-test]").exists()).toBe(false);
     });
 
     it("When there are some current_milestones, then ReleaseDisplayer Component is displayed", async () => {
@@ -78,11 +78,11 @@ describe("What'sHotSection", () => {
         store_options.state.current_milestones = [release1, release2];
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=current-milestones-test-" + release1.label + "]")).toBe(
-            true
-        );
-        expect(wrapper.contains("[data-test=current-milestones-test-" + release2.label + "]")).toBe(
-            true
-        );
+        expect(
+            wrapper.find("[data-test=current-milestones-test-" + release1.label + "]").exists()
+        ).toBe(true);
+        expect(
+            wrapper.find("[data-test=current-milestones-test-" + release2.label + "]").exists()
+        ).toBe(true);
     });
 });

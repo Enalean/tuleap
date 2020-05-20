@@ -61,25 +61,25 @@ describe("Given a timetracking overview widget", () => {
 
     it("When tracker total sum not equal zero, then table row is displayed", () => {
         const wrapper = getTimeTrackingOverviewTableRowInstance(store_options);
-        expect(wrapper.contains("[data-test=timetracking-overview-table-row]")).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
     });
 
     it("When tracker total sum equal zero and void trackers displayed, then table row is displayed", () => {
         store_options.getters.is_tracker_total_sum_equals_zero = () => true;
         const wrapper = getTimeTrackingOverviewTableRowInstance(store_options);
-        expect(wrapper.contains("[data-test=timetracking-overview-table-row]")).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
     });
 
     it("When tracker total sum not equal zero and void trackers not displayed, then table row is displayed", () => {
         store_options.getters.are_void_trackers_hidden = true;
         const wrapper = getTimeTrackingOverviewTableRowInstance(store_options);
-        expect(wrapper.contains("[data-test=timetracking-overview-table-row]")).toBeTruthy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeTruthy();
     });
 
     it("When tracker total sum equal zero and void trackers not displayed, then table row is not displayed", () => {
         store_options.getters.is_tracker_total_sum_equals_zero = () => true;
         store_options.state.are_void_trackers_hidden = true;
         const wrapper = getTimeTrackingOverviewTableRowInstance(store_options);
-        expect(wrapper.contains("[data-test=timetracking-overview-table-row]")).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-overview-table-row]").exists()).toBeFalsy();
     });
 });

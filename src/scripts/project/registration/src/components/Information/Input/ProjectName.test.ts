@@ -52,7 +52,7 @@ describe("ProjectName", () => {
         wrapper.get("[data-test=new-project-name]").setValue("t");
         expect(wrapper.vm.$data.has_error).toBe(false);
 
-        expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(false);
+        expect(wrapper.find("[data-test=project-name-is-invalid]").exists()).toBe(false);
     });
 
     it(`Should yields error when user has write more than 3 character ans when minimal project length is not reached`, async () => {
@@ -62,7 +62,7 @@ describe("ProjectName", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.vm.$data.has_error).toBe(true);
 
-        expect(wrapper.contains("[data-test=project-name-is-invalid]")).toBe(true);
+        expect(wrapper.find("[data-test=project-name-is-invalid]").exists()).toBe(true);
     });
 
     it(`Emit a named event`, () => {
@@ -71,7 +71,7 @@ describe("ProjectName", () => {
         wrapper = shallowMount(ProjectName, component_options);
         wrapper.get("[data-test=new-project-name]").setValue("test");
 
-        expect(wrapper.contains("[data-test=project-project-name-is-invalid]")).toBe(false);
+        expect(wrapper.find("[data-test=project-project-name-is-invalid]").exists()).toBe(false);
 
         expect(event_bus_emit).toHaveBeenCalledWith("slugify-project-name", "test");
     });

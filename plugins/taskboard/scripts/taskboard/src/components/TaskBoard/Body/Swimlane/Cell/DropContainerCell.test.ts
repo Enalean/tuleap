@@ -61,7 +61,7 @@ describe("DropContainerCell", () => {
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
-        expect(wrapper.contains(".my-slot-content")).toBe(true);
+        expect(wrapper.find(".my-slot-content").exists()).toBe(true);
     });
 
     it(`Given the column is collapsed, it does not display the content of the cell`, () => {
@@ -71,7 +71,7 @@ describe("DropContainerCell", () => {
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
-        expect(wrapper.contains(".my-slot-content")).toBe(false);
+        expect(wrapper.find(".my-slot-content").exists()).toBe(false);
     });
 
     it(`informs the pointerenter when the column is collapsed`, () => {
@@ -141,7 +141,7 @@ describe("DropContainerCell", () => {
             const column = { is_collapsed: false } as ColumnDefinition;
             const wrapper = getWrapper(column, true);
 
-            expect(wrapper.contains(AddCard)).toBe(true);
+            expect(wrapper.findComponent(AddCard).exists()).toBe(true);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(true);
         });
 
@@ -150,7 +150,7 @@ describe("DropContainerCell", () => {
             const column = { is_collapsed: false } as ColumnDefinition;
             const wrapper = getWrapper(column, false);
 
-            expect(wrapper.contains(AddCard)).toBe(false);
+            expect(wrapper.findComponent(AddCard).exists()).toBe(false);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
         });
 
@@ -158,7 +158,7 @@ describe("DropContainerCell", () => {
             const column = { is_collapsed: true } as ColumnDefinition;
             const wrapper = getWrapper(column, true);
 
-            expect(wrapper.contains(AddCard)).toBe(false);
+            expect(wrapper.findComponent(AddCard).exists()).toBe(false);
             expect(wrapper.classes("taskboard-cell-with-add-form")).toBe(false);
         });
     });

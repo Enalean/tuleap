@@ -61,9 +61,9 @@ describe("PostActionsSection", () => {
         beforeEach(() => (store.state.transitionModal.is_loading_modal = true));
 
         it("shows only skeleton", () => {
-            expect(wrapper.contains(skeleton_selector)).toBeTruthy();
-            expect(wrapper.contains(post_action_selector)).toBeFalsy();
-            expect(wrapper.contains(empty_message_selector)).toBeFalsy();
+            expect(wrapper.find(skeleton_selector).exists()).toBeTruthy();
+            expect(wrapper.find(post_action_selector).exists()).toBeFalsy();
+            expect(wrapper.find(empty_message_selector).exists()).toBeFalsy();
         });
     });
 
@@ -74,9 +74,9 @@ describe("PostActionsSection", () => {
             beforeEach(() => (store.getters["transitionModal/post_actions"] = []));
 
             it("shows only empty message", () => {
-                expect(wrapper.contains(skeleton_selector)).toBeFalsy();
-                expect(wrapper.contains(post_action_selector)).toBeFalsy();
-                expect(wrapper.contains(empty_message_selector)).toBeTruthy();
+                expect(wrapper.find(skeleton_selector).exists()).toBeFalsy();
+                expect(wrapper.find(post_action_selector).exists()).toBeFalsy();
+                expect(wrapper.find(empty_message_selector).exists()).toBeTruthy();
             });
         });
         describe("when some post actions", () => {
@@ -90,9 +90,9 @@ describe("PostActionsSection", () => {
             );
 
             it("shows only post actions", () => {
-                expect(wrapper.contains(skeleton_selector)).toBeFalsy();
-                expect(wrapper.contains(post_action_selector)).toBeTruthy();
-                expect(wrapper.contains(empty_message_selector)).toBeFalsy();
+                expect(wrapper.find(skeleton_selector).exists()).toBeFalsy();
+                expect(wrapper.find(post_action_selector).exists()).toBeTruthy();
+                expect(wrapper.find(empty_message_selector).exists()).toBeFalsy();
             });
             it("shows as many post action as stored", () => {
                 expect(wrapper.findAll(post_action_selector).length).toBe(2);
@@ -130,11 +130,11 @@ describe("PostActionsSection", () => {
                 },
             ];
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains(RunJobAction)).toBe(true);
-            expect(wrapper.contains(SetValueAction)).toBe(true);
-            expect(wrapper.contains(FrozenFieldsAction)).toBe(false);
-            expect(wrapper.contains(HiddenFieldsetsAction)).toBe(true);
-            expect(wrapper.contains(AddToBacklogPostAction)).toBe(false);
+            expect(wrapper.findComponent(RunJobAction).exists()).toBe(true);
+            expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
+            expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
+            expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(false);
         });
         it("displays all the component which are in the post_actions", async () => {
             store.getters["transitionModal/post_actions"] = [
@@ -160,21 +160,21 @@ describe("PostActionsSection", () => {
                 },
             ];
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains(RunJobAction)).toBe(true);
-            expect(wrapper.contains(SetValueAction)).toBe(true);
-            expect(wrapper.contains(FrozenFieldsAction)).toBe(true);
-            expect(wrapper.contains(HiddenFieldsetsAction)).toBe(true);
-            expect(wrapper.contains(AddToBacklogPostAction)).toBe(true);
+            expect(wrapper.findComponent(RunJobAction).exists()).toBe(true);
+            expect(wrapper.findComponent(SetValueAction).exists()).toBe(true);
+            expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(true);
+            expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(true);
+            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(true);
         });
 
         it("displays nothing if there is no post action", async () => {
             store.getters["transitionModal/post_actions"] = [];
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains(RunJobAction)).toBe(false);
-            expect(wrapper.contains(SetValueAction)).toBe(false);
-            expect(wrapper.contains(FrozenFieldsAction)).toBe(false);
-            expect(wrapper.contains(HiddenFieldsetsAction)).toBe(false);
-            expect(wrapper.contains(AddToBacklogPostAction)).toBe(false);
+            expect(wrapper.findComponent(RunJobAction).exists()).toBe(false);
+            expect(wrapper.findComponent(SetValueAction).exists()).toBe(false);
+            expect(wrapper.findComponent(FrozenFieldsAction).exists()).toBe(false);
+            expect(wrapper.findComponent(HiddenFieldsetsAction).exists()).toBe(false);
+            expect(wrapper.findComponent(AddToBacklogPostAction).exists()).toBe(false);
         });
     });
 });

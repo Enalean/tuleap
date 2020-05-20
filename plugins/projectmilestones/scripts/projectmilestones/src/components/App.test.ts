@@ -56,9 +56,9 @@ describe("Given a release widget", () => {
     it("When there are no errors, then the widget content will be displayed", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(true);
-        expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
-        expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=is-loading]").exists()).toBe(false);
     });
 
     it("When there is an error, then the widget content will not be displayed", async () => {
@@ -66,18 +66,18 @@ describe("Given a release widget", () => {
         store_options.getters.has_rest_error = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
-        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(false);
-        expect(wrapper.contains("[data-test=is-loading]")).toBe(false);
+        expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=is-loading]").exists()).toBe(false);
     });
 
     it("When it is loading rest data, then a loader will be displayed", async () => {
         store_options.state.is_loading = true;
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains("[data-test=is-loading]")).toBe(true);
-        expect(wrapper.contains("[data-test=widget-content-project-milestones]")).toBe(false);
-        expect(wrapper.contains("[data-test=show-error-message]")).toBe(false);
+        expect(wrapper.find("[data-test=is-loading]").exists()).toBe(true);
+        expect(wrapper.find("[data-test=widget-content-project-milestones]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(false);
     });
 
     it("When there is a rest error and it is empty, Then another message is displayed", async () => {

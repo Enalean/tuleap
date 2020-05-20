@@ -71,8 +71,8 @@ describe("TuleapTemplateList", () => {
 
         wrapper = await createWrapper(tuleap_templates);
 
-        expect(wrapper.contains(TemplateCardContent)).toBe(true);
-        expect(wrapper.findAll(TemplateCardContent)).toHaveLength(2);
+        expect(wrapper.findComponent(TemplateCardContent).exists()).toBe(true);
+        expect(wrapper.findAllComponents(TemplateCardContent)).toHaveLength(2);
     });
 
     it(`does not display anything if no tuleap templates are found`, async () => {
@@ -80,6 +80,6 @@ describe("TuleapTemplateList", () => {
 
         wrapper = await createWrapper(tuleap_templates);
 
-        expect(wrapper.contains("[data-test=tuleap-templates-section]")).toBe(false);
+        expect(wrapper.find("[data-test=tuleap-templates-section]").exists()).toBe(false);
     });
 });

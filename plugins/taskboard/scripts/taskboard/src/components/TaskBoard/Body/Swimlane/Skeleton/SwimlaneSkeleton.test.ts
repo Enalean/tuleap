@@ -49,9 +49,10 @@ describe("SwimlaneSkeleton", () => {
         expect(
             wrapper
                 .get(".taskboard-cell")
-                .contains(".taskboard-card-parent.taskboard-card-skeleton")
+                .find(".taskboard-card-parent.taskboard-card-skeleton")
+                .exists()
         ).toBe(true);
-        const skeletons = wrapper.findAll(ColumnsSkeleton);
+        const skeletons = wrapper.findAllComponents(ColumnsSkeleton);
         expect(skeletons.length).toBe(8);
         for (let i = 0; i < 8; i++) {
             expect(skeletons.at(i).props("column_index")).toBe(i);

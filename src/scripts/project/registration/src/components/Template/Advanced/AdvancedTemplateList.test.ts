@@ -57,7 +57,7 @@ describe("AdvancedTemplateList", () => {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },
         });
-        expect(wrapper.contains(TemplateCard)).toBe(false);
+        expect(wrapper.findComponent(TemplateCard).exists()).toBe(false);
     });
 
     it("displays the TemplateCard Component if the defaut project template is provided", async () => {
@@ -73,7 +73,7 @@ describe("AdvancedTemplateList", () => {
             localVue: await createProjectRegistrationLocalVue(),
             mocks: { $store: store },
         });
-        expect(wrapper.contains(TemplateCard)).toBe(true);
+        expect(wrapper.findComponent(TemplateCard).exists()).toBe(true);
     });
 
     it("Display the description by default", async () => {

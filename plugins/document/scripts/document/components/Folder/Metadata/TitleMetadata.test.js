@@ -140,7 +140,7 @@ describe("TitleMetadata", () => {
             wrapper.setProps({ value: value });
 
             await wrapper.vm.$nextTick().then(() => {});
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
         it(`Error is rendered if folder title is already used`, async () => {
@@ -163,7 +163,7 @@ describe("TitleMetadata", () => {
 
             await wrapper.vm.$nextTick().then(() => {});
 
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
 
@@ -187,7 +187,7 @@ describe("TitleMetadata", () => {
             wrapper.setProps({ value: value });
 
             await wrapper.vm.$nextTick().then(() => {});
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
         it(`Error is rendered if folder title is already used`, async () => {
@@ -209,7 +209,7 @@ describe("TitleMetadata", () => {
             wrapper.setProps({ value: existing_document_name });
 
             await wrapper.vm.$nextTick().then(() => {});
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
 
@@ -233,7 +233,7 @@ describe("TitleMetadata", () => {
             wrapper.setProps({ value: "updated title" });
 
             await wrapper.vm.$nextTick().then(() => {});
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeFalsy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeFalsy();
         });
 
         it(`Error is rendered if folder title is already used`, async () => {
@@ -255,7 +255,7 @@ describe("TitleMetadata", () => {
             wrapper.setProps({ value: existing_document_name });
 
             await wrapper.vm.$nextTick().then(() => {});
-            expect(wrapper.contains("[data-test=title-error-message]")).toBeTruthy();
+            expect(wrapper.find("[data-test=title-error-message]").exists()).toBeTruthy();
         });
     });
 });

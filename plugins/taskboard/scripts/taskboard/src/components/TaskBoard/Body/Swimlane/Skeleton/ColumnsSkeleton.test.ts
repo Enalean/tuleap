@@ -64,7 +64,9 @@ describe("ColumnsSkeleton", () => {
             const wrapper = shallowMount(ColumnsSkeleton, { propsData: { column_index, column } });
 
             expect(wrapper.classes("taskboard-cell-collapsed")).toBe(false);
-            expect(wrapper.findAll(CardSkeleton).length).toBe(expected_number_of_skeletons);
+            expect(wrapper.findAllComponents(CardSkeleton).length).toBe(
+                expected_number_of_skeletons
+            );
         });
     });
 
@@ -77,6 +79,6 @@ describe("ColumnsSkeleton", () => {
         });
 
         expect(wrapper.classes("taskboard-cell-collapsed")).toBe(true);
-        expect(wrapper.findAll(CardSkeleton).length).toBe(0);
+        expect(wrapper.findAllComponents(CardSkeleton).length).toBe(0);
     });
 });

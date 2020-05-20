@@ -113,7 +113,9 @@ describe("ObsolescenceDateMetadataForCreate", () => {
             wrapper.vm.obsolescence_date = "2018-09-07";
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
+            ).toBeTruthy();
         });
         it(`date is valid for today`, async () => {
             const props = {
@@ -128,7 +130,9 @@ describe("ObsolescenceDateMetadataForCreate", () => {
             wrapper.vm.obsolescence_date = moment().format("YYYY-MM-DD");
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
+            ).toBeTruthy();
         });
         it(`date is valid when it's in the future`, () => {
             const wrapper = metadata_factory({ value: "" });
@@ -138,7 +142,9 @@ describe("ObsolescenceDateMetadataForCreate", () => {
 
             wrapper.vm.obsolescence_date = moment().add(3, "day").format("YYYY-MM-DD");
 
-            expect(wrapper.contains("[data-test=obsolescence-date-error-message]")).toBeFalsy();
+            expect(
+                wrapper.find("[data-test=obsolescence-date-error-message]").exists()
+            ).toBeFalsy();
         });
     });
 });

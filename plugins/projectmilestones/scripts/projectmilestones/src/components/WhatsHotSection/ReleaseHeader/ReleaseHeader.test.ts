@@ -73,7 +73,7 @@ describe("ReleaseHeader", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=display-arrow]")).toBe(true);
+            expect(wrapper.find("[data-test=display-arrow]").exists()).toBe(true);
         });
 
         it("When there isn't a start date of a release, Then there isn't an arrow", async () => {
@@ -87,7 +87,7 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.contains("[data-test=display-arrow]")).toBe(false);
+            expect(wrapper.find("[data-test=display-arrow]").exists()).toBe(false);
         });
     });
 
@@ -102,7 +102,7 @@ describe("ReleaseHeader", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=display-skeleton]")).toBe(true);
+        expect(wrapper.find("[data-test=display-skeleton]").exists()).toBe(true);
     });
 
     it("When release's title contains '>', Then '>' is displayed", async () => {
@@ -128,9 +128,9 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(true);
-            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(true);
-            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(false);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(true);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(true);
+            expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(false);
         });
 
         it("When the release is past, Then PastReleaseHeaderInitialPoints component are displayed", async () => {
@@ -140,9 +140,9 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(false);
-            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(false);
-            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(true);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(false);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(false);
+            expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(true);
         });
 
         it("When the release is past and TTM is enabled, Then PastReleaseHeaderTestsDisplayer component are displayed", async () => {
@@ -161,10 +161,10 @@ describe("ReleaseHeader", () => {
             };
 
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.contains(ReleaseHeaderRemainingDays)).toBe(false);
-            expect(wrapper.contains(ReleaseHeaderRemainingPoints)).toBe(false);
-            expect(wrapper.contains(PastReleaseHeaderInitialPoints)).toBe(true);
-            expect(wrapper.contains(PastReleaseHeaderTestsDisplayer)).toBe(true);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingDays).exists()).toBe(false);
+            expect(wrapper.findComponent(ReleaseHeaderRemainingPoints).exists()).toBe(false);
+            expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(true);
+            expect(wrapper.findComponent(PastReleaseHeaderTestsDisplayer).exists()).toBe(true);
         });
     });
 });

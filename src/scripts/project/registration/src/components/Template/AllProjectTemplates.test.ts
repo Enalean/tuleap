@@ -37,10 +37,10 @@ describe("ProjectList", () => {
     it("Spawns the ProjectTemplates component", () => {
         const wrapper = factory;
 
-        expect(wrapper.contains(NewProjectBoxes)).toBe(true);
-        expect(wrapper.contains(TuleapTemplateList)).toBe(true);
-        expect(wrapper.contains(TemplateFooter)).toBe(true);
-        expect(wrapper.contains(CompanyTemplateList)).toBe(true);
-        expect(wrapper.contains(AdvancedTemplateList)).toBe(true);
+        expect(wrapper.findComponent(NewProjectBoxes).exists()).toBe(true);
+        expect(wrapper.findComponent(TuleapTemplateList).exists()).toBe(true);
+        expect(wrapper.findComponent(TemplateFooter).exists()).toBe(true);
+        expect(wrapper.findComponent(CompanyTemplateList).exists()).toBe(true);
+        expect(wrapper.findComponent(AdvancedTemplateList).exists()).toBe(true);
     });
 });

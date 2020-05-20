@@ -100,14 +100,14 @@ describe("ReleaseBadgesAllSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
 
         it("When the user can't see the tracker, Then number of sprint is not displayed", async () => {
             store_options.state.user_can_view_sub_milestones_planning = false;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
     });
 });

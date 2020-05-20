@@ -70,7 +70,7 @@ describe("EmbeddedCellTitle", () => {
             item,
         });
 
-        expect(wrapper.contains(".document-badge-corrupted")).toBeTruthy();
+        expect(wrapper.find(".document-badge-corrupted").exists()).toBeTruthy();
     });
 
     it(`Given embedded_file_properties is set
@@ -90,6 +90,6 @@ describe("EmbeddedCellTitle", () => {
             item,
         });
 
-        expect(wrapper.contains(".document-badge-corrupted")).toBeFalsy();
+        expect(wrapper.find(".document-badge-corrupted").exists()).toBeFalsy();
     });
 });

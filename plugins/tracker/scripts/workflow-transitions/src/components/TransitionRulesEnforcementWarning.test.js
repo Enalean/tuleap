@@ -43,16 +43,16 @@ describe("TransitionRulesEnforcementWarning", () => {
 
     afterEach(() => store.reset());
 
-    const enforcement_active_message_selector = '[data-test-message="rules-enforcement-active"]';
-    const enforcement_inactive_message_selector =
-        '[data-test-message="rules-enforcement-inactive"]';
-
     describe("when rules enforcement is active", () => {
         beforeEach(() => (store.getters.are_transition_rules_enforced = true));
 
         it("shows only rules enforcement active message", () => {
-            expect(wrapper.contains(enforcement_active_message_selector)).toBeTruthy();
-            expect(wrapper.contains(enforcement_inactive_message_selector)).toBeFalsy();
+            expect(
+                wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
+            ).toBeTruthy();
+            expect(
+                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists()
+            ).toBeFalsy();
         });
     });
 
@@ -60,8 +60,12 @@ describe("TransitionRulesEnforcementWarning", () => {
         beforeEach(() => (store.getters.are_transition_rules_enforced = false));
 
         it("shows only rule enforcement inactive message", () => {
-            expect(wrapper.contains(enforcement_active_message_selector)).toBeFalsy();
-            expect(wrapper.contains(enforcement_inactive_message_selector)).toBeTruthy();
+            expect(
+                wrapper.find('[data-test-message="rules-enforcement-active"]').exists()
+            ).toBeFalsy();
+            expect(
+                wrapper.find('[data-test-message="rules-enforcement-inactive"]').exists()
+            ).toBeTruthy();
         });
     });
 });

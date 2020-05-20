@@ -74,14 +74,14 @@ describe("BaseCard", () => {
     it("adds accessibility class if user needs it and card has a background color", () => {
         const wrapper = getWrapper(getCard({ background_color: "fiesta-red" } as Card), {}, true);
 
-        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(true);
+        expect(wrapper.find(".taskboard-card-accessibility").exists()).toBe(true);
         expect(wrapper.classes()).toContain("taskboard-card-with-accessibility");
     });
 
     it("does not add accessibility class if user needs it but card has no background color", () => {
         const wrapper = getWrapper(getCard(), {}, true);
 
-        expect(wrapper.contains(".taskboard-card-accessibility")).toBe(false);
+        expect(wrapper.find(".taskboard-card-accessibility").exists()).toBe(false);
         expect(wrapper.classes()).not.toContain("taskboard-card-with-accessibility");
     });
 
@@ -90,7 +90,7 @@ describe("BaseCard", () => {
             remaining_effort: '<div class="my-remaining-effort"></div>',
         });
 
-        expect(wrapper.contains(".taskboard-card > .my-remaining-effort")).toBe(true);
+        expect(wrapper.find(".taskboard-card > .my-remaining-effort").exists()).toBe(true);
     });
 
     describe("edit mode", () => {
@@ -139,7 +139,7 @@ describe("BaseCard", () => {
             const card = getCard();
             const wrapper = getWrapper(card, {}, false, { title_field: null } as Tracker);
 
-            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(false);
+            expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(false);
             expect(wrapper.classes("taskboard-card-editable")).toBe(false);
         });
 
@@ -147,7 +147,7 @@ describe("BaseCard", () => {
             Then it will display the card as editable`, () => {
             const wrapper = getWrapper(getCard());
 
-            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(true);
+            expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(true);
             expect(wrapper.classes("taskboard-card-editable")).toBe(true);
         });
 
@@ -156,7 +156,7 @@ describe("BaseCard", () => {
             Then it won't display the card as editable`, () => {
             const wrapper = getWrapper(getCard({ is_being_saved: true } as Card));
 
-            expect(wrapper.contains(".taskboard-card-edit-trigger")).toBe(false);
+            expect(wrapper.find(".taskboard-card-edit-trigger").exists()).toBe(false);
             expect(wrapper.classes("taskboard-card-editable")).toBe(false);
         });
 
@@ -187,7 +187,7 @@ describe("BaseCard", () => {
 
             const label = "Lorem ipsum";
             wrapper.setData({ label });
-            const edit_label = wrapper.get(LabelEditor);
+            const edit_label = wrapper.findComponent(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).not.toHaveBeenCalledWith(
@@ -228,7 +228,7 @@ describe("BaseCard", () => {
             const wrapper = getWrapper(card);
 
             wrapper.setData({ label: "toto" });
-            const edit_label = wrapper.get(LabelEditor);
+            const edit_label = wrapper.findComponent(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
@@ -244,7 +244,7 @@ describe("BaseCard", () => {
 
             wrapper.setData({ label: "toto" });
             wrapper.setData({ assignees: [{ id: 123 }, { id: 234 }] });
-            const edit_label = wrapper.get(LabelEditor);
+            const edit_label = wrapper.findComponent(LabelEditor);
             edit_label.vm.$emit("save");
 
             expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/saveCard", {

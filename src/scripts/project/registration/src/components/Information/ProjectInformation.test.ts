@@ -91,11 +91,11 @@ describe("ProjectInformation -", () => {
 
             wrapper.vm.$store.getters.has_error = false;
 
-            expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-            expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-            expect(wrapper.contains(ProjectName)).toBe(true);
+            expect(wrapper.findComponent(ProjectInformationSvg).exists()).toBe(true);
+            expect(wrapper.findComponent(ProjectInformationFooter).exists()).toBe(true);
+            expect(wrapper.findComponent(ProjectName).exists()).toBe(true);
 
-            expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(false);
+            expect(wrapper.find("[data-test=project-creation-failed]").exists()).toBe(false);
         });
 
         it("Displays error message", async () => {
@@ -104,12 +104,12 @@ describe("ProjectInformation -", () => {
             wrapper.vm.$store.getters.has_error = true;
             await wrapper.vm.$nextTick();
 
-            expect(wrapper.contains(ProjectInformationSvg)).toBe(true);
-            expect(wrapper.contains(ProjectInformationFooter)).toBe(true);
-            expect(wrapper.contains(ProjectInformationInputPrivacyList)).toBe(true);
-            expect(wrapper.contains(ProjectName)).toBe(true);
+            expect(wrapper.findComponent(ProjectInformationSvg).exists()).toBe(true);
+            expect(wrapper.findComponent(ProjectInformationFooter).exists()).toBe(true);
+            expect(wrapper.findComponent(ProjectInformationInputPrivacyList).exists()).toBe(true);
+            expect(wrapper.findComponent(ProjectName).exists()).toBe(true);
 
-            expect(wrapper.contains("[data-test=project-creation-failed]")).toBe(true);
+            expect(wrapper.find("[data-test=project-creation-failed]").exists()).toBe(true);
         });
 
         it("redirects user on /new when he does not have all needed information to start his project creation", async () => {
@@ -486,9 +486,9 @@ describe("ProjectInformation -", () => {
         });
 
         it("Does not display privacy list", () => {
-            expect(factory.contains("[data-test=project-information-input-privacy-list]")).toBe(
-                false
-            );
+            expect(
+                factory.find("[data-test=project-information-input-privacy-list]").exists()
+            ).toBe(false);
         });
     });
 
