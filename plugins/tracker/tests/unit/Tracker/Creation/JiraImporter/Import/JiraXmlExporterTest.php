@@ -141,7 +141,7 @@ final class JiraXmlExporterTest extends TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return (string) $fieldset_xml->getName() === 'formElements';
+                    return isset($fieldset_xml->formElements);
                 }),
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
                 "artifact_id",
@@ -158,7 +158,7 @@ final class JiraXmlExporterTest extends TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return (string) $fieldset_xml->getName() === 'formElements';
+                    return isset($fieldset_xml->formElements);
                 }),
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 "jira_issue_url",
@@ -175,7 +175,7 @@ final class JiraXmlExporterTest extends TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return (string) $fieldset_xml->getName() === 'formElements';
+                    return isset($fieldset_xml->formElements);
                 }),
                 Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
                 "updated",
@@ -192,7 +192,7 @@ final class JiraXmlExporterTest extends TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return (string) $fieldset_xml->getName() === 'formElements';
+                    return isset($fieldset_xml->formElements);
                 }),
                 Tracker_FormElementFactory::FIELD_DATE_TYPE,
                 "resolutiondate",
@@ -215,7 +215,7 @@ final class JiraXmlExporterTest extends TestCase
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
-                    return (string) $fieldset_xml->getName() === 'formElements';
+                    return isset($fieldset_xml->formElements);
                 }),
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 "status",

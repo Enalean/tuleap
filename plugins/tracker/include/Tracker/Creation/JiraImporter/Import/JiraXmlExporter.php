@@ -31,6 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
@@ -212,17 +213,13 @@ class JiraXmlExporter
         string $jira_project_key,
         string $jira_issue_type_name
     ): void {
-        $form_elements = $node_tracker->addChild('formElements');
-        $fieldsets_collection = $this->containers_xml_collection_builder->buildCollectionOfFieldsetsXML($form_elements);
-
-        $node_jira_atf_fieldset    = $fieldsets_collection->getFieldsetByName('atf');
-        $node_jira_custom_fieldset = $fieldsets_collection->getFieldsetByName('custom');
-
-        $node_jira_atf_form_elements    = $node_jira_atf_fieldset->formElements;
-        $node_jira_custom_form_elements = $node_jira_custom_fieldset->formElements;
+        $root_form_elements = $node_tracker->addChild('formElements');
+        $containers_collection = $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
+            $root_form_elements
+        );
 
         $this->field_xml_exporter->exportField(
-            $node_jira_atf_form_elements,
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
             Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
             self::JIRA_ARTIFACT_ID_FIELD_ID,
             "Artifact id",
@@ -235,7 +232,7 @@ class JiraXmlExporter
         );
 
         $this->field_xml_exporter->exportField(
-            $node_jira_atf_form_elements,
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
             Tracker_FormElementFactory::FIELD_STRING_TYPE,
             self::JIRA_LINK_FIELD_NAME,
             "Link to original issue",
@@ -248,7 +245,7 @@ class JiraXmlExporter
         );
 
         $this->field_xml_exporter->exportField(
-            $node_jira_atf_form_elements,
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
             Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
             self::JIRA_UPDATED_ON_NAME,
             "Last update date",
@@ -261,7 +258,7 @@ class JiraXmlExporter
         );
 
         $this->field_xml_exporter->exportField(
-            $node_jira_atf_form_elements,
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
             Tracker_FormElementFactory::FIELD_DATE_TYPE,
             self::JIRA_RESOLUTION_DATE_NAME,
             "Resolved",
@@ -281,7 +278,7 @@ class JiraXmlExporter
         );
 
         $this->field_xml_exporter->exportField(
-            $node_jira_atf_form_elements,
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
             Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
             self::JIRA_STATUS_NAME,
             "Status",
@@ -294,8 +291,7 @@ class JiraXmlExporter
         );
 
         $this->exportJiraField(
-            $node_jira_atf_form_elements,
-            $node_jira_custom_form_elements,
+            $containers_collection,
             $jira_project_key,
             $jira_issue_type_name
         );
@@ -331,8 +327,7 @@ class JiraXmlExporter
     }
 
     private function exportJiraField(
-        SimpleXMLElement $node_jira_atf_form_elements,
-        SimpleXMLElement $node_jira_custom_form_elements,
+        ContainersXMLCollection $containers_collection,
         string $jira_project_id,
         string $jira_issue_type_name
     ): void {
@@ -340,8 +335,7 @@ class JiraXmlExporter
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
-                $node_jira_atf_form_elements,
-                $node_jira_custom_form_elements,
+                $containers_collection,
                 $this->jira_field_mapping_collection
             );
         }

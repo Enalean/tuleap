@@ -40,6 +40,9 @@ class Tracker_FormElementFactory
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
     public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
 
+    public const CONTAINER_COLUMN_TYPE   = 'column';
+    public const CONTAINER_FIELDSET_TYPE = 'fieldset';
+
     /**
      * Cache formElements
      */
@@ -86,8 +89,8 @@ class Tracker_FormElementFactory
         'priority'  => 'Tracker_FormElement_Field_Priority'
     );
     protected $group_classnames       = array(
-        'fieldset' => 'Tracker_FormElement_Container_Fieldset',
-        'column'   => 'Tracker_FormElement_Container_Column',
+        self::CONTAINER_FIELDSET_TYPE => 'Tracker_FormElement_Container_Fieldset',
+        self::CONTAINER_COLUMN_TYPE   => 'Tracker_FormElement_Container_Column',
     );
     protected $staticfield_classnames = array(
         'linebreak'   => 'Tracker_FormElement_StaticField_LineBreak',
