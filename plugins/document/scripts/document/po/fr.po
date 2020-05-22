@@ -28,6 +28,11 @@ msgstr ""
 "%{ lock_owner_name }</a>. Vous ne pouvez pas téléverser de nouvelle version "
 "tant que le verrou n'a pas été levé."
 
+msgid "1 warning"
+msgid_plural "%{ nb_warnings } warnings"
+msgstr[0] "1 avertissement"
+msgstr[1] "2 avertissements"
+
 msgid "12 months"
 msgstr "12 mois"
 
@@ -164,9 +169,8 @@ msgid "Delete"
 msgstr "Supprimer"
 
 msgid ""
-"Depending on the speed of your network, it can take some time to complete. "
-"Do you\n"
-"            want to continue?"
+"Depending on the speed of your network, it can take some time to complete.\n"
+"                    Do you want to continue?"
 msgstr ""
 "En fonction de la vitesse de votre réseau, cela peut prendre un certain "
 "temps. Voulez-vous continuer ?"
@@ -410,6 +414,9 @@ msgstr "Permanent"
 msgid "Permissions"
 msgstr "Permissions"
 
+msgid "Please also note"
+msgstr "Veuillez noter"
+
 msgid "Please describe the changes of the new version here"
 msgstr "Merci de décrire ici le changement de version"
 
@@ -424,6 +431,13 @@ msgid ""
 msgstr ""
 "Veuillez noter que si vous activez cette option, la page wiki référencée "
 "n'existera également plus dans le service wiki."
+
+msgid ""
+"Please note that the OSX archive extraction tool might not succeed in\n"
+"                    opening it."
+msgstr ""
+"Veuillez noter que l'outil d'extraction d'archive de OSX peut ne pas réussir "
+"à l'ouvrir."
 
 msgid "Please start again."
 msgstr "Merci de bien vouloir recommencer."
@@ -476,10 +490,17 @@ msgid "Switch to old user interface"
 msgstr "Basculer sur l'ancienne interface utilisateur"
 
 msgid ""
-"The archive you want to download has a size greater than "
-"%{ warning_threshold } MB."
+"The archive you want to download has a size greater than %{\n"
+"                    warning_threshold } MB."
 msgstr ""
 "L'archive à télécharger a une taille supérieure à %{ warning_threshold } Mo."
+
+msgid ""
+"The archive you want to download has a size greater than or equal to 4GB or\n"
+"                    contains more than 64000 files."
+msgstr ""
+"L'archive que vous souhaitez télécharger a une taille supérieure ou égale à "
+"4Go ou contient plus de 64000 fichiers."
 
 msgid "The current date is the same or before the obsolescence date"
 msgstr "La date actuelle est la même ou antérieure à la date d'obsolescence"
@@ -572,6 +593,9 @@ msgstr "Validité"
 
 msgid "Version name"
 msgstr "Nom de version"
+
+msgid "We detect you are using OSX"
+msgstr "Nous détectons que vous utilisez OSX"
 
 msgid ""
 "When some files can't be downloaded for any reason (file corrupted, not "

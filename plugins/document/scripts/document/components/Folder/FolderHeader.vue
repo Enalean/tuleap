@@ -70,6 +70,7 @@
             v-if="folder_above_warning_threshold_props"
             v-bind:size="folder_above_warning_threshold_props.folder_size"
             v-bind:folder-href="folder_above_warning_threshold_props.folder_href"
+            v-bind:should-warn-osx-user="folder_above_warning_threshold_props.should_warn_osx_user"
             v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-warning-modal"
         />
@@ -252,6 +253,7 @@ export default {
             this.folder_above_warning_threshold_props = {
                 folder_size: event.detail.current_folder_size,
                 folder_href: event.detail.folder_href,
+                should_warn_osx_user: event.detail.should_warn_osx_user,
             };
         },
         hideDeleteItemModal() {
