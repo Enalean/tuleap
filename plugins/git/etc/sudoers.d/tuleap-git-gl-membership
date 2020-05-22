@@ -1,0 +1,3 @@
+Defaults:gitolite !requiretty
+Defaults:gitolite !env_reset
+gitolite ALL= (codendiadm) SETENV: NOPASSWD: /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/plugins/git/bin/gl-membership.php*
