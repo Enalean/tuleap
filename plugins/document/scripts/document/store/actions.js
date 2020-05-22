@@ -963,7 +963,7 @@ export const getFolderProperties = async (context, [folder_item]) => {
 
         return folder_properties;
     } catch (exception) {
-        await handleErrors(context, exception);
+        await context.dispatch("error/handleGlobalModalError", exception);
         return null;
     }
 };

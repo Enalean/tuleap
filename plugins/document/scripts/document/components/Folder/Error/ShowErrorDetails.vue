@@ -24,7 +24,7 @@
             It seems the content of this element can't be loaded.
         </div>
         <div class="empty-page-small-text" v-translate v-else>
-            It seems action you try to performed can't be done.
+            It seems an action you tried to perform can't be done.
         </div>
         <template v-if="has_any_loading_error">
             <div class="document-folder-error-link">

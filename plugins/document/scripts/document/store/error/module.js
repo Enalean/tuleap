@@ -19,6 +19,7 @@
 
 import * as mutations from "./error-mutations.js";
 import * as getters from "./error-getters.js";
+import * as actions from "./error-actions.js";
 
 export default {
     namespaced: true,
@@ -33,7 +34,10 @@ export default {
         modal_error: null,
         has_document_lock_error: false,
         document_lock_error: null,
+        has_global_modal_error: false,
+        global_modal_error_message: null,
     },
     getters,
     mutations,
+    actions,
 };
