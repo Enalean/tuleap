@@ -11,7 +11,6 @@
     "angular-sanitize": "^1.7.9",
     "angular-ui-router": "^0.4.3",
     "codemirror": "^5.40.0",
-    "mustache": "^2.3.2",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.11",
     "vue-gettext": "^2.1.8",

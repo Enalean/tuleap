@@ -7,7 +7,7 @@
   "dependencies": {
     "dompurify": "^2.0.10",
     "fscreen": "^1.0.2",
-    "mustache": "^4.0.0",
+    "mustache": "^4.0.1",
     "p-retry": "^4.2.0",
     "sprintf-js": "^1.1.2",
     "vue": "^2.6.11",
@@ -18,7 +18,7 @@
     "@types/dompurify": "^2.0.1",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.3.34",
-    "@types/mustache": "^3.2.0",
+    "@types/mustache": "^4.0.1",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.3",
     "jquery": "^3.4.1",
