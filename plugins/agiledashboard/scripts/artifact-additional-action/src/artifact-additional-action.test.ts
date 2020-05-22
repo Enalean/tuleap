@@ -19,23 +19,13 @@
 
 import { initArtifactAdditionalAction } from "./artifact-additional-action";
 import * as fetch_wrapper from "../../../../../src/themes/tlp/src/js/fetch-wrapper";
-import * as get_text from "../../../../../src/scripts/tuleap/gettext/gettext-init";
 import * as feedbacks from "../../../../../src/scripts/tuleap/feedback";
-import GetText from "node-gettext";
 import {
     mockFetchError,
     mockFetchSuccess,
 } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 
 describe("Artifact additional action", () => {
-    beforeEach(() => {
-        jest.spyOn(get_text, "initGettext").mockReturnValue(
-            Promise.resolve({
-                gettext: (s: string): string => s,
-            } as GetText)
-        );
-    });
-
     it("Does not crash when action can not be found", () => {
         initArtifactAdditionalAction(document);
     });
