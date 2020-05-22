@@ -24,8 +24,8 @@
         aria-labelledby="modal-archive-size-warning-label"
     >
         <div class="tlp-modal-header">
-            <h1 class="tlp-modal-title" id="modal-archive-size-warning-label" v-translate>
-                Archive size warning threshold reached
+            <h1 class="tlp-modal-title" id="modal-archive-size-warning-label">
+                {{ modal_header_title }}
             </h1>
             <div
                 class="tlp-modal-close"
@@ -39,21 +39,58 @@
             </div>
         </div>
         <div class="tlp-modal-body">
-            <p v-translate="{ warning_threshold }">
-                The archive you want to download has a size greater than %{ warning_threshold } MB.
-            </p>
-            <p v-translate>
-                Depending on the speed of your network, it can take some time to complete. Do you
-                want to continue?
-            </p>
-            <div
-                class="tlp-alert-warning"
-                data-test="download-as-zip-folder-size-warning"
-                v-translate="{ size_in_MB }"
-            >
-                Size of the archive to be downloaded: %{ size_in_MB } MB
+            <div class="download-modal-multiple-warnings-section">
+                <h2 class="tlp-modal-subtitle">
+                    <span class="tlp-badge-warning download-modal-warning-number">
+                        1
+                    </span>
+                    <span v-translate>Archive size warning threshold reached</span>
+                </h2>
+                <div class="download-modal-multiple-warnings-content">
+                    <p v-translate="{ warning_threshold }">
+                        The archive you want to download has a size greater than %{
+                        warning_threshold } MB.
+                    </p>
+                    <p v-translate>
+                        Depending on the speed of your network, it can take some time to complete.
+                        Do you want to continue?
+                    </p>
+                    <div
+                        class="tlp-alert-warning"
+                        data-test="download-as-zip-folder-size-warning"
+                        v-translate="{ size_in_MB }"
+                    >
+                        Size of the archive to be downloaded: %{ size_in_MB } MB
+                    </div>
+                </div>
             </div>
-            <warning-about-archive-errors />
+            <div class="download-modal-multiple-warnings-section" v-if="shouldWarnOsxUser">
+                <h2 class="tlp-modal-subtitle">
+                    <span class="tlp-badge-warning download-modal-warning-number">
+                        2
+                    </span>
+                    <span v-translate>We detect you are using OSX</span>
+                </h2>
+                <div class="download-modal-multiple-warnings-content">
+                    <p v-translate>
+                        The archive you want to download has a size greater than or equal to 4GB or
+                        contains more than 64000 files.
+                    </p>
+                    <p v-translate>
+                        Please note that the OSX archive extraction tool might not succeed in
+                        opening it.
+                    </p>
+                </div>
+            </div>
+            <div class="tlp-modal-body-section">
+                <h2 class="tlp-modal-subtitle">
+                    <i class="fa fa-fw fa-exclamation-triangle download-modal-warning-number"></i>
+                    <span v-translate>Please also note</span>
+                </h2>
+                <div class="download-modal-multiple-warnings-content">
+                    <warning-about-archive-errors />
+                </div>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -90,18 +127,23 @@ export default {
     name: "ModalArchiveSizeWarning",
     components: { WarningAboutArchiveErrors },
     props: {
-        size: Number,
-        folderHref: String,
+        size: {
+            type: Number,
+            default: 0,
+        },
+        folderHref: {
+            type: String,
+            default: "",
+        },
+        shouldWarnOsxUser: {
+            type: Boolean,
+            default: false,
+        },
     },
     data() {
         return {
             modal: null,
         };
-    },
-    mounted() {
-        this.modal = modal(this.$el);
-        this.modal.addEventListener("tlp-modal-hidden", this.close);
-        this.modal.show();
     },
     computed: {
         ...mapState(["warning_threshold"]),
@@ -109,6 +151,21 @@ export default {
             const size_in_mb = this.size / Math.pow(10, 6);
             return Number.parseFloat(size_in_mb).toFixed(2);
         },
+        modal_header_title() {
+            const nb_warnings = this.shouldWarnOsxUser === true ? 2 : 1;
+            const translated = this.$ngettext(
+                "1 warning",
+                "%{ nb_warnings } warnings",
+                nb_warnings
+            );
+
+            return this.$gettextInterpolate(translated, { nb_warnings });
+        },
+    },
+    mounted() {
+        this.modal = modal(this.$el);
+        this.modal.addEventListener("tlp-modal-hidden", this.close);
+        this.modal.show();
     },
     methods: {
         close() {

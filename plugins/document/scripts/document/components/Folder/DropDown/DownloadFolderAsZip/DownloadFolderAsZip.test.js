@@ -27,10 +27,10 @@ import Vue from "vue";
 describe("DownloadFolderAsZip", () => {
     let store;
 
-    function getWrapper() {
+    function getWrapper(max_archive_size = 1) {
         const state = {
             project_name: "tuleap-documentation",
-            max_archive_size: 1,
+            max_archive_size,
             warning_threshold: 0.5,
         };
         const store_options = { state };
@@ -80,6 +80,7 @@ describe("DownloadFolderAsZip", () => {
         jest.spyOn(store, "dispatch").mockReturnValue(
             Promise.resolve({
                 total_size: 600000,
+                nb_files: 50,
             })
         );
 
@@ -93,10 +94,85 @@ describe("DownloadFolderAsZip", () => {
         expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
             detail: {
                 current_folder_size: 600000,
+                should_warn_osx_user: false,
                 folder_href:
                     "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
             },
         });
+    });
+
+    it("Opens the warning modal when user is on OSX and archive size exceeds or equals 4GB", async () => {
+        const four_GB = 4 * Math.pow(10, 9);
+        const wrapper = getWrapper(2 * four_GB);
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const navigator = window.navigator;
+
+        delete window.navigator;
+
+        window.navigator = {
+            platform: "MacIntel",
+        };
+
+        jest.spyOn(store, "dispatch").mockReturnValue(
+            Promise.resolve({
+                total_size: four_GB,
+                nb_files: 50,
+            })
+        );
+
+        wrapper.trigger("click");
+
+        await Vue.nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+            { id: 10, type: "folder" },
+        ]);
+        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+            detail: {
+                current_folder_size: four_GB,
+                should_warn_osx_user: true,
+                folder_href:
+                    "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
+            },
+        });
+
+        window.navigator = navigator;
+    });
+
+    it("Opens the warning modal when user is on OSX and archive size contains more than 64k files", async () => {
+        const wrapper = getWrapper();
+        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const navigator = window.navigator;
+
+        delete window.navigator;
+
+        window.navigator = {
+            platform: "MacIntel",
+        };
+
+        jest.spyOn(store, "dispatch").mockReturnValue(
+            Promise.resolve({
+                total_size: 600000,
+                nb_files: 65000,
+            })
+        );
+
+        wrapper.trigger("click");
+
+        await Vue.nextTick();
+
+        expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
+            { id: 10, type: "folder" },
+        ]);
+        expect(event_bus_emit).toHaveBeenCalledWith("show-archive-size-warning-modal", {
+            detail: {
+                current_folder_size: 600000,
+                should_warn_osx_user: true,
+                folder_href:
+                    "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
+            },
+        });
+        window.navigator = navigator;
     });
 
     it("Opens the confirm modal", async () => {

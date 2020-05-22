@@ -42,7 +42,12 @@ import EventBus from "../../../../helpers/event-bus.js";
 export default {
     name: "DownloadFolderAsZip",
     props: {
-        item: Object,
+        item: {
+            type: Object,
+            default: () => {
+                return {};
+            },
+        },
     },
     data() {
         return {
@@ -59,6 +64,14 @@ export default {
     },
     methods: {
         ...mapActions(["getFolderProperties"]),
+        shouldWarnOSXUser(total_size, nb_files) {
+            if (window.navigator.platform !== "MacIntel") {
+                return false;
+            }
+
+            const total_size_in_GB = total_size * Math.pow(10, -9);
+            return total_size_in_GB >= 4 || nb_files >= 64000;
+        },
         async checkFolderSize() {
             this.is_retrieving_folder_size = true;
 
@@ -69,9 +82,9 @@ export default {
                 return;
             }
 
-            // max_archive_size is in MB, total_size in Bytes. Let's covert it to Bytes first.
+            // max_archive_size is in MB, total_size in Bytes. Let's convert it to Bytes first.
             const max_archive_size_in_Bytes = this.max_archive_size * Math.pow(10, 6);
-            const { total_size } = folder_properties;
+            const { total_size, nb_files } = folder_properties;
 
             if (total_size > max_archive_size_in_Bytes) {
                 EventBus.$emit("show-max-archive-size-threshold-exceeded-modal", {
@@ -81,11 +94,16 @@ export default {
                 return;
             }
 
-            if (total_size > this.warning_threshold * Math.pow(10, 6)) {
+            // warning_threshold is in MB, total_size in Bytes. Let's convert it to Bytes first.
+            const warning_threshold_in_Bytes = this.warning_threshold * Math.pow(10, 6);
+            const should_warn_osx_user = this.shouldWarnOSXUser(total_size, nb_files);
+
+            if (total_size > warning_threshold_in_Bytes) {
                 EventBus.$emit("show-archive-size-warning-modal", {
                     detail: {
                         current_folder_size: total_size,
                         folder_href: this.folder_href,
+                        should_warn_osx_user,
                     },
                 });
 
