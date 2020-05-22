@@ -47,3 +47,7 @@
 .has-visible-project-banner .document-app {
     height: calc(100vh - #{$navbar-height} - #{$project-banner-base-height});
 }
+
+.document-error-modal-link {
+    cursor: pointer;
+}

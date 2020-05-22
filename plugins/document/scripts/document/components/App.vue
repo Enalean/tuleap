@@ -33,6 +33,7 @@
             "
         />
         <router-view v-else />
+        <global-error-modal v-if="has_global_modal_error" />
         <switch-to-old-u-i v-if="user_id !== 0" />
         <post-item-deletion-notification />
     </div>
@@ -43,6 +44,7 @@ import DocumentBreadcrumb from "./Breadcrumb/DocumentBreadcrumb.vue";
 import PermissionError from "./Folder/Error/PermissionError.vue";
 import ItemPermissionError from "./Folder/Error/ItemPermissionError.vue";
 import LoadingError from "./Folder/Error/LoadingError.vue";
+import GlobalErrorModal from "./Folder/Error/GlobalErrorModal.vue";
 import SwitchToOldUI from "./Folder/SwitchToOldUI.vue";
 import PostItemDeletionNotification from "./Folder/ModalDeleteItem/PostItemDeletionNotification.vue";
 
@@ -55,6 +57,7 @@ export default {
         SwitchToOldUI,
         ItemPermissionError,
         PostItemDeletionNotification,
+        GlobalErrorModal,
     },
     props: {
         user_id: Number,
@@ -81,6 +84,7 @@ export default {
             "has_document_permission_error",
             "has_document_loading_error",
             "has_document_lock_error",
+            "has_global_modal_error",
         ]),
         ...mapGetters(["is_uploading"]),
     },

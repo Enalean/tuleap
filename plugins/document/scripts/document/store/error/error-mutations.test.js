@@ -26,6 +26,13 @@ describe("Store mutations", () => {
                 has_folder_permission_error: true,
                 has_folder_loading_error: true,
                 folder_loading_error: "Not found",
+                has_document_permission_error: true,
+                has_document_loading_error: true,
+                document_loading_error: "Could not load document",
+                has_document_lock_error: true,
+                document_lock_error: "Could not lock",
+                has_global_modal_error: true,
+                global_modal_error_message: "400 Bad Request",
             };
 
             mutations.resetErrors(state);
@@ -33,6 +40,13 @@ describe("Store mutations", () => {
             expect(state.has_folder_permission_error).toBe(false);
             expect(state.has_folder_loading_error).toBe(false);
             expect(state.folder_loading_error).toBeNull();
+            expect(state.has_document_permission_error).toBe(false);
+            expect(state.has_document_loading_error).toBe(false);
+            expect(state.document_loading_error).toBeNull();
+            expect(state.has_document_lock_error).toBe(false);
+            expect(state.document_lock_error).toBeNull();
+            expect(state.has_global_modal_error).toBe(false);
+            expect(state.global_modal_error_message).toBeNull();
         });
     });
 
@@ -107,5 +121,21 @@ describe("Store mutations", () => {
         mutations.setLockError(state, "error lock");
         expect(state.has_document_lock_error).toBe(true);
         expect(state.document_lock_error).toBe("error lock");
+    });
+
+    describe(`setGlobalModalErrorMessage`, () => {
+        it(`stores the error message to be displayed in a dedicated modal`, () => {
+            const state = { global_modal_error_message: "", has_global_modal_error: false };
+            mutations.setGlobalModalErrorMessage(state, "500 Internal Server Error");
+            expect(state.global_modal_error_message).toBe("500 Internal Server Error");
+            expect(state.has_global_modal_error).toBe(true);
+        });
+
+        it(`activates error state even if the error message is empty`, () => {
+            const state = { global_modal_error_message: "", has_global_modal_error: false };
+            mutations.setGlobalModalErrorMessage(state, "");
+            expect(state.global_modal_error_message).toBe("");
+            expect(state.has_global_modal_error).toBe(true);
+        });
     });
 });

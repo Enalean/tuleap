@@ -17,18 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {
-    resetErrors,
-    switchFolderPermissionError,
-    switchItemPermissionError,
-    setFolderLoadingError,
-    setModalError,
-    resetModalError,
-    setItemLoadingError,
-    setLockError,
-};
-
-function resetErrors(state) {
+export function resetErrors(state) {
     state.has_folder_permission_error = false;
     state.has_folder_loading_error = false;
     state.folder_loading_error = null;
@@ -37,37 +26,44 @@ function resetErrors(state) {
     state.document_loading_error = null;
     state.has_document_lock_error = false;
     state.document_lock_error = null;
+    state.has_global_modal_error = false;
+    state.global_modal_error_message = null;
 }
 
-function switchFolderPermissionError(state) {
+export function switchFolderPermissionError(state) {
     state.has_folder_permission_error = true;
 }
 
-function switchItemPermissionError(state) {
+export function switchItemPermissionError(state) {
     state.has_document_permission_error = true;
 }
 
-function setFolderLoadingError(state, message) {
+export function setFolderLoadingError(state, message) {
     state.has_folder_loading_error = true;
     state.folder_loading_error = message;
 }
 
-function setItemLoadingError(state, message) {
+export function setItemLoadingError(state, message) {
     state.has_document_loading_error = true;
     state.document_loading_error = message;
 }
 
-function setModalError(state, error_message) {
+export function setModalError(state, error_message) {
     state.has_modal_error = true;
     state.modal_error = error_message;
 }
 
-function resetModalError(state) {
+export function resetModalError(state) {
     state.has_modal_error = false;
     state.modal_error = null;
 }
 
-function setLockError(state, error_message) {
+export function setLockError(state, error_message) {
     state.has_document_lock_error = true;
     state.document_lock_error = error_message;
+}
+
+export function setGlobalModalErrorMessage(state, message) {
+    state.has_global_modal_error = true;
+    state.global_modal_error_message = message;
 }

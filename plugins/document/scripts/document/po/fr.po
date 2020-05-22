@@ -277,10 +277,9 @@ msgstr "Id"
 msgid "If it happens, please let your site-administrator know."
 msgstr "Si cela se produit, veuillez prévenir votre administrateur du site."
 
-msgid "It seems action you try to performed can't be done."
+msgid "It seems an action you tried to perform can't be done."
 msgstr ""
-"Il semble que l'action que vous souhaitez effectuer ne peut pas être "
-"réalisée."
+"Il semble que l'action que vous venez de tenter ne peut pas être réalisée."
 
 msgid "It seems the content of this element can't be loaded."
 msgstr "Le contenu de cet élément n'a pas pu être chargé."
@@ -448,6 +447,9 @@ msgstr "Options de récursion"
 
 msgid "Rejected"
 msgstr "Rejeté"
+
+msgid "Reload the page"
+msgstr "Recharger la page"
 
 msgid "Reset the approval cycle."
 msgstr "Recommencer le cycle d'approbation."
