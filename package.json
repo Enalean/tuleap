@@ -1,10 +1,11 @@
 {
   "author": "Enalean Team",
-  "name": "botmattermost_agiledashboard",
-  "homepage": "https://www.enalean.com",
-  "license": "GNU General Public License v2",
+  "name": "@tuleap/plugin-botmattermost_agiledashboard",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
   "dependencies": {
-    "mustache": "^2.3.0"
+    "mustache": "^4.0.1"
   },
   "devDependencies": {},
   "config": {
