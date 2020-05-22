@@ -26,7 +26,7 @@ import { createRouter } from "../../../router";
 
 describe("StepNavigationButtons", () => {
     async function getWrapper(
-        props: {},
+        props: Record<string, string>,
         is_ready_for_step_2 = true,
         is_ready_to_submit = true,
         has_form_been_submitted = false

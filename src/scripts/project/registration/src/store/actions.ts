@@ -18,19 +18,20 @@
  *
  */
 
-import { Context } from "./type";
+import { State } from "./type";
 import { ProjectProperties, TemplateData } from "../type";
 import { postProject } from "../api/rest-querier";
+import { ActionContext } from "vuex";
 
 export function setSelectedTemplate(
-    context: Context,
+    context: ActionContext<State, State>,
     selected_template: TemplateData
-): Promise<void> {
+): void {
     return context.commit("setSelectedTemplate", selected_template);
 }
 
 export async function createProject(
-    context: Context,
+    context: ActionContext<State, State>,
     project_properties: ProjectProperties
 ): Promise<string> {
     let response;

@@ -11,8 +11,7 @@ module.exports = {
     extends: [
         "eslint:recommended",
         "plugin:you-dont-need-lodash-underscore/all",
-        "plugin:vue/recommended", // We do not use "recommended" because it conflicts with Prettier formatting
-        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:vue/recommended",
         "plugin:import/typescript",
         "plugin:@typescript-eslint/recommended",
         "prettier",

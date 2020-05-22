@@ -28,15 +28,16 @@ import {
 } from "../api/rest-querier";
 
 import {
-    Context,
     MilestoneContent,
     MilestoneData,
+    State,
     TestManagementCampaign,
     TrackerNumberArtifacts,
 } from "../type";
 import { FetchWrapperError } from "tlp";
+import { ActionContext } from "vuex";
 
-async function getCurrentMilestones(context: Context): Promise<void> {
+async function getCurrentMilestones(context: ActionContext<State, State>): Promise<void> {
     context.commit("resetErrorMessage");
     let milestones: MilestoneData[] = [];
     const project_id = context.state.project_id;
@@ -51,7 +52,7 @@ async function getCurrentMilestones(context: Context): Promise<void> {
 }
 
 export function getEnhancedMilestones(
-    context: Context,
+    context: ActionContext<State, State>,
     milestone: MilestoneData
 ): Promise<MilestoneData> {
     const milestone_data = async (): Promise<MilestoneData> => {
@@ -69,7 +70,7 @@ export function getEnhancedMilestones(
     return milestone_data();
 }
 
-export async function getMilestones(context: Context): Promise<void> {
+export async function getMilestones(context: ActionContext<State, State>): Promise<void> {
     try {
         context.commit("setIsLoading", true);
         await getNumberOfPastRelease(context);
@@ -82,7 +83,7 @@ export async function getMilestones(context: Context): Promise<void> {
     }
 }
 
-async function getNumberOfPastRelease(context: Context): Promise<void> {
+async function getNumberOfPastRelease(context: ActionContext<State, State>): Promise<void> {
     context.commit("resetErrorMessage");
     const project_id = context.state.project_id;
     let total = 0;
@@ -97,7 +98,7 @@ async function getNumberOfPastRelease(context: Context): Promise<void> {
     return context.commit("setNbPastReleases", total);
 }
 
-async function getLastRelease(context: Context): Promise<void> {
+async function getLastRelease(context: ActionContext<State, State>): Promise<void> {
     context.commit("resetErrorMessage");
     const project_id = context.state.project_id;
     let last_milestone = null;
@@ -111,7 +112,7 @@ async function getLastRelease(context: Context): Promise<void> {
 }
 
 async function getInitialEffortAndNumberArtifactsInTrackers(
-    context: Context,
+    context: ActionContext<State, State>,
     milestone: MilestoneData
 ): Promise<void> {
     const milestone_contents = await getContent(milestone.id, context.state);
@@ -120,7 +121,7 @@ async function getInitialEffortAndNumberArtifactsInTrackers(
 }
 
 function getInitialEffortOfRelease(
-    context: Context,
+    context: ActionContext<State, State>,
     milestone: MilestoneData,
     milestone_contents: MilestoneContent[]
 ): void {
@@ -136,7 +137,7 @@ function getInitialEffortOfRelease(
 }
 
 function getNumberArtifactsInTrackerOfAgileDashboard(
-    context: Context,
+    context: ActionContext<State, State>,
     milestone: MilestoneData,
     milestone_contents: MilestoneContent[]
 ): void {
@@ -163,7 +164,7 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
 }
 
 export async function handleErrorMessage(
-    context: Context,
+    context: ActionContext<State, State>,
     rest_error: FetchWrapperError
 ): Promise<void> {
     if (rest_error.response === undefined) {
@@ -179,7 +180,7 @@ export async function handleErrorMessage(
 }
 
 export async function getTestManagementCampaigns(
-    context: Context,
+    context: ActionContext<State, State>,
     milestone: MilestoneData
 ): Promise<TestManagementCampaign> {
     const project_id = context.state.project_id;

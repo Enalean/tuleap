@@ -17,11 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+interface MockFetchSuccessOptions {
+    headers?: Partial<Headers>;
+    return_json?: unknown;
+}
+
+interface MockFetchErrorOptions {
+    status?: number;
+    statusText?: string;
+    error_json?: Record<string, unknown>;
+}
+
 export function mockFetchSuccess<T>(
     mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
-    options: object
+    options: MockFetchSuccessOptions
 ): void;
 export function mockFetchError<T>(
     mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
-    options: object
+    options: MockFetchErrorOptions
 ): void;

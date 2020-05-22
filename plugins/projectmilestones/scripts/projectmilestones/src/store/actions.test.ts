@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { ActionContext } from "vuex";
 import * as actions from "./actions";
 import { mockFetchError } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
 import {
     TrackerAgileDashboard,
-    Context,
     MilestoneData,
     TrackerProjectLabel,
     State,
@@ -30,10 +30,10 @@ import {
 import * as rest_querier from "../api/rest-querier";
 
 describe("Store actions", () => {
-    let context: Context;
+    let context: ActionContext<State, State>;
 
     beforeEach(() => {
-        context = {
+        context = ({
             commit: jest.fn(),
             state: {
                 project_id: 102,
@@ -50,7 +50,7 @@ describe("Store actions", () => {
                 label_start_date: "start date",
                 label_timeframe: "duration",
             } as State,
-        };
+        } as unknown) as ActionContext<State, State>;
     });
 
     describe("getMilestones - rest", () => {

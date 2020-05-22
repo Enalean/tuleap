@@ -57,10 +57,10 @@ function getCard(
     } as Card
 ): Card {
     return {
+        ...definition,
         id: 43,
         color: "lake-placid-blue",
         assignees: [] as User[],
-        ...definition,
     } as Card;
 }
 

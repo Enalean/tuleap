@@ -171,7 +171,7 @@ describe("getProject() -", () => {
         mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
-                get: (): number => 2,
+                get: (): string => "2",
             },
             return_json: artifact_chart,
         });
@@ -202,7 +202,7 @@ describe("getProject() -", () => {
         mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
-                get: (): number => 2,
+                get: (): string => "2",
             },
             return_json: sprints,
         });
@@ -233,7 +233,7 @@ describe("getProject() -", () => {
         mockFetchSuccess(tlpGetMock, {
             headers: {
                 // X-PAGINATION-SIZE
-                get: (): number => 10,
+                get: (): string => "10",
             },
         });
 
@@ -261,7 +261,7 @@ describe("getProject() -", () => {
             mockFetchSuccess(tlpGetMock, {
                 headers: {
                     // X-PAGINATION-SIZE
-                    get: (): number => 1,
+                    get: (): string => "1",
                 },
                 return_json: last_release,
             });

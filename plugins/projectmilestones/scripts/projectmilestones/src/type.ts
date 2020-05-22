@@ -139,11 +139,6 @@ export interface State {
     last_release: MilestoneData | null;
 }
 
-export interface Context {
-    state: State;
-    commit: Function;
-}
-
 export interface ParametersRequestWithId {
     project_id: number;
     limit: number;

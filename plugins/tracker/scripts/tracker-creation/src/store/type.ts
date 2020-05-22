@@ -119,8 +119,3 @@ export enum CreationOptions {
     TRACKER_ANOTHER_PROJECT = "tracker_another_project",
     FROM_JIRA = "from_jira",
 }
-
-export interface Context {
-    state: State;
-    commit: Function;
-}

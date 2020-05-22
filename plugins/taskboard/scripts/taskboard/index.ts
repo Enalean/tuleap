@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         typeof vue_mount_point.dataset.columns !== "undefined"
             ? JSON.parse(vue_mount_point.dataset.columns).map(
                   (column: ColumnDefinition): ColumnDefinition => {
-                      return { has_hover: false, ...column };
+                      return { ...column, has_hover: false };
                   }
               )
             : [];

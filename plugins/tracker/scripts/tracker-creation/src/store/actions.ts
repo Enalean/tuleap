@@ -19,10 +19,11 @@
  */
 
 import { post } from "tlp";
-import { Context, Credentials, ProjectList, ProjectTrackerPayload, TrackerList } from "./type";
+import { Credentials, ProjectList, ProjectTrackerPayload, TrackerList, State } from "./type";
+import { ActionContext } from "vuex";
 
 export async function getJiraProjectList(
-    context: Context,
+    context: ActionContext<State, State>,
     credentials: Credentials
 ): Promise<ProjectList[]> {
     const response = await post(
@@ -41,7 +42,7 @@ export async function getJiraProjectList(
 }
 
 export async function getJiraTrackerList(
-    context: Context,
+    context: ActionContext<State, State>,
     project_tracker_payload: ProjectTrackerPayload
 ): Promise<TrackerList[]> {
     const response = await post(

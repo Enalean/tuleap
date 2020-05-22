@@ -40,7 +40,7 @@ describe("rest-querier", () => {
 
         const tlpPost = jest.spyOn(tlp, "post");
 
-        mockFetchSuccess(tlpPost, project_properties);
+        mockFetchSuccess(tlpPost, { return_json: project_properties });
 
         await postProject(project_properties);
         expect(tlpPost).toHaveBeenCalled();
