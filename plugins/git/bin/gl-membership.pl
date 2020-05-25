@@ -33,4 +33,14 @@ if ($#ARGV == 0 && $ARGV[0] =~ /^([A-Za-z0-9-_.]+)$/) {
     exit 1;
 }
 
-exec "sudo -u codendiadm /usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/plugins/git/bin/gl-membership.php $username";
+# get PHP_PARAMS variable from php-laucher.sh
+my $PHP_PARAMS="";
+open(PHP_LAUNCHER, "</usr/share/tuleap/src/utils/php-launcher.sh");
+while (<PHP_LAUNCHER>) {
+    if (m/^[ ]*PHP_PARAMS="(.*)"$/) {
+        $PHP_PARAMS=$1
+    }
+}
+close(PHP_LAUNCHER);
+
+exec "/opt/remi/php73/root/usr/bin/php -d error_reporting=0 $PHP_PARAMS /usr/share/tuleap/plugins/git/bin/gl-membership.php $username";

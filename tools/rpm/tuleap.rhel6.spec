@@ -724,7 +724,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__install} plugins/git/etc/sudoers.d/gitolite-http $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_gitolite2_http
 %{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
-%{__install} plugins/git/etc/sudoers.d/tuleap-git-gl-membership $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_gl_membership
 
 # plugin-git-gitolite3
 %{__install} plugins/git/bin/gitolite3-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
@@ -1250,7 +1249,6 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite2_http
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
-%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_gl_membership
 
 %files plugin-git-gitolite3
 %defattr(-,%{APP_USER},%{APP_USER},-)
@@ -1270,7 +1268,6 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
-%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_gl_membership
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
 %attr(00755,root,root) /usr/share/gitolite3/VREF/TULEAP_MAX_NEWBIN_SIZE
