@@ -165,6 +165,7 @@ class PendingJiraImportBuilderTest extends TestCase
             'jira_user_email'      => '',
             'encrypted_jira_token' => '',
             'tracker_color'        => '',
+            'tracker_description'  => '',
         ];
     }
 }

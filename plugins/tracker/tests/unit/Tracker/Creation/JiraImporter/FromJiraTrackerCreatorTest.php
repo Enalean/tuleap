@@ -88,14 +88,15 @@ class FromJiraTrackerCreatorTest extends TestCase
 
         $creator->createFromJira(
             $project,
-            "my new tracker",
-            "my_tracker",
-            "inca-silver",
-            new ConcealedString("azerty123"),
-            "user@example.com",
-            "https://example.com",
-            "Jira project",
-            "Story",
+            'my new tracker',
+            'my_tracker',
+            'tracker desc',
+            'inca-silver',
+            new ConcealedString('azerty123'),
+            'user@example.com',
+            'https://example.com',
+            'Jira project',
+            'Story',
             Mockery::mock(\PFUser::class)
         );
     }

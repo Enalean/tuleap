@@ -76,6 +76,10 @@ class PendingJiraImport
      * @var string
      */
     private $encrypted_jira_token;
+    /**
+     * @var string
+     */
+    private $tracker_description;
 
     public function __construct(
         int $id,
@@ -89,7 +93,8 @@ class PendingJiraImport
         string $jira_issue_type_name,
         string $tracker_name,
         string $tracker_shortname,
-        string $tracker_color
+        string $tracker_color,
+        string $tracker_description
     ) {
         $this->id                   = $id;
         $this->project              = $project;
@@ -103,6 +108,7 @@ class PendingJiraImport
         $this->tracker_shortname    = $tracker_shortname;
         $this->tracker_color        = $tracker_color;
         $this->encrypted_jira_token = $encrypted_jira_token;
+        $this->tracker_description  = $tracker_description;
     }
 
     public function getProject(): Project
@@ -163,5 +169,10 @@ class PendingJiraImport
     public function getEncryptedJiraToken(): string
     {
         return $this->encrypted_jira_token;
+    }
+
+    public function getTrackerDescription(): string
+    {
+        return $this->tracker_description;
     }
 }

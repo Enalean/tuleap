@@ -182,6 +182,7 @@ class JiraRunnerTest extends TestCase
                 'getProject'            => $project,
                 'getTrackerName'        => 'Bugs',
                 'getTrackerShortname'   => 'bug',
+                'getTrackerDescription' => 'Imported issues from jira',
                 'getTrackerColor'       => 'inca-silver',
                 'getEncryptedJiraToken' => $encrypted_token,
                 'getJiraUser'           => 'user@example.com',
@@ -208,6 +209,7 @@ class JiraRunnerTest extends TestCase
                 $project,
                 'Bugs',
                 'bug',
+                'Imported issues from jira',
                 'inca-silver',
                 Mockery::on(
                     function (ConcealedString $token) {
@@ -406,6 +408,7 @@ class JiraRunnerTest extends TestCase
                 'getProject'            => $project,
                 'getTrackerName'        => 'Bugs',
                 'getTrackerShortname'   => 'bug',
+                'getTrackerDescription' => 'Imported issues from jira',
                 'getTrackerColor'       => 'inca-silver',
                 'getEncryptedJiraToken' => $encrypted_token,
                 'getJiraUser'           => 'user@example.com',
@@ -477,6 +480,7 @@ class JiraRunnerTest extends TestCase
                 'getProject'            => $project,
                 'getTrackerName'        => 'Bugs',
                 'getTrackerShortname'   => 'bug',
+                'getTrackerDescription' => 'Imported issues from jira',
                 'getTrackerColor'       => 'inca-silver',
                 'getEncryptedJiraToken' => $encrypted_token,
                 'getJiraUser'           => 'user@example.com',
