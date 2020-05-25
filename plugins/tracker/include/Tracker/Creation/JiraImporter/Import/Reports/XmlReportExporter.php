@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
+use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use XML_SimpleXMLCDATAFactory;
 
@@ -39,7 +41,7 @@ class XmlReportExporter
         $this->cdata_factory = $cdata_factory;
     }
 
-    public function exportReports(\SimpleXMLElement $trackers_node, FieldMappingCollection $field_mapping_collection): void
+    public function exportReports(SimpleXMLElement $trackers_node, FieldMappingCollection $field_mapping_collection): void
     {
         $reports_node = $trackers_node->addChild('reports');
         $report_node  = $reports_node->addChild('report');
@@ -47,7 +49,23 @@ class XmlReportExporter
         $this->cdata_factory->insert($report_node, 'name', 'Default');
         $this->cdata_factory->insert($report_node, 'description', 'The system default artifact report');
 
-        $report_node->addChild('criterias');
+        $summary_field     = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_SUMMARY_FIELD_NAME);
+        $description_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_DESCRIPTION_FIELD_NAME);
+        $status_field      = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_STATUS_NAME);
+        $priority_field    = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_PRIORITY_NAME);
+        $link_field        = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_LINK_FIELD_NAME);
+
+        $criterias_fields = array_filter([
+            $summary_field,
+            $description_field,
+            $status_field,
+            $priority_field
+        ]);
+
+        $this->exportCriterias(
+            $report_node,
+            $criterias_fields
+        );
 
         $renderers_node = $report_node->addChild('renderers');
         $renderer_node  = $renderers_node->addChild('renderer');
@@ -56,14 +74,49 @@ class XmlReportExporter
         $renderer_node->addAttribute('chunksz', "15");
 
         $this->cdata_factory->insert($renderer_node, 'name', 'Results');
-        $columns_node = $renderer_node->addChild('columns');
 
-        $summary_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_SUMMARY_FIELD_NAME);
-        if ($summary_field === null) {
-            return;
+        $column_fields = array_filter([
+            $summary_field,
+            $status_field,
+            $link_field,
+            $priority_field
+        ]);
+
+        $this->exportReportColumns(
+            $renderer_node,
+            $column_fields
+        );
+    }
+
+    /**
+     * @param FieldMapping[] $field_mappings
+     */
+    private function exportCriterias(
+        SimpleXMLElement $report_node,
+        array $field_mappings
+    ): void {
+        $criterias_node = $report_node->addChild('criterias');
+        $rank_in_node = 0;
+        foreach ($field_mappings as $field_mapping) {
+            $criteria_node  = $criterias_node->addChild('criteria');
+            $criteria_node->addAttribute("rank", (string) $rank_in_node);
+            $criteria_field_node = $criteria_node->addChild("field");
+            $criteria_field_node->addAttribute("REF", $field_mapping->getXMLId());
+            $rank_in_node++;
         }
-        $field_node   = $columns_node->addChild('field');
+    }
 
-        $field_node->addAttribute('REF', $summary_field->getXMLId());
+    /**
+     * @param FieldMapping[] $field_mappings
+     */
+    private function exportReportColumns(
+        SimpleXMLElement $renderer_node,
+        array $field_mappings
+    ): void {
+        $columns_node = $renderer_node->addChild('columns');
+        foreach ($field_mappings as $field_mapping) {
+            $field_node = $columns_node->addChild('field');
+            $field_node->addAttribute('REF', $field_mapping->getXMLId());
+        }
     }
 }

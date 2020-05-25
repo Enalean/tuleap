@@ -59,6 +59,7 @@ class JiraXmlExporter
     public const JIRA_UPDATED_ON_NAME        = "updated";
     public const JIRA_RESOLUTION_DATE_NAME   = "resolutiondate";
     public const JIRA_STATUS_NAME            = "status";
+    public const JIRA_PRIORITY_NAME          = "priority";
 
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";

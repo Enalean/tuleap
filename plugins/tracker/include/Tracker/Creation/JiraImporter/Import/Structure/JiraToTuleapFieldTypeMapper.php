@@ -176,7 +176,7 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
-                case 'priority':
+                case JiraXmlExporter::JIRA_PRIORITY_NAME:
                     $this->field_xml_exporter->exportField(
                         $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
