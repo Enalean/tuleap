@@ -39,11 +39,6 @@ export interface State {
     can_user_choose_project_visibility: boolean;
 }
 
-export interface Context {
-    state: State;
-    commit: Function;
-}
-
 export interface StoreOptions {
     state: {
         tuleap_templates: TemplateData[];

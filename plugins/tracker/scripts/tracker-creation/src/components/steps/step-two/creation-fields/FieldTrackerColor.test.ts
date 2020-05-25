@@ -32,7 +32,7 @@ const mocked_jquery = {
 };
 
 jest.mock("jquery", () => {
-    return (): object => mocked_jquery;
+    return (): Record<string, jest.SpyInstance> => mocked_jquery;
 });
 
 describe("FieldTrackerColor", () => {

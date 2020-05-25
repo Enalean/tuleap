@@ -18,28 +18,29 @@
  *
  */
 
+import { ActionContext } from "vuex";
 import * as tlp from "tlp";
 import { mockFetchSuccess } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper";
-import { Context, Credentials, State } from "./type";
+import { Credentials, State } from "./type";
 import { getJiraProjectList } from "./actions";
 
 jest.mock("tlp");
 
 describe("getJiraProjectList", () => {
-    let context: Context;
+    let context: ActionContext<State, State>;
 
     it("retrieve the list of jira projects", async () => {
         const credentials = {} as Credentials;
-        context = {
+        context = ({
             commit: jest.fn(),
             state: {
                 project_unix_name: "project",
             } as State,
-        };
+        } as unknown) as ActionContext<State, State>;
 
         const tlpPost = jest.spyOn(tlp, "post");
 
-        mockFetchSuccess(tlpPost, credentials);
+        mockFetchSuccess(tlpPost, { return_json: credentials });
 
         await getJiraProjectList(context, credentials);
         expect(tlpPost).toHaveBeenCalledWith("/plugins/tracker/project/jira/project_list", {
