@@ -679,7 +679,6 @@ done
 %{__perl} -pi -e "s~%PROJECT_NAME%~%{APP_NAME}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__perl} -pi -e "s~%%APP_USER%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/logrotate.d/%{APP_NAME}_git
 %{__install} plugins/git/etc/sudoers.d/tuleap-git-postreceive $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_postreceive
-%{__install} plugins/git/etc/sudoers.d/tuleap-git-gl-membership $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_git_gl_membership
 %{__install} plugins/git/etc/sudoers.d/tuleap-plugin-git $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__perl} -pi -e "s~%%app_user%%~%{APP_USER}~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
 %{__perl} -pi -e "s~%app_path%~/usr/share/tuleap~g" $RPM_BUILD_ROOT/etc/sudoers.d/tuleap_plugin_git
@@ -1100,7 +1099,6 @@ fi
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_http
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_postreceive
-%attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_git_gl_membership
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_gitolite3_replace_authorized_keys
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/tuleap_plugin_git
 %attr(00440,root,root) %{_sysconfdir}/sudoers.d/gitolite-access-command
