@@ -106,7 +106,6 @@ use Tuleap\Tracker\Creation\TrackerCreationBreadCrumbsBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationPermissionChecker;
-use Tuleap\Tracker\Creation\TrackerCreationPresenter;
 use Tuleap\Tracker\Creation\TrackerCreationPresenterBuilder;
 use Tuleap\Tracker\Creation\TrackerCreationProcessorController;
 use Tuleap\Tracker\Creation\TrackerCreator;
@@ -2056,7 +2055,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 new TrackerDao(),
                 new PendingJiraImportDao(),
                 \TrackerFactory::instance(),
-                new DefaultTemplatesCollectionBuilder(\EventManager::instance())
+                new DefaultTemplatesCollectionBuilder(\EventManager::instance()),
+                $this->getJiraRunner(BackendLogger::getDefaultLogger())
             ),
             $this->getTrackerCreationPermissionChecker()
         );
@@ -2080,16 +2080,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $logger,
                 new KeyFactory(),
                 new PendingJiraImportDao(),
-                new JiraRunner(
-                    $logger,
-                    new QueueFactory($logger),
-                    new KeyFactory(),
-                    FromJiraTrackerCreator::build(),
-                    new PendingJiraImportDao(),
-                    $this->getJiraSuccessImportNotifier(),
-                    $this->getJiraErrorImportNotifier(),
-                    $user_manager
-                )
+                $this->getJiraRunner($logger)
             )
         );
     }
@@ -2213,8 +2204,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
-        $event->addPluginsKeys(TrackerCreationPresenter::DISPLAY_JIRA_IMPORTER);
-        $event->addPluginsKeys(AsyncJiraScheduler::CONFIG_NAME);
+        $event->addPluginsKeys(JiraRunner::DISPLAY_JIRA_IMPORTER);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
@@ -2252,6 +2242,20 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new InstanceBaseURLBuilder(),
             new LocaleSwitcher(),
             TemplateRendererFactory::build(),
+        );
+    }
+
+    private function getJiraRunner(\Psr\Log\LoggerInterface $logger): JiraRunner
+    {
+        return new JiraRunner(
+            $logger,
+            new QueueFactory($logger),
+            new KeyFactory(),
+            FromJiraTrackerCreator::build(),
+            new PendingJiraImportDao(),
+            $this->getJiraSuccessImportNotifier(),
+            $this->getJiraErrorImportNotifier(),
+            $this->getUserManager()
         );
     }
 }

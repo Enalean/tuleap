@@ -27,6 +27,7 @@ use Project;
 use ProjectManager;
 use TrackerDao;
 use TrackerFactory;
+use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
@@ -53,19 +54,25 @@ class TrackerCreationPresenterBuilder
      * @var PendingJiraImportDao
      */
     private $pending_jira_import_dao;
+    /**
+     * @var JiraRunner
+     */
+    private $jira_runner;
 
     public function __construct(
         ProjectManager $project_manager,
         TrackerDao $tracker_dao,
         PendingJiraImportDao $pending_jira_import_dao,
         TrackerFactory $tracker_factory,
-        DefaultTemplatesCollectionBuilder $default_templates_collection_builder
+        DefaultTemplatesCollectionBuilder $default_templates_collection_builder,
+        JiraRunner $jira_runner
     ) {
         $this->project_manager                      = $project_manager;
         $this->tracker_dao                          = $tracker_dao;
         $this->tracker_factory                      = $tracker_factory;
         $this->default_templates_collection_builder = $default_templates_collection_builder;
         $this->pending_jira_import_dao              = $pending_jira_import_dao;
+        $this->jira_runner                          = $jira_runner;
     }
 
     public function build(\Project $current_project, \CSRFSynchronizerToken $csrf, \PFUser $user): TrackerCreationPresenter
@@ -95,6 +102,8 @@ class TrackerCreationPresenterBuilder
             'default_color' => TrackerColor::default()->getName()
         ];
 
+        $display_jira_importer = $this->jira_runner->canBeProcessedAsynchronously();
+
         return new TrackerCreationPresenter(
             $default_templates,
             $project_templates,
@@ -102,7 +111,8 @@ class TrackerCreationPresenterBuilder
             $trackers_from_other_projects,
             $tracker_colors,
             $current_project,
-            $csrf
+            $csrf,
+            $display_jira_importer
         );
     }
 

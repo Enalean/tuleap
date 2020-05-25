@@ -33,6 +33,8 @@ use Tuleap\Cryptography\Exception\CannotPerformIOOperationException;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\EncryptionKey;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
+use Tuleap\ForgeConfigSandbox;
+use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 use UserManager;
@@ -41,6 +43,7 @@ use XML_ParseException;
 class JiraRunnerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
@@ -519,5 +522,45 @@ class JiraRunnerTest extends TestCase
             ->once();
 
         $this->runner->processAsyncJiraImport($import);
+    }
+
+    public function testItCanBeProcessedAsynchronously(): void
+    {
+        \ForgeConfig::set(JiraRunner::DISPLAY_JIRA_IMPORTER, true);
+        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
+        $this->assertTrue($this->runner->canBeProcessedAsynchronously());
+    }
+
+    public function testItCannotBeProcessedAsynchronouslyIfDisplayJiraImportIsFalse(): void
+    {
+        \ForgeConfig::set(JiraRunner::DISPLAY_JIRA_IMPORTER, false);
+        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
+        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
+    }
+
+    public function testItCannotBeProcessedAsynchronouslyIfNbOfBackendWorkersIsZero(): void
+    {
+        \ForgeConfig::set(JiraRunner::DISPLAY_JIRA_IMPORTER, true);
+        \ForgeConfig::set('sys_nb_backend_workers', 0);
+        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(PersistentQueue::class)]);
+        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
+    }
+
+    public function testItCannotBeProcessedAsynchronouslyIfNoopPersistentQueue(): void
+    {
+        \ForgeConfig::set(JiraRunner::DISPLAY_JIRA_IMPORTER, true);
+        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->queue_factory->shouldReceive(['getPersistentQueue' => Mockery::mock(\Tuleap\Queue\Noop\PersistentQueue::class)]);
+        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
+    }
+
+    public function testItCannotBeProcessedAsynchronouslyIfNoQueueSystemAvailableException(): void
+    {
+        \ForgeConfig::set(JiraRunner::DISPLAY_JIRA_IMPORTER, true);
+        \ForgeConfig::set('sys_nb_backend_workers', 1);
+        $this->queue_factory->shouldReceive('getPersistentQueue')->andThrow(NoQueueSystemAvailableException::class);
+        $this->assertFalse($this->runner->canBeProcessedAsynchronously());
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
+use ForgeConfig;
 use Psr\Log\LoggerInterface;
 use SodiumException;
 use Tracker_Exception;
@@ -38,6 +39,7 @@ use XML_ParseException;
 
 class JiraRunner
 {
+    public const DISPLAY_JIRA_IMPORTER = 'display_jira_importer';
     /**
      * @var QueueFactory
      */
@@ -91,10 +93,28 @@ class JiraRunner
         $this->user_manager     = $user_manager;
     }
 
+    public function canBeProcessedAsynchronously(): bool
+    {
+        if ((bool) ForgeConfig::get(self::DISPLAY_JIRA_IMPORTER) === false) {
+            return false;
+        }
+
+        if (ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
+            return false;
+        }
+
+        try {
+            $this->getPersistentQueue();
+            return true;
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
+
     public function queueJiraImportEvent(int $pending_jira_import_id): void
     {
         try {
-            $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+            $queue = $this->getPersistentQueue();
             $queue->pushSinglePersistentMessage(
                 AsynchronousJiraRunner::TOPIC,
                 [
@@ -104,6 +124,20 @@ class JiraRunner
         } catch (\Exception $exception) {
             $this->logger->error("Unable to queue notification for Jira import #{$pending_jira_import_id}.");
         }
+    }
+
+    /**
+     * @throws \Tuleap\Queue\NoQueueSystemAvailableException
+     * @throws NoNoopPersistentQueueForJiraImport
+     */
+    private function getPersistentQueue(): \Tuleap\Queue\PersistentQueue
+    {
+        $persistent_queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
+        if ($persistent_queue instanceof \Tuleap\Queue\Noop\PersistentQueue) {
+            throw new NoNoopPersistentQueueForJiraImport();
+        }
+
+        return $persistent_queue;
     }
 
     public function processAsyncJiraImport(PendingJiraImport $pending_import): void

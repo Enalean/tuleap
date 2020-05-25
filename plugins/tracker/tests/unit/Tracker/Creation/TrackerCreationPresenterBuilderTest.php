@@ -27,6 +27,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ProjectManager;
 use TrackerDao;
+use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerColor;
 
@@ -74,6 +75,10 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|PendingJiraImportDao
      */
     private $pending_jira_dao;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|JiraRunner
+     */
+    private $jira_runner;
 
     protected function setUp(): void
     {
@@ -83,13 +88,15 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
         $this->tracker_dao      = \Mockery::mock(TrackerDao::class);
         $this->pending_jira_dao = \Mockery::mock(PendingJiraImportDao::class);
         $this->tracker_factory  = \Mockery::mock(\TrackerFactory::class);
+        $this->jira_runner      = \Mockery::mock(JiraRunner::class);
 
         $this->builder         = new TrackerCreationPresenterBuilder(
             $this->project_manager,
             $this->tracker_dao,
             $this->pending_jira_dao,
             $this->tracker_factory,
-            $this->default_templates_collection_builder
+            $this->default_templates_collection_builder,
+            $this->jira_runner
         );
 
         $this->current_project = \Mockery::mock(\Project::class);
@@ -117,6 +124,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 new DefaultTemplatesCollection([])
             );
 
+        $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
+
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
@@ -127,7 +136,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $this->getTrackerColors(),
             $this->current_project,
-            $this->csrf_token
+            $this->csrf_token,
+            true
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -147,6 +157,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 new DefaultTemplatesCollection([])
             );
 
+        $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
+
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
@@ -157,7 +169,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $this->getTrackerColors(),
             $this->current_project,
-            $this->csrf_token
+            $this->csrf_token,
+            true
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -178,6 +191,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 new DefaultTemplatesCollection([])
             );
 
+        $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
+
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
@@ -188,7 +203,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $this->getTrackerColors(),
             $this->current_project,
-            $this->csrf_token
+            $this->csrf_token,
+            true
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -224,6 +240,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
                 $collection
             );
 
+        $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
+
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);
 
         $expected_list_of_existing_trackers = ['names' => [], 'shortnames' => []];
@@ -237,7 +255,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             [],
             $this->getTrackerColors(),
             $this->current_project,
-            $this->csrf_token
+            $this->csrf_token,
+            true
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -347,6 +366,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             ]
         ];
 
+        $this->jira_runner->shouldReceive(['canBeProcessedAsynchronously' => true]);
+
         $expected_template = new TrackerCreationPresenter(
             [],
             $project_template,
@@ -354,7 +375,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $trackers_from_other_projects,
             $this->getTrackerColors(),
             $this->current_project,
-            $this->csrf_token
+            $this->csrf_token,
+            true
         );
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);

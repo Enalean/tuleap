@@ -71,16 +71,20 @@ class AsyncJiraSchedulerTest extends TestCase
             ->once()
             ->andReturn(1001);
 
-        $actions_runner = Mockery::mock(JiraRunner::class);
-        $actions_runner
+        $jira_runner = Mockery::mock(JiraRunner::class);
+        $jira_runner
             ->shouldReceive('queueJiraImportEvent')
             ->with(1001)
             ->once();
+        $jira_runner
+            ->shouldReceive('canBeProcessedAsynchronously')
+            ->once()
+            ->andReturn(true);
 
         $logger = Mockery::mock(LoggerInterface::class);
         $logger->shouldReceive('error')->never();
 
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $actions_runner);
+        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
             Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
             Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
@@ -129,10 +133,14 @@ class AsyncJiraSchedulerTest extends TestCase
             ->once()
             ->andReturn(false);
 
-        $actions_runner = Mockery::mock(JiraRunner::class);
-        $actions_runner
+        $jira_runner = Mockery::mock(JiraRunner::class);
+        $jira_runner
             ->shouldReceive('queueJiraImportEvent')
             ->never();
+        $jira_runner
+            ->shouldReceive('canBeProcessedAsynchronously')
+            ->once()
+            ->andReturn(true);
 
         $logger = Mockery::mock(LoggerInterface::class);
         $logger
@@ -140,7 +148,7 @@ class AsyncJiraSchedulerTest extends TestCase
             ->with('Unable to schedule the import of Jira: the pending jira import cannot be saved in DB.');
 
         $this->expectException(TrackerCreationHasFailedException::class);
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $actions_runner);
+        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
             Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
             Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
@@ -168,10 +176,14 @@ class AsyncJiraSchedulerTest extends TestCase
             ->shouldReceive('create')
             ->never();
 
-        $actions_runner = Mockery::mock(JiraRunner::class);
-        $actions_runner
+        $jira_runner = Mockery::mock(JiraRunner::class);
+        $jira_runner
             ->shouldReceive('queueJiraImportEvent')
             ->never();
+        $jira_runner
+            ->shouldReceive('canBeProcessedAsynchronously')
+            ->once()
+            ->andReturn(true);
 
         $logger = Mockery::mock(LoggerInterface::class);
         $logger
@@ -179,7 +191,47 @@ class AsyncJiraSchedulerTest extends TestCase
             ->with('Unable to schedule the import of Jira: Cannot read encryption key');
 
         $this->expectException(TrackerCreationHasFailedException::class);
-        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $actions_runner);
+        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
+        $scheduler->scheduleCreation(
+            Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
+            Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),
+            'https://jira.example.com',
+            'user@example.com',
+            new ConcealedString('very_secret'),
+            'jira project id',
+            'jira issue type name',
+            'Bugs',
+            'bug',
+            'inca-silver',
+            'All bugs'
+        );
+    }
+
+    public function testItThrowsExceptionIfEventCannotBeScheduled()
+    {
+        $key_factory = Mockery::mock(KeyFactory::class);
+
+        $pending_jira_import_dao = Mockery::mock(PendingJiraImportDao::class);
+        $pending_jira_import_dao
+            ->shouldReceive('create')
+            ->never();
+
+        $jira_runner = Mockery::mock(JiraRunner::class);
+        $jira_runner
+            ->shouldReceive('queueJiraImportEvent')
+            ->never();
+        $jira_runner
+            ->shouldReceive('canBeProcessedAsynchronously')
+            ->once()
+            ->andReturn(false);
+
+        $logger = Mockery::mock(LoggerInterface::class);
+        $logger
+            ->shouldReceive('error')
+            ->with('Unable to schedule the import of Jira: misconfiguration of the platform to queue the event.');
+
+        $this->expectException(TrackerCreationHasFailedException::class);
+        $scheduler = new AsyncJiraScheduler($logger, $key_factory, $pending_jira_import_dao, $jira_runner);
         $scheduler->scheduleCreation(
             Mockery::mock(Project::class)->shouldReceive(['getID' => 42])->getMock(),
             Mockery::mock(\PFUser::class)->shouldReceive(['getId' => 101])->getMock(),

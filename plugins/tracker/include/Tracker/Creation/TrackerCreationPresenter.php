@@ -27,7 +27,6 @@ use Project;
 
 class TrackerCreationPresenter
 {
-    public const DISPLAY_JIRA_IMPORTER = 'display_jira_importer';
     /**
      * @var string
      */
@@ -81,7 +80,8 @@ class TrackerCreationPresenter
         array $trackers_from_other_projects,
         array $tracker_colors,
         Project $current_project,
-        \CSRFSynchronizerToken $csrf
+        \CSRFSynchronizerToken $csrf,
+        bool $display_jira_importer
     ) {
         $this->default_templates            = json_encode($default_templates, JSON_THROW_ON_ERROR);
         $this->project_templates            = json_encode($project_templates, JSON_THROW_ON_ERROR);
@@ -97,6 +97,6 @@ class TrackerCreationPresenter
             ]
         );
         $this->company_name                 = (string) ForgeConfig::get('sys_org_name');
-        $this->display_jira_importer        = (bool) ForgeConfig::get(self::DISPLAY_JIRA_IMPORTER);
+        $this->display_jira_importer        = $display_jira_importer;
     }
 }

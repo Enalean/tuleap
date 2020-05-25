@@ -30,8 +30,6 @@ use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
 use TrackerXmlImport;
-use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
@@ -56,23 +54,17 @@ class TrackerCreator
      * @var TrackerCreationDataChecker
      */
     private $creation_data_checker;
-    /**
-     * @var FromJiraTrackerCreator
-     */
-    private $from_jira_tracker_creator;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreatorXmlErrorDisplayer $xml_error_displayer,
-        TrackerCreationDataChecker $creation_data_checker,
-        FromJiraTrackerCreator $from_jira_tracker_creator
+        TrackerCreationDataChecker $creation_data_checker
     ) {
         $this->tracker_xml_import        = $tracker_xml_import;
         $this->tracker_factory           = $tracker_factory;
         $this->xml_error_displayer       = $xml_error_displayer;
         $this->creation_data_checker     = $creation_data_checker;
-        $this->from_jira_tracker_creator = $from_jira_tracker_creator;
     }
 
     public static function build(): self
@@ -90,7 +82,6 @@ class TrackerCreator
                 new PendingJiraImportDao(),
                 TrackerFactory::instance()
             ),
-            FromJiraTrackerCreator::build()
         );
     }
 
@@ -154,47 +145,5 @@ class TrackerCreator
         }
 
         return $duplicate['tracker'];
-    }
-
-    /**
-     * @throws TrackerCreationHasFailedException
-     * @throws TrackerIsInvalidException
-     * @throws Tracker_Exception
-     */
-    public function createFromJira(
-        Project $project,
-        string $name,
-        string $itemname,
-        string $color,
-        ConcealedString $jira_token,
-        string $jira_username,
-        string $jira_url,
-        string $jira_project_id,
-        string $jira_issue_type_name,
-        \PFUser $user
-    ): Tracker {
-        try {
-            return $this->from_jira_tracker_creator->createFromJira(
-                $project,
-                $name,
-                $itemname,
-                $color,
-                $jira_token,
-                $jira_username,
-                $jira_url,
-                $jira_project_id,
-                $jira_issue_type_name,
-                $user
-            );
-        } catch (XML_ParseException $exception) {
-            $this->xml_error_displayer->displayErrors($project, $exception->getErrors(), $exception->getFileLines());
-            throw new TrackerCreationHasFailedException();
-        } catch (TrackerFromXmlException $exception) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            throw new TrackerCreationHasFailedException();
-        } catch (JiraImporter\JiraConnectionException $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $e->getI18nMessage());
-            throw new TrackerCreationHasFailedException();
-        }
     }
 }
