@@ -160,6 +160,7 @@ class JiraRunner
                 $pending_import->getProject(),
                 $pending_import->getTrackerName(),
                 $pending_import->getTrackerShortname(),
+                $pending_import->getTrackerDescription(),
                 $pending_import->getTrackerColor(),
                 $token,
                 $pending_import->getJiraUser(),

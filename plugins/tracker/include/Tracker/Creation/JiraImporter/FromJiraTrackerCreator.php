@@ -103,6 +103,7 @@ class FromJiraTrackerCreator
         Project $project,
         string $name,
         string $itemname,
+        string $description,
         string $color,
         ConcealedString $jira_token,
         string $jira_username,
@@ -123,6 +124,7 @@ class FromJiraTrackerCreator
 
         $this->cdata_section_factory->insert($tracker_xml, 'name', $name);
         $this->cdata_section_factory->insert($tracker_xml, 'item_name', $itemname);
+        $this->cdata_section_factory->insert($tracker_xml, 'description', $description);
         $this->cdata_section_factory->insert($tracker_xml, 'color', $color);
 
         $tracker_xml->addChild('cannedResponses');

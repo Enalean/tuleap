@@ -45,7 +45,7 @@ class PendingJiraImportBuilder
     }
 
     /**
-     * @param array{id: int, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, encrypted_jira_token: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string, tracker_color: string} $row
+     * @param array{id: int, project_id: int, user_id: int, created_on: int, jira_server: string, jira_user_email: string, encrypted_jira_token: string, jira_project_id: string, jira_issue_type_name: string, tracker_name: string, tracker_shortname: string, tracker_color: string, tracker_description: string} $row
      *
      * @throws UnableToBuildPendingJiraImportException
      */
@@ -74,6 +74,7 @@ class PendingJiraImportBuilder
             $row['tracker_name'],
             $row['tracker_shortname'],
             $row['tracker_color'],
+            $row['tracker_description']
         );
     }
 }
