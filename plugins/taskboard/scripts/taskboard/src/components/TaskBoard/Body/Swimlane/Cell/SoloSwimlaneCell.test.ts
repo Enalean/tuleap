@@ -40,7 +40,7 @@ describe(`SoloSwimlaneCell`, () => {
         const swimlane = { card: { id: 43, mapped_list_value: { id: 103 } } } as Swimlane;
         const wrapper = createWrapper(done_column, swimlane);
 
-        expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
+        expect(wrapper.findComponent(CardWithRemainingEffort).exists()).toBe(true);
     });
 
     describe("is draggable", () => {
@@ -70,7 +70,7 @@ describe(`SoloSwimlaneCell`, () => {
 
             const wrapper = createWrapper(done_column, swimlane);
 
-            const solo_card = wrapper.get(CardWithRemainingEffort);
+            const solo_card = wrapper.findComponent(CardWithRemainingEffort);
 
             expect(solo_card.classes()).toContain("taskboard-draggable-item");
             expect(solo_card.attributes("draggable")).toBe("true");
@@ -81,7 +81,7 @@ describe(`SoloSwimlaneCell`, () => {
 
             const wrapper = createWrapper(done_column, swimlane);
 
-            const solo_card = wrapper.get(CardWithRemainingEffort);
+            const solo_card = wrapper.findComponent(CardWithRemainingEffort);
 
             expect(solo_card.classes()).not.toContain("taskboard-draggable-item");
             expect(solo_card.attributes("draggable")).toBeFalsy();

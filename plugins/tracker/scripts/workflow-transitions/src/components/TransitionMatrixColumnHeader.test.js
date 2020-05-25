@@ -71,7 +71,7 @@ describe("TransitionMatrixColumnHeader", () => {
                 ];
             });
             it("shows the configure state button and passes that transition to it", () => {
-                const button = wrapper.find(ConfigureStateButton);
+                const button = wrapper.findComponent(ConfigureStateButton);
 
                 expect(button.exists()).toBeTruthy();
                 expect(button.props("transition")).toEqual(other_transition);
@@ -83,7 +83,7 @@ describe("TransitionMatrixColumnHeader", () => {
                 store.getters.current_workflow_transitions = [transition_from_new];
             });
             it("passes that transition to the button", () => {
-                const button = wrapper.find(ConfigureStateButton);
+                const button = wrapper.findComponent(ConfigureStateButton);
 
                 expect(button.exists()).toBeTruthy();
                 expect(button.props("transition")).toEqual(transition_from_new);
@@ -91,7 +91,7 @@ describe("TransitionMatrixColumnHeader", () => {
         });
 
         it("and there is no transition to the given state, then it does not show the configure state button", () => {
-            expect(wrapper.contains(ConfigureStateButton)).toBeFalsy();
+            expect(wrapper.findComponent(ConfigureStateButton).exists()).toBeFalsy();
         });
     });
 
@@ -100,7 +100,7 @@ describe("TransitionMatrixColumnHeader", () => {
             store.getters.is_workflow_advanced = true;
         });
         it("does not show the configure state button", () => {
-            expect(wrapper.contains(ConfigureStateButton)).toBeFalsy();
+            expect(wrapper.findComponent(ConfigureStateButton).exists()).toBeFalsy();
         });
     });
 });

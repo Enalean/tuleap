@@ -97,8 +97,8 @@ describe("ReleaseOthersBadges", () => {
         it("When there is an initial effort, Then the points of initial effort are displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(true);
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(false);
+            expect(wrapper.find("[data-test=initial-effort-not-empty]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=initial-effort-empty]").exists()).toBe(false);
         });
 
         it("When there is initial effort but null, Then the points of initial effort are 'N/A'", async () => {
@@ -112,8 +112,8 @@ describe("ReleaseOthersBadges", () => {
             component_options.propsData = { release_data };
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=initial-effort-not-empty]")).toBe(false);
-            expect(wrapper.contains("[data-test=initial-effort-empty]")).toBe(true);
+            expect(wrapper.find("[data-test=initial-effort-not-empty]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=initial-effort-empty]").exists()).toBe(true);
         });
     });
 
@@ -121,8 +121,8 @@ describe("ReleaseOthersBadges", () => {
         it("When there are points of capacity, Then the points of capacity are displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(true);
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(false);
+            expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=capacity-empty]").exists()).toBe(false);
         });
 
         it("When there are points of capacity but null, Then the points of capacity are 'N/A'", async () => {
@@ -139,8 +139,8 @@ describe("ReleaseOthersBadges", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=capacity-not-empty]")).toBe(false);
-            expect(wrapper.contains("[data-test=capacity-empty]")).toBe(true);
+            expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=capacity-empty]").exists()).toBe(true);
         });
     });
 
@@ -164,7 +164,7 @@ describe("ReleaseOthersBadges", () => {
         store_options.state.user_can_view_sub_milestones_planning = false;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
+        expect(wrapper.find("[data-test=planning-link]").exists()).toBe(false);
     });
 
     it("When there isn't sub-planning, Then there isn't any link to sub-planning", async () => {
@@ -190,6 +190,6 @@ describe("ReleaseOthersBadges", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=planning-link]")).toBe(false);
+        expect(wrapper.find("[data-test=planning-link]").exists()).toBe(false);
     });
 });

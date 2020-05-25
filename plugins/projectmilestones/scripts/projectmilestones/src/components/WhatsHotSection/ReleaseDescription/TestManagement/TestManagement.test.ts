@@ -110,7 +110,7 @@ describe("TestManagement", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=display-ttm]")).toBe(false);
+        expect(wrapper.find("[data-test=display-ttm]").exists()).toBe(false);
     });
 
     it("When component is renderer, Then there is a div element with id of release", async () => {

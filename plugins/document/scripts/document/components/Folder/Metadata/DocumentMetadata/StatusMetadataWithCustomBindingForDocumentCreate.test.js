@@ -72,7 +72,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.contains("[data-test=document-status-metadata-for-item-create]")
+            wrapper.find("[data-test=document-status-metadata-for-item-create]").exists()
         ).toBeTruthy();
     });
 
@@ -100,7 +100,7 @@ describe("StatusMetadataWithCustomBindingForDocumentCreate", () => {
         store.state.is_item_status_metadata_used = false;
 
         expect(
-            wrapper.contains("[data-test=document-status-metadata-for-item-create]")
+            wrapper.find("[data-test=document-status-metadata-for-item-create]").exists()
         ).toBeFalsy();
         expect(wrapper.vm.status_value).toEqual(undefined);
     });

@@ -57,7 +57,7 @@ describe("CardAssignees", () => {
         const wrapper = await getWrapper({ assignees: [] as User[] } as Card);
 
         expect(wrapper.classes()).toContain("taskboard-card-assignees");
-        expect(wrapper.contains(UserAvatar)).toBe(false);
+        expect(wrapper.findComponent(UserAvatar).exists()).toBe(false);
     });
 
     it("displays the avatars of the card's assignees", async () => {
@@ -73,7 +73,7 @@ describe("CardAssignees", () => {
         };
         const wrapper = await getWrapper({ assignees: [steeve, bob] } as Card);
 
-        const avatars = wrapper.findAll(UserAvatar);
+        const avatars = wrapper.findAllComponents(UserAvatar);
         expect(avatars.length).toBe(2);
         expect(avatars.at(0).props("user")).toBe(steeve);
         expect(avatars.at(1).props("user")).toBe(bob);
@@ -88,7 +88,7 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-editable");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
-        expect(wrapper.contains("[data-test=icon]")).toBe(false);
+        expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
     });
 
     it("adds additional class if assignees are editable", async () => {
@@ -100,7 +100,7 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
-        expect(wrapper.contains("[data-test=icon]")).toBe(true);
+        expect(wrapper.find("[data-test=icon]").exists()).toBe(true);
     });
 
     it("Displays an icon user-add if assignees are editable and the current list is empty", async () => {
@@ -157,7 +157,7 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).toContain("taskboard-card-assignees-editable");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
-        expect(wrapper.contains(PeoplePicker)).toBe(false);
+        expect(wrapper.findComponent(PeoplePicker).exists()).toBe(false);
 
         const icon = wrapper.get("[data-test=icon]");
         expect(icon.classes()).toContain("fa");
@@ -181,7 +181,7 @@ describe("CardAssignees", () => {
         expect(wrapper.classes()).not.toContain("taskboard-card-edit-mode-assignees");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-editable");
         expect(wrapper.classes()).not.toContain("taskboard-card-assignees-edit-mode");
-        expect(wrapper.contains("[data-test=icon]")).toBe(false);
+        expect(wrapper.find("[data-test=icon]").exists()).toBe(false);
     });
 
     describe("role/tabindex/aria-label", () => {

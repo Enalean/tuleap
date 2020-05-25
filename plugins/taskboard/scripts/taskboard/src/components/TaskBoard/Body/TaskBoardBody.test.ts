@@ -90,7 +90,7 @@ describe("TaskBoardBody", () => {
             } as Swimlane,
         ];
         const wrapper = await createWrapper(swimlanes, true);
-        expect(wrapper.contains(CollapsedSwimlane)).toBe(true);
+        expect(wrapper.findComponent(CollapsedSwimlane).exists()).toBe(true);
     });
 
     it(`displays swimlanes with invalid mapping`, async () => {
@@ -106,7 +106,7 @@ describe("TaskBoardBody", () => {
         ];
         jest.spyOn(mapper, "getColumnOfCard").mockReturnValue(undefined);
         const wrapper = await createWrapper(swimlanes, true);
-        expect(wrapper.contains(InvalidMappingSwimlane)).toBe(true);
+        expect(wrapper.findComponent(InvalidMappingSwimlane).exists()).toBe(true);
     });
 
     it("does not display swimlane that are closed if user wants to hide them", async () => {
@@ -139,6 +139,6 @@ describe("TaskBoardBody", () => {
             mocks: { $store },
             localVue: await createTaskboardLocalVue(),
         });
-        expect(wrapper.contains(SwimlaneSkeleton)).toBe(true);
+        expect(wrapper.findComponent(SwimlaneSkeleton).exists()).toBe(true);
     });
 });

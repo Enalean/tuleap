@@ -71,8 +71,8 @@ describe("ChildrenCell", () => {
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, []);
 
-        expect(wrapper.findAll(ChildCard).length).toBe(0);
-        expect(wrapper.findAll(CardSkeleton).length).toBe(4);
+        expect(wrapper.findAllComponents(ChildCard).length).toBe(0);
+        expect(wrapper.findAllComponents(CardSkeleton).length).toBe(4);
     });
 
     it(`when the swimlane has not yet finished to load children cards,
@@ -88,8 +88,8 @@ describe("ChildrenCell", () => {
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, swimlane.children_cards);
 
-        expect(wrapper.findAll(ChildCard).length).toBe(3);
-        expect(wrapper.findAll(CardSkeleton).length).toBe(1);
+        expect(wrapper.findAllComponents(ChildCard).length).toBe(3);
+        expect(wrapper.findAllComponents(CardSkeleton).length).toBe(1);
     });
 
     it(`when the swimlane has loaded children cards,
@@ -105,7 +105,7 @@ describe("ChildrenCell", () => {
         } as Swimlane;
         const wrapper = createWrapper(swimlane, false, swimlane.children_cards);
 
-        expect(wrapper.findAll(ChildCard).length).toBe(3);
-        expect(wrapper.findAll(CardSkeleton).length).toBe(0);
+        expect(wrapper.findAllComponents(ChildCard).length).toBe(3);
+        expect(wrapper.findAllComponents(CardSkeleton).length).toBe(0);
     });
 });

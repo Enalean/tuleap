@@ -49,8 +49,8 @@ describe("ParentCell", () => {
             },
         });
 
-        expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
-        expect(wrapper.contains(NoMappingMessage)).toBe(false);
+        expect(wrapper.findComponent(CardWithRemainingEffort).exists()).toBe(true);
+        expect(wrapper.findComponent(NoMappingMessage).exists()).toBe(false);
     });
 
     it("displays a no mapping message if card does not have any children", () => {
@@ -77,8 +77,8 @@ describe("ParentCell", () => {
             },
         });
 
-        expect(wrapper.contains(CardWithRemainingEffort)).toBe(true);
-        expect(wrapper.contains(NoMappingMessage)).toBe(true);
+        expect(wrapper.findComponent(CardWithRemainingEffort).exists()).toBe(true);
+        expect(wrapper.findComponent(NoMappingMessage).exists()).toBe(true);
     });
 
     it("the parent card has an 'edit-mode' class when it is being edited", () => {
@@ -106,7 +106,7 @@ describe("ParentCell", () => {
             },
         });
 
-        expect(wrapper.get(CardWithRemainingEffort).classes()).toContain(
+        expect(wrapper.findComponent(CardWithRemainingEffort).classes()).toContain(
             "taskboard-cell-parent-card-edit-mode"
         );
     });

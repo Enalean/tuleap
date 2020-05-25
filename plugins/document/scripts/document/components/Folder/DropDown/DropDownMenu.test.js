@@ -53,7 +53,9 @@ describe("DropDownMenu", () => {
             });
             store.getters.is_item_an_empty_document = () => true;
             await wrapper.vm.$nextTick();
-            expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeFalsy();
+            expect(
+                wrapper.find("[data-test=document-dropdown-approval-tables]").exists()
+            ).toBeFalsy();
         });
         it(`Given item type is a file
             When we display the menu
@@ -66,7 +68,9 @@ describe("DropDownMenu", () => {
                     can_user_manage: false,
                 },
             });
-            expect(wrapper.contains("[data-test=document-dropdown-approval-tables]")).toBeTruthy();
+            expect(
+                wrapper.find("[data-test=document-dropdown-approval-tables]").exists()
+            ).toBeTruthy();
         });
     });
 
@@ -85,7 +89,7 @@ describe("DropDownMenu", () => {
             await wrapper.vm.$nextTick();
 
             expect(
-                wrapper.contains("[data-test=document-dropdown-download-folder-as-zip]")
+                wrapper.find("[data-test=document-dropdown-download-folder-as-zip]").exists()
             ).toBeTruthy();
         });
 
@@ -102,7 +106,7 @@ describe("DropDownMenu", () => {
             await wrapper.vm.$nextTick();
 
             expect(
-                wrapper.contains("[data-test=document-dropdown-download-folder-as-zip]")
+                wrapper.find("[data-test=document-dropdown-download-folder-as-zip]").exists()
             ).toBeFalsy();
         });
     });

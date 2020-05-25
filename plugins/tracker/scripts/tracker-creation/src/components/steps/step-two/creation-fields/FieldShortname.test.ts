@@ -87,7 +87,7 @@ describe("FieldShortname", () => {
     it("If the slugify mode is active, then it displays the slugified mode", async () => {
         const wrapper = await getWrapper(true, true, false);
 
-        expect(wrapper.contains("field-shortname-slugified-stub")).toBe(true);
+        expect(wrapper.find("field-shortname-slugified-stub").exists()).toBe(true);
     });
 
     it("Enters the error mode when the shortname does not respect the expected format", async () => {

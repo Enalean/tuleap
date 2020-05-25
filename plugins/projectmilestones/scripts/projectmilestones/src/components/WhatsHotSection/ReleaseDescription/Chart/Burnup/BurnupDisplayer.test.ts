@@ -85,7 +85,7 @@ describe("BurnupDisplayer", () => {
             release_data,
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -114,7 +114,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
@@ -143,7 +143,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -172,7 +172,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -201,7 +201,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeFalsy();
         expect(chart_error.attributes("has_error_start_date")).toBeTruthy();
@@ -230,7 +230,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("is_under_calculation")).toBeTruthy();
         expect(chart_error.attributes("has_error_start_date")).toBeFalsy();
@@ -260,7 +260,7 @@ describe("BurnupDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(Burnup)).toBe(true);
+        expect(wrapper.findComponent(Burnup).exists()).toBe(true);
     });
 
     it("When the timeframe is not on duration field and end date field is null, Then there is an error", async () => {
@@ -287,7 +287,7 @@ describe("BurnupDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const chart_error = wrapper.get(ChartError);
+        const chart_error = wrapper.findComponent(ChartError);
 
         expect(chart_error.attributes("has_error_duration")).toBeTruthy();
     });
@@ -320,6 +320,6 @@ describe("BurnupDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ChartError)).toBeFalsy();
+        expect(wrapper.findComponent(ChartError).exists()).toBeFalsy();
     });
 });

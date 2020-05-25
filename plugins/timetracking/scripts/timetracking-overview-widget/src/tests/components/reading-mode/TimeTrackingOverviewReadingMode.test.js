@@ -44,23 +44,23 @@ describe("Given a timetracking overview widget on reading mode", () => {
 
     it("When the widget isn't loading, then the icon spinner is not displayed", () => {
         const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=reading-mode-actions]")).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeTruthy();
     });
 
     it("When the widget is loading, then the icon spinner is displayed", () => {
         store.state.is_loading = true;
 
         const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=reading-mode-actions]")).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeTruthy();
     });
 
     it("When report is saved, then saves choice are not displayed", () => {
         store.state.is_report_saved = true;
 
         const wrapper = shallowMount(TimeTrackingOverviewReadingMode, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=reading-mode-actions]")).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=reading-mode-actions]").exists()).toBeFalsy();
     });
 });

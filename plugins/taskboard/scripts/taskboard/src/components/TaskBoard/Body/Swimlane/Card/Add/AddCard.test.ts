@@ -50,32 +50,32 @@ describe("AddCard", () => {
     it("Displays add button and no editor yet", () => {
         const wrapper = getWrapper();
 
-        expect(wrapper.contains(LabelEditor)).toBe(false);
-        expect(wrapper.contains(AddButton)).toBe(true);
+        expect(wrapper.findComponent(LabelEditor).exists()).toBe(false);
+        expect(wrapper.findComponent(AddButton).exists()).toBe(true);
     });
 
     it("Given the button is clicked, Then it hides the button and show the editor", async () => {
         const wrapper = getWrapper();
 
-        wrapper.get(AddButton).vm.$emit("click");
+        wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains(LabelEditor)).toBe(true);
-        expect(wrapper.get(LabelEditor).props("readonly")).toBe(false);
-        expect(wrapper.contains(AddButton)).toBe(false);
+        expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
+        expect(wrapper.findComponent(LabelEditor).props("readonly")).toBe(false);
+        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("setIsACellAddingInPlace");
     });
 
     it("Given the cancel button is pressed, Then it displays back the button and hide the editor", async () => {
         const wrapper = getWrapper();
 
-        wrapper.get(AddButton).vm.$emit("click");
+        wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.vm.$nextTick();
-        wrapper.get(CancelSaveButtons).vm.$emit("cancel");
+        wrapper.findComponent(CancelSaveButtons).vm.$emit("cancel");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains(LabelEditor)).toBe(false);
-        expect(wrapper.contains(AddButton)).toBe(true);
+        expect(wrapper.findComponent(LabelEditor).exists()).toBe(false);
+        expect(wrapper.findComponent(AddButton).exists()).toBe(true);
         expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("clearIsACellAddingInPlace");
     });
 
@@ -85,12 +85,12 @@ describe("AddCard", () => {
         And the editor is cleared to enter a new card`, async () => {
         const wrapper = getWrapper();
 
-        wrapper.get(AddButton).vm.$emit("click");
+        wrapper.findComponent(AddButton).vm.$emit("click");
         wrapper.setData({ label: "Lorem ipsum" });
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
-        wrapper.get(LabelEditor).vm.$emit("save");
+        wrapper.findComponent(LabelEditor).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
             swimlane: wrapper.vm.$props.swimlane,
@@ -103,8 +103,8 @@ describe("AddCard", () => {
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
 
-        expect(wrapper.contains(LabelEditor)).toBe(true);
-        expect(wrapper.contains(AddButton)).toBe(false);
+        expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
+        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
     });
 
     it(`Given the editor is displayed,
@@ -113,12 +113,12 @@ describe("AddCard", () => {
         And the editor is cleared to enter a new card`, async () => {
         const wrapper = getWrapper();
 
-        wrapper.get(AddButton).vm.$emit("click");
+        wrapper.findComponent(AddButton).vm.$emit("click");
         wrapper.setData({ label: "Lorem ipsum" });
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.$data.label).toBe("Lorem ipsum");
-        wrapper.get(CancelSaveButtons).vm.$emit("save");
+        wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
         expect(wrapper.vm.$store.dispatch).toHaveBeenCalledWith("swimlane/addCard", {
             swimlane: wrapper.vm.$props.swimlane,
@@ -131,17 +131,17 @@ describe("AddCard", () => {
         jest.runAllTimers();
         expect(wrapper.vm.$data.label).toBe("");
 
-        expect(wrapper.contains(LabelEditor)).toBe(true);
-        expect(wrapper.contains(AddButton)).toBe(false);
+        expect(wrapper.findComponent(LabelEditor).exists()).toBe(true);
+        expect(wrapper.findComponent(AddButton).exists()).toBe(false);
     });
 
     it("Blocks the creation of a new card if one is ongoing", async () => {
         const wrapper = getWrapper({
             is_card_creation_blocked_due_to_ongoing_creation: true,
         } as SwimlaneState);
-        wrapper.get(AddButton).vm.$emit("click");
+        wrapper.findComponent(AddButton).vm.$emit("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.get(LabelEditor).props("readonly")).toBe(true);
+        expect(wrapper.findComponent(LabelEditor).props("readonly")).toBe(true);
     });
 });

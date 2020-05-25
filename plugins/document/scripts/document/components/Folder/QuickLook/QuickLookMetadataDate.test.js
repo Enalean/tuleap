@@ -58,10 +58,10 @@ describe("QuickLookMetadataDate", () => {
         store.state.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
-        expect(wrapper.contains("[data-test=metadata-date-formatted-display]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=metadata-date-today]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-permanent]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-empty]")).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeFalsy();
 
         expect(
             wrapper
@@ -83,10 +83,10 @@ describe("QuickLookMetadataDate", () => {
         store.state.date_time_format = "d/m/Y H:i";
 
         const wrapper = metadata_factory(metadata_date);
-        expect(wrapper.contains("[data-test=metadata-date-formatted-display]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-today]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-permanent]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-empty]")).toBeTruthy();
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeTruthy();
     });
     it(`Given an obsolescence date
         Then it displays the formatted date like a regular date type metadata`, () => {
@@ -103,10 +103,10 @@ describe("QuickLookMetadataDate", () => {
 
         const wrapper = metadata_factory(metadata_date);
 
-        expect(wrapper.contains("[data-test=metadata-date-formatted-display]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=metadata-date-today]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-permanent]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-empty]")).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeFalsy();
     });
     it(`Given an obsolescence date without value
         Then it displays it as permanent`, () => {
@@ -124,10 +124,10 @@ describe("QuickLookMetadataDate", () => {
 
         const wrapper = metadata_factory(metadata_date);
 
-        expect(wrapper.contains("[data-test=metadata-date-formatted-display]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-today]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-permanent]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=metadata-date-empty]")).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeFalsy();
     });
     it(`Given an obsolescence date set as today
         Then it displays it as today`, () => {
@@ -147,9 +147,9 @@ describe("QuickLookMetadataDate", () => {
 
         const wrapper = metadata_factory(metadata_date);
 
-        expect(wrapper.contains("[data-test=metadata-date-formatted-display]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-today]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=metadata-date-permanent]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-date-empty]")).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeFalsy();
     });
 });

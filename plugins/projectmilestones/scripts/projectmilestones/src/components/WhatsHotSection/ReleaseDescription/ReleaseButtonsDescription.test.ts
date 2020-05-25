@@ -178,7 +178,7 @@ describe("ReleaseButtonsDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=taskboard-link]")).toBe(false);
+        expect(wrapper.find("[data-test=taskboard-link]").exists()).toBe(false);
     });
 
     it("When there isn't cardwall in resources, Then there isn't any link to cardwall", async () => {
@@ -207,6 +207,6 @@ describe("ReleaseButtonsDescription", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=cardwall-link]")).toBe(false);
+        expect(wrapper.find("[data-test=cardwall-link]").exists()).toBe(false);
     });
 });

@@ -41,12 +41,12 @@ describe("ItemUpdateProperties", () => {
         it("displays the approvals option action for update if the item has an approval table regardless of approval enable status", () => {
             const wrapper = file_properties_update_factory({ has_approval_table: true });
 
-            expect(wrapper.contains("[data-test='update-approval-properties']")).toBeTruthy();
+            expect(wrapper.find("[data-test='update-approval-properties']").exists()).toBeTruthy();
         });
         it("does not display the approvals option action for update if the item has no approval table", () => {
             const wrapper = file_properties_update_factory({ has_approval_table: false });
 
-            expect(wrapper.contains("[data-test='update-approval-properties']")).toBeFalsy();
+            expect(wrapper.find("[data-test='update-approval-properties']").exists()).toBeFalsy();
         });
         it(`Given an action event thrown by my child component (MyUltraCoolEvent)
             Then it resend the received event`, () => {

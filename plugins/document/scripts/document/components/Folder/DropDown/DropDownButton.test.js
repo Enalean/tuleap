@@ -38,9 +38,9 @@ describe("DropDownButton", () => {
         Then it should display the button action and the dropdown option ( | update | v |)`, () => {
         const wrapper = dropdown_factory({ isAppended: true, isInQuickLookMode: false });
 
-        expect(wrapper.contains(".tlp-append")).toBeTruthy();
-        expect(wrapper.contains(".tlp-button-icon-right")).toBeFalsy();
-        expect(wrapper.contains(".fa-ellipsis-h")).toBeFalsy();
+        expect(wrapper.find(".tlp-append").exists()).toBeTruthy();
+        expect(wrapper.find(".tlp-button-icon-right").exists()).toBeFalsy();
+        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeFalsy();
     });
 
     it(`Given drop down button is not appended (aka user has read permissions)
@@ -48,9 +48,9 @@ describe("DropDownButton", () => {
         Then it should display an ellipsis and the dropdown option (|... v|)`, () => {
         const wrapper = dropdown_factory({ isAppended: false, isInQuickLookMode: false });
 
-        expect(wrapper.contains(".tlp-append")).toBeFalsy();
-        expect(wrapper.contains(".fa-ellipsis-h")).toBeTruthy();
-        expect(wrapper.contains(".tlp-button-icon-right")).toBeTruthy();
+        expect(wrapper.find(".tlp-append").exists()).toBeFalsy();
+        expect(wrapper.find(".fa-ellipsis-h").exists()).toBeTruthy();
+        expect(wrapper.find(".tlp-button-icon-right").exists()).toBeTruthy();
     });
 
     it(`Given drop down button is in quick look mode
@@ -58,7 +58,7 @@ describe("DropDownButton", () => {
         Then it should be displayed outlined`, () => {
         const wrapper = dropdown_factory({ isAppended: true, isInQuickLookMode: true });
 
-        expect(wrapper.contains(".tlp-button-outline")).toBeTruthy();
+        expect(wrapper.find(".tlp-button-outline").exists()).toBeTruthy();
     });
 
     it(`Given drop down button is in large mode
@@ -70,7 +70,7 @@ describe("DropDownButton", () => {
             isInLargeMode: true,
         });
 
-        expect(wrapper.contains(".tlp-button-large")).toBeTruthy();
+        expect(wrapper.find(".tlp-button-large").exists()).toBeTruthy();
     });
 
     it(`Hide the dropdown

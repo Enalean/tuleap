@@ -65,7 +65,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
         store.state.is_item_status_metadata_used = true;
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains("[data-test=document-status-for-item-update]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeTruthy();
     });
 
     it(`does not display status if property is not available`, () => {
@@ -89,7 +89,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
 
         store.state.is_item_status_metadata_used = false;
 
-        expect(wrapper.contains("[data-test=document-status-for-item-update]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeFalsy();
     });
 
     it(`Given status value is updated Then the props used for document update is updated`, async () => {
@@ -115,7 +115,7 @@ describe("StatusMetadataWithCustomBindingForDocumentUpdate", () => {
         wrapper.vm.status_value = "approved";
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains("[data-test=document-status-for-item-update]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-status-for-item-update]").exists()).toBeTruthy();
 
         expect(wrapper.vm.currentlyUpdatedItem.status).toEqual("approved");
     });

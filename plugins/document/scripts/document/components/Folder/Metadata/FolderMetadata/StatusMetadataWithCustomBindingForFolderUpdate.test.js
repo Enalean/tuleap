@@ -66,7 +66,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.contains("[data-test=document-status-metadata-for-folder-update]")
+            wrapper.find("[data-test=document-status-metadata-for-folder-update]").exists()
         ).toBeTruthy();
     });
 
@@ -92,7 +92,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         store.state.is_item_status_metadata_used = false;
 
         expect(
-            wrapper.contains("[data-test=document-status-metadata-for-folder-update]")
+            wrapper.find("[data-test=document-status-metadata-for-folder-update]").exists()
         ).toBeFalsy();
     });
 
@@ -124,7 +124,7 @@ describe("StatusMetadataWithCustomBindingForFolderUpdate", () => {
         await wrapper.vm.$nextTick();
 
         expect(
-            wrapper.contains("[data-test=document-status-metadata-for-folder-update]")
+            wrapper.find("[data-test=document-status-metadata-for-folder-update]").exists()
         ).toBeTruthy();
 
         expect(wrapper.vm.currentlyUpdatedItem.status.value).toEqual("approved");

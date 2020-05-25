@@ -47,7 +47,7 @@ describe("CollapsedLabel", () => {
         const column: ColumnDefinition = { label: "Done", is_collapsed: true } as ColumnDefinition;
         const wrapper = getWrapper(column);
 
-        expect(wrapper.contains(CardsInColumnCount)).toBe(true);
+        expect(wrapper.findComponent(CardsInColumnCount).exists()).toBe(true);
     });
 
     it(`informs the pointerenter when the column is collapsed`, () => {

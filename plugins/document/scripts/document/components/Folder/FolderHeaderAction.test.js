@@ -51,8 +51,10 @@ describe("FolderHeaderAction", () => {
 
         const wrapper = dropdown_factory({ item });
 
-        expect(wrapper.contains("[data-test=document-item-action-new-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-item-action-details-button]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-item-action-new-button]").exists()).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-item-action-details-button]").exists()
+        ).toBeTruthy();
     });
 
     it(`Given user has write permission on current folder
@@ -66,7 +68,9 @@ describe("FolderHeaderAction", () => {
 
         const wrapper = dropdown_factory({ item });
 
-        expect(wrapper.contains("[data-test=document-item-action-new-button]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-item-action-details-button]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-item-action-new-button]").exists()).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-item-action-details-button]").exists()
+        ).toBeFalsy();
     });
 });

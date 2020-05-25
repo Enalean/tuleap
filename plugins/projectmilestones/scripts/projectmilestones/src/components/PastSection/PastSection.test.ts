@@ -67,7 +67,7 @@ describe("PastSection", () => {
         store_options.state.last_release = null;
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseDisplayer)).toBe(false);
+        expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(false);
     });
 
     it("When there is one last_milestone, then ReleaseDisplayer Component is displayed", async () => {
@@ -76,6 +76,6 @@ describe("PastSection", () => {
         } as MilestoneData;
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseDisplayer)).toBe(true);
+        expect(wrapper.findComponent(ReleaseDisplayer).exists()).toBe(true);
     });
 });

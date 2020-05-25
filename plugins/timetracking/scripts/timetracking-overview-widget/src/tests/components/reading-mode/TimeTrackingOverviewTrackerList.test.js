@@ -42,7 +42,9 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
         it("When no selected trackers, then 'no trackers selected' is displayed", () => {
             const wrapper = shallowMount(TimeTrackingOverviewTrackerList, component_options);
             expect(
-                wrapper.contains("[data-test=timetracking-overview-reading-mode-trackers-empty]")
+                wrapper
+                    .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
+                    .exists()
             ).toBeTruthy();
         });
 
@@ -77,7 +79,9 @@ describe("TimeTrackingOverviewTrackerList tests", () => {
 
             const wrapper = shallowMount(TimeTrackingOverviewTrackerList, component_options);
             expect(
-                wrapper.contains("[data-test=timetracking-overview-reading-mode-trackers-empty]")
+                wrapper
+                    .find("[data-test=timetracking-overview-reading-mode-trackers-empty]")
+                    .exists()
             ).toBeFalsy();
         });
     });

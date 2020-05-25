@@ -51,7 +51,7 @@ describe("CardWithChildren", () => {
         };
         const wrapper = createWrapper(tuleap_template);
 
-        expect(wrapper.contains("[data-test=scrum-template-svg")).toBeTruthy();
+        expect(wrapper.find("[data-test=scrum-template-svg]").exists()).toBeTruthy();
     });
 
     it(`checks the input`, () => {

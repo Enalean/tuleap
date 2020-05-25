@@ -50,16 +50,16 @@ describe("Given a personal timetracking widget", () => {
 
     it("When reading mode is true, then reading should be displayed but not writing mode", () => {
         const wrapper = getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains(WidgetReadingMode)).toBeTruthy();
-        expect(wrapper.contains(WidgetWritingMode)).toBeFalsy();
-        expect(wrapper.contains(WidgetArtifactTable)).toBeTruthy();
+        expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeTruthy();
+        expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetArtifactTable).exists()).toBeTruthy();
     });
 
     it("When reading mode is false, then writing should be displayed but not reading mode", () => {
         store_options.state.reading_mode = false;
         const wrapper = getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(WidgetReadingMode)).toBeFalsy();
-        expect(wrapper.contains(WidgetWritingMode)).toBeTruthy();
+        expect(wrapper.findComponent(WidgetReadingMode).exists()).toBeFalsy();
+        expect(wrapper.findComponent(WidgetWritingMode).exists()).toBeTruthy();
     });
 });

@@ -85,10 +85,10 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(DocumentBreadcrumb).exists()).toBeFalsy();
-        expect(wrapper.find(PermissionError).exists()).toBeTruthy();
-        expect(wrapper.find(ItemPermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(LoadingError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeFalsy();
+        expect(wrapper.findComponent(PermissionError).exists()).toBeTruthy();
+        expect(wrapper.findComponent(ItemPermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(LoadingError).exists()).toBeFalsy();
     });
 
     it(`Displays loading error if folder fails to load itself`, () => {
@@ -104,10 +104,10 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(DocumentBreadcrumb).exists()).toBeTruthy();
-        expect(wrapper.find(PermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(ItemPermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(LoadingError).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
+        expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ItemPermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(LoadingError).exists()).toBeTruthy();
     });
 
     it(`Displays item permission error if user can't access to a document`, () => {
@@ -123,10 +123,10 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(DocumentBreadcrumb).exists()).toBeTruthy();
-        expect(wrapper.find(PermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(ItemPermissionError).exists()).toBeTruthy();
-        expect(wrapper.find(LoadingError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
+        expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ItemPermissionError).exists()).toBeTruthy();
+        expect(wrapper.findComponent(LoadingError).exists()).toBeFalsy();
     });
 
     it(`Displays item loading error if document load fails`, () => {
@@ -142,10 +142,10 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(DocumentBreadcrumb).exists()).toBeTruthy();
-        expect(wrapper.find(PermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(ItemPermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(LoadingError).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
+        expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ItemPermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(LoadingError).exists()).toBeTruthy();
     });
 
     it(`Displays item loading error if document is locked`, () => {
@@ -161,10 +161,10 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(DocumentBreadcrumb).exists()).toBeTruthy();
-        expect(wrapper.find(PermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(ItemPermissionError).exists()).toBeFalsy();
-        expect(wrapper.find(LoadingError).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DocumentBreadcrumb).exists()).toBeTruthy();
+        expect(wrapper.findComponent(PermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(ItemPermissionError).exists()).toBeFalsy();
+        expect(wrapper.findComponent(LoadingError).exists()).toBeTruthy();
     });
 
     it(`Does not display link back to old UI for anonymous`, () => {
@@ -196,7 +196,7 @@ describe("App", () => {
 
         const wrapper = factory(state, props);
 
-        expect(wrapper.find(SwitchToOldUI).exists()).toBeFalsy();
+        expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeFalsy();
     });
 
     it(`Displays a switch back link for connected users`, () => {
@@ -212,6 +212,6 @@ describe("App", () => {
 
         const wrapper = factory(state, default_prop);
 
-        expect(wrapper.find(SwitchToOldUI).exists()).toBeTruthy();
+        expect(wrapper.findComponent(SwitchToOldUI).exists()).toBeTruthy();
     });
 });

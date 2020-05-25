@@ -78,8 +78,8 @@ describe("FolderContent", () => {
             folder_content: [item],
         });
 
-        expect(wrapper.contains("[data-test=document-quick-look]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-folder-owner-information]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-quick-look]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-folder-owner-information]").exists()).toBeTruthy();
     });
 
     describe("toggleQuickLook", () => {

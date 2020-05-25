@@ -46,15 +46,15 @@ describe("Given a timetracking overview widget on writing mode", () => {
 
     it("When trackers and projects are available, then it's possible to click on add button", () => {
         const wrapper = shallowMount(TimeTrackingOverviewWritingTrackers, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=icon-plus]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=icon-ban]")).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-plus]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-ban]").exists()).toBeFalsy();
     });
 
     it("When trackers and projects are available, then click on add button", () => {
         const wrapper = shallowMount(TimeTrackingOverviewWritingTrackers, component_options);
 
-        wrapper.get(TimeTrackingOverviewTrackersOptions).vm.$emit("input", "letracker");
+        wrapper.findComponent(TimeTrackingOverviewTrackersOptions).vm.$emit("input", "letracker");
         wrapper.get("[data-test=add-tracker-button]").trigger("click");
         expect(store.commit).toHaveBeenCalledWith("addSelectedTrackers", "letracker");
     });
@@ -63,9 +63,9 @@ describe("Given a timetracking overview widget on writing mode", () => {
         store.state.trackers = [];
 
         const wrapper = shallowMount(TimeTrackingOverviewWritingTrackers, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=icon-plus]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=icon-ban]")).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-plus]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-ban]").exists()).toBeTruthy();
     });
 
     it("When projects are not available, then spinner icon is displayed", () => {
@@ -73,8 +73,8 @@ describe("Given a timetracking overview widget on writing mode", () => {
         store.state.is_loading_tracker = true;
 
         const wrapper = shallowMount(TimeTrackingOverviewWritingTrackers, component_options);
-        expect(wrapper.contains("[data-test=icon-spinner]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=icon-plus]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=icon-ban]")).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-spinner]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=icon-plus]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=icon-ban]").exists()).toBeFalsy();
     });
 });

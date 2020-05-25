@@ -37,7 +37,7 @@ describe("CollapsedHeaderCell", () => {
 
         expect(wrapper.classes("taskboard-header-collapsed")).toBe(true);
         expect(wrapper.classes("tlp-swatch-fiesta-red")).toBe(false);
-        expect(wrapper.contains(ExpandButton)).toBe(true);
+        expect(wrapper.findComponent(ExpandButton).exists()).toBe(true);
     });
 
     it("displays a cell with color", () => {

@@ -82,7 +82,7 @@ describe("ReleaseBadgesOpenSprint", () => {
         it("When the component is rendered, Then ReleaseBadgesButtonOpenSprint is rendered", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseButtonsDescription)).toBe(true);
+            expect(wrapper.findComponent(ReleaseButtonsDescription).exists()).toBe(true);
         });
     });
 });

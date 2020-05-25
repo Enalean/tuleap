@@ -46,7 +46,7 @@ describe("CardInfo", () => {
     it("Displays the assignees", () => {
         const wrapper = getWrapper(getCard());
 
-        expect(wrapper.contains(CardAssignees)).toBe(true);
+        expect(wrapper.findComponent(CardAssignees).exists()).toBe(true);
     });
 
     it("Includes the initial effort slot", () => {
@@ -54,7 +54,7 @@ describe("CardInfo", () => {
             initial_effort: '<div class="my-initial-effort"></div>',
         });
 
-        expect(wrapper.contains(".taskboard-card-info > .my-initial-effort")).toBe(true);
+        expect(wrapper.find(".taskboard-card-info > .my-initial-effort").exists()).toBe(true);
     });
 
     it("Does not include the initial effort slot if card is in edit mode", () => {
@@ -62,6 +62,6 @@ describe("CardInfo", () => {
             initial_effort: '<div class="my-initial-effort"></div>',
         });
 
-        expect(wrapper.contains(".taskboard-card-info > .my-initial-effort")).toBe(false);
+        expect(wrapper.find(".taskboard-card-info > .my-initial-effort").exists()).toBe(false);
     });
 });

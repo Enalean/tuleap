@@ -54,33 +54,33 @@ describe("Given a personal timetracking widget", () => {
 
     it("When no error and result can be displayed, then complete table should be displayed", () => {
         const wrapper = getWidgetArtifactTableInstance(store_options);
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=artifact-table]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=load-more]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-foot]")).toBeTruthy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=artifact-table]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=load-more]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-foot]").exists()).toBeTruthy();
     });
 
     it("When rest error and more times can be load, then danger message and load more button should be displayed", () => {
         store_options.getters.has_rest_error = true;
         store_options.getters.can_load_more = true;
         const wrapper = getWidgetArtifactTableInstance(store_options);
-        expect(wrapper.contains("[data-test=alert-danger]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=load-more]")).toBeTruthy();
+        expect(wrapper.find("[data-test=alert-danger]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=load-more]").exists()).toBeTruthy();
     });
 
     it("When widget is loading and result can't be displayed, then loader should be displayed but not table", () => {
         store_options.state.is_loading = true;
         store_options.getters.can_results_be_displayed = false;
         const wrapper = getWidgetArtifactTableInstance(store_options);
-        expect(wrapper.contains("[data-test=timetracking-loader]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=artifact-table]")).toBeFalsy();
+        expect(wrapper.find("[data-test=timetracking-loader]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=artifact-table]").exists()).toBeFalsy();
     });
 
     it("When no times, then table with empty tab should be displayed", () => {
         store_options.state.times = [];
         const wrapper = getWidgetArtifactTableInstance(store_options);
-        expect(wrapper.contains("[data-test=empty-tab]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=table-foot]")).toBeFalsy();
+        expect(wrapper.find("[data-test=empty-tab]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=table-foot]").exists()).toBeFalsy();
     });
 });

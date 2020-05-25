@@ -128,10 +128,10 @@ describe("ProjectInformationInputPrivacyList", () => {
                 localVue: await createProjectRegistrationLocalVue(),
                 mocks: { $store: store },
             });
-            expect(wrapper.contains("[data-test=unrestricted]")).toBe(false);
-            expect(wrapper.contains("[data-test=private]")).toBe(false);
-            expect(wrapper.contains("[data-test=private-wo-restr]")).toBe(true);
-            expect(wrapper.contains("[data-test=public]")).toBe(true);
+            expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=private]").exists()).toBe(false);
+            expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=public]").exists()).toBe(true);
         });
 
         it("Displays all options when restricted are allowed", async () => {
@@ -150,10 +150,10 @@ describe("ProjectInformationInputPrivacyList", () => {
                 mocks: { $store: store },
             });
 
-            expect(wrapper.contains("[data-test=private]")).toBe(true);
-            expect(wrapper.contains("[data-test=private-wo-restr]")).toBe(true);
-            expect(wrapper.contains("[data-test=unrestricted]")).toBe(true);
-            expect(wrapper.contains("[data-test=public]")).toBe(true);
+            expect(wrapper.find("[data-test=private]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=private-wo-restr]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=unrestricted]").exists()).toBe(true);
+            expect(wrapper.find("[data-test=public]").exists()).toBe(true);
         });
     });
 });

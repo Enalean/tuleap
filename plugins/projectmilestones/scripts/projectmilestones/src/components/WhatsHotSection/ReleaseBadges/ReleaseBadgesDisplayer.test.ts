@@ -69,8 +69,10 @@ describe("ReleaseBadgesDisplayer", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOpenSprints)).toBe(false);
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOnlyClosedSprints)).toBe(true);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
+                true
+            );
         });
 
         it("When total_sprints is null, Then ReleaseBadgesDisplayerIfOpenSprints is not rendered", async () => {
@@ -85,8 +87,10 @@ describe("ReleaseBadgesDisplayer", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOpenSprints)).toBe(false);
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOnlyClosedSprints)).toBe(true);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(false);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
+                true
+            );
         });
 
         it("When there are some open sprints, Then ReleaseBadgesDisplayerIfOpenSprints is rendered", async () => {
@@ -106,8 +110,10 @@ describe("ReleaseBadgesDisplayer", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOpenSprints)).toBe(true);
-            expect(wrapper.contains(ReleaseBadgesDisplayerIfOnlyClosedSprints)).toBe(false);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOpenSprints).exists()).toBe(true);
+            expect(wrapper.findComponent(ReleaseBadgesDisplayerIfOnlyClosedSprints).exists()).toBe(
+                false
+            );
         });
     });
 });

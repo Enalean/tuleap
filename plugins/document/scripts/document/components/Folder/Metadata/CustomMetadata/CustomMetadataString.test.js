@@ -44,7 +44,9 @@ describe("CustomMetadataString", () => {
 
         expect(date_input.element.value).toEqual("string value");
         expect(date_input.element.required).toBe(true);
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
+        ).toBeTruthy();
     });
 
     it(`renders an input with an empty value`, () => {
@@ -59,7 +61,9 @@ describe("CustomMetadataString", () => {
 
         expect(date_input.element.value).toEqual("");
         expect(date_input.element.required).toBe(false);
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
+        ).toBeFalsy();
     });
 
     it(`does not render the component when type does not match`, () => {
@@ -71,6 +75,6 @@ describe("CustomMetadataString", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-metadata-string]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-custom-metadata-string]").exists()).toBeFalsy();
     });
 });

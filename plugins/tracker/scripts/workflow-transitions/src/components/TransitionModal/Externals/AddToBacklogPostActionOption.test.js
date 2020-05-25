@@ -67,6 +67,6 @@ describe("AddToBacklogPostActionOption", () => {
     });
 
     it("does not display the option when the Agile Dashboard service is not used", () => {
-        expect(wrapper.contains("[data-test=add-to-backlog]")).toBe(false);
+        expect(wrapper.find("[data-test=add-to-backlog]").exists()).toBe(false);
     });
 });

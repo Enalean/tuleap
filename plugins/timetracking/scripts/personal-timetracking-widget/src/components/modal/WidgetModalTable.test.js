@@ -50,18 +50,18 @@ describe("Given a personal timetracking widget modal", () => {
 
     it("When add mode is false, then complete table should be displayed", () => {
         const wrapper = getWidgetModalTableInstance(store_options);
-        expect(wrapper.contains("[data-test=table-body-with-row]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=edit-time-with-row]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-body-without-row]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=edit-time-without-row]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=table-foot]")).toBeTruthy();
+        expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=edit-time-with-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-body-without-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=edit-time-without-row]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=table-foot]").exists()).toBeTruthy();
     });
 
     it("When add mode is true, then table edit and rows should be displayed", () => {
         store_options.state.is_add_mode = true;
         const wrapper = getWidgetModalTableInstance(store_options);
-        expect(wrapper.contains("[data-test=table-body-with-row]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=edit-time-with-row]")).toBeTruthy();
+        expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=edit-time-with-row]").exists()).toBeTruthy();
     });
 
     describe("Given an empty state", () => {
@@ -71,15 +71,15 @@ describe("Given a personal timetracking widget modal", () => {
 
         it("When add mode is false, then empty table should be displayed", () => {
             const wrapper = getWidgetModalTableInstance(store_options);
-            expect(wrapper.contains("[data-test=table-body-with-row]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=table-body-without-row]")).toBeTruthy();
+            expect(wrapper.find("[data-test=table-body-with-row]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=table-body-without-row]").exists()).toBeTruthy();
         });
 
         it("When in add mode, then edit row should be displayed", () => {
             store_options.state.is_add_mode = true;
             const wrapper = getWidgetModalTableInstance(store_options);
-            expect(wrapper.contains("[data-test=edit-time-without-row]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=table-foot]")).toBeFalsy();
+            expect(wrapper.find("[data-test=edit-time-without-row]").exists()).toBeTruthy();
+            expect(wrapper.find("[data-test=table-foot]").exists()).toBeFalsy();
         });
     });
 });

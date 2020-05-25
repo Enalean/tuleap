@@ -56,10 +56,10 @@ describe("CurrentFolderDropZone", () => {
             });
 
             expect(
-                wrapper.contains("[data-test=document-current-folder-success-dropzone]")
+                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists()
             ).toBeTruthy();
             expect(
-                wrapper.contains("[data-test=document-current-folder-error-dropzone]")
+                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
             ).toBeFalsy();
         });
 
@@ -71,10 +71,10 @@ describe("CurrentFolderDropZone", () => {
             });
 
             expect(
-                wrapper.contains("[data-test=document-current-folder-success-dropzone]")
+                wrapper.find("[data-test=document-current-folder-success-dropzone]").exists()
             ).toBeFalsy();
             expect(
-                wrapper.contains("[data-test=document-current-folder-error-dropzone]")
+                wrapper.find("[data-test=document-current-folder-error-dropzone]").exists()
             ).toBeTruthy();
         });
     });

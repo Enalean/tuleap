@@ -77,7 +77,7 @@ describe("TaskBoard", () => {
                 }),
             },
         });
-        expect(wrapper.contains(ErrorModal)).toBe(true);
+        expect(wrapper.findComponent(ErrorModal).exists()).toBe(true);
     });
 
     describe(`mounted()`, () => {

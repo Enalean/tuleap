@@ -81,7 +81,7 @@ describe("ReleaseDisplayer", () => {
             };
         };
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=show-error-message]")).toBe(true);
+        expect(wrapper.find("[data-test=show-error-message]").exists()).toBe(true);
     });
 
     it("When the widget is rendered and it's the first release, Then toggle is open", async () => {
@@ -95,7 +95,7 @@ describe("ReleaseDisplayer", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
+        expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
     });
 
     it("When the widget is rendered and it's not the first release, Then toggle is closed", async () => {
@@ -115,7 +115,7 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=toggle-open]")).toBe(false);
+        expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });
 
     it("When the toggle is opened and the user want close it, Then an event is emit", async () => {
@@ -128,11 +128,11 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=toggle-open]")).toBe(true);
+        expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(true);
 
-        wrapper.get(ReleaseHeader).vm.$emit("toggleReleaseDetails");
+        wrapper.findComponent(ReleaseHeader).vm.$emit("toggleReleaseDetails");
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains("[data-test=toggle-open]")).toBe(false);
+        expect(wrapper.find("[data-test=toggle-open]").exists()).toBe(false);
     });
 
     it("When the milestone is loading, Then the class is disabled and a tooltip say why", async () => {
@@ -159,6 +159,6 @@ describe("ReleaseDisplayer", () => {
         };
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        expect(wrapper.contains("[data-test=display-release-data]")).toBe(true);
+        expect(wrapper.find("[data-test=display-release-data]").exists()).toBe(true);
     });
 });

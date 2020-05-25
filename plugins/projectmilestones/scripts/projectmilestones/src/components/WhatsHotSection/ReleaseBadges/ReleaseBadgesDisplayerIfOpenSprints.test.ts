@@ -82,7 +82,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
     it("When the component is rendered, Then ReleaseBasgesOthersSprints is rendered", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseOthersBadges)).toBe(true);
+        expect(wrapper.findComponent(ReleaseOthersBadges).exists()).toBe(true);
     });
 
     describe("Display number of sprint", () => {
@@ -98,7 +98,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
 
         it("When total_sprints is null, Then ReleaseBadgesSprints is not rendered", async () => {
@@ -113,7 +113,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
 
         it("When there are some open sprints, Then ReleaseBadgesSprints is rendered", async () => {
@@ -146,7 +146,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(true);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(true);
         });
 
         it("When there is no tracker of sprint, Then ReleasesBasgesSprints is not rendered", async () => {
@@ -168,7 +168,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
 
         it("When the user can't see the tracker, Then ReleasesBasgesAllSprints is not rendered", async () => {
@@ -201,7 +201,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=badge-sprint]")).toBe(false);
+            expect(wrapper.find("[data-test=badge-sprint]").exists()).toBe(false);
         });
     });
 
@@ -209,7 +209,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         wrapper.setData({ open_sprints_details: true });
-        expect(wrapper.contains("[data-test=line-displayed]")).toBe(true);
+        expect(wrapper.find("[data-test=line-displayed]").exists()).toBe(true);
     });
 
     it("When the user clicked on sprints, Then ReleaseBadgesClosedSprints is rendered", async () => {
@@ -218,22 +218,22 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(false);
+        expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
         wrapper.setData({ open_sprints_details: true });
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains(ReleaseBadgesClosedSprints)).toBe(true);
+        expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(true);
     });
 
     it("When sprints details is open, Then there is button to close sprint details", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
 
         wrapper.setData({ open_sprints_details: true });
-        expect(wrapper.contains("[data-test=button-to-close]")).toBe(true);
+        expect(wrapper.find("[data-test=button-to-close]").exists()).toBe(true);
 
         wrapper.get("[data-test=button-to-close]").trigger("click");
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.contains("[data-test=button-to-close]")).toBe(false);
+        expect(wrapper.find("[data-test=button-to-close]").exists()).toBe(false);
     });
 
     it("When component is rendered and it's the first release, Then sprints details is open", async () => {
@@ -267,7 +267,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(true);
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
     });
 
     it("When component is rendered and it's not the first release, Then sprints details is closed", async () => {
@@ -301,7 +301,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(false);
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
     });
 
     it("When sprints details is open, Then ReleaseBadgesOpenSprint is rendered", async () => {
@@ -335,12 +335,12 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(false);
-        expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(true);
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
+        expect(wrapper.findComponent(ReleaseBadgesAllSprints).exists()).toBe(true);
 
         wrapper.setData({ open_sprints_details: true });
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains(ReleaseBadgesOpenSprint)).toBe(true);
-        expect(wrapper.contains(ReleaseBadgesAllSprints)).toBe(false);
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
+        expect(wrapper.findComponent(ReleaseBadgesAllSprints).exists()).toBe(false);
     });
 });

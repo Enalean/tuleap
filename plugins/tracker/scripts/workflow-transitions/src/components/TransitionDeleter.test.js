@@ -68,11 +68,11 @@ describe("TransitionDeleter", () => {
 
     describe("when the workflow is in advanced mode", () => {
         it("will ask for confirmation before deleting a transition", () => {
-            expect(wrapper.contains(confirm_delete_transition_selector)).toBeTruthy();
+            expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
         });
 
         it("will create a popover", async () => {
-            expect(wrapper.contains(TransitionDeletePopover)).toBeTruthy();
+            expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
             await wrapper.vm.$nextTick();
             expect(tlp.createPopover).toHaveBeenCalled();
         });
@@ -125,11 +125,11 @@ describe("TransitionDeleter", () => {
             });
 
             it("will ask for confirmation before deleting a transition", () => {
-                expect(wrapper.contains(confirm_delete_transition_selector)).toBeTruthy();
+                expect(wrapper.find(confirm_delete_transition_selector).exists()).toBeTruthy();
             });
 
             it("will create a popover", async () => {
-                expect(wrapper.contains(TransitionDeletePopover)).toBeTruthy();
+                expect(wrapper.findComponent(TransitionDeletePopover).exists()).toBeTruthy();
                 await wrapper.vm.$nextTick();
                 expect(tlp.createPopover).toHaveBeenCalled();
             });
@@ -153,7 +153,7 @@ describe("TransitionDeleter", () => {
             });
 
             it("won't show a confirmation popover", () => {
-                expect(wrapper.contains(delete_transition_selector)).toBeTruthy();
+                expect(wrapper.find(delete_transition_selector).exists()).toBeTruthy();
             });
 
             describe("and when user clicks the delete button", () => {

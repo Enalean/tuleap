@@ -45,7 +45,9 @@ describe("CustomMetadataText", () => {
 
         expect(date_input.element.value).toEqual("text value");
         expect(date_input.element.required).toBe(true);
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
+        ).toBeTruthy();
     });
 
     it(`renders an input with an empty value`, () => {
@@ -61,7 +63,9 @@ describe("CustomMetadataText", () => {
 
         expect(date_input.element.value).toEqual("");
         expect(date_input.element.required).toBe(false);
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
+        ).toBeFalsy();
     });
 
     it(`Given custom text metadata
@@ -75,6 +79,6 @@ describe("CustomMetadataText", () => {
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
 
-        expect(wrapper.contains("[data-test=document-custom-metadata-text]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-custom-metadata-text]").exists()).toBeTruthy();
     });
 });

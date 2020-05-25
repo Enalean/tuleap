@@ -51,7 +51,7 @@ describe("ChildCard", () => {
 
             const wrapper = getWrapper(card, false);
 
-            expect(wrapper.isEmpty()).toBe(true);
+            expect(wrapper.html()).toEqual("");
         });
 
         it(`Given user wants to see closed items
@@ -65,8 +65,8 @@ describe("ChildCard", () => {
 
             const wrapper = getWrapper(card, true);
 
-            expect(wrapper.isEmpty()).toBe(false);
-            expect(wrapper.get(BaseCard).props("card")).toBe(card);
+            expect(wrapper.html()).not.toEqual("");
+            expect(wrapper.findComponent(BaseCard).props("card")).toBe(card);
         });
 
         it(`adds draggable attributes`, () => {

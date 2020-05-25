@@ -78,7 +78,7 @@ describe("ReleaseBadgesClosedSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(true);
+            expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
 
         it("When the total of closed sprints is null, Then the total is not displayed", async () => {
@@ -103,7 +103,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
+            expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
 
         it("When the total of closed sprints is 0, Then the total is displayed", async () => {
@@ -128,7 +128,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(true);
+            expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(true);
         });
 
         it("When there is no trackers of sprints, Then the total is not displayed", async () => {
@@ -149,7 +149,7 @@ describe("ReleaseBadgesClosedSprints", () => {
             store_options.state.user_can_view_sub_milestones_planning = true;
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
+            expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
 
         it("When the user can't see the tracker's label, Then the total is not displayed", async () => {
@@ -175,7 +175,7 @@ describe("ReleaseBadgesClosedSprints", () => {
 
             const wrapper = await getPersonalWidgetInstance(store_options);
 
-            expect(wrapper.contains("[data-test=total-closed-sprints]")).toBe(false);
+            expect(wrapper.find("[data-test=total-closed-sprints]").exists()).toBe(false);
         });
     });
 });

@@ -68,7 +68,7 @@ describe("App", () => {
             });
 
         wrapper
-            .get(BannerPresenter)
+            .findComponent(BannerPresenter)
             .vm.$emit("save-banner", { message: "some message", activated: false });
 
         await wrapper.vm.$nextTick();
@@ -90,11 +90,13 @@ describe("App", () => {
             return Promise.reject(new Error("an error message"));
         });
 
-        wrapper.get(BannerPresenter).vm.$emit("save-banner", { message: "test", activated: false });
+        wrapper
+            .findComponent(BannerPresenter)
+            .vm.$emit("save-banner", { message: "test", activated: false });
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.get(BannerPresenter).props().loading).toBe(false);
+        expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
         expect(wrapper.element).toMatchSnapshot();
     });
 
@@ -116,12 +118,12 @@ describe("App", () => {
             });
 
         wrapper
-            .get(BannerPresenter)
+            .findComponent(BannerPresenter)
             .vm.$emit("save-banner", { message: "a new message", activated: true });
 
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.get(BannerPresenter).props().loading).toBe(true);
+        expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(true);
         expect(save_banner).toHaveBeenCalledTimes(1);
         expect(window.location.reload).toHaveBeenCalledTimes(1);
     });
@@ -140,12 +142,12 @@ describe("App", () => {
         });
 
         wrapper
-            .get(BannerPresenter)
+            .findComponent(BannerPresenter)
             .vm.$emit("save-banner", { message: "a new message", activated: true });
         await wrapper.vm.$nextTick();
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.get(BannerPresenter).props().loading).toBe(false);
+        expect(wrapper.findComponent(BannerPresenter).props().loading).toBe(false);
         expect(wrapper.element).toMatchSnapshot();
     });
 });

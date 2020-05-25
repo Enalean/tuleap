@@ -48,24 +48,24 @@ describe("Given a timetracking overview widget", () => {
 
     it("When reading mode is true, then writing should not be displayed", () => {
         const wrapper = getTimetrackingOverviewInstance(store_options);
-        expect(wrapper.contains("[data-test=report-success]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=reading-mode]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=writing-mode]")).toBeFalsy();
+        expect(wrapper.find("[data-test=report-success]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=reading-mode]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=writing-mode]").exists()).toBeFalsy();
     });
 
     it("When success message, then a success message is displayed", () => {
         store_options.getters.has_success_message = true;
         const wrapper = getTimetrackingOverviewInstance(store_options);
 
-        expect(wrapper.contains("[data-test=report-success]")).toBeTruthy();
+        expect(wrapper.find("[data-test=report-success]").exists()).toBeTruthy();
     });
 
     it("When reading mode is false, then writing should be displayed", () => {
         store_options.state.reading_mode = false;
         const wrapper = getTimetrackingOverviewInstance(store_options);
 
-        expect(wrapper.contains("[data-test=report-success]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=reading-mode]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=writing-mode]")).toBeTruthy();
+        expect(wrapper.find("[data-test=report-success]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=reading-mode]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=writing-mode]").exists()).toBeTruthy();
     });
 });

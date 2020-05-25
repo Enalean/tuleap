@@ -62,6 +62,6 @@ describe("SoloSwimlane", () => {
         const swimlane = { card: { id: 43, mapped_list_value: { id: 103 } } } as Swimlane;
         const wrapper = await createWrapper(columns, swimlane);
 
-        expect(wrapper.isEmpty()).toBe(true);
+        expect(wrapper.html()).toEqual("");
     });
 });

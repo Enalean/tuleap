@@ -52,9 +52,11 @@ describe("DropDownCurrentFolder", () => {
 
         const wrapper = dropdown_factory();
 
-        expect(wrapper.contains("[data-test=document-new-folder-creation-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-delete-folder-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-delete-folder-separator]")).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-new-folder-creation-button]").exists()
+        ).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
     });
 
     it(`Given user has write permission on current folder
@@ -65,9 +67,11 @@ describe("DropDownCurrentFolder", () => {
 
         const wrapper = dropdown_factory();
 
-        expect(wrapper.contains("[data-test=document-new-folder-creation-button]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-delete-folder-button]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-delete-folder-separator]")).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-new-folder-creation-button]").exists()
+        ).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeTruthy();
     });
 
     it(`Given user is docman writer and the current folder is not the root folder
@@ -77,8 +81,8 @@ describe("DropDownCurrentFolder", () => {
         store.state.current_folder.parent_id = 3;
 
         const wrapper = dropdown_factory();
-        expect(wrapper.contains("[data-test=document-delete-folder-button]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-delete-folder-separator]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeTruthy();
     });
 
     it(`Given user is docman writer and folder is root folder
@@ -87,8 +91,8 @@ describe("DropDownCurrentFolder", () => {
         store.state.current_folder.user_can_write = true;
         const wrapper = dropdown_factory();
 
-        expect(wrapper.contains("[data-test=document-delete-folder-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-delete-folder-separator]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
     });
 
     it(`Given user is NOT docman writer
@@ -97,7 +101,7 @@ describe("DropDownCurrentFolder", () => {
         store.state.current_folder.user_can_write = false;
 
         const wrapper = dropdown_factory();
-        expect(wrapper.contains("[data-test=document-delete-folder-button]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-delete-folder-separator]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-button]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-delete-folder-separator]").exists()).toBeFalsy();
     });
 });

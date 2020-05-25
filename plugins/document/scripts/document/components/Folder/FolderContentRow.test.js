@@ -61,9 +61,9 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: false,
             });
 
-            expect(wrapper.contains("[data-test=quick-look-button]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=dropdown-button]")).toBeTruthy();
-            expect(wrapper.contains("[data-test=dropdown-menu]")).toBeTruthy();
+            expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeTruthy();
+            expect(wrapper.find("[data-test=dropdown-button]").exists()).toBeTruthy();
+            expect(wrapper.find("[data-test=dropdown-menu]").exists()).toBeTruthy();
         });
 
         it("Should not render the quick look button and the dropdown menu when the item is being uploaded in a collapsed folder", () => {
@@ -74,9 +74,9 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: false,
             });
 
-            expect(wrapper.contains("[data-test=quick-look-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-menu]")).toBeFalsy();
+            expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-menu]").exists()).toBeFalsy();
         });
 
         it("Should not render the quick look button and the dropdown menu when the item is being uploaded", () => {
@@ -87,9 +87,9 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: false,
             });
 
-            expect(wrapper.contains("[data-test=quick-look-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-menu]")).toBeFalsy();
+            expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-menu]").exists()).toBeFalsy();
         });
 
         it("Should not render the quick look button and the dropdown menu when a new version of the item is being uploaded", () => {
@@ -100,9 +100,9 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: false,
             });
 
-            expect(wrapper.contains("[data-test=quick-look-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-button]")).toBeFalsy();
-            expect(wrapper.contains("[data-test=dropdown-menu]")).toBeFalsy();
+            expect(wrapper.find("[data-test=quick-look-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-button]").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=dropdown-menu]").exists()).toBeFalsy();
         });
     });
 
@@ -117,11 +117,11 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.contains("[data-test=progress-bar-quick-look-pane-open]")
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists()
                 ).toBeTruthy();
 
-                expect(wrapper.contains(".document-tree-cell-owner")).toBeFalsy();
-                expect(wrapper.contains(".document-tree-cell-updatedate")).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
             });
 
             it("Should render the progress bar when the quick look pane is open and a new version of the item is being uploaded", () => {
@@ -133,11 +133,11 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.contains("[data-test=progress-bar-quick-look-pane-open]")
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-open]").exists()
                 ).toBeTruthy();
 
-                expect(wrapper.contains(".document-tree-cell-owner")).toBeFalsy();
-                expect(wrapper.contains(".document-tree-cell-updatedate")).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
             });
         });
 
@@ -151,11 +151,11 @@ describe("FolderContentRow", () => {
                 });
 
                 expect(
-                    wrapper.contains("[data-test=progress-bar-quick-look-pane-closed]")
+                    wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists()
                 ).toBeTruthy();
 
-                expect(wrapper.contains(".document-tree-cell-owner")).toBeFalsy();
-                expect(wrapper.contains(".document-tree-cell-updatedate")).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
+                expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
             });
         });
 
@@ -168,11 +168,11 @@ describe("FolderContentRow", () => {
             });
 
             expect(
-                wrapper.contains("[data-test=progress-bar-quick-look-pane-closed]")
+                wrapper.find("[data-test=progress-bar-quick-look-pane-closed]").exists()
             ).toBeTruthy();
 
-            expect(wrapper.contains(".document-tree-cell-owner")).toBeFalsy();
-            expect(wrapper.contains(".document-tree-cell-updatedate")).toBeFalsy();
+            expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
+            expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
         });
     });
 
@@ -183,8 +183,8 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: false,
             });
 
-            expect(wrapper.contains(".document-tree-cell-owner")).toBeTruthy();
-            expect(wrapper.contains(".document-tree-cell-updatedate")).toBeTruthy();
+            expect(wrapper.find(".document-tree-cell-owner").exists()).toBeTruthy();
+            expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeTruthy();
         });
 
         it("Should not render the user badge and the last update date when the quick look pane is open", () => {
@@ -193,8 +193,8 @@ describe("FolderContentRow", () => {
                 isQuickLookDisplayed: true,
             });
 
-            expect(wrapper.contains(".document-tree-cell-owner")).toBeFalsy();
-            expect(wrapper.contains(".document-tree-cell-updatedate")).toBeFalsy();
+            expect(wrapper.find(".document-tree-cell-owner").exists()).toBeFalsy();
+            expect(wrapper.find(".document-tree-cell-updatedate").exists()).toBeFalsy();
         });
     });
 });

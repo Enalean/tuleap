@@ -53,6 +53,7 @@
                 v-model="additional_options"
                 v-bind:item="item"
                 v-bind:wiki-page-referencers="wiki_page_referencers"
+                data-test="delete-wiki-checkbox"
             />
             <span class="document-confirm-deletion-modal-wiki-page-referencers-loading">
                 <i

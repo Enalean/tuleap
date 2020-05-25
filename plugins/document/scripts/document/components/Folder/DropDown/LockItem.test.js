@@ -53,7 +53,7 @@ describe("LockItem", () => {
             },
         });
 
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
     });
 
     it(`Given document is not locked and given user has write permission
@@ -69,7 +69,7 @@ describe("LockItem", () => {
             },
         });
 
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
     });
 
     it(`Given document is not locked and given user has only read permission
@@ -85,7 +85,7 @@ describe("LockItem", () => {
             },
         });
 
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeFalsy();
     });
 
     it(`Given item is a file and given user can write
@@ -100,7 +100,7 @@ describe("LockItem", () => {
             },
         });
 
-        expect(wrapper.contains("[data-test=document-dropdown-menu-lock-item]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-dropdown-menu-lock-item]").exists()).toBeTruthy();
     });
 
     it(`Lock document on click`, () => {

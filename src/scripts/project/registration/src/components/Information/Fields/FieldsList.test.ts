@@ -63,7 +63,7 @@ describe("FieldsList -", () => {
             desc_description: "",
         } as FieldData);
 
-        expect(wrapper.contains("[data-test=text-info]")).toBe(false);
+        expect(wrapper.find("[data-test=text-info]").exists()).toBe(false);
     });
 
     it("Does not display the field if it is not required", async () => {
@@ -73,7 +73,7 @@ describe("FieldsList -", () => {
             desc_required: "0",
         } as FieldData);
 
-        expect(wrapper.isEmpty()).toBe(true);
+        expect(wrapper.html()).toEqual("");
     });
 
     it("Send an event when user chooses a new value for the field", async () => {

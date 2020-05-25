@@ -39,7 +39,7 @@ describe("EditCardButtons", () => {
                 },
             } as Card);
 
-            expect(wrapper.isEmpty()).toBe(true);
+            expect(wrapper.html()).toEqual("");
         });
 
         it("displays nothing if there isn't any remaining effort", () => {
@@ -48,7 +48,7 @@ describe("EditCardButtons", () => {
                 remaining_effort: null,
             } as Card);
 
-            expect(wrapper.isEmpty()).toBe(true);
+            expect(wrapper.html()).toEqual("");
         });
 
         it("displays buttons if remaining effort is in edit mode", () => {
@@ -57,7 +57,7 @@ describe("EditCardButtons", () => {
                 remaining_effort: { is_in_edit_mode: true },
             } as Card);
 
-            expect(wrapper.contains(CancelSaveButtons)).toBe(true);
+            expect(wrapper.findComponent(CancelSaveButtons).exists()).toBe(true);
         });
 
         it("displays buttons if card is in edit mode", () => {
@@ -66,7 +66,7 @@ describe("EditCardButtons", () => {
                 remaining_effort: null,
             } as Card);
 
-            expect(wrapper.contains(CancelSaveButtons)).toBe(true);
+            expect(wrapper.findComponent(CancelSaveButtons).exists()).toBe(true);
         });
     });
 
@@ -76,7 +76,7 @@ describe("EditCardButtons", () => {
             const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            wrapper.get(CancelSaveButtons).vm.$emit("cancel");
+            wrapper.findComponent(CancelSaveButtons).vm.$emit("cancel");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.CANCEL_CARD_EDITION, card);
         });
@@ -89,7 +89,7 @@ describe("EditCardButtons", () => {
             const wrapper = createWrapper(card);
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
-            wrapper.get(CancelSaveButtons).vm.$emit("save");
+            wrapper.findComponent(CancelSaveButtons).vm.$emit("save");
 
             expect(event_bus_emit).toHaveBeenCalledWith(TaskboardEvent.SAVE_CARD_EDITION, card);
         });
@@ -101,7 +101,7 @@ describe("EditCardButtons", () => {
             is_in_edit_mode: true,
             is_being_saved: true,
         } as Card);
-        const buttons = wrapper.get(CancelSaveButtons);
+        const buttons = wrapper.findComponent(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(true);
     });
 
@@ -112,7 +112,7 @@ describe("EditCardButtons", () => {
             remaining_effort: null,
             is_being_saved: false,
         } as Card);
-        const buttons = wrapper.get(CancelSaveButtons);
+        const buttons = wrapper.findComponent(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(false);
     });
 
@@ -123,7 +123,7 @@ describe("EditCardButtons", () => {
             remaining_effort: { is_in_edit_mode: true, is_being_saved: true },
             is_being_saved: false,
         } as Card);
-        const buttons = wrapper.get(CancelSaveButtons);
+        const buttons = wrapper.findComponent(CancelSaveButtons);
         expect(buttons.props("is_action_ongoing")).toBe(true);
     });
 });

@@ -34,8 +34,8 @@ describe("CardWithRemainingEffort", () => {
             },
         });
 
-        expect(wrapper.contains(ParentCard)).toBe(true);
-        expect(wrapper.contains(ParentCardRemainingEffort)).toBe(true);
-        expect(wrapper.contains(EditCardButtons)).toBe(true);
+        expect(wrapper.findComponent(ParentCard).exists()).toBe(true);
+        expect(wrapper.findComponent(ParentCardRemainingEffort).exists()).toBe(true);
+        expect(wrapper.findComponent(EditCardButtons).exists()).toBe(true);
     });
 });

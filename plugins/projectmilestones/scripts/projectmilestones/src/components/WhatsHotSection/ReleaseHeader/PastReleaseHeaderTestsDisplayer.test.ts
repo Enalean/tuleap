@@ -63,7 +63,7 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
     describe("Display number of test", () => {
         it("When TTM is disabled, Then the number is not displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
-            expect(wrapper.contains("[data-test=number-tests]")).toBe(false);
+            expect(wrapper.find("[data-test=number-tests]").exists()).toBe(false);
         });
 
         it("When TTM is enabled but there are no test, Then 0 is displayed", async () => {

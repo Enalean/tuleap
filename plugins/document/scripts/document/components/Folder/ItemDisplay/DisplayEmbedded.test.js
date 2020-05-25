@@ -64,8 +64,8 @@ describe("DisplayEmbedded", () => {
 
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeFalsy();
-        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
     it(`Given user display an embedded file content
@@ -88,8 +88,8 @@ describe("DisplayEmbedded", () => {
 
         await wrapper.vm.$nextTick().then(() => {});
 
-        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeFalsy();
-        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
     it(`Given user display an embedded file content
@@ -117,8 +117,8 @@ describe("DisplayEmbedded", () => {
         });
         await wrapper.vm.$nextTick();
 
-        expect(wrapper.find(DisplayEmbeddedContent).exists()).toBeTruthy();
-        expect(wrapper.find(DisplayEmbeddedSpinner).exists()).toBeFalsy();
+        expect(wrapper.findComponent(DisplayEmbeddedContent).exists()).toBeTruthy();
+        expect(wrapper.findComponent(DisplayEmbeddedSpinner).exists()).toBeFalsy();
     });
 
     it(`Reset currently displayed item form stored

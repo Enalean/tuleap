@@ -100,7 +100,7 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
             };
             const wrapper = metadata_factory(metadata_list);
 
-            expect(wrapper.contains("ul")).toBeFalsy();
+            expect(wrapper.find("ul").exists()).toBeFalsy();
             expect(wrapper.get("p").text()).toBe("value 1");
         });
     });
@@ -123,8 +123,8 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
 
             const displayed_metadata = wrapper.get("[id=document-bad-lyrics]");
 
-            expect(wrapper.contains("ul")).toBeFalsy();
-            expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
+            expect(wrapper.find("ul").exists()).toBeFalsy();
+            expect(wrapper.find("[data-test=metadata-list-date]").exists()).toBeFalsy();
             expect(displayed_metadata).toBeTruthy();
             expect(displayed_metadata.text()).toEqual(metadata_string.value);
             expect(displayed_metadata.html()).toContain(metadata_string.post_processed_value);
@@ -146,8 +146,8 @@ describe("QuickLookDocumentAdditionalMetadataList", () => {
 
         const displayed_metadata = wrapper.get("[id=document-silence]");
 
-        expect(wrapper.contains("ul")).toBeFalsy();
-        expect(wrapper.contains("[data-test=metadata-list-date]")).toBeFalsy();
+        expect(wrapper.find("ul").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=metadata-list-date]").exists()).toBeFalsy();
         expect(displayed_metadata.text()).toBeTruthy();
         expect(displayed_metadata).not.toEqual("Permanent");
         expect(displayed_metadata.text()).toEqual("Empty");

@@ -29,7 +29,9 @@ describe("AddToBacklogPostAction", () => {
             propsData: { post_action: { type: "add_to_backlog" } },
             localVue,
         });
-        expect(wrapper.contains(PostAction)).toBe(true);
-        expect(wrapper.contains("[data-test=add-to-backlog-post-action-description]")).toBe(true);
+        expect(wrapper.findComponent(PostAction).exists()).toBe(true);
+        expect(wrapper.find("[data-test=add-to-backlog-post-action-description]").exists()).toBe(
+            true
+        );
     });
 });

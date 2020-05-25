@@ -44,7 +44,7 @@ describe("DocumentBreadcrumb", () => {
         store.state.current_folder_ascendant_hierarchy = [];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
-        expect(wrapper.contains("[data-test=breadcrumb-administrator-link]")).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-administrator-link]").exists()).toBeTruthy();
     });
 
     it(`Given user is regular user
@@ -54,7 +54,7 @@ describe("DocumentBreadcrumb", () => {
         store.state.current_folder_ascendant_hierarchy = [];
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
-        expect(wrapper.contains("[data-test=breadcrumb-administrator-link]")).toBeFalsy();
+        expect(wrapper.find("[data-test=breadcrumb-administrator-link]").exists()).toBeFalsy();
     });
 
     it(`Given ascendant hierarchy has more than 5 ascendants
@@ -74,7 +74,7 @@ describe("DocumentBreadcrumb", () => {
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
 
-        expect(wrapper.contains("[data-test=breadcrumb-ellipsis]")).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-ellipsis]").exists()).toBeTruthy();
     });
 
     it(`Given ascendant hierarchy has more than 5 ascendants and given we're still loading the ascendent hierarchy
@@ -94,8 +94,8 @@ describe("DocumentBreadcrumb", () => {
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
 
-        expect(wrapper.contains("[data-test=breadcrumb-ellipsis]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-breadcrumb-skeleton]")).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-ellipsis]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-breadcrumb-skeleton]").exists()).toBeTruthy();
     });
 
     it(`Given a list of folders which are in different hierarchy level
@@ -134,7 +134,7 @@ describe("DocumentBreadcrumb", () => {
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
 
-        expect(wrapper.contains("[data-test=breadcrumb-current-document]")).toBeFalsy();
+        expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeFalsy();
     });
 
     it(`Given a list of folders and the current document which is displayed
@@ -158,6 +158,6 @@ describe("DocumentBreadcrumb", () => {
 
         const wrapper = shallowMount(DocumentBreadcrumb, component_options);
 
-        expect(wrapper.contains("[data-test=breadcrumb-current-document]")).toBeTruthy();
+        expect(wrapper.find("[data-test=breadcrumb-current-document]").exists()).toBeTruthy();
     });
 });

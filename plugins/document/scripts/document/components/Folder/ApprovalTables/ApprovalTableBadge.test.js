@@ -51,7 +51,7 @@ describe("ApprovalTableBadge", () => {
             item,
         });
 
-        expect(wrapper.contains(".document-approval-badge")).toBeFalsy();
+        expect(wrapper.find(".document-approval-badge").exists()).toBeFalsy();
     });
 
     it(`Given document has no approval status
@@ -70,7 +70,7 @@ describe("ApprovalTableBadge", () => {
             item,
         });
 
-        expect(wrapper.contains(".document-approval-badge")).toBeTruthy();
+        expect(wrapper.find(".document-approval-badge").exists()).toBeTruthy();
         expect(wrapper.vm.approval_data.icon_badge).toBe("fa-tlp-gavel-approved");
         expect(wrapper.vm.approval_data.badge_label).toBe("Approved");
         expect(wrapper.vm.approval_data.badge_class).toBe("tlp-badge-success ");

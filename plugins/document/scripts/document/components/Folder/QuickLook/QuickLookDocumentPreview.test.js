@@ -57,9 +57,9 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = preview_factory();
 
-        expect(wrapper.contains(".document-quick-look-image-container")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
-        expect(wrapper.contains(".document-quick-look-icon-container")).toBeFalsy();
+        expect(wrapper.find(".document-quick-look-image-container").exists()).toBeTruthy();
+        expect(wrapper.find(".document-quick-look-embedded").exists()).toBeFalsy();
+        expect(wrapper.find(".document-quick-look-icon-container").exists()).toBeFalsy();
     });
 
     it("Renders some rich text html if the item is an embedded file", () => {
@@ -76,9 +76,9 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = preview_factory();
 
-        expect(wrapper.contains(".document-quick-look-embedded")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
-        expect(wrapper.contains(".document-quick-look-icon-container")).toBeFalsy();
+        expect(wrapper.find(".document-quick-look-embedded").exists()).toBeTruthy();
+        expect(wrapper.find(".document-quick-look-image-container").exists()).toBeFalsy();
+        expect(wrapper.find(".document-quick-look-icon-container").exists()).toBeFalsy();
     });
 
     it("Displays the icon passed in props otherwise", () => {
@@ -90,10 +90,10 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = preview_factory({ iconClass: "fa-link" });
 
-        expect(wrapper.contains(".fa-link")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-icon-container")).toBeTruthy();
-        expect(wrapper.contains(".document-quick-look-image-container")).toBeFalsy();
-        expect(wrapper.contains(".document-quick-look-embedded")).toBeFalsy();
+        expect(wrapper.find(".fa-link").exists()).toBeTruthy();
+        expect(wrapper.find(".document-quick-look-icon-container").exists()).toBeTruthy();
+        expect(wrapper.find(".document-quick-look-image-container").exists()).toBeFalsy();
+        expect(wrapper.find(".document-quick-look-embedded").exists()).toBeFalsy();
     });
 
     it("Display spinner when embedded file is loaded", async () => {
@@ -106,8 +106,8 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = preview_factory({ iconClass: "fa-link" });
 
-        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-quick-look-embedded]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-preview-spinner]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-quick-look-embedded]").exists()).toBeFalsy();
 
         store.state.currently_previewed_item = {
             id: 42,
@@ -120,8 +120,8 @@ describe("QuickLookDocumentPreview", () => {
         await wrapper.vm.$nextTick();
         store.state.is_loading_currently_previewed_item = false;
         await wrapper.vm.$nextTick();
-        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
-        expect(wrapper.contains("[data-test=document-quick-look-embedded]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-preview-spinner]").exists()).toBeFalsy();
+        expect(wrapper.find("[data-test=document-quick-look-embedded]").exists()).toBeTruthy();
     });
 
     it("Do not display spinner for other types", () => {
@@ -134,9 +134,9 @@ describe("QuickLookDocumentPreview", () => {
 
         const wrapper = preview_factory({ iconClass: "fa-link" });
 
-        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-preview-spinner]").exists()).toBeFalsy();
 
         store.state.is_loading_currently_previewed_item = false;
-        expect(wrapper.contains("[data-test=document-preview-spinner]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-preview-spinner]").exists()).toBeFalsy();
     });
 });

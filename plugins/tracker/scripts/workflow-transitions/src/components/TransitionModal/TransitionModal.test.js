@@ -101,7 +101,7 @@ describe(`TransitionModal`, () => {
         store.state.transitionModal.is_loading_modal = true;
         const wrapper = createWrapper(store);
 
-        expect(wrapper.contains(PreConditionsSkeleton)).toBe(true);
+        expect(wrapper.findComponent(PreConditionsSkeleton).exists()).toBe(true);
     });
 
     it(`when the modal is loaded, it will show the Pre-conditions section`, () => {
@@ -109,7 +109,7 @@ describe(`TransitionModal`, () => {
         store.state.transitionModal.is_loading_modal = false;
         const wrapper = createWrapper(store);
 
-        expect(wrapper.contains(FilledPreConditionsSection)).toBe(true);
+        expect(wrapper.findComponent(FilledPreConditionsSection).exists()).toBe(true);
     });
 
     describe(`when the modal is saving`, () => {

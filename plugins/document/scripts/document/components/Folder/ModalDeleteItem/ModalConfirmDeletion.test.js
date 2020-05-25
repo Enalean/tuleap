@@ -38,9 +38,7 @@ describe("ModalConfirmDeletion", () => {
             propsData: {
                 ...props,
             },
-            stubs: {
-                "delete-associated-wiki-page-checkbox": `<div data-test="checkbox"></div>`,
-            },
+            stubs: ["delete-associated-wiki-page-checkbox"],
             router,
         });
     }
@@ -115,7 +113,7 @@ describe("ModalConfirmDeletion", () => {
             await deletion_modal.vm.$nextTick();
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
-            expect(deletion_modal.contains("[data-test=checkbox]")).toBeTruthy();
+            expect(deletion_modal.find("[data-test=delete-wiki-checkbox]").exists()).toBeTruthy();
         });
 
         it(`When there is a problem retrieving the wiki page referencers (either not found or either unreadable), then it should not add a checkbox`, async () => {
@@ -130,7 +128,7 @@ describe("ModalConfirmDeletion", () => {
             const deletion_modal = await getDeletionModal({ item });
 
             expect(store.dispatch).toHaveBeenCalledWith("getWikisReferencingSameWikiPage", item);
-            expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+            expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
         });
 
         it(`when it does not reference an existing wiki page, then it should not add a checkbox`, () => {
@@ -139,7 +137,7 @@ describe("ModalConfirmDeletion", () => {
             const deletion_modal = getDeletionModal({ item });
 
             expect(store.dispatch).not.toHaveBeenCalled();
-            expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+            expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
         });
     });
 
@@ -155,8 +153,8 @@ describe("ModalConfirmDeletion", () => {
         const deletion_modal = getDeletionModal({ item });
 
         expect(store.dispatch).not.toHaveBeenCalled();
-        expect(deletion_modal.contains("[data-test=delete-folder-warning]")).toBeTruthy();
-        expect(deletion_modal.contains("[data-test=checkbox]")).toBeFalsy();
+        expect(deletion_modal.find("[data-test=delete-folder-warning]").exists()).toBeTruthy();
+        expect(deletion_modal.find("[data-test=checkbox]").exists()).toBeFalsy();
     });
 
     it(`when I click on the delete button, it deletes the item`, () => {

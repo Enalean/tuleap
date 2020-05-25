@@ -58,16 +58,18 @@ describe("SwimlaneHeader", () => {
         const wrapper = await createWrapper(false);
 
         expect(
-            wrapper.contains(
-                ".fa-minus-square.taskboard-swimlane-toggle.tlp-swatch-fiesta-red[role=button]"
-            )
+            wrapper
+                .find(
+                    ".fa-minus-square.taskboard-swimlane-toggle.tlp-swatch-fiesta-red[role=button]"
+                )
+                .exists()
         ).toBe(true);
-        expect(wrapper.contains(".taskboard-fullscreen")).toBe(false);
+        expect(wrapper.find(".taskboard-fullscreen").exists()).toBe(false);
     });
 
     it("adds fullscreen class when taskboard is in fullscreen mode", async () => {
         const wrapper = await createWrapper(true);
-        expect(wrapper.contains(".taskboard-fullscreen")).toBe(true);
+        expect(wrapper.find(".taskboard-fullscreen").exists()).toBe(true);
     });
 
     it("collapse the swimlane when user click on the toggle icon", async () => {

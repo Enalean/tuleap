@@ -63,10 +63,10 @@ describe("TransitionMatrixContent", () => {
         });
 
         it("transition creation is not possible", () => {
-            expect(wrapper.contains(create_transition_selector)).toBeFalsy();
+            expect(wrapper.find(create_transition_selector).exists()).toBeFalsy();
         });
         it("no operation is possible", () => {
-            expect(wrapper.contains(forbidden_selector)).toBeTruthy();
+            expect(wrapper.find(forbidden_selector).exists()).toBeTruthy();
         });
     });
 
@@ -80,7 +80,7 @@ describe("TransitionMatrixContent", () => {
 
         describe("without any transition", () => {
             it("transition creation is possible", () => {
-                expect(wrapper.contains(create_transition_selector)).toBeTruthy();
+                expect(wrapper.find(create_transition_selector).exists()).toBeTruthy();
             });
 
             describe("during another operation running", () => {
@@ -111,7 +111,7 @@ describe("TransitionMatrixContent", () => {
                 });
 
                 it("shows a spinner", () => {
-                    expect(wrapper.contains(spinner_selector)).toBeTruthy();
+                    expect(wrapper.find(spinner_selector).exists()).toBeTruthy();
                 });
                 it("creates transition", () => {
                     expect(store.dispatch).toHaveBeenCalledWith("createTransition", {
@@ -127,7 +127,7 @@ describe("TransitionMatrixContent", () => {
                     });
 
                     it("hides spinner", () => {
-                        expect(wrapper.contains(spinner_selector)).toBeFalsy();
+                        expect(wrapper.find(spinner_selector).exists()).toBeFalsy();
                     });
                 });
             });
@@ -145,8 +145,8 @@ describe("TransitionMatrixContent", () => {
             });
 
             it("shows transition", () => {
-                expect(wrapper.contains(TransitionDeleter)).toBeTruthy();
-                expect(wrapper.contains(transition_configuration_selector)).toBeTruthy();
+                expect(wrapper.findComponent(TransitionDeleter).exists()).toBeTruthy();
+                expect(wrapper.find(transition_configuration_selector).exists()).toBeTruthy();
             });
 
             describe("and the workflow is in simple mode", () => {
@@ -155,7 +155,7 @@ describe("TransitionMatrixContent", () => {
                 });
 
                 it("does not show the 'configure transition' button", () => {
-                    expect(wrapper.contains(transition_configuration_selector)).toBeFalsy();
+                    expect(wrapper.find(transition_configuration_selector).exists()).toBeFalsy();
                 });
             });
 

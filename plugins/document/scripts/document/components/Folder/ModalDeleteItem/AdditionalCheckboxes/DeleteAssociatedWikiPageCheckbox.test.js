@@ -125,13 +125,13 @@ describe("ModalConfirmationDeletion", () => {
 
         expect(links.length).toEqual(2);
 
-        expect(links.at(0).is("a")).toBeTruthy();
+        expect(links.at(0).element.tagName).toEqual("A");
         expect(links.at(0).attributes("href")).toEqual(
             "/plugins/docman/?group_id=104&action=show&id=43"
         );
         expect(links.at(0).text()).toEqual("Project documentation/another wiki");
 
-        expect(links.at(1).is("a")).toBeTruthy();
+        expect(links.at(1).element.tagName).toEqual("A");
         expect(links.at(1).attributes("href")).toEqual(
             "/plugins/docman/?group_id=104&action=show&id=44"
         );

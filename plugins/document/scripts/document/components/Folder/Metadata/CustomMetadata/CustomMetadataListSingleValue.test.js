@@ -72,9 +72,9 @@ describe("CustomMetadataList", () => {
             .findAll("option");
         expect(all_options.length).toBe(3);
 
-        expect(wrapper.contains("[data-test=document-custom-list-value-100]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-custom-list-value-101]")).toBeTruthy();
-        expect(wrapper.contains("[data-test=document-custom-list-value-102]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-custom-list-value-100]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-custom-list-value-101]").exists()).toBeTruthy();
+        expect(wrapper.find("[data-test=document-custom-list-value-102]").exists()).toBeTruthy();
     });
 
     it(`Given a list metadata is required
@@ -98,7 +98,7 @@ describe("CustomMetadataList", () => {
         };
         const wrapper = factory({ currentlyUpdatedItemMetadata });
 
-        expect(wrapper.contains("[data-test=document-custom-list-select]")).toBeTruthy();
+        expect(wrapper.find("[data-test=document-custom-list-select]").exists()).toBeTruthy();
 
         const input = wrapper.get("[data-test=document-custom-list-select]");
         expect(input.element.required).toBe(true);
@@ -123,7 +123,7 @@ describe("CustomMetadataList", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 
     it(`does not render the component when list is multiple`, () => {
@@ -146,6 +146,6 @@ describe("CustomMetadataList", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-metadata-list]")).toBeFalsy();
+        expect(wrapper.find("[data-test=document-custom-metadata-list]").exists()).toBeFalsy();
     });
 });

@@ -42,6 +42,6 @@ describe("CellDisallowsDropOverlay", () => {
             localVue: await createTaskboardLocalVue(),
         });
 
-        expect(wrapper.contains("[data-test=overlay-error-message]")).toBe(false);
+        expect(wrapper.find("[data-test=overlay-error-message]").exists()).toBe(false);
     });
 });

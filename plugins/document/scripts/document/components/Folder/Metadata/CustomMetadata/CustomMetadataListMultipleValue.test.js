@@ -75,13 +75,13 @@ describe("CustomMetadataListMultipleValue", () => {
 
         expect(all_options.length).toBe(3);
         expect(
-            wrapper.contains("[data-test=document-custom-list-multiple-value-100]")
+            wrapper.find("[data-test=document-custom-list-multiple-value-100]").exists()
         ).toBeTruthy();
         expect(
-            wrapper.contains("[data-test=document-custom-list-multiple-value-101]")
+            wrapper.find("[data-test=document-custom-list-multiple-value-101]").exists()
         ).toBeTruthy();
         expect(
-            wrapper.contains("[data-test=document-custom-list-multiple-value-102]")
+            wrapper.find("[data-test=document-custom-list-multiple-value-102]").exists()
         ).toBeTruthy();
     });
     it(`Given a list metadata is required
@@ -105,9 +105,13 @@ describe("CustomMetadataListMultipleValue", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-list-multiple-select]")).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-custom-list-multiple-select]").exists()
+        ).toBeTruthy();
 
-        expect(wrapper.contains("[data-test=document-custom-metadata-is-required]")).toBeTruthy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-is-required]").exists()
+        ).toBeTruthy();
     });
 
     it(`Given a list metadata is updated
@@ -166,7 +170,9 @@ describe("CustomMetadataListMultipleValue", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-list-multiple]").exists()
+        ).toBeFalsy();
         expect(wrapper.vm.$data.project_metadata_list_possible_values).toEqual([]);
     });
 
@@ -194,7 +200,9 @@ describe("CustomMetadataListMultipleValue", () => {
         };
 
         const wrapper = factory({ currentlyUpdatedItemMetadata });
-        expect(wrapper.contains("[data-test=document-custom-metadata-list-multiple]")).toBeFalsy();
+        expect(
+            wrapper.find("[data-test=document-custom-metadata-list-multiple]").exists()
+        ).toBeFalsy();
     });
 
     it(`throws an event when list value is changed`, () => {

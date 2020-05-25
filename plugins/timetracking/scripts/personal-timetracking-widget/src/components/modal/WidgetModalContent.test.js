@@ -49,13 +49,13 @@ describe("Given a personal timetracking widget modal", () => {
 
     it("When there is no REST feedback, then feedback message should not be displayed", () => {
         const wrapper = getWidgetModalContentInstance(store);
-        expect(wrapper.contains("[data-test=feedback]")).toBeFalsy();
+        expect(wrapper.find("[data-test=feedback]").exists()).toBeFalsy();
     });
 
     it("When there is REST feedback, then feedback message should be displayed", () => {
         store.state.rest_feedback = { type: "success" };
         const wrapper = getWidgetModalContentInstance(store);
-        expect(wrapper.contains("[data-test=feedback]")).toBeTruthy();
+        expect(wrapper.find("[data-test=feedback]").exists()).toBeTruthy();
     });
 
     it("When add mode button is triggered, then setAddMode should be called", () => {

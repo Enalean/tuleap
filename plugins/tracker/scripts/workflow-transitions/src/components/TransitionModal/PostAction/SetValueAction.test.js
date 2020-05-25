@@ -76,7 +76,7 @@ describe("SetValueAction", () => {
     it("Shows date field in date fields group", () => {
         const date_group_selector = `optgroup[data-test-type="${DATE_FIELD}-group"]`;
         const date_select_group = wrapper.get(date_group_selector);
-        expect(date_select_group.contains('[data-test-type="field_43"]')).toBeTruthy();
+        expect(date_select_group.find('[data-test-type="field_43"]').exists()).toBeTruthy();
     });
 
     describe("when fields are already used in other post actions", () => {
@@ -121,7 +121,7 @@ describe("SetValueAction", () => {
         });
 
         it("shows post action value", () => {
-            expect(wrapper.get(DateInput).props().value).toBe("current");
+            expect(wrapper.findComponent(DateInput).props().value).toBe("current");
         });
     });
 
@@ -136,7 +136,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(int_field);
-            expect(wrapper.get(IntInput).props().value).toBe(200);
+            expect(wrapper.findComponent(IntInput).props().value).toBe(200);
         });
     });
 
@@ -151,7 +151,7 @@ describe("SetValueAction", () => {
 
         it("shows value of action", () => {
             expect(wrapper.vm.post_action_field).toEqual(float_field);
-            expect(wrapper.get(FloatInput).props().value).toBe(12.34);
+            expect(wrapper.findComponent(FloatInput).props().value).toBe(12.34);
         });
     });
 });
