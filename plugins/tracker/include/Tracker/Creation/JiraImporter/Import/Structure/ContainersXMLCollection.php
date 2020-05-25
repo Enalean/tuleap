@@ -32,7 +32,7 @@ class ContainersXMLCollection
      */
     private $containers = [];
 
-    public function addFieldsetInCollection(string $name, SimpleXMLElement $node): void
+    public function addContainerInCollection(string $name, SimpleXMLElement $node): void
     {
         $this->containers[$name] = $node;
     }
@@ -40,7 +40,7 @@ class ContainersXMLCollection
     /**
      * @throws ContainerNotFoundInCollectionException
      */
-    public function getFieldsetByName(string $name): SimpleXMLElement
+    public function getContainerByName(string $name): SimpleXMLElement
     {
         if (! isset($this->containers[$name])) {
             throw new ContainerNotFoundInCollectionException($name);

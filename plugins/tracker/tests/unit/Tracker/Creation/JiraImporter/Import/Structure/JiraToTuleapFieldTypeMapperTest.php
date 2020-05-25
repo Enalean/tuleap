@@ -26,17 +26,14 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
+use XML_SimpleXMLCDATAFactory;
 
 final class JiraToTuleapFieldTypeMapperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var \SimpleXMLElement
-     */
-    private $jira_atf_fieldset;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldXmlExporter
@@ -49,9 +46,24 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
     private $mapper;
 
     /**
-     * @var \SimpleXMLElement
+     * @var ContainersXMLCollection
      */
-    private $jira_custom_fieldset;
+    private $containers_collection;
+
+    /**
+     * @var SimpleXMLElement
+     */
+    private $left_column;
+
+    /**
+     * @var SimpleXMLElement
+     */
+    private $custom_fieldset;
+
+    /**
+     * @var SimpleXMLElement
+     */
+    private $right_column;
 
     protected function setUp(): void
     {
@@ -61,13 +73,14 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
             new ErrorCollector()
         );
 
-        $this->jira_atf_fieldset = new \SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>'
+        $form_elements = new SimpleXMLElement("<formElements/>");
+        $this->containers_collection = (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))->buildCollectionOfJiraContainersXML(
+            $form_elements
         );
 
-        $this->jira_custom_fieldset = new \SimpleXMLElement(
-            '<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>'
-        );
+        $this->left_column     = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME);
+        $this->right_column    = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME);
+        $this->custom_fieldset = $this->containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME);
     }
 
     public function testJiraSummaryFieldIsMappedToStringField(): void
@@ -84,7 +97,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_atf_fieldset,
+                $this->left_column,
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -99,8 +112,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -119,12 +131,12 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_atf_fieldset,
+                $this->left_column,
                 Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
-                2,
+                4,
                 $jira_field->isRequired(),
                 [],
                 [],
@@ -134,8 +146,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -154,7 +165,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -169,8 +180,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -189,7 +199,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -204,8 +214,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -224,7 +233,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -239,8 +248,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -259,7 +267,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_DATE_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -276,8 +284,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -296,7 +303,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_DATE_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -313,8 +320,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -344,7 +350,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_atf_fieldset,
+                $this->right_column,
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -359,8 +365,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -390,7 +395,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -405,8 +410,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -436,7 +440,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -451,8 +455,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }
@@ -482,7 +485,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->field_exporter->shouldReceive('exportField')->withArgs(
             [
-                $this->jira_custom_fieldset,
+                $this->custom_fieldset,
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 $jira_field->getId(),
                 $jira_field->getLabel(),
@@ -497,8 +500,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
         $this->mapper->exportFieldToXml(
             $jira_field,
-            $this->jira_atf_fieldset,
-            $this->jira_custom_fieldset,
+            $this->containers_collection,
             $collection
         );
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 
@@ -48,8 +47,7 @@ class JiraToTuleapFieldTypeMapper
 
     public function exportFieldToXml(
         JiraFieldAPIRepresentation $jira_field,
-        SimpleXMLElement $jira_atf_fieldset,
-        SimpleXMLElement $jira_custom_fieldset,
+        ContainersXMLCollection $containers_collection,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
         $id               = $jira_field->getId();
@@ -77,7 +75,7 @@ class JiraToTuleapFieldTypeMapper
             switch ($jira_type) {
                 case 'summary':
                     $this->field_xml_exporter->exportField(
-                        $jira_atf_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_STRING_TYPE,
                         $id,
                         $jira_field_label,
@@ -91,7 +89,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_STRING_TYPE,
                         $id,
                         $jira_field_label,
@@ -105,12 +103,12 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'description':
                     $this->field_xml_exporter->exportField(
-                        $jira_atf_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::LEFT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
-                        2,
+                        4,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -119,7 +117,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_TEXT_TYPE,
                         $id,
                         $jira_field_label,
@@ -133,7 +131,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_FLOAT_TYPE,
                         $id,
                         $jira_field_label,
@@ -147,7 +145,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_DATE_TYPE,
                         $id,
                         $jira_field_label,
@@ -163,7 +161,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_DATE_TYPE,
                         $id,
                         $jira_field_label,
@@ -179,7 +177,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'priority':
                     $this->field_xml_exporter->exportField(
-                        $jira_atf_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                         $id,
                         $jira_field_label,
@@ -193,7 +191,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE,
                         $id,
                         $jira_field_label,
@@ -207,7 +205,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                         $id,
                         $jira_field_label,
@@ -221,7 +219,7 @@ class JiraToTuleapFieldTypeMapper
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:select':
                     $this->field_xml_exporter->exportField(
-                        $jira_custom_fieldset,
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
                         Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                         $id,
                         $jira_field_label,

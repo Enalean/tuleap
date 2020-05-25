@@ -25,11 +25,17 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use SimpleXMLElement;
 use Tracker_FormElement;
-use Tracker_FormElement_Container_Fieldset;
+use Tracker_FormElementFactory;
 use XML_SimpleXMLCDATAFactory;
 
 class ContainersXMLCollectionBuilder
 {
+    public const DETAILS_FIELDSET_NAME = 'details_fieldset';
+    public const CUSTOM_FIELDSET_NAME  = 'custom_fieldset';
+
+    public const LEFT_COLUMN_NAME  = 'left_column';
+    public const RIGHT_COLUMN_NAME = 'right_column';
+
     /**
      * @var XML_SimpleXMLCDATAFactory
      */
@@ -40,37 +46,83 @@ class ContainersXMLCollectionBuilder
         $this->simplexml_cdata_factory = $simplexml_cdata_factory;
     }
 
-    public function buildCollectionOfFieldsetsXML(SimpleXMLElement $form_elements): ContainersXMLCollection
+    public function buildCollectionOfJiraContainersXML(SimpleXMLElement $form_elements): ContainersXMLCollection
     {
         $collection = new ContainersXMLCollection();
 
-        $node_jira_atf_form_elements = $this->buildFieldsetXMLNode(
+        $this->buildFieldsets($form_elements, $collection);
+        $this->buildColumns($collection);
+
+        return $collection;
+    }
+
+    private function buildFieldsets(SimpleXMLElement $form_elements, ContainersXMLCollection $collection): void
+    {
+        $details_fieldset_node = $this->buildFieldsetXMLNode(
             $form_elements,
-            'jira_atf',
-            'Jira ATF',
-            0,
+            self::DETAILS_FIELDSET_NAME,
+            'Details',
+            1,
             1
         );
 
-        $collection->addFieldsetInCollection(
-            'atf',
-            $node_jira_atf_form_elements
-        );
-
-        $node_jira_custom_form_elements = $this->buildFieldsetXMLNode(
+        $custom_fieldset_node = $this->buildFieldsetXMLNode(
             $form_elements,
-            'jira_custom',
-            'Jira Custom Fields',
-            0,
+            self::CUSTOM_FIELDSET_NAME,
+            'Custom Fields',
+            2,
             2
         );
 
-        $collection->addFieldsetInCollection(
-            'custom',
-            $node_jira_custom_form_elements
+        $collection->addContainerInCollection(
+            self::DETAILS_FIELDSET_NAME,
+            $details_fieldset_node
         );
 
-        return $collection;
+        $collection->addContainerInCollection(
+            self::CUSTOM_FIELDSET_NAME,
+            $custom_fieldset_node
+        );
+    }
+
+    private function buildColumns(ContainersXMLCollection $collection): void
+    {
+        $form_elements = $collection->getContainerByName(self::DETAILS_FIELDSET_NAME);
+
+        $left_column   = $this->buildColumnXMLNode($form_elements->formElements, 'c1', 'c1', 1, 1);
+        $right_column  = $this->buildColumnXMLNode($form_elements->formElements, 'c2', 'c2', 2, 2);
+
+        $collection->addContainerInCollection(
+            self::LEFT_COLUMN_NAME,
+            $left_column
+        );
+
+        $collection->addContainerInCollection(
+            self::RIGHT_COLUMN_NAME,
+            $right_column
+        );
+    }
+
+    private function buildColumnXMLNode(
+        SimpleXMLElement $form_elements,
+        string $name,
+        string $label,
+        int $rank,
+        int $id
+    ): SimpleXMLElement {
+        $column_node = $form_elements->addChild("formElement");
+        $column_node->addAttribute('type', Tracker_FormElementFactory::CONTAINER_COLUMN_TYPE);
+
+        $xml_id = Tracker_FormElement::XML_ID_PREFIX . 'col' . $id;
+        $column_node->addAttribute('ID', $xml_id);
+        $column_node->addAttribute('rank', (string) $rank);
+
+        $this->simplexml_cdata_factory->insert($column_node, 'name', $name);
+        $this->simplexml_cdata_factory->insert($column_node, 'label', $label);
+
+        $column_node->addChild('formElements');
+
+        return $column_node;
     }
 
     private function buildFieldsetXMLNode(
@@ -81,7 +133,7 @@ class ContainersXMLCollectionBuilder
         int $id
     ): SimpleXMLElement {
         $fieldset_node = $form_elements->addChild("formElement");
-        $fieldset_node->addAttribute('type', Tracker_FormElement_Container_Fieldset::TYPE);
+        $fieldset_node->addAttribute('type', Tracker_FormElementFactory::CONTAINER_FIELDSET_TYPE);
 
         $xml_id = Tracker_FormElement::XML_ID_PREFIX . $id;
         $fieldset_node->addAttribute('ID', $xml_id);

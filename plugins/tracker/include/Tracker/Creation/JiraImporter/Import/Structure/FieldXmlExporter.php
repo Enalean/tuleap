@@ -51,7 +51,7 @@ class FieldXmlExporter
      * @param JiraFieldAPIAllowedValueRepresentation[] $bound_values
      */
     public function exportField(
-        \SimpleXMLElement $parent_node,
+        \SimpleXMLElement $container_parent_node,
         string $type,
         string $name,
         string $label,
@@ -62,7 +62,7 @@ class FieldXmlExporter
         array $bound_values,
         FieldMappingCollection $jira_field_mapping_collection
     ): void {
-        $field = $parent_node->addChild('formElement');
+        $field = $container_parent_node->formElements->addChild('formElement');
         $field->addAttribute('type', $type);
 
         $xml_id = "F" . $jira_field_id;

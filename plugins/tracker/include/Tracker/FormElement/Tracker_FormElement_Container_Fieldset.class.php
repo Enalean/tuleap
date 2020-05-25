@@ -37,8 +37,6 @@ use Tuleap\Tracker\Workflow\SimpleMode\State\TransitionRetriever;
 
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container
 {
-    public const TYPE = 'fieldset';
-
     /**
      * Process the request
      *

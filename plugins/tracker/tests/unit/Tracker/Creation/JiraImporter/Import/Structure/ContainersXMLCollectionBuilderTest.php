@@ -36,33 +36,43 @@ class ContainersXMLCollectionBuilderTest extends TestCase
 
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');
 
-        $builder->buildCollectionOfFieldsetsXML($parent_node);
+        $builder->buildCollectionOfJiraContainersXML($parent_node);
         $this->assertCount(2, $parent_node->children());
 
-        $jira_atf_fieldset = $parent_node->formElement[0];
-        $this->assertEquals("fieldset", $jira_atf_fieldset['type']);
-        $this->assertEquals("F1", $jira_atf_fieldset['ID']);
-        $this->assertEquals("0", $jira_atf_fieldset['rank']);
-        $this->assertEquals("1", $jira_atf_fieldset['use_it']);
+        $details_fieldset = $parent_node->formElement[0];
+        $this->assertEquals("fieldset", $details_fieldset['type']);
+        $this->assertEquals("F1", $details_fieldset['ID']);
+        $this->assertEquals("1", $details_fieldset['rank']);
+        $this->assertEquals("1", $details_fieldset['use_it']);
 
-        $form_element_name = $jira_atf_fieldset->name;
+        $form_element_name = $details_fieldset->name;
         $this->assertNotNull($form_element_name);
-        $this->assertEquals("jira_atf", (string) $form_element_name);
-        $form_element_label = $jira_atf_fieldset->label;
+        $this->assertEquals("details_fieldset", (string) $form_element_name);
+        $form_element_label = $details_fieldset->label;
         $this->assertNotNull($form_element_label);
-        $this->assertEquals("Jira ATF", (string) $form_element_label);
+        $this->assertEquals("Details", (string) $form_element_label);
 
-        $jira_custom_fieldset = $parent_node->formElement[1];
-        $this->assertEquals("fieldset", $jira_custom_fieldset['type']);
-        $this->assertEquals("F2", $jira_custom_fieldset['ID']);
-        $this->assertEquals("0", $jira_custom_fieldset['rank']);
-        $this->assertEquals("1", $jira_custom_fieldset['use_it']);
+        $custom_fieldset = $parent_node->formElement[1];
+        $this->assertEquals("fieldset", $custom_fieldset['type']);
+        $this->assertEquals("F2", $custom_fieldset['ID']);
+        $this->assertEquals("2", $custom_fieldset['rank']);
+        $this->assertEquals("1", $custom_fieldset['use_it']);
 
-        $form_element_name = $jira_custom_fieldset->name;
+        $form_element_name = $custom_fieldset->name;
         $this->assertNotNull($form_element_name);
-        $this->assertEquals("jira_custom", (string) $form_element_name);
-        $form_element_label = $jira_custom_fieldset->label;
+        $this->assertEquals("custom_fieldset", (string) $form_element_name);
+        $form_element_label = $custom_fieldset->label;
         $this->assertNotNull($form_element_label);
-        $this->assertEquals("Jira Custom Fields", (string) $form_element_label);
+        $this->assertEquals("Custom Fields", (string) $form_element_label);
+
+        $left_column   = $details_fieldset->formElements->formElement[0];
+        $this->assertEquals("column", $left_column['type']);
+        $this->assertEquals("Fcol1", $left_column['ID']);
+        $this->assertEquals("1", $left_column['rank']);
+
+        $right_column  = $details_fieldset->formElements->formElement[1];
+        $this->assertEquals("column", $right_column['type']);
+        $this->assertEquals("Fcol2", $right_column['ID']);
+        $this->assertEquals("2", $right_column['rank']);
     }
 }
