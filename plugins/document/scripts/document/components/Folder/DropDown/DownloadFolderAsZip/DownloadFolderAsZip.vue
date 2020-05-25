@@ -38,6 +38,7 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import EventBus from "../../../../helpers/event-bus.js";
+import { redirectToUrl } from "../../../../helpers/location-helper";
 
 export default {
     name: "DownloadFolderAsZip",
@@ -110,11 +111,7 @@ export default {
                 return;
             }
 
-            EventBus.$emit("show-download-archive-confirm-modal", {
-                detail: {
-                    folder_href: this.folder_href,
-                },
-            });
+            redirectToUrl(this.folder_href);
         },
     },
 };

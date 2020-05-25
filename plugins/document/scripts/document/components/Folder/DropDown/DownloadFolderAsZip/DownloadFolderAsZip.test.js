@@ -22,6 +22,7 @@ import { createStoreMock } from "../../../../../../../../src/scripts/vue-compone
 import localVue from "../../../../helpers/local-vue.js";
 import DownloadFolderAsZip from "./DownloadFolderAsZip.vue";
 import EventBus from "../../../../helpers/event-bus.js";
+import * as location_helper from "../../../../helpers/location-helper.js";
 import Vue from "vue";
 
 describe("DownloadFolderAsZip", () => {
@@ -175,28 +176,23 @@ describe("DownloadFolderAsZip", () => {
         window.navigator = navigator;
     });
 
-    it("Opens the confirm modal", async () => {
+    it(`Sets the location to the download URI instead of simply using href
+        so that people can't just skip the max threshold modal`, async () => {
+        const redirect = jest.spyOn(location_helper, "redirectToUrl").mockImplementation(() => {});
         const wrapper = getWrapper();
-        const event_bus_emit = jest.spyOn(EventBus, "$emit");
+        const eventBusEmit = jest.spyOn(EventBus, "$emit");
+        jest.spyOn(store, "dispatch").mockResolvedValue({
+            total_size: 10000,
+        });
 
-        jest.spyOn(store, "dispatch").mockReturnValue(
-            Promise.resolve({
-                total_size: 10000,
-            })
-        );
-
-        wrapper.trigger("click");
-
-        await Vue.nextTick();
+        await wrapper.vm.checkFolderSize();
 
         expect(store.dispatch).toHaveBeenCalledWith("getFolderProperties", [
             { id: 10, type: "folder" },
         ]);
-        expect(event_bus_emit).toHaveBeenCalledWith("show-download-archive-confirm-modal", {
-            detail: {
-                folder_href:
-                    "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip",
-            },
-        });
+        expect(eventBusEmit).not.toHaveBeenCalled();
+        expect(redirect).toHaveBeenCalledWith(
+            "/plugins/document/tuleap-documentation/folders/10/download-folder-as-zip"
+        );
     });
 });
