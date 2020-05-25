@@ -29,7 +29,7 @@
             class="fa fa-fw tlp-dropdown-menu-item-icon"
             v-bind:class="{
                 'fa-tlp-zip-download': !is_retrieving_folder_size,
-                'fa-spin fa-spinner': is_retrieving_folder_size,
+                'fa-spin fa-circle-o-notch': is_retrieving_folder_size,
             }"
         ></i>
         <translate>Download as zip</translate>
