@@ -95,6 +95,7 @@ use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\JiraErrorImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\JiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
 use Tuleap\Tracker\Creation\JiraImporter\JiraSuccessImportNotifier;
@@ -1674,14 +1675,18 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         );
         $cleaner->deleteDanglingFilesToUpload($current_time);
 
+        $base_url_builder     = new InstanceBaseURLBuilder();
         $pending_jira_cleaner = new PendingJiraImportCleaner(
             $logger,
             new PendingJiraImportDao(),
             new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection()),
             new PendingJiraImportBuilder(ProjectManager::instance(), UserManager::instance()),
             new CancellationOfJiraImportNotifier(
-                $this->getMailNotificationBuilder(),
-                new InstanceBaseURLBuilder(),
+                new JiraImportNotifier(
+                    $base_url_builder,
+                    $this->getMailNotificationBuilder(),
+                ),
+                $base_url_builder,
                 new LocaleSwitcher(),
                 TemplateRendererFactory::build(),
             )
@@ -2227,9 +2232,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraSuccessImportNotifier(): JiraSuccessImportNotifier
     {
+        $base_url_builder = new InstanceBaseURLBuilder();
+
         return new JiraSuccessImportNotifier(
-            $this->getMailNotificationBuilder(),
-            new InstanceBaseURLBuilder(),
+            new JiraImportNotifier(
+                $base_url_builder,
+                $this->getMailNotificationBuilder(),
+            ),
+            $base_url_builder,
             new LocaleSwitcher(),
             TemplateRendererFactory::build(),
         );
@@ -2237,9 +2247,14 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraErrorImportNotifier(): JiraErrorImportNotifier
     {
+        $base_url_builder = new InstanceBaseURLBuilder();
+
         return new JiraErrorImportNotifier(
-            $this->getMailNotificationBuilder(),
-            new InstanceBaseURLBuilder(),
+            new JiraImportNotifier(
+                $base_url_builder,
+                $this->getMailNotificationBuilder(),
+            ),
+            $base_url_builder,
             new LocaleSwitcher(),
             TemplateRendererFactory::build(),
         );
