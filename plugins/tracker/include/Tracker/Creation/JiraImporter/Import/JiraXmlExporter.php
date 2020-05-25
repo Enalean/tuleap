@@ -32,6 +32,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExport
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
@@ -107,6 +108,11 @@ class JiraXmlExporter
      */
     private $status_values_collection;
 
+    /**
+     * @var ContainersXMLCollectionBuilder
+     */
+    private $containers_xml_collection_builder;
+
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
@@ -117,18 +123,20 @@ class JiraXmlExporter
         PermissionsXMLExporter $permissions_xml_exporter,
         ArtifactsXMLExporter $artifacts_xml_exporter,
         SemanticsXMLExporter $semantics_xml_exporter,
-        StatusValuesCollection $status_values_collection
+        StatusValuesCollection $status_values_collection,
+        ContainersXMLCollectionBuilder $containers_xml_collection_builder
     ) {
-        $this->field_xml_exporter            = $field_xml_exporter;
-        $this->error_collector               = $error_collector;
-        $this->jira_field_retriever          = $jira_field_retriever;
-        $this->field_type_mapper             = $field_type_mapper;
-        $this->report_exporter               = $report_exporter;
-        $this->jira_field_mapping_collection = $field_mapping_collection;
-        $this->permissions_xml_exporter      = $permissions_xml_exporter;
-        $this->artifacts_xml_exporter        = $artifacts_xml_exporter;
-        $this->semantics_xml_exporter        = $semantics_xml_exporter;
-        $this->status_values_collection      = $status_values_collection;
+        $this->field_xml_exporter                = $field_xml_exporter;
+        $this->error_collector                   = $error_collector;
+        $this->jira_field_retriever              = $jira_field_retriever;
+        $this->field_type_mapper                 = $field_type_mapper;
+        $this->report_exporter                   = $report_exporter;
+        $this->jira_field_mapping_collection     = $field_mapping_collection;
+        $this->permissions_xml_exporter          = $permissions_xml_exporter;
+        $this->artifacts_xml_exporter            = $artifacts_xml_exporter;
+        $this->semantics_xml_exporter            = $semantics_xml_exporter;
+        $this->status_values_collection          = $status_values_collection;
+        $this->containers_xml_collection_builder = $containers_xml_collection_builder;
     }
 
     public static function build(
@@ -188,6 +196,9 @@ class JiraXmlExporter
             new SemanticsXMLExporter(),
             new StatusValuesCollection(
                 $wrapper
+            ),
+            new ContainersXMLCollectionBuilder(
+                new XML_SimpleXMLCDATAFactory()
             )
         );
     }
@@ -202,22 +213,13 @@ class JiraXmlExporter
         string $jira_issue_type_name
     ): void {
         $form_elements = $node_tracker->addChild('formElements');
+        $fieldsets_collection = $this->containers_xml_collection_builder->buildCollectionOfFieldsetsXML($form_elements);
 
-        $node_jira_atf_form_elements = $this->field_xml_exporter->exportFieldsetWithName(
-            $form_elements,
-            'jira_atf',
-            'Jira ATF',
-            0,
-            1
-        );
+        $node_jira_atf_fieldset    = $fieldsets_collection->getFieldsetByName('atf');
+        $node_jira_custom_fieldset = $fieldsets_collection->getFieldsetByName('custom');
 
-        $node_jira_custom_form_elements = $this->field_xml_exporter->exportFieldsetWithName(
-            $form_elements,
-            'jira_custom',
-            'Jira Custom Fields',
-            0,
-            2
-        );
+        $node_jira_atf_form_elements    = $node_jira_atf_fieldset->formElements;
+        $node_jira_custom_form_elements = $node_jira_custom_fieldset->formElements;
 
         $this->field_xml_exporter->exportField(
             $node_jira_atf_form_elements,

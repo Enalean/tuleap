@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
-use SimpleXMLElement;
-use Tracker_FormElement_Container_Fieldset;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use XML_SimpleXMLCDATAFactory;
 
@@ -46,27 +44,6 @@ class FieldXmlExporter
     ) {
         $this->cdata_section_factory = $cdata_section_factory;
         $this->field_name_formatter  = $field_name_formatter;
-    }
-
-    public function exportFieldsetWithName(
-        SimpleXMLElement $parent_node,
-        string $name,
-        string $label,
-        int $rank,
-        int $id
-    ): SimpleXMLElement {
-        $fieldset_node = $parent_node->addChild("formElement");
-        $fieldset_node->addAttribute('type', Tracker_FormElement_Container_Fieldset::TYPE);
-
-        $xml_id = "F" . $id;
-        $fieldset_node->addAttribute('ID', $xml_id);
-        $fieldset_node->addAttribute('rank', (string) $rank);
-        $fieldset_node->addAttribute('use_it', '1');
-
-        $this->cdata_section_factory->insert($fieldset_node, 'name', $name);
-        $this->cdata_section_factory->insert($fieldset_node, 'label', $label);
-
-        return $fieldset_node->addChild('formElements');
     }
 
     /**

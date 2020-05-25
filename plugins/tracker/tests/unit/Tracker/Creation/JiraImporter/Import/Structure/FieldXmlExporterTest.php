@@ -46,28 +46,6 @@ final class FieldXmlExporterTest extends TestCase
         );
     }
 
-    public function testItExportsAFieldset(): void
-    {
-        $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');
-
-        $this->exporter->exportFieldsetWithName($parent_node, "name", "Label", 10, 1002);
-
-        $form_element_node = $parent_node->formElement;
-        $this->assertNotNull($form_element_node);
-
-        $this->assertEquals("fieldset", $form_element_node['type']);
-        $this->assertEquals("F1002", $form_element_node['ID']);
-        $this->assertEquals("10", $form_element_node['rank']);
-        $this->assertEquals("1", $form_element_node['use_it']);
-
-        $form_element_name = $form_element_node->name;
-        $this->assertNotNull($form_element_name);
-        $this->assertEquals("name", (string) $form_element_name);
-        $form_element_label = $form_element_node->label;
-        $this->assertNotNull($form_element_label);
-        $this->assertEquals("Label", (string) $form_element_label);
-    }
-
     public function testItExportAField(): void
     {
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');

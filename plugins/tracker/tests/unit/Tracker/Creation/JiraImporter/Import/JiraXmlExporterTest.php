@@ -26,12 +26,14 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
@@ -112,6 +114,9 @@ final class JiraXmlExporterTest extends TestCase
         $this->status_values_collection      = new StatusValuesCollection(
             $this->wrapper
         );
+        $this->containers_xml_collection_builder = new ContainersXMLCollectionBuilder(
+            new \XML_SimpleXMLCDATAFactory()
+        );
 
         $this->jira_exporter = new JiraXmlExporter(
             $this->field_xml_exporter,
@@ -123,20 +128,21 @@ final class JiraXmlExporterTest extends TestCase
             $this->permissions_xml_exporter,
             $this->artifacts_xml_exporter,
             $this->semantics_xml_exporter,
-            $this->status_values_collection
+            $this->status_values_collection,
+            $this->containers_xml_collection_builder
         );
     }
 
     public function testItProcessExport(): void
     {
-        $xml          = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
+        $xml          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
         $trackers_xml = $xml->addChild('trackers');
 
-        $fieldset_xml = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElement type="fieldset"/>');
-        $this->field_xml_exporter->shouldReceive('exportFieldsetWithName')->andReturn($fieldset_xml)->times(2);
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
-                $fieldset_xml,
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return (string) $fieldset_xml->getName() === 'formElements';
+                }),
                 Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
                 "artifact_id",
                 "Artifact id",
@@ -151,7 +157,9 @@ final class JiraXmlExporterTest extends TestCase
 
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
-                $fieldset_xml,
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return (string) $fieldset_xml->getName() === 'formElements';
+                }),
                 Tracker_FormElementFactory::FIELD_STRING_TYPE,
                 "jira_issue_url",
                 "Link to original issue",
@@ -166,7 +174,9 @@ final class JiraXmlExporterTest extends TestCase
 
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
-                $fieldset_xml,
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return (string) $fieldset_xml->getName() === 'formElements';
+                }),
                 Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
                 "updated",
                 "Last update date",
@@ -181,7 +191,9 @@ final class JiraXmlExporterTest extends TestCase
 
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
-                $fieldset_xml,
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return (string) $fieldset_xml->getName() === 'formElements';
+                }),
                 Tracker_FormElementFactory::FIELD_DATE_TYPE,
                 "resolutiondate",
                 "Resolved",
@@ -196,20 +208,15 @@ final class JiraXmlExporterTest extends TestCase
             ]
         )->once();
 
-        $statuses = [
-            new JiraFieldAPIAllowedValueRepresentation(
-                9000003,
-                'In Progress'
-            )
-        ];
-
         $this->wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
             $this->getStatusesAPIResponse()
         );
 
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
-                $fieldset_xml,
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return (string) $fieldset_xml->getName() === 'formElements';
+                }),
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                 "status",
                 "Status",
