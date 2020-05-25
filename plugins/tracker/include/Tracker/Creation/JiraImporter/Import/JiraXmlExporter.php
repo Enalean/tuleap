@@ -63,6 +63,16 @@ class JiraXmlExporter
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
 
+    private const JIRA_STATUS_RANK          = 1;
+    private const JIRA_UPDATED_ON_RANK      = 2;
+    private const JIRA_RESOLUTION_DATE_RANK = 3;
+    public const JIRA_PRIORITY_RANK         = 4;
+    private const JIRA_ARTIFACT_ID_RANK     = 5;
+    private const JIRA_LINK_RANK            = 6;
+
+    public const JIRA_SUMMARY_RANK     = 1;
+    public const JIRA_DESCRIPTION_RANK = 2;
+
     /**
      * @var FieldXmlExporter
      */
@@ -224,7 +234,7 @@ class JiraXmlExporter
             self::JIRA_ARTIFACT_ID_FIELD_ID,
             "Artifact id",
             self::JIRA_ARTIFACT_ID_FIELD_ID,
-            1,
+            self::JIRA_ARTIFACT_ID_RANK,
             false,
             [],
             [],
@@ -237,7 +247,7 @@ class JiraXmlExporter
             self::JIRA_LINK_FIELD_NAME,
             "Link to original issue",
             self::JIRA_LINK_FIELD_ID,
-            2,
+            self::JIRA_LINK_RANK,
             false,
             [],
             [],
@@ -250,7 +260,7 @@ class JiraXmlExporter
             self::JIRA_UPDATED_ON_NAME,
             "Last update date",
             self::JIRA_UPDATED_ON_NAME,
-            5,
+            self::JIRA_UPDATED_ON_RANK,
             false,
             [],
             [],
@@ -263,7 +273,7 @@ class JiraXmlExporter
             self::JIRA_RESOLUTION_DATE_NAME,
             "Resolved",
             self::JIRA_RESOLUTION_DATE_NAME,
-            6,
+            self::JIRA_RESOLUTION_DATE_RANK,
             false,
             [
                 'display_time' => '1'
@@ -283,7 +293,7 @@ class JiraXmlExporter
             self::JIRA_STATUS_NAME,
             "Status",
             self::JIRA_STATUS_NAME,
-            7,
+            self::JIRA_STATUS_RANK,
             false,
             [],
             $this->status_values_collection->getAllValues(),

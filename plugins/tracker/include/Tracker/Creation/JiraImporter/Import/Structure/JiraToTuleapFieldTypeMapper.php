@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
+use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 
 class JiraToTuleapFieldTypeMapper
 {
@@ -80,7 +81,7 @@ class JiraToTuleapFieldTypeMapper
                         $id,
                         $jira_field_label,
                         $id,
-                        1,
+                        JiraXmlExporter::JIRA_SUMMARY_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -108,7 +109,7 @@ class JiraToTuleapFieldTypeMapper
                         $id,
                         $jira_field_label,
                         $id,
-                        4,
+                        JiraXmlExporter::JIRA_DESCRIPTION_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -182,7 +183,7 @@ class JiraToTuleapFieldTypeMapper
                         $id,
                         $jira_field_label,
                         $id,
-                        5,
+                        JiraXmlExporter::JIRA_PRIORITY_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
