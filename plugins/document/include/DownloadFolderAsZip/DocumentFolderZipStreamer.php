@@ -25,6 +25,7 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 use Docman_PermissionsManager;
 use HTTPRequest;
 use Project;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Request\DispatchableWithProject;
@@ -49,15 +50,27 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
      * @var ZipStreamMailNotificationSender
      */
     private $notification_sender;
+    /**
+     * @var FolderSizeIsAllowedChecker
+     */
+    private $folder_size_is_allowed_checker;
+    /**
+     * @var FileDownloadLimitsBuilder
+     */
+    private $download_limits_builder;
 
     public function __construct(
         DocumentTreeProjectExtractor $project_extractor,
         ZipStreamerLoggingHelper $error_logging_helper,
-        ZipStreamMailNotificationSender $notification_sender
+        ZipStreamMailNotificationSender $notification_sender,
+        FolderSizeIsAllowedChecker $folder_size_is_allowed_checker,
+        FileDownloadLimitsBuilder $download_limits_builder
     ) {
-        $this->project_extractor    = $project_extractor;
-        $this->error_logging_helper = $error_logging_helper;
-        $this->notification_sender = $notification_sender;
+        $this->project_extractor              = $project_extractor;
+        $this->error_logging_helper           = $error_logging_helper;
+        $this->notification_sender            = $notification_sender;
+        $this->folder_size_is_allowed_checker = $folder_size_is_allowed_checker;
+        $this->download_limits_builder        = $download_limits_builder;
     }
 
     /**
@@ -70,6 +83,9 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
         $user    = $request->getCurrentUser();
         $folder  = $this->getFolder($user, $project, $variables);
 
+        $factory = \Docman_FolderFactory::instance($project->getID());
+        $factory->getItemTree($folder, $user, false, true);
+        $this->checkFolderSizeIsAllowedForDownload($folder);
         $this->streamFolder($folder, $project, $user);
     }
 
@@ -114,9 +130,6 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
         $options->setStatFiles(true);
 
         $zip = new ZipStream($folder->getTitle() . '.zip', $options);
-
-        $factory = \Docman_FolderFactory::instance($project->getID());
-        $factory->getItemTree($folder, $user, false, true);
         $errors_listing_builder = new ErrorsListingBuilder();
 
         $folder->accept(
@@ -137,6 +150,20 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
                 $folder,
                 $project
             );
+        }
+    }
+
+    /**
+     * @throws ForbiddenException
+     */
+    private function checkFolderSizeIsAllowedForDownload(\Docman_Folder $folder): void
+    {
+        $is_below_limit = $this->folder_size_is_allowed_checker->checkFolderSizeIsBelowLimit(
+            $folder,
+            $this->download_limits_builder->build()
+        );
+        if (! $is_below_limit) {
+            throw new ForbiddenException('The size of the folder exceeds the maximum allowed download size.');
         }
     }
 }

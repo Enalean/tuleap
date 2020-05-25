@@ -25,6 +25,7 @@ namespace Tuleap\Document\DownloadFolderAsZip;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Test\Builders\HTTPRequestBuilder;
@@ -46,13 +47,17 @@ final class DocumentFolderZipStreamerTest extends TestCase
 
     protected function setUp(): void
     {
-        $notification_sender     = M::mock(ZipStreamMailNotificationSender::class);
         $this->project_extractor = M::mock(DocumentTreeProjectExtractor::class);
         $logging_helper          = M::mock(ZipStreamerLoggingHelper::class);
+        $notification_sender     = M::mock(ZipStreamMailNotificationSender::class);
+        $size_is_allowed_checker = M::mock(FolderSizeIsAllowedChecker::class);
+        $download_limits_builder = M::mock(FileDownloadLimitsBuilder::class);
         $this->controller        = new DocumentFolderZipStreamer(
             $this->project_extractor,
             $logging_helper,
-            $notification_sender
+            $notification_sender,
+            $size_is_allowed_checker,
+            $download_limits_builder
         );
     }
 
