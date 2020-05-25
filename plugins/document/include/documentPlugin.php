@@ -29,6 +29,7 @@ use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
 use Tuleap\Document\DownloadFolderAsZip\ZipStreamerLoggingHelper;
+use Tuleap\Document\DownloadFolderAsZip\ZipStreamMailNotificationSender;
 use Tuleap\Document\LinkProvider\DocumentLinkProvider;
 use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
@@ -105,7 +106,8 @@ class documentPlugin extends Plugin // phpcs:ignore
     {
         return new DocumentFolderZipStreamer(
             $this->getProjectExtractor(),
-            new ZipStreamerLoggingHelper()
+            new ZipStreamerLoggingHelper(),
+            new ZipStreamMailNotificationSender()
         );
     }
 

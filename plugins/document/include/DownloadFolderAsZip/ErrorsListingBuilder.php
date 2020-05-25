@@ -45,4 +45,9 @@ final class ErrorsListingBuilder
         $contents .= PHP_EOL . implode(PHP_EOL, $this->bad_file_paths);
         $zip->addFile(self::ERROR_FILE_NAME, $contents);
     }
+
+    public function hasAnyError(): bool
+    {
+        return count($this->bad_file_paths) > 0;
+    }
 }

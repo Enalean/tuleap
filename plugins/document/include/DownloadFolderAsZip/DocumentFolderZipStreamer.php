@@ -45,13 +45,19 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
      * @var ZipStreamerLoggingHelper
      */
     private $error_logging_helper;
+    /**
+     * @var ZipStreamMailNotificationSender
+     */
+    private $notification_sender;
 
     public function __construct(
         DocumentTreeProjectExtractor $project_extractor,
-        ZipStreamerLoggingHelper $error_logging_helper
+        ZipStreamerLoggingHelper $error_logging_helper,
+        ZipStreamMailNotificationSender $notification_sender
     ) {
         $this->project_extractor    = $project_extractor;
         $this->error_logging_helper = $error_logging_helper;
+        $this->notification_sender = $notification_sender;
     }
 
     /**
@@ -123,6 +129,14 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
             $zip->finish();
         } catch (OverflowException $e) {
             $this->error_logging_helper->logOverflowExceptionError($folder);
+        }
+
+        if ($errors_listing_builder->hasAnyError()) {
+            $this->notification_sender->sendNotificationAboutErrorsInArchive(
+                $user,
+                $folder,
+                $project
+            );
         }
     }
 }
