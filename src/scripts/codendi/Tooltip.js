@@ -70,8 +70,8 @@ function tooltipModule($, codendi) {
         }
         if (this.tooltip) {
             if (this.options.atCursorPosition) {
-                var posX = mouse_event.pageX;
-                var posY = mouse_event.pageY;
+                var posX = Math.floor(mouse_event.pageX);
+                var posY = Math.floor(mouse_event.pageY);
                 this.tooltip.css({
                     top: posY + 10 + "px",
                     left: posX + 10 + "px",
@@ -79,8 +79,8 @@ function tooltipModule($, codendi) {
             } else {
                 var pos = this.element.offset();
                 this.tooltip.css({
-                    top: pos.top + this.element.outerHeight() + "px",
-                    left: pos.left + "px",
+                    top: Math.floor(pos.top) + this.element.outerHeight() + "px",
+                    left: Math.floor(pos.left) + "px",
                 });
             }
             this.tooltip.show();

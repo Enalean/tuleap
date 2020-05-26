@@ -18,7 +18,6 @@
  */
 
 @import '../node_modules/smooth-scrollbar/dist/smooth-scrollbar';
-@import '../../common/css/utils/tooltip';
 
 @import 'includes/global-variables';
 @import 'includes/smooth-scrollbar-overrides';
@@ -36,3 +35,4 @@
 @import 'includes/error';
 @import 'includes/ckeditor';
 @import 'includes/project-banner';
+@import 'includes/cross-ref-tooltip';
