@@ -36,6 +36,12 @@ msgstr "Le service Documents n'est pas activé pour le projet %s"
 msgid "File download limits"
 msgstr "Limites de téléchargement"
 
+msgid "Files missing in your latest archive download"
+msgstr "Des fichiers manquent dans l'archive récemment téléchargée"
+
+msgid "However, all its content could not have been included in the archive."
+msgstr "Cependant, tout son contenu n'a pas pu être ajouté à l'archive."
+
 msgid "MB"
 msgstr "Mo"
 
@@ -44,6 +50,9 @@ msgstr "Taille maximum de l'archive"
 
 msgid "Megabytes"
 msgstr "Mégaoctets"
+
+msgid "Please contact your site administrator."
+msgstr "Veuillez contacter votre administrateur de site."
 
 msgid "Project not found"
 msgstr "Projet non trouvé"
@@ -88,3 +97,16 @@ msgstr ""
 
 msgid "Warning threshold"
 msgstr "Seuil d'avertissement"
+
+#, php-format
+msgid ""
+"You have recently downloaded the folder \"%s\" (id: %d) in the project %s."
+msgstr ""
+"Vous avez récemment téléchargé le dossier \"%s\" (id: %d) dans le projet %s."
+
+msgid ""
+"You will find a file named TULEAP_ERRORS.txt at the root of the archive, "
+"listing all the impacted files."
+msgstr ""
+"Vous trouverez un fichier nommé TULEAP_ERRORS.txt à la racine de l'archive, "
+"répertoriant tous les fichiers impactés."

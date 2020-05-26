@@ -46,9 +46,14 @@ final class DocumentFolderZipStreamerTest extends TestCase
 
     protected function setUp(): void
     {
+        $notification_sender     = M::mock(ZipStreamMailNotificationSender::class);
         $this->project_extractor = M::mock(DocumentTreeProjectExtractor::class);
         $logging_helper          = M::mock(ZipStreamerLoggingHelper::class);
-        $this->controller        = new DocumentFolderZipStreamer($this->project_extractor, $logging_helper);
+        $this->controller        = new DocumentFolderZipStreamer(
+            $this->project_extractor,
+            $logging_helper,
+            $notification_sender
+        );
     }
 
     public function testItThrowsNotFoundWhenNoFolderID(): void
