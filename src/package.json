@@ -22,7 +22,7 @@
     "get-dataset": "^0.0.4",
     "keymaster": "^1.6.2",
     "lodash": "^4.17.4",
-    "moment": "^2.18.1",
+    "moment": "^2.26.0",
     "mustache": "^2.3.0",
     "node-gettext": "^2.0.0",
     "phptomoment": "0.0.2",
