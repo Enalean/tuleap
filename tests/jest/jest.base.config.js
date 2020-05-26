@@ -54,5 +54,4 @@ module.exports = {
     ],
     resetModules: true,
     restoreMocks: true,
-    testEnvironment: "jest-environment-jsdom-sixteen",
 };
