@@ -107,7 +107,11 @@ class documentPlugin extends Plugin // phpcs:ignore
         return new DocumentFolderZipStreamer(
             $this->getProjectExtractor(),
             new ZipStreamerLoggingHelper(),
-            new ZipStreamMailNotificationSender()
+            new ZipStreamMailNotificationSender(),
+            new \Tuleap\Document\DownloadFolderAsZip\FolderSizeIsAllowedChecker(
+                new \Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor(),
+            ),
+            new \Tuleap\Document\Config\FileDownloadLimitsBuilder()
         );
     }
 
