@@ -120,9 +120,6 @@ msgstr "Description des changements"
 msgid "Close"
 msgstr "Fermer"
 
-msgid "Confirmation needed"
-msgstr "Confirmation requise"
-
 msgid ""
 "Contact your administrator or try to reorganize this folder, then try again."
 msgstr ""
@@ -237,14 +234,6 @@ msgstr "Embarqué"
 msgid "Empty"
 msgstr "Vide"
 
-msgid ""
-"Every sub-folder, file and embedded file in this folder will be downloaded "
-"as a zip\n"
-"            archive."
-msgstr ""
-"Chaque sous-dossier, fichier et fichier embarqué dans ce dossier seront "
-"téléchargés sous la forme d'une archive zip."
-
 msgid "File"
 msgstr "Fichier"
 
@@ -277,9 +266,6 @@ msgstr "Attendez une seconde !"
 
 msgid "Id"
 msgstr "Id"
-
-msgid "If it happens, please let your site-administrator know."
-msgstr "Si cela se produit, veuillez prévenir votre administrateur du site."
 
 msgid "It seems an action you tried to perform can't be done."
 msgstr ""
@@ -412,9 +398,6 @@ msgstr "Permanent"
 
 msgid "Permissions"
 msgstr "Permissions"
-
-msgid "Please also note"
-msgstr "Veuillez noter"
 
 msgid "Please describe the changes of the new version here"
 msgstr "Merci de décrire ici le changement de version"
@@ -598,18 +581,6 @@ msgstr "Nom de version"
 
 msgid "We detect you are using OSX"
 msgstr "Nous détectons que vous utilisez OSX"
-
-msgid ""
-"When some files can't be downloaded for any reason (file corrupted, not "
-"found, not\n"
-"        readable, memory overflow), you will find a file named TULEAP_ERRORS."
-"txt at the root of\n"
-"        the zip archive."
-msgstr ""
-"Lorsque des fichiers ne peuvent pas être téléchargés pour une quelconque "
-"raison (fichier corrompu, non trouvé, non lisible, débordement mémoire), "
-"vous trouverez un fichier nommé TULEAP_ERRORS.txt à la racine de l'archive "
-"zip."
 
 msgid ""
 "When you delete a folder, all its content is also deleted. Please think "

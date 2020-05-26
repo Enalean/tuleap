@@ -82,15 +82,6 @@
                     </p>
                 </div>
             </div>
-            <div class="tlp-modal-body-section">
-                <h2 class="tlp-modal-subtitle">
-                    <i class="fa fa-fw fa-exclamation-triangle download-modal-warning-number"></i>
-                    <span v-translate>Please also note</span>
-                </h2>
-                <div class="download-modal-multiple-warnings-content">
-                    <warning-about-archive-errors />
-                </div>
-            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -121,11 +112,9 @@
 <script>
 import { mapState } from "vuex";
 import { modal } from "tlp";
-import WarningAboutArchiveErrors from "./WarningAboutArchiveErrors.vue";
 
 export default {
     name: "ModalArchiveSizeWarning",
-    components: { WarningAboutArchiveErrors },
     props: {
         size: {
             type: Number,

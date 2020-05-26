@@ -225,7 +225,7 @@ describe("Document new UI", () => {
             cy.get("[data-test=document-tree-content]").should("not.exist");
         });
 
-        it(`user can download a folder as a zip archive`, function () {
+        it.only(`user can download a folder as a zip archive`, function () {
             // Create a folder
             cy.get("[data-test=document-header-actions]").within(() => {
                 cy.get("[data-test=document-drop-down-button]").click();
@@ -267,34 +267,30 @@ describe("Document new UI", () => {
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@folder_download_dropdown").click();
             // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("@folder_download_row").within(() => {
-                cy.get("[data-test=document-dropdown-download-folder-as-zip]").click();
-            });
-            cy.get("[data-test=document-folder-confirm-archive-download").within(() => {
-                cy.get("[data-test=confirm-download-archive-button]").then((link) => {
-                    // Verify the link to download the folder. We cannot click it, otherwise the browser
-                    // will ask "Where to save this file ?" and stop the test.
-                    const download_uri = link.attr("href");
-                    expect(download_uri).to.match(
-                        /^\/plugins\/document\/document-project\/folders\/\d+\/download-folder-as-zip$/
-                    );
+            cy.get("@folder_download_row").within(($row) => {
+                // We cannot click the download button, otherwise the browser will ask "Where to save this file ?"
+                // and will stop the test.
+                cy.get("[data-test=document-dropdown-download-folder-as-zip]").should("exist");
+                const folder_id = $row.data("itemId");
+                if (folder_id === undefined) {
+                    throw new Error("Could not retrieve the folder id from its <tr>");
+                }
+                const download_uri = `/plugins/document/document-project/folders/${encodeURIComponent(
+                    folder_id
+                )}/download-folder-as-zip`;
 
-                    cy.request({
-                        url: download_uri,
-                    }).then((response) => {
-                        expect(response.status).to.equal(200);
-                        expect(response.headers["content-type"]).to.equal("application/x-zip");
-                        expect(response.headers["content-disposition"]).to.equal(
-                            "attachment; filename*=UTF-8''Folder%20download.zip"
-                        );
-                    });
-                    // Close the modal
-                    cy.get("[data-test=close-confirm-archive-download-modal]").click();
+                // Verify the download URI returns code 200 and has the correct headers
+                cy.request({
+                    url: download_uri,
+                }).then((response) => {
+                    expect(response.status).to.equal(200);
+                    expect(response.headers["content-type"]).to.equal("application/x-zip");
+                    expect(response.headers["content-disposition"]).to.equal(
+                        "attachment; filename*=UTF-8''Folder%20download.zip"
+                    );
                 });
             });
             // Delete the folder for repeatability
-            // eslint-disable-next-line cypress/require-data-selectors
-            cy.get("@folder_download_dropdown").click();
             // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@folder_download_row").within(() => {
                 cy.get("[data-test=document-dropdown-delete]").click();

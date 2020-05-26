@@ -47,7 +47,6 @@ describe("FolderHeader", () => {
             "create-new-item-version-modal",
             "download-folder-size-threshold-exceeded-modal",
             "download-folder-size-warning-modal",
-            "download-folder-confirm-modal",
         ];
 
         factory = (props = {}) => {
@@ -189,25 +188,6 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
                 true
             );
-        });
-
-        it("Loads the confirm archive downloading modal", async () => {
-            store.state.is_loading_ascendant_hierarchy = false;
-            store.state.current_folder = { id: 20 };
-
-            const wrapper = factory();
-            expect(
-                wrapper.find("[data-test=document-folder-confirm-archive-download]").exists()
-            ).toBe(false);
-
-            const event = {
-                detail: { folder_href: "/download/folder/here" },
-            };
-            wrapper.vm.showDownloadArchiveConfirmModal(event);
-            await wrapper.vm.$nextTick();
-            expect(
-                wrapper.find("[data-test=document-folder-confirm-archive-download]").exists()
-            ).toBe(true);
         });
     });
 });
