@@ -27,7 +27,7 @@ use SimpleXMLElement;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
@@ -46,7 +46,7 @@ class SemanticsXMLExporter
 
     private function exportTitleSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
     {
-        $summary_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_SUMMARY_FIELD_NAME);
+        $summary_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME);
         if ($summary_field === null) {
             return;
         }
@@ -63,7 +63,7 @@ class SemanticsXMLExporter
 
     private function exportDescriptionSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
     {
-        $description_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_DESCRIPTION_FIELD_NAME);
+        $description_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME);
         if ($description_field === null) {
             return;
         }
@@ -83,7 +83,7 @@ class SemanticsXMLExporter
         FieldMappingCollection $field_mapping_collection,
         StatusValuesCollection $status_values_collection
     ): void {
-        $status_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_STATUS_NAME);
+        $status_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
         if ($status_field === null) {
             return;
         }

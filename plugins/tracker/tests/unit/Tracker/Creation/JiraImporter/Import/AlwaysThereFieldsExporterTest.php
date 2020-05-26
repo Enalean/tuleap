@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,115 +29,74 @@ use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldXmlExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldRetriever;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraToTuleapFieldTypeMapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
+use XML_SimpleXMLCDATAFactory;
 
-final class JiraXmlExporterTest extends TestCase
+class AlwaysThereFieldsExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|XmlReportExporter
+     * @var AlwaysThereFieldsExporter
      */
-    private $report_exporter;
+    private $exporter;
 
     /**
-     * @var JiraXmlExporter
+     * @var Structure\ContainersXMLCollection
      */
-    private $jira_exporter;
+    private $containers_collection;
+
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraToTuleapFieldTypeMapper
+     * @var FieldMappingCollection
      */
-    private $field_type_mapper;
+    private $field_mapping_collection;
+
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraFieldRetriever
+     * @var StatusValuesCollection
      */
-    private $jira_field_retriever;
+    private $status_values_collection;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldXmlExporter
      */
     private $field_xml_exporter;
 
-    /**
-     * @var FieldMappingCollection
-     */
-    private $jira_field_mapping_collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PermissionsXMLExporter
-     */
-    private $permissions_xml_exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsXMLExporter
-     */
-    private $artifacts_xml_exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|SemanticsXMLExporter
-     */
-    private $semantics_xml_exporter;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|StatusValuesCollection
-     */
-    private $status_values_collection;
-
-    /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ClientWrapper
-     */
-    private $wrapper;
-
     protected function setUp(): void
     {
-        $this->wrapper = Mockery::mock(ClientWrapper::class);
+        parent::setUp();
 
-        $this->field_xml_exporter            = Mockery::mock(FieldXmlExporter::class);
-        $this->jira_field_retriever          = Mockery::mock(JiraFieldRetriever::class);
-        $error_collector                     = new ErrorCollector();
-        $this->field_type_mapper             = Mockery::mock(JiraToTuleapFieldTypeMapper::class);
-        $this->report_exporter               = Mockery::mock(XmlReportExporter::class);
-        $this->jira_field_mapping_collection = new FieldMappingCollection();
-        $this->permissions_xml_exporter      = Mockery::mock(PermissionsXMLExporter::class);
-        $this->artifacts_xml_exporter        = Mockery::mock(ArtifactsXMLExporter::class);
-        $this->semantics_xml_exporter        = Mockery::mock(SemanticsXMLExporter::class);
-        $this->status_values_collection      = new StatusValuesCollection(
-            $this->wrapper
-        );
-        $this->containers_xml_collection_builder = new ContainersXMLCollectionBuilder(
-            new \XML_SimpleXMLCDATAFactory()
+        $this->field_xml_exporter = Mockery::mock(FieldXmlExporter::class);
+        $this->exporter = new AlwaysThereFieldsExporter(
+            $this->field_xml_exporter
         );
 
-        $this->jira_exporter = new JiraXmlExporter(
-            $this->field_xml_exporter,
-            $error_collector,
-            $this->jira_field_retriever,
-            $this->field_type_mapper,
-            $this->report_exporter,
-            $this->jira_field_mapping_collection,
-            $this->permissions_xml_exporter,
-            $this->artifacts_xml_exporter,
-            $this->semantics_xml_exporter,
-            $this->status_values_collection,
-            $this->containers_xml_collection_builder
+        $root_form_elements = new SimpleXMLElement("<formElements/>");
+        $this->containers_collection = (new ContainersXMLCollectionBuilder(new XML_SimpleXMLCDATAFactory()))
+            ->buildCollectionOfJiraContainersXML($root_form_elements);
+
+        $this->field_mapping_collection = new FieldMappingCollection();
+
+        $wrapper = Mockery::mock(ClientWrapper::class);
+        $wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
+            $this->getStatusesAPIResponse()
+        );
+
+        $this->status_values_collection = new StatusValuesCollection(
+            $wrapper
+        );
+
+        $this->status_values_collection->initCollectionForProjectAndIssueType(
+            'TEST',
+            'Story'
         );
     }
 
-    public function testItProcessExport(): void
+    public function testItProcessATFExport(): void
     {
-        $xml          = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $trackers_xml = $xml->addChild('trackers');
-
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
                 Mockery::on(function (SimpleXMLElement $fieldset_xml) {
@@ -151,7 +110,7 @@ final class JiraXmlExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->jira_field_mapping_collection
+                $this->field_mapping_collection
             ]
         )->once();
 
@@ -168,7 +127,7 @@ final class JiraXmlExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->jira_field_mapping_collection
+                $this->field_mapping_collection
             ]
         )->once();
 
@@ -185,7 +144,7 @@ final class JiraXmlExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->jira_field_mapping_collection
+                $this->field_mapping_collection
             ]
         )->once();
 
@@ -204,13 +163,9 @@ final class JiraXmlExporterTest extends TestCase
                     'display_time' => '1'
                 ],
                 [],
-                $this->jira_field_mapping_collection
+                $this->field_mapping_collection
             ]
         )->once();
-
-        $this->wrapper->shouldReceive('getUrl')->with("project/TEST/statuses")->once()->andReturn(
-            $this->getStatusesAPIResponse()
-        );
 
         $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
             [
@@ -229,17 +184,15 @@ final class JiraXmlExporterTest extends TestCase
                     assert($status instanceof JiraFieldAPIAllowedValueRepresentation);
                     return $status->getId() === 9000003 && $status->getName() === "In Progress";
                 }),
-                $this->jira_field_mapping_collection
+                $this->field_mapping_collection
             ]
         )->once();
 
-        $this->report_exporter->shouldReceive('exportReports')->once();
-        $this->permissions_xml_exporter->shouldReceive('exportFieldsPermissions')->once();
-        $this->artifacts_xml_exporter->shouldReceive('exportArtifacts')->once();
-        $this->semantics_xml_exporter->shouldReceive('exportSemantics')->once();
-
-        $this->jira_field_retriever->shouldReceive('getAllJiraFields')->once();
-        $this->jira_exporter->exportJiraToXml($trackers_xml, "URLinstance", "TEST", "Story");
+        $this->exporter->exportFields(
+            $this->containers_collection,
+            $this->field_mapping_collection,
+            $this->status_values_collection
+        );
     }
 
     private function getStatusesAPIResponse(): array

@@ -28,7 +28,7 @@ use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -130,7 +130,7 @@ class FieldChangeXMLExporter
                 $value['id']
             ];
 
-            if ($mapping->getFieldName() === JiraXmlExporter::JIRA_STATUS_NAME) {
+            if ($mapping->getFieldName() === AlwaysThereFieldsExporter::JIRA_STATUS_NAME) {
                 $value_ids = [
                     $this->status_values_transformer->transformJiraStatusValue((int) $value['id'])
                 ];

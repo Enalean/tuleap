@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Permissions;
 
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -34,8 +34,8 @@ class PermissionsXMLExporter
      * @var array
      */
     private $read_only_field_ids = [
-        JiraXmlExporter::JIRA_ARTIFACT_ID_FIELD_ID,
-        JiraXmlExporter::JIRA_LINK_FIELD_ID
+        AlwaysThereFieldsExporter::JIRA_ARTIFACT_ID_FIELD_ID,
+        AlwaysThereFieldsExporter::JIRA_LINK_FIELD_ID
     ];
 
     public function exportFieldsPermissions(SimpleXMLElement $node_tracker, FieldMappingCollection $field_mapping_collection): void

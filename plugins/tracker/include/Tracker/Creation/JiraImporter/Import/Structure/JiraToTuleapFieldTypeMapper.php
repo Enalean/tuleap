@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 
 class JiraToTuleapFieldTypeMapper
 {
@@ -81,7 +81,7 @@ class JiraToTuleapFieldTypeMapper
                         $id,
                         $jira_field_label,
                         $id,
-                        JiraXmlExporter::JIRA_SUMMARY_RANK,
+                        AlwaysThereFieldsExporter::JIRA_SUMMARY_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -109,7 +109,7 @@ class JiraToTuleapFieldTypeMapper
                         $id,
                         $jira_field_label,
                         $id,
-                        JiraXmlExporter::JIRA_DESCRIPTION_RANK,
+                        AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
@@ -176,14 +176,14 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
-                case JiraXmlExporter::JIRA_PRIORITY_NAME:
+                case AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME:
                     $this->field_xml_exporter->exportField(
                         $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
-                        JiraXmlExporter::JIRA_PRIORITY_RANK,
+                        AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),
