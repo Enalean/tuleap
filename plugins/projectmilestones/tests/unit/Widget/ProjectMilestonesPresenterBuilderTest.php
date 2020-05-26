@@ -37,7 +37,6 @@ use Planning_MilestoneFactory;
 use Planning_VirtualTopMilestone;
 use Project;
 use Tracker;
-use TrackerFactory;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
@@ -94,10 +93,6 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
      */
     private $agiledashboard_milestone_backlog;
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TrackerFactory
-     */
-    private $tracker_factory;
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
@@ -142,7 +137,6 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->agiledashboard_milestone_backlog_item_collection_factory = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory::class);
         $this->agiledashboard_milestone_backlog_factory                 = Mockery::mock(AgileDashboard_Milestone_Backlog_BacklogFactory::class);
         $this->agiledashboard_milestone_backlog                         = Mockery::mock(AgileDashboard_Milestone_Backlog_Backlog::class);
-        $this->tracker_factory                                          = Mockery::mock(TrackerFactory::class);
         $this->explicit_backlog_dao                                     = Mockery::mock(ExplicitBacklogDao::class);
         $this->artifacts_in_explicit_backlog_dao                        = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->root_planning                                            = Mockery::mock(Planning::class);
@@ -170,7 +164,6 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
             $this->agiledashboard_milestone_backlog_factory,
             $this->agiledashboard_milestone_backlog_item_collection_factory,
             $this->planning_milestone_factory,
-            $this->tracker_factory,
             $this->explicit_backlog_dao,
             $this->artifacts_in_explicit_backlog_dao,
             $this->semantic_timeframe_builder,
@@ -181,7 +174,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetZeroUpcomingReleaseWhenThereAreNoFutureMilestone(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -213,7 +206,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetUpcomingReleasesWhenThereAreFutureMilestones(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -248,7 +241,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetNumberBacklogItem(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -283,13 +276,11 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetTrackersId(): void
     {
-        $this->planning_virtual_top_milestone
-            ->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => [122, 124]]));
-
-        $this->tracker_factory->shouldReceive('getTrackerById')->once()->withArgs([122])->andReturn($this->mockAnArtifact('Bug', 'fiesta-red'));
-        $this->tracker_factory->shouldReceive('getTrackerById')->once()->withArgs([124])->andReturn($this->mockAnArtifact('Story', 'deep-blue'));
+        $this->agiledashboard_milestone_backlog_factory->shouldReceive('getBacklog')->andReturn($this->agiledashboard_milestone_backlog)->once();
+        $this->agiledashboard_milestone_backlog
+            ->shouldReceive('getDescendantTrackers')
+            ->andReturn([$this->mockAnArtifact(122, 'Bug', 'fiesta-red'), $this->mockAnArtifact(124, 'Story', 'deep-blue')])
+            ->once();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -325,7 +316,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetNumberItemsOfExplicitBacklogAndNotTopBacklog(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->agiledashboard_milestone_backlog_factory
             ->shouldReceive('getSelfBacklog')
@@ -368,7 +359,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetLabelOfTrackerPlanning(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -402,7 +393,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testIsNotTimeframeDurationField(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -440,7 +431,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testIsNotTimeframeEndDateField(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -478,7 +469,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenNoTimeframeEndDateAndDurationField(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -513,7 +504,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetIfUserCanViewSubMilestoneTracker(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -548,7 +539,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testGetTheFirstSubmilestonePlanningLikeInAD(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -583,7 +574,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testUserCanSeeSubmilestonePlanningIfDontExist(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -617,7 +608,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testBurnupUseEffortMode(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -651,7 +642,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testBurnupUseCountMode(): void
     {
-        $this->mockPlanningTopMilestoneEmpty($this->planning_virtual_top_milestone);
+        $this->mockMilestoneBacklog();
 
         $this->mockAgiledashboardBacklogFactory($this->agiledashboard_milestone_backlog_factory);
 
@@ -741,20 +732,19 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->http_request->shouldReceive("getCurrentUser")->andReturn($this->john_doe);
     }
 
-    private function mockAnArtifact(string $name, string $color)
+    private function mockAnArtifact(int $id, string $name, string $color)
     {
         $artifact = Mockery::mock(\Artifact::class);
+        $artifact->shouldReceive('getId')->once()->andReturn($id);
         $artifact->shouldReceive('getName')->once()->andReturn($name);
         $artifact->shouldReceive('getColor')->once()->andReturn(Mockery::mock(TrackerColor::fromName($color)));
         return $artifact;
     }
 
-    private function mockPlanningTopMilestoneEmpty($planning_virtual_top_milestone): void
+    private function mockMilestoneBacklog(): void
     {
-        $planning_virtual_top_milestone
-            ->shouldReceive('getPlanning')
-            ->once()
-            ->andReturn(Mockery::mock(Planning::class, ['getBacklogTrackersIds' => []]));
+        $this->agiledashboard_milestone_backlog_factory->shouldReceive('getBacklog')->andReturn($this->agiledashboard_milestone_backlog)->once();
+        $this->agiledashboard_milestone_backlog->shouldReceive('getDescendantTrackers')->andReturn([])->once();
     }
 
     private function mockAgiledashboardBacklogFactory($factory): void

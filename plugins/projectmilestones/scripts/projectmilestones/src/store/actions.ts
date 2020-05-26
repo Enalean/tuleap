@@ -20,11 +20,12 @@
 import {
     getCurrentMilestones as getAllCurrentMilestones,
     getMilestonesContent as getContent,
-    getNbOfClosedSprints,
-    getOpenSprints,
     getNbOfPastRelease,
     getLastRelease as getLast,
     getTestManagementCampaigns as getTTMCampaigns,
+    getAllSprints,
+    getMilestonesBacklog,
+    getMilestonesContent,
 } from "../api/rest-querier";
 
 import {
@@ -36,6 +37,7 @@ import {
 } from "../type";
 import { FetchWrapperError } from "tlp";
 import { ActionContext } from "vuex";
+import { getSortedSprints } from "../helpers/milestones-sprints-helper";
 
 async function getCurrentMilestones(context: ActionContext<State, State>): Promise<void> {
     context.commit("resetErrorMessage");
@@ -56,15 +58,15 @@ export function getEnhancedMilestones(
     milestone: MilestoneData
 ): Promise<MilestoneData> {
     const milestone_data = async (): Promise<MilestoneData> => {
-        await getInitialEffortAndNumberArtifactsInTrackers(context, milestone);
-        const open_sprints = await getOpenSprints(milestone.id, context.state);
-        const total_closed_sprint = await getNbOfClosedSprints(milestone.id);
-        const total_sprint = open_sprints.length + total_closed_sprint;
+        const sprints = await getAllSprints(milestone.id, context.state);
+        const sorted_sprints = getSortedSprints(sprints);
+        await getInitialEffortOfRelease(context, milestone);
+        await getNumberArtifactsInTrackerOfAgileDashboard(context, milestone, sprints);
         return {
             ...milestone,
-            total_sprint,
-            total_closed_sprint,
-            open_sprints,
+            total_sprint: sprints.length,
+            total_closed_sprint: sorted_sprints.closed_sprints.length,
+            open_sprints: sorted_sprints.open_sprints,
         };
     };
     return milestone_data();
@@ -111,20 +113,12 @@ async function getLastRelease(context: ActionContext<State, State>): Promise<voi
     }
 }
 
-async function getInitialEffortAndNumberArtifactsInTrackers(
+async function getInitialEffortOfRelease(
     context: ActionContext<State, State>,
     milestone: MilestoneData
 ): Promise<void> {
     const milestone_contents = await getContent(milestone.id, context.state);
-    getInitialEffortOfRelease(context, milestone, milestone_contents);
-    getNumberArtifactsInTrackerOfAgileDashboard(context, milestone, milestone_contents);
-}
 
-function getInitialEffortOfRelease(
-    context: ActionContext<State, State>,
-    milestone: MilestoneData,
-    milestone_contents: MilestoneContent[]
-): void {
     milestone.initial_effort = milestone_contents.reduce(
         (nb_users_stories: number, milestone_content: MilestoneContent) => {
             if (milestone_content.initial_effort !== null) {
@@ -136,11 +130,14 @@ function getInitialEffortOfRelease(
     );
 }
 
-function getNumberArtifactsInTrackerOfAgileDashboard(
+async function getNumberArtifactsInTrackerOfAgileDashboard(
     context: ActionContext<State, State>,
     milestone: MilestoneData,
-    milestone_contents: MilestoneContent[]
-): void {
+    sprints: MilestoneData[]
+): Promise<void> {
+    const backlog_items = await getMilestonesBacklog(milestone.id, context.state);
+    const items_on_sprint = await getItemsOfSprints(context, sprints);
+
     const trackers_with_number_artifacts: TrackerNumberArtifacts[] = [];
 
     context.state.trackers_agile_dashboard.forEach((tracker) => {
@@ -150,7 +147,17 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
         });
     });
 
-    milestone_contents.forEach((content) => {
+    backlog_items.forEach((content) => {
+        const tracker_with_number_artifacts = trackers_with_number_artifacts.find(
+            (tracker) => tracker.id === content.artifact.tracker.id
+        );
+
+        if (tracker_with_number_artifacts) {
+            tracker_with_number_artifacts.total_artifact++;
+        }
+    });
+
+    items_on_sprint.forEach((content) => {
         const tracker_with_number_artifacts = trackers_with_number_artifacts.find(
             (tracker) => tracker.id === content.artifact.tracker.id
         );
@@ -161,6 +168,19 @@ function getNumberArtifactsInTrackerOfAgileDashboard(
     });
 
     milestone.number_of_artifact_by_trackers = [...trackers_with_number_artifacts];
+}
+
+async function getItemsOfSprints(
+    context: ActionContext<State, State>,
+    sprints: MilestoneData[]
+): Promise<MilestoneContent[]> {
+    const items_on_sprint: MilestoneContent[] = [];
+
+    for (const sprint of sprints) {
+        items_on_sprint.push(...(await getMilestonesContent(sprint.id, context.state)));
+    }
+
+    return items_on_sprint;
 }
 
 export async function handleErrorMessage(

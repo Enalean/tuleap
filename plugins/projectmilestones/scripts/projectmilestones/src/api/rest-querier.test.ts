@@ -19,13 +19,13 @@
 
 import {
     getCurrentMilestones,
-    getOpenSprints,
     getMilestonesContent,
     getChartData,
-    getNbOfClosedSprints,
     getNbOfPastRelease,
     getLastRelease,
     getTestManagementCampaigns,
+    getMilestonesBacklog,
+    getAllSprints,
 } from "./rest-querier";
 
 import * as tlp from "tlp";
@@ -82,40 +82,6 @@ describe("getProject() -", () => {
         expect(result).toEqual(milestones);
     });
 
-    it("the REST API will be queried and all the content of a milestone returned", async () => {
-        const sprints: MilestoneData[] = [
-            {
-                id: 1,
-                start_date: new Date().toDateString(),
-            } as MilestoneData,
-        ];
-
-        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
-        tlpRecursiveGetMock.mockReturnValue(Promise.resolve([sprints]));
-
-        const result = await getOpenSprints(milestone_id, {
-            limit,
-            offset,
-        });
-
-        const query = JSON.stringify({
-            status: "open",
-        });
-
-        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
-            "/api/v1/milestones/" + milestone_id + "/milestones",
-            {
-                params: {
-                    limit,
-                    offset,
-                    query,
-                },
-            }
-        );
-
-        expect(result).toEqual([sprints]);
-    });
-
     it("the REST API will be queried and the total of user stories of a release returned", async () => {
         const user_stories: MilestoneContent[] = [
             {
@@ -157,6 +123,47 @@ describe("getProject() -", () => {
         expect(result).toEqual(user_stories);
     });
 
+    it("the REST API will be queried and the backlog of a release is returned", async () => {
+        const backlog: MilestoneContent[] = [
+            {
+                initial_effort: 5,
+                artifact: {
+                    tracker: {
+                        id: 1,
+                    },
+                },
+            },
+            {
+                initial_effort: 8,
+                artifact: {
+                    tracker: {
+                        id: 2,
+                    },
+                },
+            },
+        ];
+
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(backlog));
+
+        const result = await getMilestonesBacklog(milestone_id, {
+            limit,
+            offset,
+        });
+
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
+            "/api/v1/milestones/" + milestone_id + "/backlog",
+            {
+                params: {
+                    limit,
+                    offset,
+                },
+            }
+        );
+
+        expect(result).toEqual(backlog);
+    });
+
     it("the REST API will be queried and charts data of milestone returned", async () => {
         const burndown_data: BurndownData = {
             start_date: new Date().toDateString(),
@@ -185,7 +192,7 @@ describe("getProject() -", () => {
         expect(result).toEqual(artifact_chart);
     });
 
-    it("the REST API will be queried and the total of closed sprints returned", async () => {
+    it("the REST API will be queried and all sprints returned", async () => {
         const sprints: MilestoneData[] = [
             {
                 id: 1,
@@ -197,34 +204,22 @@ describe("getProject() -", () => {
             } as MilestoneData,
         ];
 
-        const tlpGetMock = jest.spyOn(tlp, "get");
+        const tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
+        tlpRecursiveGetMock.mockReturnValue(Promise.resolve(sprints));
 
-        mockFetchSuccess(tlpGetMock, {
-            headers: {
-                // X-PAGINATION-SIZE
-                get: (): string => "2",
-            },
-            return_json: sprints,
-        });
+        const result = await getAllSprints(milestone_id, { limit: 1, offset: 0 });
 
-        const result = await getNbOfClosedSprints(milestone_id);
-
-        const query = JSON.stringify({
-            status: "closed",
-        });
-
-        expect(tlpGetMock).toHaveBeenCalledWith(
+        expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
             "/api/v1/milestones/" + project_id + "/milestones",
             {
                 params: {
                     limit: 1,
                     offset: 0,
-                    query,
                 },
             }
         );
 
-        expect(result).toEqual(sprints.length);
+        expect(result).toEqual(sprints);
     });
 
     it("the REST API will be queried and the past milestones returned", async () => {

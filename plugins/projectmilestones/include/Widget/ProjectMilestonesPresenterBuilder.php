@@ -96,10 +96,6 @@ class ProjectMilestonesPresenterBuilder
      */
     private $current_user;
     /**
-     * @var TrackerFactory
-     */
-    private $tracker_factory;
-    /**
      * @var ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
@@ -137,7 +133,6 @@ class ProjectMilestonesPresenterBuilder
         AgileDashboard_Milestone_Backlog_BacklogFactory $agile_dashboard_milestone_backlog_backlog_factory,
         AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory $agile_dashboard_milestone_backlog_backlog_item_collection_factory,
         Planning_MilestoneFactory $planning_milestone_factory,
-        TrackerFactory $tracker_factory,
         ExplicitBacklogDao $explicit_backlog_dao,
         ArtifactsInExplicitBacklogDao $artifacts_in_explicit_backlog_dao,
         SemanticTimeframeBuilder $semantic_timeframe_builder,
@@ -149,7 +144,6 @@ class ProjectMilestonesPresenterBuilder
         $this->agile_dashboard_milestone_backlog_backlog_item_collection_factory = $agile_dashboard_milestone_backlog_backlog_item_collection_factory;
         $this->planning_milestone_factory                                        = $planning_milestone_factory;
         $this->current_user                                                      = $this->request->getCurrentUser();
-        $this->tracker_factory                                                   = $tracker_factory;
         $this->explicit_backlog_dao                                              = $explicit_backlog_dao;
         $this->artifacts_in_explicit_backlog_dao                                 = $artifacts_in_explicit_backlog_dao;
         $this->semantic_timeframe_builder                                        = $semantic_timeframe_builder;
@@ -212,7 +206,6 @@ class ProjectMilestonesPresenterBuilder
                 new Tracker_Artifact_PriorityDao()
             ),
             $milestone_factory,
-            TrackerFactory::instance(),
             new ExplicitBacklogDao(),
             new ArtifactsInExplicitBacklogDao(),
             $semantic_timeframe_builder,
@@ -300,18 +293,15 @@ class ProjectMilestonesPresenterBuilder
 
     private function getTrackersIdAgileDashboard(): array
     {
-        $trackers_agile_dashboard    = [];
-        $trackers_id_agile_dashboard = $this->getVirturalTopMilestone()->getPlanning()->getBacklogTrackersIds();
+        $trackers_agile_dashboard = [];
+        $backlog_milestones       = $this->agile_dashboard_milestone_backlog_backlog_factory->getBacklog($this->getVirturalTopMilestone());
+        $trackers_backlogs        = $backlog_milestones->getDescendantTrackers();
 
-        foreach ($trackers_id_agile_dashboard as $tracker_id) {
-            $tracker                 = $this->tracker_factory->getTrackerById($tracker_id);
-            if ($tracker === null) {
-                continue;
-            }
+        foreach ($trackers_backlogs as $tracker_backlog) {
             $tracker_agile_dashboard = [
-                'id' => (int) $tracker_id,
-                'color_name' => $tracker->getColor()->getName(),
-                'label' => $tracker->getName()
+                'id' => (int) $tracker_backlog->getId(),
+                'color_name' => $tracker_backlog->getColor()->getName(),
+                'label' => $tracker_backlog->getName()
             ];
 
             $trackers_agile_dashboard[] = $tracker_agile_dashboard;

@@ -25,6 +25,7 @@ export enum BurnupMode {
 export interface MilestoneData {
     label: string;
     id: number;
+    semantic_status: "open" | "closed";
     capacity: number | null;
     start_date: string | null;
     end_date: string | null;

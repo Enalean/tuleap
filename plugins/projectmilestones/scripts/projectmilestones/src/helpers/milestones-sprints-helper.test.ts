@@ -18,7 +18,11 @@
  */
 
 import { MilestoneData } from "../type";
-import { openSprintsExist, closedSprintsExists } from "./milestones-sprints-helper";
+import {
+    getSortedSprints,
+    openSprintsExist,
+    closedSprintsExists,
+} from "./milestones-sprints-helper";
 
 describe("Milestones Sprints Helper", () => {
     describe("openSprintsExists", () => {
@@ -125,6 +129,70 @@ describe("Milestones Sprints Helper", () => {
 
             const exist = closedSprintsExists(release);
             expect(exist).toBe(true);
+        });
+    });
+
+    describe("getSortedSprints", () => {
+        it("When there are no sprints, Then there is 2 empty arrays", () => {
+            const { closed_sprints, open_sprints } = getSortedSprints([]);
+            expect(closed_sprints).toStrictEqual([]);
+            expect(open_sprints).toStrictEqual([]);
+        });
+
+        it("When there are only closed sprints, Then open_sprints array is empty", () => {
+            const sprints: MilestoneData[] = [
+                {
+                    id: 10,
+                    semantic_status: "closed",
+                } as MilestoneData,
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+            ];
+
+            const { closed_sprints, open_sprints } = getSortedSprints(sprints);
+            expect(closed_sprints).toStrictEqual(sprints);
+            expect(open_sprints).toStrictEqual([]);
+        });
+
+        it("When there are open and closed sprints, Then sprints are sorted", () => {
+            const sprints: MilestoneData[] = [
+                {
+                    id: 10,
+                    semantic_status: "open",
+                } as MilestoneData,
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+            ];
+
+            const { closed_sprints, open_sprints } = getSortedSprints(sprints);
+            expect(closed_sprints).toStrictEqual([
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+                {
+                    id: 11,
+                    semantic_status: "closed",
+                } as MilestoneData,
+            ]);
+            expect(open_sprints).toStrictEqual([
+                {
+                    id: 10,
+                    semantic_status: "open",
+                } as MilestoneData,
+            ]);
         });
     });
 });
