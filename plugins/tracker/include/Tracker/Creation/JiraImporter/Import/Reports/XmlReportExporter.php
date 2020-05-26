@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use XML_SimpleXMLCDATAFactory;
@@ -49,11 +49,11 @@ class XmlReportExporter
         $this->cdata_factory->insert($report_node, 'name', 'Default');
         $this->cdata_factory->insert($report_node, 'description', 'The system default artifact report');
 
-        $summary_field     = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_SUMMARY_FIELD_NAME);
-        $description_field = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_DESCRIPTION_FIELD_NAME);
-        $status_field      = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_STATUS_NAME);
-        $priority_field    = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_PRIORITY_NAME);
-        $link_field        = $field_mapping_collection->getMappingFromJiraField(JiraXmlExporter::JIRA_LINK_FIELD_NAME);
+        $summary_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME);
+        $description_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME);
+        $status_field      = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
+        $priority_field    = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME);
+        $link_field        = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
 
         $criterias_fields = array_filter([
             $summary_field,

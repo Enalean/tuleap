@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -201,7 +201,7 @@ class ArtifactsXMLExporter
             $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue['key']);
             $this->field_change_string_builder->build(
                 $changeset_node,
-                JiraXmlExporter::JIRA_LINK_FIELD_NAME,
+                AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME,
                 $jira_link
             );
 

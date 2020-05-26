@@ -2,7 +2,7 @@
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
 use SimpleXMLElement;
-use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -53,31 +52,6 @@ use XML_SimpleXMLCDATAFactory;
 
 class JiraXmlExporter
 {
-    public const JIRA_LINK_FIELD_NAME        = "jira_issue_url";
-    public const JIRA_SUMMARY_FIELD_NAME     = "summary";
-    public const JIRA_DESCRIPTION_FIELD_NAME = "description";
-    public const JIRA_UPDATED_ON_NAME        = "updated";
-    public const JIRA_RESOLUTION_DATE_NAME   = "resolutiondate";
-    public const JIRA_STATUS_NAME            = "status";
-    public const JIRA_PRIORITY_NAME          = "priority";
-
-    public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
-    public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
-
-    private const JIRA_STATUS_RANK          = 1;
-    private const JIRA_UPDATED_ON_RANK      = 2;
-    private const JIRA_RESOLUTION_DATE_RANK = 3;
-    public const JIRA_PRIORITY_RANK         = 4;
-    private const JIRA_ARTIFACT_ID_RANK     = 5;
-    private const JIRA_LINK_RANK            = 6;
-
-    public const JIRA_SUMMARY_RANK     = 1;
-    public const JIRA_DESCRIPTION_RANK = 2;
-
-    /**
-     * @var FieldXmlExporter
-     */
-    private $field_xml_exporter;
     /**
      * @var ErrorCollector
      */
@@ -124,9 +98,12 @@ class JiraXmlExporter
      * @var ContainersXMLCollectionBuilder
      */
     private $containers_xml_collection_builder;
+    /**
+     * @var AlwaysThereFieldsExporter
+     */
+    private $always_there_fields_exporter;
 
     public function __construct(
-        FieldXmlExporter $field_xml_exporter,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
         JiraToTuleapFieldTypeMapper $field_type_mapper,
@@ -136,9 +113,9 @@ class JiraXmlExporter
         ArtifactsXMLExporter $artifacts_xml_exporter,
         SemanticsXMLExporter $semantics_xml_exporter,
         StatusValuesCollection $status_values_collection,
-        ContainersXMLCollectionBuilder $containers_xml_collection_builder
+        ContainersXMLCollectionBuilder $containers_xml_collection_builder,
+        AlwaysThereFieldsExporter $always_there_fields_exporter
     ) {
-        $this->field_xml_exporter                = $field_xml_exporter;
         $this->error_collector                   = $error_collector;
         $this->jira_field_retriever              = $jira_field_retriever;
         $this->field_type_mapper                 = $field_type_mapper;
@@ -149,6 +126,7 @@ class JiraXmlExporter
         $this->semantics_xml_exporter            = $semantics_xml_exporter;
         $this->status_values_collection          = $status_values_collection;
         $this->containers_xml_collection_builder = $containers_xml_collection_builder;
+        $this->always_there_fields_exporter      = $always_there_fields_exporter;
     }
 
     public static function build(
@@ -168,10 +146,6 @@ class JiraXmlExporter
         $jira_field_mapper  = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector);
 
         return new self(
-            new FieldXmlExporter(
-                $cdata_factory,
-                new FieldNameFormatter()
-            ),
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
@@ -211,6 +185,9 @@ class JiraXmlExporter
             ),
             new ContainersXMLCollectionBuilder(
                 new XML_SimpleXMLCDATAFactory()
+            ),
+            new AlwaysThereFieldsExporter(
+                $field_xml_exporter
             )
         );
     }
@@ -229,76 +206,15 @@ class JiraXmlExporter
             $root_form_elements
         );
 
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
-            self::JIRA_ARTIFACT_ID_FIELD_ID,
-            "Artifact id",
-            self::JIRA_ARTIFACT_ID_FIELD_ID,
-            self::JIRA_ARTIFACT_ID_RANK,
-            false,
-            [],
-            [],
-            $this->jira_field_mapping_collection
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_STRING_TYPE,
-            self::JIRA_LINK_FIELD_NAME,
-            "Link to original issue",
-            self::JIRA_LINK_FIELD_ID,
-            self::JIRA_LINK_RANK,
-            false,
-            [],
-            [],
-            $this->jira_field_mapping_collection
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE,
-            self::JIRA_UPDATED_ON_NAME,
-            "Last update date",
-            self::JIRA_UPDATED_ON_NAME,
-            self::JIRA_UPDATED_ON_RANK,
-            false,
-            [],
-            [],
-            $this->jira_field_mapping_collection
-        );
-
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_DATE_TYPE,
-            self::JIRA_RESOLUTION_DATE_NAME,
-            "Resolved",
-            self::JIRA_RESOLUTION_DATE_NAME,
-            self::JIRA_RESOLUTION_DATE_RANK,
-            false,
-            [
-                'display_time' => '1'
-            ],
-            [],
-            $this->jira_field_mapping_collection
-        );
-
         $this->status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
             $jira_issue_type_name
         );
 
-        $this->field_xml_exporter->exportField(
-            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
-            self::JIRA_STATUS_NAME,
-            "Status",
-            self::JIRA_STATUS_NAME,
-            self::JIRA_STATUS_RANK,
-            false,
-            [],
-            $this->status_values_collection->getAllValues(),
-            $this->jira_field_mapping_collection
+        $this->always_there_fields_exporter->exportFields(
+            $containers_collection,
+            $this->jira_field_mapping_collection,
+            $this->status_values_collection
         );
 
         $this->exportJiraField(
