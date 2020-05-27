@@ -413,11 +413,10 @@ async function uploadNewVersion(
         return;
     }
 
-    const updated_item = context.state.folder_content.find(({ id }) => id === item.id);
-    context.commit("addFileInUploadsList", updated_item);
-    Vue.set(updated_item, "progress", null);
-    Vue.set(updated_item, "upload_error", null);
-    Vue.set(updated_item, "is_uploading_new_version", true);
+    context.commit("addFileInUploadsList", item);
+    Vue.set(item, "progress", null);
+    Vue.set(item, "upload_error", null);
+    Vue.set(item, "is_uploading_new_version", true);
 
     uploadVersionAndAssignUploader(item, context, uploaded_file, new_version);
 }
