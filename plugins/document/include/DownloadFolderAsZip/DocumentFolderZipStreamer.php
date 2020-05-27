@@ -83,6 +83,7 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
         $user    = $request->getCurrentUser();
         $folder  = $this->getFolder($user, $project, $variables);
 
+        ini_set('max_execution_time', '0');
         $factory = \Docman_FolderFactory::instance($project->getID());
         $factory->getItemTree($folder, $user, false, true);
         $this->checkFolderSizeIsAllowedForDownload($folder);
