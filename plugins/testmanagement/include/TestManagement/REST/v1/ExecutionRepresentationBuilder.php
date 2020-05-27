@@ -336,6 +336,9 @@ class ExecutionRepresentationBuilder
         if (! $changeset_value) {
             return '';
         }
+        if (! $changeset_value->getValue()) {
+            return '';
+        }
 
         return $changeset_value->getValue();
     }
