@@ -20,18 +20,25 @@
 <template>
     <div
         class="project-release-infos-badges"
-        v-bind:class="{ 'on-open-sprints-details': open_sprints_details }"
+        v-bind:class="{
+            'on-open-sprints-details':
+                open_sprints_details || only_one_open_sprint_and_no_closed_sprints,
+            'can-close-sprint': !only_one_open_sprint_and_no_closed_sprints,
+        }"
     >
         <div
             class="project-release-badges-open-closed"
-            v-bind:class="{ 'open-badges-sprints': open_sprints_details }"
+            v-bind:class="{
+                'open-badges-sprints':
+                    open_sprints_details || only_one_open_sprint_and_no_closed_sprints,
+            }"
         >
             <div
                 v-if="display_badge_all_sprint"
                 class="project-release-infos-badges-all-sprint-badges"
             >
                 <release-badges-all-sprints
-                    v-if="!open_sprints_details"
+                    v-if="!open_sprints_details && !only_one_open_sprint_and_no_closed_sprints"
                     v-bind:release_data="release_data"
                     v-on:onClickOpenSprintsDetails="on_click_open_sprints_details()"
                     data-test="badge-sprint"
@@ -50,12 +57,16 @@
                 data-test="button-to-close"
             />
             <release-badges-closed-sprints
-                v-if="open_sprints_details && user_can_view_sub_milestones_planning"
+                v-if="
+                    closed_sprints_exist &&
+                    open_sprints_details &&
+                    user_can_view_sub_milestones_planning
+                "
                 v-bind:release_data="release_data"
             />
         </div>
         <hr
-            v-if="open_sprints_details"
+            v-if="open_sprints_details || only_one_open_sprint_and_no_closed_sprints"
             data-test="line-displayed"
             class="milestone-badges-sprints-separator"
         />
@@ -71,7 +82,7 @@ import ReleaseBadgesAllSprints from "./ReleaseBadgesAllSprints.vue";
 import ReleaseOthersBadges from "./ReleaseOthersBadges.vue";
 import ReleaseBadgesClosedSprints from "./ReleaseBadgesClosedSprints.vue";
 import { getTrackerSubmilestoneLabel } from "../../../helpers/tracker-label-helper";
-import { openSprintsExist } from "../../../helpers/milestones-sprints-helper";
+import { openSprintsExist, closedSprintsExists } from "../../../helpers/milestones-sprints-helper";
 import { State } from "vuex-class";
 import ReleaseBadgesOpenSprint from "./ReleaseBadgesOpenSprint.vue";
 @Component({
@@ -93,11 +104,15 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
     open_sprints_details = this.isOpen;
 
     on_click_open_sprints_details(): void {
-        this.open_sprints_details = true;
+        if (!this.only_one_open_sprint_and_no_closed_sprints) {
+            this.open_sprints_details = true;
+        }
     }
 
     on_click_close_sprints_details(): void {
-        this.open_sprints_details = false;
+        if (!this.only_one_open_sprint_and_no_closed_sprints) {
+            this.open_sprints_details = false;
+        }
     }
 
     get display_badge_all_sprint(): boolean {
@@ -105,6 +120,21 @@ export default class ReleaseBadgesDisplayerIfOpenSprints extends Vue {
             openSprintsExist(this.release_data) &&
             getTrackerSubmilestoneLabel(this.release_data) !== "" &&
             this.user_can_view_sub_milestones_planning
+        );
+    }
+
+    get closed_sprints_exist(): boolean {
+        return (
+            closedSprintsExists(this.release_data) &&
+            getTrackerSubmilestoneLabel(this.release_data) !== ""
+        );
+    }
+
+    get only_one_open_sprint_and_no_closed_sprints(): boolean {
+        return (
+            !this.closed_sprints_exist &&
+            this.release_data.open_sprints !== null &&
+            this.release_data.open_sprints.length === 1
         );
     }
 }
