@@ -23,7 +23,7 @@ $expert-query-area-height: 75px;
 
 .cross-tracker-expert-content {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .cross-tracker-expert-content-query-allowed-fields.tlp-select {
@@ -32,7 +32,7 @@ $expert-query-area-height: 75px;
 
 .cross-tracker-expert-content-query {
     flex: 1 1 auto;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 
     //scss-lint:disable SelectorFormat
 

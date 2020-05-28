@@ -9,7 +9,7 @@
     flex-direction: column;
 
     > .labeled-items-error {
-        margin: 0 $tlp-spacing $tlp-spacing;
+        margin: 0 $tlp-medium-spacing $tlp-medium-spacing;
     }
 }
 
@@ -23,7 +23,7 @@
 .labeled-item {
     display: flex;
     flex: 1 0 auto;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
     text-decoration: none;
@@ -40,16 +40,16 @@
 }
 
 .labeled-item-icon {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     fill: transparentize($tlp-theme-color, .8);
 }
 
 .labeled-items-empty {
-    margin: 0 $tlp-spacing 60px;
+    margin: 0 $tlp-medium-spacing 60px;
 }
 
 .labeled-item-configuration-label {
-    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
     white-space: normal;
     cursor: default;
 }
@@ -57,7 +57,7 @@
 .labeled-items-list-more {
     display: flex;
     justify-content: center;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
 }
 
 .labeled-item-content {
@@ -71,7 +71,7 @@
 
 .labeled-item-metadata {
     display: none;
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
 }
 
 .labeled-item-metadata-icon {
@@ -97,7 +97,7 @@
 
 .labeled-item-creation-date {
     flex: 0 0 auto;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 %small-dimmed {

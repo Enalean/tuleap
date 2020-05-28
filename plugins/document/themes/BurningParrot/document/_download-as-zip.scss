@@ -18,11 +18,11 @@
  */
 
 .download-modal-multiple-warnings {
-    padding: $tlp-spacing 0;
+    padding: $tlp-medium-spacing 0;
 }
 
 .download-modal-multiple-warnings-section {
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     overflow-y: auto;
     border-right: 0;
     border-bottom: 1px solid $tlp-ui-border-light;
@@ -33,5 +33,5 @@
 }
 
 .download-modal-multiple-warnings-content {
-    margin: 0 0 $tlp-spacing 13px;
+    margin: 0 0 $tlp-medium-spacing 13px;
 }

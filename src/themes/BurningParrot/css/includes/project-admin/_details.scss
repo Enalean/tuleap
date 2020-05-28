@@ -30,12 +30,12 @@
     flex: 0 1 auto;
     width: 100%;
     max-width: 40%;
-    margin: 0 $tlp-spacing $tlp-spacing 0;
+    margin: 0 $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .project-admin-details-public-info-meta {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-admin-details-public-info-meta-type {
@@ -52,7 +52,7 @@
 }
 
 .project-admin-details-visibility {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-admin-details-hierarchy-buttons {
@@ -60,7 +60,7 @@
 }
 
 #project-admin-details-hierarchy-delete-button {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 #project-admin-details-hierarchy-project-select {
@@ -68,12 +68,12 @@
 }
 
 .project-admin-details-hierarchy-description {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-admin-details-submit {
     align-self: center;
-    margin: $tlp-spacing 0 $tlp-jumbo-spacing;
+    margin: $tlp-medium-spacing 0 $tlp-jumbo-spacing;
 }
 
 .project-admin-details-info-access {
@@ -89,11 +89,11 @@
 }
 
 #project-admin-details-info-access-level-icon {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 #project-admin-details-info-access-level-badge {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }
 
 #term-of-service-usage {

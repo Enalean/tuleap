@@ -19,21 +19,21 @@
  */
 
 .document-metadata {
-    padding: $tlp-spacing $tlp-spacing 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .document-metadata-properties-margin {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .document-metadata-title-and-status-properties-container {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .document-metadata-title {
     flex-grow: 1;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .document-obsolescence-date-section {
@@ -41,7 +41,7 @@
 }
 
 .document-obsolescence-date-metadata-select {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #document-item-owner {
@@ -53,5 +53,5 @@
 }
 
 .document-modal-other-information-title-container-spinner {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }

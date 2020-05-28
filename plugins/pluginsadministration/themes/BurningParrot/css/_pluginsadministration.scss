@@ -67,8 +67,8 @@
 }
 
 .install-plugin-modal-readme {
-    margin: $tlp-spacing 0 0;
-    padding: $tlp-spacing;
+    margin: $tlp-medium-spacing 0 0;
+    padding: $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: #fcfcfc;
@@ -82,7 +82,7 @@
     display: flex;
 
     > .tlp-property {
-        margin: 0 ($tlp-spacing * 2) 0 0;
+        margin: 0 ($tlp-medium-spacing * 2) 0 0;
     }
 }
 

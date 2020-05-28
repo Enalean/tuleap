@@ -32,7 +32,7 @@
 }
 
 .git-repository-list-create-repository-button {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .git-repository-list {
@@ -43,10 +43,10 @@
 .git-repository-list-header {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-spacing + $tlp-half-spacing;
+    margin: 0 0 $tlp-medium-spacing + $tlp-small-spacing;
 
     > h1 {
-        margin: 0 $tlp-spacing 0 0;
+        margin: 0 $tlp-medium-spacing 0 0;
     }
 }
 
@@ -69,7 +69,7 @@
 
 .git-repository-list-actions {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .git-repository-list-actions-spacer,
@@ -88,7 +88,7 @@
 }
 
 .git-repository-list-actions-display-switch {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 
     .fa-calendar {
         position: relative;
@@ -123,7 +123,7 @@
 
 .git-repository-list-collapsible-folder {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     color: $tlp-theme-color;
     cursor: pointer;
 
@@ -139,5 +139,5 @@
 }
 
 .git-repository-in-folder {
-    margin: 0 0 $tlp-spacing 33px;
+    margin: 0 0 $tlp-medium-spacing 33px;
 }

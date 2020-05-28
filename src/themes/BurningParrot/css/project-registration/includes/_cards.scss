@@ -26,12 +26,12 @@ $card-border-margin: 150px;
 
 .project-registration-template-card {
     display: flex;
-    width: calc(50% - #{$tlp-half-spacing});
+    width: calc(50% - #{$tlp-small-spacing});
     min-height: 120px;
-    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
 
     &:nth-child(even) {
-        margin: 0 0 $tlp-spacing $tlp-half-spacing;
+        margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
     }
 }
 
@@ -47,7 +47,7 @@ $card-border-margin: 150px;
 }
 
 .project-registration-template-card-title {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
     font-size: 16px;
     font-weight: normal;
     line-height: 18px;
@@ -69,7 +69,7 @@ $card-border-margin: 150px;
             border-color: $tlp-theme-color;
 
             > div > .project-registration-template-card-title {
-                margin: 0 0 $tlp-half-spacing;
+                margin: 0 0 $tlp-small-spacing;
                 color: $tlp-theme-color;
                 font-size: 16px;
                 font-weight: normal;
@@ -98,7 +98,7 @@ $card-border-margin: 150px;
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin: 0 0 0 ($card-border-margin - $tlp-spacing);
+    margin: 0 0 0 ($card-border-margin - $tlp-medium-spacing);
 }
 
 .project-registration-template-glyph {
@@ -106,12 +106,12 @@ $card-border-margin: 150px;
     position: absolute;
     align-items: center;
     justify-content: center;
-    width: ($card-border-margin - 2 * $tlp-spacing);
-    height: calc(100% - 2 * #{$tlp-spacing});
+    width: ($card-border-margin - 2 * $tlp-medium-spacing);
+    height: calc(100% - 2 * #{$tlp-medium-spacing});
 }
 
 .user-project-list-select {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 @media screen and (max-width: 1200px) {
@@ -122,10 +122,10 @@ $card-border-margin: 150px;
 
     .project-registration-template-card {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
 
         &:nth-child(even) {
-            margin: 0 0 $tlp-spacing;
+            margin: 0 0 $tlp-medium-spacing;
         }
 
         &:last-child {

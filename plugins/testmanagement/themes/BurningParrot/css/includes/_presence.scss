@@ -7,8 +7,8 @@
     align-items: flex-end;
     height: 400px;
     overflow: hidden;
-    padding: $tlp-spacing $tlp-spacing 0;
-    margin: 0 0 $tlp-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    margin: 0 0 $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
 }
 
@@ -84,7 +84,7 @@
         flex-direction: column;
         align-items: center;
         flex: 0 0 auto;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
 
         > .tlp-avatar-large {
             margin: 0 0 10px;
@@ -105,7 +105,7 @@
     align-items: center;
     flex: 1 1 auto;
     width: 100%;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     background: #fff;
     box-shadow: 0 10px 40px rgba(0,0,0,0.07);
 }
@@ -116,7 +116,7 @@
 
 .score-list {
     margin: 0;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     list-style-type: none;
     width: 100%;
 }
@@ -132,7 +132,7 @@
     }
 
     .position {
-        margin: 0 $tlp-spacing 0 0;
+        margin: 0 $tlp-medium-spacing 0 0;
         font-size: 14px;
         color: $tlp-theme-color;
         width: 30px;

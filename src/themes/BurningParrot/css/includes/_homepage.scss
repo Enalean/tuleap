@@ -26,7 +26,7 @@ body.homepage > #main-container {
     /* stylelint-disable-next-line selector-no-qualifying-type */
     > main > #feedback {
         margin: 0;
-        padding: $tlp-spacing $tlp-spacing 0;
+        padding: $tlp-medium-spacing $tlp-medium-spacing 0;
         background: $tlp-theme-background-color;
     }
 }
@@ -342,7 +342,7 @@ body.homepage > #main-container {
 .homepage-news-info {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
     color: $tlp-ui-border-dark;
     font-size: 13px;
 

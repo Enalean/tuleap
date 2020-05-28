@@ -63,13 +63,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     color: transparentize($tlp-theme-color, .7);
     font-size: 14px;
     text-align: center;
 }
 
 .no-milestone-image {
-    margin: $tlp-spacing 0 10px;
+    margin: $tlp-medium-spacing 0 10px;
     fill: transparentize($tlp-theme-color, .8);
 }

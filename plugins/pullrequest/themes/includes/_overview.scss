@@ -28,7 +28,7 @@
     border-left: 1px solid $tlp-ui-border-light;
 
     @media screen and (max-width: 1200px) {
-        margin: $tlp-spacing 0 0;
+        margin: $tlp-medium-spacing 0 0;
         border-top: 1px solid $tlp-ui-border-light;
         border-left: 0;
     }
@@ -40,7 +40,7 @@
     top: 50px;
     flex: 0 0 50%;
     min-width: 50%;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
 
     @media screen and (max-width: 1200px) {
         position: relative;
@@ -51,22 +51,22 @@
 }
 
 .pull-request-top-actions {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .pull-request-checkout-dropdown {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .pull-request-checkout-menu {
     z-index: 3;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
 }
 
 .pull-request-checkout-menu-content {
     display: flex;
     align-items: baseline;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 .pull-request-checkout-menu-label {
@@ -86,7 +86,7 @@
 .pull-request-requester-date-changes {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     .tlp-avatar {
         flex: 0 0 auto;
@@ -94,7 +94,7 @@
 }
 
 .pull-request-date {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     font-size: 14px;
 
     > .fa-clock-o {
@@ -105,7 +105,7 @@
 
 .pull-request-changes {
     flex: 1 1 auto;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     font-size: 24px;
     text-align: right;
     white-space: nowrap;
@@ -150,10 +150,10 @@
 
     button {
         min-width: 150px;
-        margin: $tlp-spacing $tlp-half-spacing 0 0;
+        margin: $tlp-medium-spacing $tlp-small-spacing 0 0;
 
         &:last-child {
-            margin: $tlp-spacing 0 0;
+            margin: $tlp-medium-spacing 0 0;
         }
     }
 }

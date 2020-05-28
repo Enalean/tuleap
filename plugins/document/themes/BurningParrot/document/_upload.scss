@@ -171,7 +171,7 @@ $progress-bar-background-color: $tlp-ui-border-normal;
 }
 
 .document-file-upload-progress-cancel {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     transition: color ease-in-out 150ms;
     color: $tlp-ui-success;
     font-size: 15px;

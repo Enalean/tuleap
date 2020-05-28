@@ -27,7 +27,7 @@
 
     .dashboard-widget-icons {
         position: absolute;
-        right: $tlp-spacing;
+        right: $tlp-medium-spacing;
     }
 }
 
@@ -35,7 +35,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    margin: $tlp-small-spacing $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .widget-project-members-members {
@@ -43,7 +43,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .widget-project-members-members-count {
@@ -72,7 +72,7 @@
 .widget-project-members-administrators-card {
     display: flex;
     align-items: center;
-    padding: $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
 }
 
 .widget-project-members-avatar {
@@ -85,5 +85,5 @@
 }
 
 .widget-project-members-badge {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }

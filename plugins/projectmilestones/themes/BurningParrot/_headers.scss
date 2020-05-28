@@ -74,8 +74,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-release-header {
     display: flex;
     align-items: baseline;
-    margin: 0 (-$tlp-medium-spacing) $tlp-spacing 0;
-    padding: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    margin: 0 (-$tlp-medium-spacing) $tlp-medium-spacing 0;
+    padding: $tlp-small-spacing $tlp-medium-spacing $tlp-small-spacing 0;
     overflow: hidden;
     background: linear-gradient(to right, transparent, transparentize($tlp-theme-background-color, .4) 50%);
     cursor: pointer;
@@ -91,7 +91,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     justify-content: center;
     width: 24px;
     height: 24px;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     border-radius: 50%;
     background: $tlp-theme-color;
     color: $tlp-ui-white;
@@ -100,7 +100,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .project-release-title {
     display: inline-block;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     font-size: 26px;
     line-height: 28px;
 }
@@ -125,7 +125,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-remaining {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .release-remaining-value {

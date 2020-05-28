@@ -33,7 +33,7 @@ $taskboard-header-height: 50px;
     justify-content: center;
     min-width: 200px;
     height: $taskboard-header-height;
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     border-right: 1px solid $tlp-ui-border-normal;
     border-bottom: 1px solid $tlp-ui-border-normal;
     background: $tlp-ui-white;
@@ -99,13 +99,13 @@ $taskboard-header-height: 50px;
     pointer-events: none;
 
     > .taskboard-header-label {
-        margin: 0 $tlp-half-spacing 0 0;
+        margin: 0 $tlp-small-spacing 0 0;
     }
 }
 
 .taskboard-header-label {
     flex: 1 0 1%;
-    margin: 0 $tlp-half-spacing;
+    margin: 0 $tlp-small-spacing;
     overflow: hidden;
     text-align: center;
     text-overflow: ellipsis;

@@ -57,7 +57,7 @@
 
 
 .tracker-creation-step-number {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     font-size: 14px;
 }
 
@@ -82,7 +82,7 @@
 }
 
 .tracker-creation-step-interactive-content {
-    margin: 0 0 $tlp-spacing 0;
+    margin: 0 0 $tlp-medium-spacing 0;
     border-bottom: 1px solid $tlp-ui-border-dark;
 }
 
@@ -90,10 +90,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: $tlp-spacing 0;
+    margin: $tlp-medium-spacing 0;
 
     &:last-child {
-        margin: $tlp-spacing 0 0;
+        margin: $tlp-medium-spacing 0 0;
     }
 
     @media screen and (max-width: $creation-small-screen-width) {
@@ -154,7 +154,7 @@
 
 #tracker-shortname-slugified-mode-label {
     display: flex;
-    margin: -$tlp-half-spacing 0 $tlp-half-spacing;
+    margin: -$tlp-small-spacing 0 $tlp-small-spacing;
     padding-left: 4px;
     color: $tlp-ui-dimmed;
     font-size: 13px;
@@ -191,7 +191,7 @@
 
     > .tracker-creation-next-step-button,
     > .tracker-creation-submit-button {
-        margin: 0 0 0 $tlp-spacing;
+        margin: 0 0 0 $tlp-medium-spacing;
         overflow: visible;
     }
 

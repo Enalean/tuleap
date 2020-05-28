@@ -4,7 +4,7 @@
     display: flex;
 
     > .form-element-item:not(:last-child) {
-        margin-right: $tlp-spacing * 2;
+        margin-right: $tlp-medium-spacing * 2;
     }
 
     > .form-element-item:not(:first-child) {
@@ -19,7 +19,7 @@
 /* -------------------- MIRROR ---------------------- */
 
 .mirror-global-action-container {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .mirror-info {
@@ -27,7 +27,7 @@
 }
 
 .mirror-info-two {
-    margin: 0 0 0 ($tlp-spacing * 2);
+    margin: 0 0 0 ($tlp-medium-spacing * 2);
 }
 
 .mirror-info-two-ssh-key {
@@ -51,7 +51,7 @@
 
 .mirror-action-delete-button,
 .mirror-action-restrict-button {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 ($tlp-medium-spacing / 2);
 }
 
 .mirror-configuration {
@@ -59,7 +59,7 @@
 }
 
 .mirror-repo-list-for-project:not(:last-child) {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .mirror-repo-list-for-project-reponame {
@@ -70,7 +70,7 @@
 /* -------------------- GERRIT ---------------------- */
 
 .add-gerrit-server-button {
-    margin-bottom: $tlp-spacing;
+    margin-bottom: $tlp-medium-spacing;
 }
 
 #gerrit-servers-list {
@@ -115,26 +115,26 @@
 }
 
 .gerrit-action-restrict-button {
-    margin: 0 ($tlp-spacing / 2) 0 0;
+    margin: 0 ($tlp-medium-spacing / 2) 0 0;
 }
 
 .gerrit-server-deprecated-configuration {
-    margin-right: $tlp-half-spacing;
+    margin-right: $tlp-small-spacing;
 }
 
 /* -------------------- WIDGETS ---------------------- */
 
 .widget-last-git-pushes-details {
-    margin: $tlp-half-spacing $tlp-spacing;
+    margin: $tlp-small-spacing $tlp-medium-spacing;
     font-size: 14px;
 }
 
 .widget-last-git-pushes-repository {
-    margin: 0 0 5px $tlp-spacing;
+    margin: 0 0 5px $tlp-medium-spacing;
 }
 
 .widget-last-git-pushes-project {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 /* -------------------- MEDIA QUERIES ---------------------- */

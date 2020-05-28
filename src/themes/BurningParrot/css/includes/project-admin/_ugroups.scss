@@ -18,7 +18,7 @@
  */
 
 #project-admin-ugroup-add-binding {
-    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
 }
 
 #project-admin-ugroup-current-binding {
@@ -55,7 +55,7 @@
 
 .project-admin-user-groups-details {
     flex: 1 1 auto;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .project-admin-user-groups-member-list-container {
@@ -69,7 +69,7 @@
 }
 
 .project-admin-user-groups-header-title {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
     word-break: break-all;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .projectadmin-userlist-result-name-avatar {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 .user-group-binding-link,

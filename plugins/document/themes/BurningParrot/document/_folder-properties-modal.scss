@@ -19,13 +19,13 @@
  */
 
 .access-legacy-update-properties-page {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
 }
 
 .document-metadata-container {
     display: flex;
     position: relative;
-    padding: 0 0 $tlp-spacing;
+    padding: 0 0 $tlp-medium-spacing;
 
     &:not(:first-child) > .document-recursion-checkbox-container > .tlp-label {
         visibility: hidden;

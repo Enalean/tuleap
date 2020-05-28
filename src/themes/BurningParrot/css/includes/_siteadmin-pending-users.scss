@@ -15,16 +15,16 @@
 }
 
 .siteadmin-pending-user-title-button {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .siteadmin-pending-user-info {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .siteadmin-pending-user-info-property {
-    margin: 0 ($tlp-spacing * 2) 0 0;
+    margin: 0 ($tlp-medium-spacing * 2) 0 0;
 }
 
 .siteadmin-pending-user-actions {
@@ -39,7 +39,7 @@
 }
 
 .siteadmin-pending-user-actions-pending {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .siteadmin-pending-user-actions-buttons {
@@ -50,7 +50,7 @@
     flex: 1 1 auto;
 
     &:not(:last-child) {
-        margin: 0 $tlp-spacing 0 0;
+        margin: 0 $tlp-medium-spacing 0 0;
     }
 }
 
@@ -58,15 +58,15 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: ($tlp-spacing * 2) 0 0;
+    margin: ($tlp-medium-spacing * 2) 0 0;
 }
 
 #siteadmin-pending-users-actions-restrict {
-    margin: 0 0 ($tlp-spacing / 2);
+    margin: 0 0 ($tlp-medium-spacing / 2);
 }
 
 #siteadmin-pending-users-actions-buttons-validateall {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 @media screen and (max-width: 1300px) {

@@ -46,7 +46,7 @@ $tlp-tooltip-margin: 5px;
 
     &::before {
         content: attr(data-tlp-tooltip);
-        padding: $tlp-spacing / 2;
+        padding: $tlp-medium-spacing / 2;
         border-radius: $tlp-tooltip-border-radius;
         background: $tlp-tooltip-background;
         color: #ffffff;

@@ -74,7 +74,7 @@
 }
 
 .dashboard-widget-content {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
     padding: 0;
     overflow-x: auto;
     overflow-y: hidden;
@@ -90,7 +90,7 @@
 
 .dashboard-add-widget-list {
     flex: 1;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
 }
 
 .dashboard-add-widget-list-body {
@@ -101,7 +101,7 @@
 
 #dashboard-add-widget-settings {
     flex: 1;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-left: 1px solid $tlp-ui-border-light;
 }
 

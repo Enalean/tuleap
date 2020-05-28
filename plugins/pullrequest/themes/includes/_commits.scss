@@ -33,11 +33,11 @@
 
 .pull-request-commits-list-commit-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-spacing;
+    min-width: $tlp-medium-spacing;
 }
 
 .pull-request-commits-list-commit-last-status {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .pull-request-commits-list-commit-last-status-icon {
@@ -50,17 +50,17 @@
 }
 
 .pull-request-commits-list-commit-metadata-avatar {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 .pull-request-commits-list-commit-metadata-authored {
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
     font-size: 14px;
     line-height: 20px;
 }
 
 .pull-request-commits-list-commit-metadata-authored-name {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 .pull-request-commits-list-commit-metadata-authored-name-link {

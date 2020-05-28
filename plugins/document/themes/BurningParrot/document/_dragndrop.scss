@@ -26,15 +26,15 @@
     left: $sidebar-expanded-width;
     width: calc(100% - #{$sidebar-expanded-width});
     height: calc(100vh - #{$navbar-height});
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     transition: box-shadow 100ms ease-in-out;
-    box-shadow: inset 0 0 0 $tlp-half-spacing transparent;
+    box-shadow: inset 0 0 0 $tlp-small-spacing transparent;
     color: $tlp-ui-white;
     text-align: center;
     pointer-events: none;
 
     &.shown-success {
-        box-shadow: inset 0 0 0 $tlp-half-spacing transparentize($tlp-theme-color, .15);
+        box-shadow: inset 0 0 0 $tlp-small-spacing transparentize($tlp-theme-color, .15);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(-10px);
@@ -43,7 +43,7 @@
     }
 
     &.shown-error {
-        box-shadow: inset 0 0 0 $tlp-half-spacing transparentize($tlp-ui-danger, .15);
+        box-shadow: inset 0 0 0 $tlp-small-spacing transparentize($tlp-ui-danger, .15);
 
         > .document-upload-to-current-folder-message {
             transform: translateY(-10px);
@@ -60,9 +60,9 @@
 .document-upload-to-current-folder-message {
     position: absolute;
     bottom: 0;
-    left: $tlp-half-spacing;
-    width: calc(100% - #{$tlp-spacing});
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    left: $tlp-small-spacing;
+    width: calc(100% - #{$tlp-medium-spacing});
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     transform: translateY(100%);
     transition: background 100ms ease-in-out, transform 100ms ease-in-out;
     background: transparent;
@@ -70,7 +70,7 @@
 
 .document-upload-to-current-folder-icon {
     display: inline-block;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
     font-size: 24px;
 }
 

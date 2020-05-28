@@ -29,17 +29,17 @@
 
 .git-repository-files {
     flex: 0 0 auto;
-    width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    width: calc(50% - #{$tlp-small-spacing});
+    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
 
     @media screen and (max-width: 1400px) {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 
     &:only-child {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 
     td {
@@ -64,12 +64,12 @@
 
 .git-repository-readme {
     flex: 1 1 auto;
-    width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 0 $tlp-spacing $tlp-half-spacing;
+    width: calc(50% - #{$tlp-small-spacing});
+    margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
 
     @media screen and (max-width: 1400px) {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }
 

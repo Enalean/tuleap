@@ -28,7 +28,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-number-artifacts-tracker {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     &:last-child {
         margin: 0;

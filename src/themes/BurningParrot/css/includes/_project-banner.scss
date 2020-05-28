@@ -20,19 +20,19 @@
 .project-banner {
     display: flex;
     justify-content: space-between;
-    padding: $tlp-spacing 15px $tlp-spacing $tlp-spacing;
+    padding: $tlp-medium-spacing 15px $tlp-medium-spacing $tlp-medium-spacing;
     background-color: $tlp-ui-warning;
 }
 
 .project-banner-clamped {
-    width: calc(100vw - #{$sidebar-expanded-width + $tlp-spacing * 4});
+    width: calc(100vw - #{$sidebar-expanded-width + $tlp-medium-spacing * 4});
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .sidebar-collapsed .project-banner-clamped {
-    width: calc(100vw - #{$sidebar-collapsed-width + $tlp-spacing * 4});
+    width: calc(100vw - #{$sidebar-collapsed-width + $tlp-medium-spacing * 4});
 }
 
 .project-banner-can-be-unclamped {
@@ -54,7 +54,7 @@
     top: 4px;
     left: -2px;
     align-self: baseline;
-    margin-left: $tlp-spacing;
+    margin-left: $tlp-medium-spacing;
     color: $tlp-ui-white;
     cursor: pointer;
 

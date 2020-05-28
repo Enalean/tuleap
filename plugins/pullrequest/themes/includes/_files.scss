@@ -19,12 +19,12 @@
 
 .pull-request-files-header {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .pull-request-file-switcher {
     flex: 1 1 auto;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 
     .fa-caret-down {
         margin: 0 0 0 10px;
@@ -101,6 +101,6 @@
 
 .pull-request-modified-files-loading {
     height: 30px;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     background: url('../../../src/www/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }

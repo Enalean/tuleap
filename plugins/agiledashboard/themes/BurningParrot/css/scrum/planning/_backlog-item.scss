@@ -35,7 +35,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     &.compact-view {
         .extra-card-fields {
@@ -91,7 +91,7 @@
 }
 
 .backlog-item-children {
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     border-right: 1px solid $tlp-ui-border-normal;
     border-left: 1px solid $tlp-ui-border-normal;
     background: lighten($tlp-theme-background-color, 2%);

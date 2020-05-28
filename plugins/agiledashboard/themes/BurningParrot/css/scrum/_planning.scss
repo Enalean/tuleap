@@ -29,7 +29,7 @@
 
 %loader {
     height: 30px;
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
     background: url('../images/spinner.gif') no-repeat center center;
 
     &:only-child {
@@ -68,7 +68,7 @@ planning {
     display: flex;
     flex: 0 0 auto;
     align-items: center;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .planning-header-title {
@@ -76,18 +76,18 @@ planning {
 }
 
 .planned-header-add-button {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .planning-header-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-spacing;
+    min-width: $tlp-medium-spacing;
 }
 
 .planning-header-view-toggler {
-    margin: 0 $tlp-half-spacing;
+    margin: 0 $tlp-small-spacing;
 }
 
 .planning-success.tlp-alert-success {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }

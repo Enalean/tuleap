@@ -169,7 +169,7 @@
     display: flex;
     flex: 0 0 auto;
     margin: 0 7px 0 0;
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 12px;
     white-space: nowrap;
@@ -192,7 +192,7 @@
 .backlog-item-details-title {
     display: block;
     flex: 1 1 auto;
-    padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing 0;
+    padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing 0;
     font-size: 14px;
     line-height: 18px;
 }

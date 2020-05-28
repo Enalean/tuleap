@@ -18,7 +18,7 @@
  */
 
 .dashboard-widget-content.dashboard-widget-content-projectheartbeat {
-    margin: 0 $tlp-spacing $tlp-spacing;
+    margin: 0 $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .dashboard-widget-content-projectheartbeat-empty-no-activity,
@@ -54,7 +54,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .dashboard-widget-content-projectheartbeat-activities {
     position: relative;
-    padding: $tlp-spacing 0;
+    padding: $tlp-medium-spacing 0;
 
     &::before {
         content: '';
@@ -64,8 +64,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
-            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
+        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-medium-spacing, transparent $tlp-medium-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-medium-spacing);
     }
 }
 
@@ -73,7 +73,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     display: inline-block;
     position: relative;
     z-index: 2;
-    margin: $tlp-spacing 0;
+    margin: $tlp-medium-spacing 0;
     padding: 5px;
     border-radius: 3px;
     background: $timeline-color;
@@ -85,7 +85,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     text-transform: uppercase;
 
     &:first-child {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }
 
@@ -94,7 +94,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     position: relative;
     z-index: 2;
     align-items: flex-start;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:last-child {
         margin: 0;
@@ -110,7 +110,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     justify-content: center;
     width: 24px;
     height: 24px;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     border-radius: 50%;
     background: $tlp-theme-color;
 

@@ -32,7 +32,7 @@ h3,
 h4,
 h5,
 h6 {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     text-rendering: optimizelegibility;
 
     small {
@@ -109,7 +109,7 @@ hr {
 }
 
 p {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     font-size: 16px;
     line-height: $tlp-paragraph-line-height;
 
@@ -121,8 +121,8 @@ p {
 
 ul,
 ol {
-    margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 1.5 * $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 1.5 * $tlp-medium-spacing;
     line-height: $tlp-paragraph-line-height;
 
     &:last-child {
@@ -162,8 +162,8 @@ sup {
 }
 
 blockquote {
-    margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 $tlp-spacing / 2;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 $tlp-medium-spacing / 2;
     border-left: 5px solid #d7d7d7;
     font-size: 16px;
     line-height: 24px;
@@ -217,7 +217,7 @@ code {
 pre {
     @extend %tlp-code;
 
-    padding: 5px 3px 5px $tlp-spacing / 2;
+    padding: 5px 3px 5px $tlp-medium-spacing / 2;
     border-left: 5px solid transparentize($tlp-theme-color, .5);
 
     code {

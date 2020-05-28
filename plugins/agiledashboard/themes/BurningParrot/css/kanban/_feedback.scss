@@ -19,11 +19,11 @@
 
 .kanban {
     &.widget-context > .kanban-feedbacks {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 
     &:not(.widget-context) > .kanban-feedbacks {
-        margin: $tlp-spacing $tlp-spacing 0;
+        margin: $tlp-medium-spacing $tlp-medium-spacing 0;
     }
 }
 

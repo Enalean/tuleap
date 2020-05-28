@@ -1,7 +1,7 @@
 .pull-request-reviewers {
     display: flex;
     align-items: center;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     background: $tlp-ui-white;
 
@@ -12,7 +12,7 @@
 }
 
 .reviewer {
-    margin: -4px $tlp-half-spacing -4px 0;
+    margin: -4px $tlp-small-spacing -4px 0;
 }
 
 #pull-request-update-reviewers-modal {

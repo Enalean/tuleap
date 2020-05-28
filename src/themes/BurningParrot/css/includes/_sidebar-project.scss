@@ -44,7 +44,7 @@
 .project-sidebar-nav {
     display: flex;
     flex-direction: column;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-sidebar-nav-item {
@@ -118,7 +118,7 @@
     justify-content: center;
     width: 30px;
     height: 30px;
-    margin: 0 auto $tlp-spacing;
+    margin: 0 auto $tlp-medium-spacing;
     transition: background 100ms;
     border-radius: 50px;
     background: darken($tlp-theme-sidebar-background-color, 2%);

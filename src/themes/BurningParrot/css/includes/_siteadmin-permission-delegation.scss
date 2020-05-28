@@ -22,11 +22,11 @@
 }
 
 #siteadmin-permission-delegation-group-actions {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 #siteadmin-permission-delegation-group-actions-edit {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 #siteadmin-permission-delegation-group-details {
@@ -34,26 +34,26 @@
 }
 
 #siteadmin-permission-delegation-group-details-perms {
-    width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 $tlp-half-spacing 0 0;
+    width: calc(50% - #{$tlp-small-spacing});
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 #siteadmin-permission-delegation-group-details-users {
-    width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 0 0 $tlp-half-spacing;
+    width: calc(50% - #{$tlp-small-spacing});
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 #siteadmin-permission-delegation-group-details-perms-actions {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 #siteadmin-permission-delegation-group-details-perms-actions-add {
-    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
 }
 
 #siteadmin-permission-delegation-group-details-users-actions-delete,
 #siteadmin-permission-delegation-group-details-perms-actions-delete {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 #siteadmin-permission-delegation-group-details-users-empty,
@@ -73,11 +73,11 @@
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 #siteadmin-permission-delegation-group-details-users-actions-add {
-    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
 }
 
 .siteadmin-permission-delegation-group-details-perms-perm-name {
@@ -89,7 +89,7 @@
 }
 
 .siteadmin-permission-delegation-group-details-users-user-avatar {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     vertical-align: middle;
 }
 
@@ -104,11 +104,11 @@
 
     #siteadmin-permission-delegation-group-details-perms {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 
     #siteadmin-permission-delegation-group-details-users {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }

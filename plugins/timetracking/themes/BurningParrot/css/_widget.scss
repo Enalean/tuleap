@@ -35,11 +35,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
 }
 
 .timetracking-overview-writing-mode-actions-cancel {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .timetracking-overview-selector {
@@ -62,7 +62,7 @@
 .timetracking-reading-mode-dates {
     display: flex;
     min-width: max-content;
-    margin: $tlp-spacing $tlp-spacing 0;
+    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .timetracking-overview-writing-mode {
@@ -71,11 +71,11 @@
 
 .timetracking-overview-writing-mode-selected-dates {
     display: flex;
-    margin: $tlp-spacing $tlp-spacing 0;
+    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .timetracking-overview-users-selector-input.tlp-select-small {
-    padding: 0 $tlp-spacing 0 $tlp-half-spacing;
+    padding: 0 $tlp-medium-spacing 0 $tlp-small-spacing;
 }
 
 .timetracking-overview-project-selector-input,
@@ -90,23 +90,23 @@
 }
 
 .timetracking-writing-mode-selected-project {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 
 .timetracking-writing-mode-selected-date:last-of-type,
 .timetracking-overview-writing-mode-selected-date:last-of-type,
 .timetracking-reading-date:last-of-type {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .timetracking-writing-search {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .timetracking-artifacts-table,
 .timetracking-overview-widget-table {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
 }
 
 .timetracking-detail-modal-step {
@@ -124,7 +124,7 @@
 .timetracking-overview-reading-mode-trackers-list {
     display: flex;
     flex-direction: row;
-    margin: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    margin: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     color: $tlp-theme-color;
 }
 
@@ -136,7 +136,7 @@
 .timetracking-overview-reading-mode-tracker {
     display: flex;
     flex-direction: column;
-    margin: 0 $tlp-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-medium-spacing $tlp-small-spacing 0;
 }
 
 .timetracking-overview-reading-mode-tracker-project-name {
@@ -156,7 +156,7 @@
 .timetracking-overview-reading-mode-trackers-empty {
     display: flex;
     align-items: center;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     font-style: italic;
 }
 
@@ -202,7 +202,7 @@
 }
 
 .timetracking-details-modal-artifact-details {
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
 }
 
 .timetracking-details-modal-artifact-infos {
@@ -278,7 +278,7 @@
 .timetracking-overview-tracker-selector {
     display: flex;
     align-items: center;
-    margin: $tlp-spacing $tlp-half-spacing 0;
+    margin: $tlp-medium-spacing $tlp-small-spacing 0;
 }
 
 .timetracking-archive {
@@ -289,9 +289,9 @@
 .reading-mode-actions {
     display: flex;
     justify-content: center;
-    margin: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    margin: $tlp-small-spacing $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .reading-mode-actions-cancel {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }

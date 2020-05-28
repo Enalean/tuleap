@@ -27,7 +27,7 @@
     flex-direction: column;
     justify-content: center;
     min-width: 0;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .document-uploads-file-title {
@@ -38,7 +38,7 @@
 }
 
 .document-uploads-file-error-message {
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
     color: $tlp-ui-danger;
 }
 

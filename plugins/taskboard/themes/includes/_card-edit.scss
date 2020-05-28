@@ -23,7 +23,7 @@
 }
 
 .taskboard-card-label-editor {
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
 }
 
 .taskboard-card-edit-mode-assignees {
@@ -51,7 +51,7 @@
         z-index: 11;
         bottom: calc(100% - 30px);
         left: 12px;
-        width: calc(100% - 2 * #{$tlp-half-spacing} - 2px);
+        width: calc(100% - 2 * #{$tlp-small-spacing} - 2px);
 
         .select2-search__field { /* stylelint-disable-line selector-class-pattern */
             width: 100% !important;
@@ -95,8 +95,8 @@
         display: flex;
         position: absolute;
         z-index: 10;
-        top: $tlp-half-spacing + $assignee-negative-margin - $additional-size-to-hide-assignee;
-        right: $tlp-half-spacing - $additional-size-to-hide-assignee;
+        top: $tlp-small-spacing + $assignee-negative-margin - $additional-size-to-hide-assignee;
+        right: $tlp-small-spacing - $additional-size-to-hide-assignee;
         justify-content: center;
         width: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
         height: $assignee-avatar-size + ($additional-size-to-hide-assignee * 2);
@@ -114,7 +114,7 @@
     }
 
     &.taskboard-card-with-accessibility > .taskboard-card-edit-trigger {
-        right: $tlp-spacing + $card-info-margin-right - $additional-size-to-hide-assignee;
+        right: $tlp-medium-spacing + $card-info-margin-right - $additional-size-to-hide-assignee;
     }
 
     &:hover {
@@ -144,7 +144,7 @@
     }
 
     &.taskboard-card-with-accessibility {
-        padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing ($tlp-half-spacing + 2);
+        padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing ($tlp-small-spacing + 2);
     }
 
     > .taskboard-card-content > .taskboard-card-xref-label {
@@ -193,16 +193,16 @@
 }
 
 .taskboard-card-cancel-save-buttons {
-    margin: ($tlp-half-spacing - 5px) 0 0;
+    margin: ($tlp-small-spacing - 5px) 0 0;
     text-align: right;
 
     &.taskboard-card-cancel-save-buttons-for-child {
-        margin: ($tlp-half-spacing - 5px) 0 $tlp-spacing;
+        margin: ($tlp-small-spacing - 5px) 0 $tlp-medium-spacing;
     }
 }
 
 .taskboard-child:last-child > .taskboard-card-cancel-save-buttons-for-child {
-    margin: ($tlp-half-spacing - 5px) 0 0;
+    margin: ($tlp-small-spacing - 5px) 0 0;
 }
 
 .taskboard-card-cancel-button {
@@ -222,7 +222,7 @@
         display: flex;
         position: absolute;
         top: 0;
-        left: -$tlp-spacing;
+        left: -$tlp-medium-spacing;
         align-items: center;
         width: 20px;
         height: 26px;

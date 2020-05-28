@@ -24,7 +24,7 @@
 
 #siteadmin-project-history-filter {
     min-width: 400px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-project-history-filter-form {
@@ -50,7 +50,7 @@
 }
 
 #siteadmin-project-history-events {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 @media screen and (max-width: 1500px) {
@@ -63,6 +63,6 @@
 
     #siteadmin-project-history-filter {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }

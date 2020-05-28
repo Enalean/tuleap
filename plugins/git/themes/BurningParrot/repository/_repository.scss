@@ -31,7 +31,7 @@
 }
 
 .git-repository-header {
-    padding: $tlp-spacing $tlp-spacing 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .git-repository-subheader {
@@ -42,16 +42,16 @@
 }
 
 .git-repository-subheader-spacer {
-    min-width: $tlp-spacing;
+    min-width: $tlp-medium-spacing;
 }
 
 .git-repository-forked-name {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 .git-repository-parent {
     display: block;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     color: $tlp-ui-dimmed;
     font-size: 14px;
 }
@@ -59,7 +59,7 @@
 .git-repository-actions {
     display: flex;
     flex: 1 1 auto;
-    margin: 5px 0 $tlp-spacing;
+    margin: 5px 0 $tlp-medium-spacing;
 }
 
 .git-repository-actions-spacer {
@@ -112,11 +112,11 @@
 }
 
 .git-repository-gerrit-status:last-child {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .git-repository-branch-tag-selector {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .git-repository-branch-tag-selector-button-time {
@@ -143,11 +143,11 @@
 }
 
 .git-repository-branch-tag-selector-filter {
-    margin: $tlp-half-spacing $tlp-spacing;
+    margin: $tlp-small-spacing $tlp-medium-spacing;
 }
 
 .git-repository-branch-tag-selector-empty {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
     color: transparentize($tlp-theme-color, .7);
     font-size: 14px;
     font-style: italic;
@@ -156,7 +156,7 @@
 
 .git-repository-branch-tag-selector-is-loading {
     height: 40px;
-    margin: $tlp-spacing 0;
+    margin: $tlp-medium-spacing 0;
     background: url('/themes/BurningParrot/images/spinner.gif') no-repeat center center;
 }
 
@@ -168,7 +168,7 @@
 }
 
 #readme {
-    margin: $tlp-spacing 10px;
+    margin: $tlp-medium-spacing 10px;
     border: 1px solid #e3e3e3;
     border-radius: 4px;
 }

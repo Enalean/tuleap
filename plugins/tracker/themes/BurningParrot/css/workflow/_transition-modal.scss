@@ -34,12 +34,12 @@
 .tracker-workflow-transition-modal-action-type {
     display: flex;
     align-items: center;
-    padding: $tlp-spacing $tlp-spacing 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .tracker-workflow-transition-modal-action-details {
     display: flex;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-top: 1px solid $tlp-ui-border-light;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .tracker-workflow-transition-modal-action-remove {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     color: $tlp-ui-danger;
     font-size: 16px;
 }

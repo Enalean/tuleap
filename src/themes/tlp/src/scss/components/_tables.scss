@@ -28,11 +28,11 @@ $tlp-table-cell-padding: 10px;
  */
 .tlp-table-actions {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .tlp-table-actions-element {
-    margin: 0 $tlp-spacing / 2 0 0;
+    margin: 0 $tlp-medium-spacing / 2 0 0;
 
     &:last-child {
         margin: 0;
@@ -41,7 +41,7 @@ $tlp-table-cell-padding: 10px;
 
 .tlp-table-actions-spacer {
     flex: 1;
-    min-width: $tlp-spacing;
+    min-width: $tlp-medium-spacing;
 }
 
 .tlp-table-actions-filter {
@@ -195,5 +195,5 @@ $tlp-table-cell-padding: 10px;
 }
 
 .tlp-table-sort-icon {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 ($tlp-medium-spacing / 2);
 }

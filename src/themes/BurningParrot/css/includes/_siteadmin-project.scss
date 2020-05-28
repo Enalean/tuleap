@@ -24,7 +24,7 @@
 
 #siteadmin-project-information-details {
     width: 70%;
-    padding: 0 $tlp-spacing 0 0;
+    padding: 0 $tlp-medium-spacing 0 0;
 }
 
 
@@ -44,11 +44,11 @@
 }
 
 #siteadmin-project-information-additional-info-access-level-icon {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 #siteadmin-project-information-additional-info-access-level-badge {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-project-information-additional-info-access-button {
@@ -58,19 +58,19 @@
 .siteadmin-project-information-details-row {
     display: flex;
     flex-wrap: wrap;
-    margin: 0 0 $tlp-spacing; // stylelint-disable-line unit-whitelist
+    margin: 0 0 $tlp-medium-spacing; // stylelint-disable-line unit-whitelist
 }
 
 .siteadmin-project-information-details-row-cell {
     margin: 0 $tlp-x-large-spacing $tlp-medium-spacing 0;
 
     &:last-child {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }
 
 .siteadmin-projects-pending-doc-pagination {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }
 
 @media screen and (max-width: 1200px) {
@@ -90,5 +90,5 @@
 }
 
 .site-admin-project-is-supended-warning {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
 }

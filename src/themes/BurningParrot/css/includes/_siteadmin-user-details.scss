@@ -22,7 +22,7 @@
 }
 
 #siteadmin-user-avatar {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-user {
@@ -31,7 +31,7 @@
 
 #siteadmin-user-details {
     width: 60%;
-    padding: 0 $tlp-spacing 0 0;
+    padding: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-user-additional-info {
@@ -46,11 +46,11 @@
 .siteadmin-user-details-row-field {
     &:first-child {
         width: 70%;
-        padding: 0 ($tlp-spacing * 2) 0 0;
+        padding: 0 ($tlp-medium-spacing * 2) 0 0;
     }
 
     &:last-child {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
 
         &:not(:first-child) {
             width: 30%;
@@ -62,12 +62,12 @@
     width: 50%;
 
     &:first-child {
-        padding: 0 ($tlp-spacing * 2) 0 0;
+        padding: 0 ($tlp-medium-spacing * 2) 0 0;
     }
 }
 
 #siteadmin-user-access-row-nb-fail {
-    padding: 0 ($tlp-spacing * 2) 0 0;
+    padding: 0 ($tlp-medium-spacing * 2) 0 0;
 }
 
 .siteadmin-user-project-icon {
@@ -78,7 +78,7 @@
 }
 
 #siteadmin-user-project-nope {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     color: $tlp-ui-dimmed;
     font-style: italic;
     text-align: center;

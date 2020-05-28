@@ -51,7 +51,7 @@
     flex: 1;
     min-width: 250px;
     min-height: 40px;
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     border-right: 1px solid $tlp-ui-border-normal;
     border-bottom: 3px solid $tlp-ui-border-normal;
     vertical-align: top;
@@ -120,8 +120,8 @@
 
 .taskboard-no-mapping:last-child,
 .taskboard-no-mapping {
-    margin: $tlp-half-spacing 0 0;
-    padding: 0 $tlp-half-spacing 0 ($tlp-half-spacing + 3px);
+    margin: $tlp-small-spacing 0 0;
+    padding: 0 $tlp-small-spacing 0 ($tlp-small-spacing + 3px);
     font-size: 14px;
     line-height: 20px;
 }

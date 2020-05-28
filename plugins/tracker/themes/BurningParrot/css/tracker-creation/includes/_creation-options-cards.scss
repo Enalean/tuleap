@@ -19,9 +19,9 @@
 
 .tracker-creation-template-card {
     display: flex;
-    width: calc(50% - #{$tlp-half-spacing});
+    width: calc(50% - #{$tlp-small-spacing});
     min-height: 120px;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     @media screen and (max-width: $creation-small-screen-width) {
         width: 100%;
@@ -122,5 +122,5 @@
 }
 
 .create-from-jira-button {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }

@@ -22,19 +22,19 @@
     position: sticky;
     left: 0;
     justify-content: space-between;
-    margin: 0 0 $tlp-spacing;
-    padding: 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 $tlp-medium-spacing;
 }
 
 .taskboard-button-bar-right {
     display: flex;
     position: sticky;
-    right: $tlp-spacing;
+    right: $tlp-medium-spacing;
 }
 
 .taskboard-button-bar-left {
     position: sticky;
-    left: calc(#{$sidebar-expanded-width} + #{$tlp-spacing});
+    left: calc(#{$sidebar-expanded-width} + #{$tlp-medium-spacing});
 
     &.taskboard-fullscreen {
         left: 0;
@@ -43,7 +43,7 @@
 
 .sidebar-collapsed {
     .taskboard-button-bar-left {
-        left: calc(#{$sidebar-collapsed-width} + #{$tlp-spacing});
+        left: calc(#{$sidebar-collapsed-width} + #{$tlp-medium-spacing});
 
         &.taskboard-fullscreen {
             left: 0;
@@ -56,5 +56,5 @@
 }
 
 .taskboard-open-closed-switcher {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
