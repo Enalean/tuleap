@@ -264,9 +264,7 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-modal-submit-button]").click();
             });
 
-            // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@folder_download_dropdown").click();
-            // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@folder_download_row").within(($row) => {
                 // We cannot click the download button, otherwise the browser will ask "Where to save this file ?"
                 // and will stop the test.
@@ -291,7 +289,6 @@ describe("Document new UI", () => {
                 });
             });
             // Delete the folder for repeatability
-            // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@folder_download_row").within(() => {
                 cy.get("[data-test=document-dropdown-delete]").click();
             });
