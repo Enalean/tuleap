@@ -21,7 +21,10 @@
     <div>
         <div class="release-content-description">
             <div>
-                <release-description-badges-tracker v-bind:release_data="release_data" />
+                <release-description-badges-tracker
+                    v-if="display_badges_tracker"
+                    v-bind:release_data="release_data"
+                />
                 <test-management-displayer
                     v-if="is_testmanagement_available"
                     v-bind:release_data="release_data"
@@ -64,6 +67,13 @@ export default class ReleaseDescription extends Vue {
 
     get is_testmanagement_available(): boolean {
         return is_testmanagement_activated(this.release_data);
+    }
+
+    get display_badges_tracker(): boolean {
+        const trackers_to_display = this.release_data.number_of_artifact_by_trackers.filter(
+            (tracker) => tracker.total_artifact > 0
+        );
+        return trackers_to_display.length > 0;
     }
 }
 </script>

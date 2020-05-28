@@ -20,10 +20,17 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescription from "./ReleaseDescription.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, Pane, StoreOptions, TrackerProjectLabel } from "../../../type";
+import {
+    MilestoneData,
+    Pane,
+    StoreOptions,
+    TrackerNumberArtifacts,
+    TrackerProjectLabel,
+} from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
+import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 
 let release_data: MilestoneData;
 const component_options: ShallowMountOptions<ReleaseDescription> = {};
@@ -83,6 +90,7 @@ describe("ReleaseDescription", () => {
                     uri: "/cardwall/",
                 },
             },
+            number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
         component_options.propsData = {
@@ -101,6 +109,7 @@ describe("ReleaseDescription", () => {
                 burndown: null,
                 additional_panes: [] as Pane[],
             },
+            number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
         component_options.propsData = {
@@ -120,6 +129,7 @@ describe("ReleaseDescription", () => {
                 },
                 additional_panes: [] as Pane[],
             },
+            number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
         component_options.propsData = {
@@ -149,6 +159,7 @@ describe("ReleaseDescription", () => {
                 },
                 additional_panes: [] as Pane[],
             },
+            number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
         } as MilestoneData;
 
         component_options.propsData = {
@@ -157,5 +168,37 @@ describe("ReleaseDescription", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(false);
+    });
+
+    it("When there are no artifacts, Then ReleaseDescriptionBadgesTracker is not rendered", async () => {
+        release_data = {
+            id: 2,
+            planning: {
+                id: "100",
+            },
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [] as TrackerProjectLabel[],
+                    },
+                },
+                additional_panes: [] as Pane[],
+            },
+            number_of_artifact_by_trackers: [
+                {
+                    color_name: "blue-deep",
+                    label: "Bug",
+                    id: 15,
+                    total_artifact: 0,
+                },
+            ] as TrackerNumberArtifacts[],
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+        expect(wrapper.findComponent(ReleaseDescriptionBadgesTracker).exists()).toBe(false);
     });
 });

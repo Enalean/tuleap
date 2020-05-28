@@ -20,7 +20,7 @@
 import { shallowMount, ShallowMountOptions, Wrapper } from "@vue/test-utils";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
-import { MilestoneData, StoreOptions } from "../../../type";
+import { MilestoneData, StoreOptions, TrackerNumberArtifacts } from "../../../type";
 import { createReleaseWidgetLocalVue } from "../../../helpers/local-vue-for-test";
 
 let release_data: MilestoneData;
@@ -71,13 +71,57 @@ describe("ReleaseDescriptionBadgesTracker", () => {
 
         const wrapper = await getPersonalWidgetInstance(store_options);
 
-        expect(wrapper.get("[data-test=color-name-tracker").classes()).toEqual([
+        expect(wrapper.get("[data-test=color-name-tracker-1]").classes()).toEqual([
             "release-number-artifacts-tracker",
             "release-number-artifacts-tracker-red-fiesta",
         ]);
 
-        expect(wrapper.get("[data-test=total-artifact-tracker").text()).toEqual("2");
+        expect(wrapper.get("[data-test=total-artifact-tracker]").text()).toEqual("2");
 
-        expect(wrapper.get("[data-test=artifact-tracker-name").text()).toEqual("Bug");
+        expect(wrapper.get("[data-test=artifact-tracker-name]").text()).toEqual("Bug");
+    });
+
+    it("When there is a tracker but wihout artifact, Then it is not displayed", async () => {
+        release_data = {
+            id: 2,
+            number_of_artifact_by_trackers: [
+                {
+                    label: "Bug",
+                    id: 1,
+                    total_artifact: 0,
+                    color_name: "red-fiesta",
+                },
+                {
+                    label: "Sprints",
+                    id: 2,
+                    total_artifact: 2,
+                    color_name: "deep-blue",
+                },
+            ],
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=color-name-tracker-1]").exists()).toBe(false);
+        expect(wrapper.find("[data-test=color-name-tracker-2]").exists()).toBe(true);
+    });
+
+    it("When there are no artifacts, Then there is no title", async () => {
+        release_data = {
+            id: 2,
+            number_of_artifact_by_trackers: [] as TrackerNumberArtifacts[],
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+        };
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.find("[data-test=subtitle-tracker]").exists()).toBe(false);
     });
 });

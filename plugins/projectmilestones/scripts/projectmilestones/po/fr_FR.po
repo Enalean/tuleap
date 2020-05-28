@@ -64,6 +64,9 @@ msgstr "Capacité : N/A"
 msgid "Cardwall"
 msgstr "Cardwall"
 
+msgid "Content"
+msgstr "Contenu"
+
 msgid "Failed"
 msgstr "Échoué"
 
