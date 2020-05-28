@@ -17,7 +17,7 @@
     "d3-scale": "^1.0.7",
     "d3-selection": "^1.2.0",
     "d3-shape": "^1.2.0",
-    "dompurify": "^2.0.10",
+    "dompurify": "^2.0.11",
     "imports-loader": "^0.7.1",
     "lodash": "2.4.0",
     "moment": "^2.26.0",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@types/bootstrap": "^4.3.1",
-    "@types/dompurify": "^2.0.1",
+    "@types/dompurify": "^2.0.2",
     "@types/jquery": "^3.3.34",
     "@types/mustache": "^4.0.1",
     "@types/sprintf-js": "^1.1.2",
