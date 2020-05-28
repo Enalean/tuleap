@@ -144,10 +144,11 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         return self::SERVICE_SHORTNAME;
     }
 
-    public function burning_parrot_get_javascript_files($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function burning_parrot_get_javascript_files($params): void //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (strpos($_SERVER['REQUEST_URI'], '/plugins/mediawiki') === 0) {
-            $params['javascript_files'][] = '/scripts/tuleap/manage-allowed-projects-on-resource.js';
+            $core_assets = new IncludeAssets(__DIR__ . '/../../../src/www/assets/core', '/assets/core');
+            $params['javascript_files'][] = $core_assets->getFileURL('manage-allowed-projects-on-resource.js');
         }
     }
 

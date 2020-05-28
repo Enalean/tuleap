@@ -121,9 +121,13 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
             case 'manage-allowed-projects':
                 try {
                     $presenter     = $this->getManageAllowedProjectsPresenter($request);
-                    $template_path = ForgeConfig::get('codendi_dir') . '/src/templates/resource_restrictor';
-
-                    $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tuleap/manage-allowed-projects-on-resource.js');
+                    $template_path = __DIR__ . '/../../../../src/templates/resource_restrictor';
+                    $GLOBALS['HTML']->addJavascriptAsset(
+                        new \Tuleap\Layout\JavascriptAsset(
+                            new IncludeAssets(__DIR__ . '/../../../../src/www/assets/core', '/assets/core'),
+                            'manage-allowed-projects-on-resource.js'
+                        )
+                    );
 
                     $this->admin_page_renderer->renderAPresenter(
                         $title,

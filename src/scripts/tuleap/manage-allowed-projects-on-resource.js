@@ -1,5 +1,7 @@
-/**
- * Copyright (c) Enalean - 2015 - 2016. All rights reserved
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* global tlp:readonly tuleap:readonly */
+import jQuery from "jquery";
+import { modal as createModal, filterInlineTable } from "tlp";
+import { autocomplete_projects_for_select2 } from "./autocomplete-for-select2";
+
 !(function ($) {
     $(function () {
         bindAllowAllEvent();
@@ -45,7 +50,7 @@
             if (!modal_element) {
                 throw Error("Unable to find confirmation allow modal " + allow_modal_id);
             }
-            allow_modal = tlp.modal(modal_element);
+            allow_modal = createModal(modal_element);
             allow_modal.addEventListener("tlp-modal-hidden", function () {
                 form.reset();
             });
@@ -56,7 +61,7 @@
                 throw Error("Unable to find confirmation restrict modal " + restrict_modal_id);
             }
 
-            restrict_modal = tlp.modal(modal_element);
+            restrict_modal = createModal(modal_element);
             restrict_modal.addEventListener("tlp-modal-hidden", function () {
                 form.reset();
             });
@@ -76,7 +81,7 @@
     function bindFilterEvent() {
         var filter = document.getElementById("filter-projects");
         if (filter) {
-            tlp.filterInlineTable(filter);
+            filterInlineTable(filter);
         }
     }
 
@@ -123,7 +128,7 @@
         var dom_natures_modal_create = document.getElementById("revoke-modal");
 
         if (dom_natures_modal_create) {
-            var tlp_natures_modal_create = tlp.modal(dom_natures_modal_create);
+            var tlp_natures_modal_create = createModal(dom_natures_modal_create);
 
             $("#revoke-project").on("click", function () {
                 tlp_natures_modal_create.toggle();
@@ -145,9 +150,9 @@
         var autocompleter = document.getElementById("project-to-allow");
 
         if (autocompleter) {
-            tuleap.autocomplete_projects_for_select2(autocompleter, {
+            autocomplete_projects_for_select2(autocompleter, {
                 include_private_projects: 1,
             });
         }
     }
-})(window.jQuery);
+})(jQuery);
