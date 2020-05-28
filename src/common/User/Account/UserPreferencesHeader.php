@@ -34,10 +34,7 @@ final class UserPreferencesHeader
         $layout->addCssAsset(new AccountCssAsset());
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/core',
-                    '/assets/core'
-                ),
+                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
                 'account/preferences-nav.js'
             )
         );

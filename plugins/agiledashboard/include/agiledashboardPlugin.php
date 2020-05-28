@@ -96,7 +96,7 @@ use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\ScriptAsset;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupDisplayEvent;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPaneCollector;
 use Tuleap\Project\Event\ProjectXMLImportPreChecksEvent;
@@ -2116,9 +2116,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $event->addServiceNameUsed('agile_dashboard');
     }
 
-    private function getScriptAssetByName(string $name): ScriptAsset
+    private function getScriptAssetByName(string $name): JavascriptAsset
     {
-        return new ScriptAsset($this->getIncludeAssets(), $name);
+        return new JavascriptAsset($this->getIncludeAssets(), $name);
     }
 
     public function checkPostActionsForTracker(CheckPostActionsForTracker $event): void

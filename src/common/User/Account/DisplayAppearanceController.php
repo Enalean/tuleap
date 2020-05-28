@@ -79,13 +79,9 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
             throw new ForbiddenException();
         }
 
-
         $layout->addJavascriptAsset(
             new JavascriptAsset(
-                new IncludeAssets(
-                    __DIR__ . '/../../../www/assets/core',
-                    '/assets/core'
-                ),
+                new IncludeAssets(__DIR__ . '/../../../www/assets/core', '/assets/core'),
                 'account/appearance.js'
             )
         );

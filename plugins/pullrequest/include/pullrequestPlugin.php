@@ -51,7 +51,7 @@ use Tuleap\Label\CollectionOfLabelableDao;
 use Tuleap\Label\LabeledItemCollection;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\ScriptAsset;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Project\Admin\GetProjectHistoryEntryValue;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\PullRequest\Authorization\PullRequestPermissionChecker;
@@ -182,7 +182,7 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
 
 
 
-        $create_pullrequest = new ScriptAsset($assets, 'create-pullrequest-button.js');
+        $create_pullrequest = new JavascriptAsset($assets, 'create-pullrequest-button.js');
         $retriever->addScript($create_pullrequest);
     }
 

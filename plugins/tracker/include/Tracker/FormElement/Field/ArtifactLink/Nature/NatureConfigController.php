@@ -21,10 +21,10 @@
 
 namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
-use CSRFSynchronizerToken;
 use Codendi_Request;
-use Response;
+use CSRFSynchronizerToken;
 use Feedback;
+use Response;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;

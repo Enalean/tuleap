@@ -26,7 +26,7 @@ use Tuleap\Git\Repository\GitRepositoryHeaderDisplayer;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
-use Tuleap\layout\ScriptAsset;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullrequestDisplayer
@@ -96,7 +96,7 @@ class PullrequestDisplayer
 
 
 
-            $pull_requests_app = new ScriptAsset($assets, 'tuleap-pullrequest.js');
+            $pull_requests_app = new JavascriptAsset($assets, 'tuleap-pullrequest.js');
             $layout->includeFooterJavascriptFile($pull_requests_app->getFileURL());
 
             $presenter = new PullRequestPresenter(

@@ -32,8 +32,9 @@ use Tracker;
 use Tracker_Artifact;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
-use Tuleap\layout\ScriptAsset;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
+use Tuleap\Layout\IncludeAssets;
+use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonAction;
 
 final class AdditionalArtifactActionBuilderTest extends TestCase
@@ -86,11 +87,6 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
     private $planned_artifact_dao;
 
     /**
-     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ScriptAsset
-     */
-    private $script_asset;
-
-    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PlanningTrackerBacklogChecker
      */
     private $planning_tracker_backlog_checker;
@@ -104,7 +100,6 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
         $this->planning_permissions_manager   = Mockery::mock(PlanningPermissionsManager::class);
         $this->artifacts_explicit_backlog_dao = Mockery::mock(ArtifactsInExplicitBacklogDao::class);
         $this->planned_artifact_dao           = Mockery::mock(PlannedArtifactDao::class);
-        $this->script_asset                    = Mockery::mock(ScriptAsset::class);
         $this->planning_tracker_backlog_checker = Mockery::mock(PlanningTrackerBacklogChecker::class);
 
         $this->builder = new AdditionalArtifactActionBuilder(
@@ -113,7 +108,7 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
             $this->planning_permissions_manager,
             $this->artifacts_explicit_backlog_dao,
             $this->planned_artifact_dao,
-            $this->script_asset,
+            new JavascriptAsset(Mockery::mock(IncludeAssets::class)->shouldReceive('getFileURL')->getMock(), 'mock.js'),
             $this->planning_tracker_backlog_checker
         );
 
@@ -260,8 +255,6 @@ final class AdditionalArtifactActionBuilderTest extends TestCase
 
         $this->artifacts_explicit_backlog_dao->shouldReceive('isArtifactInTopBacklogOfProject')
             ->once();
-
-        $this->script_asset->shouldReceive('getFileURL')->once()->andReturn('url_of_file.js');
 
         $this->assertInstanceOf(
             AdditionalButtonAction::class,

@@ -198,7 +198,7 @@ abstract class BaseLayout extends Response
         $this->javascript_in_footer[] = array('file' => $file);
     }
 
-    public function addJavascriptAsset(JavascriptAsset $asset)
+    public function addJavascriptAsset(JavascriptAsset $asset): void
     {
         $this->javascript_assets[] = $asset;
     }

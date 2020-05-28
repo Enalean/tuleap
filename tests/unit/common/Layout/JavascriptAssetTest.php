@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,23 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\layout;
+declare(strict_types=1);
 
-class ScriptAsset
+namespace Tuleap\Layout;
+
+use org\bovigo\vfs\vfsStream;
+use PHPUnit\Framework\TestCase;
+
+final class JavascriptAssetTest extends TestCase
 {
-    /** @var IncludeAssets */
-    private $include_assets;
-    /** @var string */
-    private $name;
-
-    public function __construct(IncludeAssets $include_assets, $name)
+    public function testItReturnsHashedFileURL(): void
     {
-        $this->include_assets = $include_assets;
-        $this->name           = $name;
-    }
+        $assets_dir_path = vfsStream::setup()->url() . '/assets';
+        mkdir($assets_dir_path);
+        file_put_contents($assets_dir_path . '/manifest.json', '{"file.js":"file-hashed.js"}');
+        $script_asset = new JavascriptAsset(new IncludeAssets($assets_dir_path, '/path/to'), 'file.js');
 
-    public function getFileURL()
-    {
-        return $this->include_assets->getFileURL($this->name);
+        $this->assertEquals('/path/to/file-hashed.js', $script_asset->getFileURL());
     }
 }

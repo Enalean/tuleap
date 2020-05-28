@@ -128,19 +128,8 @@ class Controller
             $csrf_token
         );
 
-        $this->admin_page_renderer->addJavascriptAsset(
-            new JavascriptAsset(
-                $this->assets,
-                'open-id-connect-client.js',
-            ),
-        );
-
-        $this->admin_page_renderer->addCssAsset(
-            new CssAsset(
-                $this->assets,
-                'bp-style',
-            )
-        );
+        $this->admin_page_renderer->addJavascriptAsset(new JavascriptAsset($this->assets, 'open-id-connect-client.js'));
+        $this->admin_page_renderer->addCssAsset(new CssAsset($this->assets, 'bp-style'));
 
         $this->admin_page_renderer->renderAPresenter(
             dgettext('tuleap-openidconnectclient', 'OpenID Connect'),
