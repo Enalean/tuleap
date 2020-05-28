@@ -30,6 +30,8 @@ use Tuleap\OpenIDConnectClient\Provider\Provider;
 
 class IDTokenVerifier
 {
+    private const LEEWAY_IN_SECOND = 10;
+
     /**
      * @var Parser
      */
@@ -70,7 +72,7 @@ class IDTokenVerifier
             throw new MalformedIDTokenException($exception->getMessage(), 0, $exception);
         }
 
-        $validation_data = new ValidationData();
+        $validation_data = new ValidationData(null, self::LEEWAY_IN_SECOND);
 
         try {
             $sub_claim = $id_token->getClaim('sub');
