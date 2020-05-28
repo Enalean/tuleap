@@ -68,6 +68,7 @@ use Tuleap\FRS\LicenseAgreement\Admin\SaveLicenseAgreementController;
 use Tuleap\FRS\LicenseAgreement\Admin\SetDefaultLicenseAgreementController;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Http\Server\SessionWriteCloseMiddleware;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Layout\SiteHomepageController;
@@ -128,6 +129,7 @@ use Tuleap\User\Account\UpdatePasswordController;
 use Tuleap\User\Account\UpdateSessionPreferencesController;
 use Tuleap\User\Account\UserAvatarSaver;
 use Tuleap\User\Profile\AvatarController;
+use Tuleap\User\Profile\ProfileAsJSONForTooltipController;
 use Tuleap\User\Profile\ProfileController;
 use Tuleap\User\Profile\ProfilePresenterBuilder;
 use Tuleap\User\SSHKey\SSHKeyCreateController;
@@ -454,8 +456,19 @@ class RouteCollector
 
     public static function getUsersName()
     {
+        $response_factory = HTTPFactoryBuilder::responseFactory();
+
         return new ProfileController(
-            new ProfilePresenterBuilder(EventManager::instance(), Codendi_HTMLPurifier::instance())
+            new ProfilePresenterBuilder(EventManager::instance(), Codendi_HTMLPurifier::instance()),
+            new ProfileAsJSONForTooltipController(
+                new JSONResponseBuilder(
+                    $response_factory,
+                    HTTPFactoryBuilder::streamFactory()
+                ),
+                new SapiEmitter(),
+                $response_factory,
+                TemplateRendererFactory::build()
+            ),
         );
     }
 

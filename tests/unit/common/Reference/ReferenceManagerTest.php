@@ -259,7 +259,7 @@ final class ReferenceManagerTest extends TestCase
 
         $html = '@username';
         $this->rm->insertReferences($html, 0);
-        $this->assertEquals('<a href="/users/username">@username</a>', $html);
+        $this->assertEquals('<a href="/users/username" class="direct-link-to-user">@username</a>', $html);
     }
 
     public function testItDoesNotInsertsLinkForUserThatDoNotExist(): void
@@ -277,7 +277,7 @@ final class ReferenceManagerTest extends TestCase
 
         $html = '/cc @username';
         $this->rm->insertReferences($html, 0);
-        $this->assertEquals('/cc <a href="/users/username">@username</a>', $html);
+        $this->assertEquals('/cc <a href="/users/username" class="direct-link-to-user">@username</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenPointAtTheMiddle(): void
@@ -286,7 +286,7 @@ final class ReferenceManagerTest extends TestCase
 
         $html = '/cc @user.name';
         $this->rm->insertReferences($html, 0);
-        $this->assertEquals('/cc <a href="/users/user.name">@user.name</a>', $html);
+        $this->assertEquals('/cc <a href="/users/user.name" class="direct-link-to-user">@user.name</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenHyphenAtTheMiddle(): void
@@ -295,7 +295,7 @@ final class ReferenceManagerTest extends TestCase
 
         $html = '/cc @user-name';
         $this->rm->insertReferences($html, 0);
-        $this->assertEquals('/cc <a href="/users/user-name">@user-name</a>', $html);
+        $this->assertEquals('/cc <a href="/users/user-name" class="direct-link-to-user">@user-name</a>', $html);
     }
 
     public function testItInsertsLinkForMentionWhenUnderscoreAtTheMiddle(): void
@@ -304,7 +304,7 @@ final class ReferenceManagerTest extends TestCase
 
         $html = '/cc @user_name';
         $this->rm->insertReferences($html, 0);
-        $this->assertEquals('/cc <a href="/users/user_name">@user_name</a>', $html);
+        $this->assertEquals('/cc <a href="/users/user_name" class="direct-link-to-user">@user_name</a>', $html);
     }
 
     public function testItDoesNotInsertsLinkIfInvalidCharacterAtBeginning(): void
