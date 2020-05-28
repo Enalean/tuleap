@@ -26,13 +26,11 @@ use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupRepresentationBuilder;
-use Tuleap\Tracker\TrackerIsInvalidException;
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher
 {
@@ -369,34 +367,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             return;
         }
 
-        // First try XML
-        if ($request->get('create_mode') == 'xml') {
-            $vFile = new Valid_File('tracker_new_xml_file');
-            $vFile->required();
-            if (! $request->validFile($vFile)) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    dgettext("tuleap-tracker", "The provided file is invalid")
-                );
-                $this->displayCreateTracker($project, $request, $name, $description, $itemname);
-                return;
-            }
-
-            try {
-                $new_tracker = $this->getTrackerCreator()->createTrackerFromXml(
-                    $project,
-                    $_FILES["tracker_new_xml_file"]["tmp_name"],
-                    $name,
-                    $description,
-                    $itemname,
-                    null
-                );
-            } catch (TrackerIsInvalidException $exception) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getTranslatedMessage());
-            } catch (Tracker_Exception | TrackerCreationHasFailedException $exception) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $exception->getMessage());
-            }
-        } elseif ($request->get('create_mode') == 'tv3') {
+        if ($request->get('create_mode') == 'tv3') {
             $atid = $request->get('tracker_new_tv3');
             $user = UserManager::instance()->getCurrentUser();
             $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
@@ -479,7 +450,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $create_mode = $request->get('create_mode');
         $this->displayCreateTrackerFromTemplate($create_mode, $project, $tracker_template);
-        $this->displayCreateTrackerFromXML($create_mode, $project);
         $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
         $this->displayMigrateFromTV3Option($create_mode, $project, $request->get('tracker_new_tv3'));
 
@@ -605,17 +575,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo '</table>';
 
         echo '</div>';
-    }
-
-    public function displayCreateTrackerFromXML($requested_create_mode, Project $project)
-    {
-        $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
-        echo '<h3><label>' . $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_xml') . '</label></h3>
-              <div class="tracker_create_mode">
-                <p>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_xml_desc') . '</p>
-                <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
-
-              </div>';
     }
 
     private function getTrackerCreator(): TrackerCreator

@@ -1144,9 +1144,6 @@ msgstr ""
 "Le champs entré ne peut pas être partagé avec cet outil de suivi parce que "
 "son projet d'origine n'est pas actif."
 
-msgid "The provided file is invalid"
-msgstr "Le fichier fourni est invalide"
-
 msgid "The provided file is not a valid file"
 msgstr "Le fichier fourni est invalide"
 

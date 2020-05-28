@@ -485,8 +485,6 @@ plugin_tracker_include_type	short_name	Nom court
 plugin_tracker_include_type	avoid_spaces	Veuillez éviter les espaces et les ponctuations dans le nom court
 plugin_tracker_include_type	choose_creation	Tout d'abord, selectonnez le modèle à partir duquel vous voulez démarrer&nbsp;:
 plugin_tracker_include_type	from_tmpl	A partir de la galerie de modèles
-plugin_tracker_include_type	from_xml	A partir d'un fichier XML
-plugin_tracker_include_type	from_xml_desc	Vous pouvez sauvegarder puis ré-importer la définition d'un outil de suivi d'un serveur à un autre.
 plugin_tracker_include_type	from_tv3	A partir d'un outil de suivi v3
 plugin_tracker_include_type	tmpl_src_prj	Projet source
 plugin_tracker_include_type	tmpl_src_trk	Liste des modèles
