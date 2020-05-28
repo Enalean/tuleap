@@ -3108,7 +3108,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $html = '';
         if ($row = $this->getStats()) {
-            $html .= '<div class="tracker_statistics" style="font-size:0.9em; color:#666;">';
+            $html .= '<div class="tracker_statistics">';
             $html .= '<div style="text-align:right;font-size:0.825em;">#' . $this->id . '</div>';
             if ($row['nb_total'] && $this->hasSemanticsStatus()) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_stat', 'number_open_artifacts') . ' ' . $row['nb_open'] . '<br />';

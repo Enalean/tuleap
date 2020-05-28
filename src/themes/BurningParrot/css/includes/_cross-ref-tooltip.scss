@@ -1,0 +1,102 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.codendi-tooltip {
+    position: absolute;
+    z-index: 100051;
+    margin: $tlp-medium-spacing 0 0;
+    padding: $tlp-medium-spacing;
+    border-radius: 4px;
+    background-color: $tlp-theme-sidebar-background-color;
+    box-shadow: 0 20px 30px transparentize($tlp-theme-sidebar-background-color, .8), 0 5px 10px transparentize($tlp-theme-sidebar-background-color, .8);
+    color: $tlp-ui-white;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 14px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: $tlp-small-spacing;
+        width: 0;
+        height: 0;
+        border-width: 0 10px 10px;
+        border-style: solid;
+        border-color: transparent transparent $tlp-theme-sidebar-background-color transparent;
+
+    }
+
+    > table > tbody > tr {
+        > td {
+            padding: 0 0 $tlp-small-spacing;
+            font-size: inherit;
+            font-weight: inherit;
+            line-height: inherit;
+            vertical-align: top;
+        }
+
+        &:last-child > td {
+            padding: 0;
+        }
+    }
+
+    label {
+        display: block;
+        margin: 0 $tlp-small-spacing 0 0;
+        color: $tlp-ui-border-dark;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: right;
+    }
+
+    img {
+        border-radius: 3px;
+    }
+
+    .cross-ref-tooltip-collection {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 0 (-$tlp-small-spacing);
+
+        > img {
+            margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
+            object-fit: cover;
+        }
+
+        > .cross-ref-tooltip-collection-item {
+            flex: 0 0 auto;
+            width: 150px;
+            margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
+            text-align: center;
+
+            > .fa {
+                margin: $tlp-small-spacing 0;
+                font-size: 26px;
+            }
+
+            > p {
+                font-size: inherit;
+                line-height: inherit;
+                word-break: break-all;
+            }
+        }
+    }
+}

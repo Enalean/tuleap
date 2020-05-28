@@ -673,6 +673,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         if ($value) {
             $files_info = $value->getFiles();
             if (count($files_info)) {
+                $html .= '<div class="cross-ref-tooltip-collection">';
+
                 $hp = Codendi_HTMLPurifier::instance();
 
                 $added = array();
@@ -683,15 +685,21 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                         $query = $this->getFileHTMLPreviewUrl($file_info);
                         $add .= '<img src="' . $query . '"
                                       alt="' .  $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML)  . '"
-                                      style="vertical-align:middle;" />';
+                                 >';
                     } elseif ($file_info->getDescription()) {
-                        $add .= $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
+                        $add .= '<div class="cross-ref-tooltip-collection-item">';
+                        $add .= '<i class="fa fa-paperclip"></i>';
+                        $add .= '<p>' . $hp->purify($file_info->getDescription(), CODENDI_PURIFIER_CONVERT_HTML) . '</p>';
+                        $add .= '</div>';
                     } else {
-                        $add .= $hp->purify($file_info->getFilename(), CODENDI_PURIFIER_CONVERT_HTML);
+                        $add .= '<div class="cross-ref-tooltip-collection-item">';
+                        $add .= '<i class="fa fa-paperclip"></i>';
+                        $add .= '<p>' . $hp->purify($file_info->getFilename(), CODENDI_PURIFIER_CONVERT_HTML) . '</p>';
+                        $add .= '</div>';
                     }
                     $added[] = $add;
                 }
-                $html .= implode('<br />', $added);
+                $html .= implode('', $added) . '</div>';
             }
         }
         return $html;

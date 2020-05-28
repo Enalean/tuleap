@@ -623,8 +623,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
-            $html .= '<tr valign="top"><td>';
-            $html .= '<label style="font-weight:bold">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . ':</label>';
+            $html .= '<tr><td>';
+            $html .= '<label>' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</label>';
             $html .= '</td><td>';
             $value = $artifact->getLastChangeset()->getValue($this);
             $html .= $this->fetchTooltipValue($artifact, $value);

@@ -1,0 +1,97 @@
+/**
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.codendi-tooltip {
+    position: absolute;
+    z-index: 100051;
+    margin: 16px 0 0;
+    padding: 16px;
+    border-radius: 4px;
+    background-color: $sidebar-background;
+    box-shadow: 0 20px 30px transparentize($sidebar-background, .8), 0 5px 10px transparentize($sidebar-background, .8);
+    color: $white;
+    font-family: 'SourceSansPro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 14px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 8px;
+        width: 0;
+        height: 0;
+        border-width: 0 10px 10px;
+        border-style: solid;
+        border-color: transparent transparent $sidebar-background transparent;
+
+    }
+
+    > table > tbody > tr {
+        > td {
+            padding: 0 0 8px;
+            vertical-align: top;
+        }
+
+        &:last-child > td {
+            padding: 0;
+        }
+    }
+
+    label {
+        margin: 0 8px 0 0;
+        opacity: .7;
+        font-size: inherit;
+        font-weight: inherit;
+        line-height: inherit;
+        text-align: right;
+    }
+
+    img {
+        border-radius: 3px;
+    }
+
+    .cross-ref-tooltip-collection {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 0 0 -8px;
+
+        > img {
+            margin: 0 8px 8px 0;
+            object-fit: cover;
+        }
+
+        > .cross-ref-tooltip-collection-item {
+            flex: 0 0 auto;
+            width: 150px;
+            margin: 0 8px 8px 0;
+            text-align: center;
+
+            > .fa {
+                margin: 8px 0;
+                font-size: 26px;
+            }
+
+            > p {
+                word-break: break-all;
+            }
+        }
+    }
+}
