@@ -560,12 +560,12 @@ class CampaignsResource
      * {
      * &nbsp;"automated_tests_results" : {<br>
      * &nbsp;"build_url": "your/url",</br>
-     * &nbsp;"junit_contents ": [<br>
+     * &nbsp;"junit_contents": [<br>
      * &nbsp;"&lt;?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?&gt;
      * &nbsp;&lt;testsuites name=\\"fake test\\" time=\\"13\\" tests=\\"1\\" failures=\\"0\\"&gt;<br>
      * &nbsp;&lt;testsuite name=\\"fake test\\" timestamp=\\"2020-04-29T07:52:25\\" tests=\\"1\\" failures=\\"0\\" time=\\"6\\"&gt;<br>
      * &nbsp;&lt;testcase name=\\"automated\\" time=\\"6.105\\" classname=\\"Project administrator can start Kanban\\"&gt;&lt;/testcase><br>
-     * &nbsp;&lt;/testsuite&gt;"<br>
+     * &nbsp;&lt;/testsuite&gt;<br>
      * &nbsp;&lt;/testsuites&gt;"<br>
      * ]}}
      *</pre>
