@@ -20,10 +20,14 @@
  *
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\JSONResponseBuilder;
 use Tuleap\Project\Event\GetUriFromCrossReference;
-use Tuleap\Reference\ReferenceOpenGraph;
+use Tuleap\Reference\ReferenceGetTooltipChainJson;
+use Tuleap\Reference\ReferenceGetTooltipChainLegacy;
+use Tuleap\Reference\ReferenceGetTooltipChainOpenGraph;
 use Tuleap\Reference\ReferenceOpenGraphDispatcher;
 
 $reference_manager = ReferenceManager::instance();
@@ -248,18 +252,26 @@ if ($request->isAjax()) {
             }
             break;
         default:
-            $event = new \Tuleap\Reference\ReferenceGetTooltipContentEvent($ref, $project, $request->getCurrentUser(), $keyword, $request->get('val'));
-            $event_manager->processEvent($event);
-            $output = $event->getOutput();
-            if ($output) {
-                echo $output;
-            } elseif ($ref->getNature() === ReferenceManager::REFERENCE_NATURE_OTHER) {
-                $open_graph_dispatcher = new ReferenceOpenGraphDispatcher(
-                    HttpClientFactory::createClient(),
-                    HTTPFactoryBuilder::requestFactory()
+            $get_tooltip = new ReferenceGetTooltipChainJson(
+                $event_manager,
+                new JSONResponseBuilder(
+                    HTTPFactoryBuilder::responseFactory(),
+                    HTTPFactoryBuilder::streamFactory()
+                ),
+                new SapiEmitter()
+            );
+            $get_tooltip
+                ->chain(new ReferenceGetTooltipChainLegacy($event_manager))
+                ->chain(
+                    new ReferenceGetTooltipChainOpenGraph(
+                        $html_purifier,
+                        new ReferenceOpenGraphDispatcher(
+                            HttpClientFactory::createClient(),
+                            HTTPFactoryBuilder::requestFactory()
+                        )
+                    )
                 );
-                echo (new ReferenceOpenGraph($html_purifier, $ref, $open_graph_dispatcher))->getContent();
-            }
+            $get_tooltip->process($ref, $project, $request->getCurrentUser(), $keyword, $request->get('val'));
             break;
     }
 } else {
