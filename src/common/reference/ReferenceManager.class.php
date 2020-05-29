@@ -654,7 +654,7 @@ class ReferenceManager
         $username        = $match['2'];
 
         if (UserManager::instance()->getUserByUserName($username)) {
-            return $char_before . '<a href="/users/' . $username . '">@' . $username . '</a>';
+            return $char_before . '<a href="/users/' . $username . '" class="direct-link-to-user">@' . $username . '</a>';
         }
 
         return $original_string;

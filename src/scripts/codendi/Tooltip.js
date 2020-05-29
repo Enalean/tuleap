@@ -57,7 +57,27 @@ function tooltipModule($, codendi) {
 
     codendi.Tooltip.prototype.createTooltip = function (content) {
         this.fetched = true;
-        this.tooltip = $("<div>").hide().addClass("codendi-tooltip").html(content);
+        if (typeof content.title_as_html !== "undefined") {
+            const container = document.createElement("div");
+            container.style.display = "none";
+            container.classList.add("codendi-tooltip");
+            container.classList.add("crossref-tooltip");
+
+            const header = document.createElement("div");
+            header.classList.add("crossref-tooltip-header");
+            $(header).html(content.title_as_html);
+            container.appendChild(header);
+
+            if (content.body_as_html) {
+                const body = document.createElement("div");
+                body.classList.add("crossref-tooltip-body");
+                $(body).html(content.body_as_html);
+                container.appendChild(body);
+            }
+            this.tooltip = $(container);
+        } else {
+            this.tooltip = $("<div>").hide().addClass("codendi-tooltip").html(content);
+        }
         $(document.body).append(this.tooltip);
     };
 
@@ -111,7 +131,10 @@ function tooltipModule($, codendi) {
 
         this.fetching = true;
         this.element.attr("title", "");
-        $.get(this.url).done($.proxy(success, this));
+        const url = new URL(this.url);
+        url.searchParams.append("as-json-for-tooltip", "1");
+
+        $.get(url.toString()).done($.proxy(success, this));
 
         function success(data) {
             this.fetching = false;

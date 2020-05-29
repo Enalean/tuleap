@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$dimmed-white-over-dark-background: transparentize(#ffffff, .2);
+
 .codendi-tooltip {
     position: absolute;
     z-index: 100051;
@@ -94,4 +96,58 @@
             }
         }
     }
+}
+
+.codendi-tooltip.crossref-tooltip {
+    padding: 0;
+
+    &::before {
+        border-color: transparent transparent darken($sidebar-background, 8%) transparent;
+    }
+}
+
+.crossref-tooltip-header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background: darken($sidebar-background, 8%);
+    line-height: 20px;
+}
+
+.crossref-tooltip-header-prefix-icon {
+    flex: 0 0 auto;
+    margin: 0 8px 0 0;
+}
+
+.crossref-tooltip-body {
+    padding: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+
+    > table > tbody > tr {
+        > th {
+            padding: 0 8px 0 0;
+            color: $dimmed-white-over-dark-background;
+            text-align: right;
+            vertical-align: top;
+        }
+
+        > td {
+            padding: 0;
+            vertical-align: top;
+        }
+    }
+}
+
+.crossref-tooltip-header-user-realname {
+    font-size: 16px;
+}
+
+.crossref-tooltip-header-user-name {
+    color: $dimmed-white-over-dark-background;
+    font-size: 12px;
+    line-height: 12px;
 }

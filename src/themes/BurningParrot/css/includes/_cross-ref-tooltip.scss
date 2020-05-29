@@ -17,6 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+$dimmed-white-over-dark-background: $tlp-ui-border-dark;
+
 .codendi-tooltip {
     position: absolute;
     z-index: 100051;
@@ -60,7 +62,7 @@
     label {
         display: block;
         margin: 0 $tlp-small-spacing 0 0;
-        color: $tlp-ui-border-dark;
+        color: $dimmed-white-over-dark-background;
         font-size: inherit;
         font-weight: inherit;
         line-height: inherit;
@@ -99,4 +101,60 @@
             }
         }
     }
+}
+
+.codendi-tooltip.crossref-tooltip {
+    padding: 0;
+
+    &::before {
+        border-color: transparent transparent darken($tlp-theme-sidebar-background-color, 8%) transparent;
+    }
+}
+
+.crossref-tooltip-header {
+    display: flex;
+    align-items: center;
+    padding: $tlp-medium-spacing;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    background: darken($tlp-theme-sidebar-background-color, 8%);
+    line-height: 20px;
+}
+
+.crossref-tooltip-header-prefix-icon {
+    flex: 0 0 auto;
+    margin: 0 $tlp-small-spacing 0 0;
+}
+
+.crossref-tooltip-body {
+    padding: $tlp-medium-spacing;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 20px;
+
+    > table > tbody > tr {
+        > th {
+            padding: 0 $tlp-small-spacing 0 0;
+            color: $dimmed-white-over-dark-background;
+            font-weight: 600;
+            text-align: right;
+            vertical-align: top;
+        }
+
+        > td {
+            padding: 0;
+            font-weight: 600;
+            vertical-align: top;
+        }
+    }
+}
+
+.crossref-tooltip-header-user-realname {
+    font-size: 16px;
+}
+
+.crossref-tooltip-header-user-name {
+    color: $dimmed-white-over-dark-background;
+    font-size: 12px;
+    line-height: 12px;
 }
