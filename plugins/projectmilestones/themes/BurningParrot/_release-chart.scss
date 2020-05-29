@@ -18,10 +18,12 @@
  */
 
 .release-charts-row {
-    flex: 0 0 auto;
-    width: 220px + $tlp-medium-spacing;
-    margin: 0 $tlp-medium-spacing 0 auto;
-    padding: 0 0 0 $tlp-small-spacing;
+    display: flex;
+    flex-direction: row;
+
+    @media screen and (max-width: 1800px) {
+        flex-wrap: wrap;
+    }
 }
 
 .release-chart-row-element {
@@ -205,6 +207,115 @@
 }
 
 .release-ttm-section {
-    width: 200 + $tlp-x-large-spacing;
-    margin: $tlp-medium-spacing $tlp-medium-spacing 0 0;
+    width: 100%;
+}
+
+.release-chart-displayer {
+    width: 220px + $tlp-small-spacing;
+    margin: 0;
+}
+
+.release-chart-displayer-burndown {
+    margin: 0 $tlp-medium-spacing $tlp-medium-spacing 0;
+}
+
+.project-milestones-display-description.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart {
+    .container-chart-burndown-burnup {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+
+    .container-chart-ttm {
+        grid-column: 1 / span 2;
+        grid-row: 3;
+    }
+
+    .release-charts-row {
+        flex-direction: row;
+    }
+}
+
+.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart .release-charts-row {
+    flex-direction: column;
+
+    @media screen and (max-width: 1800px) {
+        flex-direction: row;
+    }
+}
+
+.container-chart-burndown-burnup {
+    grid-row: 1;
+
+    @media screen and (max-width: 1800px) {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+}
+
+.container-chart-burndown-burnup.only-one-chart {
+    grid-row: auto / 2;
+
+    @media screen and (max-width: 1800px) {
+        grid-row: 2;
+    }
+}
+
+.project-milestones-display-description .release-charts-row {
+    flex-direction: column;
+
+    @media screen and (max-width: 1800px) {
+        flex-direction: row;
+    }
+}
+
+.project-milestones-display-description .container-chart-ttm {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+}
+
+.container-chart-ttm {
+    grid-row: 1;
+
+    @media screen and (max-width: 1800px) {
+        grid-column: 1 / span 2;
+        grid-row: 3;
+    }
+}
+
+.two-columns-small-big > div:first-of-type,
+.two-columns-big-small > div:nth-of-type(2),
+.three-columns,
+.three-columns-big-small-small > div:nth-of-type(2),
+.three-columns-big-small-small > div:nth-of-type(3),
+.three-columns-small-big-small > div:first-of-type,
+.three-columns-small-big-small > div:nth-of-type(3),
+.three-columns-small-small-big > div:first-of-type,
+.three-columns-small-small-big > div:nth-of-type(2) {
+    .project-milestones-display-description .container-chart-burndown-burnup {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+
+    .project-milestones-display-burndown-chart.project-milestones-display-burnup-chart .container-chart-burndown-burnup {
+        grid-row: 2;
+
+        .release-charts-row {
+            flex-direction: row;
+        }
+    }
+
+    .project-milestones-display-only-ttm .container-chart-ttm {
+        grid-column: auto;
+        grid-row: 1;
+    }
+
+    .project-milestones-display-description.project-milestones-display-only-ttm .container-chart-ttm {
+        grid-column: 1 / span 2;
+        grid-row: 2;
+    }
+
+    .container-chart-ttm {
+        grid-column: 1 / span 2;
+        grid-row: 3;
+    }
 }

@@ -21,8 +21,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 
 .release-number-artifact {
-    flex: 0 0 auto;
-    margin: 0 $tlp-x-large-spacing 0 0;
+    grid-column: 1;
+    grid-row: 1;
 
     .tlp-pane-subtitle {
         margin: 0 0 $tlp-small-spacing 0;
@@ -32,11 +32,8 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-number-artifacts-tracker {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-small-spacing;
-
-    &:last-child {
-        margin: 0;
-    }
+    width: inherit;
+    margin: 0 $tlp-medium-spacing $tlp-small-spacing 0;
 }
 
 .release-number-artifacts-value {
@@ -64,7 +61,72 @@ body.theme-condensed .release-number-artifacts-value { //stylelint-disable-line 
         color: map-get($colors, 'text');
     }
 
-    .release-number-artifacts-tracker-#{$color-name} > .release-number-artifacts-text {
+    .release-number-artifacts-tracker-#{$color-name} .release-number-artifacts-text {
+        display: inline-block;
+        width: max-content;
+        max-width: 160px;
+        padding: calc(#{$tlp-small-spacing} / 2) 0 calc(#{$tlp-small-spacing} / 2) 0;
+        overflow: hidden;
         color: map-get($colors, 'text');
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
+}
+
+.release-number-artifact-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    @media screen and (max-width: 1800px) {
+        flex-direction: row;
+    }
+}
+
+.project-milestones-display-description .release-number-artifact-container {
+    flex-direction: column;
+}
+
+.project-milestones-display-on-line-tracker .release-number-artifact-container {
+    flex-direction: row;
+}
+
+.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart .release-number-artifact-container {
+    flex-direction: column;
+
+    @media screen and (max-width: 1800px) {
+        flex-direction: row;
+    }
+}
+
+.project-milestones-display-description.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart.project-milestones-display-ttm-chart .release-number-artifact-container {
+    flex-direction: column;
+}
+
+.two-columns-small-big > div:first-of-type,
+.two-columns-big-small > div:nth-of-type(2),
+.three-columns,
+.three-columns-big-small-small > div:nth-of-type(2),
+.three-columns-big-small-small > div:nth-of-type(3),
+.three-columns-small-big-small > div:first-of-type,
+.three-columns-small-big-small > div:nth-of-type(3),
+.three-columns-small-small-big > div:first-of-type,
+.three-columns-small-small-big > div:nth-of-type(2) {
+    .project-milestones-display-burndown-chart.project-milestones-display-burnup-chart .release-number-artifact-container,
+    .project-milestones-only-trackers-to-display .release-number-artifact-container {
+        flex-direction: row;
+    }
+
+    .project-milestones-display-description.project-milestones-display-burndown-chart.project-milestones-display-burnup-chart .release-number-artifact-container {
+        flex-direction: column;
+    }
+
+    .release-number-artifact-color {
+        flex-direction: column;
+
+        @media screen and (max-width: 1800px) {
+            flex-direction: row;
+        }
+    }
+;
 }

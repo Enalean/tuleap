@@ -18,14 +18,10 @@
   -->
 
 <template>
-    <div v-if="is_testmanagement_available" class="release-ttm-section">
+    <div v-if="is_testmanagement_available" class="container-chart-ttm">
         <div v-if="is_loading" class="release-loader" data-test="loading-data"></div>
-        <div v-else>
-            <h2
-                v-if="has_rest_error || are_some_tests_to_display"
-                class="tlp-pane-subtitle"
-                v-translate
-            >
+        <div v-else-if="has_rest_error || are_some_tests_to_display" class="release-ttm-section">
+            <h2 class="tlp-pane-subtitle" v-translate>
                 Tests Results
             </h2>
             <div v-if="has_rest_error" class="tlp-alert-danger" data-test="error-rest">
@@ -101,12 +97,17 @@ export default class TestManagementDisplayer extends Vue {
             return false;
         }
 
-        return (
+        if (
             this.release_data.campaign.nb_of_notrun > 0 ||
             this.release_data.campaign.nb_of_failed > 0 ||
             this.release_data.campaign.nb_of_passed > 0 ||
             this.release_data.campaign.nb_of_blocked > 0
-        );
+        ) {
+            this.$emit("ttmExists");
+            return true;
+        }
+
+        return false;
     }
 }
 </script>

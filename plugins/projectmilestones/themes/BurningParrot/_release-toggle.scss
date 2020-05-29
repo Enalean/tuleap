@@ -38,9 +38,10 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-content-description {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    display: grid;
+    grid-auto-flow: row;
+    row-gap: $tlp-large-spacing;
+    height: inherit;
     margin: 0 0 $tlp-small-spacing;
 
     .tlp-pane-subtitle {
@@ -56,10 +57,9 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-description {
     width: initial;
-    padding: 0 0 $tlp-medium-spacing 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    margin: $tlp-medium-spacing 0 0 0;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .release-description-link-icon {
@@ -89,28 +89,9 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .release-description-row {
-    flex: 1 0 0;
-    min-width: 200px;
-    margin: 0;
-}
-
-.release-description-row .tlp-tooltip.tlp-tooltip-top::before {
-    width: 100%;
-    white-space: normal;
-}
-
-.two-columns-small-big > div:first-of-type .release-description-row,
-.two-columns-big-small > div:nth-of-type(2) .release-description-row,
-.three-columns-big-small-small .release-description-row,
-.three-columns-small-big-small .release-description-row,
-.three-columns-small-small-big .release-description-row,
-.three-columns .release-description-row,
-.too-many-columns .release-description-row {
-    order: 1;
-}
-
-.three-columns-big-small-small > div:first-of-type .release-description-row,
-.three-columns-small-big-small > div:nth-of-type(2) .release-description-row,
-.three-columns-small-small-big > div:nth-of-type(3) .release-description-row {
-    order: 0;
+    grid-column: 2;
+    grid-row: 1;
+    width: auto;
+    margin: $tlp-medium-spacing 0 0 $tlp-medium-spacing;
+    padding: 0 $tlp-medium-spacing 0 0;
 }
