@@ -69,7 +69,7 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
     }
 
     // Redirect to the same page just to refresh it !
-    header("Location: " . $_SERVER['SCRIPT_URI'] . "?" . $_SERVER['QUERY_STRING']);
+    $GLOBALS['Response']->redirect('/svn/admin/?func=notification&group_id=' . $group_id);
     exit();
 }
 
