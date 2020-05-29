@@ -42,7 +42,7 @@ main {
 
 
 #feedback {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:empty {
         margin: 0;
@@ -50,7 +50,7 @@ main {
 }
 
 main[role=main]:not(.tlp-framed) > #feedback {
-    margin: $tlp-spacing $tlp-spacing 0;
+    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
 
     &:empty {
         margin: 0;
@@ -65,7 +65,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
 
 .empty-page {
     @extend %empty-container;
-    margin: 100px auto $tlp-spacing;
+    margin: 100px auto $tlp-medium-spacing;
 }
 
 .empty-pane {
@@ -82,13 +82,13 @@ main[role=main]:not(.tlp-framed) > #feedback {
     text-align: center;
 
     > .empty-page-small-text {
-        margin: $tlp-half-spacing 0 0;
+        margin: $tlp-small-spacing 0 0;
     }
 }
 
 .empty-page-small-text {
     color: transparentize($tlp-theme-color, .7);
-    font-size: $tlp-spacing;
+    font-size: $tlp-medium-spacing;
     line-height: 20px;
     text-align: center;
 }
@@ -103,7 +103,7 @@ main[role=main]:not(.tlp-framed) > #feedback {
 }
 
 .empty-page-illustration {
-    margin: 0 0 3 * $tlp-spacing;
+    margin: 0 0 3 * $tlp-medium-spacing;
 }
 
 @import 'header';

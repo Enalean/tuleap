@@ -38,7 +38,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
     display: inline-block;
     position: relative;
     z-index: 2;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     padding: 5px;
     border-radius: 3px;
     background: $timeline-color;
@@ -51,12 +51,12 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .dashboard-widget-content.dashboard-widget-content-release {
-    margin: 0 0 $tlp-spacing $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .project-release-widget-content {
     position: relative;
-    padding: $tlp-spacing 0 $tlp-spacing 0;
+    padding: $tlp-medium-spacing 0 $tlp-medium-spacing 0;
 
     &::before {
         content: '';
@@ -65,28 +65,28 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
         left: 10px;
         width: 4px;
         height: 100%;
-        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-spacing, transparent $tlp-spacing + 1px),
-            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-spacing);
+        background: linear-gradient(to top, $tlp-ui-white 0, $timeline-color $tlp-medium-spacing, transparent $tlp-medium-spacing + 1px),
+            linear-gradient(to bottom, $tlp-ui-white 0, $timeline-color $tlp-medium-spacing);
     }
 }
 
 .project-release-timeframe {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-release {
     position: relative;
-    margin: 0 0 $tlp-double-spacing;
+    margin: 0 0 $tlp-x-large-spacing;
 }
 
 .project-release.project-release-toggle-closed {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .project-other-releases {
     display: flex;
     align-items: baseline;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     padding: 0 0 0 5px;
 }
 

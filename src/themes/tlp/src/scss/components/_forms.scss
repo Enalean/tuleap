@@ -37,7 +37,7 @@ $tlp-form-element-select-background-size: 8px;
 $tlp-form-element-select-small-background-size: 6px;
 
 .tlp-form-element {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:last-child,
     > .tlp-form-element {
@@ -136,7 +136,7 @@ $tlp-form-element-select-small-background-size: 6px;
  * Property
  */
 .tlp-property {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:last-child {
         margin: 0;
@@ -629,7 +629,7 @@ span.select2-container--tlp-select2-large {
 
 .tlp-checkbox,
 .tlp-radio {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     > input {
         margin: 0 3px 0 0;

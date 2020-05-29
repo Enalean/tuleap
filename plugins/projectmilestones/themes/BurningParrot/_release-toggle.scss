@@ -26,7 +26,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .project-release-infos-badges {
     display: flex;
     flex-direction: row;
-    margin: 0 0 $tlp-half-spacing 0;
+    margin: 0 0 $tlp-small-spacing 0;
 }
 
 .on-open-sprints-details {
@@ -34,14 +34,14 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 }
 
 .project-release-infos-badges .project-release-info-badge {
-    margin: 0 $tlp-half-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-small-spacing $tlp-small-spacing 0;
 }
 
 .release-content-description {
     display: flex;
     flex-wrap: wrap;
     align-items: flex-start;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     .tlp-pane-subtitle {
         margin: 0;
@@ -56,7 +56,7 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 
 .release-description {
     width: initial;
-    padding: 0 0 $tlp-spacing 0;
+    padding: 0 0 $tlp-medium-spacing 0;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

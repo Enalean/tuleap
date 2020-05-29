@@ -37,7 +37,7 @@
     display: flex;
     flex-direction: column;
     height: calc(100vh - #{$navbar-height} - #{$breadcrumb-height});
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }
 
 .has-visible-project-banner .taskboard-root {
@@ -69,7 +69,7 @@
     }
 
     > .taskboard-button-bar {
-        margin: $tlp-spacing 0;
+        margin: $tlp-medium-spacing 0;
     }
 }
 

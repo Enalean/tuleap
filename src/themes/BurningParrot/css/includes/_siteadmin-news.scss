@@ -15,12 +15,12 @@
 }
 
 .siteadmin-news-button-group {
-    margin-top: $tlp-spacing * 2;
+    margin-top: $tlp-medium-spacing * 2;
     text-align: center;
 }
 
 .siteadmin-news-button-approve {
-    margin-right: $tlp-spacing / 2;
+    margin-right: $tlp-medium-spacing / 2;
 }
 
 .siteadmin-news-details {
@@ -30,7 +30,7 @@
 
 .siteadmin-pane-edit-information {
     flex: 1 1 auto;
-    margin-right: $tlp-spacing;
+    margin-right: $tlp-medium-spacing;
 }
 
 .siteadmin-pane-information {
@@ -43,7 +43,7 @@
     align-items: center;
 
     > .tlp-avatar {
-        margin-right: $tlp-spacing / 2;
+        margin-right: $tlp-medium-spacing / 2;
     }
 }
 
@@ -60,7 +60,7 @@
 
             &:first-child {
                 margin-right: 0;
-                margin-bottom: $tlp-spacing;
+                margin-bottom: $tlp-medium-spacing;
             }
         }
     }

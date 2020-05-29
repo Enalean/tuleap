@@ -1,6 +1,6 @@
 .tuleap-artifact-modal-field-file {
     display: flex;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:hover {
         .tuleap-artifact-modal-field-file-preview-link,
@@ -22,7 +22,7 @@
     flex: 0 0 auto;
     width: 90px;
     height: 90px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
     border-radius: 3px;
     background-repeat: no-repeat;
     background-position: center;
@@ -77,7 +77,7 @@
 }
 
 .tuleap-artifact-modal-field-file-new-file {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     > input[type='file'] {
         display: block;

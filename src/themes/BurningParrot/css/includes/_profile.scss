@@ -37,7 +37,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
 .user-profile-avatar {
     flex: 0 0 auto;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .user-profile-identity {
@@ -57,7 +57,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 }
 
 .user-profile-title {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
     color: $theme-color-on-dark-background;
     font-size: 30px;
     font-weight: 300;
@@ -68,7 +68,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     &:last-child {
         margin: 0;
@@ -90,7 +90,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 
 .user-profile-member-since,
 .user-profile-id {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     white-space: nowrap;
 }
 
@@ -121,7 +121,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 .user-profile-no-project,
 .user-profile-no-project:last-child {
     max-width: 720px;
-    margin: 0 $tlp-spacing;
+    margin: 0 $tlp-medium-spacing;
 }
 
 .user-profile-project {
@@ -135,7 +135,7 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
 }
 
 .user-profile-project-title-description {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .user-profile-project-description {
@@ -173,11 +173,11 @@ $theme-color-on-dark-background: lighten($tlp-theme-color, 20%);
     }
 
     .user-profile-title {
-        margin: 0 0 $tlp-half-spacing;
+        margin: 0 0 $tlp-small-spacing;
     }
 
     .user-profile-member-since,
     .user-profile-id {
-        margin: $tlp-half-spacing 0 0;
+        margin: $tlp-small-spacing 0 0;
     }
 }

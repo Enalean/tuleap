@@ -55,7 +55,7 @@
 
 .document-tree-item-toggle-quicklook-lock-icon,
 .document-tree-item-toggle-quicklook-approval-badge {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .document-preview-item-is-locked-icon {
@@ -117,7 +117,7 @@
 }
 
 .quick-look-button {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .document-badge-avatar {
@@ -185,7 +185,7 @@
 }
 
 .document-folder-error-link {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
     font-size: 20px;
     line-height: 20px;
 }
@@ -219,10 +219,10 @@
 
 .document-folder-right-container {
     position: sticky;
-    top: calc(#{$navbar-height} + #{$tlp-spacing});
+    top: calc(#{$navbar-height} + #{$tlp-medium-spacing});
     min-width: 400px;
     max-width: 35%;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .document-folder-content-quick-look-and-item-uploading {
@@ -240,5 +240,5 @@
 }
 
 .document-badge-corrupted {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }

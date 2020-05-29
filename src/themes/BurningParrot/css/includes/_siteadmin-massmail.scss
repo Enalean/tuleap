@@ -29,7 +29,7 @@
 
 #massmail-header {
     width: 50%;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 #massmail-preview {
@@ -40,11 +40,11 @@
 
 #massmail-preview-destination-submit {
     flex: 0 0 auto;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 #massmail-preview-destination-or {
-    margin: 0 $tlp-half-spacing;
+    margin: 0 $tlp-small-spacing;
 }
 
 #massmail-preview-feedback {

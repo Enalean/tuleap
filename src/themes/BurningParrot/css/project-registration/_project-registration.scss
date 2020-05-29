@@ -65,7 +65,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .project-registration-button-container {
-    padding: $tlp-spacing 0 0;
+    padding: $tlp-medium-spacing 0 0;
     border-top: 1px solid $tlp-ui-border-dark;
 
     > .project-registration-content {
@@ -101,7 +101,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
 }
 
 .project-registration-back-button {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
     color: $tlp-ui-dimmed;
     cursor: pointer;
 
@@ -121,7 +121,7 @@ $title-margin-left: $illustration-width + $illustration-spacing;
     }
 
     .project-registration-title {
-        margin: $tlp-large-spacing 0 $tlp-spacing;
+        margin: $tlp-large-spacing 0 $tlp-medium-spacing;
     }
 
     .register-new-project-boxes {

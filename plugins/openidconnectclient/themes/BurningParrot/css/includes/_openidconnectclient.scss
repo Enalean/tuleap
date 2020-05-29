@@ -15,7 +15,7 @@
 }
 
 .tlp-creation-dropdown {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 #providers-configuration-header-title {
@@ -31,7 +31,7 @@
 }
 
 .provider-client {
-    margin: 0 0 0 ($tlp-spacing * 2);
+    margin: 0 0 0 ($tlp-medium-spacing * 2);
 }
 
 .provider-action-container {
@@ -46,11 +46,11 @@
 }
 
 .provider-action-delete-button {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 ($tlp-medium-spacing / 2);
 }
 
 .provider-configuration-unique-authentication-source {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .provider-azure-ad-description-allowed-to-connect {

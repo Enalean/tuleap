@@ -29,7 +29,7 @@
 #nav-dropdown-content-user-history-error-message-clear {
     display: none;
     width: 510px;
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
     font-size: 16px;
     white-space: normal;
 
@@ -67,7 +67,7 @@
 #nav-dropdown-content-user-history-clear {
     display: none;
     justify-content: center;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-top: 1px solid $tlp-ui-border-light;
 
     &.shown {
@@ -80,7 +80,7 @@
     position: relative;
     flex: 1 0 auto;
     align-items: center;
-    padding: $tlp-half-spacing $tlp-half-spacing $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-small-spacing $tlp-small-spacing $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
     color: $tlp-typo-default-text-color;
     text-decoration: none;
@@ -111,7 +111,7 @@
     display: flex;
     flex-grow: 1;
     align-items: center;
-    margin: $tlp-half-spacing $tlp-spacing $tlp-half-spacing 0;
+    margin: $tlp-small-spacing $tlp-medium-spacing $tlp-small-spacing 0;
 }
 
 .history-item-description-badge {
@@ -141,7 +141,7 @@
 
 .history-item-links-link {
     display: flex;
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     transition: color 100ms ease-in-out;
     color: $tlp-ui-dimmed;
 
@@ -153,7 +153,7 @@
 
 .history-item-project {
     max-width: 150px;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     overflow: hidden;
     color: $tlp-ui-dimmed;
     line-height: 16px;

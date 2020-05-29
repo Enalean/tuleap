@@ -18,11 +18,11 @@
  */
 
 #project-admin-ugroup-add-ldap-binding {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 #project-admin-ugroup-ldap-binding-modal-unlink-button {
-    margin: 0 $tlp-half-spacing 0 ($tlp-half-spacing * 3);
+    margin: 0 $tlp-small-spacing 0 ($tlp-small-spacing * 3);
 }
 
 #project-admin-ugroup-ldap-binding-modal-preview {
@@ -46,7 +46,7 @@
 
 // scss-lint:disable QualifyingElement
 ul.project-admin-ugroup-ldap-binding-modal-preview-list {
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
     padding: 0;
     list-style: none;
 }

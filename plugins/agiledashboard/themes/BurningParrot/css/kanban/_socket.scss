@@ -1,15 +1,15 @@
 .kanban.widget-context {
     > socket-disconnect > .alert-disconnect {
-        margin: 0 0 $tlp-spacing $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing $tlp-medium-spacing;
     }
 }
 
 .alert-disconnect {
     &:last-child {
-        margin: $tlp-spacing 0 0 $tlp-spacing;
+        margin: $tlp-medium-spacing 0 0 $tlp-medium-spacing;
     }
 
     > i {
-        margin: 0 $tlp-half-spacing 0 0;
+        margin: 0 $tlp-small-spacing 0 0;
     }
 }

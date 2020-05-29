@@ -30,7 +30,7 @@ $margin-between-kanban-item: $expand-collapse-bar-height + $margin-between-kanba
 $kanban-item-padding-height: 5px;
 
 .kanban-item {
-    margin: $margin-between-kanban-item $tlp-half-spacing;
+    margin: $margin-between-kanban-item $tlp-small-spacing;
     list-style-type: none;
     transition: margin $transition-duration $transition-delay;
 
@@ -102,10 +102,10 @@ $kanban-item-padding-height: 5px;
     }
 
     &:hover {
-        margin: $margin-between-kanban-item $tlp-half-spacing 0;
+        margin: $margin-between-kanban-item $tlp-small-spacing 0;
 
         + .kanban-item {
-            margin: $margin-between-kanban-item-on-hover $tlp-half-spacing $expand-collapse-bar-height;
+            margin: $margin-between-kanban-item-on-hover $tlp-small-spacing $expand-collapse-bar-height;
         }
 
         .kanban-item-content-expand-collapse {
@@ -152,7 +152,7 @@ kanban-item {
     position: relative;
     flex: 1 1 auto;
     flex-direction: column;
-    width: calc(100% - #{$tlp-spacing});
+    width: calc(100% - #{$tlp-medium-spacing});
     overflow-y: hidden;
     transition: padding-bottom $transition-duration;
 }
@@ -171,7 +171,7 @@ kanban-item {
     flex: 1 1 auto;
     flex-direction: column;
     align-items: flex-start;
-    width: calc(100% - #{$tlp-spacing});
+    width: calc(100% - #{$tlp-medium-spacing});
 }
 
 .kanban-item-content-info-link {
@@ -201,7 +201,7 @@ kanban-item {
     top: 32px;
     right: 5px;
     flex: 0 0 auto;
-    width: $tlp-spacing;
+    width: $tlp-medium-spacing;
     height: 100%;
 
     @each $color-name, $colors in $tlp-swatch-color-map {

@@ -27,16 +27,16 @@
 .docman-item-title-update-property {
     display: flex;
     justify-content: space-between;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .docman-item-version-title-update {
     width: 100%;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .tlp-form-element.docman-item-lock-update {
-    margin: 0 $tlp-half-spacing 0 $tlp-half-spacing;
+    margin: 0 $tlp-small-spacing 0 $tlp-small-spacing;
 
     > .tlp-label {
         margin: 0 0 13px;

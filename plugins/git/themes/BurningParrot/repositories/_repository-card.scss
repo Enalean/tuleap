@@ -27,21 +27,21 @@
 }
 
 .git-repository-card-two-columns {
-    width: calc(50% - #{$tlp-half-spacing});
-    margin: 0 $tlp-half-spacing $tlp-spacing 0;
+    width: calc(50% - #{$tlp-small-spacing});
+    margin: 0 $tlp-small-spacing $tlp-medium-spacing 0;
 
     &:nth-child(2n) {
-        margin: 0 0 $tlp-spacing $tlp-half-spacing;
+        margin: 0 0 $tlp-medium-spacing $tlp-small-spacing;
     }
 }
 
 @media screen and (max-width: 1200px) {
     .git-repository-card-two-columns {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
 
         &:nth-child(2n) {
-            margin: 0 0 $tlp-spacing;
+            margin: 0 0 $tlp-medium-spacing;
         }
     }
 }
@@ -66,7 +66,7 @@
     align-items: baseline;
 
     &:not(:only-child) {
-        padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+        padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     }
 }
 
@@ -88,7 +88,7 @@
 }
 
 .git-repository-card-last-update {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
 }
@@ -100,7 +100,7 @@
 }
 
 .git-pullrequest-badge {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
     background-color: $tlp-theme-color;
 }
 

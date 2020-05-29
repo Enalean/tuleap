@@ -52,12 +52,12 @@
 .tuleap-artifact-modal-artifact {
     flex: 1 1 auto;
     width: 65%;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     overflow-y: auto;
 
     .tlp-property:last-child,
     .tlp-form-element:last-child {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 
     > .tuleap-artifact-modal-show-hide-fieldsets {
@@ -95,7 +95,7 @@
 }
 
 fieldset {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
@@ -107,7 +107,7 @@ fieldset {
     flex-direction: column;
     align-items: flex-start;
     width: 35%;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     overflow-y: auto;
     border-left: 1px solid $tlp-ui-border-normal;
     background: $tlp-ui-white;
@@ -169,7 +169,7 @@ fieldset {
     flex: 1 1 auto;
     align-items: center;
     justify-content: center;
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
     color: transparentize($tlp-theme-color, .7);
     font-style: italic;
 }
@@ -192,7 +192,7 @@ fieldset {
 
 .tuleap-artifact-modal-followups-comment-header {
     display: flex;
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 
     > .tlp-avatar {
         flex: 0 0 auto;

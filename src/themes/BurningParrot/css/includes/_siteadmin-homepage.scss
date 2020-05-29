@@ -27,14 +27,14 @@
     flex: 1 1 auto;
     flex-direction: column;
     width: 100%;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .siteadmin-homepage-row {
     display: flex;
     flex: 1 1 auto;
     align-items: flex-start;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 
     &:first-child {
         flex: 0 1 auto;
@@ -48,7 +48,7 @@
         flex: 1 1 auto;
         width: 100%;
         max-width: 50%;
-        margin: 0 $tlp-spacing 0 0;
+        margin: 0 $tlp-medium-spacing 0 0;
 
         &:last-child {
             margin: 0;
@@ -70,7 +70,7 @@
         > .tlp-pane {
             width: 100%;
             max-width: none;
-            margin: 0 0 $tlp-spacing;
+            margin: 0 0 $tlp-medium-spacing;
 
             &:last-child {
                 margin: 0;
@@ -84,7 +84,7 @@
     align-items: center;
     justify-content: center;
     height: 120px;
-    margin: 0 0 ($tlp-spacing * 2);
+    margin: 0 0 ($tlp-medium-spacing * 2);
 }
 
 .siteadmin-homepage-users-icon,
@@ -93,7 +93,7 @@
 }
 
 .siteadmin-homepage-validation-count {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     font-size: 100px;
     font-weight: 300;
 
@@ -113,7 +113,7 @@
 
 .siteadmin-homepage-stat-lastlogins {
     display: block;
-    margin: $tlp-half-spacing 0 $tlp-large-spacing;
+    margin: $tlp-small-spacing 0 $tlp-large-spacing;
     font-size: 14px;
 }
 
@@ -159,7 +159,7 @@
     align-items: center;
     justify-content: center;
     min-width: 40%;
-    margin: $tlp-half-spacing 0;
+    margin: $tlp-small-spacing 0;
 
     &.flag-error {
         color: $tlp-ui-danger;
@@ -189,7 +189,7 @@
     justify-content: center;
 
     > .system-event-type-count {
-        margin: $tlp-spacing / 4;
+        margin: $tlp-medium-spacing / 4;
         font-size: 14px;
         text-transform: uppercase;
 

@@ -1,7 +1,7 @@
 .test-campaigns-header {
     display: flex;
     align-items: flex-end;
-    margin: 0 0 $tlp-spacing * 2;
+    margin: 0 0 $tlp-medium-spacing * 2;
 }
 
 .test-campaigns-header-title {
@@ -9,7 +9,7 @@
 }
 
 .new-campaign-button {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .test-campaigns-header-spacer {
@@ -39,7 +39,7 @@
     line-height: 20px;
 
     @media screen and (max-width: 900px) {
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }
 
@@ -54,7 +54,7 @@
 
     > .test-campaign-progression {
         min-width: 10px;
-        margin: -$tlp-half-spacing 1px 0;
+        margin: -$tlp-small-spacing 1px 0;
 
         .test-campaign-progression-value {
             margin: 0 0 3px;
@@ -215,5 +215,5 @@
 .feedback-info:last-child,
 .feedback-error:last-child,
 .feedback-success:last-child {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }

@@ -24,13 +24,13 @@
 }
 
 .account-security-password-fields {
-    width: calc(50% - #{$tlp-spacing});
+    width: calc(50% - #{$tlp-medium-spacing});
 }
 
 .account-security-password-robustness {
     display: flex;
     flex-direction: column;
-    width: calc(50% - #{$tlp-spacing});
+    width: calc(50% - #{$tlp-medium-spacing});
     transition: opacity ease-in-out 150ms;
     opacity: 1;
 
@@ -58,7 +58,7 @@
 
         > .password-strategy-good,
         > .password-strategy-bad {
-            margin: $tlp-spacing 0 $tlp-spacing + $tlp-half-spacing;
+            margin: $tlp-medium-spacing 0 $tlp-medium-spacing + $tlp-small-spacing;
             font-size: 30px;
             font-weight: 600;
             text-align: center;

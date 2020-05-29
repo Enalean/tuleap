@@ -132,7 +132,7 @@
     background: $tlp-theme-color url('/images/organization_logo.png') no-repeat center center;
 
     + #global-nav {
-        margin: 0 0 0 $tlp-half-spacing;
+        margin: 0 0 0 $tlp-small-spacing;
     }
 }
 
@@ -153,7 +153,7 @@
 
 #user-nav {
     display: flex;
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     border-left: 1px solid $tlp-ui-border-normal;
     white-space: nowrap;
 
@@ -165,7 +165,7 @@
         > .user-block-names {
             display: flex;
             flex-direction: column;
-            margin: 0 0 0 $tlp-half-spacing;
+            margin: 0 0 0 $tlp-small-spacing;
             letter-spacing: normal;
             text-transform: none;
 
@@ -191,14 +191,14 @@
 #current-project-nav {
     display: flex;
     align-items: center;
-    padding: 0 $tlp-spacing;
+    padding: 0 $tlp-medium-spacing;
     border-right: 1px solid $tlp-ui-border-normal;
 }
 
 .current-project-nav-flag {
     display: flex;
     align-items: center;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     color: $tlp-ui-dimmed;
 
     > .tuleap-svg {
@@ -240,8 +240,8 @@
 
 .current-project-nav-flag-popover-flag {
     position: relative;
-    margin: 0 0 $tlp-spacing;
-    padding: 0 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: 0 0 0 $tlp-medium-spacing;
     color: $tlp-theme-color;
 
     &:last-child {
@@ -261,7 +261,7 @@
 }
 
 .current-project-nav-flag-popover-content-title {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
@@ -299,7 +299,7 @@
 }
 
 #current-project-banner-bullhorn > a {
-    padding: 0 0 0 $tlp-spacing;
+    padding: 0 0 0 $tlp-medium-spacing;
     color: $tlp-ui-warning;
 
     > i {
@@ -329,7 +329,7 @@
         bottom: -8px;
         width: 0;
         height: 0;
-        margin-left: $tlp-half-spacing;
+        margin-left: $tlp-small-spacing;
         transform: rotate(-45deg);
         border-width: 8px;
         border-style: solid;
@@ -345,6 +345,6 @@
 .join-tuleap-community {
     width: 36px;
     height: 100%;
-    padding: 0 0 0 $tlp-half-spacing;
+    padding: 0 0 0 $tlp-small-spacing;
     fill: $tlp-theme-color;
 }

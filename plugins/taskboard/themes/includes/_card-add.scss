@@ -18,7 +18,7 @@
  */
 
 $button-size: 38px;
-$button-margin: $tlp-half-spacing;
+$button-margin: $tlp-small-spacing;
 
 .taskboard-add-card-form {
     display: none;
@@ -32,10 +32,10 @@ $button-margin: $tlp-half-spacing;
 }
 
 .taskboard-cell-with-add-form {
-    padding: $tlp-half-spacing $tlp-half-spacing ($button-size + 2 * $button-margin + $tlp-half-spacing);
+    padding: $tlp-small-spacing $tlp-small-spacing ($button-size + 2 * $button-margin + $tlp-small-spacing);
 
     &:hover {
-        padding: $tlp-half-spacing;
+        padding: $tlp-small-spacing;
 
         > .taskboard-add-card-form {
             display: flex;
@@ -48,7 +48,7 @@ $button-margin: $tlp-half-spacing;
 }
 
 .taskboard-cell-solo-card + .taskboard-add-card-form > .taskboard-add-card-form-editor-container {
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
 }
 
 .taskboard-drop-not-accepted > .taskboard-add-card-form {
@@ -56,11 +56,11 @@ $button-margin: $tlp-half-spacing;
 }
 
 .taskboard-add-in-place-button {
-    margin: $tlp-spacing 0 $tlp-half-spacing;
+    margin: $tlp-medium-spacing 0 $tlp-small-spacing;
 
     &:not(.taskboard-add-in-place-button-with-label) {
         width: $button-size;
-        margin: $tlp-half-spacing 0;
+        margin: $tlp-small-spacing 0;
         padding: 0;
         border-radius: 50%;
     }

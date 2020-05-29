@@ -25,7 +25,7 @@
 
 .git-repository-commit-diff-file-header {
     display: flex;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
 
     .git-repository-commit-file-status {
@@ -38,7 +38,7 @@
 }
 
 .git-repository-commit-diff-file-header-element:not(:first-child) {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .git-repository-diff-side-by-side,
@@ -55,43 +55,43 @@
 .git-repository-diff-side-by-side-line {
     display: flex;
     width: 100%;
-    margin: 0 $tlp-spacing;
+    margin: 0 $tlp-medium-spacing;
 }
 
 .git-repository-diff-line-left,
 .git-repository-diff-line-right {
-    width: calc(50% - #{$tlp-spacing});
+    width: calc(50% - #{$tlp-medium-spacing});
     min-height: 20px;
     white-space: pre-wrap;
 }
 
 .git-repository-diff-line-left {
-    padding: 0 $tlp-half-spacing 0 0;
+    padding: 0 $tlp-small-spacing 0 0;
     border-right: 1px solid $tlp-ui-border-light;
 }
 
 .git-repository-diff-line-right {
-    padding: 0 0 0 $tlp-half-spacing;
+    padding: 0 0 0 $tlp-small-spacing;
 }
 
 .git-repository-diff-side-by-side > .git-repository-diff-side-by-side-line {
     &:first-child {
         > .git-repository-diff-line-left {
-            padding: $tlp-spacing $tlp-half-spacing 0 0;
+            padding: $tlp-medium-spacing $tlp-small-spacing 0 0;
         }
 
         > .git-repository-diff-line-right {
-            padding: $tlp-spacing 0 0 $tlp-half-spacing;
+            padding: $tlp-medium-spacing 0 0 $tlp-small-spacing;
         }
     }
 
     &:last-child {
         > .git-repository-diff-line-left {
-            padding: 0 $tlp-half-spacing $tlp-spacing 0;
+            padding: 0 $tlp-small-spacing $tlp-medium-spacing 0;
         }
 
         > .git-repository-diff-line-right {
-            padding: 0 0 $tlp-spacing $tlp-half-spacing;
+            padding: 0 0 $tlp-medium-spacing $tlp-small-spacing;
         }
     }
 }

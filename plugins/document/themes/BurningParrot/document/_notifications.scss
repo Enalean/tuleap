@@ -20,8 +20,8 @@
 .document-notification {
     position: fixed;
     z-index: 11000;
-    right: $tlp-half-spacing;
-    bottom: $tlp-half-spacing;
+    right: $tlp-small-spacing;
+    bottom: $tlp-small-spacing;
     margin: 0;
     opacity: 1;
     background: mix($tlp-ui-success, $tlp-ui-white, 7);

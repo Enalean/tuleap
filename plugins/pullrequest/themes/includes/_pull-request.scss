@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
 
     > h2 {
         flex: 0 0 auto;
@@ -13,7 +13,7 @@
 
 .pull-request-header-labels-box {
     display: flex;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .pull-request-tab-content {

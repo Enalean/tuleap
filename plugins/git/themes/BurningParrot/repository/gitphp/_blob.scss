@@ -45,7 +45,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 .git-repository-blob-header-plain,
 .git-repository-blob-header-actions-bar,
 .git-repository-blob-header-history-datatag {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .git-repository-blob-body {
@@ -55,12 +55,12 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 }
 
 .git-repository-blob-image {
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     text-align: center;
 }
 
 #git-repository-blob-file-rendered {
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     background: $tlp-ui-white;
 
     pre {
@@ -98,7 +98,7 @@ $codemirror-like-line-numbers-color: #8c8c8c;
 
 .git-repository-blob-file-linenumbers-line {
     width: 100%;
-    padding: 0 $tlp-half-spacing;
+    padding: 0 $tlp-small-spacing;
     color: $codemirror-like-line-numbers-color;
 
     &:target {
@@ -119,7 +119,7 @@ $above-highlight-line: 2;
 .git-repository-blob-file-code {
     position: relative;
     width: 100%;
-    padding: 5px $tlp-half-spacing;
+    padding: 5px $tlp-small-spacing;
     background: none;
     color: $tlp-typo-default-text-color;
     font-family: $code-font-family;
@@ -127,7 +127,7 @@ $above-highlight-line: 2;
 
     &[class*='language-'] {
         margin: 0;
-        padding: 5px $tlp-half-spacing;
+        padding: 5px $tlp-small-spacing;
         background: none;
     }
 
@@ -153,11 +153,11 @@ $above-highlight-line: 2;
 }
 
 .git-repository-blob-diff-header-link {
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 .git-repository-blame-line {
-    padding: 5px $tlp-half-spacing;
+    padding: 5px $tlp-small-spacing;
     border-right: 1px solid $tlp-ui-border-light;
     background: mix($tlp-theme-background-color, $tlp-ui-white, 50%);
     text-align: left;

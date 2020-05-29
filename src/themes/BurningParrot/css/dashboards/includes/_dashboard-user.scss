@@ -1,11 +1,11 @@
 .dashboard-user-title {
     display: flex;
     align-items: center;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .dashboard-user-title-name {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     color: $tlp-theme-color;
     font-size: 30px;
     font-weight: 300;

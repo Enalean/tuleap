@@ -31,13 +31,13 @@
 }
 
 .reading-mode-query {
-    margin: 0 $tlp-spacing $tlp-spacing;
+    margin: 0 $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .cross-tracker-reading-mode-trackers-list {
     display: flex;
     flex-direction: row;
-    margin: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    margin: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
 }
 
 .cross-tracker-reading-mode-trackers {
@@ -48,7 +48,7 @@
 .cross-tracker-reading-mode-tracker {
     display: flex;
     flex-direction: column;
-    margin: 0 $tlp-spacing $tlp-half-spacing 0;
+    margin: 0 $tlp-medium-spacing $tlp-small-spacing 0;
 }
 
 .cross-tracker-reading-mode-tracker-project-name {
@@ -66,17 +66,17 @@
 }
 
 .cross-tracker-reading-mode-trackers-empty {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     font-style: italic;
 }
 
 .reading-mode-actions {
     display: flex;
     justify-content: center;
-    padding: $tlp-half-spacing $tlp-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-medium-spacing $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
 }
 
 .reading-mode-actions-cancel {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }

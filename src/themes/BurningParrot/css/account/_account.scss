@@ -37,7 +37,7 @@
 }
 
 .user-preferences-title {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .user-preferences-nav {
@@ -47,7 +47,7 @@
 
 .user-preferences-section {
     width: 100%;
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .user-preferences-section-submit {
@@ -81,10 +81,10 @@
     }
 
     .user-preferences-nav {
-        width: calc(100% + #{$tlp-spacing} * 2);
+        width: calc(100% + #{$tlp-medium-spacing} * 2);
         min-width: auto;
         max-width: none;
-        margin: 0 (-$tlp-spacing) $tlp-spacing;
+        margin: 0 (-$tlp-medium-spacing) $tlp-medium-spacing;
     }
 
     .user-preferences-section {

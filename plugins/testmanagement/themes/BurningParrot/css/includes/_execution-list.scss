@@ -25,7 +25,7 @@ $toolbar-height: 46px;
     display: flex;
     flex: 0 0 auto;
     align-items: flex-end;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .test-campaign-header-title {
@@ -33,7 +33,7 @@ $toolbar-height: 46px;
 }
 
 .execution-header-button {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
 }
 
 .test-campaign-header-spacer {
@@ -54,7 +54,7 @@ $toolbar-height: 46px;
 }
 
 .test-campaign-header-trophy {
-    margin: 0 0 0 $tlp-spacing;
+    margin: 0 0 0 $tlp-medium-spacing;
     color: #F3B13A;
     font-size: 22px;
     cursor: pointer;
@@ -63,7 +63,7 @@ $toolbar-height: 46px;
 .test-campaign-current-progression-container {
     display: table;
     width: 100%;
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .test-campaign-current-progression {
@@ -125,7 +125,7 @@ $toolbar-height: 46px;
 .tests-pane {
     width: 40%;
     min-width: 410px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .test-status-icon {
@@ -252,5 +252,5 @@ $toolbar-height: 46px;
 }
 
 .empty-execution-list {
-    margin: $tlp-spacing 0 0;
+    margin: $tlp-medium-spacing 0 0;
 }

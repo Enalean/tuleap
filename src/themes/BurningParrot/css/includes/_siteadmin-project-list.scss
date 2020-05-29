@@ -29,12 +29,12 @@
 }
 
 #siteadmin-projectlist-header-title {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-projectlist-filter {
     width: 300px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-projectlist-result {
@@ -42,7 +42,7 @@
 }
 
 .siteadmin-projectlist-result-nb {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 ($tlp-medium-spacing / 2);
 }
 
 @media screen and (max-width: 1200px) {
@@ -54,7 +54,7 @@
 
     #siteadmin-projectlist-filter {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }
 

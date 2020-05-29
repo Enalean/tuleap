@@ -21,7 +21,7 @@
 .document-new-item-type-selector {
     display: flex;
     justify-content: center;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-normal;
     background: $tlp-theme-background-color;
 }
@@ -32,8 +32,8 @@
     flex-direction: column;
     align-items: center;
     min-width: 96px;
-    margin: $tlp-half-spacing;
-    padding: $tlp-spacing $tlp-half-spacing;
+    margin: $tlp-small-spacing;
+    padding: $tlp-medium-spacing $tlp-small-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
@@ -50,7 +50,7 @@
 }
 
 .document-new-item-type-icon {
-    margin-bottom: $tlp-spacing;
+    margin-bottom: $tlp-medium-spacing;
     font-size: 30px;
 
     &.fa-file-pdf-o {

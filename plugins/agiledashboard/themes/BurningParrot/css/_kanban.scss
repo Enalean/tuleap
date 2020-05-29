@@ -62,21 +62,21 @@ $kanban-column-footer-height: 50px;
     flex: 0 0 auto;
     flex-wrap: wrap;
     align-items: baseline;
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
 }
 
 .kanban-header-title {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 .kanban-header-config {
     display: flex;
     flex: 1 1 auto;
-    margin: $tlp-half-spacing 0 0;
+    margin: $tlp-small-spacing 0 0;
 }
 
 .kanban-header-report-button {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .kanban-header-compact-toggler-label {
@@ -86,23 +86,23 @@ $kanban-column-footer-height: 50px;
 
 .kanban-header-spacer {
     flex: 10 1 auto;
-    margin: 0 $tlp-spacing;
+    margin: 0 $tlp-medium-spacing;
 }
 
 .kanban-header-filter-edit-buttons-spacer {
     flex: 1 1 auto;
-    margin: $tlp-half-spacing;
+    margin: $tlp-small-spacing;
 }
 
 .kanban-header-search {
     flex: 0 1 auto;
     width: 150px;
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     background: $tlp-ui-white;
 }
 
 .kanban-filtered-info {
-    padding: 0 $tlp-spacing $tlp-half-spacing;
+    padding: 0 $tlp-medium-spacing $tlp-small-spacing;
 }
 
 .kanban-board {
@@ -322,7 +322,7 @@ $kanban-column-footer-height: 50px;
 }
 
 .wip-limit-form {
-    margin: $tlp-half-spacing $tlp-spacing;
+    margin: $tlp-small-spacing $tlp-medium-spacing;
 }
 
 .wip-limit-input {
@@ -363,7 +363,7 @@ kanban-column {
 .ngsb-wrap {
     > .ngsb-container {
         left: 10px;
-        width: calc(100% - #{$tlp-spacing});
+        width: calc(100% - #{$tlp-medium-spacing});
         transition: none;
     }
 
@@ -429,7 +429,7 @@ add-in-place {
     box-shadow: 0 4px 8px rgba(0, 0, 0, .2);
 
     &.open {
-        width: calc(100% - #{$tlp-spacing});
+        width: calc(100% - #{$tlp-medium-spacing});
         height: 38px;
         transition: border-radius 50ms, width 150ms, height 150ms;
         border-radius: 4px;
@@ -498,7 +498,7 @@ add-in-place {
 
 .widget-context {
     > .kanban-header {
-        padding: 0 0 $tlp-spacing;
+        padding: 0 0 $tlp-medium-spacing;
 
         > .kanban-header-title {
             display: none;

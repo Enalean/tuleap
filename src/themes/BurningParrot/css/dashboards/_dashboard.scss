@@ -32,7 +32,7 @@
 }
 
 .dashboard-tabs-dropdown {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 #dashboard-tabs-dropdown-trigger {
@@ -47,7 +47,7 @@
 }
 
 .dashboard-widgets-container {
-    padding: $tlp-half-spacing / 2 0;
+    padding: $tlp-small-spacing / 2 0;
 }
 
 @keyframes shakeWidget {
@@ -74,7 +74,7 @@
     flex: 1;
     flex-direction: row;
     align-items: flex-start;
-    padding: $tlp-half-spacing / 2 0;
+    padding: $tlp-small-spacing / 2 0;
     transition: box-shadow 100ms;
 
     &.shake-widgets {
@@ -90,7 +90,7 @@
     > .dashboard-row-dropdown {
         position: absolute;
         top: -13px;
-        right: $tlp-spacing;
+        right: $tlp-medium-spacing;
         transition: opacity 100ms;
         opacity: 0;
     }
@@ -110,7 +110,7 @@
 .dashboard-widgets-empty-line {
     display: flex;
     flex-direction: row;
-    padding: $tlp-half-spacing / 2;
+    padding: $tlp-small-spacing / 2;
 }
 
 .dashboard-widgets-column {
@@ -119,7 +119,7 @@
     flex-grow: 1;
     flex-shrink: 1;
     width: calc(100% / 3);
-    padding: 0 $tlp-half-spacing / 2;
+    padding: 0 $tlp-small-spacing / 2;
 
     > :last-child {
         margin-bottom: 0;
@@ -128,7 +128,7 @@
 
 .dashboard-widgets-empty-column {
     align-self: stretch;
-    padding: 0 $tlp-half-spacing / 2;
+    padding: 0 $tlp-small-spacing / 2;
 }
 
 .dashboard-row-dropdown.shown {
@@ -262,10 +262,10 @@ body.gu-unselectable {
 
 .dashboard-dropdown-layout {
     margin: 0;
-    padding: 0 $tlp-half-spacing $tlp-half-spacing;
+    padding: 0 $tlp-small-spacing $tlp-small-spacing;
 
     &:last-child {
-        padding: 0 $tlp-half-spacing;
+        padding: 0 $tlp-small-spacing;
     }
 
     &.hidden {
@@ -309,14 +309,14 @@ body.gu-unselectable {
 $nb-empty-columns-separators-in-three-columns: 4;
 $nb-empty-columns-separators-in-four-columns: 5;
 
-$empty-space-taken-in-three-columns: $nb-empty-columns-separators-in-three-columns * $tlp-half-spacing;
-$empty-space-taken-in-four-columns: $nb-empty-columns-separators-in-four-columns * $tlp-half-spacing;
+$empty-space-taken-in-three-columns: $nb-empty-columns-separators-in-three-columns * $tlp-small-spacing;
+$empty-space-taken-in-four-columns: $nb-empty-columns-separators-in-four-columns * $tlp-small-spacing;
 
 $grid-width-in-three-columns: calc((100% - #{$empty-space-taken-in-three-columns} ) / 3);
-$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2 ) + #{$tlp-half-spacing});
+$two-columns-span-in-three-columns: calc((#{$grid-width-in-three-columns} * 2 ) + #{$tlp-small-spacing});
 
 $grid-width-in-four-columns: calc((100% - #{$empty-space-taken-in-four-columns} ) / 4);
-$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + #{$tlp-half-spacing});
+$two-columns-span-in-four-columns: calc((#{$grid-width-in-four-columns} * 2 ) + #{$tlp-small-spacing});
 
 .two-columns-small-big {
     > div:first-of-type {

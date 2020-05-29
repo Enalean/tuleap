@@ -24,7 +24,7 @@
 }
 
 .dashboard-widget-content-cross-tracker {
-    margin: 0 0 $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
 }
 
 .cross-tracker-loader {
@@ -33,7 +33,7 @@
 }
 
 .cross-tracker-artifacts-table {
-    margin: $tlp-spacing $tlp-spacing 0;
+    margin: $tlp-medium-spacing $tlp-medium-spacing 0;
 }
 
 .cross-tracker-last-update-date,
@@ -68,7 +68,7 @@
 
 .cross-tracker-report-error,
 .cross-tracker-report-success {
-    margin: $tlp-spacing;
+    margin: $tlp-medium-spacing;
 }
 
 .cross-tracker-report-archive-icon {

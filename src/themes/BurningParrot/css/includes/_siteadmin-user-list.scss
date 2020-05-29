@@ -29,12 +29,12 @@
 }
 
 #siteadmin-userlist-header-title {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-userlist-filter {
     width: 300px;
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 #siteadmin-userlist-filter-button {
@@ -51,7 +51,7 @@
 }
 
 .siteadmin-userlist-result-name-avatar {
-    margin: 0 ($tlp-spacing / 2) 0 0;
+    margin: 0 ($tlp-medium-spacing / 2) 0 0;
 }
 
 .siteadmin-userlist-result-table-admin-icon {
@@ -60,11 +60,11 @@
 }
 
 .siteadmin-userlist-result-nb {
-    margin: 0 0 0 ($tlp-spacing / 2);
+    margin: 0 0 0 ($tlp-medium-spacing / 2);
 }
 
 .siteadmin-userlist-result-table-adminof {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }
 
 @media screen and (max-width: 1200px) {
@@ -77,6 +77,6 @@
 
     #siteadmin-userlist-filter {
         width: 100%;
-        margin: 0 0 $tlp-spacing;
+        margin: 0 0 $tlp-medium-spacing;
     }
 }

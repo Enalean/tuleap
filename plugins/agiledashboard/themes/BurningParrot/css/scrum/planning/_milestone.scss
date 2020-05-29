@@ -18,7 +18,7 @@
  */
 
 .milestone {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 .milestone-header {
@@ -44,7 +44,7 @@
 }
 
 .milestone-action-button {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 
     &.ng-enter {
         animation: fadeIn .2s;
@@ -57,7 +57,7 @@
 
 .milestone-header-spacer {
     flex: 1 1 auto;
-    min-width: $tlp-spacing;
+    min-width: $tlp-medium-spacing;
 }
 
 .milestone-header-dates {
@@ -66,13 +66,13 @@
 }
 
 .milestone-header-status {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
 }
 
 .milestone-info {
     display: flex;
     align-items: center;
-    padding: $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
     background: darken($tlp-ui-white, 2%);
 }
 
@@ -112,7 +112,7 @@
 
 .milestone-backlog-items {
     min-height: 70px;
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: lighten($tlp-theme-background-color, 2%);

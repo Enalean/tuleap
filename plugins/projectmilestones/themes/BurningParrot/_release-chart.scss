@@ -19,9 +19,9 @@
 
 .release-charts-row {
     flex: 0 0 auto;
-    width: 220px + $tlp-spacing;
-    margin: 0 $tlp-spacing 0 auto;
-    padding: 0 0 0 $tlp-half-spacing;
+    width: 220px + $tlp-medium-spacing;
+    margin: 0 $tlp-medium-spacing 0 auto;
+    padding: 0 0 0 $tlp-small-spacing;
 }
 
 .release-chart-container {
@@ -74,7 +74,7 @@
 }
 
 .project-milestones-chart-label {
-    margin: $tlp-spacing 0 $tlp-spacing 0;
+    margin: $tlp-medium-spacing 0 $tlp-medium-spacing 0;
 }
 
 .release-widget-pie-chart-ttm-slice-blocked {
@@ -169,7 +169,7 @@
 }
 
 .release-ttm-section {
-    width: 200 + $tlp-double-spacing;
-    margin: 0 $tlp-spacing 0 auto;
-    padding: 0 0 0 $tlp-half-spacing;
+    width: 200 + $tlp-x-large-spacing;
+    margin: 0 $tlp-medium-spacing 0 auto;
+    padding: 0 0 0 $tlp-small-spacing;
 }

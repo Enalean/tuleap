@@ -19,7 +19,7 @@
 @import 'query-edition';
 
 .cross-tracker-writing-mode {
-    padding: $tlp-spacing;
+    padding: $tlp-medium-spacing;
     border-bottom: 1px solid $tlp-ui-border-light;
 }
 
@@ -57,7 +57,7 @@
 }
 
 .cross-tracker-form-trackers-selected {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
 }
 
 .writing-mode-actions {
@@ -66,5 +66,5 @@
 }
 
 .writing-mode-actions-cancel {
-    margin: 0 $tlp-spacing 0 0;
+    margin: 0 $tlp-medium-spacing 0 0;
 }

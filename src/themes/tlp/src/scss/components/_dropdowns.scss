@@ -33,7 +33,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     z-index: 1000;
     flex-direction: column;
     margin: $tlp-dropdown-arrow-size 0 0;
-    padding: $tlp-half-spacing 0;
+    padding: $tlp-small-spacing 0;
     transform: translateY(-10px);
     transition: opacity $tlp-dropdown-transition,
         transform $tlp-dropdown-transition,
@@ -70,7 +70,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 
     &.tlp-dropdown-menu-on-icon {
-        left: -$tlp-half-spacing;
+        left: -$tlp-small-spacing;
     }
 
     &.tlp-dropdown-menu-top {
@@ -100,7 +100,7 @@ $tlp-dropdown-transition: 75ms ease-out;
         }
 
         &.tlp-dropdown-menu-on-icon {
-            right: -$tlp-half-spacing;
+            right: -$tlp-small-spacing;
             left: auto;
         }
     }
@@ -117,10 +117,10 @@ $tlp-dropdown-transition: 75ms ease-out;
     }
 
     &.tlp-dropdown-with-tabs-on-top {
-        padding: 0 0 $tlp-half-spacing;
+        padding: 0 0 $tlp-small-spacing;
 
         > .tlp-tabs {
-            margin: 0 0 $tlp-half-spacing;
+            margin: 0 0 $tlp-small-spacing;
             padding: 0;
             box-shadow: inset 0 -1px 0 #e3e5ed;
         }
@@ -132,8 +132,8 @@ $tlp-dropdown-transition: 75ms ease-out;
 }
 
 .tlp-dropdown-menu-title {
-    margin: $tlp-half-spacing 0 0;
-    padding: $tlp-spacing $tlp-spacing $tlp-half-spacing;
+    margin: $tlp-small-spacing 0 0;
+    padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-small-spacing;
     border-top: 1px solid $tlp-ui-border-light;
     color: $tlp-ui-dimmed;
     font-size: 12px;
@@ -143,18 +143,18 @@ $tlp-dropdown-transition: 75ms ease-out;
 
     &:first-child {
         margin: 0;
-        padding: $tlp-half-spacing $tlp-spacing;
+        padding: $tlp-small-spacing $tlp-medium-spacing;
         border-top: 0;
     }
 }
 
 .tlp-dropdown-menu-separator {
-    margin: $tlp-half-spacing 0;
+    margin: $tlp-small-spacing 0;
     border-top: 1px solid $tlp-ui-border-light;
 }
 
 .tlp-dropdown-menu-item {
-    padding: $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
     border: 0;
     background: $tlp-ui-white;
     color: $tlp-theme-color;
@@ -186,7 +186,7 @@ $tlp-dropdown-transition: 75ms ease-out;
 }
 
 .tlp-dropdown-menu-text {
-    padding: $tlp-half-spacing $tlp-spacing;
+    padding: $tlp-small-spacing $tlp-medium-spacing;
     border: 0;
     color: $tlp-ui-dimmed;
     font-size: 14px;
@@ -217,7 +217,7 @@ $tlp-dropdown-transition: 75ms ease-out;
     border-radius: 0 4px 4px 0;
 
     &.tlp-button-large {
-        padding: 0 $tlp-spacing;
+        padding: 0 $tlp-medium-spacing;
     }
 }
 

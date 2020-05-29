@@ -18,8 +18,8 @@
  */
 
 .tlp-card {
-    margin: 0 0 $tlp-spacing;
-    padding: $tlp-spacing;
+    margin: 0 0 $tlp-medium-spacing;
+    padding: $tlp-medium-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-radius: 3px;
     background: $tlp-ui-white;
@@ -91,5 +91,5 @@
 }
 
 .tlp-pane-section-for-cards-under-tabs {
-    padding: $tlp-spacing 0 0;
+    padding: $tlp-medium-spacing 0 0;
 }
