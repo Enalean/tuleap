@@ -59,7 +59,7 @@
                         ng-class="{ draggable: edit_modal.kanban.user_can_reorder_columns, editing: column.editing }"
                         data-test="edit-kanban-column-{{edit_modal.slugifyLabel(column.label)}}"
                     >
-                        <div class="edit-kanban-column-label" ng-if="! column.editing">{{ column.label }}</div>
+                        <div class="edit-kanban-column-label" ng-if="! column.editing" data-test="edit-kanban-column-label">{{ column.label }}</div>
                         <form class="edit-kanban-edit-column-container"
                             data-nodrag="true"
                             ng-submit="edit_modal.editColumn(column)"
