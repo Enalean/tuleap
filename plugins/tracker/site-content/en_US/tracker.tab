@@ -495,8 +495,6 @@ plugin_tracker_include_type	short_name	Short name
 plugin_tracker_include_type	avoid_spaces	Please avoid spaces and punctuation in short names
 plugin_tracker_include_type	choose_creation	First, select a template you want to start from
 plugin_tracker_include_type	from_tmpl	From template gallery
-plugin_tracker_include_type	from_xml	From XML file
-plugin_tracker_include_type	from_xml_desc	You can dump and load XML description of trackers from one server to another.
 plugin_tracker_include_type	from_tv3	From a Tracker v3
 plugin_tracker_include_type	tmpl_src_prj	Origin
 plugin_tracker_include_type	tmpl_src_trk	Available templates
