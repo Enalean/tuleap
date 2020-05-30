@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -48,10 +48,15 @@ class AgileDashboard_KanbanActionsChecker
 
     public function checkUserCanAddInPlace(PFUser $user, AgileDashboard_Kanban $kanban)
     {
-        $tracker        = $this->getTrackerForKanban($kanban);
-        $semantic_title = $this->getSemanticTitle($tracker);
+        $tracker         = $this->getTrackerForKanban($kanban);
+        $semantic_title  = $this->getSemanticTitle($tracker);
+        $semantic_status = $this->getSemanticStatus($tracker);
 
-        if (! $tracker->userCanSubmitArtifact($user) || ! $this->trackerHasOnlyTitleRequired($tracker, $semantic_title)) {
+        if (
+            ! $tracker->userCanSubmitArtifact($user) ||
+            ! $this->trackerHasOnlyTitleRequired($tracker, $semantic_title) ||
+            ! $semantic_status->getField()->userCanSubmit($user)
+        ) {
             throw new Kanban_UserCantAddInPlaceException();
         }
     }
