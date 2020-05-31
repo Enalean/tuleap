@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -19,12 +19,12 @@
  *
  */
 
-namespace Tuleap\REST\v1;
+namespace Tuleap\Git\REST\v1;
 
 class GitRepositoryListRepresentation
 {
     /**
-     * @var GitRepositoryRepresentationBase[]
+     * @var GitRepositoryRepresentation[]
      */
     public $repositories;
 }

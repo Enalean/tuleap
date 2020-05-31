@@ -813,14 +813,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_GET_GIT = 'rest_project_get_git';
 
     /**
-     * Event raised to know if Git plugin is activated for REST
-     *
-     * Parameters:
-     *     'activated' => boolean
-     */
-    public const REST_PROJECT_OPTIONS_GIT = 'rest_project_options_git';
-
-    /**
      * Throw an event to allow a plugin to refdefine the type of search
      *
      * Parameters:

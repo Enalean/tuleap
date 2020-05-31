@@ -248,7 +248,7 @@ phpcbf: ## Execute PHPCBF with the "strict" ruleset enforced on all the codebase
 
 deptrac: ## Execute deptrac. Use CONFIG to choose the configuration file to evaluate (default to tests/deptrac/core_on_plugins.yml).
 	$(eval CONFIG ?= tests/deptrac/core_on_plugins.yml)
-	@$(PHP) ./src/vendor/bin/deptrac analyze --no-banner -- $(CONFIG)
+	@$(PHP) ./src/vendor/bin/deptrac analyze -- $(CONFIG)
 
 eslint: ## Execute eslint. Use FILES parameter to execute on specific file or directory.
 	$(eval FILES ?= .)

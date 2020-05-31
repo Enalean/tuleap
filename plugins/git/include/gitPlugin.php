@@ -158,8 +158,6 @@ use Tuleap\Project\Status\ProjectSuspendedAndNotBlockedWarningCollector;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\RestrictedUsersAreHandledByPluginEvent;
-use Tuleap\REST\JsonDecoder;
-use Tuleap\REST\QueryParameterParser;
 use Tuleap\User\AccessKey\AccessKeyDAO;
 use Tuleap\User\AccessKey\AccessKeyVerifier;
 use Tuleap\User\AccessKey\Scope\AccessKeyScopeBuilderCollector;
@@ -283,8 +281,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
         $this->addHook(Event::REST_RESOURCES);
         $this->addHook(Event::REST_PROJECT_RESOURCES);
-        $this->addHook(Event::REST_PROJECT_GET_GIT);
-        $this->addHook(Event::REST_PROJECT_OPTIONS_GIT);
 
         $this->addHook(ExportXmlProject::NAME);
         $this->addHook(Event::IMPORT_XML_PROJECT, 'importXmlProject', false);
@@ -2089,51 +2085,6 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         return $params['queue_name'] == "git"
             && is_array($params['executed_events_ids'])
             && count($params['executed_events_ids']) > 0;
-    }
-
-    public function getRESTRepositoryRepresentationBuilder($version)
-    {
-        $class  = "Tuleap\\Git\\REST\\" . $version . "\\RepositoryRepresentationBuilder";
-        if (! class_exists($class)) {
-            throw new LogicException("$class cannot be found");
-        }
-        return new $class(
-            $this->getGitPermissionsManager(),
-            $this->getGerritServerFactory(),
-            $this->getGitLogDao(),
-            EventManager::instance(),
-            $this->getGitRepositoryUrlManager()
-        );
-    }
-
-    public function rest_project_get_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $class            = "Tuleap\\Git\\REST\\" . $params['version'] . "\\ProjectResource";
-        if (! class_exists($class)) {
-            throw new LogicException("$class cannot be found");
-        }
-        $project          = $params['project'];
-        $project_resource = new $class(
-            $this->getRepositoryFactory(),
-            $this->getRESTRepositoryRepresentationBuilder($params['version']),
-            new QueryParameterParser(new JsonDecoder())
-        );
-
-        $params['result']->repositories = $project_resource->getGit(
-            $project,
-            $this->getCurrentUser(),
-            $params['limit'],
-            $params['offset'],
-            $params['fields'],
-            $params['query'],
-            $params['order_by'],
-            $params['total_git_repo']
-        );
-    }
-
-    public function rest_project_options_git($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['activated'] = true;
     }
 
     /**
