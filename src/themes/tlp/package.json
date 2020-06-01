@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "codemirror": "^5.48.4",
-    "dompurify": "^2.0.10"
+    "dompurify": "^2.0.11"
   },
   "types": "./src/index.d.ts"
 }

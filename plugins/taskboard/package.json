@@ -5,7 +5,7 @@
   "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
-    "dompurify": "^2.0.10",
+    "dompurify": "^2.0.11",
     "fscreen": "^1.0.2",
     "mustache": "^4.0.1",
     "p-retry": "^4.2.0",
@@ -15,7 +15,7 @@
     "vuex": "^3.4.0"
   },
   "devDependencies": {
-    "@types/dompurify": "^2.0.1",
+    "@types/dompurify": "^2.0.2",
     "@types/fscreen": "^1.0.1",
     "@types/jquery": "^3.3.34",
     "@types/mustache": "^4.0.1",
