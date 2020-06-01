@@ -20,7 +20,7 @@
 <template>
     <div class="tracker-creation-navigation">
         <div>
-            <back-to-legacy />
+            <back-to-legacy v-if="are_there_tv3" data-test="back-to-legacy" />
         </div>
 
         <div class="tracker-creation-navigation-buttons">
@@ -104,6 +104,9 @@ export default class StepNavigationButtons extends Vue {
 
     @State
     readonly is_parsing_a_xml_file!: boolean;
+
+    @State
+    readonly are_there_tv3!: boolean;
 
     goToNextStepIfGood(): void {
         if (this.is_ready_for_step_2) {

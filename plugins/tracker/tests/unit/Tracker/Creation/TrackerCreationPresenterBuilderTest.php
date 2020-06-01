@@ -104,6 +104,7 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
 
         $this->current_project->shouldReceive('getUnixNameLowerCase')->andReturn('my-project-name');
         $this->current_project->shouldReceive('getID')->andReturn(104);
+        $this->current_project->shouldReceive('usesService')->with('tracker')->andReturn(false);
 
         $this->csrf_token = \Mockery::mock(\CSRFSynchronizerToken::class);
 
@@ -137,7 +138,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            true
+            true,
+            false
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -170,7 +172,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            true
+            true,
+            false
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -204,7 +207,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            true
+            true,
+            false
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -256,7 +260,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            true
+            true,
+            false
         );
         $this->assertEquals($expected_template, $presenter);
     }
@@ -376,7 +381,8 @@ final class TrackerCreationPresenterBuilderTest extends TestCase
             $this->getTrackerColors(),
             $this->current_project,
             $this->csrf_token,
-            true
+            true,
+            false
         );
 
         $presenter = $this->builder->build($this->current_project, $this->csrf_token, $this->current_user);

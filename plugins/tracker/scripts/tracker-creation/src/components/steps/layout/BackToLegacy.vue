@@ -19,10 +19,8 @@
   -->
 
 <template>
-    <!-- prettier-ignore -->
     <a v-bind:href="url" class="tracker-creation-navigation-back-to-legacy">
-        <i class="fa fa-random tracker-footer-external-link-icon"></i><!--
-        --><translate>Switch to legacy UI</translate>
+        <translate>I want to migrate a tracker v3</translate>
     </a>
 </template>
 <script lang="ts">

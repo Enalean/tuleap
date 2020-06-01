@@ -29,7 +29,8 @@ describe("StepNavigationButtons", () => {
         props: Record<string, string>,
         is_ready_for_step_2 = true,
         is_ready_to_submit = true,
-        has_form_been_submitted = false
+        has_form_been_submitted = false,
+        are_there_tv3 = false
     ): Promise<Wrapper<StepNavigationButtons>> {
         const router: VueRouter = createRouter("my-project");
 
@@ -40,6 +41,7 @@ describe("StepNavigationButtons", () => {
                 $store: createStoreMock({
                     state: {
                         has_form_been_submitted,
+                        are_there_tv3,
                     },
                     getters: {
                         is_ready_for_step_2,
@@ -118,5 +120,17 @@ describe("StepNavigationButtons", () => {
         wrapper.get("[data-test=button-next]").trigger("click");
 
         expect(wrapper.vm.$router.push).toHaveBeenCalledWith({ name: "step-2" });
+    });
+
+    it("Does not display legacy button if no tv3", async () => {
+        const wrapper = await getWrapper({ nextStepName: "step-2" });
+
+        expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(false);
+    });
+
+    it("Displays legacy button if tv3", async () => {
+        const wrapper = await getWrapper({ nextStepName: "step-2" }, true, true, false, true);
+
+        expect(wrapper.find("[data-test=back-to-legacy]").exists()).toBe(true);
     });
 });

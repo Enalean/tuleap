@@ -106,6 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     const display_jira_importer = vue_mount_point.dataset.displayJiraImporter;
+    const are_there_tv3 = Boolean(vue_mount_point.dataset.areThereTv3);
 
     const initial_state: State = {
         csrf_token,
@@ -140,6 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             tracker_list: null,
         },
         display_jira_importer: Boolean(display_jira_importer),
+        are_there_tv3,
         project_unix_name,
     };
 
