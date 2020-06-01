@@ -155,7 +155,7 @@ foreach ($dao->searchAll() as $row) {
     );
 }
 
-$include_assets = new IncludeAssets(__DIR__ . '/../assets/core', '/assets/core');
+$include_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');
 
 $GLOBALS['HTML']->includeFooterJavascriptFile(
     $include_assets->getFileURL('site-admin-system-events-notifications.js')
