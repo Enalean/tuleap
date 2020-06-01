@@ -27,6 +27,7 @@ use EventManager;
 use Project;
 use ProjectCreationData;
 use Tuleap\Project\Event\ProjectRegistrationActivateService;
+use Tuleap\Project\Event\ReferencesGroupCreatorPostProjectCreation;
 use Tuleap\Project\Service\ServiceLinkDataBuilder;
 use Tuleap\Service\ServiceCreator;
 
@@ -162,6 +163,9 @@ class ProjectServiceActivator
             } else {
                 $is_used = $is_used['is_used'];
             }
+
+            $event = new ReferencesGroupCreatorPostProjectCreation($short_name, $project);
+            $this->event_manager->processEvent($event);
 
             $this->service_dao->create(
                 $project->getID(),
