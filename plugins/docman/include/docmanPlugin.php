@@ -159,6 +159,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $this->addHook('userCanAccessWikiDocument', 'userCanAccessWikiDocument', false);
         $this->addHook('getPermsLabelForWiki', 'getPermsLabelForWiki', false);
         $this->addHook(\Tuleap\Reference\ReferenceGetTooltipContentEvent::NAME);
+        $this->addHook(\Tuleap\Reference\ReferenceGetTooltipRepresentationEvent::NAME);
         $this->addHook('project_export_entry', 'project_export_entry', false);
         $this->addHook('project_export', 'project_export', false);
         $this->addHook('SystemEvent_PROJECT_RENAME', 'renameProject', false);
@@ -534,6 +535,50 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         $params['action'] = 'getPermsLabelForWiki';
         $request = new Docman_WikiRequest($params);
         $this->getWikiController($request)->process();
+    }
+
+    public function referenceGetTooltipRepresentationEvent(Tuleap\Reference\ReferenceGetTooltipRepresentationEvent $event): void
+    {
+        if ($event->getReference()->getServiceShortName() !== 'docman') {
+            return;
+        }
+
+        $item_factory = $this->getItemFactory($event->getProject()->getID());
+        $item = $item_factory->getItemFromDb((int) $event->getValue());
+
+        if (! $item) {
+            return;
+        }
+
+        $permissions_manager = Docman_PermissionsManager::instance($event->getProject()->getID());
+        if (! $permissions_manager->userCanAccess($event->getUser(), $item->getId())) {
+            return;
+        }
+
+        $docman_icons = new Docman_Icons('');
+        $icon = substr($docman_icons->getIconForItem($item), 0, -4); //remove .png extension
+
+        $renderer = TemplateRendererFactory::build()->getRenderer(__DIR__);
+        $tooltip_json = new \Tuleap\Layout\TooltipJSON(
+            $renderer->renderToString('tooltip-title', [
+                'is_folder' => $icon === 'folder',
+                'is_empty' => $icon === 'empty',
+                'is_link' => $icon === 'link',
+                'is_audio' => $icon === 'audio',
+                'is_video' => $icon === 'video',
+                'is_image' => $icon === 'image',
+                'is_text' => $icon === 'text',
+                'is_code' => $icon === 'code',
+                'is_archive' => $icon === 'archive',
+                'is_pdf' => $icon === 'pdf',
+                'is_document' => $icon === 'document',
+                'is_presentation' => $icon === 'presentation',
+                'is_spreadsheet' => $icon === 'spreadsheet',
+                'title' => $item->getTitle()
+            ]),
+            $item->getDescription(),
+        );
+        $event->setOutput($tooltip_json);
     }
 
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
