@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
@@ -102,28 +103,32 @@ class SVN_Apache_ModPerlTest extends TestCase
 
     public function testDSNCertificateValidationIsAlwaysDisabledBecauseItDoesnWorkReliablyOnRHEL7(): void
     {
+        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
         ForgeConfig::set('sys_enablessl', '1');
-        ForgeConfig::set('sys_db_ssl_ca', '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem');
+        ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '1');
 
         $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
 
-        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
+        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
 
     public function testDSNWithSSLDBWithoutCertificateValidation(): void
     {
+        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
         ForgeConfig::set('sys_enablessl', '1');
-        ForgeConfig::set('sys_db_ssl_ca', '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem');
+        ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '0');
 
         $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
 
-        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
+        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
 
     public function testDSNWithCustomPort(): void
@@ -138,15 +143,17 @@ class SVN_Apache_ModPerlTest extends TestCase
 
     public function testDSNWithCustomPortAndSSL(): void
     {
+        $ca_bundle_path = vfsStream::setup()->url() . '/ca-bundle.pem';
+        touch($ca_bundle_path);
         ForgeConfig::set('sys_dbname', 'tuleap');
         ForgeConfig::set('sys_dbhost', 'db-server.example.com');
         ForgeConfig::set('sys_dbport', 3307);
         ForgeConfig::set('sys_enablessl', '1');
-        ForgeConfig::set('sys_db_ssl_ca', '/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem');
+        ForgeConfig::set('sys_db_ssl_ca', $ca_bundle_path);
         ForgeConfig::set('sys_db_ssl_verify_cert', '1');
         $conf = $this->modperl->getConf($this->gpig_project_row["public_path"], $this->gpig_project_row["system_path"]);
 
-        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307;mysql_ssl=1;mysql_ssl_ca_file=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem;mysql_ssl_verify_server_cert=0"', $conf);
+        $this->assertStringContainsString('TuleapDSN "DBI:mysql:tuleap:db-server.example.com;port=3307;mysql_ssl=1;mysql_ssl_ca_file=' . $ca_bundle_path . ';mysql_ssl_verify_server_cert=0"', $conf);
     }
 
     public function testItDoesntHaveRedis(): void
