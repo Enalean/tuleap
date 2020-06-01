@@ -90,7 +90,6 @@ describe(`Taskboard`, function () {
                 });
             cy.get("[data-card-id]").contains("Deserted Torpedo");
             // Edit back the name for re-playability
-            // eslint-disable-next-line cypress/require-data-selectors
             cy.get("@card").within(() => {
                 cy.get("[data-test=card-edit-button]").click();
                 cy.get("[data-test=label-editor]").clear().type("Lonesome Galaxy{enter}");
