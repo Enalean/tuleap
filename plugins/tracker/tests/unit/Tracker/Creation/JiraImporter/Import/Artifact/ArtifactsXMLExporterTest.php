@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -25,7 +25,6 @@ namespace Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
@@ -40,6 +39,7 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
@@ -101,10 +101,10 @@ class ArtifactsXMLExporterTest extends TestCase
 
     public function testItExportsArtifacts(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn('user01');
+        $user = Mockery::mock(TrackerImporterUser::class);
+        $user->shouldReceive('getUserName')->andReturn('forge__user01');
 
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
@@ -170,10 +170,10 @@ class ArtifactsXMLExporterTest extends TestCase
 
     public function testItExportsArtifactsPaginated(): void
     {
-        $user = Mockery::mock(PFUser::class);
-        $user->shouldReceive('getUserName')->andReturn('user01');
+        $user = Mockery::mock(TrackerImporterUser::class);
+        $user->shouldReceive('getUserName')->andReturn('forge__user01');
 
-        $this->user_manager->shouldReceive('getCurrentUser')->andReturn($user);
+        $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
         $tracker_node       = new SimpleXMLElement('<tracker/>');
         $mapping_collection = new FieldMappingCollection();
