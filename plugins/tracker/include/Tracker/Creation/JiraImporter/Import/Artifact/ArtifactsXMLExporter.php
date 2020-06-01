@@ -30,6 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 use XML_SimpleXMLCDATAFactory;
 
@@ -81,7 +82,7 @@ class ArtifactsXMLExporter
         string $jira_project_id,
         string $jira_issue_type_name
     ): void {
-        $user = $this->user_manager->getCurrentUser();
+        $user = $this->user_manager->getUserById(TrackerImporterUser::ID);
         if ($user === null) {
             return;
         }

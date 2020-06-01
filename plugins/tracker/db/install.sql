@@ -1070,6 +1070,35 @@ INSERT INTO user_access SET
         user_id = 90,
         last_access_date = '0';
 
+INSERT INTO user SET
+     user_id = 91,
+     user_name = 'forge__tracker_importer_user',
+     email = 'noreply+tracker_importer@_DOMAIN_NAME_',
+     user_pw = '#~2mouahahaha',
+     realname = 'Tracker Importer',
+     register_purpose = NULL,
+     status = 'S',
+     shell = '0',
+     unix_pw = '0',
+     unix_status = '0',
+     unix_uid = 0,
+     unix_box = '0',
+     ldap_id = NULL,
+     add_date = 370514700,
+     confirm_hash = NULL,
+     mail_siteupdates = 0,
+     mail_va = 0,
+     sticky_login = 0,
+     authorized_keys = NULL,
+     email_new = NULL,
+     timezone = 'GMT',
+     language_id = 'en_US',
+     last_pwd_update = '0';
+
+INSERT INTO user_access SET
+    user_id = 91,
+    last_access_date = '0';
+
 INSERT INTO tracker_report_config (query_limit) VALUES (30);
 
 INSERT INTO plugin_tracker_projects_use_artifactlink_types (project_id)
