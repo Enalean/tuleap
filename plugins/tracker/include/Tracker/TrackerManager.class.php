@@ -26,7 +26,6 @@ use Tuleap\Tracker\Admin\GlobalAdminController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 use Tuleap\Tracker\Creation\TrackerCreationController;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
-use Tuleap\Tracker\Creation\TrackerCreator;
 use Tuleap\Tracker\ForgeUserGroupPermission\TrackerAdminAllProjects;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupJSONRetriever;
 use Tuleap\Tracker\PermissionsPerGroup\TrackerPermissionPerGroupPermissionRepresentationBuilder;
@@ -196,22 +195,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                     $this->redirectToTrackerHomepage($group_id);
                                 }
                                 break;
-                            case 'check_ugroup_consistency':
-                                $tracker = $this->getTrackerFactory()->getTrackerByid($request->get('template_tracker_id'));
-                                if (! $tracker) {
-                                    return;
-                                }
-
-                                $checker = new Tracker_UgroupPermissionsConsistencyChecker(
-                                    new Tracker_UgroupPermissionsGoldenRetriever(
-                                        new Tracker_PermissionsDao(),
-                                        new UGroupManager()
-                                    ),
-                                    new UGroupManager(),
-                                    new Tracker_UgroupPermissionsConsistencyMessenger()
-                                );
-                                $checker->checkConsistency($tracker, $project);
-                                break;
                             case 'csvimportoverview':
                                 $this->displayCSVImportOverview($project, $group_id, $user);
                                 break;
@@ -367,29 +350,14 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             return;
         }
 
-        if ($request->get('create_mode') == 'tv3') {
+        if ($request->get('create_mode') === 'tv3') {
             $atid = $request->get('tracker_new_tv3');
             $user = UserManager::instance()->getCurrentUser();
             $new_tracker = $this->getTrackerFactory()->createFromTV3($user, $atid, $project, $name, $description, $itemname);
-        } elseif ($request->get('create_mode') == 'migrate_from_tv3') {
+        } elseif ($request->get('create_mode') === 'migrate_from_tv3') {
             $tracker_id = $request->get('tracker_new_tv3');
             if ($this->getTV3MigrationManager()->askForMigration($project, $tracker_id, $name, $description, $itemname)) {
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $project->group_id);
-            }
-        } else {
-            try {
-                $user = UserManager::instance()->getCurrentUser();
-                $new_tracker = $this->getTrackerCreator()->duplicateTracker($project, $name, $name, $itemname, $color, $atid_template, $user);
-            } catch (\Tuleap\Tracker\Creation\TrackerCreationHasFailedException $exception) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    dgettext("tuleap-tracker", "Tracker creation has failed.")
-                );
-            } catch (\Tuleap\Tracker\TrackerIsInvalidException $exception) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    $exception->getTranslatedMessage()
-                );
             }
         }
 
@@ -419,6 +387,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         ?Tracker $tracker_template = null
     ) {
         global $Language;
+
+        $route_to_new_ui = TrackerCreationController::getRouteToTrackerCreationController($project);
+
+        $trackers_v3 = $this->getTrackersV3ForProject($project);
+        if (empty($trackers_v3)) {
+            $GLOBALS['HTML']->redirect($route_to_new_ui);
+            return;
+        }
+
         $breadcrumbs = array(
             array(
                 'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker'),
@@ -433,7 +410,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         echo '<div class="alert alert-error">';
         echo dgettext('tuleap-tracker', 'This page is deprecated and will be removed soon. You should switch to the new tracker creation flow.');
-        echo '<a href="' . TrackerCreationController::getRouteToTrackerCreationController($project) . '" class="btn btn-primary tracker-creation-link">
+        echo '<a href="' . $route_to_new_ui . '" class="btn btn-primary tracker-creation-link">
                 <i class="fa fa-long-arrow-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
             '</a>';
         echo '</div>';
@@ -449,7 +426,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo '<p>' . $Language->getText('plugin_tracker_include_type', 'choose_creation') . '</p>';
 
         $create_mode = $request->get('create_mode');
-        $this->displayCreateTrackerFromTemplate($create_mode, $project, $tracker_template);
         $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
         $this->displayMigrateFromTV3Option($create_mode, $project, $request->get('tracker_new_tv3'));
 
@@ -476,110 +452,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo '</td></tr></table></form>';
 
         $this->displayFooter($project);
-    }
-
-    public function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, ?Tracker $tracker_template = null)
-    {
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $js = '';
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupId(100);
-        foreach ($trackers as $tracker) {
-            $js .= '<option value="' . $tracker->getId() . '">' . $hp->purify($tracker->getName()) . '</option>';
-        }
-        $js = "codendi.tracker.defaultTemplates = '" . $hp->purify($js, CODENDI_PURIFIER_JS_QUOTE) . "';";
-        $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
-
-        $gf = new GroupFactory();
-        $radio = $this->getCreateTrackerRadio('gallery', $requested_create_mode);
-        echo '<h3><label>' . $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_tmpl') . '</label></h3>';
-
-        echo '<div class="tracker_create_mode">';
-        echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
-
-        echo '<table>';
-
-        echo '<tr>';
-        echo '<th align="left">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj') . '</th>';
-        echo '<th align="left">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_trk') . '</th>';
-        echo '</tr>';
-
-        echo '<tr>';
-        echo '<td valign="top">';
-
-        $group_id_template = 100;
-        $atid_template     = -1;
-        if ($tracker_template) {
-            $group_id_template = $tracker_template->getProject()->getID();
-            $atid_template     = $tracker_template->getId();
-        }
-        $selectedHtml = 'selected="selected"';
-
-        echo '<select name="group_id_template" size="15" id="tracker_new_project_list" autocomplete="off">';
-
-        echo '<optgroup label="' . _('Project templates') . '">';
-        echo '<option value="100" ' . ($group_id_template == 100 ? $selectedHtml : '') . '>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_default') . '</option>';
-        foreach (ProjectManager::instance()->getSiteTemplates() as $template) {
-            if ((int) $template->getID() === Project::ADMIN_PROJECT_ID) {
-                continue;
-            }
-            echo '<option value="' . (int) $template->getID() . '">' . $hp->purify($template->getPublicName()) . '</option>';
-        }
-        echo '</optgroup>';
-
-        echo '<optgroup label="' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_my') . '">';
-        $project_selected = false;
-        $results = $gf->getMemberGroups();
-        while ($row = db_fetch_array($results)) {
-            $selected = '';
-            if ($group_id_template == $row['group_id']) {
-                $selected = $selectedHtml;
-                $project_selected = true;
-            }
-            echo '<option value="' . $hp->purify($row['group_id']) . '" ' . ($group_id_template == $row['group_id'] ? $selectedHtml : '') . '>' . $hp->purify($row['group_name']) . '</option>';
-        }
-        echo '</optgroup>';
-
-        $hide  = 'style="display:none;"';
-        $other = '';
-        if ($tracker_template && !$project_selected) {
-            $hide = '';
-            $other .= '<option value="' . (int) $tracker_template->getProject()->getID() . '" ' . $selectedHtml . '>';
-            $other .= $hp->purify($tracker_template->getProject()->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML);
-            $other .= '</option>';
-        }
-        echo '<optgroup id="tracker_new_other" ' . $hide . ' label="' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_prj_other') . '">';
-        echo $other;
-        echo '</optgroup>';
-
-        echo '</select>';
-
-        echo '<br/>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_desc') . '<br /><input type="text" name="tracker_new_prjname" id="tracker_new_prjname" placeholder="' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_autocomplete_hint') . '" />';
-
-        echo '</td>';
-
-        echo '<td valign="top">';
-        echo '<select name="atid_template" size="15" id="tracker_list_trackers_from_project">';
-        $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id_template);
-        if (count($trackers) > 0) {
-            foreach ($trackers as $tracker) {
-                echo '<option value="' . $tracker->getId() . '" ' . ($atid_template == $tracker->getId() ? $selectedHtml : '') . '>' . $hp->purify($tracker->getName()) . '</option>';
-            }
-        } else {
-            echo '<option>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_no_trk') . '</option>';
-        }
-        echo '</select>';
-
-        echo '</td>';
-        echo '</tr>';
-        echo '</table>';
-
-        echo '</div>';
-    }
-
-    private function getTrackerCreator(): TrackerCreator
-    {
-        return TrackerCreator::build();
     }
 
     private function getTrackersV3ForProject(Project $project)
