@@ -64,8 +64,8 @@ msgstr "Créer mon outil de suivi"
 
 msgid "Create your new tracker and import its issues from Jira server"
 msgstr ""
-"Créez votre nouvel outil de suivi et importez ses tickets depuis un "
-"serveur Jira"
+"Créez votre nouvel outil de suivi et importez ses tickets depuis un serveur "
+"Jira"
 
 msgid "Create your new tracker based on a tracker template XML file."
 msgstr "Créez votre nouvel outil de suivi basé sur un fichier au format XML."
@@ -104,6 +104,9 @@ msgstr "Depuis Jira"
 msgid "Give your tracker some basic info"
 msgstr "Donnez à votre outil de suivi quelques infos de base"
 
+msgid "I want to migrate a tracker v3"
+msgstr "Je veux migrer un outil de suivi v3"
+
 msgid "Issue type"
 msgstr "Type de ticket"
 
@@ -124,9 +127,6 @@ msgstr "Nom court"
 
 msgid "Source project"
 msgstr "Projet source"
-
-msgid "Switch to legacy UI"
-msgstr "Basculer sur l'ancienne interface utilisateur"
 
 msgid "Template"
 msgstr "Modèle"
