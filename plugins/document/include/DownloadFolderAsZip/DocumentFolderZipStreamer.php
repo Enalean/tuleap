@@ -23,25 +23,32 @@ declare(strict_types=1);
 namespace Tuleap\Document\DownloadFolderAsZip;
 
 use Docman_PermissionsManager;
-use HTTPRequest;
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Project;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
-use Tuleap\Layout\BaseLayout;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Request\DispatchablePSR15Compatible;
 use Tuleap\Request\DispatchableWithProject;
-use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\Request\NotFoundException;
 use ZipStream\Exception\OverflowException;
 use ZipStream\Option\Archive;
 use ZipStream\ZipStream;
 
-final class DocumentFolderZipStreamer implements DispatchableWithRequest, DispatchableWithProject
+final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implements DispatchableWithProject
 {
     /**
      * @var DocumentTreeProjectExtractor
      */
     private $project_extractor;
+    /**
+     * @var \UserManager
+     */
+    private $user_manager;
     /**
      * @var ZipStreamerLoggingHelper
      */
@@ -54,40 +61,55 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
      * @var FolderSizeIsAllowedChecker
      */
     private $folder_size_is_allowed_checker;
+
     /**
      * @var FileDownloadLimitsBuilder
      */
     private $download_limits_builder;
+    /**
+     * @var BinaryFileResponseBuilder
+     */
+    private $binary_file_response_builder;
 
     public function __construct(
+        BinaryFileResponseBuilder $binary_file_response_builder,
         DocumentTreeProjectExtractor $project_extractor,
+        \UserManager $user_manager,
         ZipStreamerLoggingHelper $error_logging_helper,
         ZipStreamMailNotificationSender $notification_sender,
         FolderSizeIsAllowedChecker $folder_size_is_allowed_checker,
-        FileDownloadLimitsBuilder $download_limits_builder
+        FileDownloadLimitsBuilder $download_limits_builder,
+        EmitterInterface $emitter,
+        MiddlewareInterface ...$middleware_stack
     ) {
+        $this->binary_file_response_builder   = $binary_file_response_builder;
+        $this->user_manager                   = $user_manager;
         $this->project_extractor              = $project_extractor;
         $this->error_logging_helper           = $error_logging_helper;
         $this->notification_sender            = $notification_sender;
         $this->folder_size_is_allowed_checker = $folder_size_is_allowed_checker;
         $this->download_limits_builder        = $download_limits_builder;
+        parent::__construct($emitter, ...$middleware_stack);
     }
 
-    /**
-     * @throws NotFoundException
-     * @throws ForbiddenException
-     */
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $project = $this->getProject($variables);
-        $user    = $request->getCurrentUser();
-        $folder  = $this->getFolder($user, $project, $variables);
+        $request_variables = $request->getAttributes();
+        $project           = $this->getProject($request_variables);
+        $user              = $this->user_manager->getCurrentUser();
+        $folder            = $this->getFolder($user, $project, $request_variables);
 
         ini_set('max_execution_time', '0');
         $factory = \Docman_FolderFactory::instance($project->getID());
         $factory->getItemTree($folder, $user, false, true);
         $this->checkFolderSizeIsAllowedForDownload($folder);
-        $this->streamFolder($folder, $project, $user);
+
+        return $this->binary_file_response_builder->fromCallback(
+            $request,
+            $this->buildStreamFolderArchiveCallback($folder, $project, $user),
+            $folder->getTitle() . '.zip',
+            'application/zip'
+        );
     }
 
     /**
@@ -124,35 +146,39 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
         return $this->project_extractor->getProject($variables);
     }
 
-    private function streamFolder(\Docman_Folder $folder, Project $project, \PFUser $user): void
+    /**
+     * @psalm-return callable():void
+     */
+    private function buildStreamFolderArchiveCallback(\Docman_Folder $folder, Project $project, \PFUser $user): callable
     {
-        session_write_close();
-        $options = new Archive();
-        $options->setSendHttpHeaders(true);
-        $options->setStatFiles(true);
+        return function () use ($folder, $project, $user): void {
+            $options = new Archive();
+            $options->setStatFiles(true);
 
-        $zip = new ZipStream($folder->getTitle() . '.zip', $options);
-        $errors_listing_builder = new ErrorsListingBuilder();
+            $zip = new ZipStream(null, $options);
+            $errors_listing_builder = new ErrorsListingBuilder();
 
-        $folder->accept(
-            new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper, $errors_listing_builder),
-            ['path' => '', 'base_folder_id' => $folder->getId()]
-        );
-
-        $errors_listing_builder->addErrorsFileIfAnyToArchive($zip);
-        try {
-            $zip->finish();
-        } catch (OverflowException $e) {
-            $this->error_logging_helper->logOverflowExceptionError($folder);
-        }
-
-        if ($errors_listing_builder->hasAnyError()) {
-            $this->notification_sender->sendNotificationAboutErrorsInArchive(
-                $user,
-                $folder,
-                $project
+            $folder->accept(
+                new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper, $errors_listing_builder),
+                ['path' => '', 'base_folder_id' => $folder->getId()]
             );
-        }
+
+            $errors_listing_builder->addErrorsFileIfAnyToArchive($zip);
+
+            try {
+                $zip->finish();
+            } catch (OverflowException $e) {
+                $this->error_logging_helper->logOverflowExceptionError($folder);
+            }
+
+            if ($errors_listing_builder->hasAnyError()) {
+                $this->notification_sender->sendNotificationAboutErrorsInArchive(
+                    $user,
+                    $folder,
+                    $project
+                );
+            }
+        };
     }
 
     /**

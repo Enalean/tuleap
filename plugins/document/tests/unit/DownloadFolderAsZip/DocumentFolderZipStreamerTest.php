@@ -22,14 +22,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Document\DownloadFolderAsZip;
 
+use Laminas\HttpHandlerRunner\Emitter\EmitterInterface;
 use Mockery as M;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 use Tuleap\Request\NotFoundException;
-use Tuleap\Test\Builders\HTTPRequestBuilder;
-use Tuleap\Test\Builders\LayoutBuilder;
 use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DocumentFolderZipStreamerTest extends TestCase
@@ -48,26 +50,29 @@ final class DocumentFolderZipStreamerTest extends TestCase
     protected function setUp(): void
     {
         $this->project_extractor = M::mock(DocumentTreeProjectExtractor::class);
+        $user_manager            = M::mock(\UserManager::class);
+        $user_manager->shouldReceive('getCurrentUser')->andReturn(UserTestBuilder::aUser()->withId(110)->build());
         $logging_helper          = M::mock(ZipStreamerLoggingHelper::class);
         $notification_sender     = M::mock(ZipStreamMailNotificationSender::class);
         $size_is_allowed_checker = M::mock(FolderSizeIsAllowedChecker::class);
         $download_limits_builder = M::mock(FileDownloadLimitsBuilder::class);
         $this->controller        = new DocumentFolderZipStreamer(
+            new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory()),
             $this->project_extractor,
+            $user_manager,
             $logging_helper,
             $notification_sender,
             $size_is_allowed_checker,
-            $download_limits_builder
+            $download_limits_builder,
+            M::mock(EmitterInterface::class)
         );
     }
 
     public function testItThrowsNotFoundWhenNoFolderID(): void
     {
         $this->project_extractor->shouldReceive('getProject')->andReturn(new \Project(['group_id' => 101]));
-        $user    = UserTestBuilder::aUser()->withId(110)->build();
-        $request = HTTPRequestBuilder::get()->withUser($user)->build();
 
         $this->expectException(NotFoundException::class);
-        $this->controller->process($request, LayoutBuilder::build(), []);
+        $this->controller->handle(new NullServerRequest());
     }
 }

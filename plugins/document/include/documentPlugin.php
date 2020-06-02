@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Laminas\HttpHandlerRunner\Emitter\SapiEmitter;
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabsPresenterCollection;
 use Tuleap\Docman\ExternalLinks\DocmanLinkProvider;
 use Tuleap\Docman\ExternalLinks\ExternalLinkRedirector;
@@ -35,6 +36,8 @@ use Tuleap\Document\PermissionDeniedDocumentMailSender;
 use Tuleap\Document\Tree\DocumentTreeController;
 use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Error\PlaceHolderBuilder;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -105,13 +108,20 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function routeDownloadFolderAsZip(): DocumentFolderZipStreamer
     {
         return new DocumentFolderZipStreamer(
+            new BinaryFileResponseBuilder(
+                HTTPFactoryBuilder::responseFactory(),
+                HTTPFactoryBuilder::streamFactory()
+            ),
             $this->getProjectExtractor(),
+            UserManager::instance(),
             new ZipStreamerLoggingHelper(),
             new ZipStreamMailNotificationSender(),
             new \Tuleap\Document\DownloadFolderAsZip\FolderSizeIsAllowedChecker(
                 new \Tuleap\Docman\REST\v1\Folders\ComputeFolderSizeVisitor(),
             ),
-            new \Tuleap\Document\Config\FileDownloadLimitsBuilder()
+            new \Tuleap\Document\Config\FileDownloadLimitsBuilder(),
+            new SapiEmitter(),
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware()
         );
     }
 
