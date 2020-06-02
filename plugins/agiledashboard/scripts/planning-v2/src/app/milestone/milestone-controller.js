@@ -354,7 +354,7 @@ function MilestoneController(
 
     function additionalPanesToDisplay() {
         return self.milestone.resources.additional_panes.filter(
-            (pane) => pane.identifier === "taskboard"
+            (pane) => pane.identifier === "taskboard" || pane.identifier === "testmanagement"
         );
     }
 }
