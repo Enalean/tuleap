@@ -43,6 +43,7 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
+use Tuleap\TestManagement\TestmanagementPaneInfo;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
@@ -375,6 +376,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
+            $collector->addPane(new TestmanagementPaneInfo($milestone));
         }
     }
 
@@ -383,7 +385,14 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $milestone = $event->getMilestone();
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
-            $pane = new AgileDashboardPaneInfo($milestone);
+            $legacy_pane = new AgileDashboardPaneInfo($milestone);
+
+            $legacy_representation = new PaneInfoRepresentation();
+            $legacy_representation->build($legacy_pane);
+
+            $event->add($legacy_representation);
+
+            $pane = new TestmanagementPaneInfo($milestone);
 
             $representation = new PaneInfoRepresentation();
             $representation->build($pane);
