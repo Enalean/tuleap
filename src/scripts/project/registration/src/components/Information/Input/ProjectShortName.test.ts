@@ -121,7 +121,7 @@ describe("ProjectShortName", () => {
             });
         });
 
-        it(`Has an  no error when shortname has exactly 30 characters`, async () => {
+        it(`Has no error when shortname has exactly 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             const data = {
@@ -142,7 +142,7 @@ describe("ProjectShortName", () => {
             });
         });
 
-        it(`Has an error when shortname has more than 30 characters`, async () => {
+        it(`Truncates slugified shortname to 30 characters`, async () => {
             const event_bus_emit = jest.spyOn(EventBus, "$emit");
 
             const data = {
@@ -154,10 +154,8 @@ describe("ProjectShortName", () => {
 
             EventBus.$emit("slugify-project-name", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb");
 
-            expect(wrapper.vm.$data.slugified_project_name).toBe(
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbb"
-            );
-            expect(wrapper.vm.$data.has_slug_error).toBe(true);
+            expect(wrapper.vm.$data.slugified_project_name).toBe("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+            expect(wrapper.vm.$data.has_slug_error).toBe(false);
 
             expect(event_bus_emit).toHaveBeenCalledWith("update-project-name", {
                 slugified_name: wrapper.vm.$data.slugified_project_name,
