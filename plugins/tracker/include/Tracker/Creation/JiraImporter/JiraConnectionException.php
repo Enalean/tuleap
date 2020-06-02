@@ -103,6 +103,17 @@ class JiraConnectionException extends \Exception
         );
     }
 
+    public static function canNotRetrieveFullCollectionOfIssueChangelogsException(): self
+    {
+        return new self(
+            "can not retrieve full collection of issue changelogs",
+            dgettext(
+                'tuleap-tracker',
+                "Fail to retrieve the full collection of issue changelogs in selected tracker."
+            )
+        );
+    }
+
     public static function urlIsInvalid(): self
     {
         return new self(

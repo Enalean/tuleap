@@ -106,7 +106,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "artifact_id",
                 "Artifact id",
                 "artifact_id",
-                5,
+                6,
                 false,
                 [],
                 [],
@@ -123,7 +123,24 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "jira_issue_url",
                 "Link to original issue",
                 "jira_issue_url",
-                6,
+                7,
+                false,
+                [],
+                [],
+                $this->field_mapping_collection
+            ]
+        )->once();
+
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return isset($fieldset_xml->formElements);
+                }),
+                Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE,
+                "created",
+                "Creation date",
+                "created",
+                2,
                 false,
                 [],
                 [],
@@ -140,7 +157,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "updated",
                 "Last update date",
                 "updated",
-                2,
+                3,
                 false,
                 [],
                 [],
@@ -157,7 +174,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "resolutiondate",
                 "Resolved",
                 "resolutiondate",
-                3,
+                4,
                 false,
                 [
                     'display_time' => '1'

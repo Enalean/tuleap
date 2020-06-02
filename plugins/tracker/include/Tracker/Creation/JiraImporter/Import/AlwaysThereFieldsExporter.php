@@ -41,15 +41,17 @@ class AlwaysThereFieldsExporter
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
 
-    private const JIRA_UPDATED_ON_NAME        = "updated";
-    private const JIRA_RESOLUTION_DATE_NAME   = "resolutiondate";
+    public const JIRA_UPDATED_ON_NAME        = "updated";
+    public const JIRA_CREATED_NAME           = "created";
+    private const JIRA_RESOLUTION_DATE_NAME  = "resolutiondate";
 
     private const JIRA_STATUS_RANK          = 1;
-    private const JIRA_UPDATED_ON_RANK      = 2;
-    private const JIRA_RESOLUTION_DATE_RANK = 3;
-    public const JIRA_PRIORITY_RANK         = 4;
-    private const JIRA_ARTIFACT_ID_RANK     = 5;
-    private const JIRA_LINK_RANK            = 6;
+    private const JIRA_CREATED_RANK         = 2;
+    private const JIRA_UPDATED_ON_RANK      = 3;
+    private const JIRA_RESOLUTION_DATE_RANK = 4;
+    public const JIRA_PRIORITY_RANK         = 5;
+    private const JIRA_ARTIFACT_ID_RANK     = 6;
+    private const JIRA_LINK_RANK            = 7;
 
     public const JIRA_SUMMARY_RANK     = 1;
     public const JIRA_DESCRIPTION_RANK = 2;
@@ -89,6 +91,19 @@ class AlwaysThereFieldsExporter
             "Link to original issue",
             self::JIRA_LINK_FIELD_ID,
             self::JIRA_LINK_RANK,
+            false,
+            [],
+            [],
+            $field_mapping_collection
+        );
+
+        $this->field_xml_exporter->exportField(
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
+            Tracker_FormElementFactory::FIELD_SUBMITTED_ON_TYPE,
+            self::JIRA_CREATED_NAME,
+            "Creation date",
+            self::JIRA_CREATED_NAME,
+            self::JIRA_CREATED_RANK,
             false,
             [],
             [],

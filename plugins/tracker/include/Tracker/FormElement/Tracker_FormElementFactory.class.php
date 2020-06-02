@@ -35,6 +35,7 @@ class Tracker_FormElementFactory
     public const FIELD_FLOAT_TYPE            = 'float';
     public const FIELD_DATE_TYPE             = 'date';
     public const FIELD_LAST_UPDATE_DATE_TYPE = 'lud';
+    public const FIELD_SUBMITTED_ON_TYPE     = 'subon';
     public const FIELD_ARTIFACT_ID_TYPE      = 'aid';
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
@@ -79,10 +80,10 @@ class Tracker_FormElementFactory
     protected $special_classnames = array(
         self::FIELD_LAST_UPDATE_DATE_TYPE  => 'Tracker_FormElement_Field_LastUpdateDate',
         self::FIELD_ARTIFACT_ID_TYPE       => 'Tracker_FormElement_Field_ArtifactId',
+        self::FIELD_SUBMITTED_ON_TYPE      => 'Tracker_FormElement_Field_SubmittedOn',
         'atid'      => 'Tracker_FormElement_Field_PerTrackerArtifactId',
         'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
         'luby'      => 'Tracker_FormElement_Field_LastModifiedBy',
-        'subon'     => 'Tracker_FormElement_Field_SubmittedOn',
         'cross'     => 'Tracker_FormElement_Field_CrossReferences',
         'burndown'  => 'Tracker_FormElement_Field_Burndown',
         'computed'  => 'Tracker_FormElement_Field_Computed',

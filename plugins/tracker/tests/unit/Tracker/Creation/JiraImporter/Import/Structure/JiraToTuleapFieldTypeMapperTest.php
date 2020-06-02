@@ -355,7 +355,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
-                4,
+                5,
                 $jira_field->isRequired(),
                 [],
                 $bound_values,
