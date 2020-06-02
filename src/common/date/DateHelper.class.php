@@ -118,7 +118,7 @@ class DateHelper
         } else {
             $user_date = format_date($lang->getText('system', 'datefmt'), $date, null);
         }
-        return $user_date;
+        return (string) $user_date;
     }
 
     /**
