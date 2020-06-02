@@ -23,7 +23,7 @@
     "moment": "^2.26.0",
     "mustache": "^4.0.1",
     "ngVue": "^1.7.6",
-    "node-gettext": "^2.0.0",
+    "node-gettext": "^3.0.0",
     "pretty-kibibytes": "^4.0.4",
     "pump": "^3.0.0",
     "readable-stream": "^2.3.6",
