@@ -103,6 +103,7 @@ const webpack_config_for_vue_components = {
 
 const entry_points = {
     flamingparrot: "./themes/FlamingParrot/css/style.scss",
+    "test-plan": "./themes/BurningParrot/css/test-plan.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];

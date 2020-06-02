@@ -41,8 +41,11 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
+use Tuleap\TestManagement\TestmanagementPane;
 use Tuleap\TestManagement\TestmanagementPaneInfo;
 use Tuleap\TestManagement\TestManagementPluginInfo;
+use Tuleap\TestManagement\TestPlan\TestPlanController;
+use Tuleap\TestManagement\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
@@ -74,6 +77,9 @@ require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
 
 class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
+    public const NAME              = 'testmanagement';
+    public const SERVICE_SHORTNAME = 'plugin_testmanagement';
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -163,7 +169,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function getServiceShortname()
     {
-        return 'plugin_testmanagement';
+        return self::SERVICE_SHORTNAME;
     }
 
     /**
@@ -374,7 +380,17 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
-            $collector->addPane(new TestmanagementPaneInfo($milestone));
+
+            $pane_info = new TestmanagementPaneInfo($milestone);
+            if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestmanagementPaneInfo::URL) === 0) {
+                $pane_info->setActive(true);
+                $collector->setActivePaneBuilder(
+                    static function () use ($pane_info): AgileDashboard_Pane {
+                        return new TestmanagementPane($pane_info);
+                    }
+                );
+            }
+            $collector->addPane($pane_info);
         }
     }
 
@@ -394,6 +410,35 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
         });
+        $event->getRouteCollector()->addGroup(
+            TestmanagementPaneInfo::URL,
+            function (RouteCollector $r) {
+                $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGetPlan'));
+            }
+        );
+    }
+
+    public function routeGetPlan(): TestPlanController
+    {
+        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
+        if (! $agiledashboard_plugin instanceof AgileDashboardPlugin) {
+            throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
+        }
+
+        return new TestPlanController(
+            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
+            $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
+            $agiledashboard_plugin->getIncludeAssets(),
+            new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/testmanagement',
+                '/assets/testmanagement'
+            ),
+            new VisitRecorder(new RecentlyVisitedDao()),
+            Planning_MilestoneFactory::build(),
+            new TestPlanPresenterBuilder(
+                $agiledashboard_plugin->getMilestonePaneFactory()
+            )
+        );
     }
 
     public function routeViaLegacyRouter(): LegacyRoutingController
