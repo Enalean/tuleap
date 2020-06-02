@@ -1,0 +1,46 @@
+<div class="tlp-framed-vertically">
+    <h1 class="tlp-framed-horizontally">{{# dgettext }}tuleap-document | Document{{/ dgettext }}</h1>
+
+    <nav class="tlp-tabs">
+        {{# tabs }}
+            <a class="tlp-tab {{# is_active }}tlp-tab-active{{/ is_active }}" href="{{ url }}">{{ label }}</a>
+        {{/ tabs }}
+    </nav>
+
+    <div class="tlp-framed-horizontally">
+        <form class="tlp-pane" method="POST" action="/admin/document/history-enforcement">
+            {{# csrf_token }}
+                {{> csrf_token_input }}
+            {{/ csrf_token }}
+            <div class="tlp-pane-container">
+                <div class="tlp-pane-header">
+                    <h1 class="tlp-pane-title">
+                        <i class="tlp-pane-title-icon fa fa-history"></i>
+                        {{# dgettext }}tuleap-document | History enforcement{{/ dgettext }}
+                    </h1>
+                </div>
+                <section class="tlp-pane-section">
+                    <p>
+                        {{# dgettext }} tuleap-document | When this option is enabled, a changelog modal will open each time a user creates a new version of a file by drag and drop. {{/ dgettext }}
+                        <br>
+                        {{# dgettext }} tuleap-document | Hence, Tuleap will avoid users from forgetting to communicate changes made in the document.{{/ dgettext }}
+                    </p>
+                    <div class="tlp-form-element">
+                        <label class="tlp-label" for="toggle-changelog-modal">{{# dgettext }} tuleap-document | Propose changelog after new file version drag and drop {{/ dgettext }}</label>
+                        <div class="tlp-switch">
+                            <input
+                                    type="checkbox"
+                                    id="toggle-changelog-modal"
+                                    class="tlp-switch-checkbox"
+                                    name="is-changelog-proposed-after-dnd"
+                                    {{# is_changelog_proposed }} checked {{/ is_changelog_proposed }}
+                                    onchange="this.form.submit()"
+                            >
+                            <label for="toggle-changelog-modal" class="tlp-switch-button" aria-hidden></label>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </form>
+    </div>
+</div>

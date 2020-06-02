@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,13 +24,13 @@ namespace Tuleap\Document\Config\Admin;
 
 use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabPresenter;
 
-class FileDownloadTabPresenter extends DocmanSettingsTabPresenter
+class HistoryEnforcementTabPresenter extends DocmanSettingsTabPresenter
 {
     public function __construct()
     {
         parent::__construct(
-            FilesDownloadLimitsAdminController::URL,
-            dgettext('tuleap-document', 'File download limits')
+            HistoryEnforcementAdminController::URL,
+            dgettext('tuleap-document', 'History enforcement')
         );
     }
 }
