@@ -27,8 +27,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Server\NullServerRequest;
 
 final class BinaryFileResponseBuilderTest extends TestCase
 {
@@ -52,18 +52,39 @@ final class BinaryFileResponseBuilderTest extends TestCase
         $this->assertEquals(filesize($file), (int) $response->getHeaderLine('Content-Length'));
         $this->assertEquals('bytes', $response->getHeaderLine('Accept-Ranges'));
         $this->assertTrue($response->hasHeader('Content-Type'));
+        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
-    public function testCannotBuildResponseFromFilepathWhenTheFileDoesNotExist(): void
+    public function testFileResponseCanBeBuiltFromACallback(): void
     {
         $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
 
-        $directory = vfsStream::setup()->url();
-        $file      = $directory . '/my_file';
+        $callback = static function (): void {
+            echo 'Foo';
+        };
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Not able to read ' . $file);
-        $builder->fromFilePath(Mockery::mock(ServerRequestInterface::class), $file);
+        $response = $builder->fromCallback(Mockery::mock(ServerRequestInterface::class), $callback, 'archive.zip', 'application/zip');
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertFalse($response->hasHeader('Content-Length'));
+        $this->assertFalse($response->hasHeader('Accept-Ranges'));
+        $this->assertEquals('application/zip', $response->getHeaderLine('Content-Type'));
+        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
+    }
+
+    public function testResponseInstructsToNotCachePubliclyTheAnswer(): void
+    {
+        $builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+
+        $file = vfsStream::setup()->url() . '/file';
+        touch($file);
+
+        $response = $builder->fromFilePath(new NullServerRequest(), $file);
+
+        $this->assertEquals('private', $response->getHeaderLine('Cache-Control'));
+        $this->assertEquals('no-cache', $response->getHeaderLine('Pragma'));
     }
 
     /**
