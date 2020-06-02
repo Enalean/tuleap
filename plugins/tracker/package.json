@@ -43,6 +43,7 @@
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.3",
     "angular-mocks": "^1.7.9",
+    "concurrently": "^5.2.0",
     "gulp": "^4.0.2",
     "gulp-angular-gettext": "^2.3.0",
     "jquery": "^3.4.1",
@@ -54,7 +55,7 @@
   },
   "scripts": {
     "build": "rm -rf ../../src/www/assets/trackers && $npm_package_config_bin/webpack --config webpack.prod.js",
-    "test": "BABEL_ENV=test $npm_package_config_bin/jest",
-    "watch": "NODE_ENV=watch $npm_package_config_bin/concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --config webpack.dev.js --watch'"
+    "watch": "NODE_ENV=watch concurrently --raw --kill-others 'gulp watch' '$npm_package_config_bin/webpack --config webpack.dev.js --watch'",
+    "test": "BABEL_ENV=test $npm_package_config_bin/jest"
   }
 }

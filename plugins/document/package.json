@@ -1,9 +1,8 @@
 {
   "author": "Enalean Team",
   "name": "@tuleap/plugin-document",
-  "version": "1.0.0",
-  "homepage": "https://www.enalean.com",
-  "license": "GPL-2.0+",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
   "private": true,
   "dependencies": {
     "moment": "^2.26.0",
@@ -26,11 +25,11 @@
     "moment-timezone-data-webpack-plugin": "^1.3.0"
   },
   "config": {
-    "bin": "../../node_modules/.bin/"
+    "bin": "../../node_modules/.bin"
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest"
   }
 }

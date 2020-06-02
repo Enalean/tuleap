@@ -30,7 +30,7 @@
   },
   "scripts": {
     "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
-    "watch": "$npm_package_config_bin/concurrently --raw --kill-others '$npm_package_config_bin/webpack --config webpack.dev.js --watch' 'CI=true npm test -- --watch'",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
     "test": "$npm_package_config_bin/jest"
   }
 }
