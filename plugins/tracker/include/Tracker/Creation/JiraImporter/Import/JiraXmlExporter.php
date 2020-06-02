@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
@@ -154,29 +155,31 @@ class JiraXmlExporter
             new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
                 $wrapper,
-                new XML_SimpleXMLCDATAFactory(),
                 UserManager::instance(),
-                new FieldChangeXMLExporter(
-                    new FieldChangeDateBuilder(
-                        new XML_SimpleXMLCDATAFactory()
+                new DataChangesetXMLExporter(
+                    new XML_SimpleXMLCDATAFactory(),
+                    new FieldChangeXMLExporter(
+                        new FieldChangeDateBuilder(
+                            new XML_SimpleXMLCDATAFactory()
+                        ),
+                        new FieldChangeStringBuilder(
+                            new XML_SimpleXMLCDATAFactory()
+                        ),
+                        new FieldChangeTextBuilder(
+                            new XML_SimpleXMLCDATAFactory()
+                        ),
+                        new FieldChangeFloatBuilder(
+                            new XML_SimpleXMLCDATAFactory()
+                        ),
+                        new FieldChangeListBuilder(
+                            new XML_SimpleXMLCDATAFactory(),
+                            UserXMLExporter::build()
+                        ),
+                        new StatusValuesTransformer()
                     ),
                     new FieldChangeStringBuilder(
                         new XML_SimpleXMLCDATAFactory()
-                    ),
-                    new FieldChangeTextBuilder(
-                        new XML_SimpleXMLCDATAFactory()
-                    ),
-                    new FieldChangeFloatBuilder(
-                        new XML_SimpleXMLCDATAFactory()
-                    ),
-                    new FieldChangeListBuilder(
-                        new XML_SimpleXMLCDATAFactory(),
-                        UserXMLExporter::build()
-                    ),
-                    new StatusValuesTransformer()
-                ),
-                new FieldChangeStringBuilder(
-                    new XML_SimpleXMLCDATAFactory()
+                    )
                 )
             ),
             new SemanticsXMLExporter(),

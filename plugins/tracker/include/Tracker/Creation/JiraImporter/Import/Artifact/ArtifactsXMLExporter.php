@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -26,13 +26,10 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
-use XML_SimpleXMLCDATAFactory;
 
 class ArtifactsXMLExporter
 {
@@ -42,37 +39,23 @@ class ArtifactsXMLExporter
     private $wrapper;
 
     /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $simplexml_cdata_factory;
-
-    /**
      * @var UserManager
      */
     private $user_manager;
 
     /**
-     * @var FieldChangeXMLExporter
+     * @var DataChangesetXMLExporter
      */
-    private $field_change_xml_exporter;
-
-    /**
-     * @var FieldChangeStringBuilder
-     */
-    private $field_change_string_builder;
+    private $data_changeset_xml_exporter;
 
     public function __construct(
         ClientWrapper $wrapper,
-        XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         UserManager $user_manager,
-        FieldChangeXMLExporter $field_change_xml_exporter,
-        FieldChangeStringBuilder $field_change_string_builder
+        DataChangesetXMLExporter $data_changeset_xml_exporter
     ) {
         $this->wrapper                     = $wrapper;
-        $this->simplexml_cdata_factory     = $simplexml_cdata_factory;
         $this->user_manager                = $user_manager;
-        $this->field_change_xml_exporter   = $field_change_xml_exporter;
-        $this->field_change_string_builder = $field_change_string_builder;
+        $this->data_changeset_xml_exporter = $data_changeset_xml_exporter;
     }
 
     public function exportArtifacts(
@@ -181,44 +164,14 @@ class ArtifactsXMLExporter
         foreach ($jira_issues as $issue) {
             $artifact_node = $artifacts_node->addChild('artifact');
             $artifact_node->addAttribute('id', $issue['id']);
-            $changeset_node = $artifact_node->addChild('changeset');
 
-            $this->simplexml_cdata_factory->insertWithAttributes(
-                $changeset_node,
-                'submitted_by',
-                $user->getUserName(),
-                $format = ['format' => 'username']
+            $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
+                $user,
+                $artifact_node,
+                $jira_field_mapping_collection,
+                $issue,
+                $jira_base_url
             );
-
-            $node_submitted_on = $this->simplexml_cdata_factory->insertWithAttributes(
-                $changeset_node,
-                'submitted_on',
-                date('c', (new \DateTimeImmutable())->getTimestamp()),
-                $format = ['format' => 'ISO8601']
-            );
-
-            $changeset_node->addChild('comments');
-
-            $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue['key']);
-            $this->field_change_string_builder->build(
-                $changeset_node,
-                AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME,
-                $jira_link
-            );
-
-            foreach ($issue['fields'] as $key => $value) {
-                $rendered_value = $issue['renderedFields'][$key] ?? null;
-                $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
-                if ($mapping !== null && $value !== null) {
-                    $this->field_change_xml_exporter->exportFieldChange(
-                        $mapping,
-                        $changeset_node,
-                        $node_submitted_on,
-                        $value,
-                        $rendered_value
-                    );
-                }
-            }
         }
     }
 }

@@ -30,6 +30,7 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -72,29 +73,31 @@ class ArtifactsXMLExporterTest extends TestCase
 
         $this->exporter = new ArtifactsXMLExporter(
             $this->wrapper,
-            new XML_SimpleXMLCDATAFactory(),
             $this->user_manager,
-            new FieldChangeXMLExporter(
-                new FieldChangeDateBuilder(
-                    new XML_SimpleXMLCDATAFactory()
+            new DataChangesetXMLExporter(
+                new XML_SimpleXMLCDATAFactory(),
+                new FieldChangeXMLExporter(
+                    new FieldChangeDateBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeStringBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeTextBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeFloatBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeListBuilder(
+                        new XML_SimpleXMLCDATAFactory(),
+                        UserXMLExporter::build()
+                    ),
+                    new StatusValuesTransformer()
                 ),
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
-                ),
-                new FieldChangeTextBuilder(
-                    new XML_SimpleXMLCDATAFactory()
-                ),
-                new FieldChangeFloatBuilder(
-                    new XML_SimpleXMLCDATAFactory()
-                ),
-                new FieldChangeListBuilder(
-                    new XML_SimpleXMLCDATAFactory(),
-                    UserXMLExporter::build()
-                ),
-                new StatusValuesTransformer()
-            ),
-            new FieldChangeStringBuilder(
-                new XML_SimpleXMLCDATAFactory()
+                )
             )
         );
     }
