@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/bootstrap": "^4.3.1",
     "@types/dompurify": "^2.0.2",
-    "@types/jquery": "^3.3.34",
+    "@types/jquery": "^3.3.38",
     "@types/mustache": "^4.0.1",
     "@types/sprintf-js": "^1.1.2",
     "@vue/test-utils": "^1.0.3",
@@ -46,7 +46,7 @@
     "concurrently": "^5.2.0",
     "gulp": "^4.0.2",
     "gulp-angular-gettext": "^2.3.0",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.1",
     "vue-property-decorator": "^8.4.2",
     "vuex-class": "^0.3.2"
   },
