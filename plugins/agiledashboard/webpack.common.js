@@ -172,6 +172,16 @@ const webpack_config_for_kanban = {
             webpack_configurator.rule_vue_loader,
             webpack_configurator.rule_angular_mixed_vue_gettext,
             webpack_configurator.rule_angular_gettext_loader,
+            {
+                test: /\.js$/,
+                include: /node_modules\/escape-string-regexp\//,
+                use: [
+                    {
+                        loader: "babel-loader",
+                        options: webpack_configurator.babel_options_ie11,
+                    },
+                ],
+            },
         ],
     },
     plugins: [
