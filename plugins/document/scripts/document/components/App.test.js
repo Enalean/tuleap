@@ -47,6 +47,7 @@ describe("App", () => {
             is_deletion_allowed: true,
             is_item_status_metadata_used: false,
             is_obsolescence_date_metadata_used: false,
+            is_changelog_proposed_after_dnd: true,
             csrf_token: "challenge_value",
             csrf_token_name: "challenge_name",
         };
@@ -180,6 +181,7 @@ describe("App", () => {
             is_deletion_allowed: true,
             is_item_status_metadata_used: false,
             is_obsolescence_date_metadata_used: false,
+            is_changelog_proposed_after_dnd: true,
             csrf_token: "challenge_value",
             csrf_token_name: "challenge_name",
         };

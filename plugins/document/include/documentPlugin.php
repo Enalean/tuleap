@@ -28,6 +28,7 @@ use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
 use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
+use Tuleap\Document\Config\HistoryEnforcementSettingsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
 use Tuleap\Document\DownloadFolderAsZip\ZipStreamerLoggingHelper;
@@ -100,7 +101,8 @@ class documentPlugin extends Plugin // phpcs:ignore
         return new DocumentTreeController(
             $this->getProjectExtractor(),
             $this->getOldPluginInfo(),
-            new FileDownloadLimitsBuilder()
+            new FileDownloadLimitsBuilder(),
+            new HistoryEnforcementSettingsBuilder()
         );
     }
 
