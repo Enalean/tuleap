@@ -71,6 +71,15 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
 
         $backlog_trackers = $this->getBacklogTrackers($milestone);
 
+
+        $pane_info_collector = new \Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector(
+            $milestone,
+            null,
+            [],
+            null,
+        );
+        EventManager::instance()->processEvent($pane_info_collector);
+
         $milestone_representation = new MilestoneRepresentation();
         $milestone_representation->build(
             $milestone,
@@ -79,7 +88,8 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             $this->parent_tracker_retriever->getCreatableParentTrackers($milestone, $user, $backlog_trackers),
             $this->milestone_factory->userCanChangePrioritiesInMilestone($milestone, $user),
             $representation_type,
-            $is_scrum_mono_milestone_enabled
+            $is_scrum_mono_milestone_enabled,
+            $pane_info_collector
         );
 
         $this->event_manager->processEvent(

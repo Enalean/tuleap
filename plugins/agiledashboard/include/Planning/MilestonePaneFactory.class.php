@@ -264,9 +264,11 @@ class Planning_MilestonePaneFactory
         if ($milestone->getArtifact()) {
             $collector = new \Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector(
                 $milestone,
-                $this->request,
-                $this->request->getCurrentUser(),
-                $this->milestone_factory,
+                new \Tuleap\AgileDashboard\Milestone\Pane\ActivePaneContext(
+                    $this->request,
+                    $this->request->getCurrentUser(),
+                    $this->milestone_factory,
+                ),
                 $this->list_of_pane_info[$milestone->getArtifactId() ?? 0],
                 $this->active_pane[$milestone->getArtifactId() ?? 0]
             );

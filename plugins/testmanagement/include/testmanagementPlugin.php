@@ -20,8 +20,6 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
-use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -31,7 +29,6 @@ use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
-use Tuleap\TestManagement\AgileDashboardPaneInfo;
 use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
@@ -106,7 +103,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
-            $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
         }
 
         if (defined('TRACKER_BASE_URL')) {
@@ -377,27 +373,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
             $collector->addPane(new TestmanagementPaneInfo($milestone));
-        }
-    }
-
-    public function additionalPanesForMilestoneEvent(AdditionalPanesForMilestoneEvent $event): void
-    {
-        $milestone = $event->getMilestone();
-        $project   = $milestone->getProject();
-        if ($project->usesService($this->getServiceShortname())) {
-            $legacy_pane = new AgileDashboardPaneInfo($milestone);
-
-            $legacy_representation = new PaneInfoRepresentation();
-            $legacy_representation->build($legacy_pane);
-
-            $event->add($legacy_representation);
-
-            $pane = new TestmanagementPaneInfo($milestone);
-
-            $representation = new PaneInfoRepresentation();
-            $representation->build($pane);
-
-            $event->add($representation);
         }
     }
 

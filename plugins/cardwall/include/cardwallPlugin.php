@@ -388,15 +388,18 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             return;
         }
 
-        if ($collector->getRequest()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
+        $active_pane_context = $collector->getActivePaneContext();
+        if ($active_pane_context && $active_pane_context->getRequest()->get('pane') === CardwallPaneInfo::IDENTIFIER) {
             $pane_info->setActive(true);
-            $collector->setActivePane(
-                $this->getCardwallPane(
-                    $pane_info,
-                    $collector->getMilestone(),
-                    $collector->getUser(),
-                    $collector->getMilestoneFactory()
-                )
+            $collector->setActivePaneBuilder(
+                function () use ($pane_info, $collector, $active_pane_context): AgileDashboard_Pane {
+                    return $this->getCardwallPane(
+                        $pane_info,
+                        $collector->getMilestone(),
+                        $active_pane_context->getUser(),
+                        $active_pane_context->getMilestoneFactory()
+                    );
+                }
             );
         }
         $collector->addPane($pane_info);
