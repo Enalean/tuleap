@@ -126,6 +126,7 @@ final class DocumentFolderZipStreamer implements DispatchableWithRequest, Dispat
 
     private function streamFolder(\Docman_Folder $folder, Project $project, \PFUser $user): void
     {
+        session_write_close();
         $options = new Archive();
         $options->setSendHttpHeaders(true);
         $options->setStatFiles(true);
