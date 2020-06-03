@@ -26,6 +26,8 @@ use Tuleap\Docman\ExternalLinks\ExternalLinksManager;
 use Tuleap\Docman\ExternalLinks\Link;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminController;
 use Tuleap\Document\Config\Admin\FilesDownloadLimitsAdminSaveController;
+use Tuleap\Document\Config\Admin\HistoryEnforcementAdminController;
+use Tuleap\Document\Config\Admin\HistoryEnforcementAdminSaveController;
 use Tuleap\Document\Config\FileDownloadLimitsBuilder;
 use Tuleap\Document\DocumentUsageRetriever;
 use Tuleap\Document\DownloadFolderAsZip\DocumentFolderZipStreamer;
@@ -146,8 +148,13 @@ class documentPlugin extends Plugin // phpcs:ignore
             );
             $r->get('/{project_name:[A-z0-9-]+}/[{vue-routing:.*}]', $this->getRouteHandler('routeGet'));
         });
-        $event->getRouteCollector()->addRoute(['GET'], \DocmanPlugin::ADMIN_BASE_URL . "/files-download-limits", $this->getRouteHandler('routeGetDocumentSettings'));
-        $event->getRouteCollector()->addRoute(['POST'], \DocmanPlugin::ADMIN_BASE_URL . "/files-download-limits", $this->getRouteHandler('routePostDocumentSettings'));
+
+        $event->getRouteCollector()->addGroup(\DocmanPlugin::ADMIN_BASE_URL, function (FastRoute\RouteCollector $r) {
+            $r->get('/files-download-limits', $this->getRouteHandler('routeGetDocumentSettings'));
+            $r->post('/files-download-limits', $this->getRouteHandler('routePostDocumentSettings'));
+            $r->get('/history-enforcement', $this->getRouteHandler('routeGetHistoryEnforcementSettings'));
+            $r->post('/history-enforcement', $this->getRouteHandler('routePostHistoryEnforcementSettings'));
+        });
     }
 
     public function routeGetDocumentSettings(): FilesDownloadLimitsAdminController
@@ -158,6 +165,16 @@ class documentPlugin extends Plugin // phpcs:ignore
     public function routePostDocumentSettings(): FilesDownloadLimitsAdminSaveController
     {
         return FilesDownloadLimitsAdminSaveController::buildSelf();
+    }
+
+    public function routeGetHistoryEnforcementSettings(): HistoryEnforcementAdminController
+    {
+        return HistoryEnforcementAdminController::buildSelf();
+    }
+
+    public function routePostHistoryEnforcementSettings(): HistoryEnforcementAdminSaveController
+    {
+        return HistoryEnforcementAdminSaveController::buildSelf();
     }
 
     public function externalLinksManager(ExternalLinksManager $collector)
@@ -233,6 +250,10 @@ class documentPlugin extends Plugin // phpcs:ignore
     {
         $collection->add(
             new \Tuleap\Document\Config\Admin\FileDownloadTabPresenter()
+        );
+
+        $collection->add(
+            new \Tuleap\Document\Config\Admin\HistoryEnforcementTabPresenter()
         );
     }
 }

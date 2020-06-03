@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,17 +20,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Document\Config\Admin;
+namespace Tuleap\Document\Config;
 
-use Tuleap\Docman\DocmanSettingsSiteAdmin\DocmanSettingsTabPresenter;
-
-class FileDownloadTabPresenter extends DocmanSettingsTabPresenter
+class HistoryEnforcementSettingsBuilder
 {
-    public function __construct()
+    public function build(): HistoryEnforcementSettings
     {
-        parent::__construct(
-            FilesDownloadLimitsAdminController::URL,
-            dgettext('tuleap-document', 'File download limits')
+        $is_changelog_proposed_after_dnd = (bool) \ForgeConfig::get(
+            HistoryEnforcementSettings::IS_CHANGELOG_PROPOSED_AFTER_DND
         );
+
+        return new HistoryEnforcementSettings($is_changelog_proposed_after_dnd);
     }
 }
