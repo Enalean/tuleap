@@ -1,0 +1,39 @@
+{{# milestone_presenter }}
+    <h1 class="tlp-framed-horizontally testplan-root-title">
+        <div class="tlp-dropdown">
+            <div id="agiledashboard-scrum-milestone-menu">
+                {{ milestoneTitle }}
+                <i class="fa fa-fw fa-caret-down" id="agiledashboard-scrum-milestone-menu-caret"></i>
+            </div>
+            <div class="tlp-dropdown-menu" role="menu">
+                <a href="{{ editArtifactUrl }}"
+                   class="backlog-item-link tlp-dropdown-menu-item"
+                   data-artifact-id="{{ milestoneId }}"
+                   role="menuitem"
+                >
+                    {{ editArtifact }}
+                </a>
+            </div>
+        </div>
+        {{# displayMilestoneDates }}
+            <small>
+                {{startDate}} – {{endDate}}
+            </small>
+        {{/ displayMilestoneDates }}
+    </h1>
+
+    <nav class="tlp-tabs testplan-root-tabs">
+        {{# getPaneInfoList }}
+            <a href="{{ getUri }}" class="tlp-tab {{# isActive }}tlp-tab-active{{/ isActive }}">
+                {{ getTitle }}
+                {{# isExternalLink }}
+                    <i class="fa fa-external-link tlp-tab-icon"></i>
+                {{/ isExternalLink }}
+            </a>
+        {{/ getPaneInfoList }}
+        <a href="/plugins/tracker/?aid={{ milestoneId }}" class="tlp-tab">
+            {{ artifact }}
+            <i class="fa fa-external-link tlp-tab-icon"></i>
+        </a>
+    </nav>
+{{/ milestone_presenter }}

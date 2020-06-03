@@ -437,7 +437,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             Planning_MilestoneFactory::build(),
             new TestPlanPresenterBuilder(
                 $agiledashboard_plugin->getMilestonePaneFactory()
-            )
+            ),
+            new Browser()
         );
     }
 
