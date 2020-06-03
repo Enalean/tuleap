@@ -113,6 +113,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
+
         $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testmanagement_assets, 'test-plan'));
 
         $service->displayHeader(
@@ -127,6 +128,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
                 $this->presenter_builder->getPresenter($milestone)
             );
         } else {
+            $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testplan.js'));
             $this->renderer->renderToPage(
                 'test-plan',
                 $this->presenter_builder->getPresenter($milestone)
