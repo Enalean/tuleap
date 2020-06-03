@@ -20,54 +20,48 @@
 
 namespace Tuleap\TestManagement;
 
-use Planning_Milestone;
+use AgileDashboard_Pane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-final class TestmanagementPaneInfo extends PaneInfo
+final class TestmanagementPane extends AgileDashboard_Pane
 {
-    public const NAME = 'testmanagement';
-    public const URL  = '/testmanagement/plan';
-
     /**
-     * @var int
+     * @var TestmanagementPaneInfo
      */
-    private $milestone_id;
+    private $pane_info;
 
-    /**
-     * @var \Project
-     */
-    private $project;
-
-    public function __construct(Planning_Milestone $milestone)
+    public function __construct(TestmanagementPaneInfo $pane_info)
     {
-        parent::__construct($milestone);
-
-        $artifact           = $milestone->getArtifact();
-        $this->project      = $artifact->getTracker()->getProject();
-        $this->milestone_id = (int) $artifact->getId();
+        $this->pane_info = $pane_info;
     }
 
+    /**
+     * @return string eg: 'cardwall'
+     * @see PaneInfo::getIdentifier()
+     */
     public function getIdentifier()
     {
-        return self::NAME;
+        return $this->pane_info->getIdentifier();
     }
 
-    public function getTitle()
+    /**
+     * Return the content when displayed as a Pane
+     *
+     * @return string eg: '<a href="">customize</a> <table>...</table>'
+     */
+    public function getFullContent()
     {
-        return dgettext('tuleap-testmanagement', 'Tests');
+        return '';
     }
 
-    public function getUri()
+    /**
+     * Return the content when displayed on the agile dashboard front page
+     * Only used for cardwall as of today
+     *
+     * @return string eg: '<table>...</table>'
+     */
+    public function getMinimalContent()
     {
-        return self::URL
-            . '/'
-            . urlencode($this->project->getUnixNameMixedCase())
-            . '/'
-            . $this->milestone_id;
-    }
-
-    public function getIconName()
-    {
-        return 'fa-check';
+        return '';
     }
 }

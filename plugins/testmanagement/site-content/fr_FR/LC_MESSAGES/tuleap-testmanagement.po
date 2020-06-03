@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2020-06-02 11:32+0200\n"
+"PO-Revision-Date: 2020-06-03 09:46+0200\n"
 "Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -72,6 +72,9 @@ msgstr "Outil de suivi des bugs"
 
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"
+
+msgid "Milestone not found."
+msgstr "Le jalon n'a pas été trouvé."
 
 msgid "Permission denied"
 msgstr "Permission refusée"
