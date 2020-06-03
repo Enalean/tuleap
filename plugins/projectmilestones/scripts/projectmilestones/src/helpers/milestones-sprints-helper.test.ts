@@ -18,7 +18,7 @@
  */
 
 import { MilestoneData } from "../type";
-import { openSprintsExist } from "./milestones-sprints-helper";
+import { openSprintsExist, closedSprintsExists } from "./milestones-sprints-helper";
 
 describe("Milestones Sprints Helper", () => {
     describe("openSprintsExists", () => {
@@ -77,6 +77,54 @@ describe("Milestones Sprints Helper", () => {
 
             const exists = openSprintsExist(release_data);
             expect(exists).toBe(true);
+        });
+    });
+
+    describe("closedSprintsExist", () => {
+        it("When total_sprints is undefined, Then false returned", () => {
+            const release_data: MilestoneData = {
+                id: 10,
+            } as MilestoneData;
+
+            const exists = closedSprintsExists(release_data);
+            expect(exists).toBe(false);
+        });
+        it("When total_sprints is null, Then false returned", () => {
+            const release_data: MilestoneData = {
+                id: 10,
+                total_sprint: null,
+            } as MilestoneData;
+
+            const exists = closedSprintsExists(release_data);
+            expect(exists).toBe(false);
+        });
+        it("When total_sprints is defined but total_closed_sprints is undefined, Then false returned", () => {
+            const release_data: MilestoneData = {
+                id: 10,
+                total_sprint: 10,
+            } as MilestoneData;
+
+            const exists = closedSprintsExists(release_data);
+            expect(exists).toBe(false);
+        });
+        it("When closed_sprints is 0, Then false returned", () => {
+            const release: MilestoneData = {
+                total_sprint: 10,
+                total_closed_sprint: 0,
+            } as MilestoneData;
+
+            const exist = closedSprintsExists(release);
+            expect(exist).toBe(false);
+        });
+
+        it("When there are some closed sprints, Then true returned", () => {
+            const release: MilestoneData = {
+                total_sprint: 10,
+                total_closed_sprint: 2,
+            } as MilestoneData;
+
+            const exist = closedSprintsExists(release);
+            expect(exist).toBe(true);
         });
     });
 });

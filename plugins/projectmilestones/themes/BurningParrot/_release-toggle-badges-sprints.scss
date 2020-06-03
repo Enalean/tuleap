@@ -73,7 +73,7 @@ $width-bar-left-sprints: 16px;
     font-size: .8rem;
 }
 
-.project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
+.can-close-sprint .project-release-open-sprint-badges:hover .project-release-open-sprint-badge-icon-toggle {
     cursor: pointer;
 
     &::before {
@@ -96,7 +96,7 @@ $width-bar-left-sprints: 16px;
     }
 }
 
-.open-badges-sprints:hover .project-release-open-sprint-badge-icon-toggle {
+.can-close-sprint .open-badges-sprints:hover .project-release-open-sprint-badge-icon-toggle {
     background: transparent;
 }
 
@@ -175,7 +175,7 @@ $width-bar-left-sprints: 16px;
     background: $tlp-ui-dimmed;
 }
 
-.open-badges-sprints:hover .project-release-closed-sprint-badge::before {
+.can-close-sprint .open-badges-sprints:hover .project-release-closed-sprint-badge::before {
     display: none;
 }
 
@@ -190,7 +190,7 @@ $width-bar-left-sprints: 16px;
 }
 
 
-.icon-badge-sprint-to-close {
+.can-close-sprint .icon-badge-sprint-to-close {
     content: '';
     display: flex;
     position: absolute;
@@ -214,8 +214,8 @@ $width-bar-left-sprints: 16px;
     }
 }
 
-.open-badges-sprints:hover .icon-badge-sprint-to-close,
-.icon-badge-sprint-to-close:hover {
+.can-close-sprint .open-badges-sprints:hover .icon-badge-sprint-to-close,
+.can-close-sprint .icon-badge-sprint-to-close:hover {
     &::before {
         content: '\f066'; //fa-compress
         font-size: .6rem;
@@ -251,7 +251,7 @@ $width-bar-left-sprints: 16px;
     flex-direction: column;
 }
 
-.open-badges-sprints:hover {
+.can-close-sprint .open-badges-sprints:hover {
     &::before {
         content: '';
         position: absolute;

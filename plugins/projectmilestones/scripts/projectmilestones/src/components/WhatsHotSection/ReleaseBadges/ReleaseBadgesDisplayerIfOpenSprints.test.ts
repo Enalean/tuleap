@@ -63,6 +63,8 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         release_data = {
             id: 2,
             total_sprint,
+            total_closed_sprint: 1,
+            open_sprints: [] as MilestoneData[],
             resources: {
                 milestones: {
                     accept: {
@@ -90,6 +92,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             release_data = {
                 id: 2,
                 total_sprint: 0,
+                open_sprints: [] as MilestoneData[],
             } as MilestoneData;
 
             component_options.propsData = {
@@ -105,6 +108,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             release_data = {
                 id: 2,
                 total_sprint: null,
+                open_sprints: [] as MilestoneData[],
             } as MilestoneData;
 
             component_options.propsData = {
@@ -123,6 +127,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 open_sprints: [
                     {
                         id: 10,
+                    } as MilestoneData,
+                    {
+                        id: 11,
                     } as MilestoneData,
                 ],
                 resources: {
@@ -153,6 +160,7 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
             release_data = {
                 id: 2,
                 total_sprint: null,
+                open_sprints: [] as MilestoneData[],
                 resources: {
                     milestones: {
                         accept: {
@@ -278,6 +286,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 {
                     id: 10,
                 } as MilestoneData,
+                {
+                    id: 11,
+                } as MilestoneData,
             ],
             resources: {
                 milestones: {
@@ -312,6 +323,9 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
                 {
                     id: 10,
                 } as MilestoneData,
+                {
+                    id: 11,
+                } as MilestoneData,
             ],
             resources: {
                 milestones: {
@@ -342,5 +356,77 @@ describe("ReleaseBadgesDisplayerIfOpenSprints", () => {
         await wrapper.vm.$nextTick();
         expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
         expect(wrapper.findComponent(ReleaseBadgesAllSprints).exists()).toBe(false);
+    });
+
+    it("When there is only one sprint and no closed sprints and it's not the first release, Then sprints details is open", async () => {
+        release_data = {
+            id: 2,
+            total_sprint: 10,
+            open_sprints: [
+                {
+                    id: 10,
+                } as MilestoneData,
+            ],
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [
+                            {
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+            isOpen: false,
+        };
+
+        store_options.state.user_can_view_sub_milestones_planning = true;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(true);
+    });
+
+    it("When there are only open sprint and no closed, Then ReleaseClosedSprints is not rendered", async () => {
+        release_data = {
+            id: 2,
+            total_sprint: 10,
+            open_sprints: [
+                {
+                    id: 10,
+                } as MilestoneData,
+                {
+                    id: 11,
+                } as MilestoneData,
+            ],
+            resources: {
+                milestones: {
+                    accept: {
+                        trackers: [
+                            {
+                                label: "Sprint1",
+                            },
+                        ],
+                    },
+                },
+            },
+        } as MilestoneData;
+
+        component_options.propsData = {
+            release_data,
+            isOpen: false,
+        };
+
+        store_options.state.user_can_view_sub_milestones_planning = true;
+
+        const wrapper = await getPersonalWidgetInstance(store_options);
+
+        expect(wrapper.findComponent(ReleaseBadgesOpenSprint).exists()).toBe(false);
+        expect(wrapper.findComponent(ReleaseBadgesClosedSprints).exists()).toBe(false);
     });
 });

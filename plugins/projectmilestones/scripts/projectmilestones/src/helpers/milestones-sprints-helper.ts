@@ -30,3 +30,15 @@ export function openSprintsExist(release_data: MilestoneData): boolean {
 
     return release_data.open_sprints.length > 0;
 }
+
+export function closedSprintsExists(release_data: MilestoneData): boolean {
+    if (typeof release_data.total_sprint !== "number") {
+        return false;
+    }
+
+    if (!release_data.total_closed_sprint) {
+        return false;
+    }
+
+    return release_data.total_closed_sprint > 0;
+}
