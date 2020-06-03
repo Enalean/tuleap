@@ -64,6 +64,10 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
      * @var IncludeAssets
      */
     private $testmanagement_assets;
+    /**
+     * @var \Browser
+     */
+    private $browser;
 
     public function __construct(
         TemplateRenderer $renderer,
@@ -72,7 +76,8 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         IncludeAssets $testmanagement_assets,
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
-        TestPlanPresenterBuilder $presenter_builder
+        TestPlanPresenterBuilder $presenter_builder,
+        \Browser $browser
     ) {
         $this->renderer              = $renderer;
         $this->bread_crumbs_builder  = $bread_crumbs_builder;
@@ -81,6 +86,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         $this->visit_recorder        = $visit_recorder;
         $this->milestone_factory     = $milestone_factory;
         $this->presenter_builder     = $presenter_builder;
+        $this->browser               = $browser;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
@@ -115,10 +121,17 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
             [],
             ['main_classes' => ['fluid-main']]
         );
-        $this->renderer->renderToPage(
-            'test-plan',
-            $this->presenter_builder->getPresenter($milestone)
-        );
+        if ($this->browser->isIE11()) {
+            $this->renderer->renderToPage(
+                'test-plan-unsupported-browser',
+                $this->presenter_builder->getPresenter($milestone)
+            );
+        } else {
+            $this->renderer->renderToPage(
+                'test-plan',
+                $this->presenter_builder->getPresenter($milestone)
+            );
+        }
         $service->displayFooter();
     }
 }
