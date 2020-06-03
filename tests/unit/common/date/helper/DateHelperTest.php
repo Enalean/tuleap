@@ -130,6 +130,13 @@ final class DateHelperTest extends TestCase
         $this->assertMatchesRegularExpression('/2011-\d+-\d+ \d+:\d+/', $this->formatDate($dayOnly, "Y-m-d h:i"));
     }
 
+    public function testFormatDateReturnsEmptyStringWhenDateIsZero(): void
+    {
+        $lang = \Mockery::mock(\BaseLanguage::class);
+        $lang->shouldReceive('getText')->andReturn('Y-m-d');
+        $this->assertEquals("", DateHelper::formatForLanguage($lang, 0, false));
+    }
+
     private function formatDate($dayOnly, $format)
     {
         $lang = \Mockery::mock(\BaseLanguage::class);
