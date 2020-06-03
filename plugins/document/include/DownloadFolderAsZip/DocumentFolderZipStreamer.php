@@ -99,7 +99,6 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         $user              = $this->user_manager->getCurrentUser();
         $folder            = $this->getFolder($user, $project, $request_variables);
 
-        ini_set('max_execution_time', '0');
         $factory = \Docman_FolderFactory::instance($project->getID());
         $factory->getItemTree($folder, $user, false, true);
         $this->checkFolderSizeIsAllowedForDownload($folder);
@@ -154,9 +153,13 @@ final class DocumentFolderZipStreamer extends DispatchablePSR15Compatible implem
         return function () use ($folder, $project, $user): void {
             $options = new Archive();
             $options->setStatFiles(true);
+            $options->setLargeFileSize(0);
+            $options->setZeroHeader(true);
 
             $zip = new ZipStream(null, $options);
             $errors_listing_builder = new ErrorsListingBuilder();
+
+            ini_set('max_execution_time', '0');
 
             $folder->accept(
                 new ZipStreamFolderFilesVisitor($zip, $this->error_logging_helper, $errors_listing_builder),
