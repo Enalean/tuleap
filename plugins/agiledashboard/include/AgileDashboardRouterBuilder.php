@@ -93,10 +93,13 @@ class AgileDashboardRouterBuilder
         $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
         $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
+        $event_manager = EventManager::instance();
+
         $top_milestone_pane_factory = $this->getTopMilestonePaneFactory(
             $request,
             $milestone_representation_builder,
-            $paginated_backlog_items_representations_builder
+            $paginated_backlog_items_representations_builder,
+            $event_manager
         );
 
         $service_crumb_builder        = new AgileDashboardCrumbBuilder($plugin->getPluginPath());
@@ -115,7 +118,6 @@ class AgileDashboardRouterBuilder
         $mono_milestone_checker = new ScrumForMonoMilestoneChecker(new ScrumForMonoMilestoneDao(), $planning_factory);
 
         $ugroup_manager = new UGroupManager();
-        $event_manager  = EventManager::instance();
 
         return new AgileDashboardRouter(
             $plugin,
@@ -179,13 +181,15 @@ class AgileDashboardRouterBuilder
     private function getTopMilestonePaneFactory(
         $request,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
-        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder,
+        EventManager $event_manager
     ) {
         return new Planning_VirtualTopMilestonePaneFactory(
             $request,
             $milestone_representation_builder,
             $paginated_backlog_items_representations_builder,
-            new ExplicitBacklogDao()
+            new ExplicitBacklogDao(),
+            $event_manager
         );
     }
 

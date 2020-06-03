@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 
 /**
  * I build panes for a Planning_Milestone
@@ -69,6 +70,10 @@ class Planning_MilestonePaneFactory
 
     /** @var AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder */
     private $paginated_backlog_items_representations_builder;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Codendi_Request $request,
@@ -77,7 +82,8 @@ class Planning_MilestonePaneFactory
         AgileDashboard_Milestone_Pane_Planning_SubmilestoneFinder $submilestone_finder,
         AgileDashboard_PaneInfoFactory $pane_info_factory,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
-        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder
+        AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder,
+        EventManager $event_manager
     ) {
         $this->request                                         = $request;
         $this->milestone_factory                               = $milestone_factory;
@@ -86,6 +92,7 @@ class Planning_MilestonePaneFactory
         $this->pane_info_factory                               = $pane_info_factory;
         $this->milestone_representation_builder                = $milestone_representation_builder;
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
+        $this->event_manager                                   = $event_manager;
     }
 
     /** @return PanePresenterData */
@@ -245,6 +252,9 @@ class Planning_MilestonePaneFactory
      */
     private function getPlanningV2Pane(PlanningV2PaneInfo $info, Planning_Milestone $milestone)
     {
+        $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
+        $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
+
         return new AgileDashboard_Milestone_Pane_Planning_PlanningV2Pane(
             $info,
             new AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter(
@@ -254,7 +264,8 @@ class Planning_MilestonePaneFactory
                 $this->getMilestoneRepresentation($milestone, $this->request->getCurrentUser()),
                 $this->getPaginatedBacklogItemsRepresentationsForMilestone($milestone, $this->request->getCurrentUser()),
                 $this->getPaginatedSubMilestonesRepresentations($milestone, $this->request->getCurrentUser()),
-                false
+                false,
+                $allowed_additional_panes_to_display_collector->getIdentifiers()
             )
         );
     }

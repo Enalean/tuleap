@@ -57,7 +57,14 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
      * @var bool
      */
     public $is_in_explicit_top_backlog;
+    /**
+     * @var string
+     */
+    public $allowed_additional_panes_to_display;
 
+    /**
+     * @param string[] $allowed_additional_panes_to_display
+     */
     public function __construct(
         PFUser $current_user,
         Project $project,
@@ -65,7 +72,8 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $milestone_representation,
         $paginated_backlog_items_representations,
         $paginated_milestones_representations,
-        bool $is_in_explicit_top_backlog
+        bool $is_in_explicit_top_backlog,
+        array $allowed_additional_panes_to_display
     ) {
         $this->user_id                                 = $current_user->getId();
         $this->lang                                    = $this->getLanguageAbbreviation($current_user);
@@ -77,11 +85,12 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->paginated_milestones_representations    = json_encode($paginated_milestones_representations);
         $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
         $this->is_in_explicit_top_backlog              = $is_in_explicit_top_backlog;
+        $this->allowed_additional_panes_to_display     = json_encode($allowed_additional_panes_to_display);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user)
     {
-        list($lang, $country) = explode('_', $current_user->getLocale());
+        [$lang, $country] = explode('_', $current_user->getLocale());
 
         return $lang;
     }

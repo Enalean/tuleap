@@ -25,6 +25,8 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
 final class TestmanagementPaneInfo extends PaneInfo
 {
+    public const NAME = 'testmanagement';
+
     /** @var int */
     private $project_id;
 
@@ -42,7 +44,7 @@ final class TestmanagementPaneInfo extends PaneInfo
 
     public function getIdentifier()
     {
-        return 'testmanagement';
+        return self::NAME;
     }
 
     public function getTitle()
