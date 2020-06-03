@@ -28,6 +28,9 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         const is_in_explicit_top_backlog = planning_init_data.isInExplicitTopBacklog;
         SharedPropertiesService.setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog);
         setAccessibilityMode(JSON.parse(planning_init_data.userAccessibilityMode));
+        SharedPropertiesService.setAllowedAdditionalPanesToDisplay(
+            JSON.parse(planning_init_data.allowedAdditionalPanesToDisplay)
+        );
 
         const language = planning_init_data.language;
         initLocale(language);

@@ -8,6 +8,7 @@ export default function SharedPropertiesService() {
         initial_backlog_items: undefined,
         initial_milestones: undefined,
         is_in_explicit_top_backlog: undefined,
+        allowed_additional_panes_to_display: [],
     };
 
     return {
@@ -27,6 +28,8 @@ export default function SharedPropertiesService() {
         setInitialMilestones: setInitialMilestones,
         isInExplicitTopBacklogManagement: isInExplicitTopBacklogManagement,
         setIsInExplicitTopBacklogManagement: setIsInExplicitTopBacklogManagement,
+        setAllowedAdditionalPanesToDisplay: setAllowedAdditionalPanesToDisplay,
+        getAllowedAdditionalPanesToDisplay: getAllowedAdditionalPanesToDisplay,
     };
 
     function getUserId() {
@@ -91,5 +94,13 @@ export default function SharedPropertiesService() {
 
     function setIsInExplicitTopBacklogManagement(is_in_explicit_top_backlog) {
         property.is_in_explicit_top_backlog = is_in_explicit_top_backlog;
+    }
+
+    function setAllowedAdditionalPanesToDisplay(allowed_additional_panes_to_display) {
+        property.allowed_additional_panes_to_display = allowed_additional_panes_to_display;
+    }
+
+    function getAllowedAdditionalPanesToDisplay() {
+        return property.allowed_additional_panes_to_display;
     }
 }

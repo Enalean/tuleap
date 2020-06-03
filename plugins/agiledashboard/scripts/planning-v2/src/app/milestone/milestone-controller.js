@@ -13,6 +13,7 @@ MilestoneController.$inject = [
     "DroppedService",
     "MilestoneCollectionService",
     "BacklogItemSelectedService",
+    "SharedPropertiesService",
 ];
 
 function MilestoneController(
@@ -24,7 +25,8 @@ function MilestoneController(
     BacklogService,
     DroppedService,
     MilestoneCollectionService,
-    BacklogItemSelectedService
+    BacklogItemSelectedService,
+    SharedPropertiesService
 ) {
     const self = this;
     Object.assign(self, {
@@ -353,8 +355,8 @@ function MilestoneController(
     }
 
     function additionalPanesToDisplay() {
-        return self.milestone.resources.additional_panes.filter(
-            (pane) => pane.identifier === "taskboard" || pane.identifier === "testmanagement"
+        return self.milestone.resources.additional_panes.filter((pane) =>
+            SharedPropertiesService.getAllowedAdditionalPanesToDisplay().includes(pane.identifier)
         );
     }
 }

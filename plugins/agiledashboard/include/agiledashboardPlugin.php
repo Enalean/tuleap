@@ -1851,7 +1851,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $submilestone_finder
         );
 
-        $pane_factory = new Planning_MilestonePaneFactory(
+        $event_manager = EventManager::instance();
+
+        return new Planning_MilestonePaneFactory(
             $request,
             $milestone_factory,
             new AgileDashboard_Milestone_Pane_PanePresenterBuilderFactory(
@@ -1861,15 +1863,14 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     new AgileDashboard_Milestone_Backlog_BacklogItemPresenterBuilder()
                 ),
                 new BurnupFieldRetriever(Tracker_FormElementFactory::instance()),
-                EventManager::instance()
+                $event_manager
             ),
             $submilestone_finder,
             $pane_info_factory,
             $milestone_representation_builder,
-            $paginated_backlog_items_representations_builder
+            $paginated_backlog_items_representations_builder,
+            $event_manager
         );
-
-        return $pane_factory;
     }
 
     public function getIncludeAssets(): IncludeAssets

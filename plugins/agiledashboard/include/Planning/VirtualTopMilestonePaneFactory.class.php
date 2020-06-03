@@ -23,6 +23,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
 use Tuleap\AgileDashboard\Milestone\Pane\TopPlanning\TopPlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 
 /**
  * I build panes for a Planning_Milestone
@@ -58,17 +59,23 @@ class Planning_VirtualTopMilestonePaneFactory
      * @var ExplicitBacklogDao
      */
     private $explicit_backlog_dao;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
 
     public function __construct(
         Codendi_Request $request,
         AgileDashboard_Milestone_MilestoneRepresentationBuilder $milestone_representation_builder,
         AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder $paginated_backlog_items_representations_builder,
-        ExplicitBacklogDao $explicit_backlog_dao
+        ExplicitBacklogDao $explicit_backlog_dao,
+        EventManager $event_manager
     ) {
         $this->request                                         = $request;
         $this->milestone_representation_builder                = $milestone_representation_builder;
         $this->paginated_backlog_items_representations_builder = $paginated_backlog_items_representations_builder;
         $this->explicit_backlog_dao                            = $explicit_backlog_dao;
+        $this->event_manager                                   = $event_manager;
     }
 
     /** @return PanePresenterData */
@@ -142,6 +149,9 @@ class Planning_VirtualTopMilestonePaneFactory
             return;
         }
 
+        $allowed_additional_panes_to_display_collector = new AllowedAdditionalPanesToDisplayCollector();
+        $this->event_manager->processEvent($allowed_additional_panes_to_display_collector);
+
         $pane_info = new TopPlanningV2PaneInfo($milestone, $milestone_tracker);
         $pane_info->setActive(true);
         $project                                   = $this->request->getProject();
@@ -155,7 +165,8 @@ class Planning_VirtualTopMilestonePaneFactory
                 null,
                 $this->getPaginatedBacklogItemsRepresentationsForTopMilestone($milestone, $user),
                 $this->getPaginatedTopMilestonesRepresentations($project, $user),
-                $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID())
+                $this->explicit_backlog_dao->isProjectUsingExplicitBacklog((int) $project->getID()),
+                $allowed_additional_panes_to_display_collector->getIdentifiers()
             )
         );
 

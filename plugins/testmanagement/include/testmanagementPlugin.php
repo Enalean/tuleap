@@ -20,6 +20,7 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
+use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -103,6 +104,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
+            $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
         }
 
         if (defined('TRACKER_BASE_URL')) {
@@ -820,6 +822,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
+    }
+
+    public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
+    {
+        $event->add(TestmanagementPaneInfo::NAME);
     }
 
     private function getImportXmlFromTracker(): ImportXMLFromTracker

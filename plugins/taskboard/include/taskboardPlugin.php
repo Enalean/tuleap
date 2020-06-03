@@ -23,6 +23,7 @@ declare(strict_types=1);
 use Tuleap\AgileDashboard\Event\GetAdditionalScrumAdminSection;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
+use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
@@ -83,6 +84,7 @@ class taskboardPlugin extends Plugin
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
             $this->addHook(AlternativeBoardLinkEvent::NAME);
+            $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
         }
 
         if (defined('CARDWALL_BASE_URL')) {
@@ -238,6 +240,11 @@ class taskboardPlugin extends Plugin
 
         $duplicator = new TaskboardUsageDuplicator(new TaskboardUsageDao());
         $duplicator->duplicateUsage($project_id, $template_id);
+    }
+
+    public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
+    {
+        $event->add(TaskboardPaneInfo::NAME);
     }
 
     private function isIE11(): bool
