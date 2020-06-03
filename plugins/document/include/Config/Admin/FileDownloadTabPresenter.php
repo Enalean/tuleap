@@ -30,7 +30,7 @@ class FileDownloadTabPresenter extends DocmanSettingsTabPresenter
     {
         parent::__construct(
             FilesDownloadLimitsAdminController::URL,
-            dgettext('tuleap-document', 'File download limits')
+            dgettext('tuleap-docman', 'File download limits')
         );
     }
 }

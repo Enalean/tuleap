@@ -39,16 +39,6 @@ msgstr "Limites de téléchargement"
 msgid "Files missing in your latest archive download"
 msgstr "Des fichiers manquent dans l'archive récemment téléchargée"
 
-msgid ""
-"Hence, Tuleap will avoid users from forgetting to communicate changes made "
-"in the document."
-msgstr ""
-"Par conséquent, Tuleap évitera aux utilisateur d'oublier de remplir les "
-"changements apportés au document."
-
-msgid "History enforcement"
-msgstr "Historique"
-
 msgid "However, all its content could not have been included in the archive."
 msgstr "Cependant, tout son contenu n'a pas pu être ajouté à l'archive."
 
@@ -66,11 +56,6 @@ msgstr "Veuillez contacter votre administrateur de site."
 
 msgid "Project not found"
 msgstr "Projet non trouvé"
-
-msgid "Propose changelog after new file version drag and drop"
-msgstr ""
-"Proposer de remplir le journal des modifications après le glissé déposé "
-"d'une nouvelle version d'un fichier"
 
 msgid "Provides a modern interface for the Document Manager service"
 msgstr "Fournit une interface moderne au service de gestion des documents"
@@ -112,14 +97,6 @@ msgstr ""
 
 msgid "Warning threshold"
 msgstr "Seuil d'avertissement"
-
-msgid ""
-"When this option is enabled, a changelog modal will open each time a user "
-"creates a new version of a file by drag and drop."
-msgstr ""
-"Lorsque que cette option est active, la modal du journal des modifications "
-"s'ouvrira à chaque fois qu'un utilisateur créé une nouvelle version d'un "
-"fichier au moyen d'un glissé-déposé."
 
 #, php-format
 msgid ""
