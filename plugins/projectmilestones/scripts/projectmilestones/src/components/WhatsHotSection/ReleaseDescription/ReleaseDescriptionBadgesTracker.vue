@@ -17,14 +17,17 @@
   - along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template functional>
+<template>
     <div class="release-number-artifact">
+        <h2 class="tlp-pane-subtitle" v-if="display_title" data-test="subtitle-tracker" v-translate>
+            Content
+        </h2>
         <div
-            v-for="tracker in props.release_data.number_of_artifact_by_trackers"
+            v-for="tracker in trackers_to_display"
             v-bind:key="tracker.id"
             class="release-number-artifacts-tracker"
             v-bind:class="['release-number-artifacts-tracker-' + tracker.color_name]"
-            data-test="color-name-tracker"
+            v-bind:data-test="`color-name-tracker-${tracker.id}`"
         >
             <span class="release-number-artifacts-value" data-test="total-artifact-tracker">
                 {{ tracker.total_artifact }}
@@ -37,8 +40,22 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
+import { MilestoneData, TrackerNumberArtifacts } from "../../../type";
 
 @Component
-export default class ReleaseDescriptionBadgesTracker extends Vue {}
+export default class ReleaseDescriptionBadgesTracker extends Vue {
+    @Prop()
+    readonly release_data!: MilestoneData;
+
+    get trackers_to_display(): TrackerNumberArtifacts[] {
+        return this.release_data.number_of_artifact_by_trackers.filter(
+            (tracker) => tracker.total_artifact > 0
+        );
+    }
+
+    get display_title(): boolean {
+        return this.trackers_to_display.length > 0;
+    }
+}
 </script>

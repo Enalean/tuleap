@@ -23,6 +23,10 @@ $timeline-color: mix($tlp-theme-color, $tlp-ui-white, 10%);
 .release-number-artifact {
     flex: 0 0 auto;
     margin: 0 $tlp-x-large-spacing 0 0;
+
+    .tlp-pane-subtitle {
+        margin: 0 0 $tlp-half-spacing 0;
+    }
 }
 
 .release-number-artifacts-tracker {
