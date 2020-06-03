@@ -25,8 +25,6 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
-use Tuleap\AgileDashboard\REST\v1\AdditionalPanesForMilestoneEvent;
-use Tuleap\AgileDashboard\REST\v1\PaneInfoRepresentation;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -84,7 +82,6 @@ class taskboardPlugin extends Plugin
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
-            $this->addHook(AdditionalPanesForMilestoneEvent::NAME);
             $this->addHook(AlternativeBoardLinkEvent::NAME);
         }
 
@@ -152,9 +149,13 @@ class taskboardPlugin extends Plugin
             return;
         }
 
-        if (strpos($_SERVER['REQUEST_URI'], '/taskboard/') === 0) {
+        if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], '/taskboard/') === 0) {
             $pane_info->setActive(true);
-            $collector->setActivePane(new TaskboardPane($pane_info));
+            $collector->setActivePaneBuilder(
+                static function () use ($pane_info): AgileDashboard_Pane {
+                    return new TaskboardPane($pane_info);
+                }
+            );
         }
 
         if ($collector->has(CardwallPaneInfo::IDENTIFIER)) {
@@ -169,23 +170,6 @@ class taskboardPlugin extends Plugin
     private function getCardwallOnTopDao(): Cardwall_OnTop_Dao
     {
         return new Cardwall_OnTop_Dao();
-    }
-
-    public function additionalPanesForMilestoneEvent(AdditionalPanesForMilestoneEvent $event): void
-    {
-        if ($this->isIE11()) {
-            return;
-        }
-
-        $milestone = $event->getMilestone();
-
-        $pane = $this->getPaneInfoForMilestone($milestone);
-        if ($pane !== null) {
-            $representation = new PaneInfoRepresentation();
-            $representation->build($pane);
-
-            $event->add($representation);
-        }
     }
 
     private function getPaneInfoForMilestone(Planning_Milestone $milestone): ?TaskboardPaneInfo

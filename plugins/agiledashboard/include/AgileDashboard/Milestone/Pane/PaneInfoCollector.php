@@ -24,10 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 use AgileDashboard_Pane;
-use Codendi_Request;
-use PFUser;
 use Planning_Milestone;
-use Planning_MilestoneFactory;
 use Tuleap\Event\Dispatchable;
 
 class PaneInfoCollector implements Dispatchable
@@ -48,32 +45,24 @@ class PaneInfoCollector implements Dispatchable
      */
     private $milestone;
     /**
-     * @var Codendi_Request
+     * @var null|\Closure(): AgileDashboard_Pane
      */
-    private $request;
+    private $active_pane_builder;
     /**
-     * @var PFUser
+     * @var ActivePaneContext|null
      */
-    private $user;
-    /**
-     * @var Planning_MilestoneFactory
-     */
-    private $milestone_factory;
+    private $active_pane_context;
 
     public function __construct(
         Planning_Milestone $milestone,
-        Codendi_Request $request,
-        PFUser $user,
-        Planning_MilestoneFactory $milestone_factory,
+        ?ActivePaneContext $active_pane_context,
         array $panes,
         ?AgileDashboard_Pane $active_pane
     ) {
-        $this->milestone         = $milestone;
-        $this->request           = $request;
-        $this->user              = $user;
-        $this->milestone_factory = $milestone_factory;
-        $this->panes             = $panes;
-        $this->active_pane       = $active_pane;
+        $this->milestone           = $milestone;
+        $this->active_pane_context = $active_pane_context;
+        $this->panes               = $panes;
+        $this->active_pane         = $active_pane;
     }
 
     public function getPanes(): array
@@ -116,12 +105,19 @@ class PaneInfoCollector implements Dispatchable
 
     public function getActivePane(): ?AgileDashboard_Pane
     {
+        if ($this->active_pane_builder) {
+            return call_user_func($this->active_pane_builder);
+        }
+
         return $this->active_pane;
     }
 
-    public function setActivePane(AgileDashboard_Pane $active_pane): void
+    /**
+     * @param \Closure(): AgileDashboard_Pane $active_pane_builder
+     */
+    public function setActivePaneBuilder(\Closure $active_pane_builder): void
     {
-        $this->active_pane = $active_pane;
+        $this->active_pane_builder = $active_pane_builder;
     }
 
     public function getMilestone(): Planning_Milestone
@@ -129,18 +125,8 @@ class PaneInfoCollector implements Dispatchable
         return $this->milestone;
     }
 
-    public function getRequest(): Codendi_Request
+    public function getActivePaneContext(): ?ActivePaneContext
     {
-        return $this->request;
-    }
-
-    public function getUser(): PFUser
-    {
-        return $this->user;
-    }
-
-    public function getMilestoneFactory(): Planning_MilestoneFactory
-    {
-        return $this->milestone_factory;
+        return $this->active_pane_context;
     }
 }

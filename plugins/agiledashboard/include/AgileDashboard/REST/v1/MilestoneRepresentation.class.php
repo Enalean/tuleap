@@ -20,9 +20,9 @@
 namespace Tuleap\AgileDashboard\REST\v1;
 
 use AgileDashboard_MilestonesCardwallRepresentation;
-use EventManager;
 use Planning_Milestone;
 use PlanningFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\Project\REST\ProjectReference;
@@ -195,7 +195,8 @@ class MilestoneRepresentation
         array $parent_trackers,
         $has_user_priority_change_permission,
         $representation_type,
-        $is_mono_milestone_enabled
+        $is_mono_milestone_enabled,
+        PaneInfoCollector $pane_info_collector
     ) {
         $this->id                   = JsonCast::toInt($milestone->getArtifactId());
         $this->uri                  = self::ROUTE . '/' . $this->id;
@@ -291,10 +292,12 @@ class MilestoneRepresentation
             'uri' => $this->uri . '/siblings'
         ];
 
-        $event = new AdditionalPanesForMilestoneEvent($milestone);
-        EventManager::instance()->processEvent($event);
-
-        $this->resources['additional_panes'] = $event->getPaneInfoRepresentations();
+        $this->resources['additional_panes'] = [];
+        foreach ($pane_info_collector->getPanes() as $pane_info) {
+            $representation = new PaneInfoRepresentation();
+            $representation->build($pane_info);
+            $this->resources['additional_panes'][] = $representation;
+        }
     }
 
     private function getContentTrackersRepresentation(Planning_Milestone $milestone)

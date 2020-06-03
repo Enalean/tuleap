@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
+use AgileDashboard_Pane;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -39,9 +40,7 @@ class PaneInfoCollectorTest extends TestCase
     {
         $this->collector = new PaneInfoCollector(
             Mockery::mock(\Planning_Milestone::class),
-            Mockery::mock(\Codendi_Request::class),
-            Mockery::mock(\PFUser::class),
-            Mockery::mock(\Planning_MilestoneFactory::class),
+            null,
             [],
             null
         );
@@ -119,6 +118,62 @@ class PaneInfoCollectorTest extends TestCase
             ],
             $this->collector->getPanes()
         );
+    }
+
+    public function testItReturnsNoActivePane(): void
+    {
+        $active_pane = null;
+
+        $collector = new PaneInfoCollector(
+            Mockery::mock(\Planning_Milestone::class),
+            null,
+            [],
+            $active_pane
+        );
+
+        $this->assertNull($collector->getActivePane());
+    }
+
+    public function testItReturnsDefaultActivePane(): void
+    {
+        $active_pane = Mockery::mock(AgileDashboard_Pane::class)
+            ->shouldReceive(['getIdentifier' => 'ad'])
+            ->getMock();
+
+        $collector = new PaneInfoCollector(
+            Mockery::mock(\Planning_Milestone::class),
+            null,
+            [],
+            $active_pane
+        );
+
+        $this->assertEquals($active_pane, $collector->getActivePane());
+    }
+
+    public function testItReturnsActivePaneProvidedByBuilder(): void
+    {
+        $default_active_pane = Mockery::mock(AgileDashboard_Pane::class)
+            ->shouldReceive(['getIdentifier' => 'ad'])
+            ->getMock();
+
+        $collector = new PaneInfoCollector(
+            Mockery::mock(\Planning_Milestone::class),
+            null,
+            [],
+            $default_active_pane
+        );
+
+        $collector->setActivePaneBuilder(
+            static function () {
+                return Mockery::mock(AgileDashboard_Pane::class)
+                    ->shouldReceive(['getIdentifier' => 'taskboard'])
+                    ->getMock();
+            }
+        );
+
+
+        $default_active_pane = $collector->getActivePane();
+        $this->assertEquals('taskboard', $default_active_pane->getIdentifier());
     }
 
     private function getPaneInfo(string $identifier): PaneInfo
