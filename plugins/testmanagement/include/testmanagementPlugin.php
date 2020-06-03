@@ -41,8 +41,8 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
-use Tuleap\TestManagement\TestmanagementPane;
-use Tuleap\TestManagement\TestmanagementPaneInfo;
+use Tuleap\TestManagement\TestPlan\TestPlanPane;
+use Tuleap\TestManagement\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestManagement\TestManagementPluginInfo;
 use Tuleap\TestManagement\TestPlan\TestPlanController;
 use Tuleap\TestManagement\TestPlan\TestPlanPresenterBuilder;
@@ -381,12 +381,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
 
-            $pane_info = new TestmanagementPaneInfo($milestone);
-            if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestmanagementPaneInfo::URL) === 0) {
+            $pane_info = new TestPlanPaneInfo($milestone);
+            if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestPlanPaneInfo::URL) === 0) {
                 $pane_info->setActive(true);
                 $collector->setActivePaneBuilder(
                     static function () use ($pane_info): AgileDashboard_Pane {
-                        return new TestmanagementPane($pane_info);
+                        return new TestPlanPane($pane_info);
                     }
                 );
             }
@@ -411,7 +411,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
         });
         $event->getRouteCollector()->addGroup(
-            TestmanagementPaneInfo::URL,
+            TestPlanPaneInfo::URL,
             function (RouteCollector $r) {
                 $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGetPlan'));
             }
@@ -872,7 +872,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
     {
-        $event->add(TestmanagementPaneInfo::NAME);
+        $event->add(TestPlanPaneInfo::NAME);
     }
 
     private function getImportXmlFromTracker(): ImportXMLFromTracker

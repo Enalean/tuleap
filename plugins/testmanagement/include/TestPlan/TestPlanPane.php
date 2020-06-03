@@ -18,19 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\TestPlan;
 
 use AgileDashboard_Pane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-final class TestmanagementPane extends AgileDashboard_Pane
+final class TestPlanPane extends AgileDashboard_Pane
 {
     /**
-     * @var TestmanagementPaneInfo
+     * @var TestPlanPaneInfo
      */
     private $pane_info;
 
-    public function __construct(TestmanagementPaneInfo $pane_info)
+    public function __construct(TestPlanPaneInfo $pane_info)
     {
         $this->pane_info = $pane_info;
     }
@@ -39,7 +39,7 @@ final class TestmanagementPane extends AgileDashboard_Pane
      * @return string eg: 'cardwall'
      * @see PaneInfo::getIdentifier()
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->pane_info->getIdentifier();
     }
@@ -49,7 +49,7 @@ final class TestmanagementPane extends AgileDashboard_Pane
      *
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    public function getFullContent()
+    public function getFullContent(): string
     {
         return '';
     }
@@ -60,7 +60,7 @@ final class TestmanagementPane extends AgileDashboard_Pane
      *
      * @return string eg: '<table>...</table>'
      */
-    public function getMinimalContent()
+    public function getMinimalContent(): string
     {
         return '';
     }

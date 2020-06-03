@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement;
+namespace Tuleap\TestManagement\TestPlan;
 
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
-final class TestmanagementPaneInfo extends PaneInfo
+final class TestPlanPaneInfo extends PaneInfo
 {
     public const NAME = 'testmanagement';
     public const URL  = '/testmanagement/plan';
@@ -47,17 +47,17 @@ final class TestmanagementPaneInfo extends PaneInfo
         $this->milestone_id = (int) $artifact->getId();
     }
 
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return self::NAME;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return dgettext('tuleap-testmanagement', 'Tests');
     }
 
-    public function getUri()
+    public function getUri(): string
     {
         return self::URL
             . '/'
@@ -66,7 +66,7 @@ final class TestmanagementPaneInfo extends PaneInfo
             . $this->milestone_id;
     }
 
-    public function getIconName()
+    public function getIconName(): string
     {
         return 'fa-check';
     }
