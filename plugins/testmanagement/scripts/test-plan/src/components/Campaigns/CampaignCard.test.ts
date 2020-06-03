@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../src/themes/tlp/src/scss/variables/density';
-@import '../../src/themes/tlp/src/scss/variables/margins';
-@import '../agiledashboard/themes/BurningParrot/css/header';
+import { shallowMount } from "@vue/test-utils";
+import CampaignCard from "./CampaignCard.vue";
+import { Campaign } from "../../type";
 
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
+describe("CampaignCard", () => {
+    it("Displays a campaign as a card", () => {
+        const wrapper = shallowMount(CampaignCard, {
+            propsData: {
+                campaign: { label: "My campaign" } as Campaign,
+            },
+        });
 
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
-
-.test-plan-campaign-progress-skeleton {
-    width: 100%;
-}
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

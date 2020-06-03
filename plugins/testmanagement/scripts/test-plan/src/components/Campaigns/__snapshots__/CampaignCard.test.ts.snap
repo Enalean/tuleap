@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CampaignCard Displays a campaign as a card 1`] = `
+<div
+  class="tlp-card"
+>
+  
+    My campaign
+
+</div>
+`;

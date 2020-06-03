@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,21 +15,20 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-@import '../../src/themes/tlp/src/scss/variables/density';
-@import '../../src/themes/tlp/src/scss/variables/margins';
-@import '../agiledashboard/themes/BurningParrot/css/header';
+import { Vue } from "vue/types/vue";
+import Vuex from "vuex";
+import { createLocalVue } from "@vue/test-utils";
+import { initVueGettext } from "../../../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
+export async function createTestPlanLocalVue(): Promise<typeof Vue> {
+    const local_vue = createLocalVue();
+    await initVueGettext(local_vue, () => {
+        throw new Error("Fallback to default");
+    });
+    local_vue.use(Vuex);
 
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
-
-.test-plan-campaign-progress-skeleton {
-    width: 100%;
+    return local_vue;
 }

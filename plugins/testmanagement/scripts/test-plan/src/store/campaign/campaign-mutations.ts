@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,19 +17,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../src/themes/tlp/src/scss/variables/density';
-@import '../../src/themes/tlp/src/scss/variables/margins';
-@import '../agiledashboard/themes/BurningParrot/css/header';
+import { CampaignState } from "./type";
+import { Campaign } from "../../type";
 
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
+export function beginLoadingCampaigns(state: CampaignState): void {
+    state.is_loading = true;
 }
 
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
+export function endLoadingCampaigns(state: CampaignState): void {
+    state.is_loading = false;
 }
 
-.test-plan-campaign-progress-skeleton {
-    width: 100%;
+export function addCampaigns(state: CampaignState, collection: Campaign[]): void {
+    state.campaigns = state.campaigns.concat(collection);
 }

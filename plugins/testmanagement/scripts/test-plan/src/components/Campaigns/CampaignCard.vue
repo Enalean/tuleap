@@ -19,18 +19,19 @@
   -->
 
 <template>
-    <div class="tlp-framed-horizontally">
-        <list-of-campaigns />
+    <div class="tlp-card">
+        {{ campaign.label }}
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
+import { Campaign } from "../../type";
 
-@Component({
-    components: { ListOfCampaigns },
-})
-export default class App extends Vue {}
+@Component
+export default class CampaignCard extends Vue {
+    @Prop({ required: true })
+    readonly campaign!: Campaign;
+}
 </script>

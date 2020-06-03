@@ -19,18 +19,42 @@
   -->
 
 <template>
-    <div class="tlp-framed-horizontally">
-        <list-of-campaigns />
-    </div>
+    <section>
+        <translate tag="h2">Test campaigns</translate>
+        <campaign-card
+            v-for="campaign of campaigns"
+            v-bind:key="campaign.id"
+            v-bind:campaign="campaign"
+        />
+        <campaign-skeleton v-if="is_loading" />
+    </section>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
+import { namespace } from "vuex-class";
 import { Component } from "vue-property-decorator";
+import CampaignSkeleton from "./CampaignSkeleton.vue";
+import CampaignCard from "./CampaignCard.vue";
+import { Campaign } from "../../type";
+
+const campaign = namespace("campaign");
 
 @Component({
-    components: { ListOfCampaigns },
+    components: { CampaignCard, CampaignSkeleton },
 })
-export default class App extends Vue {}
+export default class ListOfCampaigns extends Vue {
+    @campaign.State
+    readonly is_loading!: boolean;
+
+    @campaign.State
+    readonly campaigns!: Campaign[];
+
+    @campaign.Action
+    loadCampaigns!: () => void;
+
+    created(): void {
+        this.loadCampaigns();
+    }
+}
 </script>

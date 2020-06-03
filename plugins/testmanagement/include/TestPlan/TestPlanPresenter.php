@@ -30,9 +30,22 @@ class TestPlanPresenter
      * @var AgileDashboard_MilestonePresenter
      */
     public $milestone_presenter;
+    /**
+     * @var int
+     */
+    public $milestone_id;
+    /**
+     * @var int
+     */
+    public $project_id;
 
-    public function __construct(AgileDashboard_MilestonePresenter $milestone_presenter)
-    {
+    public function __construct(
+        AgileDashboard_MilestonePresenter $milestone_presenter,
+        int $milestone_id,
+        int $project_id
+    ) {
         $this->milestone_presenter = $milestone_presenter;
+        $this->milestone_id        = $milestone_id;
+        $this->project_id          = $project_id;
     }
 }

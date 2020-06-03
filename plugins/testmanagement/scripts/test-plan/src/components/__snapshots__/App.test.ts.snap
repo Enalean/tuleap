@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App Displays the campaigns 1`] = `
+<div
+  class="tlp-framed-horizontally"
+>
+  <list-of-campaigns-stub />
+</div>
+`;

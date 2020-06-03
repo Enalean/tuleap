@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,20 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+import { Store } from "vuex";
+import { RootState } from "./type";
+import campaign from "./campaign";
 
-@import '../../src/themes/tlp/src/scss/variables/density';
-@import '../../src/themes/tlp/src/scss/variables/margins';
-@import '../agiledashboard/themes/BurningParrot/css/header';
-
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
-
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
-
-.test-plan-campaign-progress-skeleton {
-    width: 100%;
+export function createStore(initial_state: RootState): Store<RootState> {
+    return new Store({
+        state: initial_state,
+        modules: {
+            campaign,
+        },
+    });
 }
