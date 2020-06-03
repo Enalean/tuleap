@@ -97,7 +97,7 @@ export default {
             icon.classList.add("fa", "fa-fw", "project-admin-services-modal-icon-item", item.id);
             const span = document.createElement("span");
             span.insertAdjacentElement("afterbegin", icon);
-            span.insertAdjacentText("beforeend", item.text);
+            span.insertAdjacentText("beforeend", item.element.text);
             return span;
         },
     },
