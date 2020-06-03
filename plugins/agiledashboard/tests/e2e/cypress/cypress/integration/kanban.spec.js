@@ -15,6 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
+ *
  */
 
 describe("Kanban for the Agile Dashboard service", () => {
@@ -56,23 +57,23 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-column]")
                 .first()
                 .within(() => {
-                    cy.get("[data-test=add-in-place-button]").click({ force: true });
+                    cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
 
+                    cy.get("[data-test=add-in-place-button]").click();
                     cy.get("[data-test=add-in-place-label-input]")
                         .clear()
                         .type("Think about my revenge");
-
-                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click();
                     cy.wait("@post_kanban_item");
 
                     cy.get("[data-test=add-in-place-label-input]").clear().type("Still speedin'");
 
-                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click();
                     cy.wait("@post_kanban_item");
 
                     cy.get("[data-test=add-in-place-label-input]").clear().type("i30 Namyang");
 
-                    cy.get("[data-test=add-in-place-submit]").first().click({ force: true });
+                    cy.get("[data-test=add-in-place-submit]").first().click();
                     cy.wait("@post_kanban_item");
                 });
 
@@ -94,7 +95,7 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-item]")
                 .eq(1)
                 .within(() => {
-                    cy.get("[data-test=kanban-item-content-move-to-top]").click({ force: true });
+                    cy.get("[data-test=kanban-item-content-move-to-top]").click();
                 });
 
             cy.get("[data-test=tuleap-simple-field-name]").spread(
@@ -109,7 +110,7 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-item]")
                 .first()
                 .within(() => {
-                    cy.get("[data-test=kanban-item-content-move-to-bottom]").click({ force: true });
+                    cy.get("[data-test=kanban-item-content-move-to-bottom]").click();
                 });
 
             cy.get("[data-test=tuleap-simple-field-name]").spread(
@@ -125,9 +126,10 @@ describe("Kanban for the Agile Dashboard service", () => {
                 "have.class",
                 "fa-angle-down"
             );
-            cy.get("[data-test=kanban-item-content-expand-collapse]")
-                .first()
-                .click({ force: true });
+
+            // To avoid force click = true
+            cy.get("[data-test=kanban-item-content-expand-collapse]").invoke("css", "height", 10);
+            cy.get("[data-test=kanban-item-content-expand-collapse]").first().click();
             cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
                 "have.class",
                 "fa-angle-up"
@@ -140,9 +142,12 @@ describe("Kanban for the Agile Dashboard service", () => {
             );
 
             // change the display view
-            cy.get("[data-test=kanban-header-detailed-toggler]")
-                .check({ force: true })
-                .should("be.checked");
+            cy.get("[data-test=kanban-header-detailed-toggler]").invoke(
+                "css",
+                "visibility",
+                "visible"
+            );
+            cy.get("[data-test=kanban-header-detailed-toggler]").check().should("be.checked");
             // The display of the cards should be persisted after reload
             cy.reload();
             cy.get("[data-test=kanban-header-detailed-toggler]").should("be.checked");
@@ -157,9 +162,8 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-item]").should("have.length", 3);
 
             // Collapse the first card
-            cy.get("[data-test=kanban-item-content-expand-collapse]")
-                .first()
-                .click({ force: true });
+            cy.get("[data-test=kanban-item-content-expand-collapse]").invoke("css", "height", 10);
+            cy.get("[data-test=kanban-item-content-expand-collapse]").first().click();
             cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
                 "have.class",
                 "fa-angle-down"
