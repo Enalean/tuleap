@@ -104,12 +104,38 @@ class TestPlanControllerTest extends TestCase
         $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
     }
 
+    public function test404IfNoMilestone(): void
+    {
+        $this->milestone_factory
+            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->with($this->user, 42)
+            ->once()
+            ->andReturn(Mockery::mock(\Planning_NoMilestone::class));
+
+        $this->expectException(NotFoundException::class);
+
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
+    }
+
+    public function test404IfVirtualTopMilestone(): void
+    {
+        $this->milestone_factory
+            ->shouldReceive('getBareMilestoneByArtifactId')
+            ->with($this->user, 42)
+            ->once()
+            ->andReturn(Mockery::mock(\Planning_VirtualTopMilestone::class));
+
+        $this->expectException(NotFoundException::class);
+
+        $this->controller->process($this->request, Mockery::mock(BaseLayout::class), ['id' => 42]);
+    }
+
     public function test404IfProjectMilestoneDoesNotMatchRequestedOne(): void
     {
         $another_project = Mockery::mock(Project::class);
         $another_project->shouldReceive('getUnixNameMixedCase')->andReturn('another-project');
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($another_project);
 
         $this->milestone_factory
@@ -137,7 +163,7 @@ class TestPlanControllerTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
 
         $this->milestone_factory
@@ -170,7 +196,7 @@ class TestPlanControllerTest extends TestCase
             ->once()
             ->andReturnFalse();
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
 
         $this->milestone_factory
@@ -203,7 +229,7 @@ class TestPlanControllerTest extends TestCase
             ->once()
             ->andReturn(Mockery::mock(\Service::class));
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
         $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tracker_Artifact::class));
         $milestone->shouldReceive('getArtifactTitle')->andReturn("Title");
@@ -242,7 +268,7 @@ class TestPlanControllerTest extends TestCase
             ->once()
             ->andReturn(Mockery::mock(\Service::class));
 
-        $milestone = Mockery::mock(\Planning_Milestone::class);
+        $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
         $milestone->shouldReceive('getArtifact')->andReturn(Mockery::mock(\Tracker_Artifact::class));
         $milestone->shouldReceive('getArtifactTitle')->andReturn("Title");

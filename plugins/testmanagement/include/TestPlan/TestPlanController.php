@@ -96,7 +96,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         $user = $request->getCurrentUser();
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, (int) $variables['id']);
-        if (! $milestone) {
+        if (! $milestone instanceof \Planning_ArtifactMilestone) {
             throw new NotFoundException(dgettext('tuleap-testmanagement', "Milestone not found."));
         }
 

@@ -18,19 +18,9 @@
   -
   -->
 
-<template>
-    <div class="tlp-framed-horizontally">
-        <list-of-campaigns />
+<template functional>
+    <div class="tlp-card tlp-skeleton-card">
+        <h3><span class="tlp-skeleton-text"></span></h3>
+        <span class="tlp-skeleton-text test-plan-campaign-progress-skeleton"></span>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
-import { Component } from "vue-property-decorator";
-
-@Component({
-    components: { ListOfCampaigns },
-})
-export default class App extends Vue {}
-</script>

@@ -19,11 +19,14 @@
  */
 
 import Vue from "vue";
+import Vuex from "vuex";
 import {
     getPOFileFromLocale,
     initVueGettext,
 } from "../../../../src/scripts/tuleap/gettext/vue-gettext-init";
 import App from "./src/components/App.vue";
+import { createStore } from "./src/store";
+import { RootState } from "./src/store/type";
 
 document.addEventListener("DOMContentLoaded", async () => {
     const vue_mount_point = document.getElementById("test-plan");
@@ -31,11 +34,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
+    const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
+    const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
     );
+    Vue.use(Vuex);
 
     const AppComponent = Vue.extend(App);
 
-    new AppComponent().$mount(vue_mount_point);
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    const initial_state = ({ project_id, milestone_id } as unknown) as RootState;
+
+    new AppComponent({
+        store: createStore(initial_state),
+    }).$mount(vue_mount_point);
 });

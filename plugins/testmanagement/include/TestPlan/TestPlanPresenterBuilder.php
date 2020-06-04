@@ -36,12 +36,14 @@ class TestPlanPresenterBuilder
         $this->pane_factory = $pane_factory;
     }
 
-    public function getPresenter(\Planning_Milestone $milestone): TestPlanPresenter
+    public function getPresenter(\Planning_ArtifactMilestone $milestone): TestPlanPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
 
         return new TestPlanPresenter(
-            new \AgileDashboard_MilestonePresenter($milestone, $presenter_data)
+            new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
+            (int) $milestone->getArtifact()->getId(),
+            (int) $milestone->getProject()->getID(),
         );
     }
 }
