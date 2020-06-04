@@ -44,6 +44,7 @@ export function createPieChart(
     });
 
     stat.init();
+
     replaceValue(chart_container, data_stat_campaign);
 }
 
