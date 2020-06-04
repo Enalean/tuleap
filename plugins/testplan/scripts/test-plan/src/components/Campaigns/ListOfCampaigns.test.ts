@@ -38,6 +38,9 @@ describe("ListOfCampaigns", () => {
                     } as RootState,
                 }),
             },
+            stubs: {
+                "campaign-empty-state": true,
+            },
         });
     }
 
@@ -103,5 +106,32 @@ describe("ListOfCampaigns", () => {
         });
 
         expect($store.dispatch).toHaveBeenCalledWith("campaign/loadCampaigns");
+    });
+
+    it("Displays empty state when there is no campaign", async () => {
+        const wrapper = await createWrapper({
+            is_loading: false,
+            campaigns: [] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(true);
+    });
+
+    it("Does not display empty state when there is no campaign but it is still loading", async () => {
+        const wrapper = await createWrapper({
+            is_loading: true,
+            campaigns: [] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
+    });
+
+    it("Does not display empty state when there are campaigns", async () => {
+        const wrapper = await createWrapper({
+            is_loading: false,
+            campaigns: [{ id: 1 }] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
     });
 });

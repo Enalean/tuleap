@@ -19,3 +19,6 @@ msgstr[1] "%{ nb } tests"
 
 msgid "Test campaigns"
 msgstr "Campagnes de test"
+
+msgid "There is no test campaign yet."
+msgstr "Il n'y a pas de campagne de test."

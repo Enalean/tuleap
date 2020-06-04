@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CampaignEmptyState Displays empty state 1`] = `
+<div
+  class="empty-pane"
+>
+  <div
+    class="empty-page-illustration"
+  >
+    <campaign-empty-state-svg-stub />
+  </div>
+   
+  <div
+    class="empty-page-text"
+  >
+    <translate-stub
+      tag="span"
+    >
+      There is no test campaign yet.
+    </translate-stub>
+  </div>
+</div>
+`;
