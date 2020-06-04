@@ -420,6 +420,13 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tule
 %description plugin-testmanagement
 %{summary}.
 
+%package plugin-testplan
+Summary: Integration between the agiledashboard and the testmanagement plugins
+Group: Development/Tools
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, tuleap-plugin-tracker, tuleap-plugin-agiledashboard, tuleap-plugin-testmanagement
+%description plugin-testplan
+%{summary}.
+
 %package plugin-textualreport
 Summary: Textual Report
 Group: Development/Tools
@@ -514,6 +521,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/tee_container
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testmanagement
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/oauth2_server
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/projectmilestones
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/label
@@ -522,6 +530,7 @@ done
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/project_ownership
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/taskboard
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testmanagement
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/testplan
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/timetracking
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/velocity
 %{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/src/www/assets/oauth2_server
@@ -1331,6 +1340,11 @@ fi
 %defattr(-,root,root,-)
 %{APP_DIR}/plugins/testmanagement
 %{APP_DIR}/src/www/assets/testmanagement
+
+%files plugin-testplan
+%defattr(-,root,root,-)
+%{APP_DIR}/plugins/testplan
+%{APP_DIR}/src/www/assets/testplan
 
 %files plugin-textualreport
 %defattr(-,root,root,-)

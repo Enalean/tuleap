@@ -18,15 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\TestPlan;
+namespace Tuleap\TestPlan;
 
 use Planning_Milestone;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
 
 final class TestPlanPaneInfo extends PaneInfo
 {
-    public const NAME = 'testmanagement';
-    public const URL  = '/testmanagement/plan';
+    public const NAME = 'testplan';
+    public const URL  = '/testplan';
 
     /**
      * @var int
@@ -54,7 +54,7 @@ final class TestPlanPaneInfo extends PaneInfo
 
     public function getTitle(): string
     {
-        return dgettext('tuleap-testmanagement', 'Tests');
+        return dgettext('tuleap-testplan', 'Tests');
     }
 
     public function getUri(): string

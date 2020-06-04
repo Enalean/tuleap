@@ -73,9 +73,6 @@ msgstr "Outil de suivi des bugs"
 msgid "Job URL is invalid"
 msgstr "L'URL du job n'est pas valide"
 
-msgid "Milestone not found."
-msgstr "Le jalon n'a pas été trouvé."
-
 msgid "Permission denied"
 msgstr "Permission refusée"
 
@@ -119,9 +116,6 @@ msgstr "Gestion des tests"
 
 msgid "TestManagement config is not fully set up,"
 msgstr "La configuration de TestManagement est incomplète,"
-
-msgid "Tests"
-msgstr "Tests"
 
 msgid "Tests executions"
 msgstr "Exécution de tests"
@@ -207,10 +201,6 @@ msgid "We configured Test Management for you. Enjoy!"
 msgstr ""
 "La configuration initiale de Test Management a été effectuée pour vous."
 
-msgid "We recommend the latest version of Firefox, Chrome, or Edge."
-msgstr ""
-"Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
-
 #, php-format
 msgid ""
 "We tried to configure Test Management for you but an existing tracker (%1$s) "
@@ -224,9 +214,6 @@ msgid ""
 "prevented it."
 msgstr ""
 "Une erreur interne a empêché la configuration initiale de Test Management."
-
-msgid "Your browser is not supported."
-msgstr "Votre navigateur n'est pas supporté."
 
 msgid "come back later."
 msgstr "revenez plus tard."

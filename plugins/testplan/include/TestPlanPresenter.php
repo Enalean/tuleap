@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
@@ -17,19 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../src/themes/tlp/src/scss/variables/density';
-@import '../../src/themes/tlp/src/scss/variables/margins';
-@import '../agiledashboard/themes/BurningParrot/css/header';
+declare(strict_types=1);
 
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
+namespace Tuleap\TestPlan;
 
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
+use AgileDashboard_MilestonePresenter;
 
-.test-plan-campaign-progress-skeleton {
-    width: 100%;
+class TestPlanPresenter
+{
+    /**
+     * @var AgileDashboard_MilestonePresenter
+     */
+    public $milestone_presenter;
+    /**
+     * @var int
+     */
+    public $milestone_id;
+    /**
+     * @var int
+     */
+    public $project_id;
+
+    public function __construct(
+        AgileDashboard_MilestonePresenter $milestone_presenter,
+        int $milestone_id,
+        int $project_id
+    ) {
+        $this->milestone_presenter = $milestone_presenter;
+        $this->milestone_id        = $milestone_id;
+        $this->project_id          = $project_id;
+    }
 }

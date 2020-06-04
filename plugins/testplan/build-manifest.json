@@ -1,0 +1,9 @@
+{
+    "name": "testplan",
+    "gettext-vue": {
+        "test-plan": {
+            "src": "scripts/test-plan",
+            "po": "scripts/test-plan/po"
+        }
+    }
+}

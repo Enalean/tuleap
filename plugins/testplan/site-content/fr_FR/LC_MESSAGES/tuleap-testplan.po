@@ -1,0 +1,31 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Integration between the agiledashboard and the testmanagement plugins"
+msgstr "Intégration entre les plugins agiledashboard et testmanagement"
+
+msgid "Milestone not found."
+msgstr "Le jalon n'a pas été trouvé."
+
+msgid "TestPlan"
+msgstr "TestPlan"
+
+msgid "Tests"
+msgstr "Tests"
+
+msgid "We recommend the latest version of Firefox, Chrome, or Edge."
+msgstr ""
+"Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou "
+"Edge."
+
+msgid "Your browser is not supported."
+msgstr "Votre navigateur n'est pas supporté."

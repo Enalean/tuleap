@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement\TestPlan;
+namespace Tuleap\TestPlan;
 
 use AgileDashboardPlugin;
 use HTTPRequest;
@@ -34,7 +34,7 @@ use Tuleap\Request\DispatchableWithRequestNoAuthz;
 use Tuleap\Request\NotFoundException;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
-class TestPlanController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
+final class TestPlanController implements DispatchableWithRequestNoAuthz, DispatchableWithBurningParrot
 {
     /**
      * @var TemplateRenderer
@@ -63,7 +63,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
     /**
      * @var IncludeAssets
      */
-    private $testmanagement_assets;
+    private $testplan_assets;
     /**
      * @var \Browser
      */
@@ -73,7 +73,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         TemplateRenderer $renderer,
         AllBreadCrumbsForMilestoneBuilder $bread_crumbs_builder,
         IncludeAssets $agiledashboard_assets,
-        IncludeAssets $testmanagement_assets,
+        IncludeAssets $testplan_assets,
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
         TestPlanPresenterBuilder $presenter_builder,
@@ -82,39 +82,39 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
         $this->renderer              = $renderer;
         $this->bread_crumbs_builder  = $bread_crumbs_builder;
         $this->agiledashboard_assets = $agiledashboard_assets;
-        $this->testmanagement_assets = $testmanagement_assets;
+        $this->testplan_assets       = $testplan_assets;
         $this->visit_recorder        = $visit_recorder;
         $this->milestone_factory     = $milestone_factory;
         $this->presenter_builder     = $presenter_builder;
         $this->browser               = $browser;
     }
 
-    public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
+    public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        \Tuleap\Project\ServiceInstrumentation::increment(\testmanagementPlugin::NAME);
+        \Tuleap\Project\ServiceInstrumentation::increment('testplan');
 
         $user = $request->getCurrentUser();
 
         $milestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, (int) $variables['id']);
         if (! $milestone instanceof \Planning_ArtifactMilestone) {
-            throw new NotFoundException(dgettext('tuleap-testmanagement', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
         }
 
         $project = $milestone->getProject();
         if ((string) $project->getUnixNameMixedCase() !== (string) $variables['project_name']) {
-            throw new NotFoundException(dgettext('tuleap-testmanagement', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
         }
 
         $service = $project->getService(AgileDashboardPlugin::PLUGIN_SHORTNAME);
         if (! $service || ! $project->getService(\testmanagementPlugin::SERVICE_SHORTNAME)) {
-            throw new NotFoundException(dgettext('tuleap-testmanagement', "Milestone not found."));
+            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
         }
 
         $this->visit_recorder->record($user, $milestone->getArtifact());
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
 
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testmanagement_assets, 'test-plan'));
+        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
 
         $service->displayHeader(
             dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle(),
@@ -128,7 +128,7 @@ class TestPlanController implements DispatchableWithRequestNoAuthz, Dispatchable
                 $this->presenter_builder->getPresenter($milestone)
             );
         } else {
-            $layout->includeFooterJavascriptFile($this->testmanagement_assets->getFileURL('testplan.js'));
+            $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
             $this->renderer->renderToPage(
                 'test-plan',
                 $this->presenter_builder->getPresenter($milestone)

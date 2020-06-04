@@ -1,0 +1,24 @@
+{
+  "name": "@tuleap/plugin-testplan",
+  "author": "Enalean",
+  "homepage": "https://tuleap.org",
+  "license": "GPL-2.0-or-later",
+  "private": true,
+  "config": {
+    "bin": "../../node_modules/.bin"
+  },
+  "scripts": {
+    "build": "$npm_package_config_bin/webpack --config webpack.prod.js",
+    "watch": "$npm_package_config_bin/webpack --config webpack.dev.js --watch",
+    "test": "$npm_package_config_bin/jest"
+  },
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-property-decorator": "^8.4.2",
+    "vuex": "^3.4.0",
+    "vuex-class": "^0.3.2"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.3"
+  }
+}

@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\TestManagement\TestPlan;
+namespace Tuleap\TestPlan;
 
 use Planning_MilestonePaneFactory;
 

@@ -1,0 +1,13 @@
+{
+    "name": "tuleap/plugin-testplan",
+    "autoload": {
+        "psr-4": {
+            "Tuleap\\TestPlan\\": "include/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tuleap\\TestPlan\\": "tests/unit/"
+        }
+    }
+}

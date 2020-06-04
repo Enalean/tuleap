@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tuleap\TestManagement\TestPlan;
+namespace Tuleap\TestPlan;
 
 use AgileDashboard_Pane;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfo;
