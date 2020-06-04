@@ -24,6 +24,7 @@ namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
 use Tuleap\Document\Config\FileDownloadLimits;
+use Tuleap\Document\Config\HistoryEnforcementSettings;
 
 class DocumentTreePresenter
 {
@@ -84,6 +85,11 @@ class DocumentTreePresenter
      */
     public $warning_threshold;
 
+    /**
+     * @var bool
+     */
+    public $is_changelog_proposed_after_dnd;
+
     public function __construct(
         \Project $project,
         \PFUser $user,
@@ -92,7 +98,8 @@ class DocumentTreePresenter
         bool $is_obsolescence_date_metadata_used,
         bool $only_siteadmin_can_delete_option,
         CSRFSynchronizerToken $csrf,
-        FileDownloadLimits $file_download_limits
+        FileDownloadLimits $file_download_limits,
+        HistoryEnforcementSettings $history_settings
     ) {
         $this->project_id                         = $project->getID();
         $this->project_name                       = $project->getUnixNameLowerCase();
@@ -108,5 +115,6 @@ class DocumentTreePresenter
         $this->csrf_token                         = $csrf->getToken();
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
+        $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
     }
 }

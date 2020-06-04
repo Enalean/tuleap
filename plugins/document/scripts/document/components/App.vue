@@ -74,6 +74,7 @@ export default {
         is_deletion_allowed: Boolean,
         is_item_status_metadata_used: Boolean,
         is_obsolescence_date_metadata_used: Boolean,
+        is_changelog_proposed_after_dnd: Boolean,
         csrf_token: String,
         csrf_token_name: String,
     },
@@ -117,6 +118,7 @@ export default {
             this.is_deletion_allowed,
             this.is_item_status_metadata_used,
             this.is_obsolescence_date_metadata_used,
+            this.is_changelog_proposed_after_dnd,
         ]);
 
         window.addEventListener("beforeunload", (event) => {

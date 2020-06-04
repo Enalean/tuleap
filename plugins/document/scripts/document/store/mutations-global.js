@@ -56,6 +56,7 @@ function initApp(
         is_deletion_allowed,
         is_item_status_metadata_used,
         is_obsolescence_date_metadata_used,
+        is_changelog_proposed_after_dnd,
     ]
 ) {
     state.user_id = user_id;
@@ -73,6 +74,7 @@ function initApp(
     state.is_deletion_allowed = is_deletion_allowed;
     state.is_item_status_metadata_used = is_item_status_metadata_used;
     state.is_obsolescence_date_metadata_used = is_obsolescence_date_metadata_used;
+    state.is_changelog_proposed_after_dnd = is_changelog_proposed_after_dnd;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {

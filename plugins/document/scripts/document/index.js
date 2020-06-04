@@ -64,6 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const is_obsolescence_date_metadata_used = Boolean(
         vue_mount_point.dataset.isObsolescenceDateMetadataUsed
     );
+    const is_changelog_proposed_after_dnd = Boolean(
+        vue_mount_point.dataset.isChangelogProposedAfterDnd
+    );
     const csrf_token_name = vue_mount_point.dataset.csrfTokenName;
     const csrf_token = vue_mount_point.dataset.csrfToken;
 
@@ -92,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
             is_deletion_allowed,
             is_item_status_metadata_used,
             is_obsolescence_date_metadata_used,
+            is_changelog_proposed_after_dnd,
             csrf_token_name,
             csrf_token,
         },
