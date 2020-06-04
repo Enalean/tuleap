@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e388cf3698f1cb7dac150b784ef38f22",
+    "content-hash": "4ae3fbfeeb9957c3b507f551950b3d15",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -73,31 +73,31 @@
         },
         {
             "name": "php-mime-mail-parser/php-mime-mail-parser",
-            "version": "5.0.2",
+            "version": "6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-mime-mail-parser/php-mime-mail-parser.git",
-                "reference": "adb0ed13f86d72468c5608ce28ec7d4c42ef8e99"
+                "reference": "28fd7d44bb1796784dfab3fd1c76ab1021a248ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/adb0ed13f86d72468c5608ce28ec7d4c42ef8e99",
-                "reference": "adb0ed13f86d72468c5608ce28ec7d4c42ef8e99",
+                "url": "https://api.github.com/repos/php-mime-mail-parser/php-mime-mail-parser/zipball/28fd7d44bb1796784dfab3fd1c76ab1021a248ea",
+                "reference": "28fd7d44bb1796784dfab3fd1c76ab1021a248ea",
                 "shasum": ""
             },
             "require": {
                 "ext-mailparse": "*",
-                "php": "^7.1"
+                "php": "^7.2"
             },
             "replace": {
                 "exorus/php-mime-mail-parser": "*",
                 "messaged/php-mime-mail-parser": "*"
             },
             "require-dev": {
-                "php-coveralls/php-coveralls": "^2.1",
+                "php-coveralls/php-coveralls": "^2.2",
                 "phpunit/php-token-stream": "^3.0",
                 "phpunit/phpunit": "^7.0",
-                "squizlabs/php_codesniffer": "^3.4"
+                "squizlabs/php_codesniffer": "^3.5"
             },
             "type": "library",
             "autoload": {
@@ -110,12 +110,6 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "bucabay",
-                    "email": "gabe@fijiwebdesign.com",
-                    "homepage": "http://www.fijiwebdesign.com",
-                    "role": "Developer"
-                },
                 {
                     "name": "eXorus",
                     "email": "exorus.spam@gmail.com",
@@ -139,9 +133,15 @@
                     "email": "alkne@gmail.com",
                     "homepage": "https://code.google.com/p/php-mime-mail-parser",
                     "role": "Developer"
+                },
+                {
+                    "name": "bucabay",
+                    "email": "gabe@fijiwebdesign.com",
+                    "homepage": "http://www.fijiwebdesign.com",
+                    "role": "Developer"
                 }
             ],
-            "description": "A fully tested email parser for PHP 7.1+ (mailparse extension wrapper).",
+            "description": "A fully tested email parser for PHP 7.2+ (mailparse extension wrapper).",
             "homepage": "https://github.com/php-mime-mail-parser/php-mime-mail-parser",
             "keywords": [
                 "MimeMailParser",
@@ -151,7 +151,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2019-06-06T05:16:32+00:00"
+            "time": "2020-01-14T12:45:01+00:00"
         }
     ],
     "packages-dev": [],
@@ -166,5 +166,6 @@
         "php": "7.3",
         "ext-mbstring": "0",
         "ext-mailparse": "0"
-    }
+    },
+    "plugin-api-version": "1.1.0"
 }
