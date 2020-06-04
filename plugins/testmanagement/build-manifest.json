@@ -10,10 +10,6 @@
         "step-definition-field": {
             "src": "./scripts/step-definition-field",
             "po": "./scripts/step-definition-field/po"
-        },
-        "test-plan": {
-            "src": "scripts/test-plan",
-            "po": "scripts/test-plan/po"
         }
     }
 }

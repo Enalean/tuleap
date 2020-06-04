@@ -102,41 +102,8 @@ const webpack_config_for_vue_components = {
     },
 };
 
-const webpack_config_for_test_plan = {
-    entry: {
-        testplan: "./scripts/test-plan/index.ts",
-    },
-    context,
-    output,
-    resolve: {
-        extensions: [".js", ".ts", ".vue"],
-    },
-    externals: {
-        tlp: "tlp",
-    },
-    module: {
-        rules: [
-            ...webpack_configurator.configureTypescriptRules(
-                webpack_configurator.babel_options_chrome_firefox
-            ),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
-    },
-    plugins: [
-        manifest_plugin,
-        webpack_configurator.getVueLoaderPlugin(),
-        webpack_configurator.getTypescriptCheckerPlugin(true),
-        ...webpack_configurator.getCSSExtractionPlugins(),
-    ],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
-};
-
 const entry_points = {
     flamingparrot: "./themes/FlamingParrot/css/style.scss",
-    "test-plan": "./themes/BurningParrot/css/test-plan.scss",
 };
 
 const colors_burning_parrot = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -160,6 +127,5 @@ const webpack_config_for_themes = {
 module.exports = [
     webpack_config_for_angular,
     webpack_config_for_vue_components,
-    webpack_config_for_test_plan,
     webpack_config_for_themes,
 ];

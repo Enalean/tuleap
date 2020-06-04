@@ -20,7 +20,6 @@
 
 use FastRoute\RouteCollector;
 use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
-use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -41,11 +40,7 @@ use Tuleap\TestManagement\REST\ResourcesInjector;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinition;
 use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\TestManagement\Step\Execution\Field\StepExecution;
-use Tuleap\TestManagement\TestPlan\TestPlanPane;
-use Tuleap\TestManagement\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestManagement\TestManagementPluginInfo;
-use Tuleap\TestManagement\TestPlan\TestPlanController;
-use Tuleap\TestManagement\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestManagement\TrackerComesFromLegacyEngineException;
 use Tuleap\TestManagement\TrackerNotCreatedException;
 use Tuleap\TestManagement\XML\Exporter;
@@ -110,7 +105,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         if (defined('AGILEDASHBOARD_BASE_URL')) {
             $this->addHook(PaneInfoCollector::NAME);
-            $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
         }
 
         if (defined('TRACKER_BASE_URL')) {
@@ -380,17 +374,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $project   = $milestone->getProject();
         if ($project->usesService($this->getServiceShortname())) {
             $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
-
-            $pane_info = new TestPlanPaneInfo($milestone);
-            if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestPlanPaneInfo::URL) === 0) {
-                $pane_info->setActive(true);
-                $collector->setActivePaneBuilder(
-                    static function () use ($pane_info): AgileDashboard_Pane {
-                        return new TestPlanPane($pane_info);
-                    }
-                );
-            }
-            $collector->addPane($pane_info);
         }
     }
 
@@ -410,36 +393,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $event->getRouteCollector()->addGroup($this->getPluginPath(), function (RouteCollector $r) {
             $r->addRoute(['GET', 'POST'], '[/[index.php]]', $this->getRouteHandler('routeViaLegacyRouter'));
         });
-        $event->getRouteCollector()->addGroup(
-            TestPlanPaneInfo::URL,
-            function (RouteCollector $r) {
-                $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGetPlan'));
-            }
-        );
-    }
-
-    public function routeGetPlan(): TestPlanController
-    {
-        $agiledashboard_plugin = PluginManager::instance()->getPluginByName('agiledashboard');
-        if (! $agiledashboard_plugin instanceof AgileDashboardPlugin) {
-            throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
-        }
-
-        return new TestPlanController(
-            TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
-            $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
-            $agiledashboard_plugin->getIncludeAssets(),
-            new IncludeAssets(
-                __DIR__ . '/../../../src/www/assets/testmanagement',
-                '/assets/testmanagement'
-            ),
-            new VisitRecorder(new RecentlyVisitedDao()),
-            Planning_MilestoneFactory::build(),
-            new TestPlanPresenterBuilder(
-                $agiledashboard_plugin->getMilestonePaneFactory()
-            ),
-            new Browser()
-        );
     }
 
     public function routeViaLegacyRouter(): LegacyRoutingController
@@ -868,11 +821,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
     public function serviceEnableForXmlImportRetriever(ServiceEnableForXmlImportRetriever $event): void
     {
         $event->addServiceIfPluginIsNotRestricted($this, $this->getServiceShortname());
-    }
-
-    public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
-    {
-        $event->add(TestPlanPaneInfo::NAME);
     }
 
     private function getImportXmlFromTracker(): ImportXMLFromTracker
