@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
+@import '../../../agiledashboard/themes/BurningParrot/css/header';
+
+.testplan-root {
+    margin: $tlp-medium-spacing 0 0;
+}
+
+.testplan-root-title,
+.testplan-root-tabs {
+    flex: 0 0 auto;
 }

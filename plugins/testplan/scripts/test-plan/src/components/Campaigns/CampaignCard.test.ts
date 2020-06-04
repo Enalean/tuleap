@@ -20,12 +20,20 @@
 import { shallowMount } from "@vue/test-utils";
 import CampaignCard from "./CampaignCard.vue";
 import { Campaign } from "../../type";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("CampaignCard", () => {
-    it("Displays a campaign as a card", () => {
+    it("Displays a campaign as a card", async () => {
         const wrapper = shallowMount(CampaignCard, {
+            localVue: await createTestPlanLocalVue(),
             propsData: {
-                campaign: { label: "My campaign" } as Campaign,
+                campaign: {
+                    label: "My campaign",
+                    nb_of_blocked: 1,
+                    nb_of_failed: 2,
+                    nb_of_notrun: 1,
+                    nb_of_passed: 10,
+                } as Campaign,
             },
         });
 

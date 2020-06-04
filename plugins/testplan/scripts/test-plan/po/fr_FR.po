@@ -12,5 +12,10 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ nb } test"
+msgid_plural "%{ nb } tests"
+msgstr[0] "%{ nb } test"
+msgstr[1] "%{ nb } tests"
+
 msgid "Test campaigns"
 msgstr "Campagnes de test"

@@ -2,10 +2,36 @@
 
 exports[`CampaignCard Displays a campaign as a card 1`] = `
 <div
-  class="tlp-card"
+  class="tlp-pane"
 >
-  
-    My campaign
-
+  <div
+    class="tlp-pane-container"
+  >
+    <div
+      class="tlp-pane-header test-plan-campaign-header"
+    >
+      <h1
+        class="tlp-pane-title"
+      >
+        My campaign
+      </h1>
+       
+      <div
+        class="test-plan-campaign-header-stats"
+      >
+        <span
+          class="test-plan-campaign-header-stats-info"
+        >
+          <i
+            aria-hidden="true"
+            class="fa fa-check"
+          />
+          
+                    14 tests
+                
+        </span>
+      </div>
+    </div>
+  </div>
 </div>
 `;
