@@ -19,8 +19,18 @@
   -->
 
 <template>
-    <div class="tlp-card">
-        {{ campaign.label }}
+    <div class="tlp-pane">
+        <div class="tlp-pane-container">
+            <div class="tlp-pane-header test-plan-campaign-header">
+                <h1 class="tlp-pane-title">{{ campaign.label }}</h1>
+                <div class="test-plan-campaign-header-stats">
+                    <span class="test-plan-campaign-header-stats-info">
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        {{ nb_tests_title }}
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -33,5 +43,23 @@ import { Campaign } from "../../type";
 export default class CampaignCard extends Vue {
     @Prop({ required: true })
     readonly campaign!: Campaign;
+
+    get nb_tests(): number {
+        return (
+            this.campaign.nb_of_blocked +
+            this.campaign.nb_of_failed +
+            this.campaign.nb_of_notrun +
+            this.campaign.nb_of_passed
+        );
+    }
+
+    get nb_tests_title(): string {
+        return this.$gettextInterpolate(
+            this.$ngettext("%{ nb } test", "%{ nb } tests", this.nb_tests),
+            {
+                nb: this.nb_tests,
+            }
+        );
+    }
 }
 </script>

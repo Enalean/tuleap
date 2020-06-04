@@ -1,5 +1,5 @@
-/*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
+.test-plan-list-of-campaigns {
+    max-width: 50%;
+
+    @media screen and (max-width: 1100px) {
+        max-width: inherit;
+    }
+}
+
+.test-plan-list-of-campaigns-title {
+    color: $tlp-typo-default-text-color;
+}
+
+.test-plan-campaign-progress-skeleton {
+    width: 100%;
+}
+
+.test-plan-campaign-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
+.test-plan-campaign-header-stats {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
+.test-plan-campaign-header-stats-info {
+    margin: 0 0 0 $tlp-medium-spacing;
+    white-space: nowrap;
 }

@@ -27,7 +27,7 @@ use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\Layout\BaseLayout;
-use Tuleap\Layout\CssAssetWithoutVariantDeclinaisons;
+use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequestNoAuthz;
@@ -120,7 +120,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
 
         $layout->includeFooterJavascriptFile($this->agiledashboard_assets->getFileURL('scrum-header.js'));
 
-        $layout->addCssAsset(new CssAssetWithoutVariantDeclinaisons($this->testplan_assets, 'testplan-style'));
+        $layout->addCssAsset(new CssAsset($this->testplan_assets, 'testplan-style'));
 
         $service->displayHeader(
             dgettext('tuleap-testmanagement', "Tests") . ' - ' . $milestone->getArtifactTitle(),

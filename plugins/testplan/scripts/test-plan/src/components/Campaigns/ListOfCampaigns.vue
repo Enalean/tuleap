@@ -19,8 +19,8 @@
   -->
 
 <template>
-    <section>
-        <translate tag="h2">Test campaigns</translate>
+    <section class="test-plan-list-of-campaigns">
+        <translate tag="h2" class="test-plan-list-of-campaigns-title">Test campaigns</translate>
         <campaign-card
             v-for="campaign of campaigns"
             v-bind:key="campaign.id"
