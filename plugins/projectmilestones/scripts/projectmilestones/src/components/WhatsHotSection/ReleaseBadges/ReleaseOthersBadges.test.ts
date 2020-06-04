@@ -142,6 +142,44 @@ describe("ReleaseOthersBadges", () => {
             expect(wrapper.find("[data-test=capacity-not-empty]").exists()).toBe(false);
             expect(wrapper.find("[data-test=capacity-empty]").exists()).toBe(true);
         });
+
+        it("Given initial effort is bigger than capacity, Then the initial effort badge has a warning style", async () => {
+            release_data = {
+                id: 2,
+                capacity: 50,
+                total_sprint,
+                initial_effort: 100,
+            } as MilestoneData;
+
+            component_options.propsData = {
+                release_data,
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
+                "tlp-badge-warning"
+            );
+        });
+
+        it("Given initial effort is smaller than capacity, Then the initial effort badge has primary style", async () => {
+            release_data = {
+                id: 2,
+                capacity: 100,
+                total_sprint,
+                initial_effort: 50,
+            } as MilestoneData;
+
+            component_options.propsData = {
+                release_data,
+            };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.get("[data-test=initial_effort_badge]").classes()).toContain(
+                "tlp-badge-primary"
+            );
+        });
     });
 
     it("Given user display widget, Then a good link to sprint planning is renderer", async () => {
