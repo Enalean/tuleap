@@ -94,7 +94,6 @@ use Tuleap\PullRequest\REST\v1\RepositoryPullRequestRepresentation;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use UserManager;
 
 include_once __DIR__ . '/../../../../../src/www/project/admin/permissions.php';
@@ -370,7 +369,7 @@ class RepositoryResource extends AuthenticatedResource
 
         $this->sendAllowHeaders();
 
-        return $this->representation_builder->build($user, $repository, GitRepositoryRepresentationBase::FIELDS_ALL);
+        return $this->representation_builder->build($user, $repository, GitRepositoryRepresentation::FIELDS_ALL);
     }
 
     /**

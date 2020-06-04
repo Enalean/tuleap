@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -77,16 +77,19 @@ class RepositoryRepresentationBuilder
     /**
      * @param GitRepository[] $repositories
      * @param $fields
-     * @return \Generator
+     * @return GitRepositoryRepresentation[]
      */
-    public function buildWithList(PFUser $user, array $repositories, $fields)
+    public function buildWithList(PFUser $user, array $repositories, $fields): array
     {
+        $representations = [];
         if (count($repositories) > 0) {
             $this->cacheRepositoriesMetadata($repositories);
             foreach ($repositories as $repository) {
-                yield $this->build($user, $repository, $fields);
+                $representations[] = $this->build($user, $repository, $fields);
             }
         }
+
+        return $representations;
     }
 
     private function cacheRepositoriesMetadata(array $repositories)

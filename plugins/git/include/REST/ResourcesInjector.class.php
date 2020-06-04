@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Git\REST\v1\GitProjectResource;
 use Tuleap\Git\REST\v1\GitRepositoryRepresentation;
 use Tuleap\Git\REST\v1\GerritServerRepresentation;
+use Tuleap\Project\REST\ProjectRepresentation;
 use Tuleap\Project\REST\ProjectResourceReference;
 
 /**
@@ -30,6 +32,7 @@ class Git_REST_ResourcesInjector
 
     public function populate(Luracast\Restler\Restler $restler)
     {
+        $restler->addAPIClass(GitProjectResource::class, ProjectRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Git\\REST\\v1\\RepositoryResource', GitRepositoryRepresentation::ROUTE);
         $restler->addAPIClass('\\Tuleap\\Git\\REST\\v1\\GerritResource', GerritServerRepresentation::ROUTE);
     }

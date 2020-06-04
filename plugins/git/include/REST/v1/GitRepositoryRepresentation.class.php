@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,10 +23,89 @@ namespace Tuleap\Git\REST\v1;
 
 use GitRepository;
 use Tuleap\REST\JsonCast;
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 
-class GitRepositoryRepresentation extends GitRepositoryRepresentationBase
+class GitRepositoryRepresentation
 {
+    public const ROUTE = 'git';
+
+    public const FIELDS_BASIC = 'basic';
+    public const FIELDS_ALL   = 'all';
+
+    /**
+     * @var int
+     */
+    public $id;
+
+    /**
+     * @var string
+     */
+    public $uri;
+
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * The last part of the repository's name
+     * For example:
+     * name = tuleap/rhel6/stable
+     * label = stable
+     * @var string
+     */
+    public $label;
+
+    /**
+     * @var string
+     */
+    public $path;
+
+    /**
+     * The repository's path without the project and without the .git suffix.
+     * Used for presentation purposes to highlight a repository's label.
+     * For example:
+     * name = tuleap/rhel6/stable
+     * path = myproject/tuleap/rhel6/stable.git
+     * path_without_project = tuleap/rhel6
+     *
+     * Presentation will be:
+     * tuleap/rhel6
+     * <h1>stable</h1>
+     *
+     * @var string
+     */
+    public $path_without_project;
+
+    /**
+     * @var string
+     */
+    public $description;
+
+    /**
+     * @var string
+     */
+    public $last_update_date;
+
+    /**
+     * @var \Tuleap\Git\REST\v1\GitRepositoryPermissionRepresentation | null
+     */
+    public $permissions = null;
+
+    /**
+     * @var \Tuleap\Git\REST\v1\GerritServerRepresentation | null
+     */
+    public $server = null;
+
+    /**
+     * @var string
+     */
+    public $html_url;
+
+    /**
+     * @var array
+     */
+    public $additional_information;
+
     /**
      * @param string        $html_url
      * @param               $server_representation

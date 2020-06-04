@@ -74,8 +74,6 @@ use Tuleap\REST\I18NRestException;
 use Tuleap\REST\JsonDecoder;
 use Tuleap\REST\ProjectAuthorization;
 use Tuleap\REST\ResourcesInjector;
-use Tuleap\REST\v1\GitRepositoryListRepresentation;
-use Tuleap\REST\v1\GitRepositoryRepresentationBase;
 use Tuleap\REST\v1\PhpWikiPageRepresentation;
 use Tuleap\User\ForgeUserGroupPermission\RestProjectManagementPermission;
 use Tuleap\Widget\Event\GetProjectsWithCriteria;
@@ -743,166 +741,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     /**
-     * @url    OPTIONS {id}/git
-     *
-     * @param int $id Id of the project
-     *
-     * @throws RestException 404
-     */
-    public function optionsGit($id)
-    {
-        $activated = false;
-
-        $this->event_manager->processEvent(
-            Event::REST_PROJECT_OPTIONS_GIT,
-            [
-                'activated' => &$activated
-            ]
-        );
-
-        if ($activated) {
-            $this->sendAllowHeadersForGit();
-        } else {
-            throw new RestException(404, 'Git plugin not activated');
-        }
-    }
-
-    /**
-     * Get git
-     *
-     * Get info about project Git repositories. Repositories are returned ordered by last_push date, if there are no push
-     * yet, it's the creation date of the repository that is taken into account.
-     * <br>
-     * The total number of repositories returned by 'x-pagination-size' header corresponds to ALL repositories, including
-     * those you cannot view so you might retrieve a lower number of repositories than 'x-pagination-size'.
-     * <br>
-     * <br>
-     * With fields = 'basic', permissions is always set as <strong>NULL</strong>
-     * <br>
-     * <br>
-     * Basic example:
-     * <br>
-     * <br>
-     * <pre>
-     * "repositories": [{<br>
-     *   &nbsp;"id" : 90,<br>
-     *   &nbsp;"uri": "git/90",<br>
-     *   &nbsp;"name": "repo",<br>
-     *   &nbsp;"path": "project/repo.git",<br>
-     *   &nbsp;"description": "-- Default description --",<br>
-     *   &nbsp;"permissions": null<br>
-     *  }<br>
-     * ...<br>
-     * ]
-     * </pre>
-     * <br>
-     *
-     * <br>
-     * All example:
-     * <br>
-     * <br>
-     * <pre>
-     * "repositories": [{<br>
-     *   &nbsp;"id" : 90,<br>
-     *   &nbsp;"uri": "git/90",<br>
-     *   &nbsp;"name": "repo",<br>
-     *   &nbsp;"path": "project/repo.git",<br>
-     *   &nbsp;"description": "-- Default description --",<br>
-     *   &nbsp;"permissions": {<br>
-     *   &nbsp;   "read": [<br>
-     *   &nbsp;     &nbsp;{<br>
-     *   &nbsp;     &nbsp;  "id": "116_2",<br>
-     *   &nbsp;     &nbsp;  "uri": "user_groups/116_2",<br>
-     *   &nbsp;     &nbsp;  "label": "registered_users",<br>
-     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_2/users"<br>
-     *   &nbsp;     &nbsp;}<br>
-     *   &nbsp;   ],<br>
-     *   &nbsp;   "write": [<br>
-     *   &nbsp;     &nbsp;{<br>
-     *   &nbsp;     &nbsp;  "id": "116_3",<br>
-     *   &nbsp;     &nbsp;  "uri": "user_groups/116_3",<br>
-     *   &nbsp;     &nbsp;  "label": "project_members",<br>
-     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_3/users"<br>
-     *   &nbsp;     &nbsp;}<br>
-     *   &nbsp;   ]<br>
-     *   &nbsp;   "rewind": [<br>
-     *   &nbsp;     &nbsp;{<br>
-     *   &nbsp;     &nbsp;  "id": "116_122",<br>
-     *   &nbsp;     &nbsp;  "uri": "user_groups/116_122",<br>
-     *   &nbsp;     &nbsp;  "label": "admins",<br>
-     *   &nbsp;     &nbsp;  "users_uri": "user_groups/116_122/users"<br>
-     *   &nbsp;     &nbsp;}<br>
-     *   &nbsp;   ],<br>
-     *   &nbsp;}<br>
-     *  }<br>
-     * ...<br>
-     * ]
-     * </pre>
-     * <br>
-     * You can use <code>query</code> parameter in order to filter results. Currently you can only filter on scope or
-     * owner_id. By default, all repositories are returned.
-     * <br>
-     * { "scope": "project" } will return only project repositories.
-     * <br>
-     * { "scope": "individual" } will return only forked repositories.
-     * <br>
-     * { "owner_id": 123 } will return all repositories created by user with id 123.
-     * <br>
-     * { "scope": "individual", "owner_id": 123 } will return all repositories forked by user with id 123.
-     *
-     * @url    GET {id}/git
-     * @access hybrid
-     *
-     * @param int    $id       Id of the project
-     * @param int    $limit    Number of elements displayed per page {@from path}
-     * @param int    $offset   Position of the first element to display {@from path}
-     * @param string $fields   Whether you want to fetch permissions or just repository info {@from path}{@choice basic,all}
-     * @param string $query    Filter repositories {@from path}
-     * @param string $order_by {@from path}{@choice push_date,path}
-     *
-     * @return GitRepositoryListRepresentation
-     *
-     * @throws RestException
-     */
-    public function getGit(
-        $id,
-        $limit = 10,
-        $offset = 0,
-        $fields = GitRepositoryRepresentationBase::FIELDS_BASIC,
-        $query = '',
-        $order_by = 'push_date'
-    ) {
-        $this->checkAccess();
-
-        $project                = $this->getProjectForUser($id);
-        $result                 = new GitRepositoryListRepresentation();
-        $total_git_repositories = 0;
-
-        $this->event_manager->processEvent(
-            Event::REST_PROJECT_GET_GIT,
-            [
-                'version'        => 'v1',
-                'project'        => $project,
-                'result'         => &$result,
-                'limit'          => $limit,
-                'offset'         => $offset,
-                'fields'         => $fields,
-                'query'          => $query,
-                'order_by'       => $order_by,
-                'total_git_repo' => &$total_git_repositories
-            ]
-        );
-
-        if ($result->repositories !== null) {
-            $this->sendAllowHeadersForGit();
-            $this->sendPaginationHeaders($limit, $offset, $total_git_repositories);
-            return $result;
-        } else {
-            throw new RestException(404, 'Git plugin not activated');
-        }
-    }
-
-    /**
      * @url    OPTIONS {id}/svn
      *
      * @param int $id Id of the project
@@ -1236,11 +1074,6 @@ class ProjectResource extends AuthenticatedResource
     }
 
     private function sendAllowHeadersForHeartBeat()
-    {
-        Header::allowOptionsGet();
-    }
-
-    private function sendAllowHeadersForGit()
     {
         Header::allowOptionsGet();
     }
