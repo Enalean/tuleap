@@ -27,6 +27,7 @@
             v-bind:campaign="campaign"
         />
         <campaign-skeleton v-if="is_loading" />
+        <campaign-empty-state v-if="should_empty_state_be_displayed" />
     </section>
 </template>
 
@@ -41,7 +42,14 @@ import { Campaign } from "../../type";
 const campaign = namespace("campaign");
 
 @Component({
-    components: { CampaignCard, CampaignSkeleton },
+    components: {
+        CampaignCard,
+        CampaignSkeleton,
+        "campaign-empty-state": (): Promise<Record<string, unknown>> =>
+            import(
+                /* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue"
+            ),
+    },
 })
 export default class ListOfCampaigns extends Vue {
     @campaign.State
@@ -55,6 +63,10 @@ export default class ListOfCampaigns extends Vue {
 
     created(): void {
         this.loadCampaigns();
+    }
+
+    get should_empty_state_be_displayed(): boolean {
+        return this.campaigns.length === 0 && !this.is_loading;
     }
 }
 </script>
