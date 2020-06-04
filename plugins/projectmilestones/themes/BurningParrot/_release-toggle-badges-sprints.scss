@@ -100,24 +100,34 @@ $width-bar-left-sprints: 16px;
     background: transparent;
 }
 
-.on-open-sprints-details .project-release-info-badge-open-sprint::after {
-    content: '';
-    position: absolute;
-    top: -1px;
-    right: -13px;
-    width: 0;
-    height: 0;
-    border-width: $border-width-px 0 $border-width-px 12px;
-    border-style: solid;
-    border-color: transparent transparent transparent $tlp-theme-color;
-}
-
 .on-open-sprints-details .project-release-info-badge-open-sprint {
     display: flex;
     width: calc(100% - #{$width-bar-left-sprints});
     margin: 0 0 $tlp-small-spacing 0;
     border-radius: 15px 0 0 15px;
     cursor: default;
+
+    &.tlp-badge-outline {
+        border-right: 0;
+
+        &::after {
+            right: -11px;
+            filter: drop-shadow(1px 0 0 $tlp-theme-color);
+            border-color: transparent transparent transparent mix($tlp-theme-color, $tlp-ui-white, 10%);
+        }
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: -1px;
+        right: -13px;
+        width: 0;
+        height: 0;
+        border-width: $border-width-px 0 $border-width-px 12px;
+        border-style: solid;
+        border-color: transparent transparent transparent $tlp-theme-color;
+    }
 }
 
 .label-open-sprints {

@@ -23,6 +23,7 @@
             <i class="project-release-open-sprint-badge-icon-toggle fa" />
             <div
                 class="project-release-info-badge project-release-info-badge-open-sprint tlp-badge-primary"
+                v-bind:class="{ 'tlp-badge-outline': isPastRelease }"
                 data-test="sprint-label"
             >
                 <i class="fa fa-map-signs tlp-badge-icon" />
@@ -47,5 +48,7 @@ import ReleaseButtonsDescription from "../ReleaseDescription/ReleaseButtonsDescr
 export default class ReleaseBadgesOpenSprint extends Vue {
     @Prop()
     readonly sprint_data!: MilestoneData;
+    @Prop()
+    readonly isPastRelease!: boolean;
 }
 </script>

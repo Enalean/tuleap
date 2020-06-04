@@ -31,7 +31,10 @@
                 Capacity: N/A
             </translate>
         </div>
-        <div class="project-release-info-badge tlp-badge-warning tlp-badge-outline">
+        <div
+            class="project-release-info-badge tlp-badge-outline"
+            v-bind:class="initial_effort_badge_class"
+        >
             <translate
                 v-if="initial_effort_exists"
                 v-bind:translate-params="{ initialEffort: release_data.initial_effort }"
@@ -88,6 +91,18 @@ export default class ReleaseOthersBadges extends Vue {
             return false;
         }
         return this.release_data.initial_effort > 0;
+    }
+
+    get initial_effort_badge_class(): string | null {
+        if (
+            this.release_data.capacity &&
+            this.release_data.initial_effort &&
+            this.release_data.capacity < this.release_data.initial_effort
+        ) {
+            return "tlp-badge-warning";
+        }
+
+        return "tlp-badge-primary";
     }
 
     get get_planning_link(): string | null {
