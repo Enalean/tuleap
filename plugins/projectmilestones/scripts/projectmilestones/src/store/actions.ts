@@ -48,6 +48,8 @@ async function getCurrentMilestones(context: ActionContext<State, State>): Promi
             offset: context.state.offset,
         });
     }
+
+    milestones.sort((milestone_1, milestone_2) => milestone_2.id - milestone_1.id);
     return context.commit("setCurrentMilestones", milestones);
 }
 
