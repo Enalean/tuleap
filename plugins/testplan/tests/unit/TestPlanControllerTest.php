@@ -56,6 +56,10 @@ class TestPlanControllerTest extends TestCase
      */
     private $request;
     /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TestPlanPaneDisplayable
+     */
+    private $testplan_pane_displayable;
+    /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|VisitRecorder
      */
     private $visit_recorder;
@@ -70,10 +74,11 @@ class TestPlanControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->milestone_factory = Mockery::mock(\Planning_MilestoneFactory::class);
-        $this->visit_recorder    = Mockery::mock(VisitRecorder::class);
-        $this->renderer          = Mockery::mock(TemplateRenderer::class);
-        $this->browser           = Mockery::mock(Browser::class);
+        $this->milestone_factory         = Mockery::mock(\Planning_MilestoneFactory::class);
+        $this->testplan_pane_displayable = Mockery::mock(TestPlanPaneDisplayable::class);
+        $this->visit_recorder            = Mockery::mock(VisitRecorder::class);
+        $this->renderer                  = Mockery::mock(TemplateRenderer::class);
+        $this->browser                   = Mockery::mock(Browser::class);
 
         $this->user    = Mockery::mock(\PFUser::class);
         $this->request = Mockery::mock(HTTPRequest::class);
@@ -84,6 +89,7 @@ class TestPlanControllerTest extends TestCase
             Mockery::spy(AllBreadCrumbsForMilestoneBuilder::class),
             Mockery::spy(IncludeAssets::class),
             Mockery::spy(IncludeAssets::class),
+            $this->testplan_pane_displayable,
             $this->visit_recorder,
             $this->milestone_factory,
             Mockery::spy(TestPlanPresenterBuilder::class),
@@ -181,7 +187,7 @@ class TestPlanControllerTest extends TestCase
         );
     }
 
-    public function test404IfProjectDoesNotUseTTM(): void
+    public function test404IfThePaneIsNotDisplayable(): void
     {
         $my_project = Mockery::mock(Project::class);
         $my_project->shouldReceive('getUnixNameMixedCase')->andReturn('my-project');
@@ -190,11 +196,7 @@ class TestPlanControllerTest extends TestCase
             ->with('plugin_agiledashboard')
             ->once()
             ->andReturn(Mockery::mock(\Service::class));
-        $my_project
-            ->shouldReceive('getService')
-            ->with('plugin_testmanagement')
-            ->once()
-            ->andReturnFalse();
+        $this->testplan_pane_displayable->shouldReceive('isTestPlanPaneDisplayable')->andReturn(false);
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
@@ -223,11 +225,7 @@ class TestPlanControllerTest extends TestCase
             ->with('plugin_agiledashboard')
             ->once()
             ->andReturn(Mockery::spy(\Service::class));
-        $my_project
-            ->shouldReceive('getService')
-            ->with('plugin_testmanagement')
-            ->once()
-            ->andReturn(Mockery::mock(\Service::class));
+        $this->testplan_pane_displayable->shouldReceive('isTestPlanPaneDisplayable')->andReturn(true);
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);
@@ -262,11 +260,7 @@ class TestPlanControllerTest extends TestCase
             ->with('plugin_agiledashboard')
             ->once()
             ->andReturn(Mockery::spy(\Service::class));
-        $my_project
-            ->shouldReceive('getService')
-            ->with('plugin_testmanagement')
-            ->once()
-            ->andReturn(Mockery::mock(\Service::class));
+        $this->testplan_pane_displayable->shouldReceive('isTestPlanPaneDisplayable')->andReturn(true);
 
         $milestone = Mockery::mock(\Planning_ArtifactMilestone::class);
         $milestone->shouldReceive('getProject')->andReturn($my_project);

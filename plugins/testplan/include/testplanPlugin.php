@@ -27,6 +27,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestPlan\TestPlanController;
 use Tuleap\TestPlan\TestPlanPane;
+use Tuleap\TestPlan\TestPlanPaneDisplayable;
 use Tuleap\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
@@ -83,18 +84,24 @@ final class testplanPlugin extends Plugin
     {
         $milestone = $collector->getMilestone();
         $project   = $milestone->getProject();
-        if ($project->usesService(testmanagementPlugin::SERVICE_SHORTNAME)) {
-            $pane_info = new TestPlanPaneInfo($milestone);
-            if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestPlanPaneInfo::URL) === 0) {
-                $pane_info->setActive(true);
-                $collector->setActivePaneBuilder(
-                    static function () use ($pane_info): AgileDashboard_Pane {
-                        return new TestPlanPane($pane_info);
-                    }
-                );
-            }
-            $collector->addPane($pane_info);
+
+        if (
+            ! (new TestPlanPaneDisplayable(new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())))
+                ->isTestPlanPaneDisplayable($project)
+        ) {
+            return;
         }
+
+        $pane_info = new TestPlanPaneInfo($milestone);
+        if ($collector->getActivePaneContext() && strpos($_SERVER['REQUEST_URI'], TestPlanPaneInfo::URL) === 0) {
+            $pane_info->setActive(true);
+            $collector->setActivePaneBuilder(
+                static function () use ($pane_info): AgileDashboard_Pane {
+                    return new TestPlanPane($pane_info);
+                }
+            );
+        }
+        $collector->addPane($pane_info);
     }
 
     public function allowedAdditionalPanesToDisplayCollector(AllowedAdditionalPanesToDisplayCollector $event): void
@@ -127,6 +134,7 @@ final class testplanPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/testplan',
                 '/assets/testplan'
             ),
+            new TestPlanPaneDisplayable(new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())),
             new VisitRecorder(new RecentlyVisitedDao()),
             Planning_MilestoneFactory::build(),
             new TestPlanPresenterBuilder(
