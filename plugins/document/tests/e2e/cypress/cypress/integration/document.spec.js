@@ -282,9 +282,9 @@ describe("Document new UI", () => {
                     url: download_uri,
                 }).then((response) => {
                     expect(response.status).to.equal(200);
-                    expect(response.headers["content-type"]).to.equal("application/x-zip");
+                    expect(response.headers["content-type"]).to.equal("application/zip");
                     expect(response.headers["content-disposition"]).to.equal(
-                        "attachment; filename*=UTF-8''Folder%20download.zip"
+                        'attachment; filename="Folder download.zip"'
                     );
                 });
             });
