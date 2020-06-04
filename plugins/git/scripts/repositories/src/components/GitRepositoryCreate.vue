@@ -25,6 +25,7 @@
         class="tlp-modal"
         ref="create_modal"
         v-on:submit="createRepository"
+        data-test="create-repository-modal-form"
     >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="create-repository-modal-title">
@@ -42,7 +43,11 @@
             </div>
         </div>
         <div class="tlp-modal-body git-repository-create-modal-body">
-            <div v-if="error.length > 0" class="tlp-alert-danger">
+            <div
+                v-if="error.length > 0"
+                class="tlp-alert-danger"
+                data-test="git-repository-create-modal-body-error"
+            >
                 {{ error }}
             </div>
 

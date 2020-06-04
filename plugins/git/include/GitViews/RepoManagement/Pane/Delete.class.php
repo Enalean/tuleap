@@ -73,7 +73,7 @@ class Delete extends Pane
             $html .= '<p>' . 'You cannot delete' . '</p>';
             $disabled = 'readonly="readonly" disabled="disabled"';
         }
-        $html .= '<input type="submit" class="btn btn-danger" name="confirm_deletion" value="' . dgettext('tuleap-git', 'Delete this repository') . '" ' . $disabled . '/>';
+        $html .= '<input type="submit" class="btn btn-danger" name="confirm_deletion" value="' . dgettext('tuleap-git', 'Delete this repository') . '" ' . $disabled . 'data-test="confirm-repository-deletion-button"/>';
         return $html;
     }
 
@@ -85,7 +85,7 @@ class Delete extends Pane
         $html .= '<p>' . sprintf(dgettext('tuleap-git', 'You are about to permanently delete the repository <strong>%1$s</strong>. This operation <strong>cannot</strong> be undone. Do you confirm the deletion?'), $this->repository->getFullName()) . '</p>';
         $html .= '<p>';
         $html .= '<input type="hidden" id="action" name="action" value="del" />';
-        $html .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"/> ';
+        $html .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"data-test="deletion-confirmation-button"/> ';
         $onclick = 'onclick="window.location=\'/plugins/git/?' . http_build_query(array(
             'action'   => 'repo_management',
             'pane'     => $this->getIdentifier(),

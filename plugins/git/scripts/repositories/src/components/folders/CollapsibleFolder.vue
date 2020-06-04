@@ -32,7 +32,11 @@
                     'fa fa-fw fa-caret-right': isFolderCollapsed,
                 }"
             ></i>
-            <h2 class="git-repository-list-folder-label" v-if="!isRootFolder">
+            <h2
+                class="git-repository-list-folder-label"
+                v-if="!isRootFolder"
+                data-test="git-repository-list-folder-label"
+            >
                 <i class="fa fa-folder-o"></i>
                 {{ label }}
             </h2>
