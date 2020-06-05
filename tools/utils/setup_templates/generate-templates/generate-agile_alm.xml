@@ -8,15 +8,15 @@
             <preference name="note">
               <value name="title">Note from the editor</value>
               <value name="content"><![CDATA[
-  You've created a new project based upon a template.
+You've created a new project based upon a template.
 
-  Feel free to change tools customization to your needs.
+Feel free to change tools customization to your needs.
 
-  Add user groups and set permissions.
+Add user groups and set permissions.
 
-  Customize workflow options.
+Customize workflow options.
 
-  Need professional support to help you adapt your workspace? Get in touch with our sales team: <sales@enalean.com>
+Need professional support to help you adapt your workspace? Get in touch with our sales team: <sales@enalean.com>
   ]]></value>
             </preference>
           </widget>
