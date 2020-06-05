@@ -67,51 +67,6 @@ class FieldChangeXMLExporterTest extends TestCase
         );
     }
 
-    public function testItExportsTheUpdateDateAsSubmittedOnDateInXML(): void
-    {
-        $mapping = new FieldMapping(
-            'update',
-            'Fupdate',
-            'Updated',
-            'lud'
-        );
-
-        $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
-            '2020-04-21T09:31:44.481+0200',
-            'mercredi 4:45 PM'
-        );
-
-        $this->assertSame("2020-04-21T09:31:44.481+0200", (string) $submitted_on);
-    }
-
-    public function testItDoesNotUpdateTheSubmissionDateWhenUpdatedDataIsNotProvided(): void
-    {
-        $mapping = new FieldMapping(
-            'number',
-            'Fnumber',
-            'Number',
-            'float'
-        );
-
-        $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on format="ISO8601">2020-04-29T08:45:46+02:00</submitted_on>');
-
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
-            '4.5',
-            '4.5'
-        );
-
-        $this->assertSame("2020-04-29T08:45:46+02:00", (string) $submitted_on);
-    }
-
     public function testItExportsTheRenderedValueOfTextFieldsAsHTMLFormat(): void
     {
         $mapping = new FieldMapping(
@@ -122,13 +77,15 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
+        $this->exporter->exportFieldChanges(
+            [
+                [
+                    "mapping" => $mapping,
+                    "value"  => "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
+                    "rendered_value" => "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
+                ]
+            ],
             $changeset_node,
-            $submitted_on,
-            "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
-            "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
         );
 
         $this->assertEquals(
@@ -151,18 +108,20 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
+        $this->exporter->exportFieldChanges(
             [
-                'self' => 'URL/rest/api/2/priority/3',
-                'iconUrl' => 'URL/images/icons/priorities/medium.svg',
-                'name' => 'Medium',
-                'id' => '3',
+                [
+                    "mapping" => $mapping,
+                    "value"  => [
+                        'self' => 'URL/rest/api/2/priority/3',
+                        'iconUrl' => 'URL/images/icons/priorities/medium.svg',
+                        'name' => 'Medium',
+                        'id' => '3',
+                    ],
+                    "rendered_value" => null
+                ]
             ],
-            null
+            $changeset_node
         );
 
         $field_change_node = $changeset_node->field_change;
@@ -181,17 +140,19 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
+        $this->exporter->exportFieldChanges(
             [
-                'self' => 'URL/rest/api/2/customFieldOption/10005',
-                'value' => 'test',
-                'id' => '10005'
+                [
+                    "mapping" => $mapping,
+                    "value"  => [
+                        'self' => 'URL/rest/api/2/customFieldOption/10005',
+                        'value' => 'test',
+                        'id' => '10005'
+                    ],
+                    "rendered_value" => null
+                ]
             ],
-            null
+            $changeset_node
         );
 
         $field_change_node = $changeset_node->field_change;
@@ -210,25 +171,27 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
+        $this->exporter->exportFieldChanges(
             [
                 [
-                    'self' => 'URL/rest/api/2/customFieldOption/10009',
-                    'value' => 'multi1',
-                    'id' => '10009'
-                ],
-                [
-                    'self' => 'URL/rest/api/2/customFieldOption/10010',
-                    'value' => 'multi2',
-                    'id' => '10010'
-                ]
+                    "mapping" => $mapping,
+                    "value"  => [
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10009',
+                            'value' => 'multi1',
+                            'id' => '10009'
+                        ],
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10010',
+                            'value' => 'multi2',
+                            'id' => '10010'
+                        ]
 
+                    ],
+                    "rendered_value" => null
+                ]
             ],
-            null
+            $changeset_node
         );
 
         $field_change_node = $changeset_node->field_change;
@@ -248,27 +211,29 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $submitted_on = new SimpleXMLElement('<submitted_on/>');
-        $this->exporter->exportFieldChange(
-            $mapping,
-            $changeset_node,
-            $submitted_on,
+        $this->exporter->exportFieldChanges(
             [
-                'self' => 'URL/rest/api/2/status/10001',
-                'description' =>  '',
-                'iconUrl' => 'URL',
-                'name' => 'Done',
-                'id' => '10001',
-                'statusCategory' =>
-                    [
-                        'self' => 'URL/rest/api/2/statuscategory/3',
-                        'id' => 3,
-                        'key' => 'done',
-                        'colorName' => 'green',
-                        'name' => 'Done'
-                    ]
+                [
+                    "mapping" => $mapping,
+                    "value"  => [
+                        'self' => 'URL/rest/api/2/status/10001',
+                        'description' =>  '',
+                        'iconUrl' => 'URL',
+                        'name' => 'Done',
+                        'id' => '10001',
+                        'statusCategory' =>
+                            [
+                                'self' => 'URL/rest/api/2/statuscategory/3',
+                                'id' => 3,
+                                'key' => 'done',
+                                'colorName' => 'green',
+                                'name' => 'Done'
+                            ]
+                    ],
+                    "rendered_value" => null
+                ]
             ],
-            null
+            $changeset_node
         );
 
         $field_change_node = $changeset_node->field_change;

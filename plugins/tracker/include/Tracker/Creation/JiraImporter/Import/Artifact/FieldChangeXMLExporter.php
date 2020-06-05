@@ -85,14 +85,27 @@ class FieldChangeXMLExporter
         $this->status_values_transformer   = $status_values_transformer;
     }
 
+    public function exportFieldChanges(
+        array $current_state,
+        SimpleXMLElement $changeset_node
+    ): void {
+        foreach ($current_state as $key => $current_state_field) {
+            $this->exportFieldChange(
+                $current_state_field['mapping'],
+                $changeset_node,
+                $current_state_field['value'],
+                $current_state_field['rendered_value']
+            );
+        }
+    }
+
     /**
      * @param mixed|null $rendered_value
      * @param mixed $value
      */
-    public function exportFieldChange(
+    private function exportFieldChange(
         FieldMapping $mapping,
         SimpleXMLElement $changeset_node,
-        SimpleXMLElement $node_submitted_on,
         $value,
         $rendered_value
     ): void {
@@ -103,12 +116,21 @@ class FieldChangeXMLExporter
                 $value
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_TEXT_TYPE) {
-            $this->field_change_text_builder->build(
-                $changeset_node,
-                $mapping->getFieldName(),
-                (string) $rendered_value,
-                Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
-            );
+            if ($rendered_value !== null) {
+                $this->field_change_text_builder->build(
+                    $changeset_node,
+                    $mapping->getFieldName(),
+                    (string) $rendered_value,
+                    Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+                );
+            } else {
+                $this->field_change_text_builder->build(
+                    $changeset_node,
+                    $mapping->getFieldName(),
+                    (string) $value,
+                    Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+                );
+            }
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FLOAT_TYPE) {
             $this->field_change_float_builder->build(
                 $changeset_node,
@@ -155,8 +177,6 @@ class FieldChangeXMLExporter
                 Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 $value_ids
             );
-        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_LAST_UPDATE_DATE_TYPE) {
-            $node_submitted_on[0] = $value;
         }
     }
 }

@@ -413,6 +413,12 @@ msgstr "Erreur pendant l'analyse de la requête experte"
 msgid "Error in your Jira import"
 msgstr "Erreur lors de votre import Jira"
 
+msgid ""
+"Fail to retrieve the full collection of issue changelogs in selected tracker."
+msgstr ""
+"Echec lors de la récupération de la collection des historiques de l'issue dans le tracker "
+"sélectionné."
+
 msgid "Fail to retrieve the full collection of issues in selected tracker."
 msgstr ""
 "Echec lors de la récupération de la collection des issues dans le tracker "
