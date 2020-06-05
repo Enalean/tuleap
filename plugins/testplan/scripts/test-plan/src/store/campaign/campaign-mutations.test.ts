@@ -19,12 +19,18 @@
 
 import { CampaignState } from "./type";
 import { Campaign } from "../../type";
-import { addCampaigns, beginLoadingCampaigns, endLoadingCampaigns } from "./campaign-mutations";
+import {
+    addCampaigns,
+    beginLoadingCampaigns,
+    endLoadingCampaigns,
+    errorHasBeenCatched,
+} from "./campaign-mutations";
 
 describe("Campaign state mutations", () => {
     it("beginLoadingCampaigns", () => {
         const state: CampaignState = {
             is_loading: false,
+            is_error: false,
             campaigns: [],
         };
 
@@ -36,6 +42,7 @@ describe("Campaign state mutations", () => {
     it("endLoadingCampaigns", () => {
         const state: CampaignState = {
             is_loading: true,
+            is_error: false,
             campaigns: [],
         };
 
@@ -47,11 +54,24 @@ describe("Campaign state mutations", () => {
     it("addCampaigns", () => {
         const state: CampaignState = {
             is_loading: true,
+            is_error: false,
             campaigns: [{ id: 1 } as Campaign],
         };
 
         addCampaigns(state, [{ id: 2 }, { id: 3 }] as Campaign[]);
 
         expect(state.campaigns.length).toBe(3);
+    });
+
+    it("errorHasBeenCatched", () => {
+        const state: CampaignState = {
+            is_loading: true,
+            is_error: false,
+            campaigns: [],
+        };
+
+        errorHasBeenCatched(state);
+
+        expect(state.is_error).toBe(true);
     });
 });

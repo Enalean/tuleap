@@ -54,5 +54,16 @@ describe("Campaign state actions", () => {
                 }
             );
         });
+
+        it("Catches error", async () => {
+            const error = new Error();
+            tlpRecursiveGetMock.mockRejectedValue(error);
+
+            await expect(loadCampaigns(context)).rejects.toThrow();
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingCampaigns");
+            expect(context.commit).toHaveBeenCalledWith("errorHasBeenCatched");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingCampaigns");
+        });
     });
 });

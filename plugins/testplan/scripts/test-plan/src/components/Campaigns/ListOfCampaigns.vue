@@ -28,6 +28,7 @@
         />
         <campaign-skeleton v-if="is_loading" />
         <campaign-empty-state v-if="should_empty_state_be_displayed" />
+        <campaign-error-state v-if="should_error_state_be_displayed" />
     </section>
 </template>
 
@@ -49,11 +50,18 @@ const campaign = namespace("campaign");
             import(
                 /* webpackChunkName: "testplan-campaigns-emptystate" */ "./CampaignEmptyState.vue"
             ),
+        "campaign-error-state": (): Promise<Record<string, unknown>> =>
+            import(
+                /* webpackChunkName: "testplan-campaigns-errorstate" */ "./CampaignErrorState.vue"
+            ),
     },
 })
 export default class ListOfCampaigns extends Vue {
     @campaign.State
     readonly is_loading!: boolean;
+
+    @campaign.State
+    readonly is_error!: boolean;
 
     @campaign.State
     readonly campaigns!: Campaign[];
@@ -66,7 +74,11 @@ export default class ListOfCampaigns extends Vue {
     }
 
     get should_empty_state_be_displayed(): boolean {
-        return this.campaigns.length === 0 && !this.is_loading;
+        return this.campaigns.length === 0 && !this.is_loading && !this.is_error;
+    }
+
+    get should_error_state_be_displayed(): boolean {
+        return this.is_error;
     }
 }
 </script>
