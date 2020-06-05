@@ -33,6 +33,19 @@
     width: 100%;
 }
 
+.test-plan-campaign {
+    transition: border-color 100ms linear;
+    cursor: pointer;
+
+    &:hover {
+        border-color: $tlp-theme-color;
+    }
+
+    &:focus {
+        outline: 1px dotted #808080;
+    }
+}
+
 .test-plan-campaign-header {
     display: flex;
     align-items: baseline;

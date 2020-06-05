@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="tlp-pane">
+    <div
+        class="tlp-pane test-plan-campaign"
+        v-on:click="routeToCampaignExecution"
+        tabindex="0"
+        role="button"
+    >
         <div class="tlp-pane-container">
             <div class="tlp-pane-header test-plan-campaign-header">
                 <h1 class="tlp-pane-title">{{ campaign.label }}</h1>
@@ -42,6 +47,7 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Campaign } from "../../type";
 import CampaignProgression from "./CampaignProgression.vue";
+import { State } from "vuex-class";
 
 @Component({
     components: { CampaignProgression },
@@ -49,6 +55,12 @@ import CampaignProgression from "./CampaignProgression.vue";
 export default class CampaignCard extends Vue {
     @Prop({ required: true })
     readonly campaign!: Campaign;
+
+    @State
+    readonly project_id!: number;
+
+    @State
+    readonly milestone_id!: number;
 
     get nb_tests(): number {
         return (
@@ -66,6 +78,15 @@ export default class CampaignCard extends Vue {
                 nb: this.nb_tests,
             }
         );
+    }
+
+    routeToCampaignExecution(): void {
+        const url = new URL("/plugins/testmanagement/", window.location.href);
+        url.searchParams.set("group_id", String(this.project_id));
+        url.searchParams.set("milestone_id", String(this.milestone_id));
+        url.hash = "#!/campaigns/" + this.campaign.id;
+
+        window.location.href = url.toString();
     }
 }
 </script>
