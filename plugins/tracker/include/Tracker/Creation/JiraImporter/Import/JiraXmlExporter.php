@@ -27,6 +27,7 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\CreationStateDataGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -185,7 +186,8 @@ class JiraXmlExporter
                     new CreationStateDataGenerator(
                         new ChangelogEntriesBuilder(
                             $wrapper
-                        )
+                        ),
+                        new CreationStateListValueFormatter()
                     )
                 )
             ),
