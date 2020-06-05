@@ -2,7 +2,9 @@
 
 exports[`CampaignCard Displays a campaign as a card 1`] = `
 <div
-  class="tlp-pane"
+  class="tlp-pane test-plan-campaign"
+  role="button"
+  tabindex="0"
 >
   <div
     class="tlp-pane-container"
