@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2016 - 2018. All rights reserved.
+ * Copyright Enalean (c) 2016 - present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -25,6 +25,7 @@
 namespace Tuleap\SVN\Commit;
 
 use System_Command;
+use Tuleap\SVN\Admin\ImmutableTagPresenter;
 use Tuleap\SVN\Repository\Repository;
 
 class Svnlook
@@ -58,7 +59,10 @@ class Svnlook
 
     public function getTree(Repository $repository)
     {
-        $command = $this->timeout . ' ' . $this->svnlook . ' tree --full-paths ' . escapeshellarg($repository->getSystemPath());
+        $command = $this->timeout . ' ' . $this->svnlook . ' tree --full-paths ' .
+            escapeshellarg($repository->getSystemPath()) . ' | head -n' .
+            escapeshellarg((string) (ImmutableTagPresenter::MAX_NUMBER_OF_FOLDERS + 1));
+
         return $this->system_commnd->exec($command);
     }
 
