@@ -32,6 +32,14 @@ exports[`CampaignCard Displays a campaign as a card 1`] = `
         </span>
       </div>
     </div>
+     
+    <div
+      class="tlp-pane-section"
+    >
+      <campaign-progression-stub
+        campaign="[object Object]"
+      />
+    </div>
   </div>
 </div>
 `;
