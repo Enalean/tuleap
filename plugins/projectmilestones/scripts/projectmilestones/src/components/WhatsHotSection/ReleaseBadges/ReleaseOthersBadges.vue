@@ -34,6 +34,7 @@
         <div
             class="project-release-info-badge tlp-badge-outline"
             v-bind:class="initial_effort_badge_class"
+            data-test="initial_effort_badge"
         >
             <translate
                 v-if="initial_effort_exists"
@@ -93,7 +94,7 @@ export default class ReleaseOthersBadges extends Vue {
         return this.release_data.initial_effort > 0;
     }
 
-    get initial_effort_badge_class(): string | null {
+    get initial_effort_badge_class(): string {
         if (
             this.release_data.capacity &&
             this.release_data.initial_effort &&
