@@ -12,6 +12,26 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
+msgid "%{ nb } blocked"
+msgid_plural "%{ nb } blocked"
+msgstr[0] "%{ nb } bloqué"
+msgstr[1] "%{ nb } bloqués"
+
+msgid "%{ nb } failed"
+msgid_plural "%{ nb } failed"
+msgstr[0] "%{ nb } échoué"
+msgstr[1] "%{ nb } échoués"
+
+msgid "%{ nb } not run"
+msgid_plural "%{ nb } not run"
+msgstr[0] "%{ nb } non executé"
+msgstr[1] "%{ nb } non executés"
+
+msgid "%{ nb } passed"
+msgid_plural "%{ nb } passed"
+msgstr[0] "%{ nb } passé"
+msgstr[1] "%{ nb } passés"
+
 msgid "%{ nb } test"
 msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"

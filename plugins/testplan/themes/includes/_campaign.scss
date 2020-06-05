@@ -48,3 +48,92 @@
     margin: 0 0 0 $tlp-medium-spacing;
     white-space: nowrap;
 }
+
+
+.test-plan-campaign-progressions {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.test-plan-campaign-progression-value {
+    margin: 0 0 3px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .5px;
+    text-align: center;
+}
+
+.test-plan-campaign-progression-bar {
+    height: 6px;
+}
+
+.test-plan-campaign-progression {
+    min-width: 10px;
+    margin: -$tlp-small-spacing 1px 0;
+
+    &:first-child > .test-plan-campaign-progression-bar {
+        border-radius: 5px 0 0 5px;
+    }
+
+    &:last-child > .test-plan-campaign-progression-bar {
+        border-radius: 0 5px 5px 0;
+    }
+
+    &:only-child > .test-plan-campaign-progression-bar {
+        border-radius: 5px;
+    }
+
+    &.passed {
+        flex: 1 1 auto;
+
+        > .test-plan-campaign-progression-value {
+            color: $tlp-ui-success;
+        }
+
+        > .test-plan-campaign-progression-bar {
+            background-image: linear-gradient(45deg, $tlp-ui-success, mix($tlp-ui-success, $tlp-ui-white, 80%));
+        }
+    }
+
+    &.failed {
+        flex: 0 0 auto;
+
+        > .test-plan-campaign-progression-value {
+            color: $tlp-ui-danger;
+        }
+
+        > .test-plan-campaign-progression-bar {
+            background-image: linear-gradient(45deg, $tlp-ui-danger, mix($tlp-ui-danger, $tlp-ui-white, 80%));
+        }
+    }
+
+    &.blocked {
+        flex: 0 0 auto;
+
+        > .test-plan-campaign-progression-value {
+            color: $tlp-ui-info;
+        }
+
+        > .test-plan-campaign-progression-bar {
+            background-image: linear-gradient(45deg, $tlp-ui-info, mix($tlp-ui-info, $tlp-ui-white, 80%));
+        }
+    }
+
+    &.notrun {
+        flex: 0 0 auto;
+
+        > .test-plan-campaign-progression-value {
+            color: $tlp-ui-dimmed;
+        }
+
+        > .test-plan-campaign-progression-bar {
+            background-image: linear-gradient(45deg, $tlp-ui-border-dark, mix($tlp-ui-border-dark, $tlp-ui-white, 80%));
+        }
+    }
+}
+
+@for $i from 1 through 100 {
+    .test-plan-campaign-progression-width-#{$i} {
+        width: $i * 1%;
+    }
+}

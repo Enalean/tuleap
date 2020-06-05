@@ -30,6 +30,9 @@
                     </span>
                 </div>
             </div>
+            <div class="tlp-pane-section">
+                <campaign-progression v-bind:campaign="campaign" />
+            </div>
         </div>
     </div>
 </template>
@@ -38,8 +41,11 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { Campaign } from "../../type";
+import CampaignProgression from "./CampaignProgression.vue";
 
-@Component
+@Component({
+    components: { CampaignProgression },
+})
 export default class CampaignCard extends Vue {
     @Prop({ required: true })
     readonly campaign!: Campaign;
