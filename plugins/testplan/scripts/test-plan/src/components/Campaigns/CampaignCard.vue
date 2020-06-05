@@ -19,7 +19,11 @@
   -->
 
 <template>
-    <a v-bind:href="route_to_campaign_execution" class="tlp-pane test-plan-campaign">
+    <a
+        v-bind:href="route_to_campaign_execution"
+        class="tlp-pane test-plan-campaign"
+        data-test="campaign"
+    >
         <div class="tlp-pane-container">
             <div class="tlp-pane-header test-plan-campaign-header">
                 <h1 class="tlp-pane-title">{{ campaign.label }}</h1>

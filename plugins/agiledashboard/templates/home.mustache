@@ -67,7 +67,7 @@
                                         <tr>
                                             <td class="name">{{ getArtifactTitle }} <a href="{{ edit_base_link }}{{ getArtifactId }}" class="backlog-item-link" data-artifact-id="{{ getArtifactId }}"><i class="fa fa-pencil-square-o"></i></a></td>
                                             <td class="actions">
-                                                <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning-v2"><i class="fa fa-sign-in"></i> {{ planning }}</a>
+                                                <a href="?group_id={{ group_id }}&planning_id={{ getPlanningId }}&action=show&aid={{ getArtifactId }}&pane=planning-v2" data-test="go-to-planning"><i class="fa fa-sign-in"></i> {{ planning }}</a>
                                             </td>
                                         </tr>
                                         {{/ milestones }}

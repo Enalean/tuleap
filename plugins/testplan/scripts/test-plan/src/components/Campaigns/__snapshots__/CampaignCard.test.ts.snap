@@ -3,6 +3,7 @@
 exports[`CampaignCard Displays a campaign as a card 1`] = `
 <a
   class="tlp-pane test-plan-campaign"
+  data-test="campaign"
   href="http://localhost/plugins/testmanagement/?group_id=102&milestone_id=74#!/campaigns/470"
 >
   <div
