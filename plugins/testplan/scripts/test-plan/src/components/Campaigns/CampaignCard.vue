@@ -19,12 +19,7 @@
   -->
 
 <template>
-    <div
-        class="tlp-pane test-plan-campaign"
-        v-on:click="routeToCampaignExecution"
-        tabindex="0"
-        role="button"
-    >
+    <a v-bind:href="route_to_campaign_execution" class="tlp-pane test-plan-campaign">
         <div class="tlp-pane-container">
             <div class="tlp-pane-header test-plan-campaign-header">
                 <h1 class="tlp-pane-title">{{ campaign.label }}</h1>
@@ -39,7 +34,7 @@
                 <campaign-progression v-bind:campaign="campaign" />
             </div>
         </div>
-    </div>
+    </a>
 </template>
 
 <script lang="ts">
@@ -80,13 +75,13 @@ export default class CampaignCard extends Vue {
         );
     }
 
-    routeToCampaignExecution(): void {
+    get route_to_campaign_execution(): string {
         const url = new URL("/plugins/testmanagement/", window.location.href);
         url.searchParams.set("group_id", String(this.project_id));
         url.searchParams.set("milestone_id", String(this.milestone_id));
         url.hash = "#!/campaigns/" + this.campaign.id;
 
-        window.location.href = url.toString();
+        return url.toString();
     }
 }
 </script>

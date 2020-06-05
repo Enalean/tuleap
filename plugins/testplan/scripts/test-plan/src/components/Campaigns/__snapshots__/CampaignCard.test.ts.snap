@@ -1,10 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CampaignCard Displays a campaign as a card 1`] = `
-<div
+<a
   class="tlp-pane test-plan-campaign"
-  role="button"
-  tabindex="0"
+  href="http://localhost/plugins/testmanagement/?group_id=102&milestone_id=74#!/campaigns/470"
 >
   <div
     class="tlp-pane-container"
@@ -43,5 +42,5 @@ exports[`CampaignCard Displays a campaign as a card 1`] = `
       />
     </div>
   </div>
-</div>
+</a>
 `;

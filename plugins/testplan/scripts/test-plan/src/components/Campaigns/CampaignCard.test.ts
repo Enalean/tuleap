@@ -21,13 +21,24 @@ import { shallowMount } from "@vue/test-utils";
 import CampaignCard from "./CampaignCard.vue";
 import { Campaign } from "../../type";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../store/type";
 
 describe("CampaignCard", () => {
     it("Displays a campaign as a card", async () => {
         const wrapper = shallowMount(CampaignCard, {
             localVue: await createTestPlanLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
+            },
             propsData: {
                 campaign: {
+                    id: 470,
                     label: "My campaign",
                     nb_of_blocked: 1,
                     nb_of_failed: 2,
