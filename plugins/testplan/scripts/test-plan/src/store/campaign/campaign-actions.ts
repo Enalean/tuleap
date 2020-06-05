@@ -44,6 +44,9 @@ export async function loadCampaigns(
                 },
             }
         );
+    } catch (e) {
+        context.commit("errorHasBeenCatched");
+        throw e;
     } finally {
         context.commit("endLoadingCampaigns");
     }

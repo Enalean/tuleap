@@ -17,21 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./type";
-import { Campaign } from "../../type";
+import { shallowMount } from "@vue/test-utils";
+import CampaignErrorState from "./CampaignErrorState.vue";
+import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
-export function beginLoadingCampaigns(state: CampaignState): void {
-    state.is_loading = true;
-}
+describe("CampaignErrorState", () => {
+    it("Displays empty state", async () => {
+        const wrapper = shallowMount(CampaignErrorState, {
+            localVue: await createTestPlanLocalVue(),
+        });
 
-export function endLoadingCampaigns(state: CampaignState): void {
-    state.is_loading = false;
-}
-
-export function addCampaigns(state: CampaignState, collection: Campaign[]): void {
-    state.campaigns = state.campaigns.concat(collection);
-}
-
-export function errorHasBeenCatched(state: CampaignState): void {
-    state.is_error = true;
-}
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

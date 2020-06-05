@@ -40,6 +40,7 @@ describe("ListOfCampaigns", () => {
             },
             stubs: {
                 "campaign-empty-state": true,
+                "campaign-error-state": true,
             },
         });
     }
@@ -47,6 +48,7 @@ describe("ListOfCampaigns", () => {
     it("Displays skeletons while loading", async () => {
         const wrapper = await createWrapper({
             is_loading: true,
+            is_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -56,6 +58,7 @@ describe("ListOfCampaigns", () => {
     it("Does not display skeletons when not loading", async () => {
         const wrapper = await createWrapper({
             is_loading: false,
+            is_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -65,6 +68,7 @@ describe("ListOfCampaigns", () => {
     it("Does not display any cards when there is no campaign", async () => {
         const wrapper = await createWrapper({
             is_loading: false,
+            is_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -74,6 +78,7 @@ describe("ListOfCampaigns", () => {
     it("Displays a card for each campaign", async () => {
         const wrapper = await createWrapper({
             is_loading: false,
+            is_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
         });
 
@@ -83,6 +88,7 @@ describe("ListOfCampaigns", () => {
     it("Displays skeletons even if there are campaigns to show loading indication", async () => {
         const wrapper = await createWrapper({
             is_loading: true,
+            is_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
         });
 
@@ -94,6 +100,7 @@ describe("ListOfCampaigns", () => {
             state: {
                 campaign: {
                     is_loading: true,
+                    is_error: false,
                     campaigns: [] as Campaign[],
                 },
             } as RootState,
@@ -111,6 +118,7 @@ describe("ListOfCampaigns", () => {
     it("Displays empty state when there is no campaign", async () => {
         const wrapper = await createWrapper({
             is_loading: false,
+            is_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -120,6 +128,7 @@ describe("ListOfCampaigns", () => {
     it("Does not display empty state when there is no campaign but it is still loading", async () => {
         const wrapper = await createWrapper({
             is_loading: true,
+            is_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -129,9 +138,40 @@ describe("ListOfCampaigns", () => {
     it("Does not display empty state when there are campaigns", async () => {
         const wrapper = await createWrapper({
             is_loading: false,
+            is_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
+    });
+
+    it("Does not display empty state when there is an error", async () => {
+        const wrapper = await createWrapper({
+            is_loading: false,
+            is_error: true,
+            campaigns: [] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
+    });
+
+    it("Displays error stat when there is an error", async () => {
+        const wrapper = await createWrapper({
+            is_loading: false,
+            is_error: true,
+            campaigns: [] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-error-state-stub").exists()).toBe(true);
+    });
+
+    it("Does not display error stat when there is no error", async () => {
+        const wrapper = await createWrapper({
+            is_loading: false,
+            is_error: false,
+            campaigns: [] as Campaign[],
+        });
+
+        expect(wrapper.find("campaign-error-state-stub").exists()).toBe(false);
     });
 });

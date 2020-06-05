@@ -37,6 +37,9 @@ msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"
 msgstr[1] "%{ nb } tests"
 
+msgid "An error occurred while loading the campaigns."
+msgstr "Une erreur est survenue lors du chargement des campagnes."
+
 msgid "Test campaigns"
 msgstr "Campagnes de test"
 
