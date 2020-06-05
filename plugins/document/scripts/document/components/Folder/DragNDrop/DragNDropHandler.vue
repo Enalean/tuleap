@@ -37,6 +37,7 @@ import { mapGetters, mapState } from "vuex";
 import CurrentFolderDropZone from "./CurrentFolderDropZone.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 import { highlightItem } from "../../../helpers/highlight-items-helper.js";
+import EventBus from "./../../../helpers/event-bus.js";
 
 export default {
     components: { CurrentFolderDropZone },
@@ -65,6 +66,7 @@ export default {
             "max_files_dragndrop",
             "max_size_upload",
             "user_id",
+            "is_changelog_proposed_after_dnd",
         ]),
         user_can_dragndrop_in_current_folder() {
             return (
@@ -370,6 +372,17 @@ export default {
             }
 
             try {
+                if (this.is_changelog_proposed_after_dnd) {
+                    EventBus.$emit("show-changelog-modal", {
+                        detail: {
+                            updated_file: dropzone_item,
+                            dropped_file: file,
+                        },
+                    });
+
+                    return;
+                }
+
                 await this.$store.dispatch("createNewFileVersion", [dropzone_item, file]);
             } catch (error) {
                 this.error_modal_shown = this.CREATION_ERROR;

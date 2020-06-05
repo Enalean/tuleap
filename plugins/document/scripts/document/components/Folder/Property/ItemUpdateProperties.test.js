@@ -21,40 +21,58 @@ import localVue from "../../../helpers/local-vue.js";
 import ItemUpdateProperties from "./ItemUpdateProperties.vue";
 
 describe("ItemUpdateProperties", () => {
-    let file_properties_update_factory;
-    beforeEach(() => {
-        file_properties_update_factory = (item = {}) => {
-            return shallowMount(ItemUpdateProperties, {
-                localVue,
-                propsData: {
-                    version: {
-                        title: "Not idea",
-                        is_file_locked: false,
-                        changelog: "",
-                    },
-                    item: { ...item },
+    function getWrapper(item = {}, isOpenAfterDnd = false) {
+        return shallowMount(ItemUpdateProperties, {
+            localVue,
+            propsData: {
+                version: {
+                    title: "Not idea",
+                    is_file_locked: false,
+                    changelog: "",
                 },
-            });
-        };
-    });
+                item: { ...item },
+                isOpenAfterDnd,
+            },
+        });
+    }
+
     describe("ApprovalUpdateProperties", () => {
         it("displays the approvals option action for update if the item has an approval table regardless of approval enable status", () => {
-            const wrapper = file_properties_update_factory({ has_approval_table: true });
+            const wrapper = getWrapper({ has_approval_table: true });
 
             expect(wrapper.find("[data-test='update-approval-properties']").exists()).toBeTruthy();
         });
         it("does not display the approvals option action for update if the item has no approval table", () => {
-            const wrapper = file_properties_update_factory({ has_approval_table: false });
+            const wrapper = getWrapper({ has_approval_table: false });
 
             expect(wrapper.find("[data-test='update-approval-properties']").exists()).toBeFalsy();
         });
         it(`Given an action event thrown by my child component (MyUltraCoolEvent)
             Then it resend the received event`, () => {
-            const wrapper = file_properties_update_factory();
+            const wrapper = getWrapper();
 
             wrapper.vm.$emit("approvalTableActionChange", "MyUltraCoolEvent");
 
             expect(wrapper.emitted().approvalTableActionChange[0]).toEqual(["MyUltraCoolEvent"]);
+        });
+
+        describe("When the parent modal is open after a DnD", () => {
+            it("Displays only 'version title' and 'changelog' fields", () => {
+                const wrapper = getWrapper({ has_approval_table: true }, true);
+
+                expect(
+                    wrapper.find("[data-test='update-property-version-title']").exists()
+                ).toBeTruthy();
+                expect(
+                    wrapper.find("[data-test='update-property-changelog']").exists()
+                ).toBeTruthy();
+                expect(
+                    wrapper.find("[data-test='update-approval-properties']").exists()
+                ).toBeFalsy();
+                expect(
+                    wrapper.find("[data-test='update-property-lock-version']").exists()
+                ).toBeFalsy();
+            });
         });
     });
 });
