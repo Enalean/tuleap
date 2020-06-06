@@ -38,7 +38,8 @@ function ValidateService() {
         const text_field_value_models = Object.values(field_values).filter(
             ({ type }) => type === TEXT_FIELD
         );
-        var validated_values = _(field_values)
+
+        return Object.values(field_values)
             .filter(function (field) {
                 return filterFieldPermissions(field, creation_mode);
             })
@@ -62,9 +63,7 @@ function ValidateService() {
                         return validateOtherFields(field);
                 }
             })
-            .compact()
-            .value();
-        return validated_values;
+            .filter(Boolean);
     }
 
     function filterFieldPermissions(field, creation_mode) {
@@ -72,7 +71,7 @@ function ValidateService() {
             return false;
         }
         var necessary_permission = creation_mode ? "create" : "update";
-        return _(field.permissions).contains(necessary_permission);
+        return (field.permissions || []).includes(necessary_permission);
     }
 
     function validateOtherFields(field) {

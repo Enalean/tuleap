@@ -508,7 +508,7 @@ function BacklogController(
         var accepted = target_container.data("accept").split("|"),
             type = angular.element(element_to_drop).data("type");
 
-        return _(accepted).contains(type);
+        return accepted.includes(type);
     }
 
     function isItemDraggable(element_to_drag, container, handle_element) {

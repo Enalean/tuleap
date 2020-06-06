@@ -198,7 +198,7 @@ function ExecutionService(
 
     function getExecutionsByDefinitionId(artifact_id) {
         //eslint-disable-next-line you-dont-need-lodash-underscore/map
-        var executions = _.flatten(_.map(self.categories, "executions"));
+        var executions = [].concat(..._.map(self.categories, "executions"));
 
         return executions.filter((execution) => execution.definition.id === artifact_id);
     }
@@ -522,7 +522,7 @@ function ExecutionService(
             self.executions_by_categories_by_campaigns[campaign_id],
             "executions"
         );
-        return _.flatten(executions);
+        return [].concat(...executions);
     }
 
     function addArtifactLink(execution_id, artifact_link) {

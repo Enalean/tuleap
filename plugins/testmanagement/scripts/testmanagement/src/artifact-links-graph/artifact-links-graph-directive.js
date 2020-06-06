@@ -492,7 +492,7 @@ function Graph(
                     links: [],
                 };
 
-                _(graph.nodes).forEach(function (node) {
+                graph.nodes.forEach(function (node) {
                     const node_exist = graphd3
                         .graph()
                         .nodes()
@@ -503,7 +503,7 @@ function Graph(
                     }
                 });
 
-                _(graph.links).forEach(function (link) {
+                graph.links.forEach(function (link) {
                     const link_exist = graphd3
                         .graph()
                         .force("link")

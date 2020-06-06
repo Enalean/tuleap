@@ -1,4 +1,3 @@
-import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
 
@@ -93,16 +92,16 @@ describe("PlanningController -", () => {
             };
 
             BacklogItemService = _BacklogItemService_;
-            _([
+            [
                 "getBacklogItemChildren",
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
                 "getBacklogItem",
                 "removeAddBacklogItemChildren",
-            ]).forEach(returnPromise, BacklogItemService);
+            ].forEach(returnPromise, BacklogItemService);
 
             MilestoneService = _MilestoneService_;
-            _([
+            [
                 "addReorderToContent",
                 "addToContent",
                 "augmentMilestone",
@@ -116,7 +115,7 @@ describe("PlanningController -", () => {
                 "patchSubMilestones",
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",
-            ]).forEach(returnPromise, MilestoneService);
+            ].forEach(returnPromise, MilestoneService);
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});

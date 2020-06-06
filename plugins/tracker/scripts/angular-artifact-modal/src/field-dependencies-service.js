@@ -73,14 +73,15 @@ export default function TuleapArtifactModalFieldDependenciesService() {
         target_field_id,
         field_dependencies_rules
     ) {
-        return _(field_dependencies_rules)
+        return (field_dependencies_rules || [])
             .filter(function (rule) {
                 return (
-                    _(source_value_ids).contains(rule.source_value_id) &&
+                    source_value_ids.includes(rule.source_value_id) &&
                     rule.target_field_id === target_field_id
                 );
             })
-            .pluck("target_value_id")
-            .value();
+            .map((target) => {
+                return target.target_value_id;
+            });
     }
 }

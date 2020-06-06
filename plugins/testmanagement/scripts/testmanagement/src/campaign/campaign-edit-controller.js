@@ -169,6 +169,7 @@ function CampaignEditCtrl(
     }
 
     function addedTests() {
+        // eslint-disable-next-line you-dont-need-lodash-underscore/map
         return _($scope.tests_list)
             .map(function (category) {
                 //eslint-disable-next-line you-dont-need-lodash-underscore/select
@@ -179,6 +180,7 @@ function CampaignEditCtrl(
     }
 
     function removedTests() {
+        // eslint-disable-next-line you-dont-need-lodash-underscore/map
         return _($scope.tests_list)
             .map(function (category) {
                 return _(category.tests)

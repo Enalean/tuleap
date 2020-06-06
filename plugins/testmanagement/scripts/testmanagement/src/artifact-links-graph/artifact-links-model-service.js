@@ -63,7 +63,7 @@ function ArtifactLinksModelService() {
     }
 
     function createNodesAndLinksForOutgoingLinks(model, artifact, outgoing_links) {
-        _(outgoing_links).forEach(function (outgoing_link) {
+        outgoing_links.forEach(function (outgoing_link) {
             var link = {
                 source: artifact.id,
                 target: outgoing_link.id,
@@ -80,7 +80,7 @@ function ArtifactLinksModelService() {
     }
 
     function createNodesAndLinksForIncomingLinks(model, artifact, incoming_links) {
-        _(incoming_links).forEach(function (incoming_link) {
+        incoming_links.forEach(function (incoming_link) {
             var link = {
                 source: incoming_link.id,
                 target: artifact.id,
