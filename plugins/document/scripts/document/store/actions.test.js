@@ -877,8 +877,15 @@ describe("Store actions", () => {
 
             expect(uploadVersion).not.toHaveBeenCalled();
         });
-        it("upload a new version of file", async () => {
-            const item = { id: 45, lock_info: null };
+
+        it("uploads a new version of the file and releases the edition lock", async () => {
+            const item = {
+                id: 45,
+                lock_info: null,
+                title: "Electronic document management for dummies.pdf",
+            };
+            const NO_LOCK = false;
+
             context.state.folder_content = [{ id: 45 }];
             const dropped_file = { name: "filename.txt", size: 123, type: "text/plain" };
 
@@ -891,6 +898,14 @@ describe("Store actions", () => {
             await createNewFileVersion(context, [item, dropped_file]);
 
             expect(uploadVersion).toHaveBeenCalled();
+            expect(createNewVersion).toHaveBeenCalledWith(
+                item,
+                "Electronic document management for dummies.pdf",
+                "",
+                dropped_file,
+                NO_LOCK,
+                undefined
+            );
         });
     });
     describe("createNewFileVersionFromModal", () => {
