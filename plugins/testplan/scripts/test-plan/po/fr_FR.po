@@ -46,12 +46,6 @@ msgstr "Tous les tests dans %{ milestone_title }"
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
-msgid "Campaign label"
-msgstr "Label de la campagne"
-
-msgid "Choose tests"
-msgstr "Sélectionner les tests"
-
 msgid "Close"
 msgstr "Fermer"
 
@@ -61,6 +55,9 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
+msgid "Name"
+msgstr "Nom"
+
 msgid "New campaign"
 msgstr "Nouvelle campagne"
 
@@ -69,6 +66,9 @@ msgstr "Aucun test"
 
 msgid "Test campaigns"
 msgstr "Campagnes de test"
+
+msgid "Tests"
+msgstr "Tests"
 
 msgid "There is no test campaign yet."
 msgstr "Il n'y a pas de campagne de test."

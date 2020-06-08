@@ -51,7 +51,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
         <translate-stub
           tag="span"
         >
-          Campaign label
+          Name
         </translate-stub>
          
         <i
@@ -77,7 +77,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
         <translate-stub
           tag="span"
         >
-          Choose tests
+          Tests
         </translate-stub>
          
         <i
