@@ -6,9 +6,7 @@ DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_date;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
-
-DROP TABLE IF EXISTS widget_renderer;
-
+DROP TABLE IF EXISTS plugin_tracker_notification_email_custom_sender_format;
 DROP TABLE IF EXISTS tracker;
 DROP TABLE IF EXISTS tracker_field;
 DROP TABLE IF EXISTS tracker_field_int;
@@ -60,7 +58,6 @@ DROP TABLE IF EXISTS tracker_report_criteria_openlist_value;
 DROP TABLE IF EXISTS tracker_report_criteria_permissionsonartifact_value;
 DROP TABLE IF EXISTS tracker_field_list_bind_decorator;
 DROP TABLE IF EXISTS tracker_artifact;
-DROP TABLE IF EXISTS tracker_artifact_priority;
 DROP TABLE IF EXISTS tracker_artifact_priority_rank;
 DROP TABLE IF EXISTS tracker_artifact_priority_history;
 DROP TABLE IF EXISTS tracker_tooltip;
@@ -94,9 +91,7 @@ DROP TABLE IF EXISTS tracker_post_creation_event_log;
 
 DROP TABLE IF EXISTS plugin_tracker_config;
 DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures;
-DROP TABLE IF EXISTS plugin_tracker_artifactlink_natures_allowed_projects;
 DROP TABLE IF EXISTS plugin_tracker_notification_assigned_to;
-DROP TABLE IF EXISTS plugin_tracker_notification_email_custom_sender_format;
 DROP TABLE IF EXISTS plugin_tracker_recently_visited;
 DROP TABLE IF EXISTS plugin_tracker_projects_use_artifactlink_types;
 DROP TABLE IF EXISTS plugin_tracker_projects_unused_artifactlink_types;
@@ -112,6 +107,13 @@ DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_frozen_fields_value;
 DROP TABLE IF EXISTS plugin_tracker_file_upload;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets;
 DROP TABLE IF EXISTS plugin_tracker_workflow_postactions_hidden_fieldsets_value;
+DROP TABLE IF EXISTS plugin_tracker_new_layout_modal_user;
+DROP TABLE IF EXISTS plugin_tracker_pending_jira_import;
+DROP TABLE IF EXISTS tracker_field_list_bind_ugroups_value;
+DROP TABLE IF EXISTS tracker_fileinfo_temporary;
+DROP TABLE IF EXISTS tracker_reminder_notified_roles;
+DROP TABLE IF EXISTS tracker_report_config;
+DROP TABLE IF EXISTS tracker_widget_renderer;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DAO\DBTablesDao;
 use Tuleap\Markdown\ContentInterpretor;
 
 /**
@@ -136,17 +137,14 @@ class PluginManager
         $plugin = false;
         if ($this->isNameValid($name)) {
             if (!$this->plugin_factory->isPluginInstalled($name)) {
-                if (!$this->_executeSqlStatements('install', $name)) {
-                    $plugin = $this->plugin_factory->createPlugin($name);
-                    if ($plugin instanceof Plugin) {
-                        $this->_createEtc($name);
-                        $this->configureForgeUpgrade($name);
-                        $plugin->postInstall();
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', 'Unable to create plugin');
-                    }
+                $this->executeSqlStatements('install', $name);
+                $plugin = $this->plugin_factory->createPlugin($name);
+                if ($plugin instanceof Plugin) {
+                    $this->_createEtc($name);
+                    $this->configureForgeUpgrade($name);
+                    $plugin->postInstall();
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
+                    $GLOBALS['Response']->addFeedback('error', 'Unable to create plugin');
                 }
             }
         }
@@ -156,14 +154,11 @@ class PluginManager
     public function uninstallPlugin(Plugin $plugin)
     {
         $name = $this->plugin_factory->getNameForPlugin($plugin);
-        if (!$this->_executeSqlStatements('uninstall', $name)) {
-            $plugin->uninstall();
-            $this->uninstallForgeUpgrade($name);
-            $this->site_cache->invalidatePluginBasedCaches();
-            return $this->plugin_factory->removePlugin($plugin);
-        } else {
-            return false;
-        }
+        $this->executeSqlStatements('uninstall', $name);
+        $plugin->uninstall();
+        $this->uninstallForgeUpgrade($name);
+        $this->site_cache->invalidatePluginBasedCaches();
+        return $this->plugin_factory->removePlugin($plugin);
     }
     public function getPostInstall($name)
     {
@@ -278,22 +273,17 @@ class PluginManager
         }
     }
 
-    public function _executeSqlStatements($file, $name)
+    private function executeSqlStatements(string $file, string $name): void
     {
-        $db_corrupted = false;
         $path_to_file = '/' . $name . '/db/' . $file . '.sql';
 
         foreach ($this->plugin_factory->getAllPossiblePluginsDir() as $dir) {
             $sql_filename = $dir . $path_to_file;
             if (file_exists($sql_filename)) {
                 $dbtables = new DBTablesDao();
-                if (!$dbtables->updateFromFile($sql_filename)) {
-                    $db_corrupted = true;
-                }
+                $dbtables->updateFromFile($sql_filename);
             }
         }
-
-        return $db_corrupted;
     }
 
     public function getNotYetInstalledPlugins()

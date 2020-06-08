@@ -27,6 +27,14 @@ DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers;
 DROP TABLE IF EXISTS plugin_git_restricted_gerrit_servers_allowed_projects;
 DROP TABLE IF EXISTS plugin_git_global_parameters;
 DROP TABLE IF EXISTS plugin_git_big_object_authorized_project;
+DROP TABLE IF EXISTS plugin_git_commit_status;
+DROP TABLE IF EXISTS plugin_git_default_fine_grained_permissions;
+DROP TABLE IF EXISTS plugin_git_default_fine_grained_permissions_enabled;
+DROP TABLE IF EXISTS plugin_git_default_fine_grained_permissions_writers;
+DROP TABLE IF EXISTS plugin_git_default_fine_grained_permissions_rewinders;
+DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions;
+DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions_writers;
+DROP TABLE IF EXISTS plugin_git_repository_fine_grained_permissions_rewinders;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;

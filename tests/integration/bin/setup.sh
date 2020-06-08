@@ -55,6 +55,9 @@ setup_database() {
         welcome0 \
         localhost
 
+    # Allow all privileges on DB starting with 'testdb_' so we can create and drop database during the tests
+    mysql -h"$DB_HOST" -uroot -pwelcome0 -e 'GRANT ALL PRIVILEGES ON `testdb_%` . * TO "'$MYSQL_USER'"@"%";'
+
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3structure.sql"
     $MYSQL $MYSQL_DBNAME < "/usr/share/tuleap/src/db/mysql/trackerv3values.sql"
     # Need the raw import (instead of std activate of plugin) because we need to load

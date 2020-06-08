@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2018-2019. All rights reserved.
+ * Copyright Enalean (c) 2018-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -24,13 +24,13 @@
 
 namespace Tuleap\Timetracking\REST;
 
-use DBTablesDao;
 use EventManager;
 use PFUser;
 use Project;
 use REST_TestDataBuilder;
 use Tracker_ArtifactFactory;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DAO\DBTablesDao;
 use Tuleap\Dashboard\User\UserDashboardDao;
 use Tuleap\Dashboard\User\UserDashboardRetriever;
 use Tuleap\Dashboard\Widget\DashboardWidgetDao;
@@ -85,7 +85,7 @@ class TimetrackingDataBuilder extends REST_TestDataBuilder
     private function installPlugin()
     {
         $dbtables = new DBTablesDao();
-        $dbtables->updateFromFile(dirname(__FILE__) . '/../../db/install.sql');
+        $dbtables->updateFromFile(__DIR__ . '/../../db/install.sql');
     }
 
     private function addTimesInDB(Project $project)
