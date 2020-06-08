@@ -20,7 +20,7 @@
 
 <template>
     <section class="test-plan-list-of-campaigns">
-        <translate tag="h2" class="test-plan-list-of-campaigns-title">Test campaigns</translate>
+        <list-of-campaigns-header />
         <campaign-card
             v-for="campaign of campaigns"
             v-bind:key="campaign.id"
@@ -39,11 +39,13 @@ import { Component } from "vue-property-decorator";
 import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
 import { Campaign } from "../../type";
+import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
 
 const campaign = namespace("campaign");
 
 @Component({
     components: {
+        ListOfCampaignsHeader,
         CampaignCard,
         CampaignSkeleton,
         "campaign-empty-state": (): Promise<Record<string, unknown>> =>

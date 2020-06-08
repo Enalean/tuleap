@@ -18,7 +18,6 @@
  */
 
 import { shallowMount, Wrapper } from "@vue/test-utils";
-import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../store/type";
 import { Campaign } from "../../type";
@@ -28,9 +27,8 @@ import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
 
 describe("ListOfCampaigns", () => {
-    async function createWrapper(campaign: CampaignState): Promise<Wrapper<ListOfCampaigns>> {
+    function createWrapper(campaign: CampaignState): Wrapper<ListOfCampaigns> {
         return shallowMount(ListOfCampaigns, {
-            localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
@@ -45,8 +43,8 @@ describe("ListOfCampaigns", () => {
         });
     }
 
-    it("Displays skeletons while loading", async () => {
-        const wrapper = await createWrapper({
+    it("Displays skeletons while loading", () => {
+        const wrapper = createWrapper({
             is_loading: true,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -55,8 +53,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.findComponent(CampaignSkeleton).exists()).toBe(true);
     });
 
-    it("Does not display skeletons when not loading", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display skeletons when not loading", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -65,8 +63,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.findComponent(CampaignSkeleton).exists()).toBe(false);
     });
 
-    it("Does not display any cards when there is no campaign", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display any cards when there is no campaign", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -75,8 +73,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.findComponent(CampaignCard).exists()).toBe(false);
     });
 
-    it("Displays a card for each campaign", async () => {
-        const wrapper = await createWrapper({
+    it("Displays a card for each campaign", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
@@ -85,8 +83,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.findAllComponents(CampaignCard).length).toBe(2);
     });
 
-    it("Displays skeletons even if there are campaigns to show loading indication", async () => {
-        const wrapper = await createWrapper({
+    it("Displays skeletons even if there are campaigns to show loading indication", () => {
+        const wrapper = createWrapper({
             is_loading: true,
             is_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
@@ -95,7 +93,7 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.findComponent(CampaignSkeleton).exists()).toBe(true);
     });
 
-    it("Loads automatically the campaigns", async () => {
+    it("Loads automatically the campaigns", () => {
         const $store = createStoreMock({
             state: {
                 campaign: {
@@ -106,7 +104,6 @@ describe("ListOfCampaigns", () => {
             } as RootState,
         });
         shallowMount(ListOfCampaigns, {
-            localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store,
             },
@@ -115,8 +112,8 @@ describe("ListOfCampaigns", () => {
         expect($store.dispatch).toHaveBeenCalledWith("campaign/loadCampaigns");
     });
 
-    it("Displays empty state when there is no campaign", async () => {
-        const wrapper = await createWrapper({
+    it("Displays empty state when there is no campaign", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -125,8 +122,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(true);
     });
 
-    it("Does not display empty state when there is no campaign but it is still loading", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display empty state when there is no campaign but it is still loading", () => {
+        const wrapper = createWrapper({
             is_loading: true,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -135,8 +132,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Does not display empty state when there are campaigns", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display empty state when there are campaigns", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
@@ -145,8 +142,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Does not display empty state when there is an error", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display empty state when there is an error", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: true,
             campaigns: [] as Campaign[],
@@ -155,8 +152,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Displays error stat when there is an error", async () => {
-        const wrapper = await createWrapper({
+    it("Displays error stat when there is an error", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: true,
             campaigns: [] as Campaign[],
@@ -165,8 +162,8 @@ describe("ListOfCampaigns", () => {
         expect(wrapper.find("campaign-error-state-stub").exists()).toBe(true);
     });
 
-    it("Does not display error stat when there is no error", async () => {
-        const wrapper = await createWrapper({
+    it("Does not display error stat when there is no error", () => {
+        const wrapper = createWrapper({
             is_loading: false,
             is_error: false,
             campaigns: [] as Campaign[],
