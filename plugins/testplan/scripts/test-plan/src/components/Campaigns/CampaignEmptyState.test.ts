@@ -25,7 +25,8 @@ import { RootState } from "../../store/type";
 
 describe("CampaignEmptyState", () => {
     async function createWrapper(
-        user_can_create_campaign: boolean
+        user_can_create_campaign: boolean,
+        show_create_modal = jest.fn()
     ): Promise<Wrapper<CampaignEmptyState>> {
         return shallowMount(CampaignEmptyState, {
             localVue: await createTestPlanLocalVue(),
@@ -35,6 +36,9 @@ describe("CampaignEmptyState", () => {
                         user_can_create_campaign,
                     } as RootState,
                 }),
+            },
+            propsData: {
+                showCreateModal: show_create_modal,
             },
         });
     }
@@ -50,5 +54,15 @@ describe("CampaignEmptyState", () => {
         const wrapper = await createWrapper(false);
 
         expect(wrapper.find("[data-test=new-campaign]").exists()).toBe(false);
+    });
+
+    it(`On click on the button, it calls showCreateModal`, async () => {
+        const show_create_modal = jest.fn();
+
+        const wrapper = await createWrapper(true, show_create_modal);
+
+        await wrapper.find("[data-test=new-campaign]").trigger("click");
+
+        expect(show_create_modal).toHaveBeenCalled();
     });
 });

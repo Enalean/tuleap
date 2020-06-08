@@ -20,15 +20,19 @@
 
 <template>
     <section class="test-plan-list-of-campaigns">
-        <list-of-campaigns-header />
+        <list-of-campaigns-header v-bind:showCreateModal="showCreateModal" />
         <campaign-card
             v-for="campaign of campaigns"
             v-bind:key="campaign.id"
             v-bind:campaign="campaign"
         />
         <campaign-skeleton v-if="is_loading" />
-        <campaign-empty-state v-if="should_empty_state_be_displayed" />
+        <campaign-empty-state
+            v-if="should_empty_state_be_displayed"
+            v-bind:showCreateModal="showCreateModal"
+        />
         <campaign-error-state v-if="should_error_state_be_displayed" />
+        <create-modal v-bind:is="show_create_modal" />
     </section>
 </template>
 
@@ -71,8 +75,15 @@ export default class ListOfCampaigns extends Vue {
     @campaign.Action
     loadCampaigns!: () => void;
 
+    private show_create_modal: (() => Promise<Record<string, unknown>>) | string = "";
+
     created(): void {
         this.loadCampaigns();
+    }
+
+    showCreateModal(): void {
+        this.show_create_modal = (): Promise<Record<string, unknown>> =>
+            import(/* webpackChunkName: "testplan-create-campaign-modal" */ "./CreateModal.vue");
     }
 
     get should_empty_state_be_displayed(): boolean {

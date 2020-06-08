@@ -28,7 +28,8 @@ import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 describe("ListOfCampaignsHeader", () => {
     async function createWrapper(
         user_can_create_campaign: boolean,
-        campaign: CampaignState
+        campaign: CampaignState,
+        show_create_modal = jest.fn()
     ): Promise<Wrapper<ListOfCampaignsHeader>> {
         return shallowMount(ListOfCampaignsHeader, {
             localVue: await createTestPlanLocalVue(),
@@ -39,6 +40,9 @@ describe("ListOfCampaignsHeader", () => {
                         campaign,
                     } as RootState,
                 }),
+            },
+            propsData: {
+                showCreateModal: show_create_modal,
             },
         });
     }
@@ -82,5 +86,23 @@ describe("ListOfCampaignsHeader", () => {
         });
 
         expect(wrapper.find("[data-test=new-campaign]").exists()).toBe(false);
+    });
+
+    it(`On click on the button, it calls showCreateModal`, async () => {
+        const show_create_modal = jest.fn();
+
+        const wrapper = await createWrapper(
+            true,
+            {
+                is_loading: true,
+                is_error: false,
+                campaigns: [{ id: 1 }] as Campaign[],
+            },
+            show_create_modal
+        );
+
+        await wrapper.find("[data-test=new-campaign]").trigger("click");
+
+        expect(show_create_modal).toHaveBeenCalled();
     });
 });
