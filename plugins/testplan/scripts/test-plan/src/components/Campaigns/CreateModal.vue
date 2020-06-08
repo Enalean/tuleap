@@ -38,14 +38,14 @@
         <div class="tlp-modal-body">
             <div class="tlp-form-element">
                 <label class="tlp-label" for="new-campaign-label">
-                    <translate>Campaign label</translate>
+                    <translate>Name</translate>
                     <i class="fa fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <input type="text" class="tlp-input" id="new-campaign-label" />
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="new-campaign-tests-selector">
-                    <translate>Choose tests</translate>
+                    <translate>Tests</translate>
                     <i class="fa fa-asterisk" aria-hidden="true"></i>
                 </label>
                 <select class="tlp-select" id="new-campaign-tests-selector">
