@@ -25,7 +25,18 @@
     }
 }
 
+.test-plan-list-of-campaigns-header {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-medium-spacing;
+}
+
+.test-plan-list-of-campaigns-new-button {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
 .test-plan-list-of-campaigns-title {
+    margin: 0;
     color: $tlp-typo-default-text-color;
 }
 

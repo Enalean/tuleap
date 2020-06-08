@@ -19,5 +19,20 @@ exports[`CampaignEmptyState Displays empty state 1`] = `
       There is no test campaign yet.
     </translate-stub>
   </div>
+   
+  <button
+    class="tlp-button-primary tlp-button-outline tlp-button-large"
+    type="button"
+  >
+    <i
+      class="fa fa-plus tlp-button-icon"
+    />
+     
+    <translate-stub
+      tag="span"
+    >
+      Create new campaign
+    </translate-stub>
+  </button>
 </div>
 `;

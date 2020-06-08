@@ -19,27 +19,40 @@
   -->
 
 <template>
-    <div class="empty-pane">
-        <div class="empty-page-illustration">
-            <campaign-empty-state-svg />
-        </div>
-        <div class="empty-page-text">
-            <translate>There is no test campaign yet.</translate>
-        </div>
-        <button type="button" class="tlp-button-primary tlp-button-outline tlp-button-large">
+    <div class="test-plan-list-of-campaigns-header">
+        <translate tag="h2" class="test-plan-list-of-campaigns-title">Test campaigns</translate>
+        <button
+            type="button"
+            class="tlp-button-primary tlp-button-outline tlp-button-small test-plan-list-of-campaigns-new-button"
+            v-if="should_button_be_displayed"
+            data-test="new-campaign"
+        >
             <i class="fa fa-plus tlp-button-icon"></i>
-            <translate>Create new campaign</translate>
+            <translate>New campaign</translate>
         </button>
     </div>
 </template>
-
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import CampaignEmptyStateSvg from "./CampaignEmptyStateSvg.vue";
+import { namespace } from "vuex-class";
+import { Campaign } from "../../type";
 
-@Component({
-    components: { CampaignEmptyStateSvg },
-})
-export default class CampaignEmptyState extends Vue {}
+const campaign = namespace("campaign");
+
+@Component
+export default class ListOfCampaignsHeader extends Vue {
+    @campaign.State
+    readonly is_loading!: boolean;
+
+    @campaign.State
+    readonly is_error!: boolean;
+
+    @campaign.State
+    readonly campaigns!: Campaign[];
+
+    get should_button_be_displayed(): boolean {
+        return !this.is_error && this.campaigns.length > 0;
+    }
+}
 </script>
