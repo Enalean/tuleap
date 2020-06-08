@@ -141,7 +141,7 @@ class ReferenceAdministrationViews extends Views
      * @param Reference $ref Reference
      * @return String
      */
-    public static function getReferenceDescription(Reference $ref)
+    private static function getReferenceDescription(Reference $ref)
     {
         $description = '';
         if (strpos($ref->getDescription(), "_desc_key") !== false) {
