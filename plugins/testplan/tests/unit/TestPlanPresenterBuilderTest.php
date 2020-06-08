@@ -60,6 +60,7 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $this->milestone = \Mockery::mock(Planning_ArtifactMilestone::class);
         $artifact        = \Mockery::mock(\Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn('999');
+        $artifact->shouldReceive('getTitle')->andReturn('Milestone title');
         $this->milestone->shouldReceive('getArtifact')->andReturn($artifact);
         $project = \Mockery::mock(\Project::class);
         $project->shouldReceive('getID')->andReturn('102');

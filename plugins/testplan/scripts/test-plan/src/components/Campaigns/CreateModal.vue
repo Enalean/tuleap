@@ -43,6 +43,19 @@
                 </label>
                 <input type="text" class="tlp-input" id="new-campaign-label" />
             </div>
+            <div class="tlp-form-element">
+                <label class="tlp-label" for="new-campaign-tests-selector">
+                    <translate>Choose tests</translate>
+                    <i class="fa fa-asterisk" aria-hidden="true"></i>
+                </label>
+                <select class="tlp-select" id="new-campaign-tests-selector">
+                    <option value="none" v-translate>No tests</option>
+                    <option value="all" v-translate>All tests</option>
+                    <option value="milestone" v-translate="{ milestone_title }" selected>
+                        All tests in %{ milestone_title }
+                    </option>
+                </select>
+            </div>
         </div>
         <div class="tlp-modal-footer">
             <button
@@ -65,9 +78,13 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { modal as createModal } from "tlp";
+import { State } from "vuex-class";
 
 @Component
 export default class CreateModal extends Vue {
+    @State
+    readonly milestone_title!: string;
+
     mounted(): void {
         createModal(this.$el, { destroy_on_hide: true }).show();
     }

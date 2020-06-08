@@ -53,11 +53,13 @@ class TestPlanPresenterBuilder
 
     public function getPresenter(\Planning_ArtifactMilestone $milestone, \PFUser $user): TestPlanPresenter
     {
-        $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
+        $presenter_data     = $this->pane_factory->getPanePresenterData($milestone);
+        $milestone_artifact = $milestone->getArtifact();
 
         return new TestPlanPresenter(
             new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
-            (int) $milestone->getArtifact()->getId(),
+            (int) $milestone_artifact->getId(),
+            $milestone_artifact->getTitle() ?? '',
             (int) $milestone->getProject()->getID(),
             $this->canUserCreateACampaign($milestone->getProject(), $user),
         );

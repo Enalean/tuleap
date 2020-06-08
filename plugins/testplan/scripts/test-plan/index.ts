@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+    const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
 
     await initVueGettext(Vue, (locale: string) =>
@@ -49,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const initial_state = ({
         project_id,
         milestone_id,
+        milestone_title,
         user_can_create_campaign,
     } as unknown) as RootState;
 
