@@ -31,6 +31,7 @@
             class="tlp-button-primary tlp-button-outline tlp-button-large"
             v-if="user_can_create_campaign"
             data-test="new-campaign"
+            v-on:click="showCreateModal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Create new campaign</translate>
@@ -40,7 +41,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import CampaignEmptyStateSvg from "./CampaignEmptyStateSvg.vue";
 import { State } from "vuex-class";
 
@@ -50,5 +51,8 @@ import { State } from "vuex-class";
 export default class CampaignEmptyState extends Vue {
     @State
     readonly user_can_create_campaign!: boolean;
+
+    @Prop({ required: true })
+    readonly showCreateModal!: () => void;
 }
 </script>

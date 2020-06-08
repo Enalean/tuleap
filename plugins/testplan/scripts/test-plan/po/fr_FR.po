@@ -40,6 +40,15 @@ msgstr[1] "%{ nb } tests"
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
+msgid "Campaign label"
+msgstr "Label de la campagne"
+
+msgid "Close"
+msgstr "Fermer"
+
+msgid "Create campaign"
+msgstr "Créer la campagne"
+
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 

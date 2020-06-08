@@ -26,6 +26,7 @@
             class="tlp-button-primary tlp-button-outline tlp-button-small test-plan-list-of-campaigns-new-button"
             v-if="should_button_be_displayed"
             data-test="new-campaign"
+            v-on:click="showCreateModal"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>New campaign</translate>
@@ -34,7 +35,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import { namespace, State } from "vuex-class";
 import { Campaign } from "../../type";
 
@@ -53,6 +54,9 @@ export default class ListOfCampaignsHeader extends Vue {
 
     @campaign.State
     readonly campaigns!: Campaign[];
+
+    @Prop({ required: true })
+    readonly showCreateModal!: () => void;
 
     get should_button_be_displayed(): boolean {
         return !this.is_error && this.campaigns.length > 0 && this.user_can_create_campaign;
