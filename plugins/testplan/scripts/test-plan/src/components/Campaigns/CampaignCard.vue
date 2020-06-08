@@ -22,6 +22,7 @@
     <a
         v-bind:href="route_to_campaign_execution"
         class="tlp-pane test-plan-campaign"
+        v-bind:class="classname"
         data-test="campaign"
     >
         <div class="tlp-pane-container">
@@ -86,6 +87,18 @@ export default class CampaignCard extends Vue {
         url.hash = "#!/campaigns/" + this.campaign.id;
 
         return url.toString();
+    }
+
+    get classname(): string {
+        if (this.campaign.is_being_refreshed) {
+            return "test-plan-campaign-is-being-refreshed";
+        }
+
+        if (this.campaign.is_just_refreshed) {
+            return "test-plan-campaign-is-just-refreshed";
+        }
+
+        return "";
     }
 }
 </script>

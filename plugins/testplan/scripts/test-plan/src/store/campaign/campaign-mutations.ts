@@ -35,3 +35,25 @@ export function addCampaigns(state: CampaignState, collection: Campaign[]): void
 export function errorHasBeenCatched(state: CampaignState): void {
     state.is_error = true;
 }
+
+export function addNewCampaign(state: CampaignState, campaign: Campaign): void {
+    state.campaigns = [campaign, ...state.campaigns];
+}
+
+export function updateCampaignAfterCreation(state: CampaignState, campaign: Campaign): void {
+    updateCampaign(state, { ...campaign, is_being_refreshed: false, is_just_refreshed: true });
+    setTimeout(() => {
+        updateCampaign(state, { ...campaign, is_being_refreshed: false, is_just_refreshed: false });
+    }, 1000);
+}
+
+function updateCampaign(state: CampaignState, campaign: Campaign): void {
+    const index = state.campaigns.findIndex(
+        (state_campaign: Campaign): boolean => state_campaign.id === campaign.id
+    );
+    if (index === -1) {
+        throw Error("Unable to find the campaign to update");
+    }
+
+    state.campaigns.splice(index, 1, campaign);
+}

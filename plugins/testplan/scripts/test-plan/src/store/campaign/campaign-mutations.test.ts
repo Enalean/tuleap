@@ -21,10 +21,14 @@ import { CampaignState } from "./type";
 import { Campaign } from "../../type";
 import {
     addCampaigns,
+    addNewCampaign,
     beginLoadingCampaigns,
     endLoadingCampaigns,
     errorHasBeenCatched,
+    updateCampaignAfterCreation,
 } from "./campaign-mutations";
+
+jest.useFakeTimers();
 
 describe("Campaign state mutations", () => {
     it("beginLoadingCampaigns", () => {
@@ -73,5 +77,60 @@ describe("Campaign state mutations", () => {
         errorHasBeenCatched(state);
 
         expect(state.is_error).toBe(true);
+    });
+
+    it("adds new campaign at the beginning", () => {
+        const state: CampaignState = {
+            is_loading: false,
+            is_error: false,
+            campaigns: [{ id: 123 } as Campaign],
+        };
+
+        addNewCampaign(state, { id: 42 } as Campaign);
+
+        expect(state.campaigns).toStrictEqual([{ id: 42 }, { id: 123 }] as Campaign[]);
+    });
+
+    describe("updateCampaignAfterCreation", () => {
+        it("Throw error if campaign cannot be found", () => {
+            const state: CampaignState = {
+                is_loading: false,
+                is_error: false,
+                campaigns: [{ id: 123 } as Campaign],
+            };
+
+            expect(() => {
+                updateCampaignAfterCreation(state, { id: 42 } as Campaign);
+            }).toThrow();
+        });
+
+        it("store campaigns as just refreshed", () => {
+            const state: CampaignState = {
+                is_loading: false,
+                is_error: false,
+                campaigns: [{ id: 123 } as Campaign],
+            };
+
+            updateCampaignAfterCreation(state, { id: 123 } as Campaign);
+
+            expect(state.campaigns).toStrictEqual([
+                { id: 123, is_being_refreshed: false, is_just_refreshed: true },
+            ]);
+        });
+
+        it("removes just refreshed flag after one second", () => {
+            const state: CampaignState = {
+                is_loading: false,
+                is_error: false,
+                campaigns: [{ id: 123 } as Campaign],
+            };
+
+            updateCampaignAfterCreation(state, { id: 123 } as Campaign);
+            jest.advanceTimersByTime(1000);
+
+            expect(state.campaigns).toStrictEqual([
+                { id: 123, is_being_refreshed: false, is_just_refreshed: false },
+            ]);
+        });
     });
 });

@@ -24,4 +24,6 @@ export interface Campaign {
     readonly nb_of_blocked: number;
     readonly nb_of_failed: number;
     readonly nb_of_passed: number;
+    readonly is_being_refreshed: boolean;
+    readonly is_just_refreshed: boolean;
 }

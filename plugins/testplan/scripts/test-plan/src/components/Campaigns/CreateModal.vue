@@ -19,7 +19,12 @@
   -->
 
 <template>
-    <div class="tlp-modal" role="dialog" aria-labelledby="test-plan-create-campaign-modal-title">
+    <form
+        class="tlp-modal"
+        role="dialog"
+        aria-labelledby="test-plan-create-campaign-modal-title"
+        v-on:submit.stop.prevent="submit"
+    >
         <div class="tlp-modal-header">
             <h1 class="tlp-modal-title" id="test-plan-create-campaign-modal-title">
                 <i class="fa fa-plus tlp-modal-title-icon" aria-hidden="true"></i>
@@ -41,14 +46,25 @@
                     <translate>Name</translate>
                     <i class="fa fa-asterisk" aria-hidden="true"></i>
                 </label>
-                <input type="text" class="tlp-input" id="new-campaign-label" />
+                <input
+                    type="text"
+                    class="tlp-input"
+                    id="new-campaign-label"
+                    v-model="label"
+                    required
+                />
             </div>
             <div class="tlp-form-element">
                 <label class="tlp-label" for="new-campaign-tests-selector">
                     <translate>Tests</translate>
                     <i class="fa fa-asterisk" aria-hidden="true"></i>
                 </label>
-                <select class="tlp-select" id="new-campaign-tests-selector">
+                <select
+                    class="tlp-select"
+                    id="new-campaign-tests-selector"
+                    v-model="test_selector"
+                    required
+                >
                     <option value="none" v-translate>No tests</option>
                     <option value="all" v-translate>All tests</option>
                     <option value="milestone" v-translate="{ milestone_title }" selected>
@@ -66,27 +82,64 @@
             >
                 Close
             </button>
-            <button type="button" class="tlp-button-primary tlp-modal-action">
-                <i class="fa fa-save tlp-button-icon" aria-hidden="true"></i>
+            <button
+                type="submit"
+                class="tlp-button-primary tlp-modal-action"
+                v-bind:disabled="is_creating"
+            >
+                <i class="fa tlp-button-icon" v-bind:class="icon_class" aria-hidden="true"></i>
                 <translate>Create campaign</translate>
             </button>
         </div>
-    </div>
+    </form>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { modal as createModal } from "tlp";
-import { State } from "vuex-class";
+import { Modal, modal as createModal } from "tlp";
+import { namespace, State } from "vuex-class";
+import { CreateCampaignPayload } from "../../store/campaign/type";
+
+const campaign = namespace("campaign");
 
 @Component
 export default class CreateModal extends Vue {
     @State
     readonly milestone_title!: string;
 
+    @campaign.Action
+    readonly createCampaign!: (payload: CreateCampaignPayload) => Promise<void>;
+
+    private label = "";
+    private test_selector: "all" | "none" | "milestone" = "milestone";
+    private is_creating = false;
+    private modal!: Modal;
+
     mounted(): void {
-        createModal(this.$el, { destroy_on_hide: true }).show();
+        this.modal = createModal(this.$el, { destroy_on_hide: true });
+        this.modal.show();
+    }
+
+    async submit(): Promise<void> {
+        this.is_creating = true;
+        try {
+            await this.createCampaign({
+                label: this.label,
+                test_selector: this.test_selector,
+            });
+        } finally {
+            this.is_creating = false;
+            this.modal.hide();
+        }
+    }
+
+    get icon_class(): string {
+        if (this.is_creating) {
+            return "fa-spin fa-circle-o-notch";
+        }
+
+        return "fa-save";
     }
 }
 </script>
