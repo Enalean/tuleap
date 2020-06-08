@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -48,6 +48,7 @@ class ProjectTest extends TestBase
         $repositories          = $repositories_response['repositories'];
 
         $this->assertCount(1, $repositories);
+        $this->assertEquals(1, (int) (string) $response->getHeader('X-Pagination-Size'));
 
         $repository = $repositories[0];
         $this->assertArrayHasKey('id', $repository);
