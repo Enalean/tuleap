@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,4 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import "./commands";
+describe("Tuleap", () => {
+    it("has a welcome page", () => {
+        cy.visit("/");
+
+        cy.title().should("contain", "Welcome - Tuleap");
+    });
+});
