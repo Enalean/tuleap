@@ -294,13 +294,7 @@ export const loadFolder = (context, folder_id) => {
 
 export async function createNewFileVersion(context, [item, dropped_file]) {
     try {
-        await uploadNewVersion(context, [
-            item,
-            dropped_file,
-            item.title,
-            "",
-            item.lock_info !== null,
-        ]);
+        await uploadNewVersion(context, [item, dropped_file, item.title, "", false]);
         Vue.set(item, "updated", true);
     } catch (exception) {
         context.commit("toggleCollapsedFolderHasUploadingContent", [parent, false]);
