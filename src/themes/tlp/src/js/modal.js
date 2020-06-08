@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,6 @@
  */
 
 const TRANSITION_DURATION = 300;
-const ESCAPE_CODE = 27;
 
 const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
 const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
@@ -29,7 +28,7 @@ const CLASS_TLP_MODAL_DISPLAY = "tlp-modal-display";
 
 const ID_TLP_MODAL_BACKDROP = "tlp-modal-backdrop";
 
-export default (element, options) => new Modal(element, options);
+export const modal = (element, options) => new Modal(element, options);
 
 class Modal {
     constructor(element, options = { keyboard: true }) {
@@ -122,6 +121,10 @@ class Modal {
             close_element.removeEventListener("click", this.eventHandler);
         });
 
+        if (this.backdrop_element) {
+            this.backdrop_element.remove();
+        }
+
         if (this.options.keyboard) {
             document.removeEventListener("keyup", this.eventHandler);
         }
@@ -182,7 +185,7 @@ class ModalEventHandler {
     }
 
     keyupCallback(event) {
-        if (event.keyCode !== ESCAPE_CODE) {
+        if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
             return;
         }
 
@@ -196,3 +199,5 @@ class ModalEventHandler {
         }
     }
 }
+
+const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";

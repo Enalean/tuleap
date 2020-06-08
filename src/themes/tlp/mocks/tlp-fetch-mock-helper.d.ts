@@ -30,9 +30,9 @@ interface MockFetchErrorOptions {
 
 export function mockFetchSuccess<T>(
     mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
-    options: MockFetchSuccessOptions
+    options?: MockFetchSuccessOptions
 ): void;
 export function mockFetchError<T>(
     mocked_function: jest.SpyInstance<Promise<Response | Array<T>>>,
-    options: MockFetchErrorOptions
+    options?: MockFetchErrorOptions
 ): void;

@@ -21,6 +21,7 @@ export function mockFetchSuccess(spy_function, { headers, return_json } = {}) {
     spy_function.mockReturnValue(
         Promise.resolve({
             headers,
+            ok: true,
             json: () => Promise.resolve(return_json),
         })
     );

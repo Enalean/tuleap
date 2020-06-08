@@ -22,7 +22,7 @@ import { findClosestElement } from "./dom-walker.js";
 
 const CLASS_TLP_POPOVER_SHOWN = "tlp-popover-shown";
 
-export default function createPopover(popover_trigger, popover_content, options = {}) {
+export function createPopover(popover_trigger, popover_content, options = {}) {
     const anchor = options.anchor || popover_trigger;
     const popper = new Popper(anchor, popover_content, getPopperOptions(anchor, options));
 

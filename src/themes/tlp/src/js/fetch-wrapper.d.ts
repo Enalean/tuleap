@@ -21,7 +21,7 @@ interface FetchWrapperError extends Error {
     response: Response;
 }
 interface FetchWrapperParameter {
-    [key: string]: string | number;
+    [key: string]: string | number | boolean;
 }
 export function get(
     url: string,
@@ -35,7 +35,10 @@ interface RecursiveGetInit<Y, T> {
     params?: FetchWrapperParameter & RecursiveGetLimitParameters;
     getCollectionCallback?: (json: Y) => Array<T>;
 }
-export function recursiveGet<Y, T>(url: string, init?: RecursiveGetInit<Y, T>): Promise<Array<T>>;
+export function recursiveGet<Y, T>(
+    url: string,
+    init?: RequestInit & RecursiveGetInit<Y, T>
+): Promise<Array<T>>;
 export function put(url: string, init?: RequestInit & { method?: "PUT" }): Promise<Response>;
 export function patch(url: string, init?: RequestInit & { method?: "PATCH" }): Promise<Response>;
 export function post(url: string, init?: RequestInit & { method?: "POST" }): Promise<Response>;

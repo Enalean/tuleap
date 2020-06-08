@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface DropdownOptions {
-    keyboard?: boolean;
-    dropdown_menu?: Element;
-}
-declare class Dropdown {
-    constructor(trigger: Element, options?: DropdownOptions);
+const base_config = require("../../../tests/jest/jest.base.config.js");
 
-    toggle(): void;
-    show(): void;
-    hide(): void;
-    addEventListener(type: string, eventHandler: (evt: Event) => void): void;
-    removeEventListener(type: string, eventHandler: (evt: Event) => void): void;
-}
-export function dropdown(trigger: Element, options?: DropdownOptions): Dropdown;
+module.exports = {
+    ...base_config,
+    displayName: "TLP",
+};

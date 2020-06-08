@@ -4,6 +4,7 @@
   "description": "Tuleap CSS framework",
   "license": "GPL-2.0-or-later",
   "main": "index.js",
+  "types": "./src/index.d.ts",
   "private": true,
   "dependencies": {
     "flatpickr": "^4.6.2",
@@ -15,5 +16,10 @@
     "codemirror": "^5.48.4",
     "dompurify": "^2.0.11"
   },
-  "types": "./src/index.d.ts"
+  "config": {
+    "bin": "../../../node_modules/.bin"
+  },
+  "scripts": {
+    "test": "$npm_package_config_bin/jest"
+  }
 }
