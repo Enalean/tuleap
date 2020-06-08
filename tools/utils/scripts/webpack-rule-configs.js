@@ -88,6 +88,19 @@ function configureBabelRule(babel_options) {
     };
 }
 
+function configureBabelToTranspileNodeModuleForIE11(node_module_regexp) {
+    return {
+        test: /\.js$/,
+        include: node_module_regexp,
+        use: [
+            {
+                loader: "babel-loader",
+                options: babel_options_ie11,
+            },
+        ],
+    };
+}
+
 function configureTypescriptRules(babel_options) {
     return [
         {
@@ -214,6 +227,7 @@ const rule_css_assets = {
 module.exports = {
     configureBabelRule,
     configureTypescriptRules,
+    configureBabelToTranspileNodeModuleForIE11,
     babel_options_ie11,
     babel_options_chrome_firefox,
     babel_options_jest,

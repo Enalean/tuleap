@@ -47,18 +47,6 @@ module.exports = [
         },
         module: {
             rules: [
-                {
-                    // Transpile only p-retry because it has an object spread, which is unsupported by Edge
-                    test: /node_modules\/p-retry\/index\.js$/,
-                    use: [
-                        {
-                            loader: "babel-loader",
-                            options: {
-                                plugins: ["@babel/plugin-proposal-object-rest-spread"],
-                            },
-                        },
-                    ],
-                },
                 ...webpack_configurator.configureTypescriptRules(
                     webpack_configurator.babel_options_chrome_firefox
                 ),
