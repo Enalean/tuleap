@@ -131,13 +131,13 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         if ($this->browser->isIE11()) {
             $this->renderer->renderToPage(
                 'test-plan-unsupported-browser',
-                $this->presenter_builder->getPresenter($milestone)
+                $this->presenter_builder->getPresenter($milestone, $user)
             );
         } else {
             $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
             $this->renderer->renderToPage(
                 'test-plan',
-                $this->presenter_builder->getPresenter($milestone)
+                $this->presenter_builder->getPresenter($milestone, $user)
             );
         }
         $service->displayFooter();

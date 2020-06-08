@@ -22,6 +22,7 @@ import { CampaignState } from "./campaign/type";
 export interface State {
     readonly project_id: number;
     readonly milestone_id: number;
+    readonly user_can_create_campaign: boolean;
 }
 
 export interface RootState extends State {

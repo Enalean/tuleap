@@ -23,6 +23,8 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use Planning_MilestonePaneFactory;
+use TrackerFactory;
+use Tuleap\TestManagement\Config;
 
 class TestPlanPresenterBuilder
 {
@@ -30,13 +32,26 @@ class TestPlanPresenterBuilder
      * @var Planning_MilestonePaneFactory
      */
     private $pane_factory;
+    /**
+     * @var Config
+     */
+    private $testmanagement_config;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function __construct(Planning_MilestonePaneFactory $pane_factory)
-    {
-        $this->pane_factory = $pane_factory;
+    public function __construct(
+        Planning_MilestonePaneFactory $pane_factory,
+        Config $testmanagement_config,
+        TrackerFactory $tracker_factory
+    ) {
+        $this->pane_factory          = $pane_factory;
+        $this->testmanagement_config = $testmanagement_config;
+        $this->tracker_factory       = $tracker_factory;
     }
 
-    public function getPresenter(\Planning_ArtifactMilestone $milestone): TestPlanPresenter
+    public function getPresenter(\Planning_ArtifactMilestone $milestone, \PFUser $user): TestPlanPresenter
     {
         $presenter_data = $this->pane_factory->getPanePresenterData($milestone);
 
@@ -44,6 +59,21 @@ class TestPlanPresenterBuilder
             new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             (int) $milestone->getArtifact()->getId(),
             (int) $milestone->getProject()->getID(),
+            $this->canUserCreateACampaign($milestone->getProject(), $user),
         );
+    }
+
+    private function canUserCreateACampaign(\Project $project, \PFUser $user): bool
+    {
+        $campaign_tracker_id = $this->testmanagement_config->getCampaignTrackerId($project);
+        if ($campaign_tracker_id === false) {
+            return false;
+        }
+        $campaign_tracker = $this->tracker_factory->getTrackerById($campaign_tracker_id);
+        if ($campaign_tracker === null) {
+            return false;
+        }
+
+        return $campaign_tracker->userCanSubmitArtifact($user);
     }
 }

@@ -35,13 +35,16 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { namespace } from "vuex-class";
+import { namespace, State } from "vuex-class";
 import { Campaign } from "../../type";
 
 const campaign = namespace("campaign");
 
 @Component
 export default class ListOfCampaignsHeader extends Vue {
+    @State
+    readonly user_can_create_campaign!: boolean;
+
     @campaign.State
     readonly is_loading!: boolean;
 
@@ -52,7 +55,7 @@ export default class ListOfCampaignsHeader extends Vue {
     readonly campaigns!: Campaign[];
 
     get should_button_be_displayed(): boolean {
-        return !this.is_error && this.campaigns.length > 0;
+        return !this.is_error && this.campaigns.length > 0 && this.user_can_create_campaign;
     }
 }
 </script>

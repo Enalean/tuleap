@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+    const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
 
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
@@ -45,7 +46,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const AppComponent = Vue.extend(App);
 
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const initial_state = ({ project_id, milestone_id } as unknown) as RootState;
+    const initial_state = ({
+        project_id,
+        milestone_id,
+        user_can_create_campaign,
+    } as unknown) as RootState;
 
     new AppComponent({
         store: createStore(initial_state),

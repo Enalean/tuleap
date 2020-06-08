@@ -1,0 +1,116 @@
+<?php
+/**
+ * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+declare(strict_types=1);
+
+namespace Tuleap\TestPlan;
+
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\TestCase;
+use Planning_ArtifactMilestone;
+use Planning_MilestonePaneFactory;
+use TrackerFactory;
+use Tuleap\AgileDashboard\Milestone\Pane\PanePresenterData;
+use Tuleap\Test\Builders\UserTestBuilder;
+use Tuleap\TestManagement\Config;
+
+final class TestPlanPresenterBuilderTest extends TestCase
+{
+    use MockeryPHPUnitIntegration;
+
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Planning_ArtifactMilestone
+     */
+    private $milestone;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Config
+     */
+    private $testmanagement_config;
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TrackerFactory
+     */
+    private $tracker_factory;
+    /**
+     * @var TestPlanPresenterBuilder
+     */
+    private $builder;
+
+    protected function setUp(): void
+    {
+        $pane_factory = \Mockery::mock(Planning_MilestonePaneFactory::class);
+        $pane_factory->shouldReceive('getPanePresenterData')->andReturn(\Mockery::mock(PanePresenterData::class));
+
+        $this->milestone = \Mockery::mock(Planning_ArtifactMilestone::class);
+        $artifact        = \Mockery::mock(\Tracker_Artifact::class);
+        $artifact->shouldReceive('getId')->andReturn('999');
+        $this->milestone->shouldReceive('getArtifact')->andReturn($artifact);
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn('102');
+        $this->milestone->shouldReceive('getProject')->andReturn($project);
+
+        $this->testmanagement_config = \Mockery::mock(Config::class);
+        $this->tracker_factory       = \Mockery::mock(TrackerFactory::class);
+
+        $this->builder = new TestPlanPresenterBuilder($pane_factory, $this->testmanagement_config, $this->tracker_factory);
+    }
+
+    public function testBuildsPresenterWithAUserAbleToCreateACampaign(): void
+    {
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(true);
+
+        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+
+        $this->assertTrue($presenter->user_can_create_campaign);
+    }
+
+    public function testBuildsPresenterWithAUserThatDoesNotHaveEnoughPermissionsToCreateACampaign(): void
+    {
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
+        $tracker = \Mockery::mock(\Tracker::class);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
+        $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(false);
+
+        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+
+        $this->assertFalse($presenter->user_can_create_campaign);
+    }
+
+    public function testBuildsPresenterWithATestManagementConfigWithoutACampaignTrackerID(): void
+    {
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(false);
+
+        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+
+        $this->assertFalse($presenter->user_can_create_campaign);
+    }
+
+    public function testBuildsPresenterWhenTheCampaignTrackerCannotBeInstantiated(): void
+    {
+        $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
+        $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
+
+        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+
+        $this->assertFalse($presenter->user_can_create_campaign);
+    }
+}
