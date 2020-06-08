@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,8 +20,6 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-require_once __DIR__ . '/../../../bootstrap.php';
-
 use Luracast\Restler\RestException;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +36,7 @@ use Tuleap\TestManagement\Step\Execution\StepResult;
 use Tuleap\TestManagement\Step\Step;
 use Tuleap\Tracker\REST\v1\ArtifactValuesRepresentation;
 
-class StepsResultsChangesBuilderTest extends TestCase
+final class StepsResultsChangesBuilderTest extends TestCase
 {
     private $form_element_factory;
     private $execution_dao;
@@ -266,7 +264,7 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->getChanges($submitted_steps_results);
     }
 
-    public function testItGetsASpecificDefinitionChangeset()
+    public function testItGetsASpecificDefinitionChangeset(): void
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
@@ -282,7 +280,7 @@ class StepsResultsChangesBuilderTest extends TestCase
                     ['definition_changeset_id' => 1001]
                 ]
             );
-        $this->definition_artifact->method('getChangeset')->willReturn($this->definition_changeset);
+        $this->definition_artifact->expects($this->once())->method('getChangeset')->with($this->equalTo(1001))->willReturn($this->definition_changeset);
         $value_map = [
             [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
         ];
@@ -292,13 +290,12 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
         $this->definition_artifact->expects($this->never())->method('getLastChangeset');
-        $this->definition_artifact->expects($this->once())->method('getChangeset')->with($this->equalTo(1001));
 
         $submitted_steps_results = [];
         $this->getChanges($submitted_steps_results);
     }
 
-    public function testItGetsTheLastChangesetIfTheExecutionIsNotLinkedToASpecificDefinitionChangeset()
+    public function testItGetsTheLastChangesetIfTheExecutionIsNotLinkedToASpecificDefinitionChangeset(): void
     {
         $map = [
             [$this->execution_tracker_id, 'steps_results', $this->user, $this->execution_field],
@@ -308,7 +305,7 @@ class StepsResultsChangesBuilderTest extends TestCase
         $this->form_element_factory->method('getUsedFieldByNameForUser')->will($this->returnValueMap($map));
 
         $this->execution_dao->method('searchDefinitionsChangesetIdsForExecution')->willReturn([]);
-        $this->definition_artifact->method('getLastChangeset')->willReturn($this->definition_changeset);
+        $this->definition_artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->definition_changeset);
         $value_map = [
             [$this->definition_field, $this->definition_changeset, $this->definition_changeset_value]
         ];
@@ -317,7 +314,6 @@ class StepsResultsChangesBuilderTest extends TestCase
         $step2 = $this->getStep(2);
         $this->definition_changeset_value->method('getValue')->willReturn([$step1, $step2]);
 
-        $this->definition_artifact->expects($this->once())->method('getLastChangeset');
         $this->definition_artifact->expects($this->never())->method('getChangeset');
 
         $submitted_steps_results = [];
