@@ -74,6 +74,13 @@
             v-on:download-folder-as-zip-modal-closed="hideDownloadFolderModals()"
             data-test="document-folder-size-warning-modal"
         />
+        <file-changelog-modal
+            v-if="file_changelog_properties"
+            v-on:close-changelog-modal="hideChangelogModal()"
+            v-bind:updated-file="file_changelog_properties.updated_file"
+            v-bind:dropped-file="file_changelog_properties.dropped_file"
+            data-test="file-changelog-modal"
+        />
     </div>
 </template>
 
@@ -121,6 +128,11 @@ export default {
                 /* webpackChunkName: "document-download-folder-size-warning-modal" */
                 "./DropDown/DownloadFolderAsZip/ModalArchiveSizeWarning.vue"
             ),
+        "file-changelog-modal": () =>
+            import(
+                /* webpackChunkName: "file-changelog-modal" */
+                "./ModalCreateNewItemVersion/FileVersionChangelogModal.vue"
+            ),
     },
     data() {
         return {
@@ -132,6 +144,7 @@ export default {
             item_to_update_permissions: {},
             current_folder_size: null,
             folder_above_warning_threshold_props: null,
+            file_changelog_properties: null,
         };
     },
     computed: {
@@ -162,6 +175,7 @@ export default {
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
         EventBus.$on("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        EventBus.$on("show-changelog-modal", this.showChangelogModal);
     },
     beforeDestroy() {
         EventBus.$off("show-create-new-item-version-modal", this.showCreateNewItemVersionModal);
@@ -173,6 +187,7 @@ export default {
             this.showMaxArchiveSizeThresholdExceededErrorModal
         );
         EventBus.$off("show-archive-size-warning-modal", this.showArchiveSizeWarningModal);
+        EventBus.$off("show-changelog-modal", this.showChangelogModal);
     },
     methods: {
         showCreateNewItemVersionModal(event) {
@@ -212,6 +227,9 @@ export default {
                 default: //nothing
             }
         },
+        showChangelogModal(event) {
+            this.file_changelog_properties = event.detail;
+        },
         showDeleteItemModal(event) {
             this.item_to_delete = event.detail.current_item;
         },
@@ -238,6 +256,9 @@ export default {
                 folder_href: event.detail.folder_href,
                 should_warn_osx_user: event.detail.should_warn_osx_user,
             };
+        },
+        hideChangelogModal() {
+            this.file_changelog_properties = null;
         },
         hideDeleteItemModal() {
             this.item_to_delete = null;

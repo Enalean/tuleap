@@ -47,6 +47,7 @@ describe("FolderHeader", () => {
             "create-new-item-version-modal",
             "download-folder-size-threshold-exceeded-modal",
             "download-folder-size-warning-modal",
+            "file-changelog-modal",
         ];
 
         factory = (props = {}) => {
@@ -188,6 +189,21 @@ describe("FolderHeader", () => {
             expect(wrapper.find("[data-test=document-folder-size-warning-modal]").exists()).toBe(
                 true
             );
+        });
+
+        it("loads the file changelog modal", async () => {
+            store.state.is_loading_ascendant_hierarchy = false;
+            store.state.current_folder = { id: 20 };
+
+            const wrapper = factory();
+            expect(wrapper.find("[data-test=file-changelog-modal]").exists()).toBe(false);
+
+            const event = {
+                detail: { updated_file: { id: 12 }, dropped_file: new Blob() },
+            };
+            wrapper.vm.showChangelogModal(event);
+            await wrapper.vm.$nextTick();
+            expect(wrapper.find("[data-test=file-changelog-modal]").exists()).toBe(true);
         });
     });
 });
