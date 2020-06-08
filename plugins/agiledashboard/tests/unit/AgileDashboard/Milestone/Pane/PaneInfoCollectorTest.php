@@ -54,7 +54,7 @@ class PaneInfoCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'taskboard' => $pane
+                $pane
             ],
             $this->collector->getPanes()
         );
@@ -71,8 +71,8 @@ class PaneInfoCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'cardwall'  => $pane_cardwall,
-                'taskboard' => $pane_taskboard
+                $pane_cardwall,
+                $pane_taskboard
             ],
             $this->collector->getPanes()
         );
@@ -91,9 +91,9 @@ class PaneInfoCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'frs'       => $pane_frs,
-                'cardwall'  => $pane_cardwall,
-                'taskboard' => $pane_taskboard
+                $pane_frs,
+                $pane_cardwall,
+                $pane_taskboard
             ],
             $this->collector->getPanes()
         );
@@ -112,9 +112,29 @@ class PaneInfoCollectorTest extends TestCase
 
         $this->assertSame(
             [
-                'cardwall'  => $pane_cardwall,
-                'taskboard' => $pane_taskboard,
-                'frs'       => $pane_frs
+                $pane_cardwall,
+                $pane_taskboard,
+                $pane_frs
+            ],
+            $this->collector->getPanes()
+        );
+    }
+
+    public function testItReturnsExternalPanesAtTheEnd(): void
+    {
+        $pane_taskboard = $this->getPaneInfo('taskboard');
+        $pane_cardwall  = $this->getPaneInfo('cardwall');
+        $pane_frs       = $this->getExternalPaneInfo('frs');
+
+        $this->collector->addPane($pane_cardwall);
+        $this->collector->addPane($pane_frs);
+        $this->collector->addPane($pane_taskboard);
+
+        $this->assertSame(
+            [
+                $pane_cardwall,
+                $pane_taskboard,
+                $pane_frs
             ],
             $this->collector->getPanes()
         );
@@ -180,7 +200,18 @@ class PaneInfoCollectorTest extends TestCase
     {
         return Mockery::mock(PaneInfo::class)
             ->shouldReceive([
-                'getIdentifier' => $identifier
+                'getIdentifier'  => $identifier,
+                'isExternalLink' => false,
+            ])
+            ->getMock();
+    }
+
+    private function getExternalPaneInfo(string $identifier): PaneInfo
+    {
+        return Mockery::mock(PaneInfo::class)
+            ->shouldReceive([
+                'getIdentifier'  => $identifier,
+                'isExternalLink' => true,
             ])
             ->getMock();
     }

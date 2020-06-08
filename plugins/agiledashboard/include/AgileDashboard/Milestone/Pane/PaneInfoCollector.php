@@ -67,7 +67,17 @@ class PaneInfoCollector implements Dispatchable
 
     public function getPanes(): array
     {
-        return $this->panes;
+        $internal_links = [];
+        $external_links = [];
+        foreach ($this->panes as $pane) {
+            if ($pane->isExternalLink()) {
+                $external_links[] = $pane;
+            } else {
+                $internal_links[] = $pane;
+            }
+        }
+
+        return array_merge($internal_links, $external_links);
     }
 
     public function addPane(PaneInfo $pane): void
