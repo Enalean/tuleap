@@ -37,11 +37,20 @@ msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"
 msgstr[1] "%{ nb } tests"
 
+msgid "All tests"
+msgstr "Tous les tests"
+
+msgid "All tests in %{ milestone_title }"
+msgstr "Tous les tests dans %{ milestone_title }"
+
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
 msgid "Campaign label"
 msgstr "Label de la campagne"
+
+msgid "Choose tests"
+msgstr "Sélectionner les tests"
 
 msgid "Close"
 msgstr "Fermer"
@@ -54,6 +63,9 @@ msgstr "Créer une nouvelle campagne"
 
 msgid "New campaign"
 msgstr "Nouvelle campagne"
+
+msgid "No tests"
+msgstr "Aucun test"
 
 msgid "Test campaigns"
 msgstr "Campagnes de test"

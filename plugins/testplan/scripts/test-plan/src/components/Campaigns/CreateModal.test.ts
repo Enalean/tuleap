@@ -23,6 +23,8 @@ import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import * as tlp from "tlp";
 import CreateModal from "./CreateModal.vue";
 import { Modal } from "tlp";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../store/type";
 
 jest.mock("tlp", () => {
     return {
@@ -48,6 +50,13 @@ describe("CreateModal", () => {
 
         const wrapper = shallowMount(CreateModal, {
             localVue: local_vue,
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        milestone_title: "Milestone Title",
+                    } as RootState,
+                }),
+            },
         });
 
         expect(modal_show).toHaveBeenCalledTimes(1);

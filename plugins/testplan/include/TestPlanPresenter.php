@@ -39,6 +39,12 @@ class TestPlanPresenter
      */
     public $milestone_id;
     /**
+     * @var string
+     *
+     * @psalm-readonly
+     */
+    public $milestone_title;
+    /**
      * @var int
      *
      * @psalm-readonly
@@ -55,11 +61,13 @@ class TestPlanPresenter
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
         int $milestone_id,
+        string $milestone_title,
         int $project_id,
         bool $user_can_create_campaign
     ) {
         $this->milestone_presenter      = $milestone_presenter;
         $this->milestone_id             = $milestone_id;
+        $this->milestone_title          = $milestone_title;
         $this->project_id               = $project_id;
         $this->user_can_create_campaign = $user_can_create_campaign;
     }
