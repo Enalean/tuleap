@@ -41,6 +41,7 @@ use Tuleap\Document\Tree\DocumentTreeProjectExtractor;
 use Tuleap\Error\PlaceHolderBuilder;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\Http\Response\BinaryFileResponseBuilder;
+use Tuleap\Http\Server\ServiceInstrumentationMiddleware;
 use Tuleap\Layout\ServiceUrlCollector;
 use Tuleap\Request\CollectRoutesEvent;
 
@@ -125,7 +126,8 @@ class documentPlugin extends Plugin // phpcs:ignore
             ),
             new \Tuleap\Document\Config\FileDownloadLimitsBuilder(),
             new SapiEmitter(),
-            new \Tuleap\Http\Server\SessionWriteCloseMiddleware()
+            new \Tuleap\Http\Server\SessionWriteCloseMiddleware(),
+            new ServiceInstrumentationMiddleware('document')
         );
     }
 
