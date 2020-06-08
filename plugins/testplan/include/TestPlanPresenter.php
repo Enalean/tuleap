@@ -28,24 +28,39 @@ class TestPlanPresenter
 {
     /**
      * @var AgileDashboard_MilestonePresenter
+     *
+     * @psalm-readonly
      */
     public $milestone_presenter;
     /**
      * @var int
+     *
+     * @psalm-readonly
      */
     public $milestone_id;
     /**
      * @var int
+     *
+     * @psalm-readonly
      */
     public $project_id;
+
+    /**
+     * @var bool
+     *
+     * @psalm-readonly
+     */
+    public $user_can_create_campaign;
 
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
         int $milestone_id,
-        int $project_id
+        int $project_id,
+        bool $user_can_create_campaign
     ) {
-        $this->milestone_presenter = $milestone_presenter;
-        $this->milestone_id        = $milestone_id;
-        $this->project_id          = $project_id;
+        $this->milestone_presenter      = $milestone_presenter;
+        $this->milestone_id             = $milestone_id;
+        $this->project_id               = $project_id;
+        $this->user_can_create_campaign = $user_can_create_campaign;
     }
 }

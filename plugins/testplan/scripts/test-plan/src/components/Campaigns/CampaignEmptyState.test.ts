@@ -17,16 +17,38 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { shallowMount } from "@vue/test-utils";
+import { shallowMount, Wrapper } from "@vue/test-utils";
 import CampaignEmptyState from "./CampaignEmptyState.vue";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../store/type";
 
 describe("CampaignEmptyState", () => {
-    it("Displays empty state", async () => {
-        const wrapper = shallowMount(CampaignEmptyState, {
+    async function createWrapper(
+        user_can_create_campaign: boolean
+    ): Promise<Wrapper<CampaignEmptyState>> {
+        return shallowMount(CampaignEmptyState, {
             localVue: await createTestPlanLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        user_can_create_campaign,
+                    } as RootState,
+                }),
+            },
         });
+    }
+
+    it("Displays empty state with new campaign creation button", async () => {
+        const wrapper = await createWrapper(true);
 
         expect(wrapper.element).toMatchSnapshot();
+        expect(wrapper.find("[data-test=new-campaign]").exists()).toBe(true);
+    });
+
+    it("Does not show the new campaign creation button in the empty state when the user cannot create new ones", async () => {
+        const wrapper = await createWrapper(false);
+
+        expect(wrapper.find("[data-test=new-campaign]").exists()).toBe(false);
     });
 });

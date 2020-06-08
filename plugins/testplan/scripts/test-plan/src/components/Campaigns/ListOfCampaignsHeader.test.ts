@@ -26,12 +26,16 @@ import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 
 describe("ListOfCampaignsHeader", () => {
-    async function createWrapper(campaign: CampaignState): Promise<Wrapper<ListOfCampaignsHeader>> {
+    async function createWrapper(
+        user_can_create_campaign: boolean,
+        campaign: CampaignState
+    ): Promise<Wrapper<ListOfCampaignsHeader>> {
         return shallowMount(ListOfCampaignsHeader, {
             localVue: await createTestPlanLocalVue(),
             mocks: {
                 $store: createStoreMock({
                     state: {
+                        user_can_create_campaign,
                         campaign,
                     } as RootState,
                 }),
@@ -40,7 +44,7 @@ describe("ListOfCampaignsHeader", () => {
     }
 
     it("Displays new campaign button when there are campaigns", async () => {
-        const wrapper = await createWrapper({
+        const wrapper = await createWrapper(true, {
             is_loading: true,
             is_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
@@ -51,7 +55,7 @@ describe("ListOfCampaignsHeader", () => {
 
     it(`Does not display new campaign button when there is no campaign,
         because it is displayed elsewhere (empty state)`, async () => {
-        const wrapper = await createWrapper({
+        const wrapper = await createWrapper(true, {
             is_loading: true,
             is_error: false,
             campaigns: [] as Campaign[],
@@ -61,9 +65,19 @@ describe("ListOfCampaignsHeader", () => {
     });
 
     it(`Does not display new campaign button when there is an error`, async () => {
-        const wrapper = await createWrapper({
+        const wrapper = await createWrapper(true, {
             is_loading: false,
             is_error: true,
+            campaigns: [{ id: 1 }] as Campaign[],
+        });
+
+        expect(wrapper.find("[data-test=new-campaign]").exists()).toBe(false);
+    });
+
+    it(`Does not display new campaign button when the user cannot create new ones`, async () => {
+        const wrapper = await createWrapper(false, {
+            is_loading: false,
+            is_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 

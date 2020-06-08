@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`CampaignEmptyState Displays empty state 1`] = `
+exports[`CampaignEmptyState Displays empty state with new campaign creation button 1`] = `
 <div
   class="empty-pane"
 >
@@ -22,6 +22,7 @@ exports[`CampaignEmptyState Displays empty state 1`] = `
    
   <button
     class="tlp-button-primary tlp-button-outline tlp-button-large"
+    data-test="new-campaign"
     type="button"
   >
     <i

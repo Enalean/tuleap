@@ -126,6 +126,9 @@ final class testplanPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
+        $tracker_factory       = TrackerFactory::instance();
+        $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
+
         return new TestPlanController(
             TemplateRendererFactory::build()->getRenderer(__DIR__ . '/../templates'),
             $agiledashboard_plugin->getAllBreadCrumbsForMilestoneBuilder(),
@@ -138,7 +141,9 @@ final class testplanPlugin extends Plugin
             new VisitRecorder(new RecentlyVisitedDao()),
             Planning_MilestoneFactory::build(),
             new TestPlanPresenterBuilder(
-                $agiledashboard_plugin->getMilestonePaneFactory()
+                $agiledashboard_plugin->getMilestonePaneFactory(),
+                $testmanagement_config,
+                $tracker_factory,
             ),
             new Browser()
         );
