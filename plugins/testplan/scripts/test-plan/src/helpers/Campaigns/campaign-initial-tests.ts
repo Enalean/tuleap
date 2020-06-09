@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Campaign } from "../../type";
-
-export interface CampaignState {
-    campaigns: Array<Campaign>;
-    is_loading: boolean;
-    has_loading_error: boolean;
-    has_refreshing_error: boolean;
-}
-
-export interface CreateCampaignPayload {
-    readonly label: string;
-    readonly initial_tests: CampaignInitialTests;
-}
+type CampaignInitialTests =
+    | {
+          test_selector: "none" | "all" | "milestone";
+      }
+    | {
+          test_selector: "report";
+          report_id: number;
+      };

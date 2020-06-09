@@ -126,28 +126,43 @@ describe("Campaign state actions", () => {
     });
 
     describe("createCampaign", () => {
-        it("Post information to create a new campaign", async () => {
-            mockFetchSuccess(tlpPostMock, {
-                return_json: { id: 123 },
-            });
-
-            await createCampaign(context, { label: "New campaign", test_selector: "milestone" });
-
-            expect(tlpPostMock).toHaveBeenCalledWith(
+        it.each([
+            [
+                { test_selector: "milestone" },
                 `/api/v1/testmanagement_campaigns?milestone_id=42&test_selector=milestone`,
-                {
+            ],
+            [
+                { test_selector: "report", report_id: 12 },
+                `/api/v1/testmanagement_campaigns?milestone_id=42&test_selector=report&report_id=12`,
+            ],
+        ])(
+            "Post information to create a new campaign",
+            async (initial_tests: unknown, expected_url: string) => {
+                mockFetchSuccess(tlpPostMock, {
+                    return_json: { id: 123 },
+                });
+
+                await createCampaign(context, {
+                    label: "New campaign",
+                    initial_tests: initial_tests as CampaignInitialTests,
+                });
+
+                expect(tlpPostMock).toHaveBeenCalledWith(expected_url, {
                     body: JSON.stringify({ project_id: 104, label: "New campaign" }),
                     headers: { "content-type": "application/json" },
-                }
-            );
-        });
+                });
+            }
+        );
 
         it("Commits as soon as possible the new campaign, and asks to refresh it", async () => {
             mockFetchSuccess(tlpPostMock, {
                 return_json: { id: 123 },
             });
 
-            await createCampaign(context, { label: "New campaign", test_selector: "milestone" });
+            await createCampaign(context, {
+                label: "New campaign",
+                initial_tests: { test_selector: "milestone" },
+            });
 
             const campaign = {
                 id: 123,

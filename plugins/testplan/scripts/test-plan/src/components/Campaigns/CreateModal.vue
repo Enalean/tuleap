@@ -67,7 +67,7 @@
                     />
                 </div>
                 <create-campaign-test-selector
-                    v-model="test_selector"
+                    v-model="initial_tests"
                     v-bind:testdefinition_tracker_reports="testdefinition_tracker_reports"
                 />
             </div>
@@ -120,7 +120,7 @@ export default class CreateModal extends Vue {
     readonly createCampaign!: (payload: CreateCampaignPayload) => Promise<void>;
 
     private label = "";
-    private test_selector: "all" | "none" | "milestone" = "milestone";
+    private initial_tests: CampaignInitialTests = { test_selector: "milestone" };
     private testdefinition_tracker_reports: TrackerReport[] | null = null;
     private is_creating = false;
     private modal!: Modal;
@@ -150,7 +150,7 @@ export default class CreateModal extends Vue {
         try {
             await this.createCampaign({
                 label: this.label,
-                test_selector: this.test_selector,
+                initial_tests: this.initial_tests,
             });
         } finally {
             this.is_creating = false;
