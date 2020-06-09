@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- * This file is a part of Tuleap.
+ *  This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,27 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-interface IProvideArtifactChildrenForComputedCalculation
+class ArtifactsAlreadyProcessedDuringComputationCollection
 {
-    public function fetchChildrenAndManualValuesOfArtifacts(
-        array $artifact_ids_to_fetch,
-        $timestamp,
-        bool $stop_on_manual_value,
-        string $target_field_name,
-        string $computed_field_id,
-        ArtifactsAlreadyProcessedDuringComputationCollection $already_seen
-    ): array;
+    /**
+     * @var bool[]
+     */
+    private $already_seen = [];
+
+    public function addArtifactAsAlreadyProcessed(string $artifact_id): void
+    {
+        $this->already_seen[$artifact_id] = true;
+    }
+
+    public function hasArtifactBeenProcessedDuringComputation(?string $artifact_id): bool
+    {
+        return isset($this->already_seen[$artifact_id]);
+    }
 }
