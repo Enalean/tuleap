@@ -40,37 +40,36 @@
                 ×
             </div>
         </div>
+        <create-modal-error-feedback
+            v-if="error_message !== ''"
+            v-bind:error_message="error_message"
+            data-test="new-campaign-error-message"
+        />
         <div class="tlp-modal-body">
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="new-campaign-label">
-                    <translate>Name</translate>
-                    <i class="fa fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <input
-                    type="text"
-                    class="tlp-input"
-                    id="new-campaign-label"
-                    v-model="label"
-                    required
-                />
+            <div
+                v-if="testdefinition_tracker_reports === null"
+                class="test-plan-campaign-modal-creation-loading"
+            >
+                <i class="fa fa-spin fa-circle-o-notch"></i>
             </div>
-            <div class="tlp-form-element">
-                <label class="tlp-label" for="new-campaign-tests-selector">
-                    <translate>Tests</translate>
-                    <i class="fa fa-asterisk" aria-hidden="true"></i>
-                </label>
-                <select
-                    class="tlp-select"
-                    id="new-campaign-tests-selector"
+            <div v-else>
+                <div class="tlp-form-element">
+                    <label class="tlp-label" for="new-campaign-label">
+                        <translate>Name</translate>
+                        <i class="fa fa-asterisk" aria-hidden="true"></i>
+                    </label>
+                    <input
+                        type="text"
+                        class="tlp-input"
+                        id="new-campaign-label"
+                        v-model="label"
+                        required
+                    />
+                </div>
+                <create-campaign-test-selector
                     v-model="test_selector"
-                    required
-                >
-                    <option value="none" v-translate>No tests</option>
-                    <option value="all" v-translate>All tests</option>
-                    <option value="milestone" v-translate="{ milestone_title }" selected>
-                        All tests in %{ milestone_title }
-                    </option>
-                </select>
+                    v-bind:testdefinition_tracker_reports="testdefinition_tracker_reports"
+                />
             </div>
         </div>
         <div class="tlp-modal-footer">
@@ -85,7 +84,7 @@
             <button
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
-                v-bind:disabled="is_creating"
+                v-bind:disabled="is_creating || testdefinition_tracker_reports === null"
             >
                 <i class="fa tlp-button-icon" v-bind:class="icon_class" aria-hidden="true"></i>
                 <translate>Create campaign</translate>
@@ -100,25 +99,50 @@ import { Component } from "vue-property-decorator";
 import { Modal, modal as createModal } from "tlp";
 import { namespace, State } from "vuex-class";
 import { CreateCampaignPayload } from "../../store/campaign/type";
+import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
+import CreateModalErrorFeedback from "./CreateModalErrorFeedback.vue";
+import {
+    TrackerReport,
+    getTrackerReports,
+} from "../../helpers/Campaigns/tracker-reports-retriever";
 
 const campaign = namespace("campaign");
-
-@Component
+@Component({
+    components: { CreateModalErrorFeedback, CreateCampaignTestSelector },
+})
 export default class CreateModal extends Vue {
     @State
     readonly milestone_title!: string;
+    @State
+    readonly testdefinition_tracker_id!: number | null;
 
     @campaign.Action
     readonly createCampaign!: (payload: CreateCampaignPayload) => Promise<void>;
 
     private label = "";
     private test_selector: "all" | "none" | "milestone" = "milestone";
+    private testdefinition_tracker_reports: TrackerReport[] | null = null;
     private is_creating = false;
     private modal!: Modal;
+    private error_message = "";
 
-    mounted(): void {
+    async mounted(): Promise<void> {
         this.modal = createModal(this.$el, { destroy_on_hide: true });
         this.modal.show();
+        if (this.testdefinition_tracker_id === null) {
+            this.testdefinition_tracker_reports = [];
+        } else {
+            try {
+                this.testdefinition_tracker_reports = await getTrackerReports(
+                    this.testdefinition_tracker_id
+                );
+            } catch (e) {
+                this.error_message = this.$gettext(
+                    "The retrieval of the test definition tracker reports has failed, try again later"
+                );
+                throw e;
+            }
+        }
     }
 
     async submit(): Promise<void> {

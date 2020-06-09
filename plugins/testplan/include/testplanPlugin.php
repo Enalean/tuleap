@@ -30,6 +30,7 @@ use Tuleap\TestPlan\TestPlanPane;
 use Tuleap\TestPlan\TestPlanPaneDisplayable;
 use Tuleap\TestPlan\TestPlanPaneInfo;
 use Tuleap\TestPlan\TestPlanPresenterBuilder;
+use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
@@ -144,6 +145,7 @@ final class testplanPlugin extends Plugin
                 $agiledashboard_plugin->getMilestonePaneFactory(),
                 $testmanagement_config,
                 $tracker_factory,
+                new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory)
             ),
             new Browser()
         );

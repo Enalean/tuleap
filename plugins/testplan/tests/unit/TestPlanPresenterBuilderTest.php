@@ -66,10 +66,20 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $project->shouldReceive('getID')->andReturn('102');
         $this->milestone->shouldReceive('getProject')->andReturn($project);
 
-        $this->testmanagement_config = \Mockery::mock(Config::class);
-        $this->tracker_factory       = \Mockery::mock(TrackerFactory::class);
+        $this->testmanagement_config       = \Mockery::mock(Config::class);
+        $this->tracker_factory             = \Mockery::mock(TrackerFactory::class);
+        $test_definition_tracker_retriever = \Mockery::mock(TestPlanTestDefinitionTrackerRetriever::class);
+        $test_def_tracker                  = \Mockery::mock(\Tracker::class);
+        $test_def_tracker->shouldReceive('getId')->andReturn(146);
+        $test_def_tracker->shouldReceive('getName')->andReturn('Test Def');
+        $test_definition_tracker_retriever->shouldReceive('getTestDefinitionTracker')->andReturn($test_def_tracker);
 
-        $this->builder = new TestPlanPresenterBuilder($pane_factory, $this->testmanagement_config, $this->tracker_factory);
+        $this->builder = new TestPlanPresenterBuilder(
+            $pane_factory,
+            $this->testmanagement_config,
+            $this->tracker_factory,
+            $test_definition_tracker_retriever
+        );
     }
 
     public function testBuildsPresenterWithAUserAbleToCreateACampaign(): void

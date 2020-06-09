@@ -38,6 +38,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
     const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
+    let testdefinition_tracker_id: number | null = Number.parseInt(
+        vue_mount_point.dataset.testDefinitionTrackerId || "0",
+        10
+    );
+    if (testdefinition_tracker_id === 0) {
+        testdefinition_tracker_id = null;
+    }
+    const testdefinition_tracker_name = vue_mount_point.dataset.testDefinitionTrackerName || "";
 
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
@@ -52,6 +60,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         milestone_id,
         milestone_title,
         user_can_create_campaign,
+        testdefinition_tracker_id,
+        testdefinition_tracker_name,
     } as unknown) as RootState;
 
     new AppComponent({
