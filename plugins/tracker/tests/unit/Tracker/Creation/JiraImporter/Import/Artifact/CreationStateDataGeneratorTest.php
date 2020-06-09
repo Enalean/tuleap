@@ -28,6 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
 class CreationStateDataGeneratorTest extends TestCase
@@ -44,7 +45,8 @@ class CreationStateDataGeneratorTest extends TestCase
         $generator = new CreationStateDataGenerator(
             new ChangelogEntriesBuilder(
                 $wrapper
-            )
+            ),
+            new CreationStateListValueFormatter()
         );
 
         $current_state_data = $this->buildCurrentStateData();

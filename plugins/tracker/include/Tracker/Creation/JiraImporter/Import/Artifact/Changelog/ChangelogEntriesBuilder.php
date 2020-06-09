@@ -39,6 +39,9 @@ class ChangelogEntriesBuilder
         $this->wrapper = $wrapper;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array
     {
         $changelog_entries = [];
@@ -46,47 +49,25 @@ class ChangelogEntriesBuilder
         $changelog_response = $this->wrapper->getUrl(
             $this->getChangelogUrl($jira_issue_key, null, null)
         );
+        $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);
 
-        if ($changelog_response === null) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
-        }
-
-        if (
-            ! isset($changelog_response['values']) ||
-            ! isset($changelog_response['maxResults']) ||
-            ! isset($changelog_response['total'])
-        ) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
-        }
-
-        foreach ($changelog_response['values'] as $changelog) {
+        foreach ($changelog_representation->getValues() as $changelog) {
             $changelog_entries[] = ChangelogEntryValueRepresentation::buildFromAPIResponse($changelog);
         }
 
         $count_loop = 1;
-        $total      = (int) $changelog_response['total'];
-        $is_last    = $total <= (int) $changelog_response['maxResults'];
+        $total      = $changelog_representation->getTotal();
+        $is_last    = $total <= $changelog_representation->getMaxResults();
         while (! $is_last) {
-            $max_results = $changelog_response['maxResults'];
-            $start_at    = $changelog_response['maxResults'] * $count_loop;
+            $max_results = $changelog_representation->getMaxResults();
+            $start_at    = $max_results * $count_loop;
 
             $changelog_response = $this->wrapper->getUrl(
                 $this->getChangelogUrl($jira_issue_key, $start_at, $max_results)
             );
+            $changelog_representation = ChangelogResponseRepresentation::buildFromAPIResponse($changelog_response);
 
-            if ($changelog_response === null) {
-                throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
-            }
-
-            if (
-                ! isset($changelog_response['values']) ||
-                ! isset($changelog_response['maxResults']) ||
-                ! isset($changelog_response['total'])
-            ) {
-                throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
-            }
-
-            foreach ($changelog_response['values'] as $changelog) {
+            foreach ($changelog_representation->getValues() as $changelog) {
                 $changelog_entries[] = $changelog;
             }
         }

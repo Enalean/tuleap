@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 
 class CreationStateDataGenerator
 {
@@ -32,11 +33,17 @@ class CreationStateDataGenerator
      * @var ChangelogEntriesBuilder
      */
     private $changelog_entries_builder;
+    /**
+     * @var CreationStateListValueFormatter
+     */
+    private $creation_state_list_value_formatter;
 
     public function __construct(
-        ChangelogEntriesBuilder $changelog_entries_builder
+        ChangelogEntriesBuilder $changelog_entries_builder,
+        CreationStateListValueFormatter $creation_state_list_value_formatter
     ) {
-        $this->changelog_entries_builder = $changelog_entries_builder;
+        $this->changelog_entries_builder           = $changelog_entries_builder;
+        $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
     }
 
     public function generateFirstStateContent(
@@ -59,16 +66,17 @@ class CreationStateDataGenerator
                     if ($this->fieldHasNoInitialValue($changed_field)) {
                         unset($first_state[$changed_field_field_id]);
                         continue;
-                    } elseif ($this->fieldListHasInitialValue($changed_field)) {
-                        if (strpos($changed_field_from, '[') === 0) {
-                            $formatted_value = $this->formatMultiListValues($changed_field_from);
-                        } else {
-                            $formatted_value = $this->formatSimpleListValues($changed_field_from);
-                        }
+                    }
 
-                        $first_state[$changed_field_field_id]['value'] = $formatted_value;
+                    if ($this->fieldListHasInitialValue($changed_field)) {
+                        $first_state[$changed_field_field_id]['value'] =
+                            $this->creation_state_list_value_formatter->formatCreationListValue(
+                                $changed_field_from
+                            );
                         continue;
-                    } elseif ($this->fieldTextHasInitialValue($changed_field)) {
+                    }
+
+                    if ($this->fieldTextHasInitialValue($changed_field)) {
                         $first_state[$changed_field_field_id]['rendered_value'] = null;
                         $first_state[$changed_field_field_id]['value'] = $changed_field_from_string;
                         continue;
@@ -103,25 +111,5 @@ class CreationStateDataGenerator
     private function fieldTextHasInitialValue(ChangelogEntryItemsRepresentation $changed_field): bool
     {
         return $changed_field->getFromString() !== null;
-    }
-
-    private function formatMultiListValues(string $value): array
-    {
-        $all_values       = substr($value, 1, strlen($value) - 2);
-        $formatted_values = [];
-        foreach (explode(',', $all_values) as $value) {
-            $formatted_values[] = [
-                'id' => $value
-            ];
-        }
-
-        return $formatted_values;
-    }
-
-    private function formatSimpleListValues(string $value): array
-    {
-        return [
-            'id' => $value
-        ];
     }
 }

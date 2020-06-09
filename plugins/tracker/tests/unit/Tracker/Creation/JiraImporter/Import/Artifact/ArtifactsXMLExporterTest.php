@@ -31,6 +31,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\CreationStateDataGenerator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
@@ -103,7 +104,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 new CreationStateDataGenerator(
                     new ChangelogEntriesBuilder(
                         $this->wrapper
-                    )
+                    ),
+                    new CreationStateListValueFormatter()
                 )
             )
         );
@@ -271,7 +273,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertXMLArtifactsContent($tracker_node);
     }
 
-    private function mockChangelogForKey01()
+    private function mockChangelogForKey01(): void
     {
         $this->wrapper
             ->shouldReceive('getUrl')
@@ -285,7 +287,7 @@ class ArtifactsXMLExporterTest extends TestCase
             ]);
     }
 
-    private function mockChangelogForKey02()
+    private function mockChangelogForKey02(): void
     {
         $this->wrapper
             ->shouldReceive('getUrl')
