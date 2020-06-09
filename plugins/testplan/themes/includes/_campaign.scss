@@ -45,12 +45,26 @@
 }
 
 .test-plan-campaign {
-    transition: border-color 100ms linear;
+    transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     cursor: pointer;
 
+    &.test-plan-campaign-is-being-refreshed {
+        animation: blink-campaign 1200ms ease-in-out alternate infinite;
+    }
+
+
+    &.test-plan-campaign-is-just-refreshed {
+        animation: pulse-campaign 500ms ease-in-out;
+        border-color: $tlp-ui-success;
+        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
+    }
+
     &:hover {
-        border-color: $tlp-theme-color;
         text-decoration: none;
+
+        &:not(.test-plan-campaign-is-just-refreshed) {
+            border-color: $tlp-theme-color;
+        }
     }
 
     &:focus {
@@ -160,5 +174,36 @@
 @for $i from 1 through 100 {
     .test-plan-campaign-progression-width-#{$i} {
         width: $i * 1%;
+    }
+}
+
+@keyframes blink-campaign {
+    0% {
+        border-color: $tlp-ui-info;
+        background: transparentize($tlp-ui-info, .9);
+    }
+
+    50% {
+        border-color: transparent;
+        background: $tlp-ui-white;
+    }
+
+    100% {
+        border-color: $tlp-ui-info;
+        background: transparentize($tlp-ui-info, .9);
+    }
+}
+
+@keyframes pulse-campaign {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
     }
 }

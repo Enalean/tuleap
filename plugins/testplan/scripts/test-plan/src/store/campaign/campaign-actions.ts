@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./type";
+import { CampaignState, CreateCampaignPayload } from "./type";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
-import { recursiveGet } from "tlp";
+import { recursiveGet, post, get } from "tlp";
 import { Campaign } from "../../type";
 
 export async function loadCampaigns(
@@ -38,9 +38,16 @@ export async function loadCampaigns(
                     limit: 100,
                 },
                 getCollectionCallback: (collection: Campaign[]): Campaign[] => {
-                    context.commit("addCampaigns", collection);
+                    const campaigns: Campaign[] = collection.map(
+                        (campaign: Campaign): Campaign => ({
+                            ...campaign,
+                            is_being_refreshed: false,
+                            is_just_refreshed: false,
+                        })
+                    );
+                    context.commit("addCampaigns", campaigns);
 
-                    return collection;
+                    return campaigns;
                 },
             }
         );
@@ -50,4 +57,54 @@ export async function loadCampaigns(
     } finally {
         context.commit("endLoadingCampaigns");
     }
+}
+
+export async function createCampaign(
+    context: ActionContext<CampaignState, RootState>,
+    payload: CreateCampaignPayload
+): Promise<void> {
+    const headers = {
+        "content-type": "application/json",
+    };
+
+    const body = JSON.stringify({
+        project_id: context.rootState.project_id,
+        label: payload.label,
+    });
+
+    const response = await post(
+        `/api/v1/testmanagement_campaigns?milestone_id=${context.rootState.milestone_id}&test_selector=${payload.test_selector}`,
+        { headers, body }
+    );
+    const new_campaign = await response.json();
+    const campaign: Campaign = {
+        id: new_campaign.id,
+        label: payload.label,
+        nb_of_notrun: 0,
+        nb_of_blocked: 0,
+        nb_of_failed: 0,
+        nb_of_passed: 0,
+        is_being_refreshed: true,
+        is_just_refreshed: false,
+    };
+    context.commit("addNewCampaign", campaign);
+
+    return context.dispatch("refreshCampaign", campaign);
+}
+
+export async function refreshCampaign(
+    context: ActionContext<CampaignState, RootState>,
+    campaign: Campaign
+): Promise<void> {
+    const response = await get(`/api/v1/testmanagement_campaigns/${campaign.id}`);
+    const new_campaign = await response.json();
+
+    const updated_campaign: Campaign = {
+        ...campaign,
+        nb_of_blocked: new_campaign.nb_of_blocked,
+        nb_of_passed: new_campaign.nb_of_passed,
+        nb_of_notrun: new_campaign.nb_of_notrun,
+        nb_of_failed: new_campaign.nb_of_failed,
+    };
+    context.commit("updateCampaignAfterCreation", updated_campaign);
 }

@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`CreateModal Display the modal when mounted 1`] = `
-<div
+<form
   aria-labelledby="test-plan-create-campaign-modal-title"
   class="tlp-modal"
   role="dialog"
@@ -63,6 +63,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       <input
         class="tlp-input"
         id="new-campaign-label"
+        required="required"
         type="text"
       />
     </div>
@@ -89,6 +90,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       <select
         class="tlp-select"
         id="new-campaign-tests-selector"
+        required="required"
       >
         <option
           data-current-language="en_US"
@@ -141,11 +143,11 @@ exports[`CreateModal Display the modal when mounted 1`] = `
      
     <button
       class="tlp-button-primary tlp-modal-action"
-      type="button"
+      type="submit"
     >
       <i
         aria-hidden="true"
-        class="fa fa-save tlp-button-icon"
+        class="fa tlp-button-icon fa-save"
       />
        
       <translate-stub
@@ -155,5 +157,5 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       </translate-stub>
     </button>
   </div>
-</div>
+</form>
 `;

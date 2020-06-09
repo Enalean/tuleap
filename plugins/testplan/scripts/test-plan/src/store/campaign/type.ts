@@ -24,3 +24,8 @@ export interface CampaignState {
     is_loading: boolean;
     is_error: boolean;
 }
+
+export interface CreateCampaignPayload {
+    readonly label: string;
+    readonly test_selector: "none" | "all" | "milestone";
+}

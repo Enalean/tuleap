@@ -21,10 +21,11 @@ import Vue from "vue";
 import { shallowMount } from "@vue/test-utils";
 import { createTestPlanLocalVue } from "../../helpers/local-vue-for-test";
 import * as tlp from "tlp";
-import CreateModal from "./CreateModal.vue";
 import { Modal } from "tlp";
+import CreateModal from "./CreateModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../store/type";
+import { CampaignState } from "../../store/campaign/type";
 
 jest.mock("tlp", () => {
     return {
@@ -61,5 +62,40 @@ describe("CreateModal", () => {
 
         expect(modal_show).toHaveBeenCalledTimes(1);
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("creates the campaign and hides the modal", async () => {
+        const modal_hide = jest.fn();
+        jest.spyOn(tlp, "modal").mockImplementation(() => {
+            return ({
+                show: jest.fn(),
+                hide: modal_hide,
+            } as unknown) as Modal;
+        });
+
+        const $store = createStoreMock({
+            state: {
+                milestone_title: "Milestone Title",
+                campaign: {} as CampaignState,
+            } as RootState,
+        });
+
+        const wrapper = shallowMount(CreateModal, {
+            localVue: local_vue,
+            mocks: {
+                $store,
+            },
+        });
+
+        wrapper.vm.$data.label = "My new campaign";
+        wrapper.vm.$data.test_selector = "milestone";
+
+        await wrapper.trigger("submit");
+
+        expect($store.dispatch).toHaveBeenCalledWith("campaign/createCampaign", {
+            label: "My new campaign",
+            test_selector: "milestone",
+        });
+        expect(modal_hide).toHaveBeenCalledTimes(1);
     });
 });

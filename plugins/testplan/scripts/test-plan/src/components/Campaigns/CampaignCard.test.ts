@@ -50,4 +50,62 @@ describe("CampaignCard", () => {
 
         expect(wrapper.element).toMatchSnapshot();
     });
+
+    it("Displays a being refreshed campaign", async () => {
+        const wrapper = shallowMount(CampaignCard, {
+            localVue: await createTestPlanLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
+            },
+            propsData: {
+                campaign: {
+                    id: 470,
+                    label: "My campaign",
+                    nb_of_blocked: 1,
+                    nb_of_failed: 2,
+                    nb_of_notrun: 1,
+                    nb_of_passed: 10,
+                    is_being_refreshed: true,
+                    is_just_refreshed: false,
+                } as Campaign,
+            },
+        });
+
+        expect(wrapper.classes("test-plan-campaign-is-being-refreshed")).toBe(true);
+        expect(wrapper.classes("test-plan-campaign-is-just-refreshed")).toBe(false);
+    });
+
+    it("Displays a just refreshed campaign", async () => {
+        const wrapper = shallowMount(CampaignCard, {
+            localVue: await createTestPlanLocalVue(),
+            mocks: {
+                $store: createStoreMock({
+                    state: {
+                        milestone_id: 74,
+                        project_id: 102,
+                    } as RootState,
+                }),
+            },
+            propsData: {
+                campaign: {
+                    id: 470,
+                    label: "My campaign",
+                    nb_of_blocked: 1,
+                    nb_of_failed: 2,
+                    nb_of_notrun: 1,
+                    nb_of_passed: 10,
+                    is_being_refreshed: false,
+                    is_just_refreshed: true,
+                } as Campaign,
+            },
+        });
+
+        expect(wrapper.classes("test-plan-campaign-is-being-refreshed")).toBe(false);
+        expect(wrapper.classes("test-plan-campaign-is-just-refreshed")).toBe(true);
+    });
 });
