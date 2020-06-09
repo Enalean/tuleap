@@ -40,28 +40,36 @@ class TestPlanPresenterBuilder
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var TestPlanTestDefinitionTrackerRetriever
+     */
+    private $definition_tracker_retriever;
 
     public function __construct(
         Planning_MilestonePaneFactory $pane_factory,
         Config $testmanagement_config,
-        TrackerFactory $tracker_factory
+        TrackerFactory $tracker_factory,
+        TestPlanTestDefinitionTrackerRetriever $definition_tracker_retriever
     ) {
-        $this->pane_factory          = $pane_factory;
-        $this->testmanagement_config = $testmanagement_config;
-        $this->tracker_factory       = $tracker_factory;
+        $this->pane_factory                 = $pane_factory;
+        $this->testmanagement_config        = $testmanagement_config;
+        $this->tracker_factory              = $tracker_factory;
+        $this->definition_tracker_retriever = $definition_tracker_retriever;
     }
 
     public function getPresenter(\Planning_ArtifactMilestone $milestone, \PFUser $user): TestPlanPresenter
     {
         $presenter_data     = $this->pane_factory->getPanePresenterData($milestone);
         $milestone_artifact = $milestone->getArtifact();
+        $project            = $milestone->getProject();
 
         return new TestPlanPresenter(
             new \AgileDashboard_MilestonePresenter($milestone, $presenter_data),
             (int) $milestone_artifact->getId(),
             $milestone_artifact->getTitle() ?? '',
-            (int) $milestone->getProject()->getID(),
-            $this->canUserCreateACampaign($milestone->getProject(), $user),
+            (int) $project->getID(),
+            $this->canUserCreateACampaign($project, $user),
+            $this->definition_tracker_retriever->getTestDefinitionTracker($project, $user),
         );
     }
 

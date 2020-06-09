@@ -58,6 +58,11 @@ msgstr "Créer la campagne"
 msgid "Create new campaign"
 msgstr "Créer une nouvelle campagne"
 
+msgid "From %s tracker report"
+msgid_plural "From %s tracker reports"
+msgstr[0] "Rapport de l’outil de suivi %s"
+msgstr[1] "Rapports de l’outil de suivi %s"
+
 msgid "Name"
 msgstr "Nom"
 
@@ -72,6 +77,13 @@ msgstr "Campagnes de test"
 
 msgid "Tests"
 msgstr "Tests"
+
+msgid ""
+"The retrieval of the test definition tracker reports has failed, try again "
+"later"
+msgstr ""
+"La récupération des rapports de l'outil de suivi de définition de test a échoué, "
+"veuillez réessayer plus tard"
 
 msgid "There is no test campaign yet."
 msgstr "Il n'y a pas de campagne de test."

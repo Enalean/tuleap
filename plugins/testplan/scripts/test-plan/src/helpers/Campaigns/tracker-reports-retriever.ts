@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,17 +17,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { CampaignState } from "./campaign/type";
+import { recursiveGet } from "tlp";
 
-export interface State {
-    readonly project_id: number;
-    readonly milestone_id: number;
-    readonly milestone_title: string;
-    readonly user_can_create_campaign: boolean;
-    readonly testdefinition_tracker_id: number | null;
-    readonly testdefinition_tracker_name: string;
+export interface TrackerReport {
+    id: number;
+    label: string;
 }
 
-export interface RootState extends State {
-    readonly campaign: CampaignState;
+export function getTrackerReports(tracker_id: number): Promise<TrackerReport[]> {
+    return recursiveGet(`/api/v1/trackers/${encodeURIComponent(tracker_id)}/tracker_reports`);
 }

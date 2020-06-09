@@ -26,6 +26,7 @@ import CreateModal from "./CreateModal.vue";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { RootState } from "../../store/type";
 import { CampaignState } from "../../store/campaign/type";
+import * as tracker_report_retriever from "../../helpers/Campaigns/tracker-reports-retriever";
 
 jest.mock("tlp", () => {
     return {
@@ -41,7 +42,7 @@ describe("CreateModal", () => {
         local_vue = await createTestPlanLocalVue();
     });
 
-    it("Display the modal when mounted", () => {
+    it("Display the modal when mounted", async () => {
         const modal_show = jest.fn();
         jest.spyOn(tlp, "modal").mockImplementation(() => {
             return ({
@@ -55,10 +56,13 @@ describe("CreateModal", () => {
                 $store: createStoreMock({
                     state: {
                         milestone_title: "Milestone Title",
+                        testdefinition_tracker_id: null,
                     } as RootState,
                 }),
             },
         });
+        // We need to wait for the loading state to be rendered and the tracker reports status to be resolved
+        await wrapper.vm.$nextTick();
 
         expect(modal_show).toHaveBeenCalledTimes(1);
         expect(wrapper.element).toMatchSnapshot();
@@ -76,6 +80,7 @@ describe("CreateModal", () => {
         const $store = createStoreMock({
             state: {
                 milestone_title: "Milestone Title",
+                testdefinition_tracker_id: null,
                 campaign: {} as CampaignState,
             } as RootState,
         });
@@ -97,5 +102,44 @@ describe("CreateModal", () => {
             test_selector: "milestone",
         });
         expect(modal_hide).toHaveBeenCalledTimes(1);
+    });
+
+    it("sets an error message when the reports of the test definition tracker cannot be retrieved", async () => {
+        const modal_hide = jest.fn();
+        jest.spyOn(tlp, "modal").mockImplementation(() => {
+            return ({
+                show: jest.fn(),
+                hide: modal_hide,
+            } as unknown) as Modal;
+        });
+        jest.spyOn(tracker_report_retriever, "getTrackerReports").mockRejectedValueOnce(
+            new Error("Something bad happened")
+        );
+
+        const $store = createStoreMock({
+            state: {
+                milestone_title: "Milestone Title",
+                testdefinition_tracker_id: 12,
+            } as RootState,
+        });
+
+        const wrapper = shallowMount(CreateModal, {
+            localVue: local_vue,
+            mocks: {
+                $store,
+            },
+        });
+        await wrapper.vm.$nextTick();
+        // We need to mock console.error otherwise vue-test-utils tell us something has gone wrong when mounting the
+        // component because we re-throw the error which ends up failing the test
+        const consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
+        try {
+            await wrapper.vm.$nextTick();
+        } finally {
+            expect(consoleErrorSpy).toHaveBeenCalled();
+            consoleErrorSpy.mockRestore();
+        }
+
+        expect(wrapper.find("[data-test=new-campaign-error-message]").exists()).toBe(true);
     });
 });

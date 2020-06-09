@@ -38,89 +38,43 @@ exports[`CreateModal Display the modal when mounted 1`] = `
     </div>
   </div>
    
+  <!---->
+   
   <div
     class="tlp-modal-body"
   >
-    <div
-      class="tlp-form-element"
-    >
-      <label
-        class="tlp-label"
-        for="new-campaign-label"
+    <div>
+      <div
+        class="tlp-form-element"
       >
-        <translate-stub
-          tag="span"
+        <label
+          class="tlp-label"
+          for="new-campaign-label"
         >
-          Name
-        </translate-stub>
+          <translate-stub
+            tag="span"
+          >
+            Name
+          </translate-stub>
+           
+          <i
+            aria-hidden="true"
+            class="fa fa-asterisk"
+          />
+        </label>
          
-        <i
-          aria-hidden="true"
-          class="fa fa-asterisk"
+        <input
+          class="tlp-input"
+          id="new-campaign-label"
+          required="required"
+          type="text"
         />
-      </label>
+      </div>
        
-      <input
-        class="tlp-input"
-        id="new-campaign-label"
-        required="required"
-        type="text"
+      <create-campaign-test-selector-stub
+        testdefinition_tracker_reports=""
+        value="milestone"
       />
-    </div>
-     
-    <div
-      class="tlp-form-element"
-    >
-      <label
-        class="tlp-label"
-        for="new-campaign-tests-selector"
-      >
-        <translate-stub
-          tag="span"
-        >
-          Tests
-        </translate-stub>
-         
-        <i
-          aria-hidden="true"
-          class="fa fa-asterisk"
-        />
-      </label>
-       
-      <select
-        class="tlp-select"
-        id="new-campaign-tests-selector"
-        required="required"
-      >
-        <option
-          data-current-language="en_US"
-          data-msgid="No tests"
-          value="none"
-        >
-          No tests
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="All tests"
-          value="all"
-        >
-          All tests
-        </option>
-         
-        <option
-          data-current-language="en_US"
-          data-msgid="
-                    All tests in %{ milestone_title }
-                "
-          selected="selected"
-          value="milestone"
-        >
-          
-                    All tests in Milestone Title
-                
-        </option>
-      </select>
     </div>
   </div>
    
