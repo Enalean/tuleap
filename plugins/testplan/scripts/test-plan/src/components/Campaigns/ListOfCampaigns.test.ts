@@ -45,8 +45,9 @@ describe("ListOfCampaigns", () => {
 
     it("Displays skeletons while loading", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -55,8 +56,9 @@ describe("ListOfCampaigns", () => {
 
     it("Does not display skeletons when not loading", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -65,8 +67,9 @@ describe("ListOfCampaigns", () => {
 
     it("Does not display any cards when there is no campaign", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -75,8 +78,9 @@ describe("ListOfCampaigns", () => {
 
     it("Displays a card for each campaign", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
         });
 
@@ -85,8 +89,9 @@ describe("ListOfCampaigns", () => {
 
     it("Displays skeletons even if there are campaigns to show loading indication", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [{ id: 1 }, { id: 2 }] as Campaign[],
         });
 
@@ -97,8 +102,9 @@ describe("ListOfCampaigns", () => {
         const $store = createStoreMock({
             state: {
                 campaign: {
+                    has_refreshing_error: false,
                     is_loading: true,
-                    is_error: false,
+                    has_loading_error: false,
                     campaigns: [] as Campaign[],
                 },
             } as RootState,
@@ -114,8 +120,9 @@ describe("ListOfCampaigns", () => {
 
     it("Displays empty state when there is no campaign", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -124,8 +131,9 @@ describe("ListOfCampaigns", () => {
 
     it("Does not display empty state when there is no campaign but it is still loading", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -134,8 +142,9 @@ describe("ListOfCampaigns", () => {
 
     it("Does not display empty state when there are campaigns", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 
@@ -144,28 +153,31 @@ describe("ListOfCampaigns", () => {
 
     it("Does not display empty state when there is an error", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: true,
+            has_loading_error: true,
             campaigns: [] as Campaign[],
         });
 
         expect(wrapper.find("campaign-empty-state-stub").exists()).toBe(false);
     });
 
-    it("Displays error stat when there is an error", () => {
+    it("Displays error state when there is an error", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: true,
+            has_loading_error: true,
             campaigns: [] as Campaign[],
         });
 
         expect(wrapper.find("campaign-error-state-stub").exists()).toBe(true);
     });
 
-    it("Does not display error stat when there is no error", () => {
+    it("Does not display error state when there is no error", () => {
         const wrapper = createWrapper({
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 

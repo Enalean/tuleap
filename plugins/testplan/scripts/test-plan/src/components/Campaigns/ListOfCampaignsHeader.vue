@@ -50,7 +50,7 @@ export default class ListOfCampaignsHeader extends Vue {
     readonly is_loading!: boolean;
 
     @campaign.State
-    readonly is_error!: boolean;
+    readonly has_loading_error!: boolean;
 
     @campaign.State
     readonly campaigns!: Campaign[];
@@ -59,7 +59,9 @@ export default class ListOfCampaignsHeader extends Vue {
     readonly showCreateModal!: () => void;
 
     get should_button_be_displayed(): boolean {
-        return !this.is_error && this.campaigns.length > 0 && this.user_can_create_campaign;
+        return (
+            !this.has_loading_error && this.campaigns.length > 0 && this.user_can_create_campaign
+        );
     }
 }
 </script>

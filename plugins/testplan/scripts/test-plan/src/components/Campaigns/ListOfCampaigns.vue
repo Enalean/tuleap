@@ -20,7 +20,8 @@
 
 <template>
     <section class="test-plan-list-of-campaigns">
-        <list-of-campaigns-header v-bind:showCreateModal="showCreateModal" />
+        <list-of-campaigns-header v-bind:show-create-modal="showCreateModal" />
+        <global-error-message />
         <campaign-card
             v-for="campaign of campaigns"
             v-bind:key="campaign.id"
@@ -29,7 +30,7 @@
         <campaign-skeleton v-if="is_loading" />
         <campaign-empty-state
             v-if="should_empty_state_be_displayed"
-            v-bind:showCreateModal="showCreateModal"
+            v-bind:show-create-modal="showCreateModal"
         />
         <campaign-error-state v-if="should_error_state_be_displayed" />
         <create-modal v-bind:is="show_create_modal" />
@@ -44,11 +45,13 @@ import CampaignSkeleton from "./CampaignSkeleton.vue";
 import CampaignCard from "./CampaignCard.vue";
 import { Campaign } from "../../type";
 import ListOfCampaignsHeader from "./ListOfCampaignsHeader.vue";
+import GlobalErrorMessage from "./GlobalErrorMessage.vue";
 
 const campaign = namespace("campaign");
 
 @Component({
     components: {
+        GlobalErrorMessage,
         ListOfCampaignsHeader,
         CampaignCard,
         CampaignSkeleton,
@@ -67,7 +70,7 @@ export default class ListOfCampaigns extends Vue {
     readonly is_loading!: boolean;
 
     @campaign.State
-    readonly is_error!: boolean;
+    readonly has_loading_error!: boolean;
 
     @campaign.State
     readonly campaigns!: Campaign[];
@@ -87,11 +90,11 @@ export default class ListOfCampaigns extends Vue {
     }
 
     get should_empty_state_be_displayed(): boolean {
-        return this.campaigns.length === 0 && !this.is_loading && !this.is_error;
+        return this.campaigns.length === 0 && !this.is_loading && !this.has_loading_error;
     }
 
     get should_error_state_be_displayed(): boolean {
-        return this.is_error;
+        return this.has_loading_error;
     }
 }
 </script>

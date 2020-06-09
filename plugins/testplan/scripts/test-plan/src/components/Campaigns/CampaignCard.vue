@@ -90,6 +90,10 @@ export default class CampaignCard extends Vue {
     }
 
     get classname(): string {
+        if (this.campaign.is_error) {
+            return "test-plan-campaign-is-error";
+        }
+
         if (this.campaign.is_being_refreshed) {
             return "test-plan-campaign-is-being-refreshed";
         }

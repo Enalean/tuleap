@@ -28,7 +28,8 @@ const campaign_module_default: Module<CampaignState, RootState> = {
     state: {
         campaigns: [],
         is_loading: true,
-        is_error: false,
+        has_loading_error: false,
+        has_refreshing_error: false,
     },
     actions,
     mutations,

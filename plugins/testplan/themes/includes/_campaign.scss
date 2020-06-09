@@ -44,9 +44,18 @@
     width: 100%;
 }
 
+.test-plan-list-of-campaigns-error {
+    margin: 0 0 $tlp-large-spacing;
+}
+
 .test-plan-campaign {
+    margin: 0 0 $tlp-half-spacing;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     cursor: pointer;
+
+    &.test-plan-campaign-is-error {
+        opacity: .5;
+    }
 
     &.test-plan-campaign-is-being-refreshed {
         animation: blink-campaign 1200ms ease-in-out alternate infinite;
