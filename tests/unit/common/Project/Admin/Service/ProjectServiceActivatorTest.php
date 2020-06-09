@@ -62,11 +62,11 @@ final class ProjectServiceActivatorTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->service_creator = Mockery::mock(ServiceCreator::class);
-        $this->event_manager   = Mockery::mock(EventManager::class);
-        $this->service_dao     = Mockery::mock(ServiceDao::class);
-        $this->service_manager = Mockery::mock(\ServiceManager::class);
-        $this->link_builder          = Mockery::mock(ServiceLinkDataBuilder::class);
+        $this->service_creator   = Mockery::mock(ServiceCreator::class);
+        $this->event_manager     = Mockery::mock(EventManager::class);
+        $this->service_dao       = Mockery::mock(ServiceDao::class);
+        $this->service_manager   = Mockery::mock(\ServiceManager::class);
+        $this->link_builder      = Mockery::mock(ServiceLinkDataBuilder::class);
 
         $this->service_activator = new ProjectServiceActivator(
             $this->service_creator,
@@ -257,7 +257,7 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -350,7 +350,7 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -443,7 +443,7 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
@@ -490,7 +490,61 @@ final class ProjectServiceActivatorTest extends TestCase
             ]
         )->once();
 
-        $this->event_manager->shouldReceive('processEvent')->once();
+        $this->event_manager->shouldReceive('processEvent')->twice();
+
+        $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
+    }
+
+    public function testGitServiceUsageIsInheritedFromXml(): void
+    {
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getID')->andReturn(101);
+
+        $template = \Mockery::mock(\Project::class);
+        $template->shouldReceive('getID')->andReturn(201);
+
+        $data = \Mockery::mock(\ProjectCreationData::class);
+        $data->shouldReceive('getServiceInfo')->andReturn(['is_used' => true]);
+        $data->shouldReceive('isIsBuiltFromXml')->andReturnTrue();
+        $data->shouldReceive('getDataServices')->andReturn([10 => ['is_used' => true]]);
+
+        $service = Mockery::mock(\Service::class);
+        $service->shouldReceive('getShortName')->andReturn('plugin_git');
+        $service->shouldReceive('getIcon')->andReturn('');
+        $service->shouldReceive('getLabel')->andReturn('git');
+        $service->shouldReceive('getDescription')->andReturn('description');
+        $service->shouldReceive('getUrl')->andReturn('/git/group_id=$group_id');
+        $service->shouldReceive('getScope')->andReturn('P');
+        $service->shouldReceive('getRank')->andReturn('1');
+        $service->shouldReceive('isOpenedInNewTab')->andReturn(false);
+        $this->service_manager->shouldReceive('getService')->andReturn($service);
+
+        $this->link_builder->shouldReceive('substituteVariablesInLink')->andReturn('/git/group_id=101');
+
+        $template_service = ['service_id' => 10, 'short_name' => 'plugin_git', 'is_used' => 0];
+        $this->service_dao->shouldReceive('getServiceInfoQueryForNewProject')->andReturn(
+            [
+                $template_service
+            ]
+        );
+
+        $this->service_dao->shouldReceive('create')->withArgs(
+            [
+                $project->getID(),
+                $service->getLabel(),
+                '',
+                $service->getDescription(),
+                $service->getShortName(),
+                '/git/group_id=101',
+                1,
+                1,
+                $service->getScope(),
+                $service->getRank(),
+                $service->isOpenedInNewTab()
+            ]
+        )->once();
+
+        $this->event_manager->shouldReceive('processEvent')->twice();
 
         $this->service_activator->activateServicesFromTemplate($project, $template, $data, []);
     }
