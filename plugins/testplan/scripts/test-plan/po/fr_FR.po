@@ -43,11 +43,16 @@ msgstr "Tous les tests"
 msgid "All tests in %{ milestone_title }"
 msgstr "Tous les tests dans %{ milestone_title }"
 
+msgid "An error occurred while creating the campaign."
+msgstr "Une erreur est survenue lors de la création de la campagne."
+
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
 msgid "An error occurred while retrieving information of the new campaign."
-msgstr "Une erreur est survenue lors de la récupération des informations de la nouvelle campagne."
+msgstr ""
+"Une erreur est survenue lors de la récupération des informations de la "
+"nouvelle campagne."
 
 msgid "Close"
 msgstr "Fermer"
@@ -82,8 +87,8 @@ msgid ""
 "The retrieval of the test definition tracker reports has failed, try again "
 "later"
 msgstr ""
-"La récupération des rapports de l'outil de suivi de définition de test a échoué, "
-"veuillez réessayer plus tard"
+"La récupération des rapports de l'outil de suivi de définition de test a "
+"échoué, veuillez réessayer plus tard"
 
 msgid "There is no test campaign yet."
 msgstr "Il n'y a pas de campagne de test."

@@ -37,4 +37,18 @@ describe("CreateModalErrorFeedback", () => {
 
         expect(wrapper.html()).toContain(error_message);
     });
+
+    it("displays the error message details when one is provided", () => {
+        const error_message = "My custom error message";
+        const error_message_details = "Full details";
+        const wrapper = shallowMount(CreateModalErrorFeedback, {
+            propsData: {
+                error_message,
+                error_message_details,
+            },
+        });
+
+        expect(wrapper.html()).toContain(error_message);
+        expect(wrapper.html()).toContain(error_message_details);
+    });
 });

@@ -43,6 +43,7 @@
         <create-modal-error-feedback
             v-if="error_message !== ''"
             v-bind:error_message="error_message"
+            v-bind:error_message_details="error_message_details"
             data-test="new-campaign-error-message"
         />
         <div class="tlp-modal-body">
@@ -96,7 +97,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { Modal, modal as createModal } from "tlp";
+import { FetchWrapperError, Modal, modal as createModal } from "tlp";
 import { namespace, State } from "vuex-class";
 import { CreateCampaignPayload } from "../../store/campaign/type";
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";
@@ -125,6 +126,7 @@ export default class CreateModal extends Vue {
     private is_creating = false;
     private modal!: Modal;
     private error_message = "";
+    private error_message_details = "";
 
     async mounted(): Promise<void> {
         this.modal = createModal(this.$el, { destroy_on_hide: true });
@@ -152,10 +154,41 @@ export default class CreateModal extends Vue {
                 label: this.label,
                 test_selector: this.test_selector,
             });
+            this.modal.hide();
+        } catch (e) {
+            this.error_message = this.$gettext("An error occurred while creating the campaign.");
+            try {
+                this.error_message_details = await this.getErrorMessageDetailsFromError(e);
+            } catch (error) {
+                this.error_message_details = "";
+            }
+            throw e;
         } finally {
             this.is_creating = false;
-            this.modal.hide();
         }
+    }
+
+    private async getErrorMessageDetailsFromError(
+        error: Error | FetchWrapperError
+    ): Promise<string> {
+        if (!this.isAFetchWrapperError(error)) {
+            return "";
+        }
+
+        const json = await error.response.json();
+        if (!Object.prototype.hasOwnProperty.call(json, "error")) {
+            return "";
+        }
+
+        if (Object.prototype.hasOwnProperty.call(json.error, "i18n_error_message")) {
+            return json.error.i18n_error_message;
+        }
+
+        return json.error.message;
+    }
+
+    private isAFetchWrapperError(error: Error | FetchWrapperError): error is FetchWrapperError {
+        return "response" in error;
     }
 
     get icon_class(): string {

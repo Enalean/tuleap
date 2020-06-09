@@ -21,6 +21,9 @@
     <section class="tlp-modal-feedback" v-if="error_message">
         <div class="tlp-alert-danger">
             {{ error_message }}
+            <p v-if="error_message_details">
+                <code>{{ error_message_details }}</code>
+            </p>
         </div>
     </section>
 </template>
@@ -32,5 +35,8 @@ import { Component, Prop } from "vue-property-decorator";
 export default class CreateModalErrorFeedback extends Vue {
     @Prop()
     readonly error_message!: string;
+
+    @Prop()
+    readonly error_message_details!: string;
 }
 </script>
