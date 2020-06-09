@@ -49,8 +49,9 @@
         <div
             class="test-plan-campaign-progression notrun"
             v-bind:class="notrun_classname"
-            v-if="campaign.nb_of_notrun"
+            v-if="should_not_run_progress_be_displayed"
             v-bind:aria-label="notrun_title"
+            data-test="progress-not-run"
         >
             <div class="test-plan-campaign-progression-bar"></div>
             <div class="test-plan-campaign-progression-value">{{ campaign.nb_of_notrun }}</div>
@@ -68,12 +69,14 @@ export default class CampaignProgression extends Vue {
     @Prop({ required: true })
     readonly campaign!: Campaign;
 
+    private readonly percentage_classname_prefix = "test-plan-campaign-progression-width-";
+
     private percentage(nb: number): string {
         if (!nb) {
             return "";
         }
 
-        return "test-plan-campaign-progression-width-" + Math.round((nb * 100) / this.nb_tests);
+        return this.percentage_classname_prefix + Math.round((nb * 100) / this.nb_tests);
     }
 
     get nb_tests(): number {
@@ -83,6 +86,14 @@ export default class CampaignProgression extends Vue {
             this.campaign.nb_of_notrun +
             this.campaign.nb_of_passed
         );
+    }
+
+    get should_not_run_progress_be_displayed(): boolean {
+        if (this.nb_tests === 0) {
+            return true;
+        }
+
+        return this.campaign.nb_of_notrun > 0;
     }
 
     get passed_classname(): string {
@@ -98,6 +109,10 @@ export default class CampaignProgression extends Vue {
     }
 
     get notrun_classname(): string {
+        if (this.nb_tests === 0) {
+            return this.percentage_classname_prefix + 100;
+        }
+
         return this.percentage(this.campaign.nb_of_notrun);
     }
 

@@ -39,4 +39,23 @@ describe("CampaignProgression", () => {
 
         expect(wrapper.element).toMatchSnapshot();
     });
+
+    it("Display a progress bar even if there is no test in the campaign", async () => {
+        const wrapper = shallowMount(CampaignProgression, {
+            localVue: await createTestPlanLocalVue(),
+            propsData: {
+                campaign: {
+                    label: "My campaign",
+                    nb_of_blocked: 0,
+                    nb_of_failed: 0,
+                    nb_of_notrun: 0,
+                    nb_of_passed: 0,
+                } as Campaign,
+            },
+        });
+
+        const progress = wrapper.find("[data-test=progress-not-run]");
+        expect(progress.classes("test-plan-campaign-progression-width-100")).toBe(true);
+        expect(progress.text()).toBe("0");
+    });
 });
