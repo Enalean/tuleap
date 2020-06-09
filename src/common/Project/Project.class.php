@@ -23,9 +23,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\Admin\DescriptionFields\DescriptionFieldLabelBuilder;
-use Tuleap\Project\DescriptionFieldsFactory;
-use Tuleap\Project\DescriptionFieldsDao;
 
 class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
@@ -485,32 +482,6 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         }
 
         return $descfieldsvalue;
-    }
-
-    public function displayProjectsDescFieldsValue()
-    {
-        $descfieldsvalue = $this->getProjectsDescFieldsValue();
-        $fields_factory  = new DescriptionFieldsFactory(new DescriptionFieldsDao());
-        $descfields      = $fields_factory->getAllDescriptionFields();
-
-        $hp = Codendi_HTMLPurifier::instance();
-
-        for ($i = 0; $i < sizeof($descfields); $i++) {
-            $displayfieldname[$i] = $descfields[$i]['desc_name'];
-            $displayfieldvalue[$i] = '';
-            for ($j = 0; $j < sizeof($descfieldsvalue); $j++) {
-                if ($descfieldsvalue[$j]['group_desc_id'] == $descfields[$i]['group_desc_id']) {
-                    $displayfieldvalue[$i] = $descfieldsvalue[$j]['value'];
-                }
-            }
-
-            $descname = DescriptionFieldLabelBuilder::getFieldTranslatedName($displayfieldname[$i]);
-
-            echo "<h3>" . $hp->purify($descname, CODENDI_PURIFIER_LIGHT, $this->getGroupId()) . "</h3>";
-            echo "<p>";
-            echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global', 'none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT, $this->getGroupId());
-            echo "</p>";
-        }
     }
 
     private function getUGroupManager()

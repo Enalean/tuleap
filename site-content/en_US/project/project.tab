@@ -719,15 +719,6 @@ project_memberlist	developer	Member
 project_memberlist	username	Username
 #
 #-----------------------------------------------
-# Script: SF/www/project/showdetails.php
-#
-project_showdetails	proj_details	Project Details
-project_showdetails	no_detail	No detail available for this project
-project_showdetails	proj_not_found	Error - Project Not Found
-project_showdetails	back_main	[Back to Main Page]
-project_showdetails	references	Reference patterns
-#
-#-----------------------------------------------
 # Script:
 #
 project_ugroup	ugroup_anonymous_users_desc_key	Anonymous

@@ -719,15 +719,6 @@ project_memberlist	developer	Membre
 project_memberlist	username	Nom d'utilisateur
 #
 #-----------------------------------------------
-# Script: SF/www/project/showdetails.php
-#
-project_showdetails	proj_details	Information détaillée sur le projet
-project_showdetails	no_detail	Aucune information détaillée disponible pour ce projet
-project_showdetails	proj_not_found	Erreur - Projet introuvable
-project_showdetails	back_main	[Retour au sommaire]
-project_showdetails	references	Modèles de référence
-#
-#-----------------------------------------------
 # Script:
 #
 project_ugroup	ugroup_anonymous_users_desc_key	Anonymes
