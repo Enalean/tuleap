@@ -21,13 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 
-class CreationStateDataGenerator
+class InitialSnapshotDataGenerator
 {
     /**
      * @var ChangelogEntriesBuilder
@@ -46,54 +47,81 @@ class CreationStateDataGenerator
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
     }
 
-    public function generateFirstStateContent(
-        array $current_state,
+    /**
+     * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
+     */
+    public function generateInitialSnapshotContent(
+        Snapshot $current_snapshot,
         string $jira_issue_key
-    ): array {
+    ): Snapshot {
         $already_seen_fields_keys = [];
 
-        $first_state = $current_state;
+        $initial_snapshot = Snapshot::duplicateExistingSnapshot($current_snapshot);
 
         $changelog_entries = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
         foreach ($changelog_entries as $changelog_entry) {
-            foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
-                $changed_field_field_id = $changed_field->getFieldId();
-                if ($this->mustFieldBeCheckedInChangelog($changed_field_field_id, $first_state, $already_seen_fields_keys)) {
-                    $already_seen_fields_keys[$changed_field_field_id] = true;
-                    $changed_field_from        = $changed_field->getFrom();
-                    $changed_field_from_string = $changed_field->getFromString();
+            $this->parseChangelogEntry($changelog_entry, $initial_snapshot, $already_seen_fields_keys);
+        }
 
-                    if ($this->fieldHasNoInitialValue($changed_field)) {
-                        unset($first_state[$changed_field_field_id]);
-                        continue;
-                    }
+        return $initial_snapshot;
+    }
 
-                    if ($this->fieldListHasInitialValue($changed_field)) {
-                        $first_state[$changed_field_field_id]['value'] =
+    private function parseChangelogEntry(
+        ChangelogEntryValueRepresentation $changelog_entry,
+        Snapshot $initial_snapshot,
+        array $already_seen_fields_keys
+    ): void {
+        foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
+            $changed_field_field_id = $changed_field->getFieldId();
+            if ($this->mustFieldBeCheckedInChangelog($changed_field_field_id, $initial_snapshot, $already_seen_fields_keys)) {
+                $already_seen_fields_keys[$changed_field_field_id] = true;
+                $current_snapshot_field                            = $initial_snapshot->getFieldInSnapshot($changed_field_field_id);
+
+                if ($current_snapshot_field === null) {
+                    continue;
+                }
+
+                $changed_field_from        = $changed_field->getFrom();
+                $changed_field_from_string = $changed_field->getFromString();
+
+                if ($this->fieldHasNoInitialValue($changed_field)) {
+                    $initial_snapshot->removeFieldSnapshot($changed_field_field_id);
+                    continue;
+                }
+
+                if ($this->fieldListHasInitialValue($changed_field)) {
+                    $initial_snapshot->addFieldSnapshot(
+                        new FieldSnapshot(
+                            $current_snapshot_field->getFieldMapping(),
                             $this->creation_state_list_value_formatter->formatCreationListValue(
                                 $changed_field_from
-                            );
-                        continue;
-                    }
+                            ),
+                            $current_snapshot_field->getRenderedValue()
+                        )
+                    );
+                    continue;
+                }
 
-                    if ($this->fieldTextHasInitialValue($changed_field)) {
-                        $first_state[$changed_field_field_id]['rendered_value'] = null;
-                        $first_state[$changed_field_field_id]['value'] = $changed_field_from_string;
-                        continue;
-                    }
+                if ($this->fieldTextHasInitialValue($changed_field)) {
+                    $initial_snapshot->addFieldSnapshot(
+                        new FieldSnapshot(
+                            $current_snapshot_field->getFieldMapping(),
+                            $changed_field_from_string,
+                            null
+                        )
+                    );
+                    continue;
                 }
             }
         }
-
-        return $first_state;
     }
 
     private function mustFieldBeCheckedInChangelog(
         string $field_id,
-        array $first_state,
+        Snapshot $initial_snapshot,
         array $already_seen_fields_keys
     ): bool {
-        return array_key_exists($field_id, $first_state) &&
+        return $initial_snapshot->isFieldInSnapshot($field_id) &&
             ! array_key_exists($field_id, $already_seen_fields_keys);
     }
 
