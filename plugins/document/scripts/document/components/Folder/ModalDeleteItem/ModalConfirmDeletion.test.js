@@ -56,6 +56,8 @@ describe("ModalConfirmDeletion", () => {
             error: {
                 has_modal_error: false,
             },
+            currently_previewed_item: null,
+            current_folder: { id: 42 },
         };
         store_options = {
             state,
@@ -173,25 +175,62 @@ describe("ModalConfirmDeletion", () => {
         expect(deleteItem).toHaveBeenCalled();
     });
 
-    it("Delete the item, and update the url link", async () => {
-        const item = {
-            id: 42,
-            title: "my folder",
-            type: "folder",
-        };
+    describe("Redirection after deletion", () => {
+        it("Closes the quick look pane when the item to be deleted is currently previewed", async () => {
+            const item = {
+                id: 50,
+                title: "my file",
+                type: "file",
+                parent_id: 42,
+            };
 
-        const additional_options = {};
+            const additional_options = {};
 
-        store.getters.is_item_a_folder = () => true;
+            store.state.currently_previewed_item = item;
+            store.getters.is_item_a_folder = () => false;
 
-        const deletion_modal = getDeletionModal({ item, additional_options });
-        await deletion_modal.vm.deleteItem();
+            const deletion_modal = getDeletionModal({ item, additional_options });
+            jest.spyOn(deletion_modal.vm.$router, "replace");
 
-        await deletion_modal.vm.$nextTick();
-        expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
-        expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
-            "showPostDeletionNotification"
-        );
-        expect(deletion_modal.vm.$route.path).toBe("folder/42");
+            await deletion_modal.vm.$router.push("preview/50");
+            await deletion_modal.vm.deleteItem();
+            await deletion_modal.vm.$nextTick();
+
+            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
+            expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
+                "showPostDeletionNotification"
+            );
+            expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
+                name: "folder",
+                params: { item_id: 42 },
+            });
+        });
+
+        it("redirects to the parent folder when the item to be deleted is the current folder", async () => {
+            const item = {
+                id: 42,
+                title: "my folder",
+                type: "folder",
+                parent_id: 41,
+            };
+
+            const additional_options = {};
+            const deletion_modal = getDeletionModal({ item, additional_options });
+
+            store.getters.is_item_a_folder = () => true;
+            jest.spyOn(deletion_modal.vm.$router, "replace");
+
+            await deletion_modal.vm.deleteItem();
+            await deletion_modal.vm.$nextTick();
+
+            expect(store.dispatch).toHaveBeenCalledWith("deleteItem", [item, additional_options]);
+            expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
+                "showPostDeletionNotification"
+            );
+            expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
+                name: "folder",
+                params: { item_id: 41 },
+            });
+        });
     });
 });

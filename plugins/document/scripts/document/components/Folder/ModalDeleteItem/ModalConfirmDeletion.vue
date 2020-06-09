@@ -121,7 +121,7 @@ export default {
     },
     computed: {
         ...mapState("error", ["has_modal_error"]),
-        ...mapState(["current_folder"]),
+        ...mapState(["current_folder", "currently_previewed_item"]),
         ...mapGetters(["is_item_a_wiki", "is_item_a_folder"]),
         close() {
             return this.$gettext("Close");
@@ -166,10 +166,7 @@ export default {
             await this.$store.dispatch("deleteItem", [this.item, this.additional_options]);
 
             if (!this.has_modal_error) {
-                await this.$router.replace({
-                    name: "folder",
-                    params: { item_id: deleted_item.parent_id },
-                });
+                await this.redirectToParentFolderIfNeeded(deleted_item);
                 this.$store.commit("showPostDeletionNotification");
 
                 this.modal.hide();
@@ -191,6 +188,21 @@ export default {
         resetModal() {
             this.$store.commit("error/resetModalError");
             this.$emit("delete-modal-closed");
+        },
+        async redirectToParentFolderIfNeeded(deleted_item) {
+            const is_item_the_current_folder = this.item.id === this.current_folder.id;
+            const is_item_being_previewed =
+                this.currently_previewed_item !== null &&
+                this.currently_previewed_item.id === this.item.id;
+
+            if (!is_item_the_current_folder && !is_item_being_previewed) {
+                return;
+            }
+
+            await this.$router.replace({
+                name: "folder",
+                params: { item_id: deleted_item.parent_id },
+            });
         },
     },
 };
