@@ -34,7 +34,6 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     postfix \
     rsyslog \
     supervisor \
-    tuleap-documentation \
     tuleap-plugin-agiledashboard \
     tuleap-plugin-api-explorer \
     tuleap-plugin-archivedeleteditems \
@@ -72,6 +71,7 @@ RUN /usr/sbin/groupadd -g 900 -r codendiadm && \
     tuleap-plugin-textualreport \
     tuleap-plugin-timetracking \
     tuleap-plugin-velocity \
+    tuleap-plugin-embed \
     tuleap-theme-burningparrot \
     tuleap-theme-flamingparrot \
     tuleap-realtime && \
