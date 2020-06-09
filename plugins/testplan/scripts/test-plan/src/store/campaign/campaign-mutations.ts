@@ -32,8 +32,16 @@ export function addCampaigns(state: CampaignState, collection: Campaign[]): void
     state.campaigns = state.campaigns.concat(collection);
 }
 
-export function errorHasBeenCatched(state: CampaignState): void {
-    state.is_error = true;
+export function loadingErrorHasBeenCatched(state: CampaignState): void {
+    state.has_loading_error = true;
+}
+
+export function refreshingloadingErrorHasBeenCatched(state: CampaignState): void {
+    state.has_refreshing_error = true;
+}
+
+export function removeHasRefreshingErrorFlag(state: CampaignState): void {
+    state.has_refreshing_error = false;
 }
 
 export function addNewCampaign(state: CampaignState, campaign: Campaign): void {

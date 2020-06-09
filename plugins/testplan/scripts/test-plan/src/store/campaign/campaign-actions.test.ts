@@ -69,7 +69,7 @@ describe("Campaign state actions", () => {
             await expect(loadCampaigns(context)).rejects.toThrow();
 
             expect(context.commit).toHaveBeenCalledWith("beginLoadingCampaigns");
-            expect(context.commit).toHaveBeenCalledWith("errorHasBeenCatched");
+            expect(context.commit).toHaveBeenCalledWith("loadingErrorHasBeenCatched");
             expect(context.commit).toHaveBeenCalledWith("endLoadingCampaigns");
         });
     });
@@ -86,7 +86,7 @@ describe("Campaign state actions", () => {
             expect(tlpGetMock).toHaveBeenCalledWith(`/api/v1/testmanagement_campaigns/123`);
         });
 
-        it("Commits the new information about the campaign", async () => {
+        it("Commits the new information about the campaign and reset the refreshing state", async () => {
             mockFetchSuccess(tlpGetMock, {
                 return_json: {
                     id: 123,
@@ -107,6 +107,21 @@ describe("Campaign state actions", () => {
                 nb_of_notrun: 3,
                 nb_of_failed: 4,
             });
+            expect(context.commit).toHaveBeenCalledWith("removeHasRefreshingErrorFlag");
+        });
+
+        it("Given there is an error, it flags the campaign as error, and set the global refreshing error", async () => {
+            const error = new Error();
+            tlpGetMock.mockRejectedValue(error);
+
+            const campaign = { id: 123 } as Campaign;
+            await expect(refreshCampaign(context, campaign)).rejects.toThrow();
+
+            expect(context.commit).toHaveBeenCalledWith("updateCampaignAfterCreation", {
+                id: 123,
+                is_error: true,
+            });
+            expect(context.commit).toHaveBeenCalledWith("refreshingloadingErrorHasBeenCatched");
         });
     });
 
@@ -143,6 +158,7 @@ describe("Campaign state actions", () => {
                 nb_of_passed: 0,
                 is_being_refreshed: true,
                 is_just_refreshed: false,
+                is_error: false,
             };
             expect(context.commit).toHaveBeenCalledWith("addNewCampaign", campaign);
             expect(context.dispatch).toHaveBeenCalledWith("refreshCampaign", campaign);

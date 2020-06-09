@@ -49,8 +49,9 @@ describe("ListOfCampaignsHeader", () => {
 
     it("Displays new campaign button when there are campaigns", async () => {
         const wrapper = await createWrapper(true, {
+            has_refreshing_error: false,
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 
@@ -60,8 +61,9 @@ describe("ListOfCampaignsHeader", () => {
     it(`Does not display new campaign button when there is no campaign,
         because it is displayed elsewhere (empty state)`, async () => {
         const wrapper = await createWrapper(true, {
+            has_refreshing_error: false,
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [] as Campaign[],
         });
 
@@ -70,8 +72,9 @@ describe("ListOfCampaignsHeader", () => {
 
     it(`Does not display new campaign button when there is an error`, async () => {
         const wrapper = await createWrapper(true, {
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: true,
+            has_loading_error: true,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 
@@ -80,8 +83,9 @@ describe("ListOfCampaignsHeader", () => {
 
     it(`Does not display new campaign button when the user cannot create new ones`, async () => {
         const wrapper = await createWrapper(false, {
+            has_refreshing_error: false,
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
             campaigns: [{ id: 1 }] as Campaign[],
         });
 
@@ -94,8 +98,9 @@ describe("ListOfCampaignsHeader", () => {
         const wrapper = await createWrapper(
             true,
             {
+                has_refreshing_error: false,
                 is_loading: true,
-                is_error: false,
+                has_loading_error: false,
                 campaigns: [{ id: 1 }] as Campaign[],
             },
             show_create_modal

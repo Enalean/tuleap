@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GlobalErrorMessage displays error message when a campaign cannot be refreshed 1`] = `
+<div
+  class="tlp-alert-danger test-plan-list-of-campaigns-error"
+  data-current-language="en_US"
+  data-msgid="
+    An error occurred while retrieving information of the new campaign.
+"
+>
+  
+    An error occurred while retrieving information of the new campaign.
+
+</div>
+`;

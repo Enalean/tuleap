@@ -43,6 +43,7 @@ export async function loadCampaigns(
                             ...campaign,
                             is_being_refreshed: false,
                             is_just_refreshed: false,
+                            is_error: false,
                         })
                     );
                     context.commit("addCampaigns", campaigns);
@@ -52,7 +53,7 @@ export async function loadCampaigns(
             }
         );
     } catch (e) {
-        context.commit("errorHasBeenCatched");
+        context.commit("loadingErrorHasBeenCatched");
         throw e;
     } finally {
         context.commit("endLoadingCampaigns");
@@ -86,6 +87,7 @@ export async function createCampaign(
         nb_of_passed: 0,
         is_being_refreshed: true,
         is_just_refreshed: false,
+        is_error: false,
     };
     context.commit("addNewCampaign", campaign);
 
@@ -96,15 +98,26 @@ export async function refreshCampaign(
     context: ActionContext<CampaignState, RootState>,
     campaign: Campaign
 ): Promise<void> {
-    const response = await get(`/api/v1/testmanagement_campaigns/${campaign.id}`);
-    const new_campaign = await response.json();
+    try {
+        const response = await get(`/api/v1/testmanagement_campaigns/${campaign.id}`);
+        const new_campaign = await response.json();
 
-    const updated_campaign: Campaign = {
-        ...campaign,
-        nb_of_blocked: new_campaign.nb_of_blocked,
-        nb_of_passed: new_campaign.nb_of_passed,
-        nb_of_notrun: new_campaign.nb_of_notrun,
-        nb_of_failed: new_campaign.nb_of_failed,
-    };
-    context.commit("updateCampaignAfterCreation", updated_campaign);
+        const updated_campaign: Campaign = {
+            ...campaign,
+            nb_of_blocked: new_campaign.nb_of_blocked,
+            nb_of_passed: new_campaign.nb_of_passed,
+            nb_of_notrun: new_campaign.nb_of_notrun,
+            nb_of_failed: new_campaign.nb_of_failed,
+        };
+        context.commit("updateCampaignAfterCreation", updated_campaign);
+        context.commit("removeHasRefreshingErrorFlag");
+    } catch (e) {
+        const updated_campaign: Campaign = {
+            ...campaign,
+            is_error: true,
+        };
+        context.commit("updateCampaignAfterCreation", updated_campaign);
+        context.commit("refreshingloadingErrorHasBeenCatched");
+        throw e;
+    }
 }

@@ -24,7 +24,9 @@ import {
     addNewCampaign,
     beginLoadingCampaigns,
     endLoadingCampaigns,
-    errorHasBeenCatched,
+    loadingErrorHasBeenCatched,
+    refreshingloadingErrorHasBeenCatched,
+    removeHasRefreshingErrorFlag,
     updateCampaignAfterCreation,
 } from "./campaign-mutations";
 
@@ -34,7 +36,8 @@ describe("Campaign state mutations", () => {
     it("beginLoadingCampaigns", () => {
         const state: CampaignState = {
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
             campaigns: [],
         };
 
@@ -46,7 +49,8 @@ describe("Campaign state mutations", () => {
     it("endLoadingCampaigns", () => {
         const state: CampaignState = {
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
             campaigns: [],
         };
 
@@ -58,7 +62,8 @@ describe("Campaign state mutations", () => {
     it("addCampaigns", () => {
         const state: CampaignState = {
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
             campaigns: [{ id: 1 } as Campaign],
         };
 
@@ -67,22 +72,50 @@ describe("Campaign state mutations", () => {
         expect(state.campaigns.length).toBe(3);
     });
 
-    it("errorHasBeenCatched", () => {
+    it("loadingErrorHasBeenCatched", () => {
         const state: CampaignState = {
             is_loading: true,
-            is_error: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
             campaigns: [],
         };
 
-        errorHasBeenCatched(state);
+        loadingErrorHasBeenCatched(state);
 
-        expect(state.is_error).toBe(true);
+        expect(state.has_loading_error).toBe(true);
+    });
+
+    it("refreshingloadingErrorHasBeenCatched", () => {
+        const state: CampaignState = {
+            is_loading: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
+            campaigns: [],
+        };
+
+        refreshingloadingErrorHasBeenCatched(state);
+
+        expect(state.has_refreshing_error).toBe(true);
+    });
+
+    it("removeHasRefreshingErrorFlag", () => {
+        const state: CampaignState = {
+            is_loading: false,
+            has_loading_error: false,
+            has_refreshing_error: true,
+            campaigns: [],
+        };
+
+        removeHasRefreshingErrorFlag(state);
+
+        expect(state.has_refreshing_error).toBe(false);
     });
 
     it("adds new campaign at the beginning", () => {
         const state: CampaignState = {
             is_loading: false,
-            is_error: false,
+            has_loading_error: false,
+            has_refreshing_error: false,
             campaigns: [{ id: 123 } as Campaign],
         };
 
@@ -95,7 +128,8 @@ describe("Campaign state mutations", () => {
         it("Throw error if campaign cannot be found", () => {
             const state: CampaignState = {
                 is_loading: false,
-                is_error: false,
+                has_loading_error: false,
+                has_refreshing_error: false,
                 campaigns: [{ id: 123 } as Campaign],
             };
 
@@ -107,7 +141,8 @@ describe("Campaign state mutations", () => {
         it("store campaigns as just refreshed", () => {
             const state: CampaignState = {
                 is_loading: false,
-                is_error: false,
+                has_loading_error: false,
+                has_refreshing_error: false,
                 campaigns: [{ id: 123 } as Campaign],
             };
 
@@ -121,7 +156,8 @@ describe("Campaign state mutations", () => {
         it("removes just refreshed flag after one second", () => {
             const state: CampaignState = {
                 is_loading: false,
-                is_error: false,
+                has_loading_error: false,
+                has_refreshing_error: false,
                 campaigns: [{ id: 123 } as Campaign],
             };
 

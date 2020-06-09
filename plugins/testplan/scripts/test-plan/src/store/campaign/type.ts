@@ -22,7 +22,8 @@ import { Campaign } from "../../type";
 export interface CampaignState {
     campaigns: Array<Campaign>;
     is_loading: boolean;
-    is_error: boolean;
+    has_loading_error: boolean;
+    has_refreshing_error: boolean;
 }
 
 export interface CreateCampaignPayload {
