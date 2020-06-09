@@ -52,6 +52,7 @@ exports[`CampaignProgression Displays a campaign as a card 1`] = `
   <div
     aria-label="34 not run"
     class="test-plan-campaign-progression notrun test-plan-campaign-progression-width-72"
+    data-test="progress-not-run"
   >
     <div
       class="test-plan-campaign-progression-bar"
