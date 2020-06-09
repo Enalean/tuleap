@@ -124,6 +124,35 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('ug_102', $json);
     }
 
+    public function testGETMembershipWithProjectScopeDoesNotReturnSiteActive(): void
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?scope=project'));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json = $response->json();
+        $this->assertCount(2, $json);
+        $this->assertNotContains('site_active', $json);
+        $this->assertContains('private-member_project_members', $json);
+        $this->assertContains('ug_102', $json);
+    }
+
+    public function testGETMembershipWithProjectScopeAndIdFormatReturnsGroupsWithId(): void
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?scope=project&format=id'));
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $json = $response->json();
+        $this->assertCount(2, $json);
+        $this->assertContains($this->project_private_member_id . "_3", $json);
+        $this->assertContains('102', $json);
+    }
+
+    public function testGETMembershipWithIdFormatWithoutProjectScopeShouldReturn400(): void
+    {
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?format=id'));
+        $this->assertEquals(400, $response->getStatusCode());
+    }
+
     public function testUserCannotSeeGroupOfAnotherUser()
     {
         $response = $this->getResponseByName(

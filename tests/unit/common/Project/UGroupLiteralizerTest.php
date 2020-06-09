@@ -30,6 +30,11 @@ class UGroupLiteralizerTest extends TestCase
     protected $user;
     public const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
+    /**
+     * @var UGroupLiteralizer
+     */
+    private $ugroup_literalizer;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -142,5 +147,46 @@ class UGroupLiteralizerTest extends TestCase
         $result = $this->ugroup_literalizer->getUgroupIds($project, $object_id, self::PERMISSIONS_TYPE);
         $this->assertEquals($expected, $result);
         PermissionsManager::clearInstance();
+    }
+
+    public function testItReturnsOnlyProjectUserUgroups(): void
+    {
+        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $user_projects = array(
+            array('group_id' => 102, 'unix_group_name' => 'gpig2')
+        );
+        $user_groups = array(
+            array('ugroup_id' => 105)
+        );
+        $this->user->shouldReceive('getProjects')->andReturns($user_projects);
+        $this->user->shouldReceive('isMember')->andReturns(true);
+        $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);
+
+        $ugroups = $this->ugroup_literalizer->getProjectUserGroupsForUser($this->user);
+        $this->assertContains('gpig2_project_members', $ugroups);
+        $this->assertContains('gpig2_project_admin', $ugroups);
+        $this->assertContains('ug_105', $ugroups);
+        $this->assertNotContains('site_active', $ugroups);
+        $this->assertEquals(3, sizeof($ugroups));
+    }
+
+    public function testItReturnsOnlyProjectUserUgroupsIds(): void
+    {
+        $this->user->shouldReceive('getStatus')->andReturns('A');
+        $user_projects = array(
+            array('group_id' => 102, 'unix_group_name' => 'gpig2')
+        );
+        $user_groups = array(
+            array('ugroup_id' => 105)
+        );
+        $this->user->shouldReceive('getProjects')->andReturns($user_projects);
+        $this->user->shouldReceive('isMember')->andReturns(true);
+        $this->user->shouldReceive('getAllUgroups')->andReturns($user_groups);
+
+        $ugroups = $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($this->user);
+        $this->assertContains('102_3', $ugroups);
+        $this->assertContains('102_4', $ugroups);
+        $this->assertContains('105', $ugroups);
+        $this->assertEquals(3, sizeof($ugroups));
     }
 }
