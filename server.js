@@ -43,7 +43,7 @@ try {
         honorCipherOrder: true
     };
     server = require('https').Server(options, app);
-    io     = require('socket.io')(server);
+    io     = require('socket.io')(server, { cookie: false });
     server.listen(PORT_CLIENT);
     config.dropRootPrivileges();
 } catch (err) {
