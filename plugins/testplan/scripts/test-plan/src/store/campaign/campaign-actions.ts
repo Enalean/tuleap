@@ -73,10 +73,19 @@ export async function createCampaign(
         label: payload.label,
     });
 
-    const response = await post(
-        `/api/v1/testmanagement_campaigns?milestone_id=${context.rootState.milestone_id}&test_selector=${payload.test_selector}`,
-        { headers, body }
-    );
+    const url_params = new URLSearchParams({
+        milestone_id: context.rootState.milestone_id.toString(),
+        test_selector: payload.initial_tests.test_selector,
+    });
+
+    if (payload.initial_tests.test_selector === "report") {
+        url_params.set("report_id", payload.initial_tests.report_id.toString());
+    }
+
+    const response = await post(`/api/v1/testmanagement_campaigns?${url_params.toString()}`, {
+        headers,
+        body,
+    });
     const new_campaign = await response.json();
     const campaign: Campaign = {
         id: new_campaign.id,

@@ -99,7 +99,9 @@ describe("CreateModal", () => {
 
         expect($store.dispatch).toHaveBeenCalledWith("campaign/createCampaign", {
             label: "My new campaign",
-            test_selector: "milestone",
+            initial_tests: {
+                test_selector: "milestone",
+            },
         });
         expect(modal_hide).toHaveBeenCalledTimes(1);
     });

@@ -44,7 +44,6 @@
                     v-for="tracker_report in testdefinition_tracker_reports"
                     v-bind:key="`tracker-report-${tracker_report.id}`"
                     v-bind:value="`${tracker_report.id}`"
-                    disabled
                 >
                     {{ tracker_report.label }}
                 </option>
@@ -59,6 +58,13 @@ import { State } from "vuex-class";
 import { sprintf } from "sprintf-js";
 import { TrackerReport } from "../../helpers/Campaigns/tracker-reports-retriever";
 
+function transformCampaignInitialTestToStringValue(initial_tests: CampaignInitialTests): string {
+    if (initial_tests.test_selector === "report") {
+        return initial_tests.report_id.toString();
+    }
+    return initial_tests.test_selector;
+}
+
 @Component
 export default class CreateCampaignTestSelector extends Vue {
     @State
@@ -67,13 +73,13 @@ export default class CreateCampaignTestSelector extends Vue {
     @State
     readonly testdefinition_tracker_name!: string;
 
-    @Prop({ required: true, default: "milestone" })
-    readonly value!: "all" | "none" | "milestone";
+    @Prop({ required: true, default: { test_selector: "milestone" } })
+    readonly value!: CampaignInitialTests;
 
     @Prop({ required: true })
     readonly testdefinition_tracker_reports!: TrackerReport[] | null;
 
-    private selected_value = this.value;
+    private selected_value = transformCampaignInitialTestToStringValue(this.value);
 
     get test_definitions_tracker_reports_group_label(): string {
         return sprintf(
@@ -97,7 +103,20 @@ export default class CreateCampaignTestSelector extends Vue {
     }
 
     public updateSelectedTests(): void {
-        this.$emit("input", this.selected_value);
+        let initial_tests: CampaignInitialTests;
+        if (
+            this.selected_value === "none" ||
+            this.selected_value === "all" ||
+            this.selected_value === "milestone"
+        ) {
+            initial_tests = { test_selector: this.selected_value };
+        } else {
+            initial_tests = {
+                test_selector: "report",
+                report_id: Number.parseInt(this.selected_value, 10),
+            };
+        }
+        this.$emit("input", initial_tests);
     }
 }
 </script>

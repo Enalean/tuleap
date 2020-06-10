@@ -32,7 +32,7 @@ describe("CreateCampaignTestSelector", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             localVue: await createTestPlanLocalVue(),
             propsData: {
-                value: "milestone",
+                value: { test_selector: "report", report_id: 102 },
                 testdefinition_tracker_reports,
             },
             mocks: {
@@ -56,7 +56,7 @@ describe("CreateCampaignTestSelector", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             localVue: await createTestPlanLocalVue(),
             propsData: {
-                value: "milestone",
+                value: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
             mocks: {
@@ -78,7 +78,7 @@ describe("CreateCampaignTestSelector", () => {
         const wrapper = shallowMount(CreateCampaignTestSelector, {
             localVue: await createTestPlanLocalVue(),
             propsData: {
-                value: "milestone",
+                value: { test_selector: "milestone" },
                 testdefinition_tracker_reports: [],
             },
             mocks: {
@@ -96,7 +96,7 @@ describe("CreateCampaignTestSelector", () => {
         expect(emitted_input).toBeDefined();
         if (emitted_input !== undefined) {
             expect(emitted_input.length).toBe(1);
-            expect(emitted_input[0]).toEqual(["none"]);
+            expect(emitted_input[0]).toEqual([{ test_selector: "none" }]);
         }
     });
 });
