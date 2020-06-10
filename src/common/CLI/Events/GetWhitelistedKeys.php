@@ -22,7 +22,9 @@
 namespace Tuleap\CLI\Events;
 
 use BackendLogger;
+use ForgeAccess;
 use phpDocumentor\Reflection\DocBlockFactory;
+use ProjectManager;
 use Tuleap\admin\ProjectCreation\ProjectVisibility\ProjectVisibilityConfigManager;
 use Tuleap\Event\Dispatchable;
 use Tuleap\Instrument\Prometheus\Prometheus;
@@ -45,32 +47,25 @@ final class GetWhitelistedKeys implements Dispatchable
      * @var class-string[]
      */
     private $annotated_classes = [
-        \ProjectManager::class,
+        ProjectManager::class,
+        ForgeAccess::class,
+        ProjectVisibilityConfigManager::class,
+        Prometheus::class,
+        NewsCollectionBuilder::class,
+        StatisticsCollectionBuilder::class,
+        DefaultProjectVisibilityRetriever::class,
+        ServiceControl::class,
+        UserSuspensionManager::class,
+        MyProjects::class,
+        ProjectRegistrationPresenterBuilder::class,
+        BackendLogger::class,
+        LogToGraylog2::class,
     ];
 
     /**
-     * @var array<string, bool|string>
+     * @var array<string, string>
      */
-    private $white_listed_keys = [
-        \ForgeAccess::ANONYMOUS_CAN_SEE_CONTACT => true,
-        \ForgeAccess::ANONYMOUS_CAN_SEE_SITE_HOMEPAGE => true,
-        ProjectVisibilityConfigManager::PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY => true,
-        Prometheus::CONFIG_PROMETHEUS_PLATFORM => true,
-        Prometheus::CONFIG_PROMETHEUS_NODE_EXPORTER                                    => true,
-        NewsCollectionBuilder::CONFIG_DISPLAY_NEWS                                     => true,
-        StatisticsCollectionBuilder::CONFIG_DISPLAY_STATISTICS                         => true,
-        DefaultProjectVisibilityRetriever::CONFIG_SETTING_NAME                         => true,
-        ServiceControl::FORGECONFIG_INIT_MODE                                          => true,
-        UserSuspensionManager::CONFIG_NOTIFICATION_DELAY                               => true,
-        MyProjects::CONFIG_DISABLE_CONTACT                                             => true,
-        ProjectRegistrationPresenterBuilder::FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE => true,
-        BackendLogger::CONFIG_LOGGER                                                   => true,
-        UserSuspensionManager::CONFIG_INACTIVE_EMAIL                                   => true,
-        LogToGraylog2::CONFIG_GRAYLOG2_SERVER                                          => true,
-        LogToGraylog2::CONFIG_GRAYLOG2_PORT                                            => true,
-        LogToGraylog2::CONFIG_GRAYLOG2_SSL                                             => true,
-        LogToGraylog2::CONFIG_GRAYLOG2_DEBUG                                           => true,
-    ];
+    private $white_listed_keys = [];
 
     /**
      * @var DocBlockFactory
@@ -87,9 +82,14 @@ final class GetWhitelistedKeys implements Dispatchable
         return new self(DocBlockFactory::createInstance());
     }
 
-    public function addPluginsKeys(string $key_name): void
+    /**
+     * Declare a class that holds constants with `@tlp-config-key` annotation
+     *
+     * @param class-string $class_name
+     */
+    public function addConfigClass(string $class_name): void
     {
-        $this->white_listed_keys[$key_name] = true;
+        $this->annotated_classes[] = $class_name;
     }
 
     /**
@@ -120,7 +120,7 @@ final class GetWhitelistedKeys implements Dispatchable
     private function initWhiteList(): void
     {
         foreach ($this->annotated_classes as $class_name) {
-            $this->addConfigProviderClass($class_name);
+            $this->findTlpConfigConst($class_name);
         }
     }
 
@@ -130,7 +130,7 @@ final class GetWhitelistedKeys implements Dispatchable
      * @param class-string $class_name
      * @throws \ReflectionException
      */
-    private function addConfigProviderClass(string $class_name): void
+    private function findTlpConfigConst(string $class_name): void
     {
         $reflected_class = new \ReflectionClass($class_name);
         foreach ($reflected_class->getReflectionConstants() as $const) {

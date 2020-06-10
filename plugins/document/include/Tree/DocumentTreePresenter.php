@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Document\Tree;
 
 use CSRFSynchronizerToken;
+use DocmanPlugin;
 use Tuleap\Document\Config\FileDownloadLimits;
 use Tuleap\Document\Config\HistoryEnforcementSettings;
 
@@ -106,8 +107,10 @@ class DocumentTreePresenter
         $this->user_is_admin                      = $user->isAdmin($project->getID());
         $this->user_can_create_wiki               = $project->usesWiki();
         $this->user_can_delete_item               = ! $only_siteadmin_can_delete_option || $user->isSuperUser();
-        $this->max_size_upload                    = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
-        $this->max_files_dragndrop                = \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
+        $this->max_size_upload                    = \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
+        $this->max_files_dragndrop                = \ForgeConfig::get(
+            DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING
+        );
         $this->embedded_are_allowed               = $embedded_are_allowed;
         $this->is_item_status_metadata_used       = $is_item_status_metadata_used;
         $this->is_obsolescence_date_metadata_used = $is_obsolescence_date_metadata_used;

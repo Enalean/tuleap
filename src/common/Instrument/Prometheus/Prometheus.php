@@ -36,7 +36,17 @@ use Tuleap\Redis\ClientFactory;
 
 class Prometheus
 {
+    /**
+     * Platform name to be reported to Prometheus
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_PROMETHEUS_PLATFORM      = 'prometheus_platform';
+    /**
+     * URL of `node_exporter` Prometheus exporter to be scrapped and included in Tuleap metrics
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_PROMETHEUS_NODE_EXPORTER = 'prometheus_node_exporter';
 
     /**

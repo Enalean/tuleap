@@ -34,6 +34,10 @@ class ServiceControl
     public const INITV       = 'initv';
     public const SUPERVISORD = 'supervisord';
 
+    /**
+     * Init mode for the platform (systemd, initv, supervisord)
+     * @tlp-config-key
+     */
     public const FORGECONFIG_INIT_MODE = 'init_mode';
 
     public function getInitMode()

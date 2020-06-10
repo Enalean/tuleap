@@ -26,6 +26,11 @@ use Tuleap\Project\DefaultProjectVisibilityRetriever;
 
 class ProjectVisibilityConfigManager
 {
+    /**
+     * Control whether project admins are allowed to change their project visibility (unrestricted, public, private, private-wo-restricted)
+     *
+     * @tlp-config-key
+     */
     public const PROJECT_ADMIN_CAN_CHOOSE_VISIBILITY    = 'project_admin_can_choose_visibility';
     public const SEND_MAIL_ON_PROJECT_VISIBILITY_CHANGE = 'send_mail_on_project_visibility_change';
 

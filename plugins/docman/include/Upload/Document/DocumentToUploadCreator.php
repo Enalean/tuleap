@@ -21,6 +21,7 @@
 namespace Tuleap\Docman\Upload\Document;
 
 use Docman_PermissionsManager;
+use DocmanPlugin;
 use PermissionsManager;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Permissions\PermissionItemUpdater;
@@ -81,10 +82,10 @@ class DocumentToUploadCreator
         ?array $formatted_metadata,
         ?DocmanItemPermissionsForGroupsSet $permissions_for_groups
     ) {
-        if ((int) $filesize > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+        if ((int) $filesize > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
                 (int) $filesize,
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
+                (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
 

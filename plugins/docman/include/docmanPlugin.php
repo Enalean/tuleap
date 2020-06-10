@@ -115,7 +115,19 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public const SYSTEM_NATURE_NAME     = 'document';
     public const SERVICE_SHORTNAME      = 'docman';
 
-    public const ADMIN_BASE_URL = '/admin/document';
+    public const ADMIN_BASE_URL                      = '/admin/document';
+    /**
+     * Max size for individual files in Document and Docman plugins (in bytes)
+     *
+     * @tlp-config-key
+     */
+    public const PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING       = 'plugin_docman_max_file_size';
+    /**
+     * Max number of files that can be uploaded with a drag'n drop in interface
+     *
+     * @tlp-config-key
+     */
+    public const PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING = 'plugin_docman_max_number_of_files';
 
     /**
      * Store docman root items indexed by groupId
@@ -1568,8 +1580,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event)
     {
-        $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
-        $event->addPluginsKeys(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING);
+        $event->addConfigClass(self::class);
     }
 
     public function serviceUrlCollector(ServiceUrlCollector $collector): void

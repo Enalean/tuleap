@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 
+use DocmanPlugin;
 use Tuleap\Layout\BaseLayout;
 
 class DocumentFilesUploadLimitsSaver
@@ -47,7 +48,7 @@ class DocumentFilesUploadLimitsSaver
             return;
         }
 
-        $this->config_dao->save(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING, $nb_files);
+        $this->config_dao->save(DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING, $nb_files);
     }
 
     public function saveMaxFileSize(\HTTPRequest $request, BaseLayout $layout): void
@@ -61,6 +62,6 @@ class DocumentFilesUploadLimitsSaver
             return;
         }
 
-        $this->config_dao->save(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, $max_file_size);
+        $this->config_dao->save(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, $max_file_size);
     }
 }

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use DocmanPlugin;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
@@ -51,7 +52,7 @@ class VersionToUploadCreatorTest extends TestCase
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $item = \Mockery::mock(\Docman_Item::class);
         $item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -85,7 +86,7 @@ class VersionToUploadCreatorTest extends TestCase
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -122,7 +123,7 @@ class VersionToUploadCreatorTest extends TestCase
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -159,7 +160,7 @@ class VersionToUploadCreatorTest extends TestCase
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = \Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = \Mockery::mock(\PFUser::class);
@@ -196,7 +197,7 @@ class VersionToUploadCreatorTest extends TestCase
     {
         $creator = new VersionToUploadCreator($this->dao, new DBTransactionExecutorPassthrough());
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
         $parent_item  = \Mockery::mock(\Docman_Item::class);
         $user         = \Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();
