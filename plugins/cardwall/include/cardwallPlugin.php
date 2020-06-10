@@ -150,7 +150,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function tracker_report_renderer_types($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_cardwall', 'title');
+        $params['types'][self::RENDERER_TYPE] = dgettext('tuleap-cardwall', 'Card Wall');
     }
 
     /**

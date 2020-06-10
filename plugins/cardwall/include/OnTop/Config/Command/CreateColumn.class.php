@@ -43,7 +43,7 @@ class Cardwall_OnTop_Config_Command_CreateColumn extends Cardwall_OnTop_Config_C
     {
         if ($request->get('new_column')) {
             $this->dao->create($this->tracker->getId(), $request->get('new_column'));
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_added'));
+            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-cardwall', 'Column added'));
         }
     }
 }

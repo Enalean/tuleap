@@ -73,8 +73,8 @@ class Cardwall_RendererPresenter extends Cardwall_BoardPresenter
         $this->field               = $field ? $field : false;
         $this->form                = $form  ? $form  : false;
         $this->has_columns         = count($this->board->columns) > 0;
-        $this->warn_please_choose  = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_please_choose');
+        $this->warn_please_choose  = dgettext('tuleap-cardwall', 'Please select a field to group artifacts in columns.');
         $field_label               = $field ? $hp->purify($this->field->getLabel()) : '###';
-        $this->warn_no_values      = $GLOBALS['Language']->getText('plugin_cardwall', 'warn_no_values', $field_label);
+        $this->warn_no_values      = sprintf(dgettext('tuleap-cardwall', 'There is no values in the field %1$s. Please choose another one.'), $field_label);
     }
 }

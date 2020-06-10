@@ -68,7 +68,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
             foreach ($request->get('custom_mapping') as $mapping_tracker_id => $is_custom) {
                 $mapping_tracker = $this->tracker_factory->getTrackerById($mapping_tracker_id);
                 if ($this->canDelete($is_custom, $mapping_tracker) && $this->delete($mapping_tracker)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_removed', array($mapping_tracker->getName())));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-cardwall', 'Mapping on %1$s removed'), $mapping_tracker->getName()));
                 }
             }
         }

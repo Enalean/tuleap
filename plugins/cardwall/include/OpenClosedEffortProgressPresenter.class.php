@@ -63,12 +63,12 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
 
     public function milestone_initial_effort_value()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_open_closed_progress_info');
+        return dgettext('tuleap-cardwall', 'Some cards might be hidden');
     }
 
     public function milestone_points_to_go()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_open_closed_open_items');
+        return dgettext('tuleap-cardwall', 'cards open');
     }
 
     public function milestone_remaining_effort()
@@ -97,6 +97,6 @@ class Cardwall_OpenClosedEffortProgressPresenter implements Cardwall_EffortProgr
 
     public function count_style_helper()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'count_style_helper');
+        return dgettext('tuleap-cardwall', 'At least one backlog element has no initial effort. Fallback on open/closed count.');
     }
 }

@@ -73,7 +73,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
     ) {
         $this->artifact                    = $artifact;
         $this->parent                      = $parent;
-        $this->details                     = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->details                     = dgettext('tuleap-cardwall', 'details');
         $this->card_fields                 = $card_fields;
         $this->accent_color                = $accent_color;
         $this->display_preferences         = $display_preferences;

@@ -189,7 +189,7 @@ class CardwallConfigXmlImport
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_field_error', array($field_xml_id))
+                sprintf(dgettext('tuleap-cardwall', 'Provided field value %1$s is not valid. Skipping mapping.'), $field_xml_id)
             );
         }
     }
@@ -203,7 +203,7 @@ class CardwallConfigXmlImport
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_tracker_error', array($tracker_id_xml))
+                sprintf(dgettext('tuleap-cardwall', 'Provided tracker value %1$s is not valid. Skipping mapping.'), $tracker_id_xml)
             );
         }
     }
@@ -240,7 +240,7 @@ class CardwallConfigXmlImport
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_column_error', array($xml_column_id))
+                sprintf(dgettext('tuleap-cardwall', 'Provided column value %1$s is not valid. Skipping mapping value.'), $xml_column_id)
             );
         }
     }
@@ -260,7 +260,7 @@ class CardwallConfigXmlImport
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_cardwall', 'xml_import_value_error', array($xml_value_id))
+                sprintf(dgettext('tuleap-cardwall', 'Provided value %1$s is not valid. Skipping mapping value.'), $xml_value_id)
             );
         }
     }
@@ -330,14 +330,7 @@ class CardwallConfigXmlImport
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
-            $GLOBALS['Language']->getText(
-                'plugin_cardwall',
-                'xml_import_color_error',
-                [
-                    $color_label,
-                    $xml_column_id
-                ]
-            )
+            sprintf(dgettext('tuleap-cardwall', 'Provided color value %1$s for column %2$s is not valid.'), $color_label, $xml_column_id)
         );
     }
 }
