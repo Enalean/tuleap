@@ -23,6 +23,7 @@ use Symfony\Component\Lock\Store\SemaphoreStore;
 use Tuleap\CLI\Application;
 use Tuleap\CLI\CLICommandsCollector;
 use Tuleap\CLI\Command\ConfigGetCommand;
+use Tuleap\CLI\Command\ConfigListCommand;
 use Tuleap\CLI\Command\ConfigSetCommand;
 use Tuleap\CLI\Command\DailyJobCommand;
 use Tuleap\CLI\Command\ImportProjectXMLCommand;
@@ -74,6 +75,12 @@ $backend_logger        = BackendLogger::getDefaultLogger();
 $user_manager          = UserManager::instance();
 $CLI_command_collector = new CLICommandsCollector();
 
+$CLI_command_collector->addCommand(
+    ConfigListCommand::NAME,
+    static function () use ($event_manager): ConfigListCommand {
+        return new ConfigListCommand($event_manager);
+    }
+);
 $CLI_command_collector->addCommand(
     ConfigGetCommand::NAME,
     static function (): ConfigGetCommand {
