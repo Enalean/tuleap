@@ -136,6 +136,7 @@ class ArtifactDao extends DataAccessObject
     }
 
     /**
+     * @psalm-param non-empty-array $artifacts_ids
      * @param false|int $target_tracker_id
      *
      * @return \DataAccessResult|false
