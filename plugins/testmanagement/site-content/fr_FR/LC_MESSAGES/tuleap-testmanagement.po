@@ -96,9 +96,6 @@ msgstr "Définition d'étapes"
 msgid "Step execution"
 msgstr "Exécution d'étapes"
 
-msgid "Test Campaigns"
-msgstr "Campagnes de test"
-
 msgid "Test Campaigns Tracker"
 msgstr "Outil de suivi des campagnes de tests"
 

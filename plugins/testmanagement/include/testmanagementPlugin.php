@@ -19,7 +19,6 @@
  */
 
 use FastRoute\RouteCollector;
-use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\Event\Events\ImportValidateChangesetExternalField;
 use Tuleap\Event\Events\ImportValidateExternalFields;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -102,10 +101,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $this->addHook(GetExternalExporter::NAME);
 
         $this->addHook(\Tuleap\Request\CollectRoutesEvent::NAME);
-
-        if (defined('AGILEDASHBOARD_BASE_URL')) {
-            $this->addHook(PaneInfoCollector::NAME);
-        }
 
         if (defined('TRACKER_BASE_URL')) {
             $this->addHook('javascript_file');
@@ -361,19 +356,6 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         ) {
             $params['result']['message']        = $this->getPluginInfo()->getPluginDescriptor()->getFullName();
             $params['result']['can_be_deleted'] = false;
-        }
-    }
-
-    /**
-     * Add tab in Agile Dashboard Planning view to redirect to TestManagement
-     *
-     */
-    public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
-    {
-        $milestone = $collector->getMilestone();
-        $project   = $milestone->getProject();
-        if ($project->usesService($this->getServiceShortname())) {
-            $collector->addPane(new Tuleap\TestManagement\AgileDashboardPaneInfo($milestone));
         }
     }
 
