@@ -81,7 +81,7 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
                 $selected_day->getTimestamp()
             );
 
-            if ($manual_value['value'] !== null) {
+            if ($manual_value && $manual_value['value'] !== null) {
                 $manual_sum += $manual_value['value'];
                 $already_seen->addArtifactAsAlreadyProcessed($artifact_id);
             } else {
