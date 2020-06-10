@@ -28,7 +28,9 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotDataGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\CurrentSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
@@ -183,11 +185,14 @@ class JiraXmlExporter
                     new FieldChangeStringBuilder(
                         new XML_SimpleXMLCDATAFactory()
                     ),
-                    new InitialSnapshotDataGenerator(
-                        new ChangelogEntriesBuilder(
-                            $wrapper
-                        ),
-                        new CreationStateListValueFormatter()
+                    new IssueSnapshotCollectionBuilder(
+                        new CurrentSnapshotBuilder(),
+                        new InitialSnapshotBuilder(
+                            new ChangelogEntriesBuilder(
+                                $wrapper
+                            ),
+                            new CreationStateListValueFormatter()
+                        )
                     )
                 )
             ),

@@ -23,12 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
+use PFUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 
-class InitialSnapshotDataGenerator
+class InitialSnapshotBuilder
 {
     /**
      * @var ChangelogEntriesBuilder
@@ -50,32 +52,67 @@ class InitialSnapshotDataGenerator
     /**
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
-    public function generateInitialSnapshotContent(
+    public function buildInitialSnapshot(
+        PFUser $forge_user,
         Snapshot $current_snapshot,
-        string $jira_issue_key
+        array $jira_issue_api
     ): Snapshot {
         $already_seen_fields_keys = [];
+        $field_snapshots          = [];
 
-        $initial_snapshot = Snapshot::duplicateExistingSnapshot($current_snapshot);
-
-        $changelog_entries = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
+        $changelog_entries = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_api['key']);
         foreach ($changelog_entries as $changelog_entry) {
-            $this->parseChangelogEntry($changelog_entry, $initial_snapshot, $already_seen_fields_keys);
+            $this->parseChangelogEntry(
+                $changelog_entry,
+                $current_snapshot,
+                $field_snapshots,
+                $already_seen_fields_keys
+            );
         }
+
+        $this->parseCurrentStateFieldSnapshots(
+            $current_snapshot,
+            $field_snapshots,
+            $already_seen_fields_keys
+        );
+
+        $initial_snapshot = new Snapshot(
+            $forge_user,
+            new \DateTimeImmutable($jira_issue_api['fields'][AlwaysThereFieldsExporter::JIRA_CREATED_NAME]),
+            $field_snapshots
+        );
 
         return $initial_snapshot;
     }
 
+    private function parseCurrentStateFieldSnapshots(
+        Snapshot $initial_snapshot,
+        array &$field_snapshots,
+        array &$already_seen_fields_keys
+    ): void {
+        foreach ($initial_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
+            $jira_field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
+
+            if (array_key_exists($jira_field_id, $already_seen_fields_keys)) {
+                continue;
+            }
+
+            $already_seen_fields_keys[$jira_field_id] = true;
+            $field_snapshots[] = $field_snapshot;
+        }
+    }
+
     private function parseChangelogEntry(
         ChangelogEntryValueRepresentation $changelog_entry,
-        Snapshot $initial_snapshot,
-        array $already_seen_fields_keys
+        Snapshot $current_snapshot,
+        array &$field_snapshots,
+        array &$already_seen_fields_keys
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
-            $changed_field_field_id = $changed_field->getFieldId();
-            if ($this->mustFieldBeCheckedInChangelog($changed_field_field_id, $initial_snapshot, $already_seen_fields_keys)) {
-                $already_seen_fields_keys[$changed_field_field_id] = true;
-                $current_snapshot_field                            = $initial_snapshot->getFieldInSnapshot($changed_field_field_id);
+            $changed_field_id       = $changed_field->getFieldId();
+            $current_snapshot_field = $current_snapshot->getFieldInSnapshot($changed_field_id);
+            if ($this->mustFieldBeCheckedInChangelog($current_snapshot_field, $already_seen_fields_keys)) {
+                $already_seen_fields_keys[$changed_field_id] = true;
 
                 if ($current_snapshot_field === null) {
                     continue;
@@ -85,30 +122,25 @@ class InitialSnapshotDataGenerator
                 $changed_field_from_string = $changed_field->getFromString();
 
                 if ($this->fieldHasNoInitialValue($changed_field)) {
-                    $initial_snapshot->removeFieldSnapshot($changed_field_field_id);
                     continue;
                 }
 
                 if ($this->fieldListHasInitialValue($changed_field)) {
-                    $initial_snapshot->addFieldSnapshot(
-                        new FieldSnapshot(
-                            $current_snapshot_field->getFieldMapping(),
-                            $this->creation_state_list_value_formatter->formatCreationListValue(
-                                $changed_field_from
-                            ),
-                            $current_snapshot_field->getRenderedValue()
-                        )
+                    $field_snapshots[] = new FieldSnapshot(
+                        $current_snapshot_field->getFieldMapping(),
+                        $this->creation_state_list_value_formatter->formatCreationListValue(
+                            $changed_field_from
+                        ),
+                        $current_snapshot_field->getRenderedValue()
                     );
                     continue;
                 }
 
                 if ($this->fieldTextHasInitialValue($changed_field)) {
-                    $initial_snapshot->addFieldSnapshot(
-                        new FieldSnapshot(
-                            $current_snapshot_field->getFieldMapping(),
-                            $changed_field_from_string,
-                            null
-                        )
+                    $field_snapshots[] = new FieldSnapshot(
+                        $current_snapshot_field->getFieldMapping(),
+                        $changed_field_from_string,
+                        null
                     );
                     continue;
                 }
@@ -117,12 +149,11 @@ class InitialSnapshotDataGenerator
     }
 
     private function mustFieldBeCheckedInChangelog(
-        string $field_id,
-        Snapshot $initial_snapshot,
+        ?FieldSnapshot $current_snapshot_field,
         array $already_seen_fields_keys
     ): bool {
-        return $initial_snapshot->isFieldInSnapshot($field_id) &&
-            ! array_key_exists($field_id, $already_seen_fields_keys);
+        return $current_snapshot_field !== null &&
+            ! array_key_exists($current_snapshot_field->getFieldMapping()->getJiraFieldId(), $already_seen_fields_keys);
     }
 
     private function fieldHasNoInitialValue(ChangelogEntryItemsRepresentation $changed_field): bool

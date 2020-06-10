@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PFUser;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotDataGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -50,20 +50,20 @@ class DataChangesetXMLExporter
     private $field_change_string_builder;
 
     /**
-     * @var InitialSnapshotDataGenerator
+     * @var IssueSnapshotCollectionBuilder
      */
-    private $initial_snapshot_data_generator;
+    private $issue_snapshot_collection_builder;
 
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         FieldChangeXMLExporter $field_change_xml_exporter,
         FieldChangeStringBuilder $field_change_string_builder,
-        InitialSnapshotDataGenerator $initial_snapshot_data_generator
+        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder
     ) {
-        $this->simplexml_cdata_factory         = $simplexml_cdata_factory;
-        $this->field_change_xml_exporter       = $field_change_xml_exporter;
-        $this->field_change_string_builder     = $field_change_string_builder;
-        $this->initial_snapshot_data_generator = $initial_snapshot_data_generator;
+        $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
+        $this->field_change_xml_exporter         = $field_change_xml_exporter;
+        $this->field_change_string_builder       = $field_change_string_builder;
+        $this->issue_snapshot_collection_builder = $issue_snapshot_collection_builder;
     }
 
     public function exportIssueDataInChangesetXML(
@@ -73,112 +73,57 @@ class DataChangesetXMLExporter
         array $issue,
         string $jira_base_url
     ): void {
-        $current_snapshot = $this->buildCurrentSnapshot($issue, $jira_field_mapping_collection);
-
-        $this->importInitialChangeset(
+        $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(
             $user,
-            $artifact_node,
             $issue,
-            $current_snapshot
+            $jira_field_mapping_collection
         );
 
-        $this->importCurrentStateChangeset(
-            $user,
-            $artifact_node,
-            $issue,
-            $current_snapshot,
-            $jira_base_url
-        );
+        $last_item_key = array_key_last($snapshot_collection);
+        foreach ($snapshot_collection as $key => $snapshot) {
+            $changeset_node = $artifact_node->addChild('changeset');
+            $this->exportSnapshotInXML($snapshot, $changeset_node);
+
+            if ($key === $last_item_key) {
+                $this->addTuleapRelatedInformationOnLastXMLSnapshot($issue, $jira_base_url, $changeset_node);
+            }
+        }
     }
 
-    private function importCurrentStateChangeset(
-        PFUser $user,
-        SimpleXMLElement $artifact_node,
-        array $issue,
-        Snapshot $current_snapshot,
-        string $jira_base_url
-    ): void {
-        $changeset_node = $artifact_node->addChild('changeset');
-
+    private function exportSnapshotInXML(Snapshot $snapshot, SimpleXMLElement $changeset_node): void
+    {
         $this->simplexml_cdata_factory->insertWithAttributes(
             $changeset_node,
             'submitted_by',
-            $user->getUserName(),
+            $snapshot->getUser()->getUserName(),
             $format = ['format' => 'username']
         );
 
-        $updated_date = $issue['fields'][AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME];
         $this->simplexml_cdata_factory->insertWithAttributes(
             $changeset_node,
             'submitted_on',
-            $updated_date,
+            date('c', $snapshot->getDate()->getTimestamp()),
             $format = ['format' => 'ISO8601']
         );
 
         $changeset_node->addChild('comments');
 
+        $this->field_change_xml_exporter->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+    }
+
+    private function addTuleapRelatedInformationOnLastXMLSnapshot(
+        array $issue,
+        string $jira_base_url,
+        SimpleXMLElement $changeset_node
+    ): void {
         $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue['key']);
         $this->field_change_string_builder->build(
             $changeset_node,
             AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME,
             $jira_link
         );
-
-        $this->field_change_xml_exporter->exportFieldChanges(
-            $current_snapshot,
-            $changeset_node,
-        );
-    }
-
-    private function importInitialChangeset(
-        PFUser $user,
-        SimpleXMLElement $artifact_node,
-        array $issue,
-        Snapshot $current_snapshot
-    ): void {
-        $changeset_node = $artifact_node->addChild('changeset');
-
-        $this->simplexml_cdata_factory->insertWithAttributes(
-            $changeset_node,
-            'submitted_by',
-            $user->getUserName(),
-            $format = ['format' => 'username']
-        );
-
-        $creation_date = $issue['fields'][AlwaysThereFieldsExporter::JIRA_CREATED_NAME];
-        $this->simplexml_cdata_factory->insertWithAttributes(
-            $changeset_node,
-            'submitted_on',
-            $creation_date,
-            $format = ['format' => 'ISO8601']
-        );
-
-        $changeset_node->addChild('comments');
-
-        $initial_snapshot = $this->initial_snapshot_data_generator->generateInitialSnapshotContent($current_snapshot, $issue['key']);
-        $this->field_change_xml_exporter->exportFieldChanges(
-            $initial_snapshot,
-            $changeset_node
-        );
-    }
-
-    private function buildCurrentSnapshot(array $issue, FieldMappingCollection $jira_field_mapping_collection): Snapshot
-    {
-        $current_snapshot = new Changelog\Snapshot\Snapshot();
-        foreach ($issue['fields'] as $key => $value) {
-            $rendered_value = $issue['renderedFields'][$key] ?? null;
-            $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
-            if ($mapping !== null && $value !== null) {
-                $current_snapshot->addFieldSnapshot(
-                    new Changelog\Snapshot\FieldSnapshot(
-                        $mapping,
-                        $value,
-                        $rendered_value
-                    )
-                );
-            }
-        }
-
-        return $current_snapshot;
     }
 }
