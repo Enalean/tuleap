@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function assertFeedbackContainsMessage(expected_feedback_message) {
+function assertFeedbackContainsMessage(expected_feedback_message: string): void {
     cy.get("[data-test=feedback]").contains(expected_feedback_message);
 }
 
@@ -86,7 +86,7 @@ describe("User preferences", () => {
     });
 
     describe("in the [Security] Tab", () => {
-        function typePasswords(current_password, new_password) {
+        function typePasswords(current_password: string, new_password: string): void {
             cy.get("[data-test=current_password]").type(current_password);
             cy.get("[data-test=new_password]").type(new_password);
             cy.get("[data-test=repeat_new_password]").type(new_password);
@@ -277,7 +277,7 @@ describe("User preferences", () => {
         });
 
         describe("in the Theme color section", () => {
-            function assertColorPreviewIs(color_name) {
+            function assertColorPreviewIs(color_name: string): void {
                 cy.get("[data-test=user-preferences-section-appearance-preview]").should(
                     "have.class",
                     `user-preferences-section-appearance-preview-${color_name}`

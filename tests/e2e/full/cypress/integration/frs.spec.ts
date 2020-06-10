@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  */
 
 describe("Frs", function () {
-    let project_id;
+    let project_id: string;
 
     context("Project administrators", function () {
         before(() => {

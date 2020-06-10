@@ -17,19 +17,28 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import Chainable = Cypress.Chainable;
+
+declare interface Window {
+    fetch: unknown;
+}
+
 // This forces our code to polyfill "fetch" on top of XHR and allows cypress to catch those requests.
 // See https://github.com/cypress-io/cypress/issues/95
-Cypress.Commands.overwrite("visit", (originalFn, url, options = {}) => {
-    const opts = Object.assign({}, options, {
-        onBeforeLoad: (window, ...args) => {
-            window.fetch = null;
-            if (options.onBeforeLoad) {
-                return options.onBeforeLoad(window, ...args);
-            }
-        },
-    });
-    return originalFn(url, opts);
-});
+Cypress.Commands.overwrite(
+    "visit",
+    (originalFn: (...args: unknown[]) => void, url: string, options = {}): void => {
+        const opts = Object.assign({}, options, {
+            onBeforeLoad: (window: Window, ...args: unknown[]) => {
+                window.fetch = null;
+                if (options.onBeforeLoad) {
+                    return options.onBeforeLoad(window, ...args);
+                }
+            },
+        });
+        return originalFn(url, opts);
+    }
+);
 
 Cypress.Commands.add("ProjectAdministratorLogin", () => {
     cy.visit("/");
@@ -72,38 +81,55 @@ Cypress.Commands.add("userLogout", () => {
     cy.get("[data-test=user_logout]").click({ force: true });
 });
 
-const cache_service_urls = {};
-Cypress.Commands.add("visitProjectService", (project_unixname, service_label) => {
-    if (
-        Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
-        Object.prototype.hasOwnProperty.call(cache_service_urls[project_unixname], service_label)
-    ) {
-        cy.visit(cache_service_urls[project_unixname][service_label]);
-        return;
+interface CacheServiceUrls {
+    [key: string]: string;
+}
+
+interface CacheProjectUrls {
+    [key: string]: CacheServiceUrls;
+}
+const cache_service_urls: CacheProjectUrls = {};
+Cypress.Commands.add(
+    "visitProjectService",
+    (project_unixname: string, service_label: string): void => {
+        if (
+            Object.prototype.hasOwnProperty.call(cache_service_urls, project_unixname) &&
+            Object.prototype.hasOwnProperty.call(
+                cache_service_urls[project_unixname],
+                service_label
+            )
+        ) {
+            cy.visit(cache_service_urls[project_unixname][service_label]);
+            return;
+        }
+
+        cy.visit("/projects/" + project_unixname);
+        visitServiceInCurrentProject(service_label, (href) => {
+            cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
+            cache_service_urls[project_unixname][service_label] = href;
+        });
     }
+);
 
-    cy.visit("/projects/" + project_unixname);
-    visitServiceInCurrentProject(service_label, (href) => {
-        cache_service_urls[project_unixname] = cache_service_urls[project_unixname] || {};
-        cache_service_urls[project_unixname][service_label] = href;
-    });
-});
-
-Cypress.Commands.add("visitServiceInCurrentProject", (service_label) => {
+Cypress.Commands.add("visitServiceInCurrentProject", (service_label: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     visitServiceInCurrentProject(service_label, () => {});
 });
 
-function visitServiceInCurrentProject(service_label, before_visit_callback) {
+function visitServiceInCurrentProject(
+    service_label: string,
+    before_visit_callback: (href: string) => void
+): void {
     cy.get("[data-test=project-sidebar]")
         .contains(service_label)
         .should("have.attr", "href")
         .then((href) => {
-            before_visit_callback(href);
-            cy.visit(href);
+            before_visit_callback(String(href));
+            cy.visit(String(href));
         });
 }
 
-Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
+Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
     cy.platformAdminLogin();
 
     cy.get("[data-test=platform-administration-link]").click();
@@ -124,10 +150,13 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", () => {
     cy.userLogout();
 });
 
-Cypress.Commands.add("getProjectId", (project_shortname) => {
-    cy.visit(`/projects/${project_shortname}/`);
-    return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
-});
+Cypress.Commands.add(
+    "getProjectId",
+    (project_shortname: string): Chainable<JQuery<HTMLElement>> => {
+        cy.visit(`/projects/${project_shortname}/`);
+        return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
+    }
+);
 
 // Use this command to attach a file to a file input
 // Don't forget to pass the filename in the arguments
@@ -138,7 +167,7 @@ Cypress.Commands.add(
     {
         prevSubject: "element",
     },
-    (input, file_name, file_type) => {
+    (input: JQuery<HTMLInputElement>, file_name: string, file_type: string): void => {
         cy.fixture(file_name)
             .then((content) => Cypress.Blob.base64StringToBlob(content, file_type))
             .then((blob) => {
