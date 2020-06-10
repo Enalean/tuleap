@@ -30,6 +30,7 @@
             v-on:change="updateSelectedTests"
             v-model="selected_value"
             required
+            data-test="new-campaign-tests"
         >
             <option value="none" v-translate>No tests</option>
             <option value="all" v-translate>All tests</option>
