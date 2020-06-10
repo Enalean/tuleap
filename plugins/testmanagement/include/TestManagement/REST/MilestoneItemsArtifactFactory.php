@@ -21,13 +21,13 @@
 namespace Tuleap\TestManagement;
 
 use EventManager;
-use Project;
 use PFUser;
+use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
-use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
+use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
 class MilestoneItemsArtifactFactory
 {
@@ -72,28 +72,44 @@ class MilestoneItemsArtifactFactory
 
     private function addCoveredBy(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
     {
-        $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
-            $event->getItemsIds(),
-            NatureCoveredByPresenter::NATURE_COVERED_BY,
-            $this->config->getTestDefinitionTrackerId($project),
-            PHP_INT_MAX,
-            0
+        $this->appendArtifactsByNature(
+            $user,
+            $test_definitions,
+            $event,
+            $project,
+            NatureCoveredByPresenter::NATURE_COVERED_BY
         );
-
-        $this->appendArtifactsUserCanView($user, $test_definitions, $results);
     }
 
     private function addChildren(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
     {
+        $this->appendArtifactsByNature(
+            $user,
+            $test_definitions,
+            $event,
+            $project,
+            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
+        );
+    }
+
+    private function appendArtifactsByNature(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project, string $nature): void
+    {
+        $artifacts_ids = $event->getItemsIds();
+        if (empty($artifacts_ids)) {
+            return;
+        }
+
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
-            $event->getItemsIds(),
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
+            $artifacts_ids,
+            $nature,
             $this->config->getTestDefinitionTrackerId($project),
             PHP_INT_MAX,
             0
         );
 
-        $this->appendArtifactsUserCanView($user, $test_definitions, $results);
+        if ($results) {
+            $this->appendArtifactsUserCanView($user, $test_definitions, $results);
+        }
     }
 
     private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, LegacyDataAccessResultInterface $results): void
