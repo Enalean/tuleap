@@ -99,10 +99,13 @@ class Modal {
     }
 
     removeBackdrop() {
+        if (!this.backdrop_element) {
+            return;
+        }
         this.backdrop_element.classList.remove(CLASS_TLP_MODAL_BACKDROP_SHOWN);
 
         setTimeout(() => {
-            this.body_element.removeChild(this.backdrop_element);
+            this.backdrop_element.remove();
         }, TRANSITION_DURATION);
     }
 

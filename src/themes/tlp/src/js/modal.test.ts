@@ -77,18 +77,19 @@ describe(`Modal`, () => {
         describe(`for a regular modal`, () => {
             beforeEach(() => {
                 modal = createModal(modal_element);
-                modal.show();
             });
             afterEach(() => {
                 modal.destroy();
             });
 
             it(`will remove the "shown" CSS class from the modal element`, () => {
+                modal.show();
                 modal.hide();
                 expectTheModalToBeHidden(modal_element);
             });
 
             it(`will remove the "backdrop shown" CSS class from the backdrop element`, () => {
+                modal.show();
                 const backdrop = document.querySelector("#tlp-modal-backdrop");
                 if (backdrop === null) {
                     throw new Error("backdrop should exist in the document");
@@ -98,6 +99,7 @@ describe(`Modal`, () => {
             });
 
             it(`will remove the backdrop element after a delay`, () => {
+                modal.show();
                 modal.hide();
                 jest.runAllTimers();
 
@@ -106,6 +108,7 @@ describe(`Modal`, () => {
             });
 
             it(`will remove the "display" CSS class after a delay`, () => {
+                modal.show();
                 modal.hide();
                 jest.runAllTimers();
 
@@ -113,6 +116,7 @@ describe(`Modal`, () => {
             });
 
             it(`will dispatch the "hidden" event after a delay`, () => {
+                modal.show();
                 let event_dispatched = false;
                 modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, () => {
                     event_dispatched = true;
@@ -121,6 +125,13 @@ describe(`Modal`, () => {
                 modal.hide();
                 jest.runAllTimers();
                 expect(event_dispatched).toBe(true);
+            });
+
+            it(`when I hide a modal that was never "shown" first, it will not crash`, () => {
+                expect(() => {
+                    modal.hide();
+                    jest.runAllTimers();
+                }).not.toThrow();
             });
         });
 
