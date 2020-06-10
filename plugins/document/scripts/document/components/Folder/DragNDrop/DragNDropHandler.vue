@@ -203,7 +203,7 @@ export default {
             }
 
             for (const file of files) {
-                const is_item_a_file = await this.isDroppedItemAFile(file);
+                const is_item_a_file = this.isDroppedItemAFile(file);
                 if (!is_item_a_file) {
                     this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
                     this.error_modal_reasons.push({ nb_dropped_files: files.length });
@@ -358,7 +358,7 @@ export default {
             const files = event.dataTransfer.files;
             const file = files[0];
 
-            const is_item_a_file = await this.isDroppedItemAFile(file);
+            const is_item_a_file = this.isDroppedItemAFile(file);
             if (!is_item_a_file) {
                 this.error_modal_shown = this.DROPPED_ITEM_IS_NOT_A_FILE;
                 this.error_modal_reasons.push({ nb_dropped_files: 1 });
@@ -389,28 +389,8 @@ export default {
                 this.error_modal_reasons.push({ filename: file.name, message: error });
             }
         },
-        async isDroppedItemAFile(file) {
-            const read_file_operation = new Promise((resolve) => {
-                const reader = new FileReader();
-
-                reader.onload = () => {
-                    resolve(true);
-                };
-
-                reader.onerror = () => {
-                    resolve(false);
-                };
-
-                try {
-                    reader.readAsText(file);
-                } catch (error) {
-                    resolve(false);
-                }
-            });
-
-            const is_a_file = await read_file_operation;
-
-            return is_a_file;
+        isDroppedItemAFile(file) {
+            return file.size % 4096 !== 0 || file.type !== "";
         },
     },
 };
