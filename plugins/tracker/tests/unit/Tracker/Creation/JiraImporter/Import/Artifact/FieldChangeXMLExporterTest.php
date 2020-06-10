@@ -77,14 +77,16 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot = new Changelog\Snapshot\Snapshot();
+        $snapshot->addFieldSnapshot(
+            new Changelog\Snapshot\FieldSnapshot(
+                $mapping,
+                "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
+                "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
+            )
+        );
         $this->exporter->exportFieldChanges(
-            [
-                [
-                    "mapping" => $mapping,
-                    "value"  => "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
-                    "rendered_value" => "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
-                ]
-            ],
+            $snapshot,
             $changeset_node,
         );
 
@@ -108,19 +110,21 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $this->exporter->exportFieldChanges(
-            [
+        $snapshot = new Changelog\Snapshot\Snapshot();
+        $snapshot->addFieldSnapshot(
+            new Changelog\Snapshot\FieldSnapshot(
+                $mapping,
                 [
-                    "mapping" => $mapping,
-                    "value"  => [
-                        'self' => 'URL/rest/api/2/priority/3',
-                        'iconUrl' => 'URL/images/icons/priorities/medium.svg',
-                        'name' => 'Medium',
-                        'id' => '3',
-                    ],
-                    "rendered_value" => null
-                ]
-            ],
+                    'self' => 'URL/rest/api/2/priority/3',
+                    'iconUrl' => 'URL/images/icons/priorities/medium.svg',
+                    'name' => 'Medium',
+                    'id' => '3',
+                ],
+                null
+            )
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
             $changeset_node
         );
 
@@ -140,18 +144,20 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $this->exporter->exportFieldChanges(
-            [
+        $snapshot = new Changelog\Snapshot\Snapshot();
+        $snapshot->addFieldSnapshot(
+            new Changelog\Snapshot\FieldSnapshot(
+                $mapping,
                 [
-                    "mapping" => $mapping,
-                    "value"  => [
-                        'self' => 'URL/rest/api/2/customFieldOption/10005',
-                        'value' => 'test',
-                        'id' => '10005'
-                    ],
-                    "rendered_value" => null
-                ]
-            ],
+                    'self' => 'URL/rest/api/2/customFieldOption/10005',
+                    'value' => 'test',
+                    'id' => '10005'
+                ],
+                null
+            )
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
             $changeset_node
         );
 
@@ -171,26 +177,28 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $this->exporter->exportFieldChanges(
-            [
+        $snapshot = new Changelog\Snapshot\Snapshot();
+        $snapshot->addFieldSnapshot(
+            new Changelog\Snapshot\FieldSnapshot(
+                $mapping,
                 [
-                    "mapping" => $mapping,
-                    "value"  => [
-                        [
-                            'self' => 'URL/rest/api/2/customFieldOption/10009',
-                            'value' => 'multi1',
-                            'id' => '10009'
-                        ],
-                        [
-                            'self' => 'URL/rest/api/2/customFieldOption/10010',
-                            'value' => 'multi2',
-                            'id' => '10010'
-                        ]
-
+                    [
+                        'self' => 'URL/rest/api/2/customFieldOption/10009',
+                        'value' => 'multi1',
+                        'id' => '10009'
                     ],
-                    "rendered_value" => null
-                ]
-            ],
+                    [
+                        'self' => 'URL/rest/api/2/customFieldOption/10010',
+                        'value' => 'multi2',
+                        'id' => '10010'
+                    ]
+
+                ],
+                null
+            )
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
             $changeset_node
         );
 
@@ -211,28 +219,30 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $this->exporter->exportFieldChanges(
-            [
+        $snapshot = new Changelog\Snapshot\Snapshot();
+        $snapshot->addFieldSnapshot(
+            new Changelog\Snapshot\FieldSnapshot(
+                $mapping,
                 [
-                    "mapping" => $mapping,
-                    "value"  => [
-                        'self' => 'URL/rest/api/2/status/10001',
-                        'description' =>  '',
-                        'iconUrl' => 'URL',
-                        'name' => 'Done',
-                        'id' => '10001',
-                        'statusCategory' =>
-                            [
-                                'self' => 'URL/rest/api/2/statuscategory/3',
-                                'id' => 3,
-                                'key' => 'done',
-                                'colorName' => 'green',
-                                'name' => 'Done'
-                            ]
-                    ],
-                    "rendered_value" => null
-                ]
-            ],
+                    'self' => 'URL/rest/api/2/status/10001',
+                    'description' =>  '',
+                    'iconUrl' => 'URL',
+                    'name' => 'Done',
+                    'id' => '10001',
+                    'statusCategory' =>
+                        [
+                            'self' => 'URL/rest/api/2/statuscategory/3',
+                            'id' => 3,
+                            'key' => 'done',
+                            'colorName' => 'green',
+                            'name' => 'Done'
+                        ]
+                ],
+                null
+            )
+        );
+        $this->exporter->exportFieldChanges(
+            $snapshot,
             $changeset_node
         );
 

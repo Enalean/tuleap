@@ -29,6 +29,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -86,15 +87,15 @@ class FieldChangeXMLExporter
     }
 
     public function exportFieldChanges(
-        array $current_state,
+        Snapshot $current_snapshot,
         SimpleXMLElement $changeset_node
     ): void {
-        foreach ($current_state as $key => $current_state_field) {
+        foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $this->exportFieldChange(
-                $current_state_field['mapping'],
+                $field_snapshot->getFieldMapping(),
                 $changeset_node,
-                $current_state_field['value'],
-                $current_state_field['rendered_value']
+                $field_snapshot->getValue(),
+                $field_snapshot->getRenderedValue()
             );
         }
     }

@@ -40,6 +40,7 @@ class ChangelogEntriesBuilder
     }
 
     /**
+     * @return ChangelogEntryValueRepresentation[]
      * @throws JiraConnectionException
      */
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array

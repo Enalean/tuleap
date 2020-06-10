@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -31,7 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
-class CreationStateDataGeneratorTest extends TestCase
+class InitialSnapshotDataGeneratorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -42,28 +42,28 @@ class CreationStateDataGeneratorTest extends TestCase
             $this->buildWrapperResponse()
         );
 
-        $generator = new CreationStateDataGenerator(
+        $generator = new InitialSnapshotDataGenerator(
             new ChangelogEntriesBuilder(
                 $wrapper
             ),
             new CreationStateListValueFormatter()
         );
 
-        $current_state_data = $this->buildCurrentStateData();
-        $jira_issue_key     = "key01";
+        $current_snapshot = $this->buildCurrentSnapshot();
+        $jira_issue_key   = "key01";
 
-        $first_state_data = $generator->generateFirstStateContent(
-            $current_state_data,
+        $initial_snapshot = $generator->generateInitialSnapshotContent(
+            $current_snapshot,
             $jira_issue_key
         );
 
-        $this->assertArrayNotHasKey("environment", $first_state_data);
-        $this->assertArrayNotHasKey("customfield_10036", $first_state_data);
+        $this->assertFalse($initial_snapshot->isFieldInSnapshot("environment"));
+        $this->assertFalse($initial_snapshot->isFieldInSnapshot("customfield_10036"));
 
-        $this->assertSame(['id' => "10000"], $first_state_data['status']['value']);
-        $this->assertSame([['id' => "10009"]], $first_state_data['customfield_10040']['value']);
-        $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $first_state_data['description']['value']);
-        $this->assertNull($first_state_data['description']['rendered_value']);
+        $this->assertSame(['id' => "10000"], $initial_snapshot->getFieldInSnapshot('status')->getValue());
+        $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
+        $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
+        $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
     }
 
     private function buildWrapperResponse(): array
@@ -145,10 +145,11 @@ class CreationStateDataGeneratorTest extends TestCase
         ];
     }
 
-    private function buildCurrentStateData(): array
+    private function buildCurrentSnapshot(): Snapshot
     {
-        return [
-            "customfield_10036" => [
+        $snapshot = new Snapshot();
+        $snapshot->addFieldSnapshot(
+            new FieldSnapshot(
                 new FieldMapping(
                     "customfield_10036",
                     "Fcustomfield_10036",
@@ -157,8 +158,10 @@ class CreationStateDataGeneratorTest extends TestCase
                 ),
                 "11",
                 null
-            ],
-            "status" => [
+            )
+        );
+        $snapshot->addFieldSnapshot(
+            new FieldSnapshot(
                 new FieldMapping(
                     "status",
                     "Fstatus",
@@ -167,8 +170,10 @@ class CreationStateDataGeneratorTest extends TestCase
                 ),
                 "10001",
                 null
-            ],
-            "customfield_10040" => [
+            )
+        );
+        $snapshot->addFieldSnapshot(
+            new FieldSnapshot(
                 new FieldMapping(
                     "customfield_10040",
                     "Fcustomfield_10040",
@@ -177,8 +182,10 @@ class CreationStateDataGeneratorTest extends TestCase
                 ),
                 "[10009, 10010]",
                 null
-            ],
-            "description" => [
+            )
+        );
+        $snapshot->addFieldSnapshot(
+            new FieldSnapshot(
                 new FieldMapping(
                     "description",
                     "Fdescription",
@@ -187,7 +194,9 @@ class CreationStateDataGeneratorTest extends TestCase
                 ),
                 "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
                 "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
-            ]
-        ];
+            )
+        );
+
+        return $snapshot;
     }
 }
