@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,7 @@ namespace Tuleap\User\Password\Reset;
 
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
-class CreatorTest extends \PHPUnit\Framework\TestCase
+final class CreatorTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
@@ -34,27 +34,12 @@ class CreatorTest extends \PHPUnit\Framework\TestCase
         $user = \Mockery::spy(\PFUser::class);
         $user->shouldReceive('getId')->andReturns(101);
 
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
         $dao->shouldReceive('create')->with(101, 'random_hashed', \Mockery::any())->andReturns(22);
 
         $token_creator = new Creator($dao, $hasher);
 
         $token = $token_creator->create($user);
         $this->assertEquals(22, $token->getID());
-    }
-
-    public function testItThrowsExceptionWhenTokenCanNotBeCreated(): void
-    {
-        $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
-        $hasher->shouldReceive('computeHash')->andReturns('random_hashed');
-        $user = \Mockery::spy(\PFUser::class);
-
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
-        $dao->shouldReceive('create')->andReturns(false);
-
-        $token_creator = new Creator($dao, $hasher);
-
-        $this->expectException('Tuleap\\User\\Password\\Reset\\TokenNotCreatedException');
-        $token_creator->create($user);
     }
 }

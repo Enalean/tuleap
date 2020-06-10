@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -31,7 +31,7 @@ class Verifier
     public const TOKEN_VALIDITY_PERIOD = 'PT1H';
 
     /**
-     * @var DataAccessObject
+     * @var LostPasswordDAO
      */
     private $dao;
     /**
@@ -43,7 +43,7 @@ class Verifier
      */
     private $user_manager;
 
-    public function __construct(DataAccessObject $dao, SplitTokenVerificationStringHasher $hasher, UserManager $user_manager)
+    public function __construct(LostPasswordDAO $dao, SplitTokenVerificationStringHasher $hasher, UserManager $user_manager)
     {
         $this->dao          = $dao;
         $this->hasher       = $hasher;
@@ -51,15 +51,14 @@ class Verifier
     }
 
     /**
-     * @return \PFUser
      * @throws \Tuleap\User\Password\Reset\ExpiredTokenException
      * @throws \Tuleap\User\Password\Reset\InvalidTokenException
      */
-    public function getUser(SplitToken $token)
+    public function getUser(SplitToken $token): \PFUser
     {
         $row = $this->dao->getTokenInformationById($token->getID());
 
-        if ($row === false) {
+        if ($row === null) {
             throw new InvalidTokenException('Invalid ID');
         }
 

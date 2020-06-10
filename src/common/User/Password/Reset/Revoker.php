@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,24 +25,17 @@ use PFUser;
 class Revoker
 {
     /**
-     * @var DataAccessObject
+     * @var LostPasswordDAO
      */
     private $dao;
 
-    public function __construct(DataAccessObject $dao)
+    public function __construct(LostPasswordDAO $dao)
     {
         $this->dao = $dao;
     }
 
-    /**
-     * @throws TokenDataAccessException
-     */
-    public function revokeTokens(PFUser $user)
+    public function revokeTokens(PFUser $user): void
     {
-        $res = $this->dao->deleteTokensByUserId($user->getId());
-
-        if ($res === false) {
-            throw new TokenDataAccessException();
-        }
+        $this->dao->deleteTokensByUserId($user->getId());
     }
 }

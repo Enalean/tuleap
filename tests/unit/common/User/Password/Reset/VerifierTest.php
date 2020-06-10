@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,14 +24,14 @@ use Tuleap\Authentication\SplitToken\SplitToken;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationString;
 use Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher;
 
-class VerifierTest extends \PHPUnit\Framework\TestCase
+final class VerifierTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     public function testItGetsUserAssociatedWithToken(): void
     {
         $creation_date = new \DateTime();
-        $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(array(
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,
@@ -57,8 +57,8 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionWhenTokenIDCanNotBeFound(): void
     {
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
-        $dao->shouldReceive('getTokenInformationById')->andReturns(false);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
+        $dao->shouldReceive('getTokenInformationById')->andReturns(null);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);
@@ -76,7 +76,7 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
 
     public function testItThrowsAnExceptionWhenVerifierPartIsNotValid(): void
     {
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(array('verifier' => 'token_verification_part_password_hashed'));
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
@@ -100,7 +100,7 @@ class VerifierTest extends \PHPUnit\Framework\TestCase
         $expired_creation_date = new \DateTime();
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
-        $dao                   = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
+        $dao                   = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
         $dao->shouldReceive('getTokenInformationById')->andReturns(array(
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,

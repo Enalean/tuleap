@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,21 +20,19 @@
 
 namespace Tuleap\User\Password\Reset;
 
-class RevokerTest extends \PHPUnit\Framework\TestCase
+use Tuleap\Test\Builders\UserTestBuilder;
+
+final class RevokerTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function testItThrowsAnExceptionIfTokensHaveNotBeenRemoved(): void
+    public function testRemovesUserLostPasswordTokens(): void
     {
-        $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(101);
-
-        $dao = \Mockery::spy(\Tuleap\User\Password\Reset\DataAccessObject::class);
-        $dao->shouldReceive('deleteTokensByUserId')->with(101)->andReturns(false);
+        $user = UserTestBuilder::aUser()->withId(101)->build();
+        $dao = \Mockery::mock(LostPasswordDAO::class);
+        $dao->shouldReceive('deleteTokensByUserId')->with(101)->once();
 
         $token_revoker = new Revoker($dao);
-
-        $this->expectException('Tuleap\\User\\Password\\Reset\\TokenDataAccessException');
         $token_revoker->revokeTokens($user);
     }
 }

@@ -38,7 +38,7 @@ use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
 use Tuleap\User\Password\Change\PasswordChanger;
-use Tuleap\User\Password\Reset\DataAccessObject;
+use Tuleap\User\Password\Reset\LostPasswordDAO;
 use Tuleap\User\Password\Reset\Revoker;
 use Tuleap\User\PasswordVerifier;
 use Tuleap\User\SessionManager;
@@ -103,7 +103,7 @@ final class UpdatePasswordController implements DispatchableWithRequest
             new PasswordChanger(
                 UserManager::instance(),
                 new SessionManager(UserManager::instance(), new SessionDao(), new RandomNumberGenerator()),
-                new Revoker(new DataAccessObject())
+                new Revoker(new LostPasswordDAO())
             ),
             PasswordSanityChecker::build(),
         );
