@@ -65,6 +65,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
          
         <input
           class="tlp-input"
+          data-test="new-campaign-label"
           id="new-campaign-label"
           required="required"
           type="text"
@@ -97,6 +98,7 @@ exports[`CreateModal Display the modal when mounted 1`] = `
      
     <button
       class="tlp-button-primary tlp-modal-action"
+      data-test="new-campaign-submit-button"
       type="submit"
     >
       <i

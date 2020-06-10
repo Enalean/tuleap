@@ -65,6 +65,7 @@
                         id="new-campaign-label"
                         v-model="label"
                         required
+                        data-test="new-campaign-label"
                     />
                 </div>
                 <create-campaign-test-selector
@@ -86,6 +87,7 @@
                 type="submit"
                 class="tlp-button-primary tlp-modal-action"
                 v-bind:disabled="is_creating || testdefinition_tracker_reports === null"
+                data-test="new-campaign-submit-button"
             >
                 <i class="fa tlp-button-icon" v-bind:class="icon_class" aria-hidden="true"></i>
                 <translate>Create campaign</translate>

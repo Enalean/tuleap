@@ -28,8 +28,10 @@ describe("Test plan", function () {
     });
 
     context("As project member", () => {
+        let now;
         before(() => {
             cy.projectMemberLogin();
+            now = Date.now();
         });
 
         it("Displays no campaign if release does not have one", () => {
@@ -38,12 +40,23 @@ describe("Test plan", function () {
             cy.contains("There is no test campaign yet.");
         });
 
-        it("Displays campaigns of a release", () => {
-            goToTestPlanOfMilestone("Release with campaigns");
+        context("In a release with campaigns", () => {
+            before(() => {
+                goToTestPlanOfMilestone("Release with campaigns");
+            });
 
-            cy.get("[data-test=campaign]").within(() => {
+            it("Displays the campaigns", () => {
                 cy.contains("Campaign 1");
                 cy.contains("9 tests");
+            });
+
+            it("Adds new campaign", () => {
+                cy.get("[data-test=new-campaign]").click();
+                cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
+                cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
+                cy.get("[data-test=new-campaign-submit-button]").click();
+                cy.contains("Campaign " + now);
+                cy.contains("8 tests");
             });
         });
     });
