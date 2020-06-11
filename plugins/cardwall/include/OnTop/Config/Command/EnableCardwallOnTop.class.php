@@ -47,12 +47,12 @@ class Cardwall_OnTop_Config_Command_EnableCardwallOnTop extends Cardwall_OnTop_C
         if ($please_enable) {
             if (! $is_enabled) {
                 $this->dao->enable($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_enabled'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-cardwall', 'Now a cardwall exists on top of the tracker'));
             }
         } else {
             if ($is_enabled) {
                 $this->dao->disable($tracker_id);
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_disabled'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-cardwall', 'Cardwall disabled'));
             }
         }
     }

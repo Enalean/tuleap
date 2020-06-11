@@ -135,7 +135,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $html .= '</td>';
         foreach ($this->config->getDashboardColumns() as $column) {
             $html .= '<td>';
-            $html .= $mapping->getSelectedValueLabel($column, '<em>' . $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_no_matching_for_column') . '</em>');
+            $html .= $mapping->getSelectedValueLabel($column, '<em>' . dgettext('tuleap-cardwall', 'No matching for this column') . '</em>');
             $html .= '</td>';
         }
         return $html;
@@ -178,7 +178,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         $name = 'custom_mapping[' . (int) $mapping_tracker->getId() . ']';
         $html .= '<p>';
         $html .= '<input type="hidden" name="' . $name . '" value="0" />';
-        $html .= '<label><input type="checkbox" name="' . $name . '" ' . $selected . ' value="1" /> ' . $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_custom_mapping') . '</label>';
+        $html .= '<label><input type="checkbox" name="' . $name . '" ' . $selected . ' value="1" /> ' . dgettext('tuleap-cardwall', 'Custom mapping') . '</label>';
         $html .= '</p>';
         return $html;
     }
@@ -202,7 +202,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
             }
             $html .= '</select>';
         } else {
-            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_no_values') . '</em>';
+            $html .= '<em>' . dgettext('tuleap-cardwall', 'There isn\'t any value') . '</em>';
         }
 
         return $html;
@@ -211,9 +211,9 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
     protected function fetchSpeech()
     {
         if (! count($this->config->getDashboardColumns())) {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_no_column');
+            return dgettext('tuleap-cardwall', '<p>You can define your own set of columns for the cardwall. Values will be associated is they match column title (be careful to lower case/upper case).</p>');
         } else {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_semantic_freestyle_column_definition_speech_with_columns');
+            return dgettext('tuleap-cardwall', '<p>Note: you can delete a column by removing its name (make text field blank).</p>');
         }
     }
 
@@ -258,8 +258,8 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
 
     protected function fetchAdditionalColumnHeader()
     {
-        $suggestion = $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_suggestion', $this->getPlaceholderSuggestion());
-        return '<label>' . $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_new_column') . '<br /><input type="text" name="new_column" value="" placeholder="' . $suggestion  . '" /></label>';
+        $suggestion = sprintf(dgettext('tuleap-cardwall', 'E.g.: %1$s'), $this->getPlaceholderSuggestion());
+        return '<label>' . dgettext('tuleap-cardwall', 'New column:') . '<br /><input type="text" name="new_column" value="" placeholder="' . $suggestion  . '" /></label>';
     }
 
     /**
@@ -267,7 +267,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
      */
     private function getPlaceholderSuggestion()
     {
-        $placeholders = explode('|', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholders'));
+        $placeholders = explode('|', dgettext('tuleap-cardwall', 'Todo|On Going|Done|Done-Done'));
         foreach ($this->config->getDashboardColumns() as $column) {
             array_walk(
                 $placeholders,
@@ -279,7 +279,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
         }
         $filtered_placeholders = array_filter($placeholders);
         $suggestion = array_shift($filtered_placeholders);
-        return $suggestion ? $suggestion : $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_placeholder_default');
+        return $suggestion ? $suggestion : dgettext('tuleap-cardwall', 'On Going');
     }
 
     private function removeUsedColumns(&$placeholder, $key, $column_label)

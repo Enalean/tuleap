@@ -35,7 +35,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
 
     public function milestone_capacity()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_capacity', floatval($this->capacity));
+        return sprintf(dgettext('tuleap-cardwall', 'Capacity: %1$s'), floatval($this->capacity));
     }
 
     public function milestone_progress_info()
@@ -45,7 +45,7 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
 
     public function milestone_initial_effort_value()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_initial_effort', $this->initial_effort);
+        return sprintf(dgettext('tuleap-cardwall', 'Initial effort: %1$s'), $this->initial_effort);
     }
 
     public function milestone_initial_effort()
@@ -61,10 +61,10 @@ class Cardwall_RemainingEffortProgressPresenter implements Cardwall_EffortProgre
     public function milestone_points_to_go()
     {
         if ($this->milestone_remaining_effort() <= 1) {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_point_to_go');
+            return dgettext('tuleap-cardwall', 'point remaining');
         }
 
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_points_to_go');
+        return dgettext('tuleap-cardwall', 'points remaining');
     }
 
     public function milestone_remaining_effort()

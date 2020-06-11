@@ -51,6 +51,6 @@ class Cardwall_SwimlineSoloNoMatchingColumns extends Cardwall_Swimline
         $tracker_name      = $this->artifact->getTracker()->getName();
         $uri               = $this->artifact->getUri();
 
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'cells_not_displayed', array($backlog_item_name, $tracker_name, $uri));
+        return sprintf(dgettext('tuleap-cardwall', 'The backlog item <a href="%3$s"><u>%1$s</u></a> cannot be displayed since the column matchings have not be defined between <b>%2$s</b> and this planning'), $backlog_item_name ?? '', $tracker_name, $uri);
     }
 }

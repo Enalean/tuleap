@@ -74,13 +74,13 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
     ) {
         parent::__construct($board, $redirect_parameter);
         $this->nifty                        = '';
-        $this->swimline_title               = $GLOBALS['Language']->getText('plugin_cardwall', 'swimline_title');
+        $this->swimline_title               = dgettext('tuleap-cardwall', 'Backlog items');
         $this->has_swimline_header          = true;
         $this->switch_display_username_url  = $switch_display_username_url;
         $this->is_display_avatar_selected   = $is_display_avatar_selected;
-        $this->display_avatar_label         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_label');
-        $this->display_avatar_title         = $GLOBALS['Language']->getText('plugin_cardwall', 'display_avatar_title');
-        $this->search_cardwall_placeholder  = $GLOBALS['Language']->getText('plugin_cardwall', 'search_cardwall_placeholder');
+        $this->display_avatar_label         = dgettext('tuleap-cardwall', 'Display Avatar');
+        $this->display_avatar_title         = dgettext('tuleap-cardwall', 'Toggle the avatar or username display');
+        $this->search_cardwall_placeholder  = dgettext('tuleap-cardwall', 'Search for: user, title, ...');
         $this->planning_id                  = $planning->getId();
         $this->milestone                    = $milestone;
         $this->progress_presenter           = $progress_presenter;
@@ -108,7 +108,7 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
 
     public function go_to_fullscreen()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_go_to_fullscreen');
+        return dgettext('tuleap-cardwall', 'Fullscreen');
     }
 
     public function milestone_has_dates_info()
@@ -118,21 +118,21 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter //phpcs:igno
 
     public function milestone_no_date_info()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_no_date_info');
+        return dgettext('tuleap-cardwall', 'The start date and the duration are not defined');
     }
 
     public function milestone_no_initial_effort_info()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_no_initial_effort_info');
+        return dgettext('tuleap-cardwall', 'There is no initial effort');
     }
 
     public function milestone_days_to_go()
     {
         if ($this->milestone_days_remaining() <= 1) {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_day_to_go');
+            return dgettext('tuleap-cardwall', 'day to go');
         }
 
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'milestone_days_to_go');
+        return dgettext('tuleap-cardwall', 'days to go');
     }
 
     public function milestone_start_date()

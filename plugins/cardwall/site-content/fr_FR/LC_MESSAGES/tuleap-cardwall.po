@@ -17,17 +17,59 @@ msgstr ""
 msgid "<b>%s</b> field will determine background color."
 msgstr "Le champ <b>%s</b> va définir la couleur de fond des cartes."
 
+msgid ""
+"<p>Note: you can delete a column by removing its name (make text field "
+"blank).</p>"
+msgstr ""
+"<p>Note : vous pouvez supprimer une colonne en supprimant son nom (effacer "
+"le champ text correspondant).</p>"
+
+msgid ""
+"<p>You can define your own set of columns for the cardwall. Values will be "
+"associated is they match column title (be careful to lower case/upper case)."
+"</p>"
+msgstr ""
+"<p>Vous pouvez définir les colonnes dont vous avez besoin. Les valeurs des "
+"champs seront automatiquement associées si leur nom correspond (attention "
+"aux majuscules/minuscules).</p>"
+
 msgid "A card will be displayed for each available background color."
 msgstr "Pour chaque couleur de fond disponible, une carte sera affichée."
 
 msgid "Add a field to the cards"
 msgstr "Ajouter un champ aux cartes"
 
+msgid ""
+"At least one backlog element has no initial effort. Fallback on open/closed "
+"count."
+msgstr ""
+"Au moins un élément du backlog n'a pas d'effort initial. Plan B: comptage "
+"des cartes."
+
+msgid "Auto stack the cards in this column"
+msgstr "Empiler automatiquement les cartes dans cette colonne"
+
 msgid "Background color"
 msgstr "Couleur de fond"
 
+msgid "Backlog items"
+msgstr "Éléments du backlog"
+
+#, php-format
+msgid "Capacity: %1$s"
+msgstr "Capacité : %1$s"
+
+msgid "Card Wall"
+msgstr "Card Wall"
+
 msgid "Card design is the same as Kanban."
 msgstr "Le design des cartes est le même que celui de Kanban."
+
+msgid "Cards semantics"
+msgstr "Sémantiques des cartes"
+
+msgid "Cardwall disabled"
+msgstr "Cardwall désactivé"
 
 msgid "Choose a field to define card background color"
 msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
@@ -35,11 +77,43 @@ msgstr "Choisissez un champ pour définir la couleur de fond des cartes"
 msgid "Choose a field..."
 msgstr "Choisissez un champ..."
 
+#, php-format
+msgid "Column %1$s changed"
+msgstr "Colonne %1$s modifiée"
+
+msgid "Column added"
+msgstr "Colonne ajoutée"
+
+msgid "Column removed"
+msgstr "Colonne supprimée"
+
+msgid "Custom mapping"
+msgstr "Association spécifique"
+
+msgid "Display Avatar"
+msgstr "Afficher l'avatar"
+
+#, php-format
+msgid "E.g.: %1$s"
+msgstr "Ex. : %1$s"
+
+msgid "Electronic card wall for trackers for scrum, kanban, ..."
+msgstr "Mur virtuel de notes repositionnables pour scrum, kanban, ..."
+
+msgid "Enable cardwall on top of this planning"
+msgstr "Activer un cardwall au dessus du planning"
+
+msgid "Expand cards"
+msgstr "Dépiler les cartes"
+
 msgid "Field not found"
 msgstr "Champ non trouvé"
 
 msgid "Fields"
 msgstr "Champs"
+
+msgid "Fullscreen"
+msgstr "Plein écran"
 
 msgid ""
 "If a color corresponds to multiple values, the preview will display only one "
@@ -47,6 +121,28 @@ msgid ""
 msgstr ""
 "Si une couleur correspond à plusieurs valeurs, l'aperçu va afficher "
 "seulement une carte pour ce fond."
+
+#, php-format
+msgid "Initial effort: %1$s"
+msgstr "Effort initial : %1$s"
+
+msgid "Manage the Fields to be displayed on cards"
+msgstr "Gérer les champs devant être affichés sur les cartes"
+
+#, php-format
+msgid "Mapping on %1$s added"
+msgstr "Correspondance avec le champ %1$s ajoutée"
+
+#, php-format
+msgid "Mapping on %1$s changed to %2$s"
+msgstr "Correspondance avec %1$s modifiée à %2$s"
+
+#, php-format
+msgid "Mapping on %1$s removed"
+msgstr "Correspondance avec le champ %1$s supprimée"
+
+msgid "New column:"
+msgstr "Nouvelle colonne :"
 
 msgid ""
 "No field can be chosen for card color background. Only selectbox and "
@@ -60,6 +156,15 @@ msgstr ""
 
 msgid "No field is chosen to determine backgorund color"
 msgstr "Aucun champ n'a été choisi pour définir la couleur de fond des cartes."
+
+msgid "No matching for this column"
+msgstr "Aucune correspondance"
+
+msgid "Now a cardwall exists on top of the tracker"
+msgstr "Un cardwall existe maintenant au dessus de l'outil de suivi"
+
+msgid "On Going"
+msgstr "En Cours"
 
 msgid ""
 "Only selectbox and radiobutton bind on static values with no value linked "
@@ -77,14 +182,56 @@ msgstr ""
 "Seuls les champs statiques avec des valeurs liées à la nouvelle palette de "
 "couleur peuvent être choisis comme couleur de fond des cartes"
 
+msgid "Please select a field to group artifacts in columns."
+msgstr "Sélectionnez un champ pour grouper les artefacts en colonnes."
+
 msgid "Preview of the card"
 msgstr "Aperçu des cartes"
+
+#, php-format
+msgid "Provided color value %1$s for column %2$s is not valid."
+msgstr "La valeur de la couleur %1$s pour la colonne %2$s n'est pas valide."
+
+#, php-format
+msgid "Provided column value %1$s is not valid. Skipping mapping value."
+msgstr "La colonne %1$s n'est pas valide."
+
+#, php-format
+msgid "Provided field value %1$s is not valid. Skipping mapping."
+msgstr "La valeur du champ %1$s n'est pas valide."
+
+#, php-format
+msgid "Provided tracker value %1$s is not valid. Skipping mapping."
+msgstr "La valeur du tracker %1$s n'est pas valide."
+
+#, php-format
+msgid "Provided value %1$s is not valid. Skipping mapping value."
+msgstr "La valeur %1$s n'est pas valide."
 
 msgid "Remove background color"
 msgstr "Supprimer la couleur de fond"
 
+msgid "Search for: user, title, ..."
+msgstr "Recherchez : personnes, titre, ..."
+
+msgid "Some cards might be hidden"
+msgstr "Certaines cartes peuvent être cachées"
+
+msgid "Stack cards"
+msgstr "Empiler les cartes"
+
 msgid "Submit"
 msgstr "Soumettre"
+
+#, php-format
+msgid ""
+"The backlog item <a href=\"%3$s\"><u>%1$s</u></a> cannot be displayed since "
+"the column matchings have not be defined between <b>%2$s</b> and this "
+"planning"
+msgstr ""
+"L'élément du backlog <a href=\"%3$s\"><u>%1$s</u></a> ne peut être affiché. "
+"Il n'y a pas de correspondance de colonnes définie entre <b>%2$s</b> et ce "
+"planning"
 
 msgid ""
 "The field used to determine background color has been removed with success."
@@ -101,20 +248,64 @@ msgstr ""
 msgid "The following fields are added to the cards"
 msgstr "Les champs suivants sont ajoutés aux cartes"
 
+msgid "The following fields are added to the cards:"
+msgstr "Les champs suivants sont ajoutés aux cartes:"
+
 msgid "The preview respects the following rules:"
 msgstr "L'aperçu suit les règles suivantes :"
+
+msgid "The start date and the duration are not defined"
+msgstr "La date de début et la durée ne sont pas définies"
 
 msgid "There aren't any fields added to cards yet."
 msgstr "Aucun champ n'est ajouté aux cartes pour l'instant"
 
+msgid "There is no initial effort"
+msgstr "Il n'y pas d'effort initial"
+
 msgid "There is no more field that can be added to the cards."
 msgstr "Il n'y a plus de champs pouveant être ajoutés aux cartes"
 
+#, php-format
+msgid "There is no values in the field %1$s. Please choose another one."
+msgstr "Il n'y a pas de valeur pour le champ %1$s. Choisissez-en un autre."
+
+msgid "There isn't any value"
+msgstr "Il n'y a aucune valeur"
+
 msgid "This is an example title"
 msgstr "Ceci est un exemple de titre"
+
+msgid "Todo|On Going|Done|Done-Done"
+msgstr "A Faire|En Cours|Fini|Terminé"
+
+msgid "Toggle the avatar or username display"
+msgstr "Basculer vers l'affichage des utilisateurs ou des avatars"
+
+#, php-format
+msgid "Values mapping changed for \"%1$s\" field"
+msgstr "Modification de la correspondance des valeurs avec le champ %1$s"
+
+msgid "cards open"
+msgstr "cartes ouvertes"
+
+msgid "day to go"
+msgstr "jour restant"
+
+msgid "days to go"
+msgstr "jours restants"
+
+msgid "details"
+msgstr "détails"
 
 msgid "go back to semantic overview"
 msgstr "retour à l'administration de la sémantique"
 
 msgid "or"
 msgstr "ou"
+
+msgid "point remaining"
+msgstr "point restant"
+
+msgid "points remaining"
+msgstr "points restants"

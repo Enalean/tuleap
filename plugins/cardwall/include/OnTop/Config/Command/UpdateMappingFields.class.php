@@ -117,7 +117,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
     {
         if ($this->dao->save($this->tracker->getId(), $mapping_tracker->getId(), $field->getId())) {
             $this->value_dao->delete($this->tracker->getId(), $mapping_tracker->getId());
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_changed', array($mapping_tracker->getName(), $field->getLabel())));
+            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-cardwall', 'Mapping on %1$s changed to %2$s'), $mapping_tracker->getName(), $field->getLabel()));
         }
     }
 
@@ -138,7 +138,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
             }
         }
         if ($mapping_changed && $nb_changes > 0) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_values_changed', array($field->getLabel())));
+            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-cardwall', 'Values mapping changed for "%1$s" field'), $field->getLabel()));
         }
     }
 

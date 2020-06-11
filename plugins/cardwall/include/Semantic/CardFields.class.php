@@ -120,9 +120,9 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $fields = $this->getFields();
         $html   .= '<p>';
         if (! count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_no_fields_defined');
+            $html .= dgettext('tuleap-cardwall', 'There aren\'t any fields added to cards yet.');
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_fields');
+            $html .= dgettext('tuleap-cardwall', 'The following fields are added to the cards:');
             $html .= '<ul>';
             foreach ($fields as $field) {
                 $html .= '<li><strong>' . $this->html_purifier->purify($field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';
@@ -219,12 +219,12 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_description');
+        return dgettext('tuleap-cardwall', 'Manage the Fields to be displayed on cards');
     }
 
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'semantic_cardFields_label');
+        return dgettext('tuleap-cardwall', 'Cards semantics');
     }
 
     public function getShortName()

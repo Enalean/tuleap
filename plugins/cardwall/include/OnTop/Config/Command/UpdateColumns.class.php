@@ -47,7 +47,7 @@ class Cardwall_OnTop_Config_Command_UpdateColumns extends Cardwall_OnTop_Config_
                 $success = $this->saveColors($column_definition, $column_label, $id);
 
                 if ($success) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_changed', array($column_label)));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-cardwall', 'Column %1$s changed'), $column_label));
                 }
             }
         }

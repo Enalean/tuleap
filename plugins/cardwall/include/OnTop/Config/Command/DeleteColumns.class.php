@@ -63,7 +63,7 @@ class Cardwall_OnTop_Config_Command_DeleteColumns extends Cardwall_OnTop_Config_
                 if (empty($column_definition['label'])) {
                     $this->value_dao->deleteForColumn($this->tracker->getId(), $id);
                     $this->dao->delete($this->tracker->getId(), $id);
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_column_removed'));
+                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-cardwall', 'Column removed'));
                     $deleted_columns++;
                 }
             }

@@ -50,7 +50,7 @@ class Cardwall_OnTop_Config_Command_CreateMappingField extends Cardwall_OnTop_Co
         if ($request->get('add_mapping_on')) {
             $new_mapping_tracker = $this->tracker_factory->getTrackerById($request->get('add_mapping_on'));
             if ($new_mapping_tracker && $this->dao->create($this->tracker->getId(), $new_mapping_tracker->getId(), null)) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_mapping_added', array($new_mapping_tracker->getName())));
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-cardwall', 'Mapping on %1$s added'), $new_mapping_tracker->getName()));
             }
         }
     }
