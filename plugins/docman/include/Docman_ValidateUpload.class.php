@@ -55,7 +55,11 @@ class Docman_ValidateUpload extends Docman_Validator
                         $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). Unknown error code.'), $_FILES['file']['error']));
                 }
             }
-            if ($ok && isset($_FILES['file']['size']) && (int) $_FILES['file']['size'] >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+            if (
+                $ok && isset($_FILES['file']['size']) && (int) $_FILES['file']['size'] >= (int) ForgeConfig::get(
+                    DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING
+                )
+            ) {
                 $ok = false;
                 $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). The uploaded file exceeds the maximum allowed file size.'), $_FILES['file']['name'] ?? ''));
             }

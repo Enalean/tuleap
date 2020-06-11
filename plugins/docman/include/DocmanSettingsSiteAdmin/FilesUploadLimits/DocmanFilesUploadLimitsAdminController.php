@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tuleap\Docman\DocmanSettingsSiteAdmin\FilesUploadLimits;
 
 use CSRFSynchronizerToken;
+use DocmanPlugin;
 use Feedback;
 use HTTPRequest;
 use Tuleap\Admin\AdminPageRenderer;
@@ -75,8 +76,8 @@ class DocmanFilesUploadLimitsAdminController implements DispatchableWithRequest,
             'document-settings',
             new DocmanFilesUploadLimitsAdminPresenter(
                 $csrf_token,
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING),
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING),
+                (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_NB_FILE_UPLOADS_SETTING),
+                (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING),
                 $this->tabs_presenter_collection_builder->build()
             )
         );

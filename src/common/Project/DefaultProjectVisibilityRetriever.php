@@ -27,6 +27,11 @@ use Project;
 
 final class DefaultProjectVisibilityRetriever
 {
+    /**
+     * Default project visibility as project creation (unrestricted, public, private, private-wo-restr)
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_SETTING_NAME = 'default_project_visibility';
 
     public function getDefaultProjectVisibility(): string

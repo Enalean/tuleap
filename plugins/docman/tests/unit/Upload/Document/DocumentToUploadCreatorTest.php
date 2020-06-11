@@ -20,6 +20,7 @@
 
 namespace Tuleap\Docman\Upload\Document;
 
+use DocmanPlugin;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PermissionsManager;
@@ -73,7 +74,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $parent_item->shouldReceive('getGroupId')->andReturns(741);
@@ -130,7 +131,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $parent_item->shouldReceive('getGroupId')->andReturns(741);
@@ -173,7 +174,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = Mockery::mock(\PFUser::class);
@@ -213,7 +214,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = Mockery::mock(\PFUser::class);
@@ -253,7 +254,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '999999');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $parent_item->shouldReceive('getId')->andReturns(11);
         $user = Mockery::mock(\PFUser::class);
@@ -293,7 +294,7 @@ final class DocumentToUploadCreatorTest extends TestCase
             $this->permissions_item_updater
         );
 
-        \ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
+        \ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '1');
         $parent_item = Mockery::mock(\Docman_Item::class);
         $user = Mockery::mock(\PFUser::class);
         $current_time = new \DateTimeImmutable();

@@ -24,6 +24,7 @@ namespace Tuleap\Docman;
 
 use Codendi_Request;
 use Docman_ValidateUpload;
+use DocmanPlugin;
 use ForgeConfig;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -45,7 +46,7 @@ final class DocmanValidateUploadTest extends TestCase
         $request   = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
 
-        ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10000');
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10000');
 
         $_FILES = [];
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];
@@ -59,7 +60,7 @@ final class DocmanValidateUploadTest extends TestCase
         $request   = Mockery::mock(Codendi_Request::class);
         $request->shouldReceive('exist')->with('upload_content')->andReturn(false);
 
-        ForgeConfig::set(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10');
+        ForgeConfig::set(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING, '10');
 
         $_FILES = [];
         $_FILES['file'] = ['name' => 'my_file', 'size' => 100, 'error' => UPLOAD_ERR_OK];

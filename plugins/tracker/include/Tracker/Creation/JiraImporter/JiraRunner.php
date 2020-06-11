@@ -39,6 +39,11 @@ use XML_ParseException;
 
 class JiraRunner
 {
+    /**
+     * Toggle display of "Create from Jira" in Tracker creation page
+     *
+     * @tlp-config-key
+     */
     public const DISPLAY_JIRA_IMPORTER = 'display_jira_importer';
     /**
      * @var QueueFactory

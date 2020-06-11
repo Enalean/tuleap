@@ -26,6 +26,11 @@ use Tuleap\Log\LogToSyslog;
 
 class BackendLogger extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
+    /**
+     * Which logger should be used ('files', 'syslog', 'graylog2'). Default is 'files'
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_LOGGER          = 'sys_logger';
 
     public const FILENAME              = 'codendi_syslog';

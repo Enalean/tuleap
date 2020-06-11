@@ -26,7 +26,13 @@ use Tuleap\News\NewsDao;
 
 class NewsCollectionBuilder
 {
+    /**
+     * Toggle display of news on the site home page
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_DISPLAY_NEWS = 'display_homepage_news';
+
     /**
      * @var NewsDao
      */

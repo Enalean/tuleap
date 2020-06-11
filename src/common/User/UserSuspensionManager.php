@@ -38,9 +38,19 @@ use UserManager;
 
 class UserSuspensionManager
 {
+    /**
+     * Send an email X number of days before an inactive user will be suspended
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_NOTIFICATION_DELAY = 'sys_suspend_inactive_accounts_notification_delay';
-    public const CONFIG_INACTIVE_DELAY = 'sys_suspend_inactive_accounts_delay';
+    /**
+     * Toggle activation of notification of inactive accounts
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_INACTIVE_EMAIL = 'sys_suspend_send_account_suspension_email';
+    public const CONFIG_INACTIVE_DELAY = 'sys_suspend_inactive_accounts_delay';
     public const ONE_DAY_INTERVAL = "PT23H59M59S";
 
     /**

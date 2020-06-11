@@ -624,10 +624,12 @@ $soapFunctions[] = array('createDocmanFolder', 'Create a folder');
  */
 function createDocmanFile($sessionKey, $group_id, $parent_id, $title, $description, $ordering, $status, $obsolescence_date, $permissions, $metadata, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date, $owner, $create_date, $update_date)
 {
-    if ((int) $file_size >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+    if ((int) $file_size >= (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
         return new SoapFault(
             INVALID_ITEM_FAULT,
-            sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING), $file_size)
+            sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(
+                DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING
+            ), $file_size)
         );
     }
 
@@ -720,10 +722,12 @@ $soapFunctions[] = array('createDocmanEmptyDocument', 'Creates a docman empty do
  */
 function createDocmanFileVersion($sessionKey, $group_id, $item_id, $label, $changelog, $file_size, $file_name, $mime_type, $content, $chunk_offset, $chunk_size, $author, $date)
 {
-    if ((int) $file_size >= (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+    if ((int) $file_size >= (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
         return new SoapFault(
             INVALID_ITEM_FAULT,
-            sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING), $file_size)
+            sprintf('Maximum file size is %s bytes, got %s bytes', ForgeConfig::get(
+                DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING
+            ), $file_size)
         );
     }
 

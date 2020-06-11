@@ -127,7 +127,7 @@ class WebDAVDocmanFile extends WebDAVDocmanDocument
      */
     public function getMaxFileSize()
     {
-        return (int) ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
+        return (int) ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING);
     }
 
     /**

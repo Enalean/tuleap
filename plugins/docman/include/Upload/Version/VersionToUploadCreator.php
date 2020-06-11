@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\Upload\Version;
 
+use DocmanPlugin;
 use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Docman\Upload\UploadCreationConflictException;
 use Tuleap\Docman\Upload\UploadCreationFileMismatchException;
@@ -68,10 +69,10 @@ class VersionToUploadCreator
         ?string $approval_table_action
     ): VersionToUpload {
         $file_size = $filesize;
-        if ((int) $file_size > (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
+        if ((int) $file_size > (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)) {
             throw new UploadMaxSizeExceededException(
                 (int) $file_size,
-                (int) \ForgeConfig::get(PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
+                (int) \ForgeConfig::get(DocmanPlugin::PLUGIN_DOCMAN_MAX_FILE_SIZE_SETTING)
             );
         }
         $this->transaction_executor->execute(

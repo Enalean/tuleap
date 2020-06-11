@@ -33,6 +33,11 @@ use Tuleap\Project\Registration\Template\TemplatePresenter;
 
 class ProjectRegistrationPresenterBuilder
 {
+    /**
+     * Toggle display of legacy site template (aka project number 100) in project creation page
+     *
+     * @tlp-config-key
+     */
     public const FORGECONFIG_CAN_USE_DEFAULT_SITE_TEMPLATE = "can_use_default_site_template";
 
     /**

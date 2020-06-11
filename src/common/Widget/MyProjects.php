@@ -37,6 +37,11 @@ use UserManager;
 */
 class MyProjects extends \Widget
 {
+    /**
+     * Do not allow to contact project members from 'My projects' widget
+     *
+     * @tlp-config-key
+     */
     public const CONFIG_DISABLE_CONTACT = 'widget_myprojects_disable_contact';
 
     public function __construct()

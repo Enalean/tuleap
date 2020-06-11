@@ -2201,7 +2201,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getWhitelistedKeys(GetWhitelistedKeys $event): void
     {
-        $event->addPluginsKeys(JiraRunner::DISPLAY_JIRA_IMPORTER);
+        $event->addConfigClass(JiraRunner::class);
     }
 
     private function getMailNotificationBuilder(): MailNotificationBuilder
