@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -49,6 +49,14 @@ function display_ml_details($group_id, $list_server, $result, $i)
     echo ' ]<br>&nbsp;' .  db_result($result, $i, 'description') . '<p>';
 }
 
+$request = HTTPRequest::instance();
+$valid_project_id = new Valid_GroupId();
+$valid_project_id->required();
+if (! $request->valid($valid_project_id)) {
+    exit_no_group();
+    exit();
+}
+$group_id = $request->get('group_id');
 if ($group_id) {
     $list_server = get_list_server_url();
 
@@ -64,7 +72,6 @@ if ($group_id) {
     } else {
         $public_flag = '1';
     }
-    $request = HTTPRequest::instance();
     if ($request->exist('action')) {
         if ($request->exist('id')) {
             $sql = "SELECT * FROM mail_group_list WHERE group_id='$group_id' AND is_public IN ($public_flag) AND group_list_id = " . (int) $request->get('id');
