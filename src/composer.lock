@@ -855,16 +855,16 @@
         },
         {
             "name": "laminas/laminas-httphandlerrunner",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-httphandlerrunner.git",
-                "reference": "296f5ff35074dd981d1570a66b95596c81808087"
+                "reference": "e1a5dad040e0043135e8095ee27d1fbf6fb640e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/296f5ff35074dd981d1570a66b95596c81808087",
-                "reference": "296f5ff35074dd981d1570a66b95596c81808087",
+                "url": "https://api.github.com/repos/laminas/laminas-httphandlerrunner/zipball/e1a5dad040e0043135e8095ee27d1fbf6fb640e1",
+                "reference": "e1a5dad040e0043135e8095ee27d1fbf6fb640e1",
                 "shasum": ""
             },
             "require": {
@@ -875,7 +875,7 @@
                 "psr/http-server-handler": "^1.0"
             },
             "replace": {
-                "zendframework/zend-httphandlerrunner": "self.version"
+                "zendframework/zend-httphandlerrunner": "^1.1.0"
             },
             "require-dev": {
                 "laminas/laminas-coding-standard": "~1.0.0",
@@ -885,8 +885,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev",
-                    "dev-develop": "1.2.x-dev"
+                    "dev-master": "1.2.x-dev",
+                    "dev-develop": "1.3.x-dev"
                 },
                 "laminas": {
                     "config-provider": "Laminas\\HttpHandlerRunner\\ConfigProvider"
@@ -910,7 +910,13 @@
                 "psr-15",
                 "psr-7"
             ],
-            "time": "2019-12-31T17:06:16+00:00"
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-06-03T15:52:17+00:00"
         },
         {
             "name": "laminas/laminas-loader",
@@ -1280,16 +1286,16 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.0.0",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "32d7095e436a31b8d98e485a5c63d70df74915a8"
+                "reference": "fcd87520e4943d968557803919523772475e8ea3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/32d7095e436a31b8d98e485a5c63d70df74915a8",
-                "reference": "32d7095e436a31b8d98e485a5c63d70df74915a8",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/fcd87520e4943d968557803919523772475e8ea3",
+                "reference": "fcd87520e4943d968557803919523772475e8ea3",
                 "shasum": ""
             },
             "require": {
@@ -1328,7 +1334,13 @@
                 "laminas",
                 "zf"
             ],
-            "time": "2019-12-31T15:24:03+00:00"
+            "funding": [
+                {
+                    "url": "https://funding.communitybridge.org/projects/laminas-project",
+                    "type": "community_bridge"
+                }
+            ],
+            "time": "2020-05-20T16:45:56+00:00"
         },
         {
             "name": "lcobucci/jwt",
