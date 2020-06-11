@@ -25,6 +25,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\PaneInfoCollector;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
+use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\TestPlanController;
 use Tuleap\TestPlan\TestPlanPane;
 use Tuleap\TestPlan\TestPlanPaneDisplayable;
@@ -75,7 +76,7 @@ final class testplanPlugin extends Plugin
     {
         $this->addHook(PaneInfoCollector::NAME);
         $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
-
+        $this->addHook(GetURIForMilestoneFromTTM::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
 
         return parent::getHooksAndCallbacks();
@@ -84,12 +85,8 @@ final class testplanPlugin extends Plugin
     public function agiledashboardEventAdditionalPanesOnMilestone(PaneInfoCollector $collector): void
     {
         $milestone = $collector->getMilestone();
-        $project   = $milestone->getProject();
 
-        if (
-            ! (new TestPlanPaneDisplayable(new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())))
-                ->isTestPlanPaneDisplayable($project)
-        ) {
+        if (! $this->isTestPlanPaneDisplayable($milestone)) {
             return;
         }
 
@@ -127,7 +124,7 @@ final class testplanPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
-        $tracker_factory       = TrackerFactory::instance();
+        $tracker_factory = TrackerFactory::instance();
         $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
 
         return new TestPlanController(
@@ -138,7 +135,9 @@ final class testplanPlugin extends Plugin
                 __DIR__ . '/../../../src/www/assets/testplan',
                 '/assets/testplan'
             ),
-            new TestPlanPaneDisplayable(new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())),
+            new TestPlanPaneDisplayable(
+                new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())
+            ),
             new VisitRecorder(new RecentlyVisitedDao()),
             Planning_MilestoneFactory::build(),
             new TestPlanPresenterBuilder(
@@ -149,5 +148,28 @@ final class testplanPlugin extends Plugin
             ),
             new Browser()
         );
+    }
+
+    public function getURIForMilestoneFromTTM(GetURIForMilestoneFromTTM $event): void
+    {
+        $milestone = $event->getMilestone();
+        if (! $this->isTestPlanPaneDisplayable($milestone)) {
+            return;
+        }
+
+        $pane_info = new TestPlanPaneInfo($milestone);
+        $event->setURI($pane_info->getUri());
+    }
+
+    private function isTestPlanPaneDisplayable(Planning_Milestone $milestone): bool
+    {
+        $test_plan_pane_displayable = new TestPlanPaneDisplayable(
+            new \Tuleap\TestManagement\Config(
+                new \Tuleap\TestManagement\Dao(),
+                TrackerFactory::instance()
+            )
+        );
+
+        return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject());
     }
 }

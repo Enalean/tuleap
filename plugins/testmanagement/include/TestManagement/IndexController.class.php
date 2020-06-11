@@ -25,6 +25,7 @@ use EventManager;
 use PFUser;
 use Tracker_FormElementFactory;
 use TrackerFactory;
+use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 
 class IndexController extends TestManagementController
@@ -57,6 +58,14 @@ class IndexController extends TestManagementController
 
         $this->recordVisit($current_user);
 
+        if ($this->current_milestone) {
+            $event = new GetURIForMilestoneFromTTM($this->current_milestone);
+            $this->event_manager->processEvent($event);
+            $milestone_representation = new MilestoneRepresentation($this->current_milestone, $event->getURI());
+        } else {
+            $milestone_representation = new \stdClass();
+        }
+
         return $this->renderToString(
             'index',
             new IndexPresenter(
@@ -67,7 +76,7 @@ class IndexController extends TestManagementController
                 $this->config->getIssueTrackerId($this->project),
                 $this->getIssueTrackerConfig($current_user),
                 $current_user,
-                $this->current_milestone
+                $milestone_representation
             )
         );
     }
