@@ -343,9 +343,11 @@ class CampaignsResource
      *
      * @return CampaignRepresentation
      *
+     * @access hybrid
+     *
      * @throws RestException 403
      */
-    protected function getId($id)
+    public function getId($id)
     {
         $this->optionsId($id);
 
@@ -382,10 +384,12 @@ class CampaignsResource
      *
      * @return array {@type ExecutionRepresentation}
      *
+     * @access hybrid
+     *
      * @throws RestException 400
      * @throws RestException 403
      */
-    protected function getExecutions($id, $limit = 10, $offset = 0)
+    public function getExecutions($id, $limit = 10, $offset = 0)
     {
         $this->optionsExecutions($id);
 
