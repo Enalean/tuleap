@@ -132,11 +132,13 @@ class ProjectResource
      *
      * @return array
      *
+     * @access hybrid
+     *
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
      */
-    protected function getCampaigns($id, $query = null, $limit = 10, $offset = 0)
+    public function getCampaigns($id, $query = null, $limit = 10, $offset = 0)
     {
         $this->optionsCampaigns($id);
 
