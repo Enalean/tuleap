@@ -57,7 +57,7 @@ function TuleapArtifactModalTrackerTransformerService(
 
     function excludeFieldsForCreationMode(all_fields) {
         var filtered_fields = _.reject(all_fields, function (field) {
-            return _(TuleapArtifactModalAwkwardCreationFields).contains(field.type);
+            return TuleapArtifactModalAwkwardCreationFields.includes(field.type);
         });
         var filtered_fields_without_creation_permissions = excludeFieldsWithoutCreationPermissions(
             filtered_fields
@@ -180,15 +180,30 @@ function TuleapArtifactModalTrackerTransformerService(
     }
 
     function getListFieldsBoundToUgroups(fields) {
-        return _(fields)
-            .filter({ bindings: { type: "ugroups" } })
-            .map(function (field) {
-                field.values = _.indexBy(field.values, "id");
+        // keyBy function extracted from https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore/tree/v6.10.0#_keyBy
+        const keyBy = (array, key) =>
+            (array || []).reduce((r, x) => ({ ...r, [key ? x[key] : x]: x }), {});
 
-                return field;
-            })
-            .indexBy("field_id")
-            .value();
+        return keyBy(
+            fields
+                .filter((field) => {
+                    if (!Object.prototype.hasOwnProperty.call(field, "bindings")) {
+                        return false;
+                    }
+                    const bindings = field.bindings;
+
+                    return (
+                        Object.prototype.hasOwnProperty.call(bindings, "type") &&
+                        bindings.type === "ugroups"
+                    );
+                })
+                .map(function (field) {
+                    field.values = keyBy(field.values, "id");
+
+                    return field;
+                }),
+            "field_id"
+        );
     }
 
     function replaceSourceFieldValueIdWithUgroupReferenceId(field_dependency_rule, source_field) {
@@ -219,7 +234,7 @@ function TuleapArtifactModalTrackerTransformerService(
 
             // We attach the value to the tracker to avoid submitting it
             switch (true) {
-                case isAwkwardFieldForCration(field.type):
+                case isAwkwardFieldForCreation(field.type):
                     return addReadOnlyFieldValueToTracker(field, artifact_value);
                 case field.type === "perm":
                     return addPermissionFieldValueToTracker(field, artifact_value);
@@ -239,8 +254,8 @@ function TuleapArtifactModalTrackerTransformerService(
         return tracker;
     }
 
-    function isAwkwardFieldForCration(type) {
-        return _(TuleapArtifactModalAwkwardCreationFields).contains(type);
+    function isAwkwardFieldForCreation(type) {
+        return TuleapArtifactModalAwkwardCreationFields.includes(type);
     }
 
     function addReadOnlyFieldValueToTracker(field, artifact_value) {

@@ -174,7 +174,11 @@ function KanbanCtrl(
             filterArchiveCards();
         }
 
-        _(self.board.columns).filter("is_open").forEach(filterColumnCards);
+        self.board.columns
+            .filter((column) => {
+                return Object.prototype.hasOwnProperty.call(column, "is_open") && column.is_open;
+            })
+            .forEach(filterColumnCards);
 
         reflowKustomScrollBars();
     }

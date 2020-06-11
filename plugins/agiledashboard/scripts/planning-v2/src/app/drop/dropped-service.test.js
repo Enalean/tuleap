@@ -1,5 +1,4 @@
 import planning_module from "../app.js";
-import _ from "lodash";
 import angular from "angular";
 import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../../tests/jest/angular-promise-wrapper.js";
@@ -41,13 +40,13 @@ describe("DroppedService", () => {
             };
 
             ProjectService = _ProjectService_;
-            _(["reorderBacklog", "removeAddReorderToBacklog", "removeAddToBacklog"]).forEach(
+            ["reorderBacklog", "removeAddReorderToBacklog", "removeAddToBacklog"].forEach(
                 returnPromise,
                 ProjectService
             );
 
             MilestoneService = _MilestoneService_;
-            _([
+            [
                 "reorderBacklog",
                 "reorderContent",
                 "addReorderToContent",
@@ -56,14 +55,14 @@ describe("DroppedService", () => {
                 "removeAddToBacklog",
                 "removeAddReorderToContent",
                 "removeAddToContent",
-            ]).forEach(returnPromise, MilestoneService);
+            ].forEach(returnPromise, MilestoneService);
 
             BacklogItemService = _BacklogItemService_;
-            _([
+            [
                 "reorderBacklogItemChildren",
                 "removeAddReorderBacklogItemChildren",
                 "removeAddBacklogItemChildren",
-            ]).forEach(returnPromise, BacklogItemService);
+            ].forEach(returnPromise, BacklogItemService);
 
             jest.spyOn(RestErrorService, "setError").mockImplementation(() => {});
         });

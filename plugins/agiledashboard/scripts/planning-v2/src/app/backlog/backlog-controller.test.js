@@ -1,7 +1,6 @@
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
-import _ from "lodash";
 
 import BaseBacklogController from "./backlog-controller.js";
 import BacklogFilterValue from "../backlog-filter-terms.js";
@@ -105,7 +104,7 @@ describe("BacklogController -", () => {
             ).mockImplementation(() => {});
 
             MilestoneService = _MilestoneService_;
-            _([
+            [
                 "addReorderToContent",
                 "addToContent",
                 "augmentMilestone",
@@ -119,16 +118,16 @@ describe("BacklogController -", () => {
                 "removeAddReorderToBacklog",
                 "removeAddToBacklog",
                 "updateInitialEffort",
-            ]).forEach(returnPromise, MilestoneService);
+            ].forEach(returnPromise, MilestoneService);
 
             BacklogItemService = _BacklogItemService_;
-            _([
+            [
                 "getBacklogItemChildren",
                 "getMilestoneBacklogItems",
                 "getProjectBacklogItems",
                 "getBacklogItem",
                 "removeAddBacklogItemChildren",
-            ]).forEach(returnPromise, BacklogItemService);
+            ].forEach(returnPromise, BacklogItemService);
 
             BacklogItemCollectionService = _BacklogItemCollectionService_;
             jest.spyOn(
@@ -137,12 +136,12 @@ describe("BacklogController -", () => {
             ).mockImplementation(() => {});
 
             ProjectService = _ProjectService_;
-            _([
+            [
                 "getProjectBacklog",
                 "getProject",
                 "removeAddToBacklog",
                 "removeAddReorderToBacklog",
-            ]).forEach(returnPromise, ProjectService);
+            ].forEach(returnPromise, ProjectService);
 
             DroppedService = _DroppedService_;
             jest.spyOn(

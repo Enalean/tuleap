@@ -41,7 +41,7 @@ function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItem
     });
 
     function appendBacklogItems(items) {
-        _(items).forEach(function (item) {
+        items.forEach(function (item) {
             BacklogItemFactory.augment(item);
             self.items.content.push(item);
         });
@@ -73,7 +73,7 @@ function BacklogService($filter, BacklogItemFactory, ProjectService, BacklogItem
         var filtered_items = $filter("InPropertiesFilter")(self.items.content, filter_terms);
 
         emptyArray(self.items.filtered_content);
-        _(filtered_items).forEach(function (item) {
+        (filtered_items || []).forEach(function (item) {
             self.items.filtered_content.push(item);
         });
     }
