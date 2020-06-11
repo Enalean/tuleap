@@ -91,16 +91,21 @@
                         <div>
                             <div class="tlp-property">
                                 <label class="tlp-label">{{ submitted_by_label }}</label>
-                                <div class="pending-project-name-and-avatar">
-                                    <a href="/admin/usergroup.php?user_id={{ user_id }}">
-                                    <div class="tlp-avatar pending-project-avatar">
-                                        {{# user_has_avatar }}
-                                            <img src="{{ user_avatar }}">
-                                        {{/ user_has_avatar }}
+                                {{# admin_is_anonymous }}
+                                    <div class="tlp-alert-warning">{{# gettext }}User cannot be found{{/ gettext }}</div>
+                                {{/ admin_is_anonymous }}
+                                {{^ admin_is_anonymous }}
+                                    <div class="pending-project-name-and-avatar">
+                                        <a href="/admin/usergroup.php?user_id={{ user_id }}">
+                                        <div class="tlp-avatar pending-project-avatar">
+                                            {{# user_has_avatar }}
+                                                <img src="{{ user_avatar }}">
+                                            {{/ user_has_avatar }}
+                                        </div>
+                                        {{ user_name }}
+                                        </a>
                                     </div>
-                                    {{ user_name }}
-                                    </a>
-                                </div>
+                                {{/ admin_is_anonymous }}
                             </div>
                             <div class="tlp-property">
                                 <label class="tlp-label">{{ creation_date_label }}</label>

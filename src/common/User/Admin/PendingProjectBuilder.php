@@ -69,6 +69,9 @@ class PendingProjectBuilder
 
         foreach ($this->project_manager->getAllPendingProjects() as $project) {
             $admin         = $this->getProjectAdminWhichIsFirstProjectMember($project);
+            if (! $admin) {
+                $admin = $this->user_manager->getUserAnonymous();
+            }
             $custom_fields = $this->field_builder->build($project);
             $trovecats     = $this->trove_cat_collection_retriever->getCollection($project->getID());
 
@@ -79,6 +82,7 @@ class PendingProjectBuilder
                 'project_is_public'   => $project->isPublic(),
                 'project_get_access'  => $project->getAccess(),
                 'project_description' => $project->getDescription(),
+                'admin_is_anonymous'  => $admin->isAnonymous(),
                 'user_id'             => $admin->getId(),
                 'user_name'           => $admin->getRealName(),
                 'user_has_avatar'     => $admin->hasAvatar(),
