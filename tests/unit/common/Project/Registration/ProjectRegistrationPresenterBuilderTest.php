@@ -103,7 +103,7 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
                 'desc_name'        => 'Custom field',
                 'desc_type'        => 'text',
                 'desc_description' => 'Custom description',
-                'desc_required'    => true
+                'desc_required'    => 1
             ]
         ];
         $this->fields_factory->shouldReceive('getAllDescriptionFields')->andReturn(
@@ -138,7 +138,7 @@ final class ProjectRegistrationPresenterBuilderTest extends TestCase
         );
 
         $this->assertEquals(
-            '[{"group_desc_id":"1","desc_name":"Custom field","desc_type":"text","desc_description":"Custom description","desc_required":true}]',
+            '[{"group_desc_id":"1","desc_name":"Custom field","desc_type":"text","desc_description":"Custom description","desc_required":"1"}]',
             $result->field_list
         );
     }

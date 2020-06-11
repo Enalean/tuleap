@@ -43,17 +43,7 @@ class ProjectRegistrationUserPermissionChecker
 
     public function checkUserCreateAProject(PFUser $user): void
     {
-        if (! ForgeConfig::get(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED) && ! $user->isSuperUser()) {
-            throw new LimitedToSiteAdministratorsException();
-        }
-
-        if ($user->isAnonymous()) {
-            throw new AnonymousNotAllowedException();
-        }
-
-        if ($user->isRestricted() && (int) ForgeConfig::get(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS) === 0) {
-            throw new RestrictedUsersNotAllowedException();
-        }
+        $this->checkUserHasThePermissionToCreateProject($user);
 
         if ((int) ForgeConfig::get(ProjectManager::CONFIG_PROJECT_APPROVAL, 1) === 1) {
             if (! $this->numberOfProjectsWaitingForValidationBelowThreshold()) {
@@ -93,5 +83,23 @@ class ProjectRegistrationUserPermissionChecker
         }
         $current_per_user = $this->project_dao->countByStatusAndUser((int) $requester->getId(), Project::STATUS_PENDING);
         return $current_per_user < $max_per_user;
+    }
+
+    public function checkUserHasThePermissionToCreateProject(PFUser $user): void
+    {
+        if (! ForgeConfig::get(ProjectManager::CONFIG_PROJECTS_CAN_BE_CREATED) && ! $user->isSuperUser()) {
+            throw new LimitedToSiteAdministratorsException();
+        }
+
+        if ($user->isAnonymous()) {
+            throw new AnonymousNotAllowedException();
+        }
+
+        if (
+            $user->isRestricted()
+            && (int) ForgeConfig::get(ProjectManager::CONFIG_RESTRICTED_USERS_CAN_CREATE_PROJECTS) === 0
+        ) {
+            throw new RestrictedUsersNotAllowedException();
+        }
     }
 }

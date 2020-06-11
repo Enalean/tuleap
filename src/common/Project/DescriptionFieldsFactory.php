@@ -35,11 +35,11 @@ class DescriptionFieldsFactory
 
     public function getAllDescriptionFields(): array
     {
-        $description_fields = array();
-        foreach ($this->dao->searchAll() as $row) {
-            $description_fields[] = $row;
-        }
+        return $this->dao->searchAll();
+    }
 
-        return $description_fields;
+    public function getPaginatedDescriptionFields(int $limit, int $offset): array
+    {
+        return $this->dao->searchFieldsWithPagination($limit, $offset);
     }
 }

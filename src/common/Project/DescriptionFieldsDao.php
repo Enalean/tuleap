@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All rights reserved
+ * Copyright (c) Enalean, 2016-present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+declare(strict_types=1);
 
 namespace Tuleap\Project;
 
-class DescriptionFieldsDao extends \DataAccessObject
+use Tuleap\DB\DataAccessObject;
+
+class DescriptionFieldsDao extends DataAccessObject
 {
-    public function searchAll()
+    public function searchAll(): array
     {
         $sql = "SELECT * FROM group_desc ORDER BY desc_rank";
 
-        return $this->retrieve($sql);
+        return $this->getDB()->run($sql);
+    }
+
+    public function searchFieldsWithPagination(int $limit, int $offset): array
+    {
+        $sql = "SELECT * FROM group_desc ORDER BY desc_rank LIMIT ? OFFSET ?";
+
+        return $this->getDB()->run($sql, $limit, $offset);
     }
 }
