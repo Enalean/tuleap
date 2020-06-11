@@ -20,7 +20,7 @@
 import { CampaignState, CreateCampaignPayload } from "./type";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
-import { recursiveGet, post, get } from "tlp";
+import { recursiveGet, post, get, FetchWrapperError } from "tlp";
 import { Campaign } from "../../type";
 
 export async function loadCampaigns(
@@ -53,11 +53,25 @@ export async function loadCampaigns(
             }
         );
     } catch (e) {
-        context.commit("loadingErrorHasBeenCatched");
-        throw e;
+        if (!isPermissionDenied(e)) {
+            context.commit("loadingErrorHasBeenCatched");
+            throw e;
+        }
     } finally {
         context.commit("endLoadingCampaigns");
     }
+}
+
+function isPermissionDenied(error: Error | FetchWrapperError): boolean {
+    if (!isAFetchWrapperError(error)) {
+        return false;
+    }
+
+    return error.response.status === 403;
+}
+
+function isAFetchWrapperError(error: Error | FetchWrapperError): error is FetchWrapperError {
+    return "response" in error;
 }
 
 export async function createCampaign(

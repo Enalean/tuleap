@@ -72,6 +72,17 @@ describe("Campaign state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("loadingErrorHasBeenCatched");
             expect(context.commit).toHaveBeenCalledWith("endLoadingCampaigns");
         });
+
+        it("Does not catch 403 so that empty state can be displayed instead of error state", async () => {
+            const error = { response: { status: 403 } };
+            tlpRecursiveGetMock.mockRejectedValue(error);
+
+            await loadCampaigns(context);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingCampaigns");
+            expect(context.commit).not.toHaveBeenCalledWith("loadingErrorHasBeenCatched");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingCampaigns");
+        });
     });
 
     describe("refreshCampaign", () => {
