@@ -22,7 +22,6 @@ namespace Tuleap\TestManagement;
 
 use ForgeConfig as TuleapConfig;
 use PFUser;
-use stdClass;
 use Tuleap\TestManagement\REST\v1\MilestoneRepresentation;
 use Tuleap\User\REST\UserRepresentation;
 
@@ -80,6 +79,7 @@ class IndexPresenter
      * @param int|false $test_definition_tracker_id
      * @param int|false $test_execution_tracker_id
      * @param int|false|null $issue_tracker_id
+     * @param MilestoneRepresentation|\stdClass $milestone_representation
      */
     public function __construct(
         int $project_id,
@@ -89,7 +89,7 @@ class IndexPresenter
         $issue_tracker_id,
         array $issue_tracker_config,
         PFUser $current_user,
-        ?\Planning_Milestone $current_milestone
+        object $milestone_representation
     ) {
         $this->lang       = $this->getLanguageAbbreviation($current_user);
         $this->project_id = $project_id;
@@ -114,12 +114,7 @@ class IndexPresenter
 
         $this->issue_tracker_config = json_encode($issue_tracker_config);
 
-        if (isset($current_milestone)) {
-            $milestone_representation = new MilestoneRepresentation($current_milestone);
-        } else {
-            $milestone_representation = new stdClass();
-        }
-        $this->current_milestone          = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
+        $this->current_milestone = json_encode($milestone_representation, JSON_THROW_ON_ERROR);
     }
 
     private function getLanguageAbbreviation(PFUser $current_user): string

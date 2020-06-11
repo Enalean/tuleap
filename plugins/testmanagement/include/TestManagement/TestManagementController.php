@@ -44,7 +44,7 @@ abstract class TestManagementController extends MVC2_PluginController
     protected $project;
 
     /**
-     * @var Planning_Milestone
+     * @var Planning_Milestone|null
      */
     protected $current_milestone;
 

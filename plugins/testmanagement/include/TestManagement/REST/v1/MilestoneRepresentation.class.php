@@ -19,7 +19,6 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
-use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
 use Tuleap\REST\JsonCast;
 
 /**
@@ -39,19 +38,10 @@ class MilestoneRepresentation
     /** @var String */
     public $uri;
 
-    public function __construct(\Planning_Milestone $milestone)
+    public function __construct(\Planning_Milestone $milestone, string $uri)
     {
         $this->id    = JsonCast::toInt($milestone->getArtifactId());
         $this->label = $milestone->getArtifactTitle() ?? '';
-        $this->uri   = AGILEDASHBOARD_BASE_URL . '/?' .
-            http_build_query(
-                [
-                    'pane'        => DetailsPaneInfo::IDENTIFIER,
-                    'action'      => 'show',
-                    'group_id'    => $milestone->getGroupId(),
-                    'planning_id' => $milestone->getPlanningId(),
-                    'aid'         => $this->id
-                ]
-            );
+        $this->uri   = $uri;
     }
 }
