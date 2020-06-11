@@ -32,7 +32,9 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotDataGenerator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\CurrentSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -101,11 +103,14 @@ class ArtifactsXMLExporterTest extends TestCase
                 new FieldChangeStringBuilder(
                     new XML_SimpleXMLCDATAFactory()
                 ),
-                new InitialSnapshotDataGenerator(
-                    new ChangelogEntriesBuilder(
-                        $this->wrapper
-                    ),
-                    new CreationStateListValueFormatter()
+                new IssueSnapshotCollectionBuilder(
+                    new CurrentSnapshotBuilder(),
+                    new InitialSnapshotBuilder(
+                        new ChangelogEntriesBuilder(
+                            $this->wrapper
+                        ),
+                        new CreationStateListValueFormatter()
+                    )
                 )
             )
         );
@@ -154,8 +159,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     [
                                         'id' => '10004'
                                     ],
-                                'created' => '',
-                                'updated' => ''
+                                'created' => '2020-03-25T14:10:10.823+0100',
+                                'updated' => '2020-04-25T14:10:10.823+0100'
                             ]
                         ],
                         [
@@ -168,8 +173,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     [
                                         'id' => '10004'
                                     ],
-                                'created' => '',
-                                'updated' => ''
+                                'created' => '2020-03-26T14:10:10.823+0100',
+                                'updated' => '2020-04-26T14:10:10.823+0100'
                             ]
                         ]
                     ]
@@ -227,8 +232,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     [
                                         'id' => '10004'
                                     ],
-                                'created' => '',
-                                'updated' => ''
+                                'created' => '2020-03-25T14:10:10.823+0100',
+                                'updated' => '2020-04-25T14:10:10.823+0100'
                             ]
                         ]
                     ]
@@ -254,8 +259,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     [
                                         'id' => '10004'
                                     ],
-                                'created' => '',
-                                'updated' => ''
+                                'created' => '2020-03-26T14:10:10.823+0100',
+                                'updated' => '2020-04-26T14:10:10.823+0100'
                             ]
                         ]
                     ]
@@ -326,8 +331,8 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertNotNull($artifact_node_01_field_changes_changeset_02);
         $this->assertCount(2, $artifact_node_01_field_changes_changeset_02);
 
-        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_02[0]->value);
-        $this->assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_02[1]->value);
+        $this->assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_02[0]->value);
+        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_02[1]->value);
 
         $artifact_node_02 = $artifacts_node->artifact[1];
         $this->assertSame("10043", (string) $artifact_node_02['id']);
@@ -348,7 +353,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertNotNull($artifact_node_02_field_changes_changeset_02);
         $this->assertCount(2, $artifact_node_02_field_changes_changeset_02);
 
-        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_02[0]->value);
-        $this->assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_02[1]->value);
+        $this->assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_02[0]->value);
+        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_02[1]->value);
     }
 }

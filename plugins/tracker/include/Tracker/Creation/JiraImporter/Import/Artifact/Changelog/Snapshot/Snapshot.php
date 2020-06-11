@@ -23,14 +23,38 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
+use DateTimeImmutable;
+use PFUser;
+
 class Snapshot
 {
     /**
      * @var FieldSnapshot[]
+     * @psalm-readonly
      */
     private $field_snapshots;
 
     /**
+     * @var PFUser
+     * @psalm-readonly
+     */
+    private $user;
+
+    /**
+     * @var DateTimeImmutable
+     * @psalm-readonly
+     */
+    private $date;
+
+    public function __construct(PFUser $user, DateTimeImmutable $date, array $field_snapshots)
+    {
+        $this->user            = $user;
+        $this->date            = $date;
+        $this->field_snapshots = $field_snapshots;
+    }
+
+    /**
+     * @psalm-mutation-free
      * @return FieldSnapshot[]
      */
     public function getAllFieldsSnapshot(): array
@@ -38,41 +62,33 @@ class Snapshot
         return $this->field_snapshots;
     }
 
-    public function addFieldSnapshot(FieldSnapshot $state): void
+    /**
+     * @psalm-mutation-free
+     */
+    public function getFieldInSnapshot(string $field_key): ?FieldSnapshot
     {
-        $field_key = $state->getFieldMapping()->getJiraFieldId();
-
-        $this->field_snapshots[$field_key] = $state;
-    }
-
-    public function removeFieldSnapshot(string $field_state_key): void
-    {
-        if (isset($this->field_snapshots[$field_state_key])) {
-            unset($this->field_snapshots[$field_state_key]);
-        }
-    }
-
-    public function isFieldInSnapshot(string $field_state_key): bool
-    {
-        return array_key_exists($field_state_key, $this->field_snapshots);
-    }
-
-    public function getFieldInSnapshot(string $field_state_key): ?FieldSnapshot
-    {
-        if ($this->isFieldInSnapshot($field_state_key)) {
-            return $this->field_snapshots[$field_state_key];
+        foreach ($this->field_snapshots as $field_snapshot) {
+            if ($field_snapshot->getFieldMapping()->getJiraFieldId() === $field_key) {
+                return $field_snapshot;
+            }
         }
 
         return null;
     }
 
-    public static function duplicateExistingSnapshot(Snapshot $snapshot): self
+    /**
+     * @psalm-mutation-free
+     */
+    public function getDate(): DateTimeImmutable
     {
-        $new_snapshot = new self();
-        foreach ($snapshot->getAllFieldsSnapshot() as $field_snapshot) {
-            $new_snapshot->addFieldSnapshot($field_snapshot);
-        }
+        return $this->date;
+    }
 
-        return $new_snapshot;
+    /**
+     * @psalm-mutation-free
+     */
+    public function getUser(): PFUser
+    {
+        return $this->user;
     }
 }

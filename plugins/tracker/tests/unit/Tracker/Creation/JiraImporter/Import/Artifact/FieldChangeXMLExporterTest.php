@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
+use Mockery;
+use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -37,6 +39,8 @@ use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporterTest extends TestCase
 {
+    use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
     /**
      * @var FieldChangeXMLExporter
      */
@@ -77,13 +81,16 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot();
-        $snapshot->addFieldSnapshot(
-            new Changelog\Snapshot\FieldSnapshot(
-                $mapping,
-                "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
-                "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
-            )
+        $snapshot = new Changelog\Snapshot\Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new Changelog\Snapshot\FieldSnapshot(
+                    $mapping,
+                    "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
+                    "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
+                )
+            ]
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -110,18 +117,21 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot();
-        $snapshot->addFieldSnapshot(
-            new Changelog\Snapshot\FieldSnapshot(
-                $mapping,
-                [
-                    'self' => 'URL/rest/api/2/priority/3',
-                    'iconUrl' => 'URL/images/icons/priorities/medium.svg',
-                    'name' => 'Medium',
-                    'id' => '3',
-                ],
-                null
-            )
+        $snapshot = new Changelog\Snapshot\Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new Changelog\Snapshot\FieldSnapshot(
+                    $mapping,
+                    [
+                        'self' => 'URL/rest/api/2/priority/3',
+                        'iconUrl' => 'URL/images/icons/priorities/medium.svg',
+                        'name' => 'Medium',
+                        'id' => '3',
+                    ],
+                    null
+                )
+            ]
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -144,17 +154,20 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot();
-        $snapshot->addFieldSnapshot(
-            new Changelog\Snapshot\FieldSnapshot(
-                $mapping,
-                [
-                    'self' => 'URL/rest/api/2/customFieldOption/10005',
-                    'value' => 'test',
-                    'id' => '10005'
-                ],
-                null
-            )
+        $snapshot = new Changelog\Snapshot\Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new Changelog\Snapshot\FieldSnapshot(
+                    $mapping,
+                    [
+                        'self' => 'URL/rest/api/2/customFieldOption/10005',
+                        'value' => 'test',
+                        'id' => '10005'
+                    ],
+                    null
+                )
+            ]
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -177,25 +190,28 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot();
-        $snapshot->addFieldSnapshot(
-            new Changelog\Snapshot\FieldSnapshot(
-                $mapping,
-                [
+        $snapshot = new Changelog\Snapshot\Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new Changelog\Snapshot\FieldSnapshot(
+                    $mapping,
                     [
-                        'self' => 'URL/rest/api/2/customFieldOption/10009',
-                        'value' => 'multi1',
-                        'id' => '10009'
-                    ],
-                    [
-                        'self' => 'URL/rest/api/2/customFieldOption/10010',
-                        'value' => 'multi2',
-                        'id' => '10010'
-                    ]
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10009',
+                            'value' => 'multi1',
+                            'id' => '10009'
+                        ],
+                        [
+                            'self' => 'URL/rest/api/2/customFieldOption/10010',
+                            'value' => 'multi2',
+                            'id' => '10010'
+                        ]
 
-                ],
-                null
-            )
+                    ],
+                    null
+                )
+            ]
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -219,27 +235,30 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot();
-        $snapshot->addFieldSnapshot(
-            new Changelog\Snapshot\FieldSnapshot(
-                $mapping,
-                [
-                    'self' => 'URL/rest/api/2/status/10001',
-                    'description' =>  '',
-                    'iconUrl' => 'URL',
-                    'name' => 'Done',
-                    'id' => '10001',
-                    'statusCategory' =>
-                        [
-                            'self' => 'URL/rest/api/2/statuscategory/3',
-                            'id' => 3,
-                            'key' => 'done',
-                            'colorName' => 'green',
-                            'name' => 'Done'
-                        ]
-                ],
-                null
-            )
+        $snapshot = new Changelog\Snapshot\Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new Changelog\Snapshot\FieldSnapshot(
+                    $mapping,
+                    [
+                        'self' => 'URL/rest/api/2/status/10001',
+                        'description' =>  '',
+                        'iconUrl' => 'URL',
+                        'name' => 'Done',
+                        'id' => '10001',
+                        'statusCategory' =>
+                            [
+                                'self' => 'URL/rest/api/2/statuscategory/3',
+                                'id' => 3,
+                                'key' => 'done',
+                                'colorName' => 'green',
+                                'name' => 'Done'
+                            ]
+                    ],
+                    null
+                )
+            ]
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
