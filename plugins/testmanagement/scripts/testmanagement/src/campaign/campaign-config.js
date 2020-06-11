@@ -42,6 +42,21 @@ function CampaignConfig($stateProvider) {
             templateUrl: "campaign-list.tpl.html",
             ncyBreadcrumb: {
                 label: "{{ campaign_breadcrumb_label }}",
+                skip: shouldCampaignsListBreadcrumbBeSkipped(),
             },
         });
+}
+
+function shouldCampaignsListBreadcrumbBeSkipped() {
+    const init_data = document.querySelector(".testmanagement-init-data");
+    if (!init_data) {
+        return false;
+    }
+
+    try {
+        const current_milestone = JSON.parse(init_data.dataset.currentMilestone);
+        return "id" in current_milestone;
+    } catch (e) {
+        return false;
+    }
 }
