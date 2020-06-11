@@ -25,11 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PFUser;
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use XML_SimpleXMLCDATAFactory;
 
 class DataChangesetXMLExporter
@@ -45,25 +43,25 @@ class DataChangesetXMLExporter
     private $field_change_xml_exporter;
 
     /**
-     * @var FieldChangeStringBuilder
-     */
-    private $field_change_string_builder;
-
-    /**
      * @var IssueSnapshotCollectionBuilder
      */
     private $issue_snapshot_collection_builder;
 
+    /**
+     * @var LastDataChangesetXMLUpdater
+     */
+    private $last_data_changeset_xml_updater;
+
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         FieldChangeXMLExporter $field_change_xml_exporter,
-        FieldChangeStringBuilder $field_change_string_builder,
-        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder
+        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder,
+        LastDataChangesetXMLUpdater $last_data_changeset_xml_updater
     ) {
         $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
         $this->field_change_xml_exporter         = $field_change_xml_exporter;
-        $this->field_change_string_builder       = $field_change_string_builder;
         $this->issue_snapshot_collection_builder = $issue_snapshot_collection_builder;
+        $this->last_data_changeset_xml_updater   = $last_data_changeset_xml_updater;
     }
 
     public function exportIssueDataInChangesetXML(
@@ -85,7 +83,12 @@ class DataChangesetXMLExporter
             $this->exportSnapshotInXML($snapshot, $changeset_node);
 
             if ($key === $last_item_key) {
-                $this->addTuleapRelatedInformationOnLastXMLSnapshot($issue, $jira_base_url, $changeset_node);
+                $this->last_data_changeset_xml_updater->updateLastXMLChangeset(
+                    $issue,
+                    $jira_base_url,
+                    $changeset_node,
+                    $jira_field_mapping_collection
+                );
             }
         }
     }
@@ -111,19 +114,6 @@ class DataChangesetXMLExporter
         $this->field_change_xml_exporter->exportFieldChanges(
             $snapshot,
             $changeset_node
-        );
-    }
-
-    private function addTuleapRelatedInformationOnLastXMLSnapshot(
-        array $issue,
-        string $jira_base_url,
-        SimpleXMLElement $changeset_node
-    ): void {
-        $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue['key']);
-        $this->field_change_string_builder->build(
-            $changeset_node,
-            AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME,
-            $jira_link
         );
     }
 }

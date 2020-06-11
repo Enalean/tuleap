@@ -25,44 +25,52 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapsho
 
 use PFUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilder
 {
     /**
-     * @var ChangelogEntriesBuilder
+     * @var CurrentSnapshotBuilder
      */
-    private $changelog_entries_builder;
+    private $current_snapshot_builder;
     /**
      * @var CreationStateListValueFormatter
      */
     private $creation_state_list_value_formatter;
 
     public function __construct(
-        ChangelogEntriesBuilder $changelog_entries_builder,
+        CurrentSnapshotBuilder $current_snapshot_builder,
         CreationStateListValueFormatter $creation_state_list_value_formatter
     ) {
-        $this->changelog_entries_builder           = $changelog_entries_builder;
+        $this->current_snapshot_builder            = $current_snapshot_builder;
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
     }
 
     /**
+     * @param ChangelogEntryValueRepresentation[] $changelog_entries
+     *
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
     public function buildInitialSnapshot(
         PFUser $forge_user,
-        Snapshot $current_snapshot,
-        array $jira_issue_api
+        array $changelog_entries,
+        array $jira_issue_api,
+        FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
         $already_seen_fields_keys = [];
         $field_snapshots          = [];
 
-        $changelog_entries = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_api['key']);
+        $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
+            $forge_user,
+            $jira_issue_api,
+            $jira_field_mapping_collection
+        );
+
         foreach ($changelog_entries as $changelog_entry) {
-            $this->parseChangelogEntry(
+            $this->retrieveInitialFieldsValueInChangelogEntry(
                 $changelog_entry,
                 $current_snapshot,
                 $field_snapshots,
@@ -70,7 +78,7 @@ class InitialSnapshotBuilder
             );
         }
 
-        $this->parseCurrentStateFieldSnapshots(
+        $this->retrieveFieldsNotModifiedSinceIssueCreation(
             $current_snapshot,
             $field_snapshots,
             $already_seen_fields_keys
@@ -85,7 +93,7 @@ class InitialSnapshotBuilder
         return $initial_snapshot;
     }
 
-    private function parseCurrentStateFieldSnapshots(
+    private function retrieveFieldsNotModifiedSinceIssueCreation(
         Snapshot $initial_snapshot,
         array &$field_snapshots,
         array &$already_seen_fields_keys
@@ -102,7 +110,7 @@ class InitialSnapshotBuilder
         }
     }
 
-    private function parseChangelogEntry(
+    private function retrieveInitialFieldsValueInChangelogEntry(
         ChangelogEntryValueRepresentation $changelog_entry,
         Snapshot $current_snapshot,
         array &$field_snapshots,

@@ -28,11 +28,13 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LastDataChangesetXMLUpdater;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
@@ -182,16 +184,24 @@ class JiraXmlExporter
                         ),
                         new StatusValuesTransformer()
                     ),
-                    new FieldChangeStringBuilder(
-                        new XML_SimpleXMLCDATAFactory()
-                    ),
                     new IssueSnapshotCollectionBuilder(
-                        new CurrentSnapshotBuilder(),
+                        new ChangelogEntriesBuilder(
+                            $wrapper
+                        ),
                         new InitialSnapshotBuilder(
-                            new ChangelogEntriesBuilder(
-                                $wrapper
-                            ),
+                            new CurrentSnapshotBuilder(),
                             new CreationStateListValueFormatter()
+                        ),
+                        new ChangelogSnapshotBuilder(
+                            new CreationStateListValueFormatter()
+                        )
+                    ),
+                    new LastDataChangesetXMLUpdater(
+                        new FieldChangeStringBuilder(
+                            new XML_SimpleXMLCDATAFactory()
+                        ),
+                        new FieldChangeTextBuilder(
+                            new XML_SimpleXMLCDATAFactory()
                         )
                     )
                 )

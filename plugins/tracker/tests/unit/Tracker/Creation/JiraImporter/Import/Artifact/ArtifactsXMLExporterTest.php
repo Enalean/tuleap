@@ -32,11 +32,13 @@ use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\InitialSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LastDataChangesetXMLUpdater;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
@@ -100,16 +102,24 @@ class ArtifactsXMLExporterTest extends TestCase
                     ),
                     new StatusValuesTransformer()
                 ),
-                new FieldChangeStringBuilder(
-                    new XML_SimpleXMLCDATAFactory()
-                ),
                 new IssueSnapshotCollectionBuilder(
-                    new CurrentSnapshotBuilder(),
+                    new ChangelogEntriesBuilder(
+                        $this->wrapper
+                    ),
                     new InitialSnapshotBuilder(
-                        new ChangelogEntriesBuilder(
-                            $this->wrapper
-                        ),
+                        new CurrentSnapshotBuilder(),
                         new CreationStateListValueFormatter()
+                    ),
+                    new ChangelogSnapshotBuilder(
+                        new CreationStateListValueFormatter()
+                    )
+                ),
+                new LastDataChangesetXMLUpdater(
+                    new FieldChangeStringBuilder(
+                        new XML_SimpleXMLCDATAFactory()
+                    ),
+                    new FieldChangeTextBuilder(
+                        new XML_SimpleXMLCDATAFactory()
                     )
                 )
             )
@@ -161,7 +171,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
                                 'updated' => '2020-04-25T14:10:10.823+0100'
-                            ]
+                            ],
+                            'renderedFields' => []
                         ],
                         [
                             'id'     => '10043',
@@ -175,7 +186,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100'
-                            ]
+                            ],
+                            'renderedFields' => []
                         ]
                     ]
                 ]
@@ -234,7 +246,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
                                 'updated' => '2020-04-25T14:10:10.823+0100'
-                            ]
+                            ],
+                            'renderedFields' => []
                         ]
                     ]
                 ]
@@ -261,7 +274,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100'
-                            ]
+                            ],
+                            'renderedFields' => []
                         ]
                     ]
                 ]
@@ -317,43 +331,29 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->assertNotNull($artifact_node_01->submitted_on);
         $this->assertNotNull($artifact_node_01->submitted_by);
         $this->assertNotNull($artifact_node_01->comments);
-        $this->assertCount(2, $artifact_node_01->changeset);
+        $this->assertCount(1, $artifact_node_01->changeset);
 
         $this->assertNotNull($artifact_node_01->changeset[0]);
         $artifact_node_01_field_changes_changeset_01 = $artifact_node_01->changeset[0]->field_change;
         $this->assertNotNull($artifact_node_01_field_changes_changeset_01);
-        $this->assertCount(1, $artifact_node_01_field_changes_changeset_01);
+        $this->assertCount(2, $artifact_node_01_field_changes_changeset_01);
 
         $this->assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_01[0]->value);
-
-        $this->assertNotNull($artifact_node_01->changeset[1]);
-        $artifact_node_01_field_changes_changeset_02 = $artifact_node_01->changeset[1]->field_change;
-        $this->assertNotNull($artifact_node_01_field_changes_changeset_02);
-        $this->assertCount(2, $artifact_node_01_field_changes_changeset_02);
-
-        $this->assertSame("summary01", (string) $artifact_node_01_field_changes_changeset_02[0]->value);
-        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_02[1]->value);
+        $this->assertSame("URLinstance/browse/key01", (string) $artifact_node_01_field_changes_changeset_01[1]->value);
 
         $artifact_node_02 = $artifacts_node->artifact[1];
         $this->assertSame("10043", (string) $artifact_node_02['id']);
         $this->assertNotNull($artifact_node_02->submitted_on);
         $this->assertNotNull($artifact_node_02->submitted_by);
         $this->assertNotNull($artifact_node_02->comments);
-        $this->assertCount(2, $artifact_node_02->changeset);
+        $this->assertCount(1, $artifact_node_02->changeset);
 
         $this->assertNotNull($artifact_node_02->changeset[0]);
         $artifact_node_02_field_changes_changeset_01 = $artifact_node_02->changeset[0]->field_change;
         $this->assertNotNull($artifact_node_02_field_changes_changeset_01);
-        $this->assertCount(1, $artifact_node_02_field_changes_changeset_01);
+        $this->assertCount(2, $artifact_node_02_field_changes_changeset_01);
 
         $this->assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_01[0]->value);
-
-        $this->assertNotNull($artifact_node_02->changeset[1]);
-        $artifact_node_02_field_changes_changeset_02 = $artifact_node_02->changeset[1]->field_change;
-        $this->assertNotNull($artifact_node_02_field_changes_changeset_02);
-        $this->assertCount(2, $artifact_node_02_field_changes_changeset_02);
-
-        $this->assertSame("summary02", (string) $artifact_node_02_field_changes_changeset_02[0]->value);
-        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_02[1]->value);
+        $this->assertSame("URLinstance/browse/key02", (string) $artifact_node_02_field_changes_changeset_01[1]->value);
     }
 }

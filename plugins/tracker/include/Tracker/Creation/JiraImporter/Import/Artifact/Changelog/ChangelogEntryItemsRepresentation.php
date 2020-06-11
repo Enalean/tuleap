@@ -43,14 +43,28 @@ class ChangelogEntryItemsRepresentation
      */
     private $from_string;
 
+    /**
+     * @var string|null
+     */
+    private $to;
+
+    /**
+     * @var string|null
+     */
+    private $toString;
+
     public function __construct(
         string $field_id,
         ?string $from,
-        ?string $from_string
+        ?string $from_string,
+        ?string $to,
+        ?string $toString
     ) {
         $this->field_id    = $field_id;
         $this->from        = $from;
         $this->from_string = $from_string;
+        $this->to          = $to;
+        $this->toString    = $toString;
     }
 
     /**
@@ -64,7 +78,9 @@ class ChangelogEntryItemsRepresentation
 
         if (
             ! array_key_exists('from', $response) ||
-            ! array_key_exists('fromString', $response)
+            ! array_key_exists('fromString', $response) ||
+            ! array_key_exists('to', $response) ||
+            ! array_key_exists('toString', $response)
         ) {
             throw new ChangelogAPIResponseNotWellFormedException();
         }
@@ -72,7 +88,9 @@ class ChangelogEntryItemsRepresentation
         return new self(
             $response['fieldId'],
             $response['from'],
-            $response['fromString']
+            $response['fromString'],
+            $response['to'],
+            $response['toString'],
         );
     }
 
@@ -89,5 +107,15 @@ class ChangelogEntryItemsRepresentation
     public function getFromString(): ?string
     {
         return $this->from_string;
+    }
+
+    public function getTo(): ?string
+    {
+        return $this->to;
+    }
+
+    public function getToString(): ?string
+    {
+        return $this->toString;
     }
 }
