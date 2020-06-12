@@ -85,7 +85,7 @@ class MailProjectNotificationMustBeApprovedPresenter extends MailOutlinePresente
 
     public function get_help()
     {
-        return $GLOBALS['Language']->getText('mail_outline', 'help', array(ForgeConfig::get('sys_email_admin')));
+        return $GLOBALS['Language']->getOverridableText('mail_outline', 'help', array(ForgeConfig::get('sys_email_admin')));
     }
 
     public function get_url()

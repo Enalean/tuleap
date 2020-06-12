@@ -46,7 +46,7 @@ class SoftwareMapPresenter
 
     public function __construct($current_category_name, $parent_id, $sub_categories, $root_categories, $projects, PaginationPresenter $pagination)
     {
-        $this->title                    = $GLOBALS['Language']->getText('softwaremap_trove_list', 'map');
+        $this->title                    = $GLOBALS['Language']->getOverridableText('softwaremap_trove_list', 'map');
         $this->projects                 = $GLOBALS['Language']->getText('softwaremap_trove_list', 'projs');
         $this->browse_by                = $GLOBALS['Language']->getText('softwaremap_trove_list', 'browse_by');
         $this->title_date               = $GLOBALS['Language']->getText('softwaremap_trove_list', 'register_date');

@@ -50,7 +50,7 @@ class MailProjectNotificationPresenter extends MailOutlinePresenter
 
     public function get_title()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step_notification', 'title');
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step_notification', 'title');
     }
 
     public function get_thanks()

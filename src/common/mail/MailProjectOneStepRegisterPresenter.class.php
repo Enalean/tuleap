@@ -89,22 +89,22 @@ class MailProjectOneStepRegisterPresenter extends MailOutlinePresenter
 
     public function get_section_one()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_one', array($this->getUrlDocumentationSite(), ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_one', array($this->getUrlDocumentationSite(), ForgeConfig::get('sys_name')));
     }
 
     public function get_section_two()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_two', array($this->getUrlSummaryLink()));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_two', array($this->getUrlSummaryLink()));
     }
 
     public function get_section_three()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_three', array($this->getUrlProjectAdministration()));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_three', array($this->getUrlProjectAdministration()));
     }
 
     public function get_section_four()
     {
-        return $GLOBALS['Language']->getText('mail_register_project_one_step', 'section_four', array(ForgeConfig::get('sys_name')));
+        return $GLOBALS['Language']->getOverridableText('mail_register_project_one_step', 'section_four', array(ForgeConfig::get('sys_name')));
     }
 
     public function get_help()

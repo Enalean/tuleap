@@ -77,7 +77,7 @@ echo '<form method="POST" action="">';
 echo $token->fetchHTMLInput();
 echo '<input type="hidden" name="group_id" value="' . (int) $group_id . '" />
     <p>
-        <label for="newtracker_login"><b>' . $Language->getText('account_login', 'name') . '</b>:<br />
+        <label for="newtracker_login"><b>' . $Language->getOverridableText('account_login', 'name') . '</b>:<br />
         ' . $generic_user->getUserName() . '
     </p>
     <p>

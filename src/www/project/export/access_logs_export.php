@@ -69,7 +69,7 @@ function export_file_logs($project, $span, $who)
                       'type'       => 'Action',
                       'user'       => $GLOBALS['Language']->getText('project_export_access_logs_export', 'user'),
                       'email'      => $GLOBALS['Language']->getText('project_export_access_logs_export', 'email'),
-                      'title'      => $GLOBALS['Language']->getText('project_stats_source_code_access_utils', 'frs_elements'),
+                      'title'      => $GLOBALS['Language']->getOverridableText('project_stats_source_code_access_utils', 'frs_elements'),
                       'local_time' => $GLOBALS['Language']->getText('project_export_access_logs_export', 'local_time'));
     $result = db_query($sql);
     $rows = db_numrows($result);

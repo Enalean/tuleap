@@ -154,7 +154,7 @@ file_admin_editreleases	of_this_package	dans ce paquet
 file_admin_editreleases	subject	Sujet
 file_admin_editreleases	file_news_subject	Nouvelle version : $1
 file_admin_editreleases	details	Détails
-file_admin_editreleases	file_news_details	Une nouvelle version $1 est maintenant disponible à l'URL : $2
+file_admin_editreleases	file_news_details	Une nouvelle version $1 est maintenant disponible à $2
 file_admin_editreleases	submit_news	Soumettre une annonce
 file_admin_editreleases	relname	<nom-de-version>
 file_admin_editreleases	fieldset_properties	Propriétés

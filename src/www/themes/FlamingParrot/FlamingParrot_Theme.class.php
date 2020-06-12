@@ -200,24 +200,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function navbar($params, PFUser $current_user, $selected_top_tab)
     {
-        [$search_options, $selected_entry, $hidden_fields] = $this->getSearchEntries();
-
-        $project_id_from_params = $this->getProjectIdFromParams($params);
-        $event_manager          = EventManager::instance();
-
-        $search_type = $selected_entry['value'];
-        $event_manager->processEvent(
-            Event::REDEFINE_SEARCH_TYPE,
-            array(
-                'type'         => &$search_type,
-                'service_name' => (isset($params['service_name'])) ? $params['service_name'] : '',
-                'project_id'   => $project_id_from_params,
-                'user'         => $current_user
-            )
-        );
-        $selected_entry['value'] = $search_type;
-
-        $search_form_presenter = new FlamingParrot_SearchFormPresenter($selected_entry, $hidden_fields);
         $project_manager       = ProjectManager::instance();
         $projects              = $project_manager->getActiveProjectsForUser($current_user);
         $projects_presenters   = $this->getPresentersForProjects($projects);
@@ -232,7 +214,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             )
         );
         $csrf_logout_token     = new CSRFSynchronizerToken('logout_action');
-        $url_redirect          = new URLRedirect($event_manager);
+        $url_redirect          = new URLRedirect(EventManager::instance());
 
         $banner = null;
         if (!empty($params['group'])) {
@@ -250,7 +232,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $current_project_navbar_info,
             $_SERVER['REQUEST_URI'],
             $selected_top_tab,
-            $search_form_presenter,
+            $this->getSearchFormPresenter(),
             $this->displayNewAccount(),
             $this->getMOTD(),
             $navbar_items_builder->buildNavBarItemPresentersCollection(),
@@ -286,14 +268,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         ) {
             $GLOBALS['Response']->addTour(new Tuleap_Tour_FlamingParrotBurningParrotUnificationTour());
         }
-    }
-
-    private function getProjectIdFromParams(array $params)
-    {
-        $project_id  = (isset($params['project_id'])) ? $params['project_id'] : null;
-        $project_id  = (! $project_id && isset($params['group_id'])) ? $params['group_id'] : $project_id;
-
-        return $project_id;
     }
 
     private function getPresentersForProjects($list_of_projects)

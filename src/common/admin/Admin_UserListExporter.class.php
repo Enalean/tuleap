@@ -55,7 +55,7 @@ class Admin_UserListExporter
         $eol = "\n";
         $documents_title = [
             'user_id'          => $Language->getText('admin_userlist', 'id_user'),
-            'login_name'       => $Language->getText('include_user_home', 'login_name'),
+            'login_name'       => $Language->getOverridableText('include_user_home', 'login_name'),
             'real_name'        => $Language->getText('include_user_home', 'real_name'),
             'email'            => $Language->getText('admin_userlist', 'email'),
             'member_of'        => $Language->getText('admin_userlist', 'member_of'),

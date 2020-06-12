@@ -84,7 +84,6 @@ class LdapPlugin extends Plugin
         $this->addHook('before_register', 'before_register', false);
 
         // Search
-        $this->addHook(Event::LAYOUT_SEARCH_ENTRY);
         $this->addHook(Event::SEARCH_TYPE);
 
         // Authentication
@@ -255,25 +254,6 @@ class LdapPlugin extends Plugin
             $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         }
         return $this->_ldapUmInstance;
-    }
-
-    /**
-     * Hook
-     *
-     * IN  $params['type_of_search']
-     * OUT $params['output']
-     *
-     * @param Array $params
-     *
-     * @return void
-     */
-    public function layout_search_entry($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-        $params['search_entries'][] = array(
-            'value'    => 'people_ldap',
-            'label'    => $GLOBALS['Language']->getText('plugin_ldap', 'people_ldap'),
-            'selected' => $params['type_of_search'] == 'people_ldap',
-        );
     }
 
     /**

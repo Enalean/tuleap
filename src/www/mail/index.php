@@ -114,7 +114,7 @@ if ($group_id) {
             exit;
         }
 
-        echo '<P>' . $Language->getText('mail_index', 'mail_list_via_gnu');
+        echo '<P>' . $Language->getOverridableText('mail_index', 'mail_list_via_gnu');
 
         if ($pv) {
             echo "<P>" . $Language->getText('mail_index', 'choose_and_browse') . "<P>\n";

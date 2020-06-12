@@ -114,23 +114,13 @@ include_menu	trove_cat_add	Trove Cat. Add
 include_menu	bugs	Bugs
 include_menu	tasks	Tasks
 include_menu	supp_requ	Support Requests
-include_menu	this_forum	This Forum
-include_menu	this_tracker	This Tracker
 include_menu	all_trackers	All trackers
-include_menu	software_proj	Software Projects
-include_menu	people	People
-include_menu	this_wiki	This Wiki
 include_menu	wiki	Wiki
-include_menu	require_all_words	Require All Words
 include_menu	search	Search
-include_menu	software_map	Software Map
-include_menu	software	Software
 include_menu	new_releases	New Releases
 include_menu	other_site_mirrors	Other Site Mirrors
 include_menu	help_index	Help Index
 include_menu	site_doc	Site Documentation
-include_menu	dev_channel	Developers Channels
-include_menu	discussion_forum	Discussion Forums
 include_menu	contact_us	Contact Us
 include_menu	games	Games
 include_menu	printing	Printing
@@ -145,7 +135,6 @@ include_menu	filter_project	Project...
 include_menu	account_maintenance	Account Maintenance
 include_menu	my_perso_page	My Personal Page
 include_menu	bookmark_this_page	Bookmark This Page
-include_menu	not_logged_in	NOT LOGGED IN
 include_menu	login	Login
 include_menu	new_user	New User
 include_menu	auth_prev_success	Previous successful log-on:
@@ -280,7 +269,6 @@ include_squal_pre	not_connect_db	Could Not Connect to Database
 # Script: SF/www/include/trove.php
 #
 include_trove	none_selected	None Selected
-include_trove	not_categorized_yet	This project has not yet categorized itself in the <A href="$1">Trove Software Map</A>. You can <a href=$2>categorize it</a> now.
 include_trove	now_filter	Now Filtering
 include_trove	filter	Filter
 
@@ -301,7 +289,7 @@ include_user	invalid_u_id	Invalid User ID
 #
 include_utils	prio_colors	Priority Colors
 include_utils	address_problem	There are problems with the following addresses
-include_utils	email_explain	Email addresses must either be valid user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@somewhere.xerox.com'). Lists of email addresses may be separated by either commas or semicolons.
+include_utils	email_explain	Email addresses must either be valid user names (e.g., 'jdoe') or fully qualified email addresses (e.g., 'jill.doe@example.com'). Lists of email addresses may be separated by either commas or semicolons.
 include_utils	invalid_email	Email format invalid
 include_utils	1_minute	1 minute
 include_utils	less_1_minute	less than a minute

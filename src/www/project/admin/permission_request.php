@@ -154,9 +154,9 @@ echo '
 echo '<table>';
 echo '<tr><td colspan="2"><p>';
 if (!$project->isPublic()) {
-    echo $Language->getText('project_admin_index', 'member_request_delegation_desc_private_group');
+    echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_private_group');
 } else {
-    echo $Language->getText('project_admin_index', 'member_request_delegation_desc_restricted_user');
+    echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_restricted_user');
 }
 echo '</p>';
 $notices = array();
