@@ -17,8 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
+import { localVue } from "../helpers/local-vue";
 import { createStore } from "../store/index.js";
 import WritingMode from "./WritingMode.vue";
 import {
@@ -26,33 +26,24 @@ import {
     TooManyTrackersSelectedError,
 } from "./writing-cross-tracker-report.js";
 import * as rest_querier from "../api/rest-querier.js";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 
 describe("WritingMode", () => {
-    let Writing, writingCrossTrackerReport;
+    let writingCrossTrackerReport;
 
     beforeEach(() => {
-        jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockImplementation(() =>
-            Promise.resolve([{ id: 102 }])
-        );
-
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-        Writing = Vue.extend(WritingMode);
+        jest.spyOn(rest_querier, "getSortedProjectsIAmMemberOf").mockResolvedValue([{ id: 102 }]);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
 
     function instantiateComponent() {
-        const vm = new Writing({
-            store: createStore(),
-            propsData: {
-                writingCrossTrackerReport,
+        return shallowMount(WritingMode, {
+            localVue,
+            mocks: {
+                $store: createStoreMock(createStore()),
             },
+            propsData: { writingCrossTrackerReport },
         });
-        vm.$mount();
-
-        return vm;
     }
 
     describe("mounted()", () => {
@@ -66,9 +57,9 @@ describe("WritingMode", () => {
                 { id: 51, label: "monodynamism" }
             );
 
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
 
-            expect(vm.selected_trackers).toEqual([
+            expect(wrapper.vm.selected_trackers).toEqual([
                 {
                     tracker_id: 29,
                     tracker_label: "charry",
@@ -85,23 +76,21 @@ describe("WritingMode", () => {
 
     describe("cancel()", () => {
         it("when I hit cancel, then an event will be emitted to switch the widget to reading mode in saved state", () => {
-            const vm = instantiateComponent();
-            jest.spyOn(vm, "$emit").mockImplementation(() => {});
+            const wrapper = instantiateComponent();
 
-            vm.cancel();
+            wrapper.vm.cancel();
 
-            expect(vm.$emit).toHaveBeenCalledWith("switchToReadingMode", { saved_state: true });
+            expect(wrapper.emitted("switchToReadingMode")[0][0]).toEqual({ saved_state: true });
         });
     });
 
     describe("search()", () => {
         it("when I hit search, then an event will be emitted to switch the widget to reading mode in unsaved state", () => {
-            const vm = instantiateComponent();
-            jest.spyOn(vm, "$emit").mockImplementation(() => {});
+            const wrapper = instantiateComponent();
 
-            vm.search();
+            wrapper.vm.search();
 
-            expect(vm.$emit).toHaveBeenCalledWith("switchToReadingMode", { saved_state: false });
+            expect(wrapper.emitted("switchToReadingMode")[0][0]).toEqual({ saved_state: false });
         });
     });
 
@@ -117,14 +106,13 @@ describe("WritingMode", () => {
             );
             jest.spyOn(writingCrossTrackerReport, "removeTracker");
             const tracker = { tracker_id: 46 };
-            const vm = instantiateComponent();
-            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
+            const wrapper = instantiateComponent();
 
-            vm.removeTrackerFromSelection(tracker);
+            wrapper.vm.removeTrackerFromSelection(tracker);
 
             expect(writingCrossTrackerReport.removeTracker).toHaveBeenCalledWith(46);
-            expect(vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
-            expect(vm.selected_trackers).toEqual([
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
+            expect(wrapper.vm.selected_trackers).toEqual([
                 {
                     tracker_id: 61,
                     tracker_label: "Dipneumona",
@@ -137,11 +125,11 @@ describe("WritingMode", () => {
     describe("addTrackerToSelection()", () => {
         it("when I add a tracker, then the writing report will be updated", () => {
             jest.spyOn(writingCrossTrackerReport, "addTracker");
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
             const selected_project = { id: 656, label: "ergatogyne" };
             const selected_tracker = { id: 53, label: "observingly" };
 
-            vm.addTrackerToSelection({
+            wrapper.vm.addTrackerToSelection({
                 selected_project,
                 selected_tracker,
             });
@@ -150,7 +138,7 @@ describe("WritingMode", () => {
                 selected_project,
                 selected_tracker
             );
-            expect(vm.selected_trackers).toEqual([
+            expect(wrapper.vm.selected_trackers).toEqual([
                 {
                     tracker_id: 53,
                     tracker_label: "observingly",
@@ -163,17 +151,19 @@ describe("WritingMode", () => {
             jest.spyOn(writingCrossTrackerReport, "addTracker").mockImplementation(() => {
                 throw new TooManyTrackersSelectedError();
             });
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
             const selected_project = { id: 656, label: "ergatogyne" };
             const selected_tracker = { id: 53, label: "observingly" };
-            const storeCommitSpy = jest.spyOn(vm.$store, "commit");
 
-            vm.addTrackerToSelection({
+            wrapper.vm.addTrackerToSelection({
                 selected_project,
                 selected_tracker,
             });
 
-            expect(storeCommitSpy).toHaveBeenCalledWith("setErrorMessage", expect.any(String));
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setErrorMessage",
+                expect.any(String)
+            );
         });
     });
 });

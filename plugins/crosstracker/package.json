@@ -13,7 +13,9 @@
     "vue-gettext": "^2.1.8",
     "vuex": "^3.4.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.3"
+  },
   "config": {
     "bin": "../../node_modules/.bin"
   },

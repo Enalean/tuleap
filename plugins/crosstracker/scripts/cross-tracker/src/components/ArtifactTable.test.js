@@ -17,26 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
+import { localVue } from "../helpers/local-vue.js";
+import { shallowMount } from "@vue/test-utils";
 import {
     mockFetchError,
     mockFetchSuccess,
 } from "../../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createStore } from "../store/index.js";
 import WritingCrossTrackerReport from "../writing-mode/writing-cross-tracker-report.js";
 import ArtifactTable from "./ArtifactTable.vue";
-import GetTextPlugin from "vue-gettext";
 import * as rest_querier from "../api/rest-querier.js";
 
 describe("ArtifactTable", () => {
-    let Widget, writingCrossTrackerReport, getReportContent, getQueryResult;
+    let writingCrossTrackerReport, getReportContent, getQueryResult;
 
     beforeEach(() => {
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-        Widget = Vue.extend(ArtifactTable);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
 
         getReportContent = jest.spyOn(rest_querier, "getReportContent");
@@ -45,48 +41,35 @@ describe("ArtifactTable", () => {
         getQueryResult = jest.spyOn(rest_querier, "getQueryResult");
     });
 
-    function instantiateComponent() {
-        const vm = new Widget({
-            store: createStore(),
+    function instantiateComponent(state) {
+        return shallowMount(ArtifactTable, {
+            store: createStoreMock(createStore(), state),
+            localVue,
             propsData: {
                 writingCrossTrackerReport,
             },
         });
-        vm.$mount();
-
-        return vm;
     }
 
     describe("loadArtifacts() -", () => {
         it("Given report is saved, it loads artifacts of report", () => {
-            const vm = instantiateComponent();
-            vm.$store.replaceState({
-                is_report_saved: true,
-            });
-
-            vm.loadArtifacts();
-
+            const wrapper = instantiateComponent({ is_report_saved: true });
+            wrapper.vm.loadArtifacts();
             expect(getReportContent).toHaveBeenCalled();
         });
 
         it("Given report is not saved, it loads artifacts of current selected trackers", () => {
-            const vm = instantiateComponent();
-            vm.$store.replaceState({
-                is_report_saved: false,
-            });
-
-            vm.loadArtifacts();
-
+            const wrapper = instantiateComponent({ is_report_saved: false });
+            wrapper.vm.loadArtifacts();
             expect(getQueryResult).toHaveBeenCalled();
         });
 
         it("when there is a REST error, it will be displayed", () => {
             mockFetchError(getReportContent, { status: 500 });
-            const vm = instantiateComponent();
-            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
+            const wrapper = instantiateComponent();
 
-            return vm.loadArtifacts().then(() => {
-                expect(vm.$store.commit).toHaveBeenCalledWith(
+            return wrapper.vm.loadArtifacts().then(() => {
+                expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                     "setErrorMessage",
                     "An error occurred"
                 );
@@ -94,17 +77,12 @@ describe("ArtifactTable", () => {
         });
 
         it("when there is a translated REST error, it will be shown", () => {
-            const vm = instantiateComponent();
-            const error_json = {
-                error: {
-                    i18n_error_message: "Error while parsing the query",
-                },
-            };
+            const wrapper = instantiateComponent();
+            const error_json = { error: { i18n_error_message: "Error while parsing the query" } };
             mockFetchError(getReportContent, { status: 400, error_json });
-            jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
 
-            return vm.loadArtifacts().then(() => {
-                expect(vm.$store.commit).toHaveBeenCalledWith(
+            return wrapper.vm.loadArtifacts().then(() => {
+                expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                     "setErrorMessage",
                     "Error while parsing the query"
                 );
