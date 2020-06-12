@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,26 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * @psalm-immutable
+ */
 class FlamingParrot_SearchFormPresenter
 {
+    /**
+     * @var string
+     */
+    public $selected_entry_value;
 
-    private $selected_entry;
+    /**
+     * @var array
+     */
+    public $hidden_fields;
 
-    private $hidden_fields;
-
-    public function __construct($selected_entry, $hidden_fields)
+    public function __construct(string $selected_entry_value, array $hidden_fields)
     {
-        $this->selected_entry = $selected_entry;
-        $this->hidden_fields  = $hidden_fields;
-    }
-
-    public function selected_entry()
-    {
-        return $this->selected_entry['value'];
-    }
-
-    public function hidden_fields()
-    {
-        return $this->hidden_fields;
+        $this->selected_entry_value = $selected_entry_value;
+        $this->hidden_fields        = $hidden_fields;
     }
 }

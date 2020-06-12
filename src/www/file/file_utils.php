@@ -432,7 +432,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     echo "var type_id = ['" . implode("', '", $type_id) . "'];";
     echo "var type_name = ['" . implode("', '", $type_name) . "'];";
     echo "var group_id = " . $hp->purify($group_id, CODENDI_PURIFIER_JS_QUOTE) . ";";
-    echo "var relname = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
+    echo "var relname = '" . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     echo "var choose = '" . $hp->purify($GLOBALS['Language']->getText('file_file_utils', 'must_choose_one'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     echo "var browse = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'browse'), CODENDI_PURIFIER_JS_QUOTE) . "';";
     echo "var local_file = '" . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'local_file'), CODENDI_PURIFIER_JS_QUOTE) . "';";
@@ -470,7 +470,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
     }
     echo '</script>';
     //set variables for news template
-    $relname = $GLOBALS['Language']->getText('file_admin_editreleases', 'relname');
+    $relname = $GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'relname');
     if (!$is_update) {
         echo '<p>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'contain_multiple_files')) . '</p>';
     }
@@ -793,7 +793,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                             <B> ' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'details')) . ' :</B>
                         </TD>
                         <TD>
-                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'file_news_details', array (
+                            <TEXTAREA ID="release_news_details" NAME="release_news_details" ROWS="7" COLS="50">' . $hp->purify($GLOBALS['Language']->getOverridableText('file_admin_editreleases', 'file_news_details', array (
                 $relname,
                 $url_news
                 ))) . ' </TEXTAREA>

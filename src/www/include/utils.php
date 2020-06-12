@@ -658,7 +658,7 @@ function util_validateCCList(&$arr_email, &$message, $strict = false)
     if (! $valid) {
         $message = $Language->getText('include_utils', 'address_problem') . ":"
             . "<blockquote>$message</blockquote>"
-            . $Language->getText('include_utils', 'email_explain');
+            . $Language->getOverridableText('include_utils', 'email_explain');
     }
 
     return $valid;

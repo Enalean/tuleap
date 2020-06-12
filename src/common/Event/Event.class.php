@@ -813,17 +813,6 @@ class Event // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public const REST_PROJECT_GET_GIT = 'rest_project_get_git';
 
     /**
-     * Throw an event to allow a plugin to refdefine the type of search
-     *
-     * Parameters:
-     *     'type'         => (string) current type,
-     *     'service_name' => string,
-     *     'project_id'   => int,
-     *     'user'         => PFUser,
-     */
-    public const REDEFINE_SEARCH_TYPE = 'redefine_search_type';
-
-    /**
      * When access level of project changes
      *
      * Parameters:

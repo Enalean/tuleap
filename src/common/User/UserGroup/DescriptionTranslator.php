@@ -39,7 +39,7 @@ class DescriptionTranslator
     {
         switch ($desc) {
             case self::ANON:
-                return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_anonymous_users_desc_key');
+                return $GLOBALS['Language']->getOverridableText('project_ugroup', 'ugroup_anonymous_users_desc_key');
             case self::REGISTERED:
                 return $GLOBALS['Language']->getText('project_ugroup', 'ugroup_registered_users_desc_key');
             case self::PROJECT_MEMBERS:

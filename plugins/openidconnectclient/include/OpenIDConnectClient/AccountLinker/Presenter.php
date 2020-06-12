@@ -56,7 +56,7 @@ class Presenter
 
     public function account_login_name()
     {
-        return $GLOBALS['Language']->getText('account_login', 'name');
+        return $GLOBALS['Language']->getOverridableText('account_login', 'name');
     }
 
     public function account_login_password()

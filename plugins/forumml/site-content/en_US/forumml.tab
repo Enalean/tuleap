@@ -2,7 +2,7 @@
 #  *
 #  * Plugin forumml scripts message catalog (English)
 #  *
-#  * 
+#  *
 #  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
 #  *
 #  * Originally written by Mohamed CHAARI, 2007. STMicroelectronics.
@@ -97,5 +97,4 @@ plugin_forumml	toggle_font	Toggle font familly (typewriter/normal)
 #-----------------------------------------------
 # Script:plugins/forumml/include/forummlPlugin.class.php
 #
-plugin_forumml	this_list	This Mailing-List
 plugin_forumml	search_list	Mailing list

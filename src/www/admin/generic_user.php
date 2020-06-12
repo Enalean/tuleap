@@ -57,7 +57,7 @@ echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
         ' . $fake_generic_user->getRealName() . '
       </p>
       <p>
-        <label class="' . $name_css . '"><b>' . $Language->getText('account_login', 'name') . '</b>:<br />
+        <label class="' . $name_css . '"><b>' . $Language->getOverridableText('account_login', 'name') . '</b>:<br />
         ' . $fake_generic_user->getUnixName() . '
         <div class="help">e.g. ' . $sample_generic_user->getUnixName() . '</div>
       </p>

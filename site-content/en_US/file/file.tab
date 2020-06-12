@@ -162,7 +162,7 @@ file_admin_editreleases	of_this_package	Of This Package
 file_admin_editreleases	subject	Subject
 file_admin_editreleases	file_news_subject	New Release : $1
 file_admin_editreleases	details	Details
-file_admin_editreleases	file_news_details	A new release $1 is now available at this URL : $2
+file_admin_editreleases	file_news_details	A new release $1 is now available at $2
 file_admin_editreleases	submit_news	Submit News
 file_admin_editreleases	relname	<release-name>
 file_admin_editreleases	fieldset_properties	Properties

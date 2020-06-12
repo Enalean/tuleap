@@ -108,23 +108,13 @@ include_menu	trove_cat_add	Ajout des catégories
 include_menu	bugs	Bugs
 include_menu	tasks	Tâches
 include_menu	supp_requ	Demande de support
-include_menu	this_forum	Ce forum
 include_menu	wiki	Wiki
-include_menu	this_tracker	Cet outil de suivi
 include_menu	all_trackers	Tous les outils de suivi
-include_menu	software_proj	Projets logiciel
-include_menu	people	Utilisateurs
-include_menu	this_wiki	Ce wiki
-include_menu	require_all_words	Tous les mots
 include_menu	search	Rechercher
-include_menu	software_map	Arbre des projets
-include_menu	software	Logiciels
 include_menu	new_releases	Nouvelles versions
 include_menu	other_site_mirrors	Autres sites miroirs
 include_menu	help_index	Index de l'aide
 include_menu	site_doc	Documentation site
-include_menu	dev_channel	Canaux développeurs
-include_menu	discussion_forum	Forums de discussions
 include_menu	contact_us	Contactez-nous
 include_menu	about_foudries	À propos des fonderies
 include_menu	games	Jeux
@@ -140,7 +130,6 @@ include_menu	filter_project	Projet...
 include_menu	account_maintenance	Mon compte
 include_menu	my_perso_page	Ma page personnelle
 include_menu	bookmark_this_page	Cette page en favori
-include_menu	not_logged_in	Déconnecté
 include_menu	login	Se connecter
 include_menu	new_user	Nouveau compte
 include_menu	auth_prev_success	Dernière connexion:
@@ -275,7 +264,6 @@ include_squal_pre	not_connect_db	Connexion à la base de données impossible
 # Script: SF/www/include/trove.php
 #
 include_trove	none_selected	Aucune sélection
-include_trove	not_categorized_yet	Ce projet n'est pas encore catégorisé dans <A href="$1">l'arbre des projets</A>. Vous pouvez <a href=$2>le catégoriser</a> maintenant.
 include_trove	now_filter	Filtrage en cours
 include_trove	filter	Filtrer
 
@@ -296,7 +284,7 @@ include_user	invalid_u_id	ID utilisateur invalide
 #
 include_utils	prio_colors	Échelle de couleurs des priorités
 include_utils	address_problem	Les adresses suivantes présentent une anomalie
-include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@mon.domaine.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
+include_utils	email_explain	Les adresses e-mail doivent être soit des noms de login utilisateur (par exemple 'jmartin') ou une adresse e-mail complète (par exemple jean.martin@example.com). Plusieurs adresses e-mail peuvent être saisies si elles sont séparées par une virgule ou un point-virgule.
 include_utils	invalid_email	Format d'email invalide
 include_utils	1_minute	1 minute
 include_utils	less_1_minute	moins d'une minute

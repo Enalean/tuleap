@@ -86,16 +86,3 @@ menu	site_status	Site Status
 menu	software_map	Software Map
 menu	submit	Submit
 menu	top_projects	Top Projects
-searchbox	advanced_search	Advanced search
-searchbox	docs	This project's documents
-searchbox	forum	This forum
-searchbox	forums	This project's forums
-searchbox	frs	This project's releases
-searchbox	full	Search the entire project
-searchbox	news	This project's news
-searchbox	people	People
-searchbox	search	Search
-searchbox	softwaregroup	Software/Group
-searchbox	task	Tasks
-searchbox	tasks	This project's tasks
-searchbox	trackers	This project's trackers

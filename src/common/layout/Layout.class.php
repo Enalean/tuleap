@@ -827,12 +827,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         $this->generic_footer($params);
     }
 
-    public function menu_entry($link, $title) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    {
-            print "\t" . '<A class="menus" href="' . $link . '">' . $title . '</A> &nbsp;<img src="' . util_get_image_theme("point1.png") . '" alt=" " width="7" height="7"><br>';
-    }
-
-    protected function getSearchEntries()
+    protected function getSearchFormPresenter(): FlamingParrot_SearchFormPresenter
     {
         $em      = EventManager::instance();
         $request = HTTPRequest::instance();
@@ -852,7 +847,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             if ($request->exist('forum_id')) {
                 $search_entries[] = array(
                     'value'    => 'forums',
-                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_forum'),
                     'selected' => true,
                 );
                 $hidden[] = array(
@@ -863,7 +857,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             if ($request->exist('atid')) {
                 $search_entries[] = array(
                     'value'    => 'tracker',
-                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_tracker'),
                     'selected' => true,
                 );
                 $hidden[] = array(
@@ -874,7 +867,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             if (strpos($_SERVER['REQUEST_URI'], '/wiki/') === 0) {
                 $search_entries[] = array(
                     'value'    => 'wiki',
-                    'label'    => $GLOBALS['Language']->getText('include_menu', 'this_wiki'),
                     'selected' => true,
                 );
             }
@@ -883,13 +875,13 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         if (ForgeConfig::get('sys_use_trove')) {
             $search_entries[] = array(
                 'value' => 'soft',
-                'label' => $GLOBALS['Language']->getText('include_menu', 'software_proj')
+                'selected' => false,
             );
         }
 
         $search_entries[] = array(
             'value' => 'people',
-            'label' => $GLOBALS['Language']->getText('include_menu', 'people')
+            'selected' => false,
         );
 
         $em->processEvent(
@@ -901,24 +893,17 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             )
         );
 
-        $search_entries = $this->forceSelectedOption($search_entries);
         $selected_entry = $this->getSelectedOption($search_entries);
 
-        return array($search_entries, $selected_entry, $hidden);
+        return new FlamingParrot_SearchFormPresenter($selected_entry['value'], $hidden);
     }
 
-    private function forceSelectedOption(array $search_entries)
-    {
-        foreach ($search_entries as $key => $search_entry) {
-            if (! isset($search_entry['selected'])) {
-                $search_entries[$key]['selected'] = false;
-            }
-        }
-
-        return $search_entries;
-    }
-
-    private function getSelectedOption(array $search_entries)
+    /**
+     * @param array{array{value: string, selected: bool}} $search_entries
+     *
+     * @return array{value: string, selected: bool}
+     */
+    private function getSelectedOption(array $search_entries): array
     {
         $selected_option = $search_entries[0];
 
@@ -929,56 +914,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         }
 
         return $selected_option;
-    }
-
-    public function getSearchBox()
-    {
-        $request = HTTPRequest::instance();
-
-        $type_of_search = $request->get('type_of_search');
-        $words          = $request->get('words');
-
-        // if there is no search currently, set the default
-        $exact = 1;
-        if (isset($type_of_search)) {
-            $exact = 0;
-        }
-
-        [$search_entries, $selected_entry, $hidden_fields] = $this->getSearchEntries();
-
-        $output = '
-                <form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
-        ';
-        $output .= '<input type="hidden" name="number_of_page_results" value="' . Search_SearchPlugin::RESULTS_PER_QUERY . '">';
-        $output .= '<select style="font-size: x-small" name="type_of_search">';
-        foreach ($search_entries as $entry) {
-            $selected = '';
-            if (isset($entry['selected']) && $entry['selected'] == true) {
-                $selected = ' selected="selected"';
-            }
-            $output .= '<option value="' . $entry['value'] . '"' . $selected . '>' . $entry['label'] . '</option>';
-        }
-        $output .= '</select>';
-
-        foreach ($hidden_fields as $hidden) {
-            $output .= '<input type="hidden" name="' . $hidden['name'] . '" value="' . $hidden['value'] . '" />';
-        }
-
-        $output .= '<input style="font-size:0.8em" type="text" class="input-medium" size="22" name="words" value="' . $this->purifier->purify($words, CODENDI_PURIFIER_CONVERT_HTML) . '" /><br />';
-        $output .= '<input type="CHECKBOX" name="exact" value="1"' . ( $exact ? ' CHECKED' : ' UNCHECKED' ) . '><span style="font-size:0.8em">' . $GLOBALS['Language']->getText('include_menu', 'require_all_words') . '</span>';
-
-        $output .= '</td><td>';
-        $output .= '<input class="btn" style="font-size:0.8em" type="submit" name="Search" value="' . $GLOBALS['Language']->getText('searchbox', 'search') . '" />';
-        $output .= '</td></tr></table></form>';
-        return $output;
-    }
-
-    /**
-     * Echo the search box
-     */
-    public function searchBox()
-    {
-        echo "\t<CENTER>\n" . $this->getSearchBox() . "\t</CENTER>\n";
     }
 
     /**

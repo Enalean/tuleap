@@ -88,7 +88,6 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if ($group_id && $request->exist('list')) {
             $params['search_entries'][] = array(
                 'value' => 'mail',
-                'label' => $GLOBALS['Language']->getText('plugin_forumml', 'this_list'),
                 'selected' => true,
             );
             $params['hidden_fields'][] = array(

@@ -215,7 +215,7 @@ if ($special_cat) {
 
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
 
-$GLOBALS['HTML']->header(array('title' => $Language->getText('softwaremap_trove_list', 'map'), 'main_classes' => array('tlp-framed')));
+$GLOBALS['HTML']->header(array('title' => $Language->getOverridableText('softwaremap_trove_list', 'map'), 'main_classes' => array('tlp-framed')));
 
 $renderer->renderToPage(
     'software_map',

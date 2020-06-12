@@ -64,7 +64,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
     {
         parent::__construct($id);
         $this->setName("mediawiki");
-        $this->text = "Mediawiki"; // To show in the tabs, use...
         $this->addHook('cssfile');
         $this->addHook(Event::SERVICES_ALLOWED_FOR_PROJECT);
         $this->addHook(Event::PROCCESS_SYSTEM_CHECK);
@@ -186,7 +185,6 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         if ($this->isSearchEntryAvailable($project)) {
             $params['search_entries'][] = array(
                 'value'    => $this->getName(),
-                'label'    => $this->text,
                 'selected' => $this->isSearchEntrySelected($params['type_of_search']),
             );
             $params['hidden_fields'][] = array(
@@ -219,7 +217,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         if ($this->isSearchEntryAvailable($params['project'])) {
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 $this->getName(),
-                $this->text,
+                "Mediawiki",
                 array(),
                 $this->getMediawikiSearchURI($params['project'], $params['words'])
             );
