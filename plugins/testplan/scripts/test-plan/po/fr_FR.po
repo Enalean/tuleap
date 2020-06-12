@@ -46,6 +46,9 @@ msgstr "Tous les tests dans %{ milestone_title }"
 msgid "An error occurred while creating the campaign."
 msgstr "Une erreur est survenue lors de la création de la campagne."
 
+msgid "An error occurred while loading the backlog items."
+msgstr "Une erreur est survenue lors du chargement des éléments du backlog."
+
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
@@ -83,6 +86,9 @@ msgstr "Aucun test"
 msgid "Test campaigns"
 msgstr "Campagnes de test"
 
+msgid "Test plan"
+msgstr "Plan de test"
+
 msgid "Tests"
 msgstr "Tests"
 
@@ -92,6 +98,9 @@ msgid ""
 msgstr ""
 "La récupération des rapports de l'outil de suivi de définition de test a "
 "échoué, veuillez réessayer plus tard"
+
+msgid "There is no backlog item yet."
+msgstr "Il n'y a pas d'éléments dans le backlog."
 
 msgid "There is no test campaign yet."
 msgstr "Il n'y a pas de campagne de test."

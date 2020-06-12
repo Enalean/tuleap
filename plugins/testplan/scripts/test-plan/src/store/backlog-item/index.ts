@@ -17,21 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
-    readonly is_being_refreshed: boolean;
-    readonly is_just_refreshed: boolean;
-    readonly is_error: boolean;
-}
+import { Module } from "vuex";
+import { RootState } from "../type";
+import { BacklogItemState } from "./type";
+import * as actions from "./backlog-item-actions";
+import * as mutations from "./backlog-item-mutations";
 
-export interface BacklogItem {
-    readonly id: number;
-    readonly label: string;
-    readonly short_type: string;
-    readonly color: string;
-}
+const backlog_item_module_default: Module<BacklogItemState, RootState> = {
+    namespaced: true,
+    state: {
+        backlog_items: [],
+        is_loading: true,
+        has_loading_error: false,
+    },
+    actions,
+    mutations,
+};
+export default backlog_item_module_default;

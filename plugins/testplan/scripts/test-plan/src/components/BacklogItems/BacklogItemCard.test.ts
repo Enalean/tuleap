@@ -17,21 +17,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
-    readonly is_being_refreshed: boolean;
-    readonly is_just_refreshed: boolean;
-    readonly is_error: boolean;
-}
+import { shallowMount } from "@vue/test-utils";
+import BacklogItemCard from "./BacklogItemCard.vue";
 
-export interface BacklogItem {
-    readonly id: number;
-    readonly label: string;
-    readonly short_type: string;
-    readonly color: string;
-}
+describe("BacklogItemCard", () => {
+    it("Display the backlog item as a card", () => {
+        const wrapper = shallowMount(BacklogItemCard, {
+            propsData: {
+                backlog_item: {
+                    id: 123,
+                    label: "A backlog item",
+                    color: "fiesta-red",
+                    short_type: "bug",
+                },
+            },
+        });
+
+        expect(wrapper.element).toMatchSnapshot();
+    });
+});

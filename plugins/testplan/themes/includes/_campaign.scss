@@ -18,10 +18,10 @@
  */
 
 .test-plan-list-of-campaigns {
-    max-width: 50%;
+    width: calc(40% - #{$tlp-large-spacing});
 
     @media screen and (max-width: 1100px) {
-        max-width: inherit;
+        width: 100%;
     }
 }
 

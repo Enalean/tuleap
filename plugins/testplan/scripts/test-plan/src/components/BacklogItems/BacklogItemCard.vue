@@ -19,20 +19,28 @@
   -->
 
 <template>
-    <div class="tlp-framed-horizontally test-plan-app">
-        <list-of-backlog-items />
-        <list-of-campaigns />
+    <div class="tlp-card">
+        <span class="tlp-badge-outline" v-bind:class="badge_color">
+            {{ backlog_item.short_type }} #{{ backlog_item.id }}
+        </span>
+        <span class="test-plan-backlog-item-title">
+            {{ backlog_item.label }}
+        </span>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
-import { Component } from "vue-property-decorator";
-import ListOfBacklogItems from "./BacklogItems/ListOfBacklogItems.vue";
+import { Component, Prop } from "vue-property-decorator";
+import { BacklogItem } from "../../type";
 
-@Component({
-    components: { ListOfBacklogItems, ListOfCampaigns },
-})
-export default class App extends Vue {}
+@Component
+export default class BacklogItemCard extends Vue {
+    @Prop({ required: true })
+    readonly backlog_item!: BacklogItem;
+
+    get badge_color(): string {
+        return "tlp-badge-" + this.backlog_item.color;
+    }
+}
 </script>

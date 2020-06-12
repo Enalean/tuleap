@@ -18,21 +18,9 @@
   -
   -->
 
-<template>
-    <div class="tlp-framed-horizontally test-plan-app">
-        <list-of-backlog-items />
-        <list-of-campaigns />
+<template functional>
+    <div class="tlp-card tlp-skeleton-card">
+        <span class="tlp-skeleton-text test-plan-backlog-item-skeleton-xref"></span>
+        <span class="tlp-skeleton-text test-plan-backlog-item-skeleton-title"></span>
     </div>
 </template>
-
-<script lang="ts">
-import Vue from "vue";
-import ListOfCampaigns from "./Campaigns/ListOfCampaigns.vue";
-import { Component } from "vue-property-decorator";
-import ListOfBacklogItems from "./BacklogItems/ListOfBacklogItems.vue";
-
-@Component({
-    components: { ListOfBacklogItems, ListOfCampaigns },
-})
-export default class App extends Vue {}
-</script>
