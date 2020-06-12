@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -15,15 +15,13 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-Cypress.Commands.add("login", () => {
-    cy.visit("/");
-    cy.get("[data-test=form_loginname]").type("alice");
-    cy.get("[data-test=form_pw]").type("Correct Horse Battery Staple{enter}");
-});
-
-Cypress.Commands.add("getProjectId", (project_shortname) => {
-    cy.visit(`/projects/${project_shortname}/`);
-    return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
-});
+/// <reference types="cypress" />
+declare namespace Cypress {
+    interface Chainable<Subject> {
+        login(): void;
+        getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
+    }
+}
