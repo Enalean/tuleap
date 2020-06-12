@@ -29,7 +29,7 @@ use Lcobucci\JWT\Signer\Key;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use UGroupLiteralizer;
+use Tuleap\Project\UGroupLiteralizer;
 use UserManager;
 
 class JWTGeneratorTest extends TestCase
@@ -68,7 +68,7 @@ class JWTGeneratorTest extends TestCase
 
         $u_groups = array('@site_active');
 
-        $this->ugroup_literalizer = \Mockery::mock(\UGroupLiteralizer::class);
+        $this->ugroup_literalizer = \Mockery::mock(UGroupLiteralizer::class);
         $this->ugroup_literalizer->shouldReceive('getUserGroupsForUserWithArobase')->andReturn($u_groups);
 
         $this->private_key   = new Key('private_key_test');

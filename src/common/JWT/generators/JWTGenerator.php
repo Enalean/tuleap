@@ -24,8 +24,8 @@ namespace Tuleap\JWT\Generators;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Signer\Key;
+use Tuleap\Project\UGroupLiteralizer;
 use UserManager;
-use UGroupLiteralizer;
 
 class JWTGenerator
 {

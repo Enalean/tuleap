@@ -58,7 +58,7 @@ class ConfigPermissionsSerializerTest extends TestCase
         $this->project->shouldReceive('getUnixName')->andReturns('project' . $this->project_id);
 
         $this->repository = Mockery::spy(\GitRepository::class);
-        $this->repository->shouldReceive('getId')->andReturns($this->repository);
+        $this->repository->shouldReceive('getId')->andReturns($this->repository_id);
         $this->repository->shouldReceive('getProject')->andReturn($this->project);
 
         PermissionsManager::setInstance(Mockery::spy(\PermissionsManager::class));

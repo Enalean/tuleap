@@ -33,6 +33,7 @@ use Tuleap\Project\Admin\PermissionsPerGroup\PanesPermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupBuilder;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupPresenter;
 use Tuleap\Project\Admin\PermissionsPerGroup\PermissionPerGroupUGroupFormatter;
+use Tuleap\Project\UGroupLiteralizer;
 
 require_once __DIR__ . '/../../include/pre.php';
 

@@ -21,9 +21,9 @@ namespace Tuleap\User\REST\v1;
 
 use Luracast\Restler\RestException;
 use PFUser;
+use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
-use UGroupLiteralizer;
 use User_ForgeUserGroupPermission_RetrieveUserMembershipInformation;
 use User_ForgeUserGroupPermission_UserManagement;
 use User_ForgeUserGroupPermissionsDao;
