@@ -30,6 +30,8 @@
  * https://github.com/sitaramc/gitolite/blob/pu/contrib/ldap/ldap-query-example.pl
  */
 
+use Tuleap\Project\UGroupLiteralizer;
+
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 if (!isset($argv[1])) {

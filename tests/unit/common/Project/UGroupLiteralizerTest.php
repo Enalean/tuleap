@@ -18,8 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Project;
+
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PermissionsManager;
 use PHPUnit\Framework\TestCase;
+use ProjectUGroup;
+use UserManager;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class UGroupLiteralizerTest extends TestCase

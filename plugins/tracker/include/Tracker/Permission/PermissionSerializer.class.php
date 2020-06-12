@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\UGroupLiteralizer;
+
 class Tracker_Permission_PermissionsSerializer
 {
 

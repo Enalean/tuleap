@@ -20,6 +20,7 @@
  */
 
 use Tuleap\PHPWiki\WikiPage;
+use Tuleap\Project\UGroupLiteralizer;
 
 /*
  * I extract permissions according wiki page rights, wiki service rights

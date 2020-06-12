@@ -18,25 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace Tuleap\Project;
+
+use PermissionsManager;
+use PFUser;
+use Project;
+use ProjectUGroup;
+use UserManager;
+
 /**
  * This class returns ugroup in a literalized form (eg: 'gpig_project_member')
  */
 class UGroupLiteralizer
 {
-
-    private static $user_status = array(
+    private const USER_STATUS = [
         PFUser::STATUS_RESTRICTED => 'site_restricted',
-        PFUser::STATUS_ACTIVE     => 'site_active'
-    );
+        PFUser::STATUS_ACTIVE     => 'site_active',
+    ];
 
-    private static $ugroups_templates = array(
+    private const UGROUPS_TEMPLATES = [
         ProjectUGroup::ANONYMOUS       => '@site_active @%s_project_members',
         ProjectUGroup::REGISTERED      => '@site_active @%s_project_members',
         ProjectUGroup::AUTHENTICATED   => '@site_active @%s_project_members @site_restricted',
         ProjectUGroup::PROJECT_MEMBERS => '@%s_project_members',
         ProjectUGroup::PROJECT_ADMIN   => '@%s_project_admin',
-        ProjectUGroup::WIKI_ADMIN      => '@%s_wiki_admin'
-    );
+        ProjectUGroup::WIKI_ADMIN      => '@%s_wiki_admin',
+    ];
 
     /**
      * Return User groups for a given user
@@ -66,7 +73,7 @@ class UGroupLiteralizer
             return array();
         }
         return array_merge(
-            array(self::$user_status[$user->getStatus()]),
+            array(self::USER_STATUS[$user->getStatus()]),
             $this->getProjectUserGroupsForUser($user)
         );
     }
@@ -178,7 +185,7 @@ class UGroupLiteralizer
      */
     private function isValidUser(PFUser $user)
     {
-        return isset(self::$user_status[$user->getStatus()]);
+        return isset(self::USER_STATUS[$user->getStatus()]);
     }
 
     /**
@@ -187,15 +194,15 @@ class UGroupLiteralizer
      * @param int    $ugroup_id    The id of the ugroup
      * @param string $project_name The unix group name of the project
      *
-     * @return string @ug_102 | @gpig_project_admin | @site_active @gpig_project_member | ... or null if not found
+     * @return string|null @ug_102 | @gpig_project_admin | @site_active @gpig_project_member | ... or null if not found
      */
-    private function ugroupIdToString($ugroup_id, $project_name)
+    private function ugroupIdToString($ugroup_id, $project_name): ?string
     {
         $ugroup = null;
         if ($ugroup_id > 100) {
             $ugroup = '@ug_' . $ugroup_id;
-        } elseif (isset(self::$ugroups_templates[$ugroup_id])) {
-            $ugroup = sprintf(self::$ugroups_templates[$ugroup_id], $project_name);
+        } elseif (isset(self::UGROUPS_TEMPLATES[$ugroup_id])) {
+            $ugroup = sprintf(self::UGROUPS_TEMPLATES[$ugroup_id], $project_name);
         }
         return $ugroup;
     }
@@ -203,9 +210,9 @@ class UGroupLiteralizer
     /**
      * @see ugroupIdToString
      */
-    private function ugroupIdToStringWithoutArobase($ugroup_id, $project_name)
+    private function ugroupIdToStringWithoutArobase(int $ugroup_id, string $project_name): string
     {
-        return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name));
+        return str_replace('@', '', $this->ugroupIdToString($ugroup_id, $project_name) ?? '');
     }
 
     /**
@@ -224,17 +231,20 @@ class UGroupLiteralizer
         return $this->ugroupIdsToString($ugroup_ids, $project);
     }
 
-    public function getUgroupIds(Project $project, $object_id, $permission_type)
+    public function getUgroupIds(Project $project, int $object_id, string $permission_type): array
     {
         return PermissionsManager::instance()->getAuthorizedUGroupIdsForProject($project, $object_id, $permission_type);
     }
 
-    public function ugroupIdsToString($ugroup_ids, Project $project)
+    /**
+     * @psalm-return list<string>
+     */
+    public function ugroupIdsToString(array $ugroup_ids, Project $project): array
     {
         $project_name = $project->getUnixName();
         $strings      = array();
         foreach ($ugroup_ids as $key => $ugroup_id) {
-            foreach (explode(' ', $this->ugroupIdToString($ugroup_id, $project_name)) as $string) {
+            foreach (explode(' ', $this->ugroupIdToString($ugroup_id, $project_name) ?? '') as $string) {
                 $strings[] = $string;
             }
         }

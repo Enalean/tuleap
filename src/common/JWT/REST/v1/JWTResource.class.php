@@ -22,11 +22,11 @@ namespace Tuleap\JWT\REST\v1;
 use Lcobucci\JWT\Builder;
 use Lcobucci\JWT\Signer\Hmac\Sha512;
 use Lcobucci\JWT\Signer\Key;
+use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\Header;
 use Tuleap\JWT\REST\JWTRepresentation;
 use Tuleap\JWT\Generators\JWTGenerator;
 use UserManager;
-use UGroupLiteralizer;
 use ForgeConfig;
 
 class JWTResource

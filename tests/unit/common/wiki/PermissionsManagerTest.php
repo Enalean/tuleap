@@ -19,6 +19,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Tuleap\Project\UGroupLiteralizer;
 
 class Wiki_PermissionsManagerTest extends TestCase
 {
