@@ -15,6 +15,8 @@ if [ -n "$1" ]; then
     test_results_folder="$1"
 fi
 
+cypress_version="$(node -p "require('./package-lock.json').dependencies.cypress.version")"
+
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
@@ -31,7 +33,7 @@ mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" $DOCKERCOMPOSE up -d --build
+TEST_RESULT_OUTPUT="$test_results_folder" CYPRESS_VERSION="$cypress_version" $DOCKERCOMPOSE up -d --build
 
 wait_until_tests_are_executed
 

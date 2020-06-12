@@ -15,6 +15,8 @@ if [ "$#" -eq "1" ]; then
     test_results_folder="$1"
 fi
 
+cypress_version="$(node -p "require('./package-lock.json').dependencies.cypress.version")"
+
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
 }
@@ -23,7 +25,7 @@ mkdir -p "$test_results_folder" || true
 rm -rf "$test_results_folder/*" || true
 clean_env
 
-TEST_RESULT_OUTPUT="$test_results_folder" $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
+TEST_RESULT_OUTPUT="$test_results_folder" CYPRESS_VERSION="$cypress_version" $TIMEOUT "$MAX_TEST_EXECUTION_TIME" $DOCKERCOMPOSE up --build --abort-on-container-exit --exit-code-from=test
 
 tuleap_container_id="$($DOCKERCOMPOSE ps -q tuleap)"
 mkdir -p "$test_results_folder/logs"

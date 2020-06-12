@@ -18,6 +18,8 @@ services:
   test-cypress:
     build:
       context: ./tests/e2e/DockerImage
+      args:
+        - CYPRESS_VERSION
     command: /tuleap/tests/e2e/distlp/cypress/run.sh
     volumes:
       - .:/tuleap

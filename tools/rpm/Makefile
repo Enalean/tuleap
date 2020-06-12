@@ -80,7 +80,7 @@ mo:
 
 node:
 	cd $(BASE_DIR) &&\
-	     npm install --no-audit &&\
+	     CYPRESS_INSTALL_BINARY=0 npm install --no-audit &&\
 	     npm run build
 
 composer:
