@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -65,11 +65,59 @@ class UGroupLiteralizer
         if (!$this->isValidUser($user)) {
             return array();
         }
-        $groups = array(self::$user_status[$user->getStatus()]);
-        $groups = $this->appendDynamicUGroups($user, $groups);
-        $groups = $this->appendStaticUgroups($user, $groups);
+        return array_merge(
+            array(self::$user_status[$user->getStatus()]),
+            $this->getProjectUserGroupsForUser($user)
+        );
+    }
 
-        return $groups;
+    public function getProjectUserGroupsForUser(PFUser $user): array
+    {
+        if (!$this->isValidUser($user)) {
+            return array();
+        }
+
+        return array_merge(
+            $this->getDynamicUGroups($user),
+            $this->getStaticUGroups($user)
+        );
+    }
+
+    public function getProjectUserGroupsIdsForUser(PFUser $user): array
+    {
+        if (! $this->isValidUser($user)) {
+            return array();
+        }
+
+        return array_merge(
+            $this->getDynamicUGroupsIds($user),
+            $this->getStaticUGroupsIds($user)
+        );
+    }
+
+    private function getDynamicUGroupsIds(PFUser $user): array
+    {
+        $groups_ids = array();
+        foreach ($user->getProjects(true) as $project) {
+            $group_id = $project['group_id'];
+            $groups_ids[] = $group_id . '_' . ProjectUGroup::PROJECT_MEMBERS;
+
+            if ($user->isMember($group_id, 'A')) {
+                $groups_ids[] = $group_id . '_' . ProjectUGroup::PROJECT_ADMIN;
+            }
+        }
+
+        return $groups_ids;
+    }
+
+    private function getStaticUGroupsIds(PFUser $user): array
+    {
+        $groups_ids = array();
+        foreach ($user->getAllUgroups() as $ugroup) {
+            $groups_ids[] = (string) $ugroup['ugroup_id'];
+        }
+
+        return $groups_ids;
     }
 
     /**
@@ -93,12 +141,11 @@ class UGroupLiteralizer
     /**
      * Append project dynamic ugroups of user
      *
-     * @param array $user_ugroups
-     *
-     * @return array the new array of user's ugroup
+     * @return array the array of user's ugroup
      */
-    private function appendDynamicUGroups(PFUser $user, array $user_ugroups = array())
+    private function getDynamicUGroups(PFUser $user): array
     {
+        $user_ugroups   = array();
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -114,13 +161,12 @@ class UGroupLiteralizer
     /**
      * Append project static ugroups of user
      *
-     * @param array $user_ugroups
-     *
-     * @return array the new array of user's ugroup
+     * @return array the array of user's ugroup
      */
-    private function appendStaticUgroups(PFUser $user, array $user_ugroups = array())
+    private function getStaticUGroups(PFUser $user)
     {
-        $ugroups = $user->getAllUgroups();
+        $user_ugroups = array();
+        $ugroups      = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $user_ugroups[] = 'ug_' . $row['ugroup_id'];
         }

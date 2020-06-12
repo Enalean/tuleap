@@ -52,11 +52,13 @@ use UserManager;
 class UserResource extends AuthenticatedResource
 {
 
-    public const SELF_ID         = 'self';
-    public const MAX_LIMIT       = 50;
-    public const DEFAULT_LIMIT   = 10;
-    public const DEFAULT_OFFSET  = 0;
-    public const MAX_TIMES_BATCH = 100;
+    public const SELF_ID                        = 'self';
+    public const MAX_LIMIT                      = 50;
+    public const DEFAULT_LIMIT                  = 10;
+    public const DEFAULT_OFFSET                 = 0;
+    public const MAX_TIMES_BATCH                = 100;
+    public const DEFAULT_USER_MEMBERSHIP_SCOPE  = null;
+    public const DEFAULT_USER_MEMBERSHIP_FORMAT = null;
 
     /** @var JsonDecoder */
     private $json_decoder;
@@ -253,11 +255,30 @@ class UserResource extends AuthenticatedResource
      * ]
      * </pre>
      *
+     * If you choose the "project" scope, any platform group will not be
+     * presented as a result (ie: site_active in this case").
+     *
+     * <br />
+     * <br />
+     *
+     * If you choose the "id" format, which is only compatible with "project" scope
+     * you will get an array of group ids instead:
+     * <pre>
+     * [
+     *     "102_3",
+     *     "102_4",
+     *     "108"
+     *     ...
+     * ]
+     * </pre>
+     *
      * @url GET {id}/membership
      * @access protected
      * @oauth2-scope read:user_membership
      *
      * @param string $id Id of the desired user
+     * @param string | null $scope Scope to project permissions or platform permissions {@from path} {@choice project}
+     * @param string | null $format Special format to display the groups, only works with project scope {@from path} {@choice id}
      *
      * @throws RestException 400
      * @throws RestException 403
@@ -265,8 +286,11 @@ class UserResource extends AuthenticatedResource
      *
      * @return array {@type string}
      */
-    public function getMembership($id)
-    {
+    public function getMembership(
+        $id,
+        $scope = self::DEFAULT_USER_MEMBERSHIP_SCOPE,
+        $format = self::DEFAULT_USER_MEMBERSHIP_FORMAT
+    ) {
         $this->checkAccess();
 
         $user_id = $this->getUserIDFromIDOrSelf($id);
@@ -274,6 +298,17 @@ class UserResource extends AuthenticatedResource
         $watchee = $this->getUserById($user_id);
         $watcher = $this->user_manager->getCurrentUser();
         if ($this->checkUserCanSeeOtherUser($watcher, $watchee)) {
+            if ($scope === "project") {
+                if ($format === "id") {
+                    return $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($watchee);
+                }
+                return $this->ugroup_literalizer->getProjectUserGroupsForUser($watchee);
+            }
+
+            if ($format === "id") {
+                throw new RestException(400, "format=id is only supported for project scope");
+            }
+
             return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
         }
         throw new RestException(403, "Cannot see other's membership");
