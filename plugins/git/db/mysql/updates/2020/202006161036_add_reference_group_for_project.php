@@ -20,7 +20,7 @@
 declare(strict_types=1);
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
-final class b202006081606_add_reference_group_for_project extends ForgeUpgrade_Bucket
+final class b202006161036_add_reference_group_for_project extends ForgeUpgrade_Bucket
 {
     public function description(): string
     {
@@ -86,21 +86,30 @@ final class b202006081606_add_reference_group_for_project extends ForgeUpgrade_B
 
     private function insertReferenceGroup(int $reference_id, array $group_ids): void
     {
-        $data_to_insert = [];
-        $question_mark  = [];
-
-        foreach ($group_ids as $data) {
-            $data_to_insert = array_merge($data_to_insert, [$reference_id, $data['group_id'], 1]);
-            $question_mark[]  = '(?,?,?)';
-        }
-        $sql = "INSERT INTO reference_group (reference_id, group_id, is_active) VALUES " . implode(',', $question_mark);
-
+        $sql           = "INSERT INTO reference_group (reference_id, group_id, is_active) VALUES (?, ?, ?)";
         $pdo_statement = $this->db->dbh->prepare($sql);
 
-        if ($pdo_statement->execute($data_to_insert) === false) {
-            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
-                'Error while retrieving git reference.'
-            );
+        if (! $pdo_statement) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete("Error while preparing insert request");
         }
+
+        $this->db->dbh->beginTransaction();
+
+        foreach ($group_ids as $group_id) {
+            $data_to_insert = [$reference_id, $group_id['group_id'], 1];
+            if ($pdo_statement->execute($data_to_insert) === false) {
+                $this->rollBackOnError('Error while inserting new reference_group in ' . $group_id);
+            }
+        }
+
+        if (! $this->db->dbh->commit()) {
+            throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Error while committing.');
+        }
+    }
+
+    private function rollBackOnError($message): void
+    {
+        $this->db->dbh->rollBack();
+        throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete($message);
     }
 }
