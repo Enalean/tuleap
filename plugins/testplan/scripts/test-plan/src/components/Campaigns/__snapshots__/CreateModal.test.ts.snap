@@ -87,12 +87,12 @@ exports[`CreateModal Display the modal when mounted 1`] = `
       data-current-language="en_US"
       data-dismiss="modal"
       data-msgid="
-            Close
+            Cancel
         "
       type="button"
     >
       
-            Close
+            Cancel
         
     </button>
      

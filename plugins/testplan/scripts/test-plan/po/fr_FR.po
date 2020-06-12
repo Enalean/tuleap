@@ -54,6 +54,9 @@ msgstr ""
 "Une erreur est survenue lors de la récupération des informations de la "
 "nouvelle campagne."
 
+msgid "Cancel"
+msgstr "Annuler"
+
 msgid "Close"
 msgstr "Fermer"
 
