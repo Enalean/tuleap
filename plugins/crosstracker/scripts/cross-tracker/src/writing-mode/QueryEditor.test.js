@@ -17,36 +17,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
+import { localVue } from "../helpers/local-vue";
 import QueryEditor from "./QueryEditor.vue";
 import WritingCrossTrackerReport from "./writing-cross-tracker-report.js";
 
 describe("QueryEditor", () => {
-    let QueryEditorElement, writingCrossTrackerReport;
+    let writingCrossTrackerReport;
 
     beforeEach(() => {
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
-        });
-        QueryEditorElement = Vue.extend(QueryEditor);
         writingCrossTrackerReport = new WritingCrossTrackerReport();
     });
 
     function instantiateComponent() {
-        const vm = new QueryEditorElement({
+        return shallowMount(QueryEditor, {
+            localVue,
             propsData: {
                 writingCrossTrackerReport,
             },
         });
-        vm.$mount();
-
-        return vm;
     }
 
     describe("mounted()", () => {
-        it("When the code mirror instance's value changes, then the writing report is updated", () => {
+        it(`When the code mirror instance's value changes,
+            then the writing report is updated`, () => {
             // eslint-disable-next-line no-undef
             global.document.createRange = () => {
                 return {
@@ -59,10 +53,10 @@ describe("QueryEditor", () => {
                 };
             };
 
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
             const expert_query = "@title = 'foo'";
 
-            vm.code_mirror_instance.setValue(expert_query);
+            wrapper.vm.code_mirror_instance.setValue(expert_query);
 
             expect(writingCrossTrackerReport.expert_query).toEqual(expert_query);
         });
@@ -70,12 +64,11 @@ describe("QueryEditor", () => {
 
     describe("search()", () => {
         it("When I search, then an event will be emitted", () => {
-            const vm = instantiateComponent();
-            jest.spyOn(vm, "$emit").mockImplementation(() => {});
+            const wrapper = instantiateComponent();
 
-            vm.search();
+            wrapper.vm.search();
 
-            expect(vm.$emit).toHaveBeenCalledWith("triggerSearch");
+            expect(wrapper.emitted("triggerSearch")).toBeTruthy();
         });
     });
 });

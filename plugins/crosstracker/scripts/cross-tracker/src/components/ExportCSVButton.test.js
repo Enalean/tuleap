@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Vue from "vue";
-import GetTextPlugin from "vue-gettext";
+import { shallowMount } from "@vue/test-utils";
+import { localVue } from "../helpers/local-vue";
+import { createStoreMock } from "../../../../../../src/scripts/vue-components/store-wrapper-jest";
 import { createStore } from "../store/index.js";
 import ExportCSVButton from "./ExportCSVButton.vue";
 import * as rest_querier from "../api/rest-querier.js";
@@ -34,41 +35,37 @@ describe("ExportCSVButton", () => {
     });
 
     function instantiateComponent() {
-        Vue.use(GetTextPlugin, {
-            translations: {},
-            silent: true,
+        return shallowMount(ExportCSVButton, {
+            localVue,
+            mocks: {
+                $store: createStoreMock(createStore()),
+            },
         });
-        const Component = Vue.extend(ExportCSVButton);
-        const vm = new Component({
-            store: createStore(),
-        });
-        jest.spyOn(vm.$store, "commit").mockImplementation(() => {});
-        return vm;
     }
 
     describe("exportCSV()", () => {
-        it("When the server responds, then it will hide feedbacks, show a spinner and offer to download a CSV file with the results", async () => {
-            const vm = instantiateComponent();
-            vm.$store.replaceState({
-                report_id: 36,
-            });
+        it(`When the server responds,
+            then it will hide feedbacks,
+            show a spinner and offer to download a CSV file with the results`, async () => {
+            const wrapper = instantiateComponent();
+            wrapper.vm.$store.state.report_id = 36;
             const csv = `"id"\r\n72\r\n17\r\n`;
-            getCSVReport.mockImplementation(() => Promise.resolve(csv));
+            getCSVReport.mockResolvedValue(csv);
             addBOM.mockImplementation((csv) => csv);
 
-            const promise = vm.exportCSV();
+            const promise = wrapper.vm.exportCSV();
 
-            expect(vm.is_loading).toBe(true);
+            expect(wrapper.vm.is_loading).toBe(true);
             await promise;
 
-            expect(vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith("resetFeedbacks");
             expect(getCSVReport).toHaveBeenCalledWith(36);
             expect(download).toHaveBeenCalledWith(csv, "export-36.csv", "text/csv;encoding:utf-8");
-            expect(vm.is_loading).toBe(false);
+            expect(wrapper.vm.is_loading).toBe(false);
         });
 
         it("When there is a REST error, then it will be shown", async () => {
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
@@ -78,17 +75,17 @@ describe("ExportCSVButton", () => {
                 })
             );
 
-            await vm.exportCSV();
+            await wrapper.vm.exportCSV();
 
-            expect(vm.is_loading).toBe(false);
-            expect(vm.$store.commit).toHaveBeenCalledWith(
+            expect(wrapper.vm.is_loading).toBe(false);
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
                 "setErrorMessage",
                 "Report with id 90 not found"
             );
         });
 
         it("When there is a 50x REST error, then a generic error message will be shown", async () => {
-            const vm = instantiateComponent();
+            const wrapper = instantiateComponent();
             getCSVReport.mockImplementation(() =>
                 Promise.reject({
                     response: {
@@ -97,10 +94,13 @@ describe("ExportCSVButton", () => {
                 })
             );
 
-            await vm.exportCSV();
+            await wrapper.vm.exportCSV();
 
-            expect(vm.is_loading).toBe(false);
-            expect(vm.$store.commit).toHaveBeenCalledWith("setErrorMessage", expect.any(String));
+            expect(wrapper.vm.is_loading).toBe(false);
+            expect(wrapper.vm.$store.commit).toHaveBeenCalledWith(
+                "setErrorMessage",
+                expect.any(String)
+            );
         });
     });
 });
