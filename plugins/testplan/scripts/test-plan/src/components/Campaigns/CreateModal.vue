@@ -81,7 +81,7 @@
                 data-dismiss="modal"
                 v-translate
             >
-                Close
+                Cancel
             </button>
             <button
                 type="submit"

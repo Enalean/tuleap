@@ -79,6 +79,10 @@
     &:focus {
         outline: 1px dotted #808080;
     }
+
+    > .tlp-pane-container > .tlp-pane-section:last-child {
+        padding: $tlp-small-spacing $tlp-spacing $tlp-spacing;
+    }
 }
 
 .test-plan-campaign-header {
@@ -95,6 +99,10 @@
 .test-plan-campaign-header-stats-info {
     margin: 0 0 0 $tlp-medium-spacing;
     white-space: nowrap;
+
+    > .fa {
+        font-size: 12px;
+    }
 }
 
 
@@ -104,8 +112,8 @@
 }
 
 .test-plan-campaign-progression-value {
-    margin: 0 0 3px;
-    font-size: 14px;
+    margin: 2px 0 0;
+    font-size: 13px;
     font-weight: 600;
     letter-spacing: .5px;
     text-align: center;
