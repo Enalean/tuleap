@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
+use Tuleap\TestPlan\REST\ResourcesInjector;
 use Tuleap\TestPlan\TestPlanController;
 use Tuleap\TestPlan\TestPlanPane;
 use Tuleap\TestPlan\TestPlanPaneDisplayable;
@@ -78,6 +79,7 @@ final class testplanPlugin extends Plugin
         $this->addHook(AllowedAdditionalPanesToDisplayCollector::NAME);
         $this->addHook(GetURIForMilestoneFromTTM::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
+        $this->addHook(Event::REST_RESOURCES);
 
         return parent::getHooksAndCallbacks();
     }
@@ -115,6 +117,16 @@ final class testplanPlugin extends Plugin
                 $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGetPlan'));
             }
         );
+    }
+
+    /**
+     * @see Event::REST_RESOURCES
+     *
+     * @psalm-param array{restler: \Luracast\Restler\Restler} $params
+     */
+    public function restResources(array $params): void
+    {
+        (new ResourcesInjector())->populate($params['restler']);
     }
 
     public function routeGetPlan(): TestPlanController
