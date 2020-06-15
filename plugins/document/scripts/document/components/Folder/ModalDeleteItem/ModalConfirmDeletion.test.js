@@ -200,6 +200,7 @@ describe("ModalConfirmDeletion", () => {
             expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
                 "showPostDeletionNotification"
             );
+            expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
             expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
                 name: "folder",
                 params: { item_id: 42 },
@@ -227,6 +228,7 @@ describe("ModalConfirmDeletion", () => {
             expect(deletion_modal.vm.$store.commit).toHaveBeenCalledWith(
                 "showPostDeletionNotification"
             );
+            expect(store.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
             expect(deletion_modal.vm.$router.replace).toHaveBeenCalledWith({
                 name: "folder",
                 params: { item_id: 41 },

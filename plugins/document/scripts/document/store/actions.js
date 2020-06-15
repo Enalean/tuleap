@@ -617,13 +617,6 @@ export const deleteItem = async (context, [item, additional_options]) => {
                 break;
         }
 
-        if (
-            context.state.currently_previewed_item &&
-            item.id === context.state.currently_previewed_item.id
-        ) {
-            context.commit("updateCurrentlyPreviewedItem", null);
-        }
-
         context.commit("clipboard/emptyClipboardAfterItemDeletion", item);
         context.commit("removeItemFromFolderContent", item);
         context.commit("showPostDeletionNotification");
