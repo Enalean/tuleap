@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="empty-pane">
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <backlog-item-empty-state-svg />
+        </div>
         <div class="empty-page-text">
             <translate>There is no backlog item yet.</translate>
         </div>
@@ -29,7 +32,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import BacklogItemEmptyStateSvg from "./BacklogItemEmptyStateSvg.vue";
 
-@Component
+@Component({
+    components: { BacklogItemEmptyStateSvg },
+})
 export default class BacklogItemEmptyState extends Vue {}
 </script>
