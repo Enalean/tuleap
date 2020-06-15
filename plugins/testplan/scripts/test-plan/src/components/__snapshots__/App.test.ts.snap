@@ -2,8 +2,10 @@
 
 exports[`App Displays the campaigns 1`] = `
 <div
-  class="tlp-framed-horizontally"
+  class="tlp-framed-horizontally test-plan-app"
 >
+  <list-of-backlog-items-stub />
+   
   <list-of-campaigns-stub />
 </div>
 `;

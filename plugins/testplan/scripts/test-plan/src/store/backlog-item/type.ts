@@ -17,21 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
-    readonly is_being_refreshed: boolean;
-    readonly is_just_refreshed: boolean;
-    readonly is_error: boolean;
-}
+import { BacklogItem } from "../../type";
 
-export interface BacklogItem {
-    readonly id: number;
-    readonly label: string;
-    readonly short_type: string;
-    readonly color: string;
+export interface BacklogItemState {
+    backlog_items: Array<BacklogItem>;
+    is_loading: boolean;
+    has_loading_error: boolean;
 }

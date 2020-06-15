@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BacklogItemCard Display the backlog item as a card 1`] = `
+<div
+  class="tlp-card"
+>
+  <span
+    class="tlp-badge-outline tlp-badge-fiesta-red"
+  >
+    
+        bug #123
+    
+  </span>
+   
+  <span
+    class="test-plan-backlog-item-title"
+  >
+    
+        A backlog item
+    
+  </span>
+</div>
+`;

@@ -17,21 +17,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Campaign {
-    readonly id: number;
-    readonly label: string;
-    readonly nb_of_notrun: number;
-    readonly nb_of_blocked: number;
-    readonly nb_of_failed: number;
-    readonly nb_of_passed: number;
-    readonly is_being_refreshed: boolean;
-    readonly is_just_refreshed: boolean;
-    readonly is_error: boolean;
+import { BacklogItemState } from "./type";
+import { BacklogItem } from "../../type";
+
+export function beginLoadingBacklogItems(state: BacklogItemState): void {
+    state.is_loading = true;
 }
 
-export interface BacklogItem {
-    readonly id: number;
-    readonly label: string;
-    readonly short_type: string;
-    readonly color: string;
+export function endLoadingBacklogItems(state: BacklogItemState): void {
+    state.is_loading = false;
+}
+
+export function addBacklogItems(state: BacklogItemState, collection: BacklogItem[]): void {
+    state.backlog_items = state.backlog_items.concat(collection);
+}
+
+export function loadingErrorHasBeenCatched(state: BacklogItemState): void {
+    state.has_loading_error = true;
 }

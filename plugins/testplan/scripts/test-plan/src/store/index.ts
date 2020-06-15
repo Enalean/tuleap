@@ -19,12 +19,14 @@
 import { Store } from "vuex";
 import { RootState } from "./type";
 import campaign from "./campaign";
+import backlog_item from "./backlog-item";
 
 export function createStore(initial_state: RootState): Store<RootState> {
     return new Store({
         state: initial_state,
         modules: {
             campaign,
+            backlog_item,
         },
     });
 }

@@ -17,23 +17,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import '../../../agiledashboard/themes/BurningParrot/css/header';
-
-.testplan-root {
-    margin: $tlp-medium-spacing 0 0;
-}
-
-.testplan-root-title,
-.testplan-root-tabs {
-    flex: 0 0 auto;
-}
-
-.test-plan-app {
-    display: flex;
-    justify-content: space-between;
+.test-plan-list-of-backlogitems {
+    width: calc(60% - #{$tlp-large-spacing});
 
     @media screen and (max-width: 1100px) {
-        flex-direction: column;
-        justify-content: flex-start;
+        width: 100%;
+        margin: 0 0 $tlp-jumbo-spacing;
     }
+}
+
+.test-plan-list-of-backlogitems-header {
+    display: flex;
+    align-items: center;
+    margin: 0 0 $tlp-medium-spacing;
+}
+
+.test-plan-list-of-backlogitems-title {
+    margin: 0;
+    color: $tlp-typo-default-text-color;
+}
+
+.test-plan-backlog-item-skeleton-xref {
+    width: 70px;
+    margin: 0 10px 0 0;
+}
+
+.test-plan-backlog-item-skeleton-title {
+    width: 300px;
+}
+
+.test-plan-backlog-item-title {
+    margin: 0 0 0 4px;
+    color: $tlp-ui-dimmed;
+    font-weight: 600;
 }

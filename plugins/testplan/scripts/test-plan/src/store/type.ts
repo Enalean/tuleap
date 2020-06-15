@@ -18,6 +18,7 @@
  */
 
 import { CampaignState } from "./campaign/type";
+import { BacklogItemState } from "./backlog-item/type";
 
 export interface State {
     readonly project_id: number;
@@ -30,4 +31,5 @@ export interface State {
 
 export interface RootState extends State {
     readonly campaign: CampaignState;
+    readonly backlog_item: BacklogItemState;
 }
