@@ -22,20 +22,37 @@ declare(strict_types=1);
 
 namespace Tuleap\User\Password\Reset;
 
+use ParagonIE\EasyDB\EasyDB;
 use Tuleap\DB\DataAccessObject;
 
 class LostPasswordDAO extends DataAccessObject
 {
-    public function create(int $user_id, string $verifier, int $current_time): int
-    {
-        $this->getDB()->run(
-            "INSERT INTO user_lost_password(user_id, verifier, creation_date) VALUES (?,?,?)",
-            $user_id,
-            $verifier,
-            $current_time,
-        );
+    private const MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS = 10 * 60;
 
-        return (int) $this->getDB()->lastInsertId();
+    public function create(int $user_id, string $verifier, int $current_time): ?int
+    {
+        return $this->getDB()->tryFlatTransaction(
+            function (EasyDB $db) use ($user_id, $verifier, $current_time): ?int {
+                $recently_created_code = $db->cell(
+                    "SELECT COUNT(*) FROM user_lost_password WHERE user_id = ? AND ? < creation_date",
+                    $user_id,
+                    $current_time - self::MIN_DELAY_BETWEEN_LOST_PASSWORD_TOKEN_CREATION_SECONDS
+                );
+
+                if ($recently_created_code > 0) {
+                    return null;
+                }
+
+                $db->run(
+                    "INSERT INTO user_lost_password(user_id, verifier, creation_date) VALUES (?,?,?)",
+                    $user_id,
+                    $verifier,
+                    $current_time,
+                );
+
+                return (int) $this->getDB()->lastInsertId();
+            }
+        );
     }
 
     /**
