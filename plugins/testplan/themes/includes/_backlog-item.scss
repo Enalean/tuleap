@@ -46,6 +46,10 @@
     width: 300px;
 }
 
+.test-plan-backlog-item-caret {
+    color: $tlp-ui-dimmed;
+}
+
 .test-plan-backlog-item-title {
     margin: 0 0 0 4px;
     color: $tlp-ui-dimmed;

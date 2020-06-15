@@ -35,3 +35,22 @@ export function addBacklogItems(state: BacklogItemState, collection: BacklogItem
 export function loadingErrorHasBeenCatched(state: BacklogItemState): void {
     state.has_loading_error = true;
 }
+
+export function expandBacklogItem(state: BacklogItemState, item: BacklogItem): void {
+    updateBacklogItem(state, { ...item, is_expanded: true });
+}
+
+export function collapseBacklogItem(state: BacklogItemState, item: BacklogItem): void {
+    updateBacklogItem(state, { ...item, is_expanded: false });
+}
+
+function updateBacklogItem(state: BacklogItemState, item: BacklogItem): void {
+    const index = state.backlog_items.findIndex(
+        (state_backlog_item: BacklogItem): boolean => state_backlog_item.id === item.id
+    );
+    if (index === -1) {
+        throw Error("Unable to find the backlog item to update");
+    }
+
+    state.backlog_items.splice(index, 1, item);
+}

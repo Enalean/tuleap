@@ -35,7 +35,13 @@ export async function loadBacklogItems(
                     limit: 100,
                 },
                 getCollectionCallback: (collection: BacklogItem[]): BacklogItem[] => {
-                    context.commit("addBacklogItems", collection);
+                    const backlog_items: BacklogItem[] = collection.map(
+                        (campaign: BacklogItem): BacklogItem => ({
+                            ...campaign,
+                            is_expanded: false,
+                        })
+                    );
+                    context.commit("addBacklogItems", backlog_items);
 
                     return collection;
                 },
