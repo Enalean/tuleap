@@ -70,8 +70,8 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
         $this->artifact_dao->shouldReceive('searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId')
             ->twice()
             ->andReturn(
-                \TestHelper::arrayToDar([['mocked_artifact_row_1']]),
-                \TestHelper::arrayToDar([['mocked_artifact_row_1']]),
+                [['mocked_artifact_row_1']],
+                [['mocked_artifact_row_1']],
             );
 
         $artifact_user_can_view     = \Mockery::mock(\Tracker_Artifact::class);

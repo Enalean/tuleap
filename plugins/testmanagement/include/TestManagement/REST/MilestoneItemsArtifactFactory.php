@@ -25,7 +25,6 @@ use PFUser;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\TestManagement\Event\GetItemsFromMilestone;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
 
@@ -107,12 +106,10 @@ class MilestoneItemsArtifactFactory
             0
         );
 
-        if ($results) {
-            $this->appendArtifactsUserCanView($user, $test_definitions, $results);
-        }
+        $this->appendArtifactsUserCanView($user, $test_definitions, $results);
     }
 
-    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, LegacyDataAccessResultInterface $results): void
+    private function appendArtifactsUserCanView(PFUser $user, array &$test_definitions, array $results): void
     {
         foreach ($results as $row) {
             $test_def_artifact = $this->tracker_artifact_factory->getInstanceFromRow($row);
