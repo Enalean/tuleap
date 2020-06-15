@@ -21,7 +21,7 @@
 <template>
     <section class="test-plan-list-of-backlogitems">
         <list-of-backlog-items-header />
-        <backlog-item-card
+        <backlog-item-container
             v-for="backlog_item of backlog_items"
             v-bind:key="backlog_item.id"
             v-bind:backlog_item="backlog_item"
@@ -40,11 +40,13 @@ import { BacklogItem } from "../../type";
 import ListOfBacklogItemsHeader from "./ListOfBacklogItemsHeader.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
 import BacklogItemCard from "./BacklogItemCard.vue";
+import BacklogItemContainer from "./BacklogItemContainer.vue";
 
 const backlog_item = namespace("backlog_item");
 
 @Component({
     components: {
+        BacklogItemContainer,
         BacklogItemCard,
         BacklogItemSkeleton,
         ListOfBacklogItemsHeader,

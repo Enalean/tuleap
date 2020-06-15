@@ -2,7 +2,7 @@
 
 exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
 <a
-  class="tlp-card tlp-card-selectable"
+  class="tlp-card tlp-card-selectable test-plan-backlog-item-card"
   href="/plugins/tracker/?aid=42"
 >
   <i

@@ -17,7 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'includes/header';
-@import 'includes/campaign';
-@import 'includes/backlog-item';
-@import 'includes/test-definitions';
+.test-plan-list-of-test-definitions {
+    padding: $tlp-medium-spacing;
+    border: 1px solid $tlp-ui-border-normal;
+    border-top: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background: darken($tlp-theme-color-dimmed-background, 1%);
+}
+
+.test-plan-test-definition-skeleton-xref {
+    width: 70px;
+    margin: 0 10px 0 0;
+}
+
+.test-plan-test-definition-skeleton-title {
+    width: 300px;
+}

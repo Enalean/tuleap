@@ -24,7 +24,7 @@ import { BacklogItem } from "../../type";
 import { BacklogItemState } from "../../store/backlog-item/type";
 import ListOfBacklogItems from "./ListOfBacklogItems.vue";
 import BacklogItemSkeleton from "./BacklogItemSkeleton.vue";
-import BacklogItemCard from "./BacklogItemCard.vue";
+import BacklogItemContainer from "./BacklogItemContainer.vue";
 
 describe("ListOfBacklogItems", () => {
     function createWrapper(backlog_item: BacklogItemState): Wrapper<ListOfBacklogItems> {
@@ -70,7 +70,7 @@ describe("ListOfBacklogItems", () => {
             backlog_items: [] as BacklogItem[],
         });
 
-        expect(wrapper.findComponent(BacklogItemCard).exists()).toBe(false);
+        expect(wrapper.findComponent(BacklogItemContainer).exists()).toBe(false);
     });
 
     it("Displays a card for each backlog_item", () => {
@@ -80,7 +80,7 @@ describe("ListOfBacklogItems", () => {
             backlog_items: [{ id: 1 }, { id: 2 }] as BacklogItem[],
         });
 
-        expect(wrapper.findAllComponents(BacklogItemCard).length).toBe(2);
+        expect(wrapper.findAllComponents(BacklogItemContainer).length).toBe(2);
     });
 
     it("Displays skeletons even if there are backlog_items to show loading indication", () => {
