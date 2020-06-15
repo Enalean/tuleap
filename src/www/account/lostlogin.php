@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -30,7 +30,7 @@ $confirm_hash = new \Tuleap\Cryptography\ConcealedString(
     $request->get('confirm_hash') === false ? '' : $request->get('confirm_hash')
 );
 
-$reset_token_dao          = new Tuleap\User\Password\Reset\DataAccessObject();
+$reset_token_dao          = new Tuleap\User\Password\Reset\LostPasswordDAO();
 $hasher                   = new \Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher();
 $user_manager             = UserManager::instance();
 $reset_token_verifier     = new \Tuleap\User\Password\Reset\Verifier($reset_token_dao, $hasher, $user_manager);

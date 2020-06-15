@@ -267,7 +267,7 @@ if ($request->isPost()) {
         $password_changer = new PasswordChanger(
             $user_manager,
             new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
-            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\DataAccessObject())
+            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\LostPasswordDAO())
         );
         try {
             $password_changer->changePassword($user, new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')));

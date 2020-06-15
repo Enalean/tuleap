@@ -21,8 +21,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\User\Password\Reset\TokenNotCreatedException;
-
 require_once __DIR__ . '/../include/pre.php';
 
 $event_manager = EventManager::instance();
@@ -39,20 +37,12 @@ if ($user === null || $user->getUserPw() === null) {
     exit_error('Invalid User', 'That user does not exist.');
 }
 
-$reset_token_dao         = new Tuleap\User\Password\Reset\DataAccessObject();
+$reset_token_dao         = new Tuleap\User\Password\Reset\LostPasswordDAO();
 $reset_token_creator     = new \Tuleap\User\Password\Reset\Creator(
     $reset_token_dao,
     new Tuleap\Authentication\SplitToken\SplitTokenVerificationStringHasher()
 );
-try {
-    $reset_token = $reset_token_creator->create($user);
-} catch (TokenNotCreatedException $ex) {
-    $GLOBALS['Response']->addFeedback(
-        Feedback::ERROR,
-        $GLOBALS['Language']->getText('account_lostpw-confirm', 'token_generation_failed')
-    );
-    $GLOBALS['Response']->redirect('/account/lostpw.php');
-}
+$reset_token = $reset_token_creator->create($user);
 
 $reset_token_formatter = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
 $identifier            = $reset_token_formatter->getIdentifier($reset_token);
