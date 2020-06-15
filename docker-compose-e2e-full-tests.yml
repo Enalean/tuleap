@@ -5,6 +5,8 @@ services:
     image: tuleap-run-e2e-tests-v2
     build:
       context: ./tests/e2e/DockerImage
+      args:
+        - CYPRESS_VERSION
     command: /tuleap/tests/e2e/full/run.sh
     volumes:
       - .:/tuleap

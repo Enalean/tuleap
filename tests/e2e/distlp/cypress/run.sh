@@ -42,4 +42,7 @@ setup_user
 is_backend_svn_server_ready
 is_backend_web_server_ready
 
-su -c 'CYPRESS_CACHE_FOLDER=/var/cache/cypress/ cypress run --project /tuleap/tests/e2e/distlp' -l runner
+# Workaround Cypress not being happy when started the first time in a restricted environment
+CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress verify
+
+su -c 'CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress run --project /tuleap/tests/e2e/distlp' -l runner
