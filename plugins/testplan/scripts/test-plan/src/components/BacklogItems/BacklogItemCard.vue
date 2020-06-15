@@ -21,7 +21,8 @@
 <template>
     <a
         v-bind:href="'/plugins/tracker/?aid=' + encodeURIComponent(backlog_item.artifact.id)"
-        class="tlp-card tlp-card-selectable"
+        class="tlp-card tlp-card-selectable test-plan-backlog-item-card"
+        v-bind:class="classname"
         v-on:click.prevent.stop="toggle"
     >
         <i
@@ -75,6 +76,14 @@ export default class BacklogItemCard extends Vue {
         }
 
         return "fa-caret-right";
+    }
+
+    get classname(): string {
+        if (this.backlog_item.is_expanded) {
+            return "test-plan-backlog-item-card-expanded";
+        }
+
+        return "";
     }
 }
 </script>

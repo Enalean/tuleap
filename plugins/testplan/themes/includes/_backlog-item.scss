@@ -37,6 +37,19 @@
     color: $tlp-typo-default-text-color;
 }
 
+.test-plan-backlog-item-container {
+    margin: 0 0 $tlp-half-spacing;
+}
+
+.test-plan-backlog-item-card {
+    margin: 0;
+}
+
+.test-plan-backlog-item-card-expanded {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
 .test-plan-backlog-item-skeleton-xref {
     width: 70px;
     margin: 0 10px 0 0;

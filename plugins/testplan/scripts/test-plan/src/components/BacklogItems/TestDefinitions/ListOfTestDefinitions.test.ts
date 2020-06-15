@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2020 - Present. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,7 +17,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'includes/header';
-@import 'includes/campaign';
-@import 'includes/backlog-item';
-@import 'includes/test-definitions';
+import { shallowMount } from "@vue/test-utils";
+import ListOfTestDefinitions from "./ListOfTestDefinitions.vue";
+import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
+
+describe("ListOfTestDefinitions", () => {
+    it("Display a loading state", () => {
+        const wrapper = shallowMount(ListOfTestDefinitions);
+
+        expect(wrapper.findComponent(TestDefinitionSkeleton).exists()).toBe(true);
+    });
+});
