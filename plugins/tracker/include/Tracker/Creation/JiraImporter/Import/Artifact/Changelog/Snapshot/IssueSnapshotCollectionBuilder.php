@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
 use PFUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class IssueSnapshotCollectionBuilder
@@ -34,16 +35,23 @@ class IssueSnapshotCollectionBuilder
     private $initial_snapshot_builder;
 
     /**
-     * @var CurrentSnapshotBuilder
+     * @var ChangelogEntriesBuilder
      */
-    private $current_snapshot_builder;
+    private $changelog_entries_builder;
+
+    /**
+     * @var ChangelogSnapshotBuilder
+     */
+    private $changelog_snapshot_builder;
 
     public function __construct(
-        CurrentSnapshotBuilder $current_snapshot_builder,
-        InitialSnapshotBuilder $initial_snapshot_builder
+        ChangelogEntriesBuilder $changelog_entries_builder,
+        InitialSnapshotBuilder $initial_snapshot_builder,
+        ChangelogSnapshotBuilder $changelog_snapshot_builder
     ) {
-        $this->initial_snapshot_builder = $initial_snapshot_builder;
-        $this->current_snapshot_builder = $current_snapshot_builder;
+        $this->initial_snapshot_builder   = $initial_snapshot_builder;
+        $this->changelog_entries_builder  = $changelog_entries_builder;
+        $this->changelog_snapshot_builder = $changelog_snapshot_builder;
     }
 
     /**
@@ -55,20 +63,27 @@ class IssueSnapshotCollectionBuilder
         FieldMappingCollection $jira_field_mapping_collection
     ): array {
         $snapshots_collection = [];
-        $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
-            $forge_user,
-            $jira_issue_api,
-            $jira_field_mapping_collection
-        );
-        $snapshots_collection[$current_snapshot->getDate()->getTimestamp()] = $current_snapshot;
+        $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_api['key']);
 
         $initial_snapshot = $this->initial_snapshot_builder->buildInitialSnapshot(
             $forge_user,
-            $current_snapshot,
+            $changelog_entries,
             $jira_issue_api,
+            $jira_field_mapping_collection
         );
-
         $snapshots_collection[$initial_snapshot->getDate()->getTimestamp()] = $initial_snapshot;
+
+        foreach ($changelog_entries as $changelog_entry) {
+            $changelog_snapshot = $this->changelog_snapshot_builder->buildSnapshotFromChangelogEntry(
+                $forge_user,
+                $changelog_entry,
+                $jira_field_mapping_collection
+            );
+
+            if (count($changelog_snapshot->getAllFieldsSnapshot()) > 0) {
+                $snapshots_collection[$changelog_snapshot->getDate()->getTimestamp()] = $changelog_snapshot;
+            }
+        }
 
         ksort($snapshots_collection);
 

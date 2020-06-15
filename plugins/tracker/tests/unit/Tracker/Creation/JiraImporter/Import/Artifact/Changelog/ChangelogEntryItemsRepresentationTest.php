@@ -32,7 +32,9 @@ class ChangelogEntryItemsRepresentationTest extends TestCase
         $response = [
             "fieldId"    => "field01",
             "from"       => null,
-            "fromString" => "string01"
+            "fromString" => "string01",
+            "to"         => null,
+            "toString"   => "string02"
         ];
 
         $representation = ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -42,11 +44,15 @@ class ChangelogEntryItemsRepresentationTest extends TestCase
         $this->assertSame("field01", $representation->getFieldId());
         $this->assertNull($representation->getFrom());
         $this->assertSame("string01", $representation->getFromString());
+        $this->assertNull($representation->getTo());
+        $this->assertSame("string02", $representation->getToString());
 
         $response = [
             "fieldId"    => "field02",
             "from"       => "10001",
-            "fromString" => "string02"
+            "fromString" => "string02",
+            "to"         => "10002",
+            "toString"   => "string03"
         ];
 
         $representation = ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
@@ -56,6 +62,8 @@ class ChangelogEntryItemsRepresentationTest extends TestCase
         $this->assertSame("field02", $representation->getFieldId());
         $this->assertSame("10001", $representation->getFrom());
         $this->assertSame("string02", $representation->getFromString());
+        $this->assertSame("10002", $representation->getTo());
+        $this->assertSame("string03", $representation->getToString());
     }
 
     public function testItReturnsNullIfFieldIdNotProvidedInAPIResponse(): void
@@ -76,7 +84,9 @@ class ChangelogEntryItemsRepresentationTest extends TestCase
     {
         $response = [
             "fieldId"    => "field01",
-            "fromString" => "string01"
+            "fromString" => "string01",
+            "to"         => null,
+            "toString"   => "string02"
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
@@ -85,7 +95,31 @@ class ChangelogEntryItemsRepresentationTest extends TestCase
 
         $response = [
             "fieldId" => "field01",
-            "from"    => "10001"
+            "from"    => "10001",
+            "to"         => null,
+            "toString"   => "string02"
+        ];
+
+        $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
+
+        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+
+        $response = [
+            "fieldId"    => "field01",
+            "from"       => "10001",
+            "fromString" => "string01",
+            "to"         => null
+        ];
+
+        $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
+
+        ChangelogEntryItemsRepresentation::buildFromAPIResponse($response);
+
+        $response = [
+            "fieldId"    => "field01",
+            "from"       => "10001",
+            "fromString" => "string01",
+            "toString"   => "string02"
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);

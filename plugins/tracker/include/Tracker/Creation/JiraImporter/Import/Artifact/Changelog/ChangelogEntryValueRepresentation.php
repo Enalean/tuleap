@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
+use DateTimeImmutable;
+
 /**
  * @psalm-immutable
  */
@@ -38,10 +40,16 @@ class ChangelogEntryValueRepresentation
      */
     private $item_representations;
 
-    public function __construct(int $id, array $item_representations)
+    /**
+     * @var DateTimeImmutable
+     */
+    private $created;
+
+    public function __construct(int $id, DateTimeImmutable $created, array $item_representations)
     {
         $this->id                   = $id;
         $this->item_representations = $item_representations;
+        $this->created              = $created;
     }
 
     /**
@@ -51,7 +59,8 @@ class ChangelogEntryValueRepresentation
     {
         if (
             ! array_key_exists('items', $changelog_response) ||
-            ! array_key_exists('id', $changelog_response)
+            ! array_key_exists('id', $changelog_response) ||
+            ! array_key_exists('created', $changelog_response)
         ) {
             throw new ChangelogAPIResponseNotWellFormedException();
         }
@@ -63,6 +72,7 @@ class ChangelogEntryValueRepresentation
 
         return new self(
             (int) $changelog_response['id'],
+            new DateTimeImmutable($changelog_response['created']),
             array_filter($items)
         );
     }
@@ -75,5 +85,10 @@ class ChangelogEntryValueRepresentation
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getCreated(): DateTimeImmutable
+    {
+        return $this->created;
     }
 }

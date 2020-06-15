@@ -30,12 +30,15 @@ class ChangelogEntryValueRepresentationTest extends TestCase
     public function testItBuildsARepresentationFromAPIResponse(): void
     {
         $response = [
-            "id"    => "10057",
-            "items" => [
+            "id"      => "10057",
+            "created" => "2020-03-25T14:10:10.823+0100",
+            "items"   => [
                 [
                     "fieldId"    => "field01",
                     "from"       => null,
-                    "fromString" => "string01"
+                    "fromString" => "string01",
+                    "to"         => null,
+                    "toString"   => "string02"
                 ]
             ]
         ];
@@ -45,6 +48,7 @@ class ChangelogEntryValueRepresentationTest extends TestCase
         $this->assertInstanceOf(ChangelogEntryValueRepresentation::class, $representation);
 
         $this->assertSame(10057, $representation->getId());
+        $this->assertSame(1585141810, $representation->getCreated()->getTimestamp());
         $this->assertCount(1, $representation->getItemRepresentations());
     }
 
@@ -66,6 +70,21 @@ class ChangelogEntryValueRepresentationTest extends TestCase
 
         $response = [
             "id" => "10057",
+        ];
+
+        $this->expectException(ChangelogAPIResponseNotWellFormedException::class);
+
+        ChangelogEntryValueRepresentation::buildFromAPIResponse($response);
+
+        $response = [
+            "id" => "10057",
+            "items" => [
+                [
+                    "fieldId"    => "field01",
+                    "from"       => null,
+                    "fromString" => "string01"
+                ]
+            ]
         ];
 
         $this->expectException(ChangelogAPIResponseNotWellFormedException::class);

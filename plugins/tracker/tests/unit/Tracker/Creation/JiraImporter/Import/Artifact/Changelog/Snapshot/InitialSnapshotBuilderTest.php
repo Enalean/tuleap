@@ -23,15 +23,14 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
-use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilderTest extends TestCase
 {
@@ -39,31 +38,37 @@ class InitialSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
-        $wrapper = Mockery::mock(ClientWrapper::class);
-        $wrapper->shouldReceive('getUrl')->andReturn(
-            $this->buildWrapperResponse()
-        );
-
         $generator = new InitialSnapshotBuilder(
-            new ChangelogEntriesBuilder(
-                $wrapper
-            ),
+            new CurrentSnapshotBuilder(),
             new CreationStateListValueFormatter()
         );
 
         $user             = Mockery::mock(PFUser::class);
-        $current_snapshot = $this->buildCurrentSnapshot($user);
         $jira_issue_api   = [
             "key" => "key01",
             "fields" => [
-                "created" => "2020-03-25T14:10:10.823+0100"
+                "created" => "2020-03-25T14:10:10.823+0100",
+                "updated" => "2020-04-25T14:10:10.823+0100",
+                "customfield_10036" => "11",
+                "status" => "10001",
+                "customfield_10040" => [
+                    "10009", "10010"
+                ],
+                "description" => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
+            ],
+            'renderedFields' => [
+                "description" => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
             ]
         ];
 
+        $changelog_entires        = $this->buildChangelogEntries();
+        $field_mapping_collection = $this->buildFieldMappingCollection();
+
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
-            $current_snapshot,
-            $jira_issue_api
+            $changelog_entires,
+            $jira_issue_api,
+            $field_mapping_collection
         );
 
         $this->assertNull($initial_snapshot->getFieldInSnapshot("environment"));
@@ -78,16 +83,13 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
     }
 
-    private function buildWrapperResponse(): array
+    private function buildChangelogEntries(): array
     {
         return [
-            "maxResults" => 100,
-            "startAt"    => 0,
-            "total"      => 5,
-            "isLast"     => true,
-            "values"     => [
-                0 => [
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
                     "id" => "100",
+                    "created" => "2020-03-25T14:10:10.823+0100",
                     "items" => [
                         0 => [
                             "fieldId"    => "customfield_10036",
@@ -97,9 +99,12 @@ class InitialSnapshotBuilderTest extends TestCase
                             "toString"   => "9"
                         ]
                     ]
-                ],
-                1 => [
+                ]
+            ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
                     "id" => "101",
+                    "created" => "2020-03-25T14:11:10.823+0100",
                     "items" => [
                         0 => [
                             "fieldId"    => "customfield_10036",
@@ -109,9 +114,12 @@ class InitialSnapshotBuilderTest extends TestCase
                             "toString"   => "11"
                         ]
                     ]
-                ],
-                2 => [
+                ]
+            ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
                     "id" => "102",
+                    "created" => "2020-03-25T14:12:10.823+0100",
                     "items" => [
                         0 => [
                             "fieldId"    => "status",
@@ -121,9 +129,12 @@ class InitialSnapshotBuilderTest extends TestCase
                             "toString"   => "Done"
                         ]
                     ]
-                ],
-                3 => [
+                ]
+            ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
                     "id" => "103",
+                    "created" => "2020-03-25T14:13:10.823+0100",
                     "items" => [
                         0 => [
                             "fieldId"    => "customfield_10040",
@@ -140,9 +151,12 @@ class InitialSnapshotBuilderTest extends TestCase
                             "toString"   => "----\r\n"
                         ]
                     ]
-                ],
-                4 => [
+                ]
+            ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
                     "id" => "104",
+                    "created" => "2020-03-25T14:14:10.823+0100",
                     "items" => [
                         0 => [
                             "fieldId"    => "description",
@@ -152,60 +166,47 @@ class InitialSnapshotBuilderTest extends TestCase
                             "toString"   => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
                         ]
                     ]
-                ],
-            ]
+                ]
+            ),
         ];
     }
 
-    private function buildCurrentSnapshot(PFUser $user): Snapshot
+    private function buildFieldMappingCollection(): FieldMappingCollection
     {
-        $snapshot = new Snapshot(
-            $user,
-            new DateTimeImmutable(),
-            [
-                new FieldSnapshot(
-                    new FieldMapping(
-                        "customfield_10036",
-                        "Fcustomfield_10036",
-                        "Field 01",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
-                    ),
-                    "11",
-                    null
-                ),
-                new FieldSnapshot(
-                    new FieldMapping(
-                        "status",
-                        "Fstatus",
-                        "status",
-                        "status"
-                    ),
-                    "10001",
-                    null
-                ),
-                new FieldSnapshot(
-                    new FieldMapping(
-                        "customfield_10040",
-                        "Fcustomfield_10040",
-                        "Field 02",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
-                    ),
-                    "[10009, 10010]",
-                    null
-                ),
-                new FieldSnapshot(
-                    new FieldMapping(
-                        "description",
-                        "Fdescription",
-                        "Description",
-                        "description"
-                    ),
-                    "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*",
-                    "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
-                )
-            ]
+        $collection = new FieldMappingCollection();
+        $collection->addMapping(
+            new FieldMapping(
+                "customfield_10036",
+                "Fcustomfield_10036",
+                "Field 01",
+                "com.atlassian.jira.plugin.system.customfieldtypes:float"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "status",
+                "Fstatus",
+                "status",
+                "status"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "customfield_10040",
+                "Fcustomfield_10040",
+                "Field 02",
+                "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+            ),
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "description",
+                "Fdescription",
+                "Description",
+                "description"
+            )
         );
 
-        return $snapshot;
+        return $collection;
     }
 }
