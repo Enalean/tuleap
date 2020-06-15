@@ -1455,24 +1455,6 @@ describe("Store actions", () => {
             );
         });
 
-        it("resets currentlyPreviewedItem when it references the deleted item", async () => {
-            jest.spyOn(rest_querier, "deleteFile").mockReturnValue(Promise.resolve());
-
-            context.state.currently_previewed_item = item_to_delete;
-
-            await deleteItem(context, [item_to_delete]);
-
-            expect(context.commit).toHaveBeenCalledWith(
-                "removeItemFromFolderContent",
-                item_to_delete
-            );
-            expect(context.commit).toHaveBeenCalledWith("updateCurrentlyPreviewedItem", null);
-            expect(context.commit).toHaveBeenCalledWith(
-                "clipboard/emptyClipboardAfterItemDeletion",
-                item_to_delete
-            );
-        });
-
         it("display error if something wrong happens", async () => {
             const deleteFolder = jest
                 .spyOn(rest_querier, "deleteFolder")

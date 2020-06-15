@@ -199,6 +199,7 @@ export default {
                 return;
             }
 
+            this.$store.commit("updateCurrentlyPreviewedItem", null);
             await this.$router.replace({
                 name: "folder",
                 params: { item_id: deleted_item.parent_id },
