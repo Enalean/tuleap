@@ -316,6 +316,9 @@ msgstr "Fermer"
 msgid "Comment"
 msgstr "Commentaire"
 
+msgid "Comment has been cleared"
+msgstr "Commentaire effacé"
+
 msgid "Comment must be empty or at least 4 characters length"
 msgstr "Le commentaire peut être vide ou doit contenir au moins 4 caractères"
 
@@ -416,8 +419,8 @@ msgstr "Erreur lors de votre import Jira"
 msgid ""
 "Fail to retrieve the full collection of issue changelogs in selected tracker."
 msgstr ""
-"Echec lors de la récupération de la collection des historiques de l'issue dans le tracker "
-"sélectionné."
+"Echec lors de la récupération de la collection des historiques de l'issue "
+"dans le tracker sélectionné."
 
 msgid "Fail to retrieve the full collection of issues in selected tracker."
 msgstr ""
@@ -1481,6 +1484,9 @@ msgstr ""
 
 msgid "Update"
 msgstr "Mise à jour"
+
+msgid "Updated comment:"
+msgstr "Commentaire modifié :"
 
 msgid "Use"
 msgstr "Utiliser"

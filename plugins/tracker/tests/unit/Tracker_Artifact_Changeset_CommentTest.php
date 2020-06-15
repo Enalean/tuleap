@@ -23,6 +23,7 @@ declare(strict_types=1);
 class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase  // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var string
@@ -137,5 +138,135 @@ class Tracker_Artifact_Changeset_CommentTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('html', Tracker_Artifact_Changeset_Comment::checkCommentFormat('html'));
         $this->assertEquals('text', Tracker_Artifact_Changeset_Comment::checkCommentFormat('not_valid'));
         $this->assertEquals('text', Tracker_Artifact_Changeset_Comment::checkCommentFormat(true));
+    }
+
+    public function testItReturnsEmptyWhenFormatIsTextAndWhenItHasEmptyBody(): void
+    {
+        $comment = Mockery::mock(
+            Tracker_Artifact_Changeset_Comment::class,
+            [
+                1,
+                $this->changeset,
+                0,
+                0,
+                101,
+                $this->timestamp,
+                "",
+                'text',
+                0
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $this->assertEquals("", $comment->fetchMailFollowUp('text'));
+    }
+
+    public function testItClearsComment(): void
+    {
+        $comment = Mockery::mock(
+            Tracker_Artifact_Changeset_Comment::class,
+            [
+                1,
+                $this->changeset,
+                0,
+                0,
+                101,
+                $this->timestamp,
+                " ",
+                'html',
+                1234
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $user = $this->getAMockedUser();
+        $comment->shouldReceive('getCurrentUser')->andReturn($user);
+
+        $this->assertStringContainsString("Comment has been cleared", $comment->fetchMailFollowUp());
+    }
+
+    public function testItDisplayStandardComment(): void
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $artifact                      = Mockery::mock(Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+        $this->getPurifier($artifact);
+
+        $body    = 'See art #290';
+        $comment = Mockery::mock(
+            Tracker_Artifact_Changeset_Comment::class,
+            [
+                1,
+                $this->changeset,
+                0,
+                0,
+                101,
+                $this->timestamp,
+                $body,
+                'html',
+                0
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $user = $this->getAMockedUser();
+        $comment->shouldReceive('getCurrentUser')->andReturn($user);
+        $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
+        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
+        $comment->shouldReceive('getPurifier')->andReturn($purifier);
+
+        $follow_up = $comment->fetchMailFollowUp();
+        $this->assertStringNotContainsString("Comment has been cleared", $follow_up);
+        $this->assertStringNotContainsString("Updated comment", $follow_up);
+    }
+
+    public function testItDisplayEditedComment(): void
+    {
+        $tracker = Mockery::mock(Tracker::class);
+        $tracker->shouldReceive('getGroupId')->andReturn(101);
+        $artifact                      = Mockery::mock(Tracker_Artifact::class);
+        $artifact->shouldReceive('getTracker')->andReturn($tracker);
+
+        $this->changeset->artifact = $artifact;
+        $body                      = 'See art #290';
+        $comment                   = Mockery::mock(
+            Tracker_Artifact_Changeset_Comment::class,
+            [
+                1,
+                $this->changeset,
+                0,
+                0,
+                101,
+                $this->timestamp,
+                $body,
+                'html',
+                1234
+            ]
+        )->makePartial()->shouldAllowMockingProtectedMethods();
+        $user = $this->getAMockedUser();
+        $comment->shouldReceive('getCurrentUser')->andReturn($user);
+        $purifier = Mockery::mock(Codendi_HTMLPurifier::class);
+        $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn($body);
+        $comment->shouldReceive('getPurifier')->andReturn($purifier);
+
+        $this->assertStringContainsString("Updated comment", $comment->fetchMailFollowUp());
+    }
+
+    private function getAMockedUser()
+    {
+        $user = Mockery::mock(PFUser::class);
+
+        $user->shouldReceive('fetchHtmlAvatar')->once();
+        $user->shouldReceive('getTimezone');
+        $user->shouldReceive('getId')->once();
+        $user->shouldReceive('getEmail')->once();
+        $user->shouldReceive('getRealName')->once();
+        $user->shouldReceive('getUserName')->once();
+        $user->shouldReceive('isAnonymous')->once()->andReturnFalse();
+        return $user;
+    }
+
+    /**
+     * @param $artifact
+     */
+    private function getPurifier($artifact): void
+    {
+        $this->changeset->artifact = $artifact;
     }
 }

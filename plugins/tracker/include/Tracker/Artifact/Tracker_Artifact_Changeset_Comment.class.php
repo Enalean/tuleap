@@ -114,10 +114,7 @@ class Tracker_Artifact_Changeset_Comment
         return $this->purifyBody($level);
     }
 
-    /**
-     * @return string the cleaned body to be included in a text/html context
-     */
-    public function getPurifiedBodyForHTML()
+    public function getPurifiedBodyForHTML(): string
     {
         if ($this->bodyFormat === 'html') {
             return $this->purifyHTMLBody();
@@ -127,22 +124,20 @@ class Tracker_Artifact_Changeset_Comment
         return $this->purifyBody($level);
     }
 
-    private function purifyBody($level)
+    private function purifyBody($level): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purify(
+        return $this->getPurifier()->purify(
             $this->body,
             $level,
             $this->changeset->getArtifact()->getTracker()->getGroupId()
         );
     }
 
-    private function purifyHTMLBody()
+    private function purifyHTMLBody(): string
     {
-        $hp = Codendi_HTMLPurifier::instance();
-        return $hp->purifyHTMLWithReferences(
+        return $this->getPurifier()->purifyHTMLWithReferences(
             $this->body,
-            $this->changeset->artifact->getTracker()->group_id
+            $this->changeset->artifact->getTracker()->getGroupId()
         );
     }
 
@@ -209,7 +204,10 @@ class Tracker_Artifact_Changeset_Comment
             return PHP_EOL . PHP_EOL . $body . PHP_EOL . PHP_EOL;
         }
 
-        $user     = UserManager::instance()->getUserById($this->submitted_by);
+        $user     = $this->getCurrentUser();
+        if ($user === null) {
+            return '';
+        }
         $avatar   = $user->fetchHtmlAvatar();
         $timezone = ($user->getId() != 0) ? ' (' . $user->getTimezone() . ')' : '';
 
@@ -275,17 +273,19 @@ class Tracker_Artifact_Changeset_Comment
         return $comment_format;
     }
 
-    private function fetchFormattedMailComment()
+    private function fetchFormattedMailComment(): string
     {
         $formatted_comment = '';
+        $comment = '';
         if (!empty($this->body)) {
             if ($this->parent_id && !trim($this->body)) {
                 $comment =
-                '<em>' .
-                    $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') . '
-                </em>';
+                '<em>' . dgettext('tuleap-tracker', "Comment has been cleared") . '</em>';
             } else {
-                $comment = $this->getPurifiedBodyForHTML();
+                if ($this->parent_id) {
+                    $comment .= "<em>" . dgettext('tuleap-tracker', "Updated comment:") . "</em><br><br>";
+                }
+                $comment .= $this->getPurifiedBodyForHTML();
             }
 
             $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">' . $comment . '</div>';
@@ -357,5 +357,21 @@ class Tracker_Artifact_Changeset_Comment
         }
 
         return $escaped_body;
+    }
+
+    /**
+     * Protected for testing purpose
+     */
+    protected function getCurrentUser(): ?PFUser
+    {
+        return UserManager::instance()->getUserById($this->submitted_by);
+    }
+
+    /**
+     * Protected for testing purpose
+     */
+    protected function getPurifier(): Codendi_HTMLPurifier
+    {
+        return Codendi_HTMLPurifier::instance();
     }
 }
