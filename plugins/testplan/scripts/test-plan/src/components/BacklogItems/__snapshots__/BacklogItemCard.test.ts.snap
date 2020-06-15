@@ -1,9 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`BacklogItemCard Display the backlog item as a card 1`] = `
-<div
-  class="tlp-card"
+exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
+<a
+  class="tlp-card tlp-card-selectable"
+  href="/plugins/tracker/?aid=42"
 >
+  <i
+    aria-hidden="true"
+    class="fa fa-fw test-plan-backlog-item-caret fa-caret-right"
+  />
+   
   <span
     class="tlp-badge-outline tlp-badge-fiesta-red"
   >
@@ -19,5 +25,5 @@ exports[`BacklogItemCard Display the backlog item as a card 1`] = `
         A backlog item
     
   </span>
-</div>
+</a>
 `;

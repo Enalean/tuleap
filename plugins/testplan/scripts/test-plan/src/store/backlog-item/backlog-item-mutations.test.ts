@@ -22,7 +22,9 @@ import { BacklogItem } from "../../type";
 import {
     addBacklogItems,
     beginLoadingBacklogItems,
+    collapseBacklogItem,
     endLoadingBacklogItems,
+    expandBacklogItem,
     loadingErrorHasBeenCatched,
 } from "./backlog-item-mutations";
 
@@ -75,5 +77,57 @@ describe("BacklogItem state mutations", () => {
         loadingErrorHasBeenCatched(state);
 
         expect(state.has_loading_error).toBe(true);
+    });
+
+    describe("expandBacklogItem", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                expandBacklogItem(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("Expands the item", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, is_expanded: false } as BacklogItem],
+            };
+
+            expandBacklogItem(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items).toStrictEqual([{ id: 123, is_expanded: true }]);
+        });
+    });
+
+    describe("collapseBacklogItem", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                collapseBacklogItem(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("Collapses the item", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, is_expanded: true } as BacklogItem],
+            };
+
+            collapseBacklogItem(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items).toStrictEqual([{ id: 123, is_expanded: false }]);
+        });
     });
 });

@@ -19,28 +19,62 @@
   -->
 
 <template>
-    <div class="tlp-card">
+    <a
+        v-bind:href="'/plugins/tracker/?aid=' + encodeURIComponent(backlog_item.artifact.id)"
+        class="tlp-card tlp-card-selectable"
+        v-on:click.prevent.stop="toggle"
+    >
+        <i
+            class="fa fa-fw test-plan-backlog-item-caret"
+            v-bind:class="caret"
+            aria-hidden="true"
+        ></i>
         <span class="tlp-badge-outline" v-bind:class="badge_color">
             {{ backlog_item.short_type }} #{{ backlog_item.id }}
         </span>
         <span class="test-plan-backlog-item-title">
             {{ backlog_item.label }}
         </span>
-    </div>
+    </a>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
+import { namespace } from "vuex-class";
+
+const backlog_item_store = namespace("backlog_item");
 
 @Component
 export default class BacklogItemCard extends Vue {
     @Prop({ required: true })
     readonly backlog_item!: BacklogItem;
 
+    @backlog_item_store.Mutation
+    readonly expandBacklogItem!: (item: BacklogItem) => void;
+
+    @backlog_item_store.Mutation
+    readonly collapseBacklogItem!: (item: BacklogItem) => void;
+
+    toggle(): void {
+        if (this.backlog_item.is_expanded) {
+            this.collapseBacklogItem(this.backlog_item);
+        } else {
+            this.expandBacklogItem(this.backlog_item);
+        }
+    }
+
     get badge_color(): string {
         return "tlp-badge-" + this.backlog_item.color;
+    }
+
+    get caret(): string {
+        if (this.backlog_item.is_expanded) {
+            return "fa-caret-down";
+        }
+
+        return "fa-caret-right";
     }
 }
 </script>

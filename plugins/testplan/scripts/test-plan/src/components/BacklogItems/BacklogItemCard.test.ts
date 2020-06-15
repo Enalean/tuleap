@@ -19,9 +19,12 @@
 
 import { shallowMount } from "@vue/test-utils";
 import BacklogItemCard from "./BacklogItemCard.vue";
+import { BacklogItem } from "../../type";
+import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../store/type";
 
 describe("BacklogItemCard", () => {
-    it("Display the backlog item as a card", () => {
+    it("Displays the backlog item as a card", () => {
         const wrapper = shallowMount(BacklogItemCard, {
             propsData: {
                 backlog_item: {
@@ -29,10 +32,81 @@ describe("BacklogItemCard", () => {
                     label: "A backlog item",
                     color: "fiesta-red",
                     short_type: "bug",
-                },
+                    is_expanded: false,
+                    artifact: {
+                        id: 42,
+                    },
+                } as BacklogItem,
             },
         });
 
         expect(wrapper.element).toMatchSnapshot();
+    });
+
+    it("Expands the item when the user click on it", async () => {
+        const $store = createStoreMock({
+            state: {
+                backlog_item: {},
+            } as RootState,
+        });
+
+        const backlog_item = {
+            id: 123,
+            label: "A backlog item",
+            color: "fiesta-red",
+            short_type: "bug",
+            is_expanded: false,
+            artifact: {
+                id: 42,
+            },
+        } as BacklogItem;
+
+        const wrapper = shallowMount(BacklogItemCard, {
+            propsData: {
+                backlog_item,
+            },
+            mocks: {
+                $store,
+            },
+        });
+
+        await wrapper.trigger("click");
+
+        expect($store.commit).toHaveBeenCalledWith("backlog_item/expandBacklogItem", backlog_item);
+    });
+
+    it("Collapses the item when the user reclick on it", async () => {
+        const $store = createStoreMock({
+            state: {
+                backlog_item: {},
+            } as RootState,
+        });
+
+        const backlog_item = {
+            id: 123,
+            label: "A backlog item",
+            color: "fiesta-red",
+            short_type: "bug",
+            is_expanded: true,
+            artifact: {
+                id: 42,
+            },
+        } as BacklogItem;
+
+        const wrapper = shallowMount(BacklogItemCard, {
+            propsData: {
+                backlog_item,
+            },
+            mocks: {
+                $store,
+            },
+        });
+
+        await wrapper.trigger("click");
+
+        expect($store.commit).toHaveBeenCalledWith(
+            "backlog_item/collapseBacklogItem",
+            backlog_item
+        );
     });
 });

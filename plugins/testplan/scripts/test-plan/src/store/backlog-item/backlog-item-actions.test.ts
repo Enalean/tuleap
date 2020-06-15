@@ -22,6 +22,7 @@ import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import * as tlp from "tlp";
 import { loadBacklogItems } from "./backlog-item-actions";
+import { BacklogItem } from "../../type";
 
 jest.mock("tlp");
 
@@ -42,6 +43,10 @@ describe("BacklogItem state actions", () => {
 
     describe("loadBacklogItems", () => {
         it("Retrieves all backlog items for milestone", async () => {
+            tlpRecursiveGetMock.mockImplementation((route, config) => {
+                config.getCollectionCallback([{ id: 123 }, { id: 124 }] as BacklogItem[]);
+            });
+
             await loadBacklogItems(context);
 
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
@@ -50,6 +55,10 @@ describe("BacklogItem state actions", () => {
                 params: { limit: 100 },
                 getCollectionCallback: expect.any(Function),
             });
+            expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [
+                { id: 123, is_expanded: false },
+                { id: 124, is_expanded: false },
+            ] as BacklogItem[]);
         });
 
         it("Catches error", async () => {

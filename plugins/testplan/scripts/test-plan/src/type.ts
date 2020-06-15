@@ -29,9 +29,15 @@ export interface Campaign {
     readonly is_error: boolean;
 }
 
+interface ArtifactReference {
+    readonly id: number;
+}
+
 export interface BacklogItem {
     readonly id: number;
     readonly label: string;
     readonly short_type: string;
     readonly color: string;
+    readonly artifact: ArtifactReference;
+    readonly is_expanded: boolean;
 }
