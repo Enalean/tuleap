@@ -44,14 +44,21 @@ class IssueSnapshotCollectionBuilder
      */
     private $changelog_snapshot_builder;
 
+    /**
+     * @var CurrentSnapshotBuilder
+     */
+    private $current_snapshot_builder;
+
     public function __construct(
         ChangelogEntriesBuilder $changelog_entries_builder,
+        CurrentSnapshotBuilder $current_snapshot_builder,
         InitialSnapshotBuilder $initial_snapshot_builder,
         ChangelogSnapshotBuilder $changelog_snapshot_builder
     ) {
         $this->initial_snapshot_builder   = $initial_snapshot_builder;
         $this->changelog_entries_builder  = $changelog_entries_builder;
         $this->changelog_snapshot_builder = $changelog_snapshot_builder;
+        $this->current_snapshot_builder   = $current_snapshot_builder;
     }
 
     /**
@@ -65,17 +72,24 @@ class IssueSnapshotCollectionBuilder
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_api['key']);
 
-        $initial_snapshot = $this->initial_snapshot_builder->buildInitialSnapshot(
+        $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
             $forge_user,
-            $changelog_entries,
             $jira_issue_api,
             $jira_field_mapping_collection
+        );
+
+        $initial_snapshot = $this->initial_snapshot_builder->buildInitialSnapshot(
+            $forge_user,
+            $current_snapshot,
+            $changelog_entries,
+            $jira_issue_api
         );
         $snapshots_collection[$initial_snapshot->getDate()->getTimestamp()] = $initial_snapshot;
 
         foreach ($changelog_entries as $changelog_entry) {
             $changelog_snapshot = $this->changelog_snapshot_builder->buildSnapshotFromChangelogEntry(
                 $forge_user,
+                $current_snapshot,
                 $changelog_entry,
                 $jira_field_mapping_collection
             );

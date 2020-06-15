@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
+use DateTimeImmutable;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
@@ -44,16 +45,18 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $user                          = Mockery::mock(PFUser::class);
         $changelog_entry               = $this->buildChangelogEntry();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
+        $current_snapshot              = $this->buildCurrentSnapshot($user);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $user,
+            $current_snapshot,
             $changelog_entry,
             $jira_field_mapping_collection
         );
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(2, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(4, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -63,6 +66,53 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 ['id' => '10010'],
             ],
             $snapshot->getFieldInSnapshot('customfield_10040')->getValue()
+        );
+
+        $this->assertSame(
+            "*aaaaaaaaa*",
+            $snapshot->getFieldInSnapshot('description')->getValue()
+        );
+
+        $this->assertSame(
+            "<p>aaaaaaaaa</p>",
+            $snapshot->getFieldInSnapshot('description')->getRenderedValue()
+        );
+
+        $this->assertSame(
+            "*def*",
+            $snapshot->getFieldInSnapshot('textfield')->getValue()
+        );
+
+        $this->assertNull($snapshot->getFieldInSnapshot('textfield')->getRenderedValue());
+    }
+
+    private function buildCurrentSnapshot(PFUser $user): Snapshot
+    {
+        return new Snapshot(
+            $user,
+            new DateTimeImmutable("2020-03-25T14:10:10.823+0100"),
+            [
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "description",
+                        "Fdescription",
+                        "Description",
+                        "text"
+                    ),
+                    "*aaaaaaaaa*",
+                    "<p>aaaaaaaaa</p>"
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "textfield",
+                        "Ftextfield",
+                        "Text Field",
+                        "text"
+                    ),
+                    "*text area v2*",
+                    "<p>text area v2</p>"
+                )
+            ]
         );
     }
 
@@ -93,6 +143,20 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "fromString" => "\r\n----\r\n",
                         "to"         => null,
                         "toString"   => "----\r\n"
+                    ],
+                    3 => [
+                        "fieldId"    => "description",
+                        "from"       => null,
+                        "fromString" => "aaaaaaaaaaa",
+                        "to"         => null,
+                        "toString"   => "*aaaaaaaaa*"
+                    ],
+                    4 => [
+                        "fieldId"    => "textfield",
+                        "from"       => null,
+                        "fromString" => "abc",
+                        "to"         => null,
+                        "toString"   => "*def*"
                     ]
                 ]
             ]
@@ -107,7 +171,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "customfield_10036",
                 "Fcustomfield_10036",
                 "Field 01",
-                "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                "float"
             )
         );
         $collection->addMapping(
@@ -115,7 +179,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "status",
                 "Fstatus",
                 "status",
-                "status"
+                "sb"
             )
         );
         $collection->addMapping(
@@ -123,7 +187,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
-                "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+                "msb"
             ),
         );
         $collection->addMapping(
@@ -131,7 +195,15 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "description",
                 "Fdescription",
                 "Description",
-                "description"
+                "text"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "textfield",
+                "Ftextfield",
+                "Text Field",
+                "com.atlassian.jira.plugin.system.customfieldtypes:textarea"
             )
         );
 

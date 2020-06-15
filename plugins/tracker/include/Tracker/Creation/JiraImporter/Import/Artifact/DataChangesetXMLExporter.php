@@ -87,7 +87,6 @@ class DataChangesetXMLExporter
                     $issue,
                     $jira_base_url,
                     $changeset_node,
-                    $jira_field_mapping_collection
                 );
             }
         }

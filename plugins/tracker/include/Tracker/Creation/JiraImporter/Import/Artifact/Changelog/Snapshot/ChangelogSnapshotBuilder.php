@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
 use PFUser;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -42,14 +43,14 @@ class ChangelogSnapshotBuilder
 
     public function buildSnapshotFromChangelogEntry(
         PFUser $forge_user,
+        Snapshot $current_snapshot,
         ChangelogEntryValueRepresentation $changelog_entry,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
         $fields_snapshot = [];
         foreach ($changelog_entry->getItemRepresentations() as $item_representation) {
-            $field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(
-                $item_representation->getFieldId()
-            );
+            $field_id      = $item_representation->getFieldId();
+            $field_mapping = $jira_field_mapping_collection->getMappingFromJiraField($field_id);
 
             if ($field_mapping === null) {
                 continue;
@@ -70,10 +71,20 @@ class ChangelogSnapshotBuilder
             }
 
             if ($changed_field_to_string !== null) {
+                $rendered_value = null;
+                $field_snapshot = $current_snapshot->getFieldInSnapshot($field_id);
+                if (
+                    $field_snapshot !== null &&
+                    $field_snapshot->getFieldMapping()->getType() === Tracker_FormElementFactory::FIELD_TEXT_TYPE &&
+                    $field_snapshot->getValue() === $changed_field_to_string
+                ) {
+                    $rendered_value = $field_snapshot->getRenderedValue();
+                }
+
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,
                     $changed_field_to_string,
-                    null
+                    $rendered_value
                 );
                 continue;
             }
