@@ -64,6 +64,10 @@ class RequirementRetriever
             $this->config->getTestExecutionTrackerId($definition->getTracker()->getProject())
         );
 
+        if ($requirement_id === null) {
+            return null;
+        }
+
         return $this->tracker_artifact_factory->getArtifactByIdUserCanView($user, $requirement_id['id']);
     }
 }

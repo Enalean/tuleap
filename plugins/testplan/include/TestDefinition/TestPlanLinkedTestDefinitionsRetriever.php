@@ -78,8 +78,8 @@ class TestPlanLinkedTestDefinitionsRetriever
         );
 
         $rows = new \AppendIterator();
-        $rows->append($rows_covered_by);
-        $rows->append($rows_children);
+        $rows->append(new \ArrayIterator($rows_covered_by));
+        $rows->append(new \ArrayIterator($rows_children));
 
         $test_definitions = [];
         foreach ($rows as $row) {
