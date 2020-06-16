@@ -68,11 +68,11 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
         $this->testmanagement_config->shouldReceive('getTestDefinitionTrackerId')->andReturn(102);
 
         $this->artifact_dao->shouldReceive('searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId')
-            ->twice()
+            ->once()
             ->andReturn(
-                [['mocked_artifact_row_1']],
-                [['mocked_artifact_row_1']],
+                [['mocked_artifact_row_1'], ['mocked_artifact_row_2']],
             );
+        $this->artifact_dao->shouldReceive('foundRows')->andReturn(2);
 
         $artifact_user_can_view     = \Mockery::mock(\Tracker_Artifact::class);
         $artifact_user_can_view->shouldReceive('userCanView')->andReturn(true);
@@ -90,9 +90,9 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
         $tracker->shouldReceive('getProject')->andReturn($project);
         $backlog_item->shouldReceive('getTracker')->andReturn($tracker);
 
-        $linked_artifacts = $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build());
+        $linked_artifacts = $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build(), 512, 0);
 
-        $this->assertEquals([$artifact_user_can_view], $linked_artifacts);
+        $this->assertEquals([$artifact_user_can_view], $linked_artifacts->getRequestedLinkedTestDefinitions());
     }
 
     public function testNoArtifactsAreFoundWhenTheTestDefinitionTrackerIsNotSetInTheTestManagementConfig(): void
@@ -105,8 +105,9 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
         $tracker->shouldReceive('getProject')->andReturn($project);
         $backlog_item->shouldReceive('getTracker')->andReturn($tracker);
 
-        $this->assertEmpty(
-            $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build())
+        $this->assertEquals(
+            TestPlanLinkedTestDefinitions::empty(),
+            $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build(), 512, 0)
         );
     }
 }

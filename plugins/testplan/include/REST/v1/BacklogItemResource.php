@@ -85,9 +85,18 @@ final class BacklogItemResource extends AuthenticatedResource
             $testmanagement_artifact_dao,
             $artifact_factory
         );
-        $linked_test_definitions = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact($backlog_item, $user);
-        Header::sendPaginationHeaders($limit, $offset, count($linked_test_definitions), \Tuleap\AgileDashboard\REST\v1\BacklogItemResource::MAX_LIMIT);
-        $linked_test_definitions = array_slice($linked_test_definitions, $offset, $limit);
+        $linked_test_definitions = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact(
+            $backlog_item,
+            $user,
+            $limit,
+            $offset,
+        );
+        Header::sendPaginationHeaders(
+            $limit,
+            $offset,
+            $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions(),
+            \Tuleap\AgileDashboard\REST\v1\BacklogItemResource::MAX_LIMIT,
+        );
 
         $definition_representation_builder = new DefinitionRepresentationBuilder(
             Tracker_FormElementFactory::instance(),
@@ -98,7 +107,7 @@ final class BacklogItemResource extends AuthenticatedResource
 
         $representations = [];
 
-        foreach ($linked_test_definitions as $linked_test_definition) {
+        foreach ($linked_test_definitions->getRequestedLinkedTestDefinitions() as $linked_test_definition) {
             $representations[] = $definition_representation_builder->getMinimalRepresentation($user, $linked_test_definition);
         }
 

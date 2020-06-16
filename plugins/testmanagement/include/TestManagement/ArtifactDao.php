@@ -102,17 +102,20 @@ class ArtifactDao extends DataAccessObject
     }
 
     /**
+     * @param string[] $natures
+     * @psalm-param non-empty-array<string> $natures
      * @psalm-param non-empty-array $artifacts_ids
      * @param false|int $target_tracker_id
      */
     public function searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
         array $artifacts_ids,
-        string $nature,
+        array $natures,
         $target_tracker_id,
         int $limit,
         int $offset
     ): array {
-        $parent_art_id_filter = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids);
+        $where_statement      = EasyStatement::open()->in('parent_art.id IN (?*)', $artifacts_ids)
+            ->andIn('IFNULL(artlink.nature, "") IN (?*)', $natures);
 
         $sql = "SELECT DISTINCT SQL_CALC_FOUND_ROWS linked_art.*
                 FROM tracker_artifact parent_art
@@ -121,12 +124,11 @@ class ArtifactDao extends DataAccessObject
                     INNER JOIN tracker_changeset_value_artifactlink AS artlink    ON (artlink.changeset_value_id = cv.id)
                     INNER JOIN tracker_artifact                     AS linked_art ON (linked_art.id = artlink.artifact_id)
                     INNER JOIN tracker                              AS t          ON (linked_art.tracker_id = t.id AND t.id = ?)
-                WHERE $parent_art_id_filter
-                    AND IFNULL(artlink.nature, '') = ?
+                WHERE $where_statement
                 LIMIT ?
                 OFFSET ?";
 
-        return $this->getDB()->run($sql, ...array_merge([$target_tracker_id], $parent_art_id_filter->values(), [$nature, $limit, $offset]));
+        return $this->getDB()->run($sql, ...array_merge([$target_tracker_id], $where_statement->values(), [$limit, $offset]));
     }
 
     /**
