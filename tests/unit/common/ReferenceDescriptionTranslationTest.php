@@ -51,7 +51,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
 
         $expected_translation = 'Plugin ref description';
         $GLOBALS['Language']->shouldReceive('hasText')->andReturn(true);
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_aaaaa', 'myref_build_desc_key')->andReturn($expected_translation);
+        $GLOBALS['Language']->shouldReceive('getOverridableText')->with('plugin_aaaaa', 'myref_build_desc_key')->andReturn($expected_translation);
 
         $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
@@ -65,7 +65,7 @@ final class ReferenceDescriptionTranslationTest extends TestCase
 
         $expected_translation = 'Project ref description';
         $GLOBALS['Language']->shouldReceive('hasText')->andReturn(true);
-        $GLOBALS['Language']->shouldReceive('getText')->with('project_reference', 'projectref_desc_key')->andReturn($expected_translation);
+        $GLOBALS['Language']->shouldReceive('getOverridableText')->with('project_reference', 'projectref_desc_key')->andReturn($expected_translation);
 
         $this->assertEquals($expected_translation, $reference_description_translation->getTranslatedDescription());
     }
