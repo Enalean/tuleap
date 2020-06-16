@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TestDefinitionCard Display a test definition as a card 1`] = `
+<a
+  class="tlp-card tlp-card-selectable test-plan-test-definition-card"
+  href="/plugins/tracker/?aid=123"
+>
+  <div
+    class="test-plan-test-definition-xref-title"
+  >
+    <span
+      class="test-plan-test-definition-xref"
+    >
+      #123
+    </span>
+     
+    <span
+      class="test-plan-test-definition-title"
+    >
+      
+            Test definition summary
+        
+    </span>
+  </div>
+   
+  <div
+    class="test-plan-test-definition-icons"
+  >
+    <!---->
+  </div>
+</a>
+`;

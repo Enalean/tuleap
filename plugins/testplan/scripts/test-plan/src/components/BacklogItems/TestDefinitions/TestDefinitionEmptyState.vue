@@ -18,9 +18,18 @@
   -
   -->
 
-<template functional>
-    <div class="tlp-card tlp-skeleton-card test-plan-test-definition-skeleton">
-        <span class="tlp-skeleton-text test-plan-test-definition-skeleton-xref"></span>
-        <span class="tlp-skeleton-text test-plan-test-definition-skeleton-title"></span>
+<template>
+    <div class="empty-pane">
+        <div class="empty-pane-text test-plan-list-of-test-definitions-empty-text" v-translate>
+            This item isn't covered yet.
+        </div>
     </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
+@Component
+export default class TestDefinitionEmptyState extends Vue {}
+</script>

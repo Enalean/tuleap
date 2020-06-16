@@ -18,14 +18,19 @@
  */
 
 import { BacklogItemState } from "./type";
-import { BacklogItem } from "../../type";
+import { BacklogItem, TestDefinition } from "../../type";
 import {
     addBacklogItems,
+    addTestDefinitions,
     beginLoadingBacklogItems,
+    beginLoadingTestDefinition,
     collapseBacklogItem,
     endLoadingBacklogItems,
+    endLoadingTestDefinition,
     expandBacklogItem,
     loadingErrorHasBeenCatched,
+    loadingErrorHasBeenCatchedForTestDefinition,
+    markTestDefinitionsAsBeingLoaded,
 } from "./backlog-item-mutations";
 
 jest.useFakeTimers();
@@ -128,6 +133,165 @@ describe("BacklogItem state mutations", () => {
             collapseBacklogItem(state, { id: 123 } as BacklogItem);
 
             expect(state.backlog_items).toStrictEqual([{ id: 123, is_expanded: false }]);
+        });
+    });
+
+    describe("beginLoadingTestDefinition", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                beginLoadingTestDefinition(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("Begins the loading of test definitions", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, is_loading_test_definitions: false } as BacklogItem],
+            };
+
+            beginLoadingTestDefinition(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items[0].is_loading_test_definitions).toBe(true);
+        });
+    });
+
+    describe("endLoadingTestDefinition", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                endLoadingTestDefinition(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("Ends the loading of test definitions", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, is_loading_test_definitions: true } as BacklogItem],
+            };
+
+            endLoadingTestDefinition(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items[0].is_loading_test_definitions).toBe(false);
+        });
+    });
+
+    describe("loadingErrorHasBeenCatchedForTestDefinition", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                loadingErrorHasBeenCatchedForTestDefinition(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("flags the loading of test definitions as error", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    { id: 123, has_test_definitions_loading_error: false } as BacklogItem,
+                ],
+            };
+
+            loadingErrorHasBeenCatchedForTestDefinition(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items[0].has_test_definitions_loading_error).toBe(true);
+        });
+    });
+
+    describe("markTestDefinitionsAsBeingLoaded", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                markTestDefinitionsAsBeingLoaded(state, { id: 123 } as BacklogItem);
+            }).toThrow();
+        });
+
+        it("flags test definitions as being loaded", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [{ id: 123, are_test_definitions_loaded: false } as BacklogItem],
+            };
+
+            markTestDefinitionsAsBeingLoaded(state, { id: 123 } as BacklogItem);
+
+            expect(state.backlog_items[0].are_test_definitions_loaded).toBe(true);
+        });
+    });
+
+    describe("addTestDefinitions", () => {
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                addTestDefinitions(state, {
+                    backlog_item: { id: 123 } as BacklogItem,
+                    test_definitions: [{ id: 678 } as TestDefinition],
+                });
+            }).toThrow();
+        });
+
+        it("Adds test definitions to the backlog item", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    { id: 123, test_definitions: [{ id: 677 } as TestDefinition] } as BacklogItem,
+                ],
+            };
+
+            addTestDefinitions(state, {
+                backlog_item: { id: 123 } as BacklogItem,
+                test_definitions: [{ id: 678 } as TestDefinition],
+            });
+
+            expect(state.backlog_items[0].test_definitions.length).toBe(2);
+        });
+
+        it("Does not wipe new test definitions if we call another mutation", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    { id: 123, test_definitions: [{ id: 677 } as TestDefinition] } as BacklogItem,
+                ],
+            };
+
+            const backlog_item = { id: 123 } as BacklogItem;
+            addTestDefinitions(state, {
+                backlog_item,
+                test_definitions: [{ id: 678 } as TestDefinition],
+            });
+            endLoadingTestDefinition(state, backlog_item);
+
+            expect(state.backlog_items[0].test_definitions.length).toBe(2);
         });
     });
 });

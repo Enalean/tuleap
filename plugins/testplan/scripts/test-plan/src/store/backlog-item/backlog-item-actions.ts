@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItemState } from "./type";
+import { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import { FetchWrapperError, recursiveGet } from "tlp";
-import { BacklogItem } from "../../type";
+import { BacklogItem, BacklogItemFromREST, TestDefinition } from "../../type";
 
 export async function loadBacklogItems(
     context: ActionContext<BacklogItemState, RootState>
@@ -34,16 +34,20 @@ export async function loadBacklogItems(
                 params: {
                     limit: 100,
                 },
-                getCollectionCallback: (collection: BacklogItem[]): BacklogItem[] => {
+                getCollectionCallback: (collection: BacklogItemFromREST[]): BacklogItem[] => {
                     const backlog_items: BacklogItem[] = collection.map(
-                        (campaign: BacklogItem): BacklogItem => ({
+                        (campaign: BacklogItemFromREST): BacklogItem => ({
                             ...campaign,
                             is_expanded: false,
+                            is_loading_test_definitions: false,
+                            are_test_definitions_loaded: false,
+                            has_test_definitions_loading_error: false,
+                            test_definitions: [],
                         })
                     );
                     context.commit("addBacklogItems", backlog_items);
 
-                    return collection;
+                    return backlog_items;
                 },
             }
         );
@@ -54,6 +58,40 @@ export async function loadBacklogItems(
         }
     } finally {
         context.commit("endLoadingBacklogItems");
+    }
+}
+
+export async function loadTestDefinitions(
+    context: ActionContext<BacklogItemState, RootState>,
+    backlog_item: BacklogItem
+): Promise<void> {
+    context.commit("beginLoadingTestDefinition", backlog_item);
+    try {
+        await recursiveGet(
+            `/api/v1/backlog_items/${encodeURIComponent(backlog_item.id)}/test_definitions`,
+            {
+                params: {
+                    limit: 100,
+                },
+                getCollectionCallback: (test_definitions: TestDefinition[]): TestDefinition[] => {
+                    const payload: AddTestDefinitionsToBacklogItemPayload = {
+                        backlog_item,
+                        test_definitions,
+                    };
+                    context.commit("addTestDefinitions", payload);
+
+                    return test_definitions;
+                },
+            }
+        );
+        context.commit("markTestDefinitionsAsBeingLoaded", backlog_item);
+    } catch (e) {
+        if (!isPermissionDenied(e)) {
+            context.commit("loadingErrorHasBeenCatchedForTestDefinition", backlog_item);
+            throw e;
+        }
+    } finally {
+        context.commit("endLoadingTestDefinition", backlog_item);
     }
 }
 

@@ -17,10 +17,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItem } from "../../type";
+import { BacklogItem, TestDefinition } from "../../type";
 
 export interface BacklogItemState {
     backlog_items: Array<BacklogItem>;
     is_loading: boolean;
     has_loading_error: boolean;
+}
+
+export interface AddTestDefinitionsToBacklogItemPayload {
+    readonly backlog_item: BacklogItem;
+    readonly test_definitions: TestDefinition[];
 }

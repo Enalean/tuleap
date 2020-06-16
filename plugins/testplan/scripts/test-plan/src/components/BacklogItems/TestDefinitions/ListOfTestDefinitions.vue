@@ -20,17 +20,60 @@
 
 <template>
     <div class="test-plan-list-of-test-definitions">
-        <test-definition-skeleton />
+        <test-definition
+            v-for="test_definition of backlog_item.test_definitions"
+            v-bind:key="test_definition.id"
+            v-bind:test_definition="test_definition"
+        />
+        <test-definition-skeleton v-if="backlog_item.is_loading_test_definitions" />
+        <test-definition-empty-state v-if="should_empty_state_be_displayed" />
+        <test-definition-error-state v-if="should_error_state_be_displayed" />
     </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
-import { Component } from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
+import { BacklogItem } from "../../../type";
+import { namespace } from "vuex-class";
+import TestDefinitionCard from "./TestDefinitionCard.vue";
+import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
+import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
+
+const backlog_item_store = namespace("backlog_item");
 
 @Component({
-    components: { TestDefinitionSkeleton },
+    components: {
+        TestDefinitionErrorState,
+        TestDefinitionEmptyState,
+        TestDefinition: TestDefinitionCard,
+        TestDefinitionSkeleton,
+    },
 })
-export default class ListOfTestDefinitions extends Vue {}
+export default class ListOfTestDefinitions extends Vue {
+    @Prop({ required: true })
+    readonly backlog_item!: BacklogItem;
+
+    @backlog_item_store.Action
+    readonly loadTestDefinitions!: (backlog_item: BacklogItem) => Promise<void>;
+
+    mounted(): void {
+        if (!this.backlog_item.are_test_definitions_loaded) {
+            this.loadTestDefinitions(this.backlog_item);
+        }
+    }
+
+    get should_empty_state_be_displayed(): boolean {
+        return (
+            this.backlog_item.test_definitions.length === 0 &&
+            !this.backlog_item.is_loading_test_definitions &&
+            !this.backlog_item.has_test_definitions_loading_error
+        );
+    }
+
+    get should_error_state_be_displayed(): boolean {
+        return this.backlog_item.has_test_definitions_loading_error;
+    }
+}
 </script>

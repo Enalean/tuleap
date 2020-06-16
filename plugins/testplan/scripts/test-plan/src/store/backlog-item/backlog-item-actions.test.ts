@@ -21,8 +21,8 @@ import { BacklogItemState } from "./type";
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import * as tlp from "tlp";
-import { loadBacklogItems } from "./backlog-item-actions";
-import { BacklogItem } from "../../type";
+import { loadBacklogItems, loadTestDefinitions } from "./backlog-item-actions";
+import { BacklogItem, TestDefinition } from "../../type";
 
 jest.mock("tlp");
 
@@ -56,8 +56,22 @@ describe("BacklogItem state actions", () => {
                 getCollectionCallback: expect.any(Function),
             });
             expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [
-                { id: 123, is_expanded: false },
-                { id: 124, is_expanded: false },
+                {
+                    id: 123,
+                    is_expanded: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
+                {
+                    id: 124,
+                    is_expanded: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
             ] as BacklogItem[]);
         });
 
@@ -81,6 +95,68 @@ describe("BacklogItem state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
             expect(context.commit).not.toHaveBeenCalledWith("loadingErrorHasBeenCatched");
             expect(context.commit).toHaveBeenCalledWith("endLoadingBacklogItems");
+        });
+    });
+
+    describe("loadTestDefinitions", () => {
+        it("Retrieves the test definitions of a backlog item", async () => {
+            tlpRecursiveGetMock.mockImplementation((route, config) => {
+                config.getCollectionCallback([{ id: 123 }, { id: 124 }] as TestDefinition[]);
+            });
+
+            const backlog_item = { id: 101 } as BacklogItem;
+
+            await loadTestDefinitions(context, backlog_item);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
+            expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
+                `/api/v1/backlog_items/101/test_definitions`,
+                {
+                    params: { limit: 100 },
+                    getCollectionCallback: expect.any(Function),
+                }
+            );
+            expect(context.commit).toHaveBeenCalledWith("addTestDefinitions", {
+                backlog_item,
+                test_definitions: [{ id: 123 }, { id: 124 }] as TestDefinition[],
+            });
+            expect(context.commit).toHaveBeenCalledWith(
+                "markTestDefinitionsAsBeingLoaded",
+                backlog_item
+            );
+            expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
+        });
+
+        it("Catches error", async () => {
+            const error = new Error();
+            tlpRecursiveGetMock.mockRejectedValue(error);
+
+            const backlog_item = { id: 101 } as BacklogItem;
+
+            await expect(loadTestDefinitions(context, backlog_item)).rejects.toThrow();
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
+            expect(context.commit).toHaveBeenCalledWith(
+                "loadingErrorHasBeenCatchedForTestDefinition",
+                backlog_item
+            );
+            expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
+        });
+
+        it("Does not catch 403 so that empty state can be displayed instead of error state", async () => {
+            const error = { response: { status: 403 } };
+            tlpRecursiveGetMock.mockRejectedValue(error);
+
+            const backlog_item = { id: 101 } as BacklogItem;
+
+            await loadTestDefinitions(context, backlog_item);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
+            expect(context.commit).not.toHaveBeenCalledWith(
+                "loadingErrorHasBeenCatchedForTestDefinition",
+                backlog_item
+            );
+            expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
         });
     });
 });

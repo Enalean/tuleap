@@ -18,9 +18,16 @@
   -
   -->
 
-<template functional>
-    <div class="tlp-card tlp-skeleton-card test-plan-test-definition-skeleton">
-        <span class="tlp-skeleton-text test-plan-test-definition-skeleton-xref"></span>
-        <span class="tlp-skeleton-text test-plan-test-definition-skeleton-title"></span>
+<template>
+    <div class="tlp-alert-danger" v-translate>
+        An error occurred while loading the tests.
     </div>
 </template>
+
+<script lang="ts">
+import Vue from "vue";
+import { Component } from "vue-property-decorator";
+
+@Component
+export default class TestDefinitionErrorState extends Vue {}
+</script>

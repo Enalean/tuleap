@@ -33,11 +33,24 @@ interface ArtifactReference {
     readonly id: number;
 }
 
-export interface BacklogItem {
+export interface BacklogItemFromREST {
     readonly id: number;
     readonly label: string;
     readonly short_type: string;
     readonly color: string;
     readonly artifact: ArtifactReference;
+}
+
+export interface BacklogItem extends BacklogItemFromREST {
     readonly is_expanded: boolean;
+    readonly are_test_definitions_loaded: boolean;
+    readonly is_loading_test_definitions: boolean;
+    readonly has_test_definitions_loading_error: boolean;
+    readonly test_definitions: TestDefinition[];
+}
+
+export interface TestDefinition {
+    readonly id: number;
+    readonly summary: string;
+    readonly automated_tests: string;
 }
