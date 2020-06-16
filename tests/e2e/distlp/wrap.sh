@@ -15,7 +15,7 @@ if [ -n "$1" ]; then
     test_results_folder="$1"
 fi
 
-cypress_version="$(node -p "require('./package-lock.json').dependencies.cypress.version")"
+cypress_version="$(python -c 'import json,sys;print(json.load(sys.stdin)["dependencies"]["cypress"]["version"], end="")' < ./package-lock.json)"
 
 clean_env() {
     $DOCKERCOMPOSE down --remove-orphans --volumes || true
