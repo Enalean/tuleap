@@ -38,7 +38,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Init
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LastDataChangesetXMLUpdater;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
@@ -113,14 +112,6 @@ class ArtifactsXMLExporterTest extends TestCase
                     new ChangelogSnapshotBuilder(
                         new CreationStateListValueFormatter()
                     )
-                ),
-                new LastDataChangesetXMLUpdater(
-                    new FieldChangeStringBuilder(
-                        new XML_SimpleXMLCDATAFactory()
-                    ),
-                    new FieldChangeTextBuilder(
-                        new XML_SimpleXMLCDATAFactory()
-                    )
                 )
             )
         );
@@ -145,6 +136,14 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
+        );
+        $mapping_collection->addMapping(
+            new FieldMapping(
+                "jira_issue_url",
+                "Fjira_issue_url",
+                "Link to original issue",
+                "string"
+            ),
         );
         $jira_project_id = 'project';
         $jira_base_url   = 'URLinstance';
@@ -220,6 +219,14 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 Tracker_FormElementFactory::FIELD_STRING_TYPE
             )
+        );
+        $mapping_collection->addMapping(
+            new FieldMapping(
+                "jira_issue_url",
+                "Fjira_issue_url",
+                "Link to original issue",
+                "string"
+            ),
         );
         $jira_project_id = 'project';
         $jira_base_url   = 'URLinstance';

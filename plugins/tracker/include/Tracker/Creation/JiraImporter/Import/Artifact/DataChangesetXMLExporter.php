@@ -47,21 +47,14 @@ class DataChangesetXMLExporter
      */
     private $issue_snapshot_collection_builder;
 
-    /**
-     * @var LastDataChangesetXMLUpdater
-     */
-    private $last_data_changeset_xml_updater;
-
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         FieldChangeXMLExporter $field_change_xml_exporter,
-        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder,
-        LastDataChangesetXMLUpdater $last_data_changeset_xml_updater
+        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder
     ) {
         $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
         $this->field_change_xml_exporter         = $field_change_xml_exporter;
         $this->issue_snapshot_collection_builder = $issue_snapshot_collection_builder;
-        $this->last_data_changeset_xml_updater   = $last_data_changeset_xml_updater;
     }
 
     public function exportIssueDataInChangesetXML(
@@ -74,21 +67,13 @@ class DataChangesetXMLExporter
         $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(
             $user,
             $issue,
-            $jira_field_mapping_collection
+            $jira_field_mapping_collection,
+            $jira_base_url
         );
 
-        $last_item_key = array_key_last($snapshot_collection);
         foreach ($snapshot_collection as $key => $snapshot) {
             $changeset_node = $artifact_node->addChild('changeset');
             $this->exportSnapshotInXML($snapshot, $changeset_node);
-
-            if ($key === $last_item_key) {
-                $this->last_data_changeset_xml_updater->updateLastXMLChangeset(
-                    $issue,
-                    $jira_base_url,
-                    $changeset_node,
-                );
-            }
         }
     }
 
