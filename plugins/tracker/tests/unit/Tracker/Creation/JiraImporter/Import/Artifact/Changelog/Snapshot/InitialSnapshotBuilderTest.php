@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
 
+use DateTimeImmutable;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
@@ -30,7 +31,6 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilderTest extends TestCase
 {
@@ -39,7 +39,6 @@ class InitialSnapshotBuilderTest extends TestCase
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
         $generator = new InitialSnapshotBuilder(
-            new CurrentSnapshotBuilder(),
             new CreationStateListValueFormatter()
         );
 
@@ -61,14 +60,14 @@ class InitialSnapshotBuilderTest extends TestCase
             ]
         ];
 
-        $changelog_entires        = $this->buildChangelogEntries();
-        $field_mapping_collection = $this->buildFieldMappingCollection();
+        $current_snapshot = $this->buildCurrentSnapshot($user);
+        $changelog_entires = $this->buildChangelogEntries();
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
+            $current_snapshot,
             $changelog_entires,
             $jira_issue_api,
-            $field_mapping_collection
         );
 
         $this->assertNull($initial_snapshot->getFieldInSnapshot("environment"));
@@ -171,42 +170,47 @@ class InitialSnapshotBuilderTest extends TestCase
         ];
     }
 
-    private function buildFieldMappingCollection(): FieldMappingCollection
+    private function buildCurrentSnapshot(PFUser $user): Snapshot
     {
-        $collection = new FieldMappingCollection();
-        $collection->addMapping(
-            new FieldMapping(
-                "customfield_10036",
-                "Fcustomfield_10036",
-                "Field 01",
-                "com.atlassian.jira.plugin.system.customfieldtypes:float"
-            )
+        return new Snapshot(
+            $user,
+            new DateTimeImmutable("2020-03-25T14:14:10.823+0100"),
+            [
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "status",
+                        "Fstatus",
+                        "status",
+                        "status"
+                    ),
+                    [
+                        'id' => "10000"
+                    ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "customfield_10040",
+                        "Fcustomfield_10040",
+                        "Field 02",
+                        "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+                    ),
+                    [
+                        ['id' => "10009"]
+                    ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "description",
+                        "Fdescription",
+                        "Description",
+                        "text"
+                    ),
+                    "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
+                    null
+                ),
+            ]
         );
-        $collection->addMapping(
-            new FieldMapping(
-                "status",
-                "Fstatus",
-                "status",
-                "status"
-            )
-        );
-        $collection->addMapping(
-            new FieldMapping(
-                "customfield_10040",
-                "Fcustomfield_10040",
-                "Field 02",
-                "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
-            ),
-        );
-        $collection->addMapping(
-            new FieldMapping(
-                "description",
-                "Fdescription",
-                "Description",
-                "description"
-            )
-        );
-
-        return $collection;
     }
 }

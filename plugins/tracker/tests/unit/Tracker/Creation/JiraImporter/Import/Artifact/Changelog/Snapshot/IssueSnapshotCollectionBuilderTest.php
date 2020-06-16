@@ -71,16 +71,23 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
      */
     private $jira_field_mapping_collection;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CurrentSnapshotBuilder
+     */
+    private $current_snapshot_builder;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->changelog_entries_builder  = Mockery::mock(ChangelogEntriesBuilder::class);
+        $this->current_snapshot_builder   = Mockery::mock(CurrentSnapshotBuilder::class);
         $this->initial_snapshot_builder   = Mockery::mock(InitialSnapshotBuilder::class);
         $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
+            $this->current_snapshot_builder,
             $this->initial_snapshot_builder,
             $this->changelog_snapshot_builder
         );
@@ -98,6 +105,12 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             ->with('key01')
             ->andReturn(
                 $this->buildChangelogEntriesCollection()
+            );
+
+        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
+            ->once()
+            ->andReturn(
+                $this->buildCurrentSnapshot($this->user)
             );
 
         $this->initial_snapshot_builder->shouldReceive('buildInitialSnapshot')
@@ -142,6 +155,12 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                 $this->buildInitialSnapshot($this->user)
             );
 
+        $this->current_snapshot_builder->shouldReceive('buildCurrentSnapshot')
+            ->once()
+            ->andReturn(
+                $this->buildCurrentSnapshotInEmptyTestCase($this->user)
+            );
+
         $this->changelog_snapshot_builder->shouldReceive('buildSnapshotFromChangelogEntry')->andReturn(
             $this->buildFirstChangelogSnapshot($this->user),
             $this->buildEmptySecondChangelogSnapshot($this->user)
@@ -174,10 +193,70 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "description"
+                        "text"
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
+                )
+            ]
+        );
+    }
+
+    private function buildCurrentSnapshot($user): Snapshot
+    {
+        return new Snapshot(
+            $user,
+            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            [
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "description",
+                        "Fdescription",
+                        "Description",
+                        "text"
+                    ),
+                    'aaaaaaaa',
+                    'aaaaaaaa'
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "customfield_10036",
+                        "Fcustomfield_10036",
+                        "Field 01",
+                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                    ),
+                    '11',
+                    null
+                )
+            ]
+        );
+    }
+
+    private function buildCurrentSnapshotInEmptyTestCase($user): Snapshot
+    {
+        return new Snapshot(
+            $user,
+            new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
+            [
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "description",
+                        "Fdescription",
+                        "Description",
+                        "text"
+                    ),
+                    'aaaaaaaa',
+                    'aaaaaaaa'
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "customfield_10036",
+                        "Fcustomfield_10036",
+                        "Field 01",
+                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                    ),
+                    '9',
+                    null
                 )
             ]
         );

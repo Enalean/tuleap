@@ -188,8 +188,8 @@ class JiraXmlExporter
                         new ChangelogEntriesBuilder(
                             $wrapper
                         ),
+                        new CurrentSnapshotBuilder(),
                         new InitialSnapshotBuilder(
-                            new CurrentSnapshotBuilder(),
                             new CreationStateListValueFormatter()
                         ),
                         new ChangelogSnapshotBuilder(
@@ -198,9 +198,6 @@ class JiraXmlExporter
                     ),
                     new LastDataChangesetXMLUpdater(
                         new FieldChangeStringBuilder(
-                            new XML_SimpleXMLCDATAFactory()
-                        ),
-                        new FieldChangeTextBuilder(
                             new XML_SimpleXMLCDATAFactory()
                         )
                     )

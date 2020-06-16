@@ -106,8 +106,8 @@ class ArtifactsXMLExporterTest extends TestCase
                     new ChangelogEntriesBuilder(
                         $this->wrapper
                     ),
+                    new CurrentSnapshotBuilder(),
                     new InitialSnapshotBuilder(
-                        new CurrentSnapshotBuilder(),
                         new CreationStateListValueFormatter()
                     ),
                     new ChangelogSnapshotBuilder(
