@@ -52,34 +52,21 @@ class TestPlanLinkedTestDefinitionsRetriever
         $this->artifact_factory      = $artifact_factory;
     }
 
-    /**
-     * @return Tracker_Artifact[]
-     */
-    public function getDefinitionsLinkedToAnArtifact(Tracker_Artifact $artifact, PFUser $user): array
+    public function getDefinitionsLinkedToAnArtifact(Tracker_Artifact $artifact, PFUser $user, int $limit, int $offset): TestPlanLinkedTestDefinitions
     {
         $test_definition_tracker_id = $this->testmanagement_config->getTestDefinitionTrackerId($artifact->getTracker()->getProject());
         if ($test_definition_tracker_id === false) {
-            return [];
+            return TestPlanLinkedTestDefinitions::empty();
         }
 
-        $rows_covered_by = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
+        $rows = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             [$artifact->getId()],
-            NatureCoveredByPresenter::NATURE_COVERED_BY,
+            [NatureCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
             $test_definition_tracker_id,
-            PHP_INT_MAX,
-            0,
+            $limit,
+            $offset,
         );
-        $rows_children = $this->artifact_dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
-            [$artifact->getId()],
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
-            $test_definition_tracker_id,
-            PHP_INT_MAX,
-            0,
-        );
-
-        $rows = new \AppendIterator();
-        $rows->append(new \ArrayIterator($rows_covered_by));
-        $rows->append(new \ArrayIterator($rows_children));
+        $total_number_of_linked_artifacts = $this->artifact_dao->foundRows();
 
         $test_definitions = [];
         foreach ($rows as $row) {
@@ -89,6 +76,6 @@ class TestPlanLinkedTestDefinitionsRetriever
             }
         }
 
-        return $test_definitions;
+        return TestPlanLinkedTestDefinitions::subset($test_definitions, $total_number_of_linked_artifacts);
     }
 }

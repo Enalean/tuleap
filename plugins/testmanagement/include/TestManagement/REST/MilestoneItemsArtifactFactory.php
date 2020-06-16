@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -63,35 +63,22 @@ class MilestoneItemsArtifactFactory
         $event = new GetItemsFromMilestone($user, $milestone_id);
         $this->event_manager->processEvent($event);
 
-        $this->addCoveredBy($user, $test_definitions, $event, $project);
-        $this->addChildren($user, $test_definitions, $event, $project);
+        $this->appendArtifactsByNatures(
+            $user,
+            $test_definitions,
+            $event,
+            $project,
+            [NatureCoveredByPresenter::NATURE_COVERED_BY, Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD],
+        );
 
         return $test_definitions;
     }
 
-    private function addCoveredBy(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
-    {
-        $this->appendArtifactsByNature(
-            $user,
-            $test_definitions,
-            $event,
-            $project,
-            NatureCoveredByPresenter::NATURE_COVERED_BY
-        );
-    }
-
-    private function addChildren(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project): void
-    {
-        $this->appendArtifactsByNature(
-            $user,
-            $test_definitions,
-            $event,
-            $project,
-            Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
-        );
-    }
-
-    private function appendArtifactsByNature(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project, string $nature): void
+    /**
+     * @param string[] $natures
+     * @psalm-param non-empty-array<string> $natures
+     */
+    private function appendArtifactsByNatures(PFUser $user, array &$test_definitions, GetItemsFromMilestone $event, Project $project, array $natures): void
     {
         $artifacts_ids = $event->getItemsIds();
         if (empty($artifacts_ids)) {
@@ -100,7 +87,7 @@ class MilestoneItemsArtifactFactory
 
         $results = $this->dao->searchPaginatedLinkedArtifactsByLinkNatureAndTrackerId(
             $artifacts_ids,
-            $nature,
+            $natures,
             $this->config->getTestDefinitionTrackerId($project),
             PHP_INT_MAX,
             0
