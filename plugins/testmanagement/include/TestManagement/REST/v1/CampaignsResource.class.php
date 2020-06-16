@@ -424,7 +424,6 @@ class CampaignsResource
      * @url PATCH {id}/testmanagement_executions
      *
      * @param int    $id                      Id of the campaign
-     * @param string $uuid                    UUID of current user {@from body}
      * @param array  $definition_ids_to_add   Test definition ids for which test executions should be created {@from body}
      * @param array  $execution_ids_to_remove Test execution ids which should be unlinked from the campaign {@from body}
      *
@@ -433,7 +432,7 @@ class CampaignsResource
      * @throws RestException 400
      * @throws RestException 403
      */
-    protected function patchExecutions($id, $uuid, $definition_ids_to_add, $execution_ids_to_remove)
+    protected function patchExecutions($id, $definition_ids_to_add, $execution_ids_to_remove)
     {
         $user              = $this->getCurrentUser();
         $campaign          = $this->getCampaignUserCanRead($user, $id);

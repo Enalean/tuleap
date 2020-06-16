@@ -23,26 +23,18 @@ import "angular-mocks";
 import { createAngularPromiseWrapper } from "../../../../../../tests/jest/angular-promise-wrapper.js";
 
 describe("CampaignService", () => {
-    let mockBackend, wrapPromise, CampaignService, SharedPropertiesService;
-    const userUUID = "123";
+    let mockBackend, wrapPromise, CampaignService;
 
     beforeEach(() => {
         angular.mock.module(testmanagement_module);
 
         let $rootScope;
-        angular.mock.inject(function (
-            _$rootScope_,
-            _CampaignService_,
-            $httpBackend,
-            _SharedPropertiesService_
-        ) {
+        angular.mock.inject(function (_$rootScope_, _CampaignService_, $httpBackend) {
             $rootScope = _$rootScope_;
             CampaignService = _CampaignService_;
             mockBackend = $httpBackend;
-            SharedPropertiesService = _SharedPropertiesService_;
         });
 
-        jest.spyOn(SharedPropertiesService, "getUUID").mockReturnValue(userUUID);
         mockBackend.when("GET", "campaign-list.tpl.html").respond(200);
 
         wrapPromise = createAngularPromiseWrapper($rootScope);
@@ -146,7 +138,6 @@ describe("CampaignService", () => {
 
         mockBackend
             .expectPATCH("/api/v1/testmanagement_campaigns/17/testmanagement_executions", {
-                uuid: userUUID,
                 definition_ids_to_add: definition_ids,
                 execution_ids_to_remove: execution_ids,
             })
