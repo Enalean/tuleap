@@ -171,7 +171,8 @@ class AgileDashboardRouterBuilder
             new PlanningBacklogTrackerRemovalChecker(
                 $this->getPlanningFactory(),
                 new AddToTopBacklogPostActionDao()
-            )
+            ),
+            TrackerFactory::instance()
         );
     }
 

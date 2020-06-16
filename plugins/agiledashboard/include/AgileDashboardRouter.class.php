@@ -168,6 +168,10 @@ class AgileDashboardRouter
      * @var PlanningBacklogTrackerRemovalChecker
      */
     private $planning_backlog_tracker_removal_checker;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
     public function __construct(
         Plugin $plugin,
@@ -194,7 +198,8 @@ class AgileDashboardRouter
         PlanningUpdater $planning_updater,
         Planning_RequestValidator $planning_request_validator,
         AgileDashboard_XMLExporter $agile_dashboard_exporter,
-        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker
+        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker,
+        TrackerFactory $tracker_factory
     ) {
         $this->plugin                                   = $plugin;
         $this->milestone_factory                        = $milestone_factory;
@@ -221,6 +226,7 @@ class AgileDashboardRouter
         $this->planning_request_validator               = $planning_request_validator;
         $this->agile_dashboard_exporter                 = $agile_dashboard_exporter;
         $this->planning_backlog_tracker_removal_checker = $planning_backlog_tracker_removal_checker;
+        $this->tracker_factory                          = $tracker_factory;
     }
 
     /**
@@ -489,7 +495,8 @@ class AgileDashboardRouter
             $this->planning_updater,
             $this->event_manager,
             $this->planning_request_validator,
-            $this->planning_backlog_tracker_removal_checker
+            $this->planning_backlog_tracker_removal_checker,
+            $this->tracker_factory
         );
     }
 
