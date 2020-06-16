@@ -267,12 +267,12 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     private function getInternationalizedText($text, $key): string
     {
         if ($text === $key) {
-            return $GLOBALS['Language']->getText('project_admin_editservice', $key);
+            return $GLOBALS['Language']->getOverridableText('project_admin_editservice', $key);
         }
 
         if (preg_match('/(.*):(.*)/', $text, $matches)) {
             if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                $text = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                $text = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
             }
         }
 

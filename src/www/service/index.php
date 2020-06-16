@@ -34,9 +34,9 @@ if ($project && $request->exist('id')) {
         if ($service['is_in_iframe']) {
             $label = $service['label'];
             if ($label == "service_" . $service['short_name'] . "_lbl_key") {
-                $label = $Language->getText('project_admin_editservice', $label);
+                $label = $Language->getOverridableText('project_admin_editservice', $label);
             } elseif (preg_match('/(.*):(.*)/', $label, $matches)) {
-                $label = $Language->getText($matches[1], $matches[2]);
+                $label = $Language->getOverridableText($matches[1], $matches[2]);
             }
             $title = $label . ' - ' . $project->getPublicName();
             site_project_header(array('title' => $title, 'group' => $request->get('group_id'), 'toptab' => $service['service_id']));

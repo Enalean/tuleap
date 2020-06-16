@@ -47,11 +47,11 @@ final class ReferenceDescriptionTranslation
             preg_match('/(.*):(.*)/', $description, $reference_matches) === 1 &&
             $GLOBALS['Language']->hasText($reference_matches[1], $reference_matches[2])
         ) {
-            return $GLOBALS['Language']->getText($reference_matches[1], $reference_matches[2]);
+            return $GLOBALS['Language']->getOverridableText($reference_matches[1], $reference_matches[2]);
         }
 
         if ($GLOBALS['Language']->hasText('project_reference', $description)) {
-            return $GLOBALS['Language']->getText('project_reference', $description);
+            return $GLOBALS['Language']->getOverridableText('project_reference', $description);
         }
 
         return $description;

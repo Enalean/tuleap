@@ -199,7 +199,7 @@ class ArtifactFieldSet
     {
         global $Language;
         if ($this->isNameMustBeLocalized()) {
-            return $Language->getText('tracker_common_fieldset', $this->getName());
+            return $Language->getOverridableText('tracker_common_fieldset', $this->getName());
         } else {
             return $this->getName();
         }
@@ -216,7 +216,7 @@ class ArtifactFieldSet
     {
         global $Language;
         if ($this->isDescriptionMustBeLocalized()) {
-            return $Language->getText('tracker_common_fieldset', $this->getDescription());
+            return $Language->getOverridableText('tracker_common_fieldset', $this->getDescription());
         } else {
             return $this->getDescription();
         }
