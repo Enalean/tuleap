@@ -148,10 +148,10 @@ class ReferenceAdministrationViews extends Views
             $matches = array();
             if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                 if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                    $description = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                    $description = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
                 }
             } else {
-                $description = $GLOBALS['Language']->getText('project_reference', $ref->getDescription());
+                $description = $GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription());
             }
         } else {
             $description = $ref->getDescription();
@@ -279,7 +279,7 @@ class ReferenceAdministrationViews extends Views
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
                 if ($label == "service_" . $serv['short_name'] . "_lbl_key") {
-                    $label = $GLOBALS['Language']->getText('project_admin_editservice', $label);
+                    $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[] = $label;
@@ -377,7 +377,7 @@ class ReferenceAdministrationViews extends Views
 <td>';
         if ($ro) {
             if ($ref->getDescription() == "reference_" . $ref->getKeyWord() . "_desc_key") {
-                echo $purifier->purify($GLOBALS['Language']->getText('project_reference', $ref->getDescription()));
+                echo $purifier->purify($GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription()));
             } else {
                 echo $purifier->purify($ref->getDescription());
             }
@@ -434,7 +434,7 @@ class ReferenceAdministrationViews extends Views
             while ($serv = db_fetch_array($result)) {
                 $label = $serv['label'];
                 if ($label == "service_" . $serv['short_name'] . "_lbl_key") {
-                    $label = $GLOBALS['Language']->getText('project_admin_editservice', $label);
+                    $label = $GLOBALS['Language']->getOverridableText('project_admin_editservice', $label);
                 }
                 $serv_short_name[] = $serv['short_name'];
                 $serv_label[] = $label;

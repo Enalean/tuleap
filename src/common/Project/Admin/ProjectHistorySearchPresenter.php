@@ -105,7 +105,7 @@ class ProjectHistorySearchPresenter
             }
             $this->events[] = array(
                 'key'        => $group,
-                'label'      => $GLOBALS['Language']->getText('project_admin_utils', $group),
+                'label'      => $GLOBALS['Language']->getOverridableText('project_admin_utils', $group),
                 'is_current' => $selected_event === $group
             );
 
@@ -113,7 +113,7 @@ class ProjectHistorySearchPresenter
             foreach ($events as $event) {
                 $translated_events[] = array(
                     'key'        => $event,
-                    'label'      => $GLOBALS['Language']->getText('project_admin_utils', $event),
+                    'label'      => $GLOBALS['Language']->getOverridableText('project_admin_utils', $event),
                     'is_current' => isset($selected_subevents[$event])
                 );
             }

@@ -57,7 +57,7 @@ class ProjectHistoryResultsPresenter
                 $msg_key  = $field;
                 $arr_args = "";
             }
-            $msg = $GLOBALS['Language']->getText('project_admin_utils', $msg_key, $arr_args);
+            $msg = $GLOBALS['Language']->getOverridableText('project_admin_utils', $msg_key, $arr_args);
             if (strpos($msg, "*** Unkown msg") !== false) {
                 $msg = $field;
             }

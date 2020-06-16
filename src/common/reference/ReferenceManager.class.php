@@ -750,10 +750,10 @@ class ReferenceManager
             if (strpos($ref->getDescription(), "_desc_key") !== false) {
                 if (preg_match('/(.*):(.*)/', $ref->getDescription(), $matches)) {
                     if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                        $desc = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                        $desc = $GLOBALS['Language']->getOverridableText($matches[1], $matches[2]);
                     }
                 } else {
-                    $desc = $GLOBALS['Language']->getText('project_reference', $ref->getDescription());
+                    $desc = $GLOBALS['Language']->getOverridableText('project_reference', $ref->getDescription());
                 }
             } else {
                 $desc = $ref->getDescription();
