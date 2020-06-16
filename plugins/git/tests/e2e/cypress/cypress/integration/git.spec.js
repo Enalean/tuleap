@@ -54,6 +54,84 @@ describe("Git", function () {
                 });
             });
         });
+        context("Manage repository", function () {
+            it(`create and see repository in tree view`, function () {
+                cy.visit("/plugins/git/git-project/");
+                cy.get("[data-test=create-repository-button]").click();
+                cy.get("[data-test=create-repository-modal-form]").within(() => {
+                    cy.get("[data-test=create_repository_name]").type("Mazda/MX5");
+                    cy.root().submit();
+                });
+                cy.get("[data-test=git-repository-path]").contains("Mazda/");
+                cy.get("[data-test=git_repo_name]").contains("MX5");
+
+                // return to the git repositories list page
+                cy.visit("/plugins/git/git-project/");
+                cy.get("[data-test=git-repository-card-path]").contains("Mazda/");
+                cy.get("[data-test=repository_name]").contains("MX5");
+
+                cy.get("[data-test=git-repository-list-switch-path]").click();
+                cy.get("[data-test=git-repository-list-folder-label").contains("Mazda");
+                cy.get("[data-test=repository_name]").contains("MX5");
+            });
+            it("cannot create repository", function () {
+                cy.visit("/plugins/git/git-project/");
+                cy.get("[data-test=create-repository-button]").click();
+                cy.get("[data-test=create-repository-modal-form]").within(() => {
+                    cy.get("[data-test=create_repository_name]").type("Koenigseggeor,kerj,rjr");
+                    cy.root().submit();
+                    cy.get("[data-test=git-repository-create-modal-body-error]").should(
+                        "have.length",
+                        1
+                    );
+                    cy.get("[data-test=create_repository_name]").clear().type("Koenigsegg.git");
+                    cy.root().submit();
+                    cy.get("[data-test=git-repository-create-modal-body-error]").should(
+                        "have.length",
+                        1
+                    );
+                });
+            });
+            it("changes the repository description and privacy", function () {
+                cy.visit("/plugins/git/git-project/");
+
+                cy.get("[data-test=git-repository-card-description]").should("have.length", 0);
+                cy.get("[data-test=repository_name]")
+                    .contains("MX5")
+                    .parent()
+                    .within(() => {
+                        cy.get("[data-test=git-repository-card-admin-link]").click();
+                    });
+                cy.get("[data-test=repository-general-settings-form]").within(() => {
+                    cy.get("[data-test=repository-description]").contains(
+                        "-- Default description --"
+                    );
+                    cy.get("[data-test=repository-description]")
+                        .clear()
+                        .type("This is a lightweight two-passenger roadster sports car");
+                    cy.root().submit();
+                });
+                cy.get("[data-test=repository-description]").contains(
+                    "This is a lightweight two-passenger roadster sports car"
+                );
+
+                cy.visit("/plugins/git/git-project/");
+
+                cy.get("[data-test=repository_name]")
+                    .contains("MX5")
+                    .parent()
+                    .siblings()
+                    .within(() => {
+                        cy.get("[data-test=git-repository-card-description]").should(
+                            "have.length",
+                            1
+                        );
+                        cy.get("[data-test=git-repository-card-description]").contains(
+                            "This is a lightweight two-passenger roadster sports car"
+                        );
+                    });
+            });
+        });
     });
 
     context("Project members", function () {

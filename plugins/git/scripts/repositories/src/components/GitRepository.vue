@@ -35,6 +35,7 @@
                         <span
                             v-if="is_in_folder && !isFolderDisplayMode"
                             class="git-repository-card-path"
+                            data-test="git-repository-card-path"
                         >
                             {{ folder_path }}
                         </span>
@@ -53,12 +54,16 @@
                         v-if="is_admin"
                         v-bind:href="repository_admin_url"
                         class="git-repository-card-admin-link"
+                        data-test="git-repository-card-admin-link"
                     >
                         <i class="fa fa-cog" v-bind:title="administration_link_title"></i>
                     </a>
                 </div>
                 <section class="tlp-pane-section" v-if="hasRepositoryDescription">
-                    <p class="git-repository-card-description">
+                    <p
+                        class="git-repository-card-description"
+                        data-test="git-repository-card-description"
+                    >
                         {{ repository.description }}
                     </p>
                 </section>
@@ -71,7 +76,7 @@ const DEFAULT_DESCRIPTION = "-- Default description --";
 
 import { mapGetters } from "vuex";
 import TimeAgo from "javascript-time-ago";
-import { getProjectId, getUserIsAdmin, getDashCasedLocale } from "../repository-list-presenter.js";
+import { getDashCasedLocale, getProjectId, getUserIsAdmin } from "../repository-list-presenter.js";
 import PullRequestBadge from "./PullRequestBadge.vue";
 import { getRepositoryListUrl } from "../breadcrumb-presenter.js";
 

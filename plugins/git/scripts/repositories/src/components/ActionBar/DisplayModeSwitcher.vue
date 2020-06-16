@@ -55,6 +55,7 @@
                 class="tlp-button-primary tlp-button-outline git-repository-list-switch-path-label"
                 v-bind:class="{ disabled: isLoading }"
                 v-bind:title="sort_by_path_title"
+                data-test="git-repository-list-switch-path"
             >
                 <i class="fa fa-fw fa-sort-alpha-asc"></i>
             </label>

@@ -1,13 +1,13 @@
 <h2>{{ title }}</h2>
 
-<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id={{ project_id }}">
+<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id={{ project_id }}" data-test="repository-general-settings-form">
   <input type="hidden" id="action" name="action" value="edit-description" />
   <input type="hidden" name="pane" value="{{ pane_identifier }}" />
   <input type="hidden" id="repo_id" name="repo_id" value="{{ repository_id }}" />
 
   <p>
     <label for="repo_desc">{{ repository_description_label }}:</label>
-    <textarea class="text" id="repo_desc" name="repo_desc">{{ description }}</textarea>
+    <textarea class="text" id="repo_desc" name="repo_desc" data-test="repository-description">{{ description }}</textarea>
   </p>
 
   <p><input type="submit" name="save" class="btn" value="{{ save_label }}" /></p>

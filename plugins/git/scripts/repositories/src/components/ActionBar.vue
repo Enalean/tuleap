@@ -24,6 +24,7 @@
             class="tlp-button-primary git-repository-list-create-repository-button"
             v-if="show_create_repository_button"
             v-on:click="showAddRepositoryModal()"
+            data-test="create-repository-button"
         >
             <i class="fa fa-plus tlp-button-icon"></i>
             <translate>Add project repository</translate>
