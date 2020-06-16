@@ -44,27 +44,32 @@ $reset_token_creator     = new \Tuleap\User\Password\Reset\Creator(
 );
 $reset_token = $reset_token_creator->create($user);
 
-$reset_token_formatter = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
-$identifier            = $reset_token_formatter->getIdentifier($reset_token);
+$mail_is_sent = false;
 
-$message = stripcslashes($Language->getText(
-    'account_lostpw-confirm',
-    'mail_body',
-    array($GLOBALS['sys_name'],
-    $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
-));
+if ($reset_token !== null) {
+    $reset_token_formatter = new \Tuleap\User\Password\Reset\ResetTokenSerializer();
+    $identifier            = $reset_token_formatter->getIdentifier($reset_token);
 
-$mail = new Codendi_Mail();
-$mail->setTo($user->getEmail(), true);
-$mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
-$mail->setBodyText($message);
-$mail->setFrom($GLOBALS['sys_noreply']);
-$mail_is_sent = $mail->send();
-if (!$mail_is_sent) {
-    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_FULL);
+    $message = stripcslashes($Language->getText(
+        'account_lostpw-confirm',
+        'mail_body',
+        array($GLOBALS['sys_name'],
+              $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
+    ));
+
+    $mail = new Codendi_Mail();
+    $mail->setTo($user->getEmail(), true);
+    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
+    $mail->setBodyText($message);
+    $mail->setFrom($GLOBALS['sys_noreply']);
+    $mail_is_sent = $mail->send();
+    if (!$mail_is_sent) {
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_FULL);
+    }
 }
+
 site_header(array('title' => $Language->getText('account_lostpw-confirm', 'title')));
-if ($mail_is_sent) {
+if ($reset_token === null || $mail_is_sent) {
     echo '<p>' . $Language->getText('account_lostpw-confirm', 'msg_confirm') . '</p>';
 }
 echo '<p><a href="/">[' . $Language->getText('global', 'back_home') . ']</a></p>';

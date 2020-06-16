@@ -44,10 +44,7 @@ class Creator
         $this->hasher = $hasher;
     }
 
-    /**
-     * @return SplitToken
-     */
-    public function create(PFUser $user)
+    public function create(PFUser $user): ?SplitToken
     {
         $verification_string = SplitTokenVerificationString::generateNewSplitTokenVerificationString();
         $current_date        = new \DateTime();
@@ -57,6 +54,10 @@ class Creator
             $this->hasher->computeHash($verification_string),
             $current_date->getTimestamp()
         );
+
+        if ($token_id === null) {
+            return null;
+        }
 
         return new SplitToken($token_id, $verification_string);
     }
