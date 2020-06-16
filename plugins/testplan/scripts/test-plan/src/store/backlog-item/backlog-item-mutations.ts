@@ -17,8 +17,40 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { BacklogItemState } from "./type";
+import { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
 import { BacklogItem } from "../../type";
+
+export function beginLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
+    updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: true }));
+}
+
+export function endLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
+    updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: false }));
+}
+
+export function addTestDefinitions(
+    state: BacklogItemState,
+    payload: AddTestDefinitionsToBacklogItemPayload
+): void {
+    updateBacklogItem(state, payload.backlog_item, (item) => ({
+        ...item,
+        test_definitions: item.test_definitions.concat(payload.test_definitions),
+    }));
+}
+
+export function loadingErrorHasBeenCatchedForTestDefinition(
+    state: BacklogItemState,
+    item: BacklogItem
+): void {
+    updateBacklogItem(state, item, (item) => ({
+        ...item,
+        has_test_definitions_loading_error: true,
+    }));
+}
+
+export function markTestDefinitionsAsBeingLoaded(state: BacklogItemState, item: BacklogItem): void {
+    updateBacklogItem(state, item, (item) => ({ ...item, are_test_definitions_loaded: true }));
+}
 
 export function beginLoadingBacklogItems(state: BacklogItemState): void {
     state.is_loading = true;
@@ -37,14 +69,18 @@ export function loadingErrorHasBeenCatched(state: BacklogItemState): void {
 }
 
 export function expandBacklogItem(state: BacklogItemState, item: BacklogItem): void {
-    updateBacklogItem(state, { ...item, is_expanded: true });
+    updateBacklogItem(state, item, (item) => ({ ...item, is_expanded: true }));
 }
 
 export function collapseBacklogItem(state: BacklogItemState, item: BacklogItem): void {
-    updateBacklogItem(state, { ...item, is_expanded: false });
+    updateBacklogItem(state, item, (item) => ({ ...item, is_expanded: false }));
 }
 
-function updateBacklogItem(state: BacklogItemState, item: BacklogItem): void {
+function updateBacklogItem(
+    state: BacklogItemState,
+    item: BacklogItem,
+    getNewVersionOfItem: (item: BacklogItem) => BacklogItem
+): void {
     const index = state.backlog_items.findIndex(
         (state_backlog_item: BacklogItem): boolean => state_backlog_item.id === item.id
     );
@@ -52,5 +88,5 @@ function updateBacklogItem(state: BacklogItemState, item: BacklogItem): void {
         throw Error("Unable to find the backlog item to update");
     }
 
-    state.backlog_items.splice(index, 1, item);
+    state.backlog_items.splice(index, 1, getNewVersionOfItem(state.backlog_items[index]));
 }

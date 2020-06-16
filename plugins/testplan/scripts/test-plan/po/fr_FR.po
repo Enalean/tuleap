@@ -52,6 +52,9 @@ msgstr "Une erreur est survenue lors du chargement des éléments du backlog."
 msgid "An error occurred while loading the campaigns."
 msgstr "Une erreur est survenue lors du chargement des campagnes."
 
+msgid "An error occurred while loading the tests."
+msgstr "Une erreur est survenue lors du chargement des tests."
+
 msgid "An error occurred while retrieving information of the new campaign."
 msgstr ""
 "Une erreur est survenue lors de la récupération des informations de la "
@@ -104,3 +107,6 @@ msgstr "Il n'y a pas d'éléments dans le backlog."
 
 msgid "There is no test campaign yet."
 msgstr "Il n'y a pas de campagne de test."
+
+msgid "This item isn't covered yet."
+msgstr "Cet élément n'est pas encore couvert."

@@ -21,7 +21,10 @@
 <template>
     <div class="test-plan-backlog-item-container">
         <backlog-item-card v-bind:backlog_item="backlog_item" />
-        <list-of-test-definitions v-if="backlog_item.is_expanded" />
+        <list-of-test-definitions
+            v-if="backlog_item.is_expanded"
+            v-bind:backlog_item="backlog_item"
+        />
     </div>
 </template>
 

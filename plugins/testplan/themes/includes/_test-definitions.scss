@@ -18,7 +18,7 @@
  */
 
 .test-plan-list-of-test-definitions {
-    padding: $tlp-medium-spacing;
+    padding: $tlp-half-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-top: 0;
     border-bottom-right-radius: 3px;
@@ -26,11 +26,56 @@
     background: darken($tlp-theme-color-dimmed-background, 1%);
 }
 
+.test-plan-list-of-test-definitions-empty-text {
+    margin: 24px 0;
+    font-size: 16px;
+    font-style: italic;
+    line-height: 20px;
+}
+
+.test-plan-test-definition-skeleton {
+    min-height: inherit;
+    margin: 0 0 $tlp-half-spacing;
+    padding: $tlp-half-spacing;
+}
+
 .test-plan-test-definition-skeleton-xref {
     width: 70px;
-    margin: 0 10px 0 0;
+    margin: 0 $tlp-half-spacing 0 0;
 }
 
 .test-plan-test-definition-skeleton-title {
     width: 300px;
+}
+
+.test-plan-test-definition-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 $tlp-half-spacing;
+    padding: $tlp-half-spacing;
+}
+
+.test-plan-test-definition-xref-title {
+    display: flex;
+    align-items: baseline;
+}
+
+.test-plan-test-definition-xref {
+    color: $tlp-ui-dimmed;
+    font-size: 12px;
+}
+
+.test-plan-test-definition-title {
+    margin: 0 0 0 $tlp-half-spacing;
+    font-size: 14px;
+}
+
+.test-plan-test-definition-icons {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
+.test-plan-test-definition-icon-automated-tests {
+    opacity: .5;
+    color: $tlp-ui-dimmed;
 }
