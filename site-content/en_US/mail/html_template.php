@@ -356,7 +356,7 @@ height:auto;
     background-color: #f0f0f0;
 }
 .bodyContent div.avatar {
-    background: transparent url(<?php echo $img_path ?>/avatar_default.png) 0 0 no-repeat;
+    background: transparent url(<?php echo $http_url ?>/themes/common/images/avatar_default.png) 0 0 no-repeat;
     background-size: contain;
     width:50px;
     height:50px;
@@ -527,7 +527,7 @@ display:inline;
                                    <tr>
                                       <td valign="bottom">
                                          <div>
-                                             <img src="<?php echo $img_path ?>/organization_logo_mail.png" alt="<?php echo $GLOBALS['sys_name'] ?>" />
+                                             <img src="<?php echo $http_url ?>/images/organization_logo_mail.png" alt="<?php echo $GLOBALS['sys_name'] ?>" />
                                          </div>
                                       </td>
                                     </tr>
@@ -583,7 +583,7 @@ display:inline;
                                                         <td colspan="2" valign="middle" id="social">
                                                             <div>
                                                                 <?php echo !empty($additional_footer_link) ? '&nbsp;' . $additional_footer_link . '&nbsp; |' : '' ?>
-                                                                &nbsp;<a href="<?php echo HTTPRequest::instance()->getServerUrl() ?>/account/preferences.php" target="_blank" rel="noreferrer"><?php echo $txt_can_update_prefs ?></a>&nbsp;
+                                                                &nbsp;<a href="<?php echo $http_url ?>/account/information" target="_blank" rel="noreferrer"><?php echo $txt_can_update_prefs ?></a>&nbsp;
                                                             </div>
                                                         </td>
                                                     </tr>
