@@ -508,7 +508,7 @@ class PlanningFactory
     {
         $tracker = $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
         if ($tracker === null) {
-            throw new RuntimeException('Tracker does not exist');
+            throw new RuntimeException('Tracker does not exist ' . $planning->getPlanningTrackerId() . ' for planning ' . $planning->getId());
         }
         return $tracker;
     }
