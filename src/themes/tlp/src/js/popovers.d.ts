@@ -26,8 +26,3 @@ export function createPopover(
     popover_content: Element,
     options?: PopperOptions & { anchor?: Element; trigger?: "click" | "hover" }
 ): Popover;
-
-interface FilterTable {
-    filterTable(): void;
-}
-export function filterInlineTable(filter: Element): FilterTable;

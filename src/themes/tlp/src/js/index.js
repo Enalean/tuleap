@@ -32,7 +32,7 @@ export { dropdown } from "./dropdowns.js";
 
 export { createPopover } from "./popovers.js";
 
-export { default as filterInlineTable } from "./filter-inline-table.js";
+export { filterInlineTable } from "./filter-inline-table.js";
 
 import jQuery from "jquery";
 // Many scripts still depend on jQuery being on window

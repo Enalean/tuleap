@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,11 +17,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default filterInlineTable;
-
 const reset_search_term = "";
 
-function filterInlineTable(filter) {
+const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";
+
+export function filterInlineTable(filter) {
     const target_table = getTargetTable(filter);
 
     filter.addEventListener("keyup", handleEscape);
@@ -32,12 +32,11 @@ function filterInlineTable(filter) {
     };
 
     function handleEscape(event) {
-        const ESC_KEYCODE = 27;
-
-        if (event.keyCode === ESC_KEYCODE) {
-            filter.value = reset_search_term;
-            filterTable();
+        if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
+            return;
         }
+        filter.value = reset_search_term;
+        filterTable();
     }
 
     function filterTable() {
