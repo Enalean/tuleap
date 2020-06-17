@@ -94,39 +94,35 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     public function scrum_nothing_set_up()
     {
         if ($this->is_user_admin) {
-            return $GLOBALS['Language']->getText(
-                'plugin_agiledashboard',
-                'nothing_set_up_scrum_admin',
-                array('/plugins/agiledashboard/?group_id=' . $this->group_id . '&action=admin')
-            );
+            return sprintf(dgettext('tuleap-agiledashboard', 'No Scrum has been yet configured by a project administrator. <a href="%1$s">Get Started!</a>'), '/plugins/agiledashboard/?group_id=' . $this->group_id . '&action=admin');
         }
 
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_scrum_generic');
+        return dgettext('tuleap-agiledashboard', 'No Scrum has been yet configured by a project administrator.');
     }
 
     public function kanban_nothing_set_up()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_kanban_generic');
+        return dgettext('tuleap-agiledashboard', 'No Kanban has been yet configured by a project administrator.');
     }
 
     public function come_back_later()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
+        return dgettext('tuleap-agiledashboard', 'Please come back later.');
     }
 
     public function past()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'past');
+        return dgettext('tuleap-agiledashboard', 'Done');
     }
 
     public function now()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'now');
+        return dgettext('tuleap-agiledashboard', 'What\'s hot');
     }
 
     public function future()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'future');
+        return dgettext('tuleap-agiledashboard', 'What\'s next');
     }
 
     public function past_active()
@@ -158,11 +154,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function project_backlog()
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_agiledashboard',
-            'project_backlog',
-            $this->project_name
-        );
+        return sprintf(dgettext('tuleap-agiledashboard', '%1$s backlog'), $this->project_name);
     }
 
     public function has_milestone_presenters()
@@ -173,15 +165,15 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
     public function user_helper()
     {
         if ($this->past_active() !== '') {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'home_user_helper_done');
+            return dgettext('tuleap-agiledashboard', 'Milestones are "Done" when they have their status set to \'closed\' as defined in their tracker\'s semantic.');
         }
 
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'home_user_helper_others');
+        return dgettext('tuleap-agiledashboard', 'All milestones that have a status set to \'open\' (as defined in their tracker\'s semantic) are either "Current" or "Next". The existence and values of their date fields (start_date and duration) decide in which tab(s) they appear.');
     }
 
     public function add_kanban()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_kanban');
+        return dgettext('tuleap-agiledashboard', 'Add a kanban');
     }
 
     public function user_can_see_kanban()
@@ -191,27 +183,27 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function add_kanban_modal_title()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'add_kanban_modal_title');
+        return dgettext('tuleap-agiledashboard', 'Create a kanban');
     }
 
     public function btn_close_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_close_label');
+        return dgettext('tuleap-agiledashboard', 'Close');
     }
 
     public function btn_add_modal_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_add_modal_label');
+        return dgettext('tuleap-agiledashboard', 'Create');
     }
 
     public function kanban_name_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_name_label');
+        return dgettext('tuleap-agiledashboard', 'Kanban name:');
     }
 
     public function tracker_kanban_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'tracker_kanban_label');
+        return dgettext('tuleap-agiledashboard', 'Select the source tracker:');
     }
 
     public function are_trackers_available()
@@ -227,16 +219,16 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function no_tracker_available()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_tracker_available');
+        return dgettext('tuleap-agiledashboard', 'No tracker is available.');
     }
 
     public function top_backlog_planning()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link');
+        return dgettext('tuleap-agiledashboard', 'Top Backlog Planning');
     }
 
     public function content()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
+        return dgettext('tuleap-agiledashboard', 'Overview');
     }
 }

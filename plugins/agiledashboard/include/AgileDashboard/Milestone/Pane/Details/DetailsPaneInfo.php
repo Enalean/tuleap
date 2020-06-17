@@ -39,7 +39,7 @@ class DetailsPaneInfo extends PaneInfo
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
+        return dgettext('tuleap-agiledashboard', 'Overview');
     }
 
     public function getIconName()

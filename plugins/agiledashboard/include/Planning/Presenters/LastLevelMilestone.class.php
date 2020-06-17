@@ -38,6 +38,6 @@ class Planning_Presenter_LastLevelMilestone
 
     public function no_milestone()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
+        return dgettext('tuleap-agiledashboard', 'There are no milestones for this period');
     }
 }

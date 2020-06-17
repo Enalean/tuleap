@@ -341,10 +341,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
 
         if ($is_mono_milestone_enabled && count($params['xml_content']->agiledashboard->plannings->planning) > 1) {
-            $params['errors'] = $GLOBALS['Language']->getText(
-                'plugin_agiledashboard',
-                'cannot_import_planning_in_scrum_v2'
-            );
+            $params['errors'] = dgettext('tuleap-agiledashboard', 'You cannot import more than one planning in scrum V2, please check your XML.');
         }
     }
 

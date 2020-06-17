@@ -390,17 +390,17 @@ class AgileDashboardRouter
     private function getHeaderTitle(Codendi_Request $request, $action_name)
     {
         $header_title = array(
-            'index'               => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'exportToFile'        => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
-            'adminScrum'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminScrum'),
-            'adminKanban'         => $GLOBALS['Language']->getText('plugin_agiledashboard', 'AdminKanban'),
+            'index'               => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
+            'exportToFile'        => dgettext('tuleap-agiledashboard', 'Agile Dashboard'),
+            'adminScrum'          => dgettext('tuleap-agiledashboard', 'Scrum Administration of Agile Dashboard'),
+            'adminKanban'         => dgettext('tuleap-agiledashboard', 'Kanban Administration of Agile Dashboard'),
             'adminCharts'         => dgettext("tuleap-agiledashboard", "Charts configuration"),
-            'new_'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'importForm'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
-            'edit'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
-            'show'                => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showTop'             => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show'),
-            'showKanban'          => $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_show')
+            'new_'                => dgettext('tuleap-agiledashboard', 'New Planning'),
+            'importForm'          => dgettext('tuleap-agiledashboard', 'New Planning'),
+            'edit'                => dgettext('tuleap-agiledashboard', 'Edit'),
+            'show'                => dgettext('tuleap-agiledashboard', 'View Planning'),
+            'showTop'             => dgettext('tuleap-agiledashboard', 'View Planning'),
+            'showKanban'          => dgettext('tuleap-agiledashboard', 'Kanban')
         );
 
         $title = $header_title[$action_name];
@@ -449,7 +449,7 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+                    dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
         }
@@ -607,7 +607,7 @@ class AgileDashboardRouter
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+                    dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
         }

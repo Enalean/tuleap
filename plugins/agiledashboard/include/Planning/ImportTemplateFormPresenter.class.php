@@ -33,17 +33,17 @@ class Planning_ImportTemplateFormPresenter
 
     public function adminTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
+        return dgettext('tuleap-agiledashboard', 'Agile Dashboard Administration');
     }
 
     public function importTemplateHeader()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template');
+        return  dgettext('tuleap-agiledashboard', 'Import a configuration from a template file');
     }
 
     public function btnSubmit()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'btn_import');
+        return dgettext('tuleap-agiledashboard', 'Import');
     }
 
     public function importInstructions()
@@ -53,6 +53,6 @@ class Planning_ImportTemplateFormPresenter
 
     public function importNotes()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_notes');
+        return dgettext('tuleap-agiledashboard', 'Note:<br>Importing a template will create new trackers. The import will not work if any existing tracker match those in the template');
     }
 }

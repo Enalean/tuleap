@@ -20,6 +20,14 @@ msgstr ""
 "projet n'utilise pas la planification générale."
 
 #, php-format
+msgid "%1$s Planning"
+msgstr "Planification de %1$s"
+
+#, php-format
+msgid "%1$s backlog"
+msgstr "Backlog de %1$s"
+
+#, php-format
 msgid "%s Kanban"
 msgstr "Kanban %s"
 
@@ -27,11 +35,45 @@ msgstr "Kanban %s"
 msgid "%s top backlog"
 msgstr "%s planification générale"
 
+#, php-format
+msgid ""
+"<p>The initial effort of this tracker will be represented in the Agile "
+"Dashboard by the field <strong>%1$s</strong>.</p>"
+msgstr ""
+"<p>L'effort estimé sera représenté par le champ <strong>%1$s</strong> dans "
+"ce tracker.</p>"
+
+msgid "<p>This tracker does not have an <em>initial effort</em> field yet.</p>"
+msgstr "<p>Ce tracker n'a pas de champ <em>effort estimé</em>.</p>"
+
+msgid ""
+"A first Kanban will be created during the activation. This operation can "
+"take a few seconds."
+msgstr ""
+"Une première instance de Kanban sera créée lors de l'activation. Ceci peut "
+"prendre quelques secondes."
+
+msgid ""
+"A first scrum configuration will be used during the activation. This "
+"operation can take a few seconds."
+msgstr ""
+"Une configuration scrum initiale sera utilisée lors de l'activation. Ceci "
+"peut prendre quelques secondes."
+
+msgid "Activate Kanban"
+msgstr "Activer Kanban"
+
+msgid "Activate Scrum"
+msgstr "Activer Scrum"
+
 msgid "Activate count elements mode for burnup chart"
 msgstr "Activer le mode comptage d'éléments pour le burnup"
 
 msgid "Add Kanban to dashboard"
 msgstr "Ajouter Kanban au tableau de bord"
+
+msgid "Add a kanban"
+msgstr "Ajouter un kanban"
 
 msgid "Add to dashboard"
 msgstr "Ajouter au tableau de bord"
@@ -46,13 +88,29 @@ msgid "Add to top backlog"
 msgstr "Ajouter à la planification générale"
 
 msgid "Agile Dashboard"
-msgstr "Agile Dashboard"
+msgstr "Dashboard agile"
+
+msgid "Agile Dashboard Administration"
+msgstr "Administration du dashboard agile"
+
+msgid "Agile Dashboard administration"
+msgstr "Administration de l'Agile Dashboard"
 
 msgid "Agile dashboard"
 msgstr "Tableau de bord agile"
 
 msgid "Agiledashboard plannings"
 msgstr "Plannings du tableau de bord agile"
+
+msgid ""
+"All milestones that have a status set to 'open' (as defined in their "
+"tracker's semantic) are either \"Current\" or \"Next\". The existence and "
+"values of their date fields (start_date and duration) decide in which tab(s) "
+"they appear."
+msgstr ""
+"Les jalons en cours et à venir ont leur statut défini à 'ouvert' tel que "
+"précisé dans la sémantique. De plus, ils sont classés en fonction de leur "
+"champs de type date (start_date et duration)."
 
 msgid ""
 "All tracker reports using \"Unplanned\" option for \"In milestone\" report "
@@ -81,6 +139,9 @@ msgstr ""
 
 msgid "An error occurred while clearing done values."
 msgstr "Une erreur est survenue lors de la suppression des valeurs finies."
+
+msgid "An error occurred while trying to solve inconsistencies."
+msgstr "Une erreur s'est produite pendant la résolution des inconsistences."
 
 msgid "An error occurred while updating done values."
 msgstr "Une erreur est survenue lors de la mise à jour des valeurs finies."
@@ -115,6 +176,13 @@ msgstr ""
 "Les artéfacts ne peuvent être considérés comme <strong>fini</strong> car il "
 "n'y aucune valeur selectionnée pour cette sémantique."
 
+#, php-format
+msgid "Available %1$s"
+msgstr "%1$s disponible(s)"
+
+msgid "Backlog title"
+msgstr "Titre du backlog"
+
 msgid "Burnup Chart"
 msgstr "Diagramme Burn-Up"
 
@@ -125,8 +193,14 @@ msgid "Burnup is under calculation. It will be available in few minutes."
 msgstr ""
 "Le burn-up est en cours de calcul. Il sera disponible dans quelques minutes."
 
+msgid "Can't create new planning"
+msgstr "Impossible de créer un nouveau planning"
+
 msgid "Cancel"
 msgstr "Annuler"
+
+msgid "Cardwall"
+msgstr "Cardwall"
 
 msgid "Charts"
 msgstr "Graphiques"
@@ -143,10 +217,22 @@ msgstr "Configuration"
 msgid "Continue"
 msgstr "Continuer"
 
+msgid "Create"
+msgstr "Créer"
+
+msgid "Create a kanban"
+msgstr "Créer un kanban"
+
+msgid "Create a new planning"
+msgstr "Créer un nouveau planning"
+
 msgid "Define the closed status that are considered Done"
 msgstr ""
 "Définissez les valeurs fermées de la sémantique statut considérées comme "
 "finies"
+
+msgid "Define the initial effort of an artifact."
+msgstr "Définir l'effort estimé d'un artéfact"
 
 msgid "Delete"
 msgstr "Supprimer"
@@ -167,13 +253,30 @@ msgstr ""
 "quelques minutes."
 
 msgid "Done"
-msgstr "Fini"
+msgstr "Terminé"
 
 msgid "Done values successfully cleared."
 msgstr "Les valeurs finies ont été supprimées avec succès."
 
 msgid "Done values successfully updated."
 msgstr "Les valeurs finies ont été mises à jour avec succès."
+
+msgid "Edit"
+msgstr "Éditer"
+
+#, php-format
+msgid "Edit %1$s"
+msgstr "Éditer %1$s"
+
+msgid "Edit planning:"
+msgstr "Éditer le planning :"
+
+msgid "Enable Scrum V2"
+msgstr "Activer Scrum V2"
+
+#, php-format
+msgid "Error while creating Kanban %1$s."
+msgstr "Erreur pendant la création du Kanban %1$s."
 
 msgid "Explicit backlog actions"
 msgstr "Actions de planification générale explicite"
@@ -188,11 +291,17 @@ msgstr ""
 msgid "Explicit top backlog"
 msgstr "Planification générale explicite"
 
+msgid "Export the configuration"
+msgstr "Exporter la configuration"
+
 msgid "Filter:"
 msgstr "Filtre :"
 
 msgid "Force cache regeneration"
 msgstr "Reconstruire le cache"
+
+msgid "General settings"
+msgstr "Options générales"
 
 msgid "Go back to semantic overview"
 msgstr "Retour à l'administration de la sémantique"
@@ -205,6 +314,30 @@ msgstr ""
 "mis à jour afin de ne plus utiliser la valeur \"Non planifié\" du critère "
 "\"Dans le jalon\"."
 
+msgid "Import"
+msgstr "Importer"
+
+msgid "Import a configuration from a template file"
+msgstr "Importer une configuration à partir d'un fichier"
+
+msgid "Import them in the backlog"
+msgstr "Les importer dans le backlog"
+
+msgid "Import/Export"
+msgstr "Import/Export"
+
+msgid "In milestone"
+msgstr "Dans le jalon"
+
+msgid "Inconsistencies successfully solved!"
+msgstr "Les inconsistences ont été résolues avec succès!"
+
+msgid "Initial Effort"
+msgstr "Effort Estimé"
+
+msgid "Initial effort semantic has been unset"
+msgstr "La sémantique effort estimé a été réinitialisée"
+
 msgid "Item"
 msgstr "Élément"
 
@@ -214,17 +347,93 @@ msgstr "L'élément n'est pas lié à ce jalon"
 msgid "Kanban"
 msgstr "Kanban"
 
+#, php-format
+msgid "Kanban %1$s successfully created."
+msgstr "Kanban %1$s créé avec succès."
+
+msgid "Kanban Administration of Agile Dashboard"
+msgstr "Administration Kanban du dashboard agile"
+
 msgid "Kanban cards"
 msgstr "Carte de Kanban"
+
+msgid "Kanban is currently active."
+msgstr "Kanban est actuellement actif."
+
+msgid "Kanban is not currently active."
+msgstr "Kanban n'est actuellement pas actif."
+
+msgid "Kanban name:"
+msgstr "Nom du Kanban :"
+
+msgid "Kanban not found."
+msgstr "Le Kanban requis n'a pas pu être trouvé."
+
+msgid "Kanban successfully activated."
+msgstr "Kanban activé avec succès."
+
+msgid "Kanban title is empty."
+msgstr "Le titre Kanban est vide."
+
+msgid "Kanban title successfully modified."
+msgstr "Le titre Kanban modifié avec succès."
 
 msgid "Make sure to check their configuration."
 msgstr "Merci de vérifier leur configuration."
 
+msgid "Milestone"
+msgstr "Jalon"
+
 msgid "Milestones"
 msgstr "Jalons"
 
+msgid ""
+"Milestones are \"Done\" when they have their status set to 'closed' as "
+"defined in their tracker's semantic."
+msgstr ""
+"Les jalons terminés ont leur statut défini à 'fermé' tel que précisé dans la "
+"sémantique."
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "New Planning"
+msgstr "Nouveau Planning"
+
+msgid "No Kanban has been yet configured by a project administrator."
+msgstr ""
+"Aucune configuration Kanban n'a encore été mise en place par un "
+"administrateur du projet."
+
+msgid "No Scrum has been yet configured by a project administrator."
+msgstr ""
+"Aucune configuration Scrum n'a encore été mise en place par un "
+"administrateur du projet."
+
+#, php-format
+msgid ""
+"No Scrum has been yet configured by a project administrator. <a href=\"%1$s"
+"\">Get Started!</a>"
+msgstr ""
+"Aucune configuration Scrum n'a encore été mise en place par un "
+"administrateur du projet. <a href=\"%1$s\">Démarrer!</a>"
+
+msgid "No tracker has been selected."
+msgstr "Aucun tracker n'a été sélectionné."
+
+msgid "No tracker is available."
+msgstr "Aucun tracker n'est disponible."
+
 msgid "None"
 msgstr "Aucun"
+
+msgid ""
+"Note:<br>Importing a template will create new trackers. The import will not "
+"work if any existing tracker match those in the template"
+msgstr ""
+"Note:<br>Cette opération va créer des trackers. L'opération ne pourra "
+"aboutir si la configuration contient des trackers denommés identiquement à "
+"des trackers existants"
 
 msgid "Once activated, you will start with a copy of the previous top backlog."
 msgstr ""
@@ -237,17 +446,45 @@ msgid_plural "Other %s"
 msgstr[0] "Autre %s"
 msgstr[1] "Autres %s"
 
+msgid "Overview"
+msgstr "Résumé"
+
 msgid "Parent item"
 msgstr "Parent"
 
+msgid "Plan title"
+msgstr "Titre du plan"
+
+msgid "Planning"
+msgstr "Planning"
+
 msgid "Planning deletion"
 msgstr "Suppression de planning"
+
+msgid "Planning management"
+msgstr "Gestion des plannings"
+
+msgid "Planning name, backlog tracker and planning tracker are mandatory."
+msgstr ""
+"Le nom du planning, le tracker de backlog et le tracker de plan sont "
+"obligatoires."
 
 msgid "Planning succesfully created."
 msgstr "La planning a été créé."
 
 msgid "Planning succesfully updated."
 msgstr "Le planning a été mis à jour."
+
+msgid ""
+"Please choose between Scrum or Kanban layout below.<br>Don't worry, you will "
+"be able to change your mind and customize your configuration afterwards."
+msgstr ""
+"Choisissez entre une structure Kanban ou Scrum ci-dessous.<br>Ne vous "
+"inquiétez pas, vous pouvez changer d'avis et personnaliser votre "
+"configuration plus tard."
+
+msgid "Please come back later."
+msgstr "Veuillez revenir plus tard."
 
 #, php-format
 msgid ""
@@ -265,11 +502,29 @@ msgstr "Sauvegarder"
 msgid "Scrum"
 msgstr "Scrum"
 
+msgid "Scrum Administration of Agile Dashboard"
+msgstr "Administration Scrum du dashboard agile"
+
 msgid "Scrum configuration successfully updated."
 msgstr "La configuration de Scrum a été mise à jour."
 
+msgid "Scrum mono milestone"
+msgstr "Scrum jalon unique"
+
+msgid "Scrum successfully activated."
+msgstr "Scrum activé avec succès."
+
+msgid "Scrum title is empty."
+msgstr "Le titre Scrum est vide."
+
+msgid "Scrum title successfully modified."
+msgstr "Le titre Scrum modifié avec succès."
+
 msgid "See documentation for more details."
 msgstr "Voir la documentation pour plus de détails."
+
+msgid "Select the source tracker:"
+msgstr "Sélectionnez le tracker source:"
 
 msgid "Selected values are invalid because some are not closed values anymore."
 msgstr ""
@@ -295,6 +550,18 @@ msgstr "La sémantique status n'est pas définie."
 msgid "Service Agiledashboard is disabled."
 msgstr "Le service des tableaux de bords agile est désactivé"
 
+msgid "Some items are not linked to this milestone."
+msgstr "Certains éléments n'ont pas été liés à ce jalon."
+
+msgid "Start Kanban"
+msgstr "Démarrez Kanban"
+
+msgid "Start Scrum"
+msgstr "Démarrez Scrum"
+
+msgid "Start Scrum V2"
+msgstr "Activer Scrum V2"
+
 msgid "Status"
 msgstr "Statut"
 
@@ -303,6 +570,15 @@ msgstr "Valider"
 
 msgid "Switch backlog mode"
 msgstr "Basculer le mode de planification"
+
+msgid ""
+"The Agile Dashboard has not yet been configured by a project administrator."
+msgstr ""
+"Aucune configuration de l'Agile Dashboard n'a encore été mise en place par "
+"un administrateur du projet."
+
+msgid "The Agile Dashboard has not yet been configured."
+msgstr "Aucune configuration de l'Agile Dashboard n'est encore en place."
 
 #, php-format
 msgid ""
@@ -313,12 +589,22 @@ msgstr ""
 "les outils de suivi suivant utilisent au moins une action de workflow de "
 "type \"Ajouter à la planification générale\" : %s"
 
+msgid "The configuration has been successfully imported!"
+msgstr "La configuration a été importée !"
+
 msgid ""
 "The field for semantic status cannot be updated because semantic done is "
 "defined for this tracker."
 msgstr ""
 "Le champ pour la sémantique statut ne peut être mis à jour car la sémantique "
 "fini est définie."
+
+msgid "The field you submitted is not a numeric field"
+msgstr "Le champ soumis n'est pas un champ numérique"
+
+#, php-format
+msgid "The initial effort is now: %1$s"
+msgstr "L'effort estimé est maintenant : %1$s"
 
 msgid ""
 "The post actions cannot be saved because this tracker not a top backlog "
@@ -327,6 +613,17 @@ msgstr ""
 "Les post actions ne peuvent être enregistrées car ce tracker n'est pas "
 "utilisé dans la planification générale et une action de type "
 "\"AddToTopBacklog\"est définie."
+
+#, php-format
+msgid ""
+"The potential planning trackers are computed out of %1$s configuration and "
+"its hierarchy."
+msgstr ""
+"Les trackers \"planning\" potentiels sont déterminés à partir de la "
+"configuration de %1$s et de sa hiérarchie."
+
+msgid "The request is invalid."
+msgstr "La requête n'est pas valide."
 
 msgid "The request is not valid."
 msgstr "La requête n'est pas valide."
@@ -352,6 +649,9 @@ msgstr ""
 msgid "The tracker %s is not found"
 msgstr "L'outil de suivi %s n'a pas été trouvé"
 
+msgid "There are no milestones for this period"
+msgstr "Il n'y a aucun jalon pour cette période"
+
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"
 
@@ -371,11 +671,32 @@ msgstr ""
 "présent dans un sous jalon."
 
 msgid ""
+"This feature is under development. Once checked it wont be possible to start "
+"scrum with default template."
+msgstr ""
+"Cette fonctionnalité est en cours de développement. Une fois coché il n'est "
+"plus possible de démarrer un mode Scrum avec un template par défaut."
+
+msgid "This is used in the <b>Agile Dashboard</b> if enabled."
+msgstr "Ce champ est utilisé dans le <b>Tableau Agile</b> si activé."
+
+msgid ""
 "This option will display all the burnup charts in the project with elements "
 "progression instead of effort progression."
 msgstr ""
 "Cette option permet d'afficher l'ensemble des graphiques burnup du projet en "
 "montrant la progression des éléments au lieu de la progression de l'effort."
+
+msgid "This planning allows assignment of"
+msgstr "Ce planning permet l'association de"
+
+#, php-format
+msgid ""
+"This planning doesn't belong to root planning (%1$s) hierarchy. This "
+"configuration is not supported. You should remove this planning."
+msgstr ""
+"Ce planning n'appartient pas à la hierarchie du planning racine (%1$s). "
+"Cette configuration n'est pas supportée. Vous devriez supprimer ce planning."
 
 msgid ""
 "This semantic will be used in the <strong>AgileDashboard</strong> service "
@@ -387,8 +708,40 @@ msgstr ""
 msgid "This tracker is not a planning tracker"
 msgstr "Cet outil de suivi n'est pas un outil de suivi lié à un planning"
 
+msgid ""
+"This will be used to identify the Kanban section from the Agile Dashboard "
+"homepage."
+msgstr ""
+"Titre affiché sur la page d'accueil du service AgileDashboard pour la partie "
+"Kanban"
+
+msgid ""
+"This will be used to identify the Scrum section from the Agile Dashboard "
+"homepage."
+msgstr ""
+"Titre affiché sur la page d'accueil du service AgileDashboard pour la partie "
+"Scrum"
+
+msgid "Title"
+msgstr "Titre"
+
+msgid "Top Backlog Planning"
+msgstr "Planification Générale"
+
+msgid "Tracker already used by another Kanban."
+msgstr "Le tracker est déjà utilisé par un autre Kanban."
+
 msgid "Tracker semantic done"
 msgstr "Sémantique fini"
+
+msgid "Unable to export the configuration"
+msgstr "Impossible d'exporter la configuration"
+
+msgid "Unable to import the configuration!"
+msgstr "Impossible d'importer la configuration!"
+
+msgid "Unable to save the <em>initial effort</em>"
+msgstr "Impossible de sauvegarder la sémantique <em>effort estimé</em>"
 
 msgid "Unknown masschange action."
 msgstr "L'action de modification en masse n'est pas connue."
@@ -398,6 +751,52 @@ msgstr "Non planifié"
 
 msgid "Update of planning assignment may lead to errors in:"
 msgstr "La mise à jour des plannings peut causer des erreurs dans :"
+
+msgid "View Planning"
+msgstr "Vue du Planning"
+
+#, php-format
+msgid "We created <a href=\"%1$s\">a first kanban</a> for you. Enjoy!"
+msgstr ""
+"Une <a href=\"%1$s\">première instance de kanban</a> a été créée pour vous."
+
+msgid "We created an initial scrum configuration for you. Enjoy!"
+msgstr "La configuration initiale de scrum a été effectuée pour vous."
+
+#, php-format
+msgid ""
+"We tried to create a first kanban for you but an existing tracker (%1$s) "
+"prevented it."
+msgstr ""
+"Un outil de suivi existant (%1$s) a empêché la création d'une première "
+"instance de kanban."
+
+msgid ""
+"We tried to create a first kanban for you but an internal error prevented it."
+msgstr ""
+"Une erreur interne a empêché la création d'une première instance de kanban."
+
+#, php-format
+msgid ""
+"We tried to create an initial scrum configuration for you but an existing "
+"tracker (%1$s) prevented it."
+msgstr ""
+"Un outil de suivi existant (%1$s) a empêché la configuration initiale de "
+"scrum."
+
+msgid ""
+"We tried to create an initial scrum configuration for you but an internal "
+"error prevented it."
+msgstr "Une erreur interne a empêché la configuration initiale de scrum."
+
+msgid "What's hot"
+msgstr "En cours"
+
+msgid "What's next"
+msgstr "À venir"
+
+msgid "Who can prioritize items?"
+msgstr "Qui peut prioriser les éléments ?"
 
 msgid ""
 "You are going to remove the top backlog planning permanently (no possible "
@@ -417,5 +816,44 @@ msgstr ""
 "des valeurs possibles sont définies en tant que valeurs ouvertes dans la "
 "sémantique statut."
 
+msgid "You cannot create more than one planning in scrum V2."
+msgstr "Vous ne pouvez pas créer plus d'un planning en utilisant scrum V2."
+
+msgid "You cannot create new planning because either:"
+msgstr "Vous ne pouvez plus créer de planning soit:"
+
+msgid ""
+"You cannot define the <em>initial effort</em> semantic since there aren't "
+"any numeric fields in the tracker"
+msgstr ""
+"Vous ne pouvez pas définir la sémantique <em>effort estimé</em> car il n'y a "
+"aucun champ numérique dans votre outil de suivi."
+
+msgid ""
+"You cannot import more than one planning in scrum V2, please check your XML."
+msgstr ""
+"Vous ne pouvez pas importer plus d'un planning en utilisant scrum V2, merci "
+"de vérifier votre XML."
+
 msgid "You don't have permissions to see user groups."
 msgstr "Vous n'avez pas la permission de voir les groupes utilisateurs"
+
+#, php-format
+msgid ""
+"all potential planning trackers (%1$s) are already used by a planning "
+"configuration (see below)."
+msgstr ""
+"ou alors tous les trackers \"planning\" potentiels (%1$s) sont déjà utilisés "
+"par une configuration (ci-dessous)."
+
+msgid "closed"
+msgstr "fermés"
+
+msgid "open"
+msgstr "ouverts"
+
+msgid "there is no trackers in tracker service"
+msgstr "parce qu'il n'y a pas de trackers"
+
+msgid "to"
+msgstr "à"

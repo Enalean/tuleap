@@ -40,8 +40,6 @@ class Planning_PlanningOutOfHierarchyAdminPresenter extends Planning_PlanningAdm
 
     public function extra_message()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_out_of_hierarchy', array(
-            $this->root_planning_name
-        ));
+        return sprintf(dgettext('tuleap-agiledashboard', 'This planning doesn\'t belong to root planning (%1$s) hierarchy. This configuration is not supported. You should remove this planning.'), $this->root_planning_name);
     }
 }

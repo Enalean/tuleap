@@ -87,15 +87,9 @@ class Planning_FormPresenter extends PlanningPresenter
         $this->available_planning_trackers  = $available_planning_trackers;
         $this->cardwall_admin               = $cardwall_admin;
 
-        $this->planning_allows_assignment_intro = $GLOBALS['Language']->getText(
-            'plugin_agiledashboard',
-            'planning-allows-assignment-intro'
-        );
+        $this->planning_allows_assignment_intro = dgettext('tuleap-agiledashboard', 'This planning allows assignment of');
 
-        $this->planning_allows_assignment_to = $GLOBALS['Language']->getText(
-            'plugin_agiledashboard',
-            'planning-allows-assignment-to'
-        );
+        $this->planning_allows_assignment_to = dgettext('tuleap-agiledashboard', 'to');
 
         $this->warning_list = $warning_list;
         $this->has_warning  = count($warning_list) > 0;
@@ -103,37 +97,37 @@ class Planning_FormPresenter extends PlanningPresenter
 
     public function adminTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
+        return dgettext('tuleap-agiledashboard', 'Agile Dashboard Administration');
     }
 
     public function createPlanning()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
+        return  dgettext('tuleap-agiledashboard', 'Create a new planning');
     }
 
     public function editPlanning()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_editing');
+        return  dgettext('tuleap-agiledashboard', 'Edit planning:');
     }
 
     public function planningNameFieldLabel()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_name');
+        return  dgettext('tuleap-agiledashboard', 'Name');
     }
 
     public function planningBacklogTitleFieldLabel()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_backlog_title');
+        return  dgettext('tuleap-agiledashboard', 'Backlog title');
     }
 
     public function planningPlanTitleFieldLabel()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_plan_title');
+        return  dgettext('tuleap-agiledashboard', 'Plan title');
     }
 
     public function planningPriorityChangePermissionFieldLabel()
     {
-        return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_priority_change_permission');
+        return  dgettext('tuleap-agiledashboard', 'Who can prioritize items?');
     }
 
     public function priority_change_permission()

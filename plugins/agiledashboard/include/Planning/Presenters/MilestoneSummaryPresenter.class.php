@@ -62,11 +62,11 @@ class Planning_Presenter_MilestoneSummaryPresenter extends Planning_Presenter_Mi
 
     public function open()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'open');
+        return dgettext('tuleap-agiledashboard', 'open');
     }
 
     public function closed()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'closed');
+        return dgettext('tuleap-agiledashboard', 'closed');
     }
 }

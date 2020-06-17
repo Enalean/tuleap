@@ -61,16 +61,16 @@ class AgileDashboard_Presenter_KanbanSummaryPresenter
 
     public function open()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'open');
+        return dgettext('tuleap-agiledashboard', 'open');
     }
 
     public function closed()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'closed');
+        return dgettext('tuleap-agiledashboard', 'closed');
     }
 
     public function cardwall()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall');
+        return dgettext('tuleap-agiledashboard', 'Cardwall');
     }
 }

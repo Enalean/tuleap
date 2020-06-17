@@ -20,8 +20,6 @@
 
 namespace Tuleap\Velocity\Semantic;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -276,7 +274,6 @@ class BacklogRequiredTrackerCollectionTest extends TestCase
         $collection->addBacklogRequiredTracker($required_tracker);
         $collection->addBacklogRequiredTracker($other_required_tracker);
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('Initial effort');
-        $this->assertEquals(['Initial effort'], $collection->getSemanticMisconfiguredForAllTrackers());
+        $this->assertEquals(['Initial Effort'], $collection->getSemanticMisconfiguredForAllTrackers());
     }
 }

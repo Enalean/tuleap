@@ -85,24 +85,20 @@ class AgileDashboard_FirstKanbanCreator
 
         if ($this->isTrackerAlreadyCreated()) {
             $this->warn(
-                $GLOBALS['Language']->getText(
-                    'plugin_agiledashboard_first_kanban',
-                    'error_existing_tracker',
-                    $this->tracker_itemname
-                )
+                sprintf(dgettext('tuleap-agiledashboard', 'We tried to create a first kanban for you but an existing tracker (%1$s) prevented it.'), $this->tracker_itemname)
             );
             return;
         }
 
         $tracker = $this->importTrackerStructure();
         if (! $tracker) {
-            $this->warn($GLOBALS['Language']->getText('plugin_agiledashboard_first_kanban', 'internal_error'));
+            $this->warn(dgettext('tuleap-agiledashboard', 'We tried to create a first kanban for you but an internal error prevented it.'));
             return;
         }
 
         $kanban_id = $this->kanban_manager->createKanban($tracker->getName(), $tracker->getId());
         if (! $kanban_id) {
-            $this->warn($GLOBALS['Language']->getText('plugin_agiledashboard_first_kanban', 'internal_error'));
+            $this->warn(dgettext('tuleap-agiledashboard', 'We tried to create a first kanban for you but an internal error prevented it.'));
             return;
         }
 
@@ -111,17 +107,13 @@ class AgileDashboard_FirstKanbanCreator
 
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
-            $GLOBALS['Language']->getText(
-                'plugin_agiledashboard_first_kanban',
-                'created',
-                '?' . http_build_query(
-                    array(
-                        'group_id' => $this->project->getId(),
-                        'action'   => 'showKanban',
-                        'id'       => $kanban_id
-                    )
+            sprintf(dgettext('tuleap-agiledashboard', 'We created <a href="%1$s">a first kanban</a> for you. Enjoy!'), '?' . http_build_query(
+                array(
+                    'group_id' => $this->project->getId(),
+                    'action'   => 'showKanban',
+                    'id'       => $kanban_id
                 )
-            ),
+            )),
             CODENDI_PURIFIER_DISABLED
         );
     }
