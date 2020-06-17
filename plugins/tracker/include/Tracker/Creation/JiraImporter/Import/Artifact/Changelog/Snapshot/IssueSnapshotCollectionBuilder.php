@@ -67,7 +67,8 @@ class IssueSnapshotCollectionBuilder
     public function buildCollectionOfSnapshotsForIssue(
         PFUser $forge_user,
         array $jira_issue_api,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
+        string $jira_base_url
     ): array {
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_api['key']);
@@ -82,8 +83,11 @@ class IssueSnapshotCollectionBuilder
             $forge_user,
             $current_snapshot,
             $changelog_entries,
-            $jira_issue_api
+            $jira_field_mapping_collection,
+            $jira_issue_api,
+            $jira_base_url
         );
+
         $snapshots_collection[$initial_snapshot->getDate()->getTimestamp()] = $initial_snapshot;
 
         foreach ($changelog_entries as $changelog_entry) {

@@ -31,6 +31,7 @@ use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilderTest extends TestCase
 {
@@ -60,14 +61,19 @@ class InitialSnapshotBuilderTest extends TestCase
             ]
         ];
 
-        $current_snapshot = $this->buildCurrentSnapshot($user);
-        $changelog_entires = $this->buildChangelogEntries();
+        $jira_base_url = 'URL';
+
+        $current_snapshot         = $this->buildCurrentSnapshot($user);
+        $changelog_entires        = $this->buildChangelogEntries();
+        $field_mapping_collection = $this->buildFieldMappingCollection();
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
             $current_snapshot,
             $changelog_entires,
+            $field_mapping_collection,
             $jira_issue_api,
+            $jira_base_url
         );
 
         $this->assertNull($initial_snapshot->getFieldInSnapshot("environment"));
@@ -76,10 +82,50 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertSame($user, $initial_snapshot->getUser());
         $this->assertSame(1585141810, $initial_snapshot->getDate()->getTimestamp());
 
+        $this->assertSame("URL/browse/key01", $initial_snapshot->getFieldInSnapshot('jira_issue_url')->getValue());
         $this->assertSame(['id' => "10000"], $initial_snapshot->getFieldInSnapshot('status')->getValue());
         $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
         $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
+    }
+
+    private function buildFieldMappingCollection(): FieldMappingCollection
+    {
+        $collection = new FieldMappingCollection();
+        $collection->addMapping(
+            new FieldMapping(
+                "status",
+                "Fstatus",
+                "status",
+                "sb"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "customfield_10040",
+                "Fcustomfield_10040",
+                "Field 02",
+                "msb"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "description",
+                "Fdescription",
+                "Description",
+                "text"
+            ),
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "jira_issue_url",
+                "Fjira_issue_url",
+                "Link to original issue",
+                "string"
+            ),
+        );
+
+        return $collection;
     }
 
     private function buildChangelogEntries(): array
@@ -181,7 +227,7 @@ class InitialSnapshotBuilderTest extends TestCase
                         "status",
                         "Fstatus",
                         "status",
-                        "status"
+                        "sb"
                     ),
                     [
                         'id' => "10000"
@@ -193,7 +239,7 @@ class InitialSnapshotBuilderTest extends TestCase
                         "customfield_10040",
                         "Fcustomfield_10040",
                         "Field 02",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:multiselect"
+                        "msb"
                     ),
                     [
                         ['id' => "10009"]

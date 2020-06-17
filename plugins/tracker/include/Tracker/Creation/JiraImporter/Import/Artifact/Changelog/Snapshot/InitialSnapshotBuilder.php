@@ -28,6 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilder
 {
@@ -51,7 +52,9 @@ class InitialSnapshotBuilder
         PFUser $forge_user,
         Snapshot $current_snapshot,
         array $changelog_entries,
-        array $jira_issue_api
+        FieldMappingCollection $jira_field_mapping_collection,
+        array $jira_issue_api,
+        string $jira_base_url
     ): Snapshot {
         $already_seen_fields_keys = [];
         $field_snapshots          = [];
@@ -69,6 +72,13 @@ class InitialSnapshotBuilder
             $current_snapshot,
             $field_snapshots,
             $already_seen_fields_keys
+        );
+
+        $this->addJiraLinkInformation(
+            $field_snapshots,
+            $jira_field_mapping_collection,
+            $jira_issue_api,
+            $jira_base_url
         );
 
         $initial_snapshot = new Snapshot(
@@ -141,6 +151,26 @@ class InitialSnapshotBuilder
                 }
             }
         }
+    }
+
+    private function addJiraLinkInformation(
+        array &$field_snapshots,
+        FieldMappingCollection $jira_field_mapping_collection,
+        array $jira_issue_api,
+        string $jira_base_url
+    ): void {
+        $jira_link_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
+        if ($jira_link_field_mapping === null) {
+            return;
+        }
+
+        $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($jira_issue_api['key']);
+
+        $field_snapshots[] = new FieldSnapshot(
+            $jira_link_field_mapping,
+            $jira_link,
+            null
+        );
     }
 
     private function mustFieldBeCheckedInChangelog(

@@ -34,7 +34,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Init
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\LastDataChangesetXMLUpdater;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
@@ -194,11 +193,6 @@ class JiraXmlExporter
                         ),
                         new ChangelogSnapshotBuilder(
                             new CreationStateListValueFormatter()
-                        )
-                    ),
-                    new LastDataChangesetXMLUpdater(
-                        new FieldChangeStringBuilder(
-                            new XML_SimpleXMLCDATAFactory()
                         )
                     )
                 )

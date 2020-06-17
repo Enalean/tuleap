@@ -76,6 +76,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
      */
     private $current_snapshot_builder;
 
+    /**
+     * @var string
+     */
+    private $jira_base_url;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -97,6 +102,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             'key' => 'key01'
         ];
         $this->jira_field_mapping_collection = new FieldMappingCollection();
+        $this->jira_base_url                 = 'URL';
     }
 
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
@@ -127,7 +133,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
             $this->jira_issue_api,
-            $this->jira_field_mapping_collection
+            $this->jira_field_mapping_collection,
+            $this->jira_base_url
         );
 
         $this->assertCount(3, $collection);
@@ -169,7 +176,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
             $this->jira_issue_api,
-            $this->jira_field_mapping_collection
+            $this->jira_field_mapping_collection,
+            $this->jira_base_url
         );
 
         $this->assertCount(2, $collection);
@@ -223,7 +231,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                        "float"
                     ),
                     '11',
                     null
@@ -253,7 +261,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                        "float"
                     ),
                     '9',
                     null
@@ -273,7 +281,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                        "float"
                     ),
                     '9',
                     null
@@ -293,7 +301,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "com.atlassian.jira.plugin.system.customfieldtypes:float"
+                        "float"
                     ),
                     '11',
                     null
