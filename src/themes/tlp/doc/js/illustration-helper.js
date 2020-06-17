@@ -19,6 +19,7 @@
 
 import { sanitize } from "dompurify";
 import { modal } from "tlp";
+import { injectClasses } from "./illustration-inject-class-helper";
 
 const illustration_helper_button = document.getElementById("doc-colors-illustration-helper-button");
 const illustration_helper_source = document.getElementById("illustration-helper-source");
@@ -26,11 +27,6 @@ const illustration_helper_target = document.getElementById("illustration-helper-
 const illustration_helper_preview = document.getElementById(
     "doc-colors-illustration-helper-modal-preview-block"
 );
-
-const primary_color = "#92cee5";
-const secondary_light_color = "#e0f6ff";
-const secondary_dark_color = "#c1edff";
-const tertiary_color = "#d5e8f3";
 
 if (illustration_helper_button) {
     const illustration_helper_modal = modal(
@@ -50,61 +46,4 @@ function generateSVG() {
     });
     injectClasses(illustration_helper_preview.children);
     illustration_helper_target.value = illustration_helper_preview.innerHTML;
-}
-
-function injectClasses(elements) {
-    const length = elements.length;
-    if (length === 0) {
-        return;
-    }
-
-    for (let i = 0; i < length; i++) {
-        const element = elements[i];
-        if (typeof element.classList !== "undefined") {
-            const stroke = element.getAttribute("stroke");
-            const fill = element.getAttribute("fill");
-
-            element.classList.remove(
-                "tlp-illustration-primary-box",
-                "tlp-illustration-primary-box",
-                "tlp-illustration-primary-stroke",
-                "tlp-illustration-secondary-light-stroke",
-                "tlp-illustration-secondary-dark-stroke",
-                "tlp-illustration-tertiary-stroke",
-                "tlp-illustration-primary-box",
-                "tlp-illustration-secondary-light-fill",
-                "tlp-illustration-secondary-dark-fill",
-                "tlp-illustration-tertiary-fill"
-            );
-            if (
-                String(stroke).toLowerCase() === primary_color &&
-                String(fill).toLowerCase() === secondary_light_color
-            ) {
-                element.classList.add("tlp-illustration-primary-box");
-            } else if (
-                String(stroke).toLowerCase() === primary_color &&
-                String(fill).toLowerCase() === secondary_dark_color
-            ) {
-                element.classList.add("tlp-illustration-primary-dark-box");
-            } else if (String(stroke).toLowerCase() === primary_color) {
-                element.classList.add("tlp-illustration-primary-stroke");
-            } else if (String(stroke).toLowerCase() === secondary_light_color) {
-                element.classList.add("tlp-illustration-secondary-light-stroke");
-            } else if (String(stroke).toLowerCase() === secondary_dark_color) {
-                element.classList.add("tlp-illustration-secondary-dark-stroke");
-            } else if (String(stroke).toLowerCase() === tertiary_color) {
-                element.classList.add("tlp-illustration-tertiary-stroke");
-            } else if (String(fill).toLowerCase() === primary_color) {
-                element.classList.add("tlp-illustration-primary-fill");
-            } else if (String(fill).toLowerCase() === secondary_light_color) {
-                element.classList.add("tlp-illustration-secondary-light-fill");
-            } else if (String(fill).toLowerCase() === secondary_dark_color) {
-                element.classList.add("tlp-illustration-secondary-dark-fill");
-            } else if (String(fill).toLowerCase() === tertiary_color) {
-                element.classList.add("tlp-illustration-tertiary-fill");
-            }
-        }
-
-        injectClasses(element.children);
-    }
 }
