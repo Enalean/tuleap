@@ -1,8 +1,8 @@
 export default CampaignService;
 
-CampaignService.$inject = ["$http", "$q", "Restangular", "SharedPropertiesService"];
+CampaignService.$inject = ["$http", "$q", "Restangular"];
 
-function CampaignService($http, $q, Restangular, SharedPropertiesService) {
+function CampaignService($http, $q, Restangular) {
     var rest = Restangular.withConfig(function (RestangularConfigurer) {
         RestangularConfigurer.setFullResponse(true);
         RestangularConfigurer.setBaseUrl("/api/v1");
@@ -49,7 +49,6 @@ function CampaignService($http, $q, Restangular, SharedPropertiesService) {
             .one("testmanagement_campaigns", campaign_id)
             .one("testmanagement_executions")
             .patch({
-                uuid: SharedPropertiesService.getUUID(),
                 definition_ids_to_add: definition_ids,
                 execution_ids_to_remove: execution_ids,
             })
