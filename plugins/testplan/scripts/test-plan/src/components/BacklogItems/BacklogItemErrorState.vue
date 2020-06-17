@@ -19,7 +19,10 @@
   -->
 
 <template>
-    <div class="empty-pane">
+    <div class="empty-page">
+        <div class="empty-page-illustration">
+            <backlog-item-error-state-svg />
+        </div>
         <div class="empty-page-text">
             <translate>An error occurred while loading the backlog items.</translate>
         </div>
@@ -29,7 +32,10 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
+import BacklogItemErrorStateSvg from "./BacklogItemErrorStateSvg.vue";
 
-@Component
+@Component({
+    components: { BacklogItemErrorStateSvg },
+})
 export default class BacklogItemEmptyState extends Vue {}
 </script>
