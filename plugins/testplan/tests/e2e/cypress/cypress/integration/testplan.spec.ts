@@ -28,7 +28,7 @@ describe("Test plan", function () {
     });
 
     context("As project member", () => {
-        let now;
+        let now: number;
         before(() => {
             cy.projectMemberLogin();
             now = Date.now();
@@ -62,7 +62,7 @@ describe("Test plan", function () {
     });
 });
 
-function goToTestPlanOfMilestone(milestone_label) {
+function goToTestPlanOfMilestone(milestone_label: string): void {
     cy.visitProjectService("test-testplan-project", "Agile Dashboard");
     cy.contains(milestone_label)
         .parent()
