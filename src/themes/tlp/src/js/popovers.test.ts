@@ -102,6 +102,15 @@ describe(`Popovers`, () => {
             popover.destroy();
         });
 
+        it(`when the trigger element's data-placement attribute is invalid,
+            it will throw`, () => {
+            trigger_element.dataset.placement = "invalid";
+
+            expect(() => createPopover(doc, trigger_element, content_element)).toThrow(
+                "Invalid placement received: invalid."
+            );
+        });
+
         it(`when there is neither options.placement nor data-placement,
             it will default to "bottom" placement`, () => {
             const popover = createPopover(doc, trigger_element, content_element);

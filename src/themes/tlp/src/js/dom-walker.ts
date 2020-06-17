@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2019 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,15 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { PopperOptions } from "popper.js";
-interface Popover {
-    destroy(): void;
-}
-export function createPopover(
+export function findClosestElement(
     doc: Document,
-    popover_trigger: Element,
-    popover_content: Element,
-    options?: PopperOptions & { anchor?: Element; trigger?: "click" | "hover" }
-): Popover;
-
-export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
+    element: Element,
+    ancestor: Element
+): Element | null {
+    let current: Element | null = element;
+    do {
+        if (!doc.documentElement.contains(element)) {
+            return null;
+        }
+        if (current.isSameNode(ancestor)) {
+            return current;
+        }
+        current = current.parentElement;
+    } while (current !== null && current.nodeType === Node.ELEMENT_NODE);
+    return null;
+}

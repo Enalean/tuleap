@@ -54,13 +54,16 @@ const webpack_config_for_vue = {
     entry: {
         "admin-nature": "./scripts/admin-nature.js",
         "global-admin": "./scripts/global-admin.js",
-        "tracker-report-expert-mode": "./scripts/report/index.js",
+        "tracker-admin": "./scripts/tracker-admin/index.js",
+        "tracker-creation": "./scripts/tracker-creation/index.ts",
+        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
         "tracker-permissions-per-group": "./scripts/permissions-per-group/src/index.js",
+        "tracker-report-expert-mode": "./scripts/report/index.js",
+        "tracker-semantic-timeframe-option-selector":
+            "./scripts/semantic-timeframe-option-selector.js",
         "tracker-workflow-transitions": "./scripts/workflow-transitions/src/index.js",
         MoveArtifactModal: "./scripts/artifact-action-buttons/src/index.js",
         TrackerAdminFields: "./scripts/TrackerAdminFields.js",
-        "tracker-semantic-timeframe-option-selector":
-            "./scripts/semantic-timeframe-option-selector",
     },
     context,
     output,
@@ -71,34 +74,7 @@ const webpack_config_for_vue = {
     },
     resolve: {
         alias: webpack_configurator.tlp_fetch_alias,
-    },
-    module: {
-        rules: [
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
-            webpack_configurator.rule_easygettext_loader,
-            webpack_configurator.rule_vue_loader,
-        ],
-    },
-    plugins: [manifest_plugin, webpack_configurator.getVueLoaderPlugin()],
-    resolveLoader: {
-        alias: webpack_configurator.easygettext_loader_alias,
-    },
-};
-
-const webpack_for_vue_plus_typescript = {
-    entry: {
-        "tracker-creation": "./scripts/tracker-creation/index.ts",
-        "tracker-creation-success": "./scripts/tracker-creation-success-modal/index.ts",
-        "tracker-admin": "./scripts/tracker-admin/index.js",
-    },
-    context,
-    output,
-    resolve: {
         extensions: [".js", ".ts", ".vue"],
-    },
-    externals: {
-        tlp: "tlp",
-        jquery: "jQuery",
     },
     module: {
         rules: [
@@ -205,7 +181,6 @@ const config_for_themes = {
 module.exports = [
     webpack_config_for_burndown_chart,
     webpack_config_for_vue,
-    webpack_for_vue_plus_typescript,
     config_for_legacy_scripts,
     config_for_themes,
 ];

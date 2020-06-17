@@ -22,7 +22,7 @@ import { datePicker } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const user_logging_date_picker_element = document.getElementById("user-logging-date-picker");
-    if (user_logging_date_picker_element === null) {
+    if (!(user_logging_date_picker_element instanceof HTMLInputElement)) {
         throw new Error("Cannot find #user-logging-date-picker in the DOM");
     }
     datePicker(user_logging_date_picker_element);

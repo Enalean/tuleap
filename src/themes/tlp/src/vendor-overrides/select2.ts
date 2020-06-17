@@ -1,5 +1,5 @@
-/**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+/*
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,20 +20,31 @@
 import jQuery from "jquery";
 import "select2";
 
-import default_locale from "../js/default_locale.js";
+import default_locale from "../js/default_locale";
+import type {
+    Options,
+    Select2Plugin,
+    DataFormat,
+    LoadingData,
+    IdTextPair,
+    GroupedDataFormat,
+} from "../js/select2";
 
-export default function overrideSelect2(element, options) {
-    options = options || {};
+export type { Options, Select2Plugin, DataFormat, LoadingData, IdTextPair, GroupedDataFormat };
 
-    options.language = options.language || default_locale;
-
-    options.theme = "tlp-select2";
-
+export function select2(element: Element, options?: Options): Select2Plugin {
+    let theme = "tlp-select2";
     if (element && element.classList.contains("tlp-select-small")) {
-        options.theme = "tlp-select2-small";
+        theme = "tlp-select2-small";
     } else if (element && element.classList.contains("tlp-select-large")) {
-        options.theme = "tlp-select2-large";
+        theme = "tlp-select2-large";
     }
 
-    return jQuery(element).select2(options);
+    // jQuery().select2 should yield a Select2Plugin but apparently it doesn't
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    return (jQuery(element).select2({
+        language: default_locale,
+        ...options,
+        theme,
+    }) as unknown) as Select2Plugin;
 }

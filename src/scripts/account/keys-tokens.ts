@@ -82,9 +82,8 @@ function handleAccessKeys(): void {
 
 function addAccessKeyDatePicker(): void {
     const date_picker = document.getElementById("access-key-expiration-date-picker");
-
-    if (!date_picker) {
-        return;
+    if (!(date_picker instanceof HTMLInputElement)) {
+        throw new Error(`Could not find input tag with id #access-key-expiration-date-picker`);
     }
 
     datePicker(date_picker);

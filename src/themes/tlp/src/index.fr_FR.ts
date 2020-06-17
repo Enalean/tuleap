@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function findClosestElement(doc, element, ancestor) {
-    let current = element;
-    do {
-        if (!doc.documentElement.contains(element)) {
-            return null;
-        }
-        if (current.isSameNode(ancestor)) {
-            return current;
-        }
-        current = current.parentElement;
-    } while (current !== null && current.nodeType === Node.ELEMENT_NODE);
-    return null;
+import flatpickr from "flatpickr";
+import { French } from "flatpickr/dist/l10n/fr.js";
+
+export * from "./js/index";
+
+import "../node_modules/select2/dist/js/i18n/fr.js";
+
+import locale from "./vendor-i18n/fr_FR/tlp.fr";
+import { select2, Options, Select2Plugin } from "./js/index";
+
+flatpickr.localize(French);
+
+function frenchSelect2(element: Element, options?: Options): Select2Plugin {
+    return select2(element, { language: locale, ...options });
 }
+
+export { locale, frenchSelect2 as select2 };
