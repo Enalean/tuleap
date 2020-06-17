@@ -18,7 +18,7 @@
  *
  */
 
-Cypress.Commands.add("getFromTuleapAPI", (url) => {
+Cypress.Commands.add("getFromTuleapAPI", (url: string) => {
     return cy.request({
         url,
         headers: {
@@ -28,7 +28,7 @@ Cypress.Commands.add("getFromTuleapAPI", (url) => {
     });
 });
 
-Cypress.Commands.add("postFromTuleapApi", (url, payload) => {
+Cypress.Commands.add("postFromTuleapApi", (url: string, payload: unknown) => {
     cy.request({
         method: "POST",
         url: url,
@@ -40,7 +40,7 @@ Cypress.Commands.add("postFromTuleapApi", (url, payload) => {
     });
 });
 
-Cypress.Commands.add("putFromTuleapApi", (url, payload) => {
+Cypress.Commands.add("putFromTuleapApi", (url: string, payload: unknown) => {
     cy.request({
         method: "PUT",
         url: url,

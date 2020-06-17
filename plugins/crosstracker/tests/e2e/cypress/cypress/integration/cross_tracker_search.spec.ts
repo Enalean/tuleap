@@ -18,7 +18,7 @@
  *
  */
 
-function updateSearchQuery(search_query) {
+function updateSearchQuery(search_query: string): void {
     cy.get("[data-test=cross-tracker-reading-mode]").click();
     cy.get("[data-test=expert-query-textarea]")
         .clear({ force: true })
@@ -26,7 +26,7 @@ function updateSearchQuery(search_query) {
     cy.get("[data-test=search-report-button]").click();
 }
 
-function assertOpenArtifacts() {
+function assertOpenArtifacts(): void {
     cy.get("[data-test=cross-tracker-results-artifact]").then((artifact) => {
         cy.wrap(artifact).should("contain", "nananana");
         cy.wrap(artifact).should("contain", "kanban 2");
@@ -36,7 +36,7 @@ function assertOpenArtifacts() {
     });
 }
 
-function assertAllArtifacts() {
+function assertAllArtifacts(): void {
     cy.get("[data-test=cross-tracker-results-artifact]").then((artifact) => {
         cy.wrap(artifact).should("contain", "nananana");
         cy.wrap(artifact).should("contain", "kanban 2");

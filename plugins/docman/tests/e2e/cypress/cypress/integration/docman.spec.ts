@@ -18,7 +18,7 @@
  */
 
 describe("Docman", function () {
-    let project_id;
+    let project_id: string;
 
     context("Project administrators", function () {
         before(function () {

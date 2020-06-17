@@ -18,4 +18,4 @@
  *
  */
 
-import "../../../../../../../tests/e2e/full/cypress/support/index.js";
+import "../../../../../../../tests/e2e/full/cypress/support/index";

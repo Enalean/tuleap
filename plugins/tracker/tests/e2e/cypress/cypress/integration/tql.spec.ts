@@ -17,21 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getTrackerIdFromTrackerListPage() {
+function getTrackerIdFromTrackerListPage(): Chainable<JQuery<HTMLElement>> {
     cy.visitProjectService("tql", "Trackers");
     return cy.get("[data-test=tracker-link-tql]").should("have.attr", "data-test-tracker-id");
 }
 
-function getSummaryFieldId(tracker_id) {
+interface TrackerField {
+    name: string;
+    field_id: string;
+}
+function getSummaryFieldId(tracker_id: string): Chainable<string> {
     return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}`).then((response) => {
         const tracker = response.body;
-        const summary_field = tracker.fields.find((field) => field.name === "summary");
+        const summary_field = tracker.fields.find(
+            (field: TrackerField) => field.name === "summary"
+        );
 
         return summary_field.field_id;
     });
 }
 
-function clearCodeMirror() {
+function clearCodeMirror(): void {
     // ignore for code mirror
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(".CodeMirror").then((el) => {
@@ -40,7 +46,7 @@ function clearCodeMirror() {
     });
 }
 
-function findArtifactsWithExpertQuery(query) {
+function findArtifactsWithExpertQuery(query: string): void {
     clearCodeMirror();
 
     // ignore for code mirror
@@ -49,7 +55,10 @@ function findArtifactsWithExpertQuery(query) {
     cy.get("[data-test=expert-query-submit-button]").click();
 }
 
-function checkOnlyExpectedArtifactsAreListed(summary_column_id, expected_artifacts) {
+function checkOnlyExpectedArtifactsAreListed(
+    summary_column_id: string,
+    expected_artifacts: Array<string>
+): void {
     cy.get(
         `[data-test=tracker-report-table-results-artifact] > [data-column-id=${summary_column_id}]`
     ).then((artifact) => {
@@ -59,12 +68,12 @@ function checkOnlyExpectedArtifactsAreListed(summary_column_id, expected_artifac
     });
 }
 
-function checkNoArtifactsAreListed() {
+function checkNoArtifactsAreListed(): void {
     cy.get(`[data-test=tracker-report-table-empty-state]`).contains("No results");
 }
 
 describe("Report expert queries", () => {
-    let summary_column_id;
+    let summary_column_id: string;
 
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");
@@ -73,12 +82,12 @@ describe("Report expert queries", () => {
 
         getTrackerIdFromTrackerListPage()
             .as("tql_tracker_id")
-            .then((tql_tracker_id) => {
-                cy.visit(`/plugins/tracker/?tracker=${tql_tracker_id}`);
+            .then(function () {
+                cy.visit(`/plugins/tracker/?tracker=${this.tql_tracker_id}`);
 
-                return getSummaryFieldId(tql_tracker_id).as("summary_field_id");
+                return getSummaryFieldId(this.tql_tracker_id).as("summary_field_id");
             })
-            .then((summary_field_id) => {
+            .then((summary_field_id: string) => {
                 summary_column_id = summary_field_id;
             });
     });

@@ -18,7 +18,7 @@
  */
 
 describe("TTM campaign", () => {
-    let ttm_project_name, ttm_project_public_name, now;
+    let ttm_project_name: string, ttm_project_public_name: string, now: number;
 
     before(() => {
         cy.clearCookie("__Host-TULEAP_session_hash");

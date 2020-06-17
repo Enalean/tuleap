@@ -17,7 +17,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Chainable = Cypress.Chainable;
+export interface Chainable<Subject> {
+    ProjectAdministratorLogin(): void;
+    projectMemberLogin(): void;
+    platformAdminLogin(): void;
+    RestrictedMemberLogin(): void;
+    RestrictedRegularUserLogin(): void;
+    heisenbergLogin(): void;
+    userLogout(): void;
+    updatePlatformVisibilityAndAllowRestricted(): void;
+    getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
+    visitProjectService(project_unixname: string, service_label: string): void;
+    uploadFixtureFile(input: JQuery<HTMLInputElement>, file_name: string, file_type: string): void;
+    visitServiceInCurrentProject(service_label: string): void;
+    getFromTuleapAPI(url: string): Chainable<Response>;
+    postFromTuleapApi(url: string, payload: unknown): void;
+    putFromTuleapApi(url: string, payload: unknown): void;
+}
 
 declare interface Window {
     fetch: unknown;
