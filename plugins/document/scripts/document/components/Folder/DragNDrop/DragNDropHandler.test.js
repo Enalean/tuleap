@@ -162,13 +162,24 @@ describe("DragNDropHandler", () => {
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE);
             });
 
-            it("Shows an error if there item is not a file", async () => {
+            it("Shows an error if the item has the size of a default cluster size and no type, so it is probably a folder", async () => {
                 const wrapper = getWrapper();
-                drop_event.dataTransfer.files.push("Some text I've just selected somewhere");
-
+                drop_event.dataTransfer.files.push({
+                    type: "",
+                    size: 4096,
+                });
                 await wrapper.vm.ondrop(drop_event);
-
                 expect(wrapper.vm.error_modal_shown).toEqual(wrapper.vm.DROPPED_ITEM_IS_NOT_A_FILE);
+            });
+
+            it("Does not show any error when the item is a valid file", async () => {
+                const wrapper = getWrapper();
+                drop_event.dataTransfer.files.push({
+                    type: "text/pdf",
+                    size: 4096,
+                });
+                await wrapper.vm.ondrop(drop_event);
+                expect(wrapper.vm.error_modal_shown).toBe(false);
             });
         });
 
