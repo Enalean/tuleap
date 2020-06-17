@@ -51,6 +51,7 @@ export interface BacklogItem extends BacklogItemFromREST {
 
 export interface TestDefinition {
     readonly id: number;
+    readonly short_type: string;
     readonly summary: string;
     readonly automated_tests: string;
 }

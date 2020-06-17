@@ -25,7 +25,11 @@ describe("TestDefinitionCard", () => {
     it("Display a test definition as a card", () => {
         const wrapper = shallowMount(TestDefinitionCard, {
             propsData: {
-                test_definition: { id: 123, summary: "Test definition summary" } as TestDefinition,
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                } as TestDefinition,
             },
         });
 
@@ -37,6 +41,7 @@ describe("TestDefinitionCard", () => {
             propsData: {
                 test_definition: {
                     id: 123,
+                    short_type: "test_def",
                     summary: "Test definition summary",
                     automated_tests: "Automated test name",
                 },
