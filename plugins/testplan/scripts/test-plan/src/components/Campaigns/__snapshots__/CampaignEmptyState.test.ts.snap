@@ -5,13 +5,13 @@ exports[`CampaignEmptyState Displays empty state with new campaign creation butt
   class="empty-pane"
 >
   <div
-    class="empty-page-illustration"
+    class="empty-pane-illustration"
   >
     <campaign-empty-state-svg-stub />
   </div>
    
   <div
-    class="empty-page-text"
+    class="empty-pane-text"
   >
     <translate-stub
       tag="span"

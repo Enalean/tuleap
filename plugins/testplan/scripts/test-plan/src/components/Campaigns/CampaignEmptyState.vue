@@ -20,10 +20,10 @@
 
 <template>
     <div class="empty-pane">
-        <div class="empty-page-illustration">
+        <div class="empty-pane-illustration">
             <campaign-empty-state-svg />
         </div>
-        <div class="empty-page-text">
+        <div class="empty-pane-text">
             <translate>There is no test campaign yet.</translate>
         </div>
         <button

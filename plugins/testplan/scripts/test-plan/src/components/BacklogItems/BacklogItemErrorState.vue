@@ -19,11 +19,11 @@
   -->
 
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-pane">
+        <div class="empty-pane-illustration">
             <backlog-item-error-state-svg />
         </div>
-        <div class="empty-page-text">
+        <div class="empty-pane-text">
             <translate>An error occurred while loading the backlog items.</translate>
         </div>
     </div>
