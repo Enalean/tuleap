@@ -18,8 +18,8 @@
  *
  */
 
-describe("PhpWiki", function () {
-    let project_id;
+describe("News", function () {
+    let project_id: string;
     context("Project administrators", function () {
         before(() => {
             cy.clearCookie("__Host-TULEAP_session_hash");
@@ -33,7 +33,7 @@ describe("PhpWiki", function () {
 
         it("can access to admin section", function () {
             project_id = this.project_id;
-            cy.visit("/wiki/admin/index.php?group_id=" + this.project_id + "&view=wikiPerms");
+            cy.visit("/news/admin/?group_id=" + project_id);
         });
     });
     context("Project members", function () {
@@ -45,11 +45,11 @@ describe("PhpWiki", function () {
         beforeEach(function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
-        it("should raise an error when user try to access to wiki admin page", function () {
-            cy.visit("/wiki/admin/index.php?group_id=" + project_id + "&view=wikiPerms");
+        it("should raise an error when user try to access to News admin page", function () {
+            cy.visit("/news/admin/?group_id=" + project_id);
 
             cy.get("[data-test=feedback]").contains(
-                "You are not granted sufficient permission to perform this operation."
+                "Permission Denied. You have to be an admin on the News service of this project."
             );
         });
     });

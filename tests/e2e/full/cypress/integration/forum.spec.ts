@@ -18,8 +18,8 @@
  *
  */
 
-describe("List", function () {
-    let project_id;
+describe("Forums", function () {
+    let project_id: string;
     context("Project administrators", function () {
         before(() => {
             cy.clearCookie("__Host-TULEAP_session_hash");
@@ -33,7 +33,7 @@ describe("List", function () {
 
         it("can access to admin section", function () {
             project_id = this.project_id;
-            cy.visit("/mail/admin/?group_id=" + project_id);
+            cy.visit("/forum/admin/?group_id=" + project_id);
         });
     });
     context("Project members", function () {
@@ -45,9 +45,8 @@ describe("List", function () {
         beforeEach(function () {
             Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
         });
-        it("should raise an error when user try to access to List admin page", function () {
-            cy.visit("/mail/admin/?group_id=" + project_id);
-
+        it("should raise an error when user try to access to Forum admin page", function () {
+            cy.visit("/forum/admin/?group_id=" + project_id);
             cy.get("[data-test=feedback]").contains(
                 "You are not granted sufficient permission to perform this operation."
             );
