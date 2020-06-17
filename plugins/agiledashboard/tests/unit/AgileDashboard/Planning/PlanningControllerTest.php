@@ -41,6 +41,7 @@ use PlanningParameters;
 use PlanningPermissionsManager;
 use Project;
 use ProjectManager;
+use Tracker;
 use Tracker_FormElementFactory;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AdministrationCrumbBuilder;
 use Tuleap\AgileDashboard\BreadCrumbDropdown\AgileDashboardCrumbBuilder;
@@ -49,6 +50,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 class PlanningControllerTest extends TestCase
@@ -64,6 +66,10 @@ class PlanningControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ArtifactsInExplicitBacklogDao
      */
     public $explicit_backlog_dao;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\TrackerFactory
+     */
+    private $tracker_factory;
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ScrumForMonoMilestoneChecker
      */
@@ -119,6 +125,8 @@ class PlanningControllerTest extends TestCase
         $this->planning_updater           = Mockery::mock(PlanningUpdater::class);
         $this->tracker_removal_checker    = Mockery::mock(PlanningBacklogTrackerRemovalChecker::class);
 
+        $this->tracker_factory = Mockery::mock(\TrackerFactory::class);
+
         $this->scrum_mono_milestone_checker = Mockery::mock(ScrumForMonoMilestoneChecker::class);
         $this->planning_controller          = new Planning_Controller(
             $this->request,
@@ -142,7 +150,8 @@ class PlanningControllerTest extends TestCase
             $this->planning_updater,
             $this->event_manager,
             $this->planning_request_validator,
-            $this->tracker_removal_checker
+            $this->tracker_removal_checker,
+            $this->tracker_factory
         );
     }
 
@@ -284,7 +293,42 @@ class PlanningControllerTest extends TestCase
         $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
         $this->tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')->once();
 
+        $this->tracker_factory->shouldReceive('getTrackerById')->once()
+            ->andReturn(Mockery::mock(Tracker::class));
+
         $this->planning_updater->shouldReceive('update')->once();
+
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
+
+        $this->planning_controller->update();
+    }
+
+
+    public function testItDoesNotUpdatePlanningWhenPlanningTrackerNoLongerExists(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive('isAdmin')->once()->andReturnTrue();
+
+        $this->request->shouldReceive('getCurrentUser')->twice()->andReturn($user);
+        $this->request->shouldReceive('get')->withArgs(['planning_id'])->andReturn(1);
+
+        $planning_parameters = [];
+        $this->request->shouldReceive('get')->withArgs(['planning'])->andReturn($planning_parameters);
+
+        $GLOBALS['Response']->shouldReceive('addFeedback')->once();
+
+        $this->event_manager->shouldReceive('processEvent')->once();
+
+        $planning = Mockery::mock(\Planning::class);
+        $planning->shouldReceive('getPlanningTracker')->once();
+        $this->planning_factory->shouldReceive('getPlanning')->times(2)->andReturn($planning);
+
+        $this->planning_request_validator->shouldReceive('isValid')->andReturnTrue();
+        $this->tracker_removal_checker->shouldReceive('checkRemovedBacklogTrackersCanBeRemoved')->once();
+
+        $this->tracker_factory->shouldReceive('getTrackerById')->andThrow(TrackerNotFoundException::class);
+
+        $this->planning_updater->shouldReceive('update')->never();
 
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 

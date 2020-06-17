@@ -36,6 +36,7 @@ use Tuleap\DB\DBTransactionExecutor;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Report\TrackerNotFoundException;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeChecker;
 
 /**
@@ -131,6 +132,10 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      * @var PlanningBacklogTrackerRemovalChecker
      */
     private $planning_backlog_tracker_removal_checker;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
     public function __construct(
         Codendi_Request $request,
@@ -154,7 +159,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         PlanningUpdater $planning_updater,
         EventManager $event_manager,
         Planning_RequestValidator $planning_request_validator,
-        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker
+        PlanningBacklogTrackerRemovalChecker $planning_backlog_tracker_removal_checker,
+        TrackerFactory $tracker_factory
     ) {
         parent::__construct('agiledashboard', $request);
 
@@ -181,6 +187,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->event_manager                            = $event_manager;
         $this->planning_request_validator               = $planning_request_validator;
         $this->planning_backlog_tracker_removal_checker = $planning_backlog_tracker_removal_checker;
+        $this->tracker_factory                          = $tracker_factory;
     }
 
     public function index()
@@ -655,6 +662,8 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                     $planning_parameter
                 );
 
+                $this->checkPlanningTrackerIdIsStillAValidTracker((int) $planning_parameter->planning_tracker_id);
+
                 $this->planning_updater->update($user, $this->project, $updated_planning_id, $planning_parameter);
 
                 $this->addFeedback(
@@ -665,6 +674,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 $this->addFeedback(
                     Feedback::ERROR,
                     $exception->getMessage()
+                );
+            } catch (TrackerNotFoundException $exception) {
+                $this->addFeedback(
+                    Feedback::ERROR,
+                    sprintf(
+                        dgettext('tuleap-agiledashboard', 'The tracker %s is not found'),
+                        (string) $planning_parameter->planning_tracker_id
+                    )
                 );
             }
         } else {
@@ -790,5 +807,15 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         $this->addOtherWarnings($warning_list, $planning->getPlanningTracker());
 
         return $warning_list;
+    }
+
+    /**
+     * @throws TrackerNotFoundException
+     */
+    private function checkPlanningTrackerIdIsStillAValidTracker(int $planning_tracker_id): void
+    {
+        if (!$this->tracker_factory->getTrackerById($planning_tracker_id)) {
+            throw new TrackerNotFoundException();
+        }
     }
 }

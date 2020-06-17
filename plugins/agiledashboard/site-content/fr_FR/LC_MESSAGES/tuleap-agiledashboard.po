@@ -181,7 +181,8 @@ msgstr "Actions de planification générale explicite"
 msgid ""
 "Explicit backlog allows to select, item per item, what goes in Scrum top "
 "backlog."
-msgstr "La planification explicite permet de choisir élément par élément ce qui doit "
+msgstr ""
+"La planification explicite permet de choisir élément par élément ce qui doit "
 "aller dans la planification générale de Scrum."
 
 msgid "Explicit top backlog"
@@ -346,6 +347,10 @@ msgid ""
 msgstr ""
 "La sémantique statut ne peut être supprimée car la sémantique fini est "
 "définie."
+
+#, php-format
+msgid "The tracker %s is not found"
+msgstr "L'outil de suivi %s n'a pas été trouvé"
 
 msgid "There is no content <br> you can see"
 msgstr "Il n’y a aucun élément <br> visible"

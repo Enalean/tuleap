@@ -34,6 +34,9 @@ class PlanningParameters
     public $backlog_title;
     public $plan_title;
     public $backlog_tracker_ids = array();
+    /**
+     * @var string|null
+     */
     public $planning_tracker_id;
     public $priority_change_permission;
 
