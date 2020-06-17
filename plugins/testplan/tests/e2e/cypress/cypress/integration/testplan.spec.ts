@@ -34,29 +34,49 @@ describe("Test plan", function () {
             now = Date.now();
         });
 
-        it("Displays no campaign if release does not have one", () => {
+        it("Displays no campaign nor backlog items if release does not have one", () => {
             goToTestPlanOfMilestone("Release without campaigns");
 
             cy.contains("There is no test campaign yet.");
+            cy.contains("There is no backlog item yet");
         });
 
-        context("In a release with campaigns", () => {
+        context("In a release with campaigns and backlog items", () => {
             before(() => {
                 goToTestPlanOfMilestone("Release with campaigns");
             });
 
-            it("Displays the campaigns", () => {
-                cy.contains("Campaign 1");
-                cy.contains("9 tests");
+            context("Test campaigns", () => {
+                it("Displays the campaigns", () => {
+                    cy.contains("Campaign 1");
+                    cy.contains("9 tests");
+                });
+
+                it("Adds new campaign", () => {
+                    cy.get("[data-test=new-campaign]").click();
+                    cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
+                    cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
+                    cy.get("[data-test=new-campaign-submit-button]").click();
+                    cy.contains("Campaign " + now);
+                    cy.contains("8 tests");
+                });
             });
 
-            it("Adds new campaign", () => {
-                cy.get("[data-test=new-campaign]").click();
-                cy.get("[data-test=new-campaign-label]").type("Campaign " + now);
-                cy.get("[data-test=new-campaign-tests]").select("Test Suite Complete");
-                cy.get("[data-test=new-campaign-submit-button]").click();
-                cy.contains("Campaign " + now);
-                cy.contains("8 tests");
+            context("Test plan", () => {
+                it("Display the backlog items", () => {
+                    cy.contains("Display list of backlog items with their tests definition");
+                    cy.contains("Create new campaign in new “Test” screen");
+                });
+
+                it("Expand a backlog items to see its test coverage", () => {
+                    cy.contains(
+                        "Display list of backlog items with their tests definition"
+                    ).click();
+                    cy.contains("Update artifact");
+                    cy.contains("Send beeper notification").within(() => {
+                        cy.get("[data-test=automated-test-icon]");
+                    });
+                });
             });
         });
     });
