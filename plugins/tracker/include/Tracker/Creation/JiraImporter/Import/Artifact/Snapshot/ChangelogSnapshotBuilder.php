@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
 use Tracker_FormElementFactory;
@@ -93,7 +93,8 @@ class ChangelogSnapshotBuilder
         return new Snapshot(
             $forge_user,
             $changelog_entry->getCreated(),
-            $fields_snapshot
+            $fields_snapshot,
+            null
         );
     }
 }

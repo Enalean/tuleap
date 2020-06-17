@@ -29,7 +29,7 @@ use Tracker_Artifact_ChangesetValue_Text;
 use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Snapshot;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;

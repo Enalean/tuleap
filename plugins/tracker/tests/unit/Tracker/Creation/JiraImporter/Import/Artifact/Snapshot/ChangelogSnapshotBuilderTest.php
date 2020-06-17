@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use DateTimeImmutable;
 use Mockery;
@@ -112,7 +112,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                     "*text area v2*",
                     "<p>text area v2</p>"
                 )
-            ]
+            ],
+            null
         );
     }
 

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
@@ -84,7 +84,8 @@ class InitialSnapshotBuilder
         $initial_snapshot = new Snapshot(
             $forge_user,
             new \DateTimeImmutable($jira_issue_api['fields'][AlwaysThereFieldsExporter::JIRA_CREATED_NAME]),
-            $field_snapshots
+            $field_snapshots,
+            null
         );
 
         return $initial_snapshot;
