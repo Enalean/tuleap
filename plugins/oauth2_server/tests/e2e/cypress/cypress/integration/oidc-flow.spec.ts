@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function visitProjectAdmin(project_id) {
+function visitProjectAdmin(project_id: string): void {
     cy.visit(`/plugins/oauth2_server/project/${encodeURIComponent(project_id)}/admin`);
 }
 
@@ -53,8 +53,8 @@ describe("OIDC flow", function () {
 
             cy.request({
                 url: `https://oauth2-server-rp-oidc:8443/init-flow?client_id=${encodeURIComponent(
-                    client_id
-                )}&client_secret=${encodeURIComponent(client_secret)}`,
+                    client_id ?? ""
+                )}&client_secret=${encodeURIComponent(client_secret ?? "")}`,
                 followRedirect: false,
             }).then(function (resp) {
                 cy.visit(resp.headers.location);
