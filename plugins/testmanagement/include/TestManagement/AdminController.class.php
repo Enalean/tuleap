@@ -131,7 +131,7 @@ class AdminController extends TestManagementController
             $definition_tracker_id === null ||
             $execution_tracker_id === false ||
             $execution_tracker_id === null ||
-            ! $issue_tracker_id
+            $issue_tracker_id === false
         ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
