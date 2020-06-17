@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import angular from "angular";
 import "angular-mocks";
 
@@ -19,41 +38,6 @@ describe("PlanningController -", () => {
         BacklogItemCollectionService,
         BacklogItemSelectedService,
         ItemAnimatorService;
-
-    const milestone = {
-        id: 592,
-        resources: {
-            backlog: {
-                accept: {
-                    trackers: [{ id: 99, label: "story" }],
-                },
-            },
-            content: {
-                accept: {
-                    trackers: [{ id: 99, label: "story" }],
-                },
-            },
-        },
-        sub_milestone_type: { id: 66, label: "sprints" },
-    };
-    const initial_milestones = {
-        milestones_representations: [
-            {
-                resources: {
-                    backlog: {
-                        accept: {
-                            trackers: [{ id: 98, label: "task" }],
-                        },
-                    },
-                    content: {
-                        accept: {
-                            trackers: [{ id: 98, label: "task" }],
-                        },
-                    },
-                },
-            },
-        ],
-    };
 
     beforeEach(() => {
         angular.mock.module(planning_module);
@@ -79,11 +63,6 @@ describe("PlanningController -", () => {
             jest.spyOn(SharedPropertiesService, "getUserId").mockReturnValue(102);
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
-            jest.spyOn(SharedPropertiesService, "getMilestone").mockReturnValue(undefined);
-            jest.spyOn(
-                SharedPropertiesService,
-                "getInitialMilestones"
-            ).mockImplementation(() => {});
             jest.spyOn(SharedPropertiesService, "getViewMode").mockImplementation(() => {});
 
             var returnPromise = function (method) {
@@ -164,21 +143,12 @@ describe("PlanningController -", () => {
                 SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
             });
 
-            it("and given that no milestone was injected, when I load the controller, then the milestones will be retrieved", function () {
-                SharedPropertiesService.getInitialMilestones.mockImplementation(() => {});
-                var milestone_request = $q.defer();
-                MilestoneService.getOpenMilestones.mockReturnValue(milestone_request.promise);
+            it("when I load the controller, then the milestones will be retrieved", function () {
+                MilestoneService.getOpenMilestones.mockReturnValue(
+                    $q.when({ results: [{ id: 184, label: "Release v1.0" }], total: 1 })
+                );
 
                 PlanningController.$onInit();
-                milestone_request.resolve({
-                    results: [
-                        {
-                            id: 184,
-                            label: "Release v1.0",
-                        },
-                    ],
-                    total: 1,
-                });
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
 
@@ -203,26 +173,21 @@ describe("PlanningController -", () => {
                 SharedPropertiesService.getMilestoneId.mockReturnValue(592);
             });
 
-            it("and given that no milestone was injected, when I load the controller, then the submilestones will be retrieved", () => {
-                SharedPropertiesService.getInitialMilestones.mockImplementation(() => {});
-                var milestone_request = $q.defer();
-                var submilestone_request = $q.defer();
-                MilestoneService.getMilestone.mockReturnValue(milestone_request.promise);
-                MilestoneService.getOpenSubMilestones.mockReturnValue(submilestone_request.promise);
+            it("when I load the controller, then the submilestones will be retrieved", () => {
+                const milestone = {
+                    id: 592,
+                    resources: {
+                        backlog: { accept: { trackers: [{ id: 99, label: "story" }] } },
+                        content: { accept: { trackers: [{ id: 99, label: "story" }] } },
+                    },
+                    sub_milestone_type: { id: 66, label: "sprints" },
+                };
+                MilestoneService.getMilestone.mockReturnValue($q.when({ results: milestone }));
+                MilestoneService.getOpenSubMilestones.mockReturnValue(
+                    $q.when({ results: [{ id: 249, label: "Sprint 2015-38" }], total: 1 })
+                );
 
                 PlanningController.$onInit();
-                milestone_request.resolve({
-                    results: milestone,
-                });
-                submilestone_request.resolve({
-                    results: [
-                        {
-                            id: 249,
-                            label: "Sprint 2015-38",
-                        },
-                    ],
-                    total: 1,
-                });
                 expect(PlanningController.milestones.loading).toBeTruthy();
                 $scope.$apply();
 
@@ -241,20 +206,6 @@ describe("PlanningController -", () => {
                 ]);
             });
         });
-
-        it(
-            "Load injected milestones",
-            angular.mock.inject(() => {
-                SharedPropertiesService.getInitialMilestones.mockReturnValue(initial_milestones);
-                jest.spyOn(PlanningController, "loadInitialMilestones");
-
-                PlanningController.$onInit();
-
-                expect(PlanningController.loadInitialMilestones).toHaveBeenCalledWith(
-                    initial_milestones
-                );
-            })
-        );
 
         it("Load injected view mode", () => {
             SharedPropertiesService.getViewMode.mockReturnValue("detailed-view");

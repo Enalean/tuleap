@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import angular from "angular";
 import _ from "lodash";
 import { sprintf } from "sprintf-js";
@@ -74,8 +93,8 @@ function BacklogController(
 
     function init() {
         initDragular();
-        self.loadBacklog(SharedPropertiesService.getMilestone());
-        self.loadInitialBacklogItems(SharedPropertiesService.getInitialBacklogItems());
+        self.loadBacklog();
+        self.loadInitialBacklogItems();
     }
 
     function initDragular() {
@@ -107,14 +126,9 @@ function BacklogController(
         return !isNaN(self.milestone_id);
     }
 
-    function loadBacklog(initial_milestone) {
+    function loadBacklog() {
         if (!self.isMilestoneContext()) {
             BacklogService.loadProjectBacklog(self.project_id);
-        } else if (initial_milestone) {
-            MilestoneService.defineAllowedBacklogItemTypes(initial_milestone);
-            MilestoneService.augmentMilestone(initial_milestone, self.all_backlog_items);
-
-            BacklogService.loadMilestoneBacklog(initial_milestone);
         } else {
             MilestoneService.getMilestone(self.milestone_id, self.all_backlog_items).then(function (
                 data
@@ -124,16 +138,8 @@ function BacklogController(
         }
     }
 
-    function loadInitialBacklogItems(initial_backlog_items) {
-        if (initial_backlog_items) {
-            appendBacklogItems(initial_backlog_items.backlog_items_representations);
-
-            self.backlog_items.pagination.offset = self.backlog_items.pagination.limit;
-            self.backlog_items.fully_loaded =
-                self.backlog_items.pagination.offset >= initial_backlog_items.total_size;
-        } else {
-            displayBacklogItems();
-        }
+    function loadInitialBacklogItems() {
+        displayBacklogItems();
     }
 
     function displayBacklogItems() {

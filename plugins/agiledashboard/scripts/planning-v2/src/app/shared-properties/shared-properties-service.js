@@ -1,35 +1,45 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 export default function SharedPropertiesService() {
     var property = {
         user_id: undefined,
         view_mode: undefined,
         project_id: undefined,
         milestone_id: undefined,
-        milestone: undefined,
-        initial_backlog_items: undefined,
-        initial_milestones: undefined,
         is_in_explicit_top_backlog: undefined,
         allowed_additional_panes_to_display: [],
     };
 
     return {
-        getUserId: getUserId,
-        setUserId: setUserId,
-        getViewMode: getViewMode,
-        setViewMode: setViewMode,
-        getProjectId: getProjectId,
-        setProjectId: setProjectId,
-        getMilestoneId: getMilestoneId,
-        setMilestoneId: setMilestoneId,
-        getMilestone: getMilestone,
-        setMilestone: setMilestone,
-        getInitialBacklogItems: getInitialBacklogItems,
-        setInitialBacklogItems: setInitialBacklogItems,
-        getInitialMilestones: getInitialMilestones,
-        setInitialMilestones: setInitialMilestones,
-        isInExplicitTopBacklogManagement: isInExplicitTopBacklogManagement,
-        setIsInExplicitTopBacklogManagement: setIsInExplicitTopBacklogManagement,
-        setAllowedAdditionalPanesToDisplay: setAllowedAdditionalPanesToDisplay,
-        getAllowedAdditionalPanesToDisplay: getAllowedAdditionalPanesToDisplay,
+        getUserId,
+        setUserId,
+        getViewMode,
+        setViewMode,
+        getProjectId,
+        setProjectId,
+        getMilestoneId,
+        setMilestoneId,
+        isInExplicitTopBacklogManagement,
+        setIsInExplicitTopBacklogManagement,
+        setAllowedAdditionalPanesToDisplay,
+        getAllowedAdditionalPanesToDisplay,
     };
 
     function getUserId() {
@@ -62,30 +72,6 @@ export default function SharedPropertiesService() {
 
     function setMilestoneId(milestone_id) {
         property.milestone_id = milestone_id;
-    }
-
-    function getMilestone() {
-        return property.milestone;
-    }
-
-    function setMilestone(milestone) {
-        property.milestone = milestone;
-    }
-
-    function getInitialBacklogItems() {
-        return property.initial_backlog_items;
-    }
-
-    function setInitialBacklogItems(initial_backlog_items) {
-        property.initial_backlog_items = initial_backlog_items;
-    }
-
-    function getInitialMilestones() {
-        return property.initial_milestones;
-    }
-
-    function setInitialMilestones(initial_milestones) {
-        property.initial_milestones = initial_milestones;
     }
 
     function isInExplicitTopBacklogManagement() {
