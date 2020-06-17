@@ -606,13 +606,6 @@ class Tracker implements Tracker_Dispatchable_Interface
                                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_reference', 't_r_deleted'));
                             }
                         }
-
-                        EventManager::instance()->processEvent(
-                            TRACKER_EVENT_TRACKER_DELETE,
-                            array(
-                                'tracker' => $this,
-                            )
-                        );
                     } else {
                         $GLOBALS['Response']->addFeedback(
                             'error',
