@@ -61,7 +61,7 @@ if ($request->valid($vEndDate)) {
 if ($startDate > $endDate) {
     $GLOBALS['Response']->addFeedback(
         Feedback::ERROR,
-        $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+        dgettext('tuleap-statistics', 'You made a mistake in selecting period. Please try again!')
     );
     $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
 }

@@ -68,15 +68,15 @@ class DiskUsageProjectsPresenter
         $this->evolution_url      = $page . '?' . http_build_query($this->buildUrlParams($menu, 'evolution'));
         $this->evolution_rate_url = $page . '?' . http_build_query($this->buildUrlParams($menu, 'evolution_rate'));
 
-        $this->pane_title                      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_projects_pane_title');
-        $this->table_rank_title                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_rank_title');
-        $this->table_name_title                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_name_title');
-        $this->table_start_size_title          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_start_size_title');
-        $this->table_end_size_title            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_end_size_title');
-        $this->table_evolution_size_title      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_title');
-        $this->table_evolution_rate_size_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_rate_title');
-        $this->table_project_details_title     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_project_details_title');
-        $this->no_data                         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_projects_no_data');
+        $this->pane_title                      = dgettext('tuleap-statistics', 'Usage per project');
+        $this->table_rank_title                = dgettext('tuleap-statistics', 'Rank');
+        $this->table_name_title                = dgettext('tuleap-statistics', 'Name');
+        $this->table_start_size_title          = dgettext('tuleap-statistics', 'Start size');
+        $this->table_end_size_title            = dgettext('tuleap-statistics', 'End size');
+        $this->table_evolution_size_title      = dgettext('tuleap-statistics', 'Size evolution');
+        $this->table_evolution_rate_size_title = dgettext('tuleap-statistics', 'Evolution rate (%)');
+        $this->table_project_details_title     = dgettext('tuleap-statistics', 'Statistics');
+        $this->no_data                         = dgettext('tuleap-statistics', 'There is no matching data per project');
 
         $this->order_is_start_size     = $order === 'start_size';
         $this->order_is_end_size       = $order === 'end_size';

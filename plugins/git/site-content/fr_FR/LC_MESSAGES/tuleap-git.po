@@ -814,6 +814,9 @@ msgid "Missing repository id or project id"
 msgstr ""
 "Impossible de supprimer le dépôt de la base de données, paramètres invalides"
 
+msgid "Month"
+msgstr "Mois"
+
 msgid ""
 "Must be unique. The name \"projects\" and the hostname defined in .gitolite."
 "rc file cannot be used."
@@ -1519,8 +1522,20 @@ msgstr "Jeton pour les outils d'intégration continues"
 msgid "Too long description"
 msgstr "Description trop longue"
 
+msgid "Total number of git commits"
+msgstr "Nombre total des commits git"
+
+msgid "Total number of git pushes"
+msgstr "Nombre total des push git"
+
 msgid "Total number of git read access"
 msgstr "Nombre total des accès en lecture git"
+
+msgid "Total number of repositories"
+msgstr "Nombre total des dépôts git"
+
+msgid "Total number of users"
+msgstr "Nombre total des utilisateurs git"
 
 msgid "Trigger a build after Git pushes in repository"
 msgstr "Déclencher un build après un push Git dans le dépôt"

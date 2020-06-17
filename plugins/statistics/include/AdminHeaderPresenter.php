@@ -58,20 +58,20 @@ class AdminHeaderPresenter
         $this->service_usage_tab_active  = ($active_tab === 'service_usage');
         $this->data_export_tab_active    = ($active_tab === 'data_export');
 
-        $this->frequencies_tab_label        = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
-        $this->disk_usage_tab_label         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
-        $this->project_quota_tab_label      = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-        $this->all_project_quota_tab_label  = $GLOBALS['Language']->getText('plugin_statistics', 'project_quota_tab_label');
-        $this->project_over_quota_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'project_over_quota_tab_label');
-        $this->data_export_tab_label        = $GLOBALS['Language']->getText('plugin_statistics', 'data_export_title');
+        $this->frequencies_tab_label        = dgettext('tuleap-statistics', 'Frequencies');
+        $this->disk_usage_tab_label         = dgettext('tuleap-statistics', 'Disk usage');
+        $this->project_quota_tab_label      = dgettext('tuleap-statistics', 'Project quota');
+        $this->all_project_quota_tab_label  = dgettext('tuleap-statistics', 'All projects quota');
+        $this->project_over_quota_tab_label = dgettext('tuleap-statistics', 'Projects over quota');
+        $this->data_export_tab_label        = dgettext('tuleap-statistics', 'Data export');
 
-        $this->disk_usage_services_menu_span_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_span_label');
-        $this->disk_usage_services_menu_label        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_services_menu_label');
-        $this->disk_usage_projects_menu_label        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_projects_menu_label');
-        $this->disk_usage_users_menu_span_label      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_menu_span_label');
-        $this->disk_usage_users_top_users_menu_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_top_users_menu_label');
-        $this->disk_usage_users_user_details_label   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_users_user_details_label');
-        $this->disk_usage_global_menu_span_label     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_global_menu_span_label');
-        $this->disk_usage_global_menu_label          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_global_menu_label');
+        $this->disk_usage_services_menu_span_label   = dgettext('tuleap-statistics', 'Services/Projects');
+        $this->disk_usage_services_menu_label        = dgettext('tuleap-statistics', 'Usage per service');
+        $this->disk_usage_projects_menu_label        = dgettext('tuleap-statistics', 'Usage per project');
+        $this->disk_usage_users_menu_span_label      = dgettext('tuleap-statistics', 'Users');
+        $this->disk_usage_users_top_users_menu_label = dgettext('tuleap-statistics', 'Top 10 users');
+        $this->disk_usage_users_user_details_label   = dgettext('tuleap-statistics', 'One user details');
+        $this->disk_usage_global_menu_span_label     = dgettext('tuleap-statistics', 'Global');
+        $this->disk_usage_global_menu_label          = dgettext('tuleap-statistics', 'Global usage');
     }
 }

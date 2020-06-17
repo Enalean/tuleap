@@ -39,7 +39,7 @@ class DiskUsageGlobalPresenter
         $this->data_global = $data_global;
         $this->date        = date($GLOBALS['Language']->getText('system', 'datefmt_short'), strtotime($date));
 
-        $this->pane_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_global_pane_title', array($this->date));
-        $this->no_data    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_global_no_data');
+        $this->pane_title = sprintf(dgettext('tuleap-statistics', 'Usage global on %1$s'), $this->date);
+        $this->no_data    = dgettext('tuleap-statistics', 'There is no matching global data');
     }
 }

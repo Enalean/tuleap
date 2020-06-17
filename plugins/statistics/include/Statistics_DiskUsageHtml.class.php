@@ -125,10 +125,10 @@ class Statistics_DiskUsageHtml extends Statistics_DiskUsageOutput
         $pqm          = new ProjectQuotaManager();
         $allowedQuota = $pqm->getProjectCustomQuota($groupId);
         if ($allowedQuota) {
-            $html = '<div style="text-align:center"><p>' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($this->sizeReadable($totalSize), $allowedQuota . 'GiB')) . '</p></div>';
+            $html = '<div style="text-align:center"><p>' . sprintf(dgettext('tuleap-statistics', 'This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota.'), $this->sizeReadable($totalSize), $allowedQuota . 'GiB') . '</p></div>';
         } else {
             $html  = '<LABEL><b>';
-            $html .= $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+            $html .= dgettext('tuleap-statistics', 'Total project size:');
             $html .= '</b></LABEL>';
             $html .= $this->sizeReadable($totalSize);
         }

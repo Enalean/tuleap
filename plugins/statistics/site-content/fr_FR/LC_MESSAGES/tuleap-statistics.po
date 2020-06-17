@@ -13,6 +13,86 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#, php-format
+msgid "%1$s GB"
+msgstr "%1$s Go"
+
+msgid "A collection of statistics tools & scripts"
+msgstr ""
+"Collection d'outils et de scripts de statistiques sur les données du site"
+
+msgid "Add quota"
+msgstr "Définir un quota"
+
+msgid "All projects quota"
+msgstr "Tous les quotas par projet"
+
+msgid "An error occurred when adding the entry"
+msgstr "Une erreur est survenue lors de l'ajout"
+
+msgid "An error occurred when deleting entries"
+msgstr "Une erreur est survenue lors de la suppression"
+
+msgid "Backup"
+msgstr "Sauvegarde"
+
+msgid "Backup old"
+msgstr "Ancienne sauvegarde"
+
+msgid "Closed (or wished end date) Artifacts (V3)"
+msgstr "Artéfacts fermés (ou date de fin souhaitée) (V3)"
+
+msgid "Codendi Logs"
+msgstr "Logs Codendi"
+
+msgid "Comment..."
+msgstr "Commentaire…"
+
+msgid "Current project size"
+msgstr "Taille actuelle du projet"
+
+msgid "Data export"
+msgstr "Export de données"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Day"
+msgstr "Jour"
+
+#, php-format
+msgid ""
+"Dear project administrator,<br><br>The size of the project <a href=\"%1$s\">"
+"%2$s</a> is: \"%3$s\".<br>We advise you to delete unneeded data in order to "
+"decrease the project size growth. <br>(please note that deleting items from "
+"a subversion repository has no effect on the disk size, on the contrary, it "
+"may increase your server repository size).<br>We advise you to avoid storing "
+"binaries into your Subversion repository.<br>For Documents, you can remove "
+"oldest versions in order to decrease the project's size.<br><br>--<br>Please "
+"note that without any actions from you, for the safety of the entire "
+"platform, your project may be suspended until we find a solution."
+msgstr ""
+"Cher administrateur de projet, <br><br> La taille du projet <a href=\"%1$s\" "
+">%2$s</a> est: \"%3$s\".<br> Nous vous conseillons de supprimer des données "
+"inutiles pour diminuer la croissance de la taille de votre projet. <br> ( Il "
+"est à noter que la suppression d'élèments d'un dépôt Subversion n'a aucun "
+"effet sur la taille de disque, au contraire, il peut augmenter la taille de "
+"votre dépôt de serveur).<br> Nous vous conseillons d'éviter de stocker des "
+"fichiers binaires dans votre dépôt Subversion.<br> Pour les documents, vous "
+"pouvez enlever les versions les plus vieilles pour diminuer la taille du "
+"projet.<br> <br>--<br> Notez S'il vous plaît que sans aucune action de vous, "
+"pour la sécurité de la plate-forme entière, votre projet peut être suspendu "
+"jusqu'à ce que nous trouvions une solution."
+
+msgid "Delete"
+msgstr "Supprimer"
+
+msgid "Delete quota"
+msgstr "Supprimer le quota"
+
+msgid "Details"
+msgstr "Détails"
+
 msgid ""
 "Differences may exist between actual size of a project/service and "
 "statistics which are computed daily"
@@ -20,11 +100,366 @@ msgstr ""
 "Il peut y avoir des différences entre la taille réelle des projets/services "
 "et les statistiques qui sont calculées chaque jour"
 
+msgid "Disk usage"
+msgstr "Utilisation disque"
+
+msgid "End date"
+msgstr "Date de fin"
+
+msgid "End size"
+msgstr "Taille de fin"
+
+msgid "Evolution rate (%)"
+msgstr "Moyenne de l'évolution (%)"
+
+msgid "Exceeding size"
+msgstr "Taille en excès"
+
+msgid "Export CSV"
+msgstr "Exporter en CSV"
+
+msgid "Files downloaded"
+msgstr "Fichiers téléchargés"
+
+msgid "Files released"
+msgstr "Fichiers publiés"
+
+msgid "Filter"
+msgstr "Filtrer"
+
+msgid "Frequencies"
+msgstr "Fréquences"
+
+msgid "GB"
+msgstr "Go"
+
+msgid ""
+"Generate a CSV file that contains the progress of some data figures (number "
+"of users, number of projects) over the time. For each month, it outputs the "
+"number of created projects and user accounts."
+msgstr ""
+"Génére un fichier CSV qui contient la progression de quelques chiffres de "
+"données (nombre d'utilisateurs, nombre de projets) dans le temps. Pour "
+"chaque mois, il génère le nombre de projets et de comptes d'utilisateur "
+"créés."
+
+msgid "Global"
+msgstr "Global"
+
+msgid "Global usage"
+msgstr "Utilisation globale"
+
+msgid "Group by"
+msgstr "Grouper par"
+
+msgid "Group by day"
+msgstr "Grouper par jour"
+
+msgid "Group by hour"
+msgstr "Grouper par heure"
+
+msgid "Group by month"
+msgstr "Grouper par mois"
+
+msgid "Invalid Action"
+msgstr "Action invalide"
+
+msgid "Invalid project"
+msgstr "Projet invalide"
+
+#, php-format
+msgid "Maximum quota is %1$s GB"
+msgstr "Le quota maximum est de %1$s Go"
+
+msgid "Messages in forums"
+msgstr "Messages de forums"
+
+msgid "Month"
+msgstr "Mois"
+
+msgid "Motivation"
+msgstr "Motivation"
+
+msgid "MyProject"
+msgstr "MonProjet"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "No data to display"
+msgstr "Il n'y a pas de données à afficher"
+
+msgid "No matching data for this user"
+msgstr "Aucune données correspondantes pour cet utilisateur"
+
+msgid "No matching user data"
+msgstr "Aucune données utilisateur correspondantes"
+
+msgid "No motivation"
+msgstr "Pas de motivation donnée"
+
+msgid "No user selected"
+msgstr "Aucun utilisateur sélectionné"
+
+msgid "One user details"
+msgstr "Utilisation par utilisateur"
+
+msgid "Opened Artifacts (V3)"
+msgstr "Artéfacts ouverts (V3)"
+
+msgid "Project"
+msgstr "Projet"
+
+msgid ""
+"Project Id is optional, you can leave it empty to calculate statistics for "
+"the whole platform."
+msgstr ""
+"L'identifiant du projet est optionnel, laissez le champ vide pour calculer "
+"les statistiques de toute la plateforme."
+
+msgid "Project by service growth over time"
+msgstr "Croissance du project par service en fonction du temps"
+
+msgid "Project created"
+msgstr "Projets créés"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Project not found"
+msgstr "Projet non trouvé"
+
+msgid "Project quota"
+msgstr "Quota par projet"
+
 msgid "Project statistics"
 msgstr "Statistiques du projet"
+
+msgid "Projects exceeding their disk quota"
+msgstr "Projets excédant leur part de disque"
+
+msgid "Projects over quota"
+msgstr "Projets dépassant les quotas"
+
+msgid "Quota"
+msgstr "Quota"
+
+#, php-format
+msgid "Quota deleted for %1$s"
+msgstr "Quota supprimé pour %1$s"
+
+#, php-format
+msgid "Quota for project \"%1$s\" is now %2$s GB"
+msgstr "Le quota pour le projet \"%1$s\" est maintenant %2$s Go"
+
+#, php-format
+msgid "Quota must be between 1 and %1$s Gb"
+msgstr "Le quota doit être compris entre 1 et %1$s Go"
+
+msgid "Rank"
+msgstr "Rang"
+
+msgid "Relative Y axis (depends on data set values)"
+msgstr "Relatif à l'axe des Y (dépend du jeu de données)"
 
 msgid "Remaining space"
 msgstr "Espace restant"
 
+msgid "Requester"
+msgstr "Demandeur"
+
+msgid "Results"
+msgstr "Résultats"
+
+msgid "SCM statistics"
+msgstr "Statistiques des SCM"
+
+msgid "Service"
+msgstr "Service"
+
+msgid "Service usage"
+msgstr "Utilisation des services"
+
+msgid "Services"
+msgstr "Services"
+
+msgid "Services growth over time"
+msgstr "Croissance des services en fonction du temps"
+
+msgid "Services/Projects"
+msgstr "Services/Projets"
+
+msgid "Sessions"
+msgstr "Sessions"
+
+msgid "Show project disk statistics"
+msgstr "Affiche les statistiques disque du projet"
+
+msgid "Size"
+msgstr "Taille"
+
+msgid "Size evolution"
+msgstr "Évolution de la taille"
+
+msgid "Start date"
+msgstr "Date de début"
+
+msgid "Start size"
+msgstr "Taille de départ"
+
+msgid "Statistics"
+msgstr "Statistiques"
+
+msgid "Sum of end sizes"
+msgstr "Somme des tailles de fin"
+
+msgid "Sum of size evolution"
+msgstr "Somme des évolutions des tailles"
+
+msgid "Sum of start sizes"
+msgstr "Somme des tailles de départ"
+
+msgid "There is no matching data per project"
+msgstr "Il n'y a pas de données par projet"
+
+msgid "There is no matching global data"
+msgstr "Il n'y a pas de données globale"
+
+msgid "There is no matching services data"
+msgstr "Il n'y a pas de données sur les services"
+
+msgid "There isn't any matching projects."
+msgstr "Aucun projet correspondant."
+
+#, php-format
+msgid ""
+"There isn't any projects with a custom quota. All projects have the default "
+"quota (%1$s GB)."
+msgstr ""
+"Il n'y a pas de projet avec un quota personnalisé. Tous les projets ont le "
+"quota par défaut (%1$s Go)."
+
+msgid "There isn't any quota for the selected project"
+msgstr "Il n'y a pas de quota défini pour le projet sélectionné"
+
+#, php-format
+msgid "This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota."
+msgstr "Ce projet utilise <b>%1$s</b> de <b>%2$s</b> alloué."
+
+msgid "Top 10 users"
+msgstr "Top 10 des utilisateurs"
+
+msgid "Top projects"
+msgstr "Top des projets"
+
+msgid "Top projects (number of commits)"
+msgstr "Top des projets (nombre de commits)"
+
+msgid "Top users"
+msgstr "Top des utilisateurs"
+
+msgid "Top users (number of commits)"
+msgstr "Top des utilisateurs (nombre de commits)"
+
+msgid "Total number of CVS commits"
+msgstr "Nombre total des commits CVS"
+
+msgid "Total number of CVS read access"
+msgstr "Nombre total d'accès en lecture à CVS"
+
+msgid "Total number of SVN commits"
+msgstr "Nombre total des commits SVN"
+
+msgid "Total number of SVN read access"
+msgstr "Nombre total d'accès en lecture à SVN"
+
+msgid "Total number of projects with CVS commits"
+msgstr "Nombre total de projets avec des commits CVS"
+
+msgid "Total number of projects with CVS read access"
+msgstr "Nombre total de projets avec des accès en lecture à CVS"
+
+msgid "Total number of projects with SVN commits"
+msgstr "Nombre total de projets avec des commits SVN"
+
+msgid "Total number of projects with SVN read access"
+msgstr "Nombre total de projets avec des accès en lecture à SVN"
+
+msgid "Total number of repositories containing commits"
+msgstr "Nombre total des dépôts contenant au moins un commit"
+
+msgid "Total number of users with CVS commits"
+msgstr "Nombre total d'utilisateurs avec des commits CVS"
+
+msgid "Total number of users with CVS read access"
+msgstr "Nombre total d'utilisateurs avec des accès en lecture à CVS"
+
+msgid "Total number of users with SVN commits"
+msgstr "Nombre total d'utilisateurs avec des commits SVN"
+
+msgid "Total number of users with SVN read access"
+msgstr "Nombre total d'utilisateurs avec des accès en lecture à SVN"
+
+msgid "Total project size:"
+msgstr "Taille totale du Projet:"
+
+msgid "Type"
+msgstr "Type"
+
+#, php-format
+msgid "Usage global on %1$s"
+msgstr "Utilisation globale du %1$s"
+
+msgid "Usage per project"
+msgstr "Utilisation par projet"
+
+msgid "Usage per service"
+msgstr "Utilisation par service"
+
+msgid "Usage progress"
+msgstr "Progression de l'utilisation"
+
 msgid "Used proportion"
 msgstr "Espace utilisé"
+
+msgid "User"
+msgstr "Utilisateur"
+
+msgid "User consumption over time"
+msgstr "Consommation de l'utilisateur en fonction du temps"
+
+msgid "User statistics"
+msgstr "Statistiques de l'utilisateur"
+
+msgid "Users"
+msgstr "Utilisateurs"
+
+msgid "Warn administrators"
+msgstr "Notifier les administrateurs"
+
+msgid "Week"
+msgstr "Semaine"
+
+msgid "Wiki pages viewed"
+msgstr "Pages wiki vues"
+
+#, php-format
+msgid ""
+"Wow, wait a minute. You are about to delete the quota for <b>%1$s</b> "
+"project. Please confirm your action."
+msgstr ""
+"Hop, hop, hop ! Attendez un instant. Vous êtes en train de supprimer le "
+"quota pour le projet <b>%1$s</b>. Merci de confirmer votre action."
+
+msgid "Year"
+msgstr "Année"
+
+msgid "You made a mistake in selecting period. Please try again!"
+msgstr ""
+"Vous avez fait une erreur en selectionnant la période. Veuillez réessayer!"
+
+#, php-format
+msgid "[Disk quota] [Warning] Project %1$s is exceeding allowed disk quota"
+msgstr ""
+"[Quota disque] [Avertissement] Le projet %1$s excède la part de disque "
+"permise"

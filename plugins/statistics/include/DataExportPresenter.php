@@ -50,8 +50,8 @@ class DataExportPresenter
         $this->services_usage_presenter = $services_usage_presenter;
         $this->scm_statistics_presenter = $scm_statistics_presenter;
 
-        $this->services_usage_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
-        $this->scm_statistics_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
-        $this->usage_progress_label = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_title');
+        $this->services_usage_label = dgettext('tuleap-statistics', 'Service usage');
+        $this->scm_statistics_label = dgettext('tuleap-statistics', 'SCM statistics');
+        $this->usage_progress_label = dgettext('tuleap-statistics', 'Usage progress');
     }
 }

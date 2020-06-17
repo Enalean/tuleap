@@ -45,10 +45,10 @@ class FrequenciesSearchFieldsPresenter
         $this->filter_values    = $filter_values;
 
         $this->title            = $GLOBALS['Language']->getText('global', 'search_title');
-        $this->type_label       = $GLOBALS['Language']->getText('plugin_statistics', 'type_label');
-        $this->start_date_label = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
-        $this->end_date_label   = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->filter_label     = $GLOBALS['Language']->getText('plugin_statistics', 'filter_label');
+        $this->type_label       = dgettext('tuleap-statistics', 'Type');
+        $this->start_date_label = dgettext('tuleap-statistics', 'Start date');
+        $this->end_date_label   = dgettext('tuleap-statistics', 'End date');
+        $this->filter_label     = dgettext('tuleap-statistics', 'Filter');
         $this->search           = $GLOBALS['Language']->getText('global', 'btn_search');
     }
 }

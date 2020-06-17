@@ -42,7 +42,7 @@ class FrequenciesPresenter
         $this->header        = $header;
         $this->search_fields = $search_fields;
 
-        $this->frequencies_label = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
+        $this->frequencies_label = dgettext('tuleap-statistics', 'Frequencies');
 
         $this->graph_url = 'frequence_stat_graph.php?year=&month=&day=' .
                                                     '&data=' . urlencode($datastr) .

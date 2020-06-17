@@ -45,14 +45,14 @@ class ProjectsOverQuotaPresenter
 
     public function __construct(AdminHeaderPresenter $header, array $exceeding_projects)
     {
-        $this->title                = $GLOBALS['Language']->getText('plugin_statistics', 'projects_over_quota_title');
-        $this->project_name         = $GLOBALS['Language']->getText('plugin_statistics', 'project_name');
-        $this->current_size         = $GLOBALS['Language']->getText('plugin_statistics', 'current_size');
-        $this->quota                = $GLOBALS['Language']->getText('plugin_statistics', 'quota');
-        $this->exceeding_size       = $GLOBALS['Language']->getText('plugin_statistics', 'exceeding_size');
-        $this->warn_administrators  = $GLOBALS['Language']->getText('plugin_statistics', 'warn_administrators');
-        $this->no_projects_warning  = $GLOBALS['Language']->getText('plugin_statistics', 'no_projects_warning');
-        $this->filter_project_quota = $GLOBALS['Language']->getText('plugin_statistics', 'filter_project_quota');
+        $this->title                = dgettext('tuleap-statistics', 'Projects exceeding their disk quota');
+        $this->project_name         = dgettext('tuleap-statistics', 'Project name');
+        $this->current_size         = dgettext('tuleap-statistics', 'Current project size');
+        $this->quota                = dgettext('tuleap-statistics', 'Quota');
+        $this->exceeding_size       = dgettext('tuleap-statistics', 'Exceeding size');
+        $this->warn_administrators  = dgettext('tuleap-statistics', 'Warn administrators');
+        $this->no_projects_warning  = dgettext('tuleap-statistics', 'There isn\'t any matching projects.');
+        $this->filter_project_quota = dgettext('tuleap-statistics', 'Filter');
 
         $this->submit_button = $GLOBALS['Language']->getText('global', 'btn_submit');
         $this->close_button  = $GLOBALS['Language']->getText('global', 'btn_cancel');

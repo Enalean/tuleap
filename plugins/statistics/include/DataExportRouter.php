@@ -45,7 +45,7 @@ class DataExportRouter
         } catch (StartDateGreaterThanEndDateException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_statistics', 'period_error')
+                dgettext('tuleap-statistics', 'You made a mistake in selecting period. Please try again!')
             );
             $GLOBALS['Response']->redirect('/plugins/statistics/data_export.php');
         }
@@ -59,7 +59,7 @@ class DataExportRouter
         $scm_statistics_end_date         = $request->get('scm_statistics_end_date');
         $scm_statistics_selected_project = $request->get('scm_statistics_project_select');
 
-        $title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+        $title = dgettext('tuleap-statistics', 'Statistics');
 
         $data_export_presenter = $this->data_export_builder->build(
             $title,

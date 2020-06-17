@@ -47,7 +47,7 @@ $project_quota_manager = new ProjectQuotaManager();
 
 $collection = $pqHtml->getListOfProjectQuotaPresenters($request);
 
-$title = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
+$title = dgettext('tuleap-statistics', 'Project quota');
 
 $admin_page_renderer = new AdminPageRenderer();
 $admin_page_renderer->renderANoFramedPresenter(

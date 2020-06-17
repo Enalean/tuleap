@@ -46,12 +46,12 @@ class DiskUsageUserDetailsPresenter
         $this->data_user_details = $data_user_details;
         $this->error_message     = $error_message;
 
-        $this->user_details_pane_title   = $GLOBALS['Language']->getText('plugin_statistics_show_one_user', 'user_growth');
-        $this->graph_image_title         = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_image_title');
-        $this->name_label                = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_name_title');
-        $this->start_size_label          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_start_size_title');
-        $this->end_size_label            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_end_size_title');
-        $this->size_evolution_label      = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_title');
-        $this->size_evolution_rate_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_rate_title');
+        $this->user_details_pane_title   = dgettext('tuleap-statistics', 'User consumption over time');
+        $this->graph_image_title         = dgettext('tuleap-statistics', 'Results');
+        $this->name_label                = dgettext('tuleap-statistics', 'Name');
+        $this->start_size_label          = dgettext('tuleap-statistics', 'Start size');
+        $this->end_size_label            = dgettext('tuleap-statistics', 'End size');
+        $this->size_evolution_label      = dgettext('tuleap-statistics', 'Size evolution');
+        $this->size_evolution_rate_label = dgettext('tuleap-statistics', 'Evolution rate (%)');
     }
 }

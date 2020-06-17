@@ -30,10 +30,10 @@ class ServicesUsagePresenter
 
     public function __construct($start_date, $end_date)
     {
-        $this->service_usage_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
-        $this->start_date_label    = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
-        $this->end_date_label      = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->csv_export_button   = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
+        $this->service_usage_label = dgettext('tuleap-statistics', 'Service usage');
+        $this->start_date_label    = dgettext('tuleap-statistics', 'Start date');
+        $this->end_date_label      = dgettext('tuleap-statistics', 'End date');
+        $this->csv_export_button   = dgettext('tuleap-statistics', 'Export CSV');
 
         $this->services_usage_start_date = $start_date;
         $this->services_usage_end_date   = $end_date;

@@ -58,15 +58,15 @@ class DiskUsageServicesPresenter
         $this->total_end_size   = $total_end_size;
         $this->total_evolution  = $total_evolution;
 
-        $this->pane_title                 = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_pane_title');
-        $this->table_service_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_service_title');
-        $this->table_start_size_title     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_start_size_title');
-        $this->table_end_size_title       = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_end_size_title');
-        $this->table_size_evolution_title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_size_evolution_title');
-        $this->total_start_size_tooltip   = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_start_size_tooltip');
-        $this->total_end_size_tooltip     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_end_size_tooltip');
-        $this->total_evolution_tooltip    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'total_evolution_tooltip');
-        $this->no_data                    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'data_services_no_data');
-        $this->graph_image_title          = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_image_title');
+        $this->pane_title                 = dgettext('tuleap-statistics', 'Usage per service');
+        $this->table_service_title        = dgettext('tuleap-statistics', 'Service');
+        $this->table_start_size_title     = dgettext('tuleap-statistics', 'Start size');
+        $this->table_end_size_title       = dgettext('tuleap-statistics', 'End size');
+        $this->table_size_evolution_title = dgettext('tuleap-statistics', 'Size evolution');
+        $this->total_start_size_tooltip   = dgettext('tuleap-statistics', 'Sum of start sizes');
+        $this->total_end_size_tooltip     = dgettext('tuleap-statistics', 'Sum of end sizes');
+        $this->total_evolution_tooltip    = dgettext('tuleap-statistics', 'Sum of size evolution');
+        $this->no_data                    = dgettext('tuleap-statistics', 'There is no matching services data');
+        $this->graph_image_title          = dgettext('tuleap-statistics', 'Results');
     }
 }

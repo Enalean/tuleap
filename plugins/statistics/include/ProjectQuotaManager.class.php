@@ -190,9 +190,9 @@ class ProjectQuotaManager
     {
         $maxQuota = $this->getMaximumQuota();
         if (empty($project)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_project'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'Invalid project'));
         } elseif (empty($quota)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota', $maxQuota));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-statistics', 'Quota must be between 1 and %1$s Gb'), $maxQuota));
         } else {
             $project = $this->pm->getProjectFromAutocompleter($project);
             if ($project) {
@@ -206,18 +206,18 @@ class ProjectQuotaManager
                     $userId = $user->getId();
                 }
                 if ($quota > $maxQuota) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_quota', $maxQuota));
+                    $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-statistics', 'Quota must be between 1 and %1$s Gb'), $maxQuota));
                 } else {
                     if ($this->dao->addException($project->getGroupID(), $userId, $quota, $motivation)) {
                         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
                         $historyDao->groupAddHistory("add_custom_quota", $quota, $project->getGroupID());
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_added', array($project->getPublicName(), $quota)));
+                        $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota for project "%1$s" is now %2$s GB'), $project->getPublicName(), $quota));
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'add_error'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'An error occurred when adding the entry'));
                     }
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'no_project'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'Project not found'));
             }
         }
     }
@@ -256,9 +256,9 @@ class ProjectQuotaManager
         $historyDao   = new ProjectHistoryDao(CodendiDataAccess::instance());
         if ($this->dao->deleteCustomQuota($project->getId())) {
             $historyDao->groupAddHistory("restore_default_quota", intval($defaultQuota), $project->getId());
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'quota_deleted', $project->getPublicName()));
+            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-statistics', 'Quota deleted for %1$s'), $project->getPublicName()));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'delete_error'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-statistics', 'An error occurred when deleting entries'));
         }
     }
 

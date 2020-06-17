@@ -44,12 +44,12 @@ class SCMStatisticsPresenter
         $this->scm_statistics_end_date         = $end_date;
         $this->scm_statistics_selected_project = $selected_project;
 
-        $this->scm_statistics_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_title');
-        $this->start_date_label     = $GLOBALS['Language']->getText('plugin_statistics', 'start_date');
-        $this->end_date_label       = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
-        $this->project_label        = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
-        $this->project_placeholder  = $GLOBALS['Language']->getText('plugin_statistics', 'project_placeholder');
-        $this->project_help         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_project_id_info');
-        $this->csv_export_button    = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
+        $this->scm_statistics_label = dgettext('tuleap-statistics', 'SCM statistics');
+        $this->start_date_label     = dgettext('tuleap-statistics', 'Start date');
+        $this->end_date_label       = dgettext('tuleap-statistics', 'End date');
+        $this->project_label        = dgettext('tuleap-statistics', 'Project');
+        $this->project_placeholder  = dgettext('tuleap-statistics', 'MyProject');
+        $this->project_help         = dgettext('tuleap-statistics', 'Project Id is optional, you can leave it empty to calculate statistics for the whole platform.');
+        $this->csv_export_button    = dgettext('tuleap-statistics', 'Export CSV');
     }
 }
