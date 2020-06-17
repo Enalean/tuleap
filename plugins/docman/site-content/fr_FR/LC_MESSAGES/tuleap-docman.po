@@ -1286,6 +1286,9 @@ msgstr ""
 msgid "Impossible to apply recursively properties values: No item found."
 msgstr "Impossible d'appliquer récursivement les propriétés: pas d'élément."
 
+msgid "Impossible to identify the requested project"
+msgstr "Impossible d'identifier le projet demandé"
+
 msgid "In:&nbsp;"
 msgstr "Dans :&nbsp;"
 
