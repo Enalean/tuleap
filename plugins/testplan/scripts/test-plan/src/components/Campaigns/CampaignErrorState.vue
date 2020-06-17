@@ -20,10 +20,10 @@
 
 <template>
     <div class="empty-pane">
-        <div class="empty-page-illustration">
+        <div class="empty-pane-illustration">
             <campaign-error-state-svg />
         </div>
-        <div class="empty-page-text">
+        <div class="empty-pane-text">
             <translate>An error occurred while loading the campaigns.</translate>
         </div>
     </div>

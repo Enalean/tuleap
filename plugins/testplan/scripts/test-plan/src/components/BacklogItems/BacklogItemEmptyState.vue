@@ -19,11 +19,11 @@
   -->
 
 <template>
-    <div class="empty-page">
-        <div class="empty-page-illustration">
+    <div class="empty-pane">
+        <div class="empty-pane-illustration">
             <backlog-item-empty-state-svg />
         </div>
-        <div class="empty-page-text">
+        <div class="empty-pane-text">
             <translate>There is no backlog item yet.</translate>
         </div>
     </div>
