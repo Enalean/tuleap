@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import planning_module from "../app.js";
 import angular from "angular";
 import "angular-mocks";
@@ -35,27 +54,6 @@ describe("BacklogController -", () => {
         SharedPropertiesService,
         NewTuleapArtifactModalService,
         ItemAnimatorService;
-
-    const milestone = {
-            id: 592,
-            resources: {
-                backlog: {
-                    accept: {
-                        trackers: [{ id: 99, label: "story" }],
-                    },
-                },
-                content: {
-                    accept: {
-                        trackers: [{ id: 99, label: "story" }],
-                    },
-                },
-            },
-            sub_milestone_type: { id: 66, label: "sprints" },
-        },
-        initial_backlog_items = {
-            backlog_items_representations: [{ id: 7 }],
-            total_size: 104,
-        };
 
     beforeEach(() => {
         angular.mock.module(planning_module);
@@ -176,10 +174,6 @@ describe("BacklogController -", () => {
             SharedPropertiesService = _SharedPropertiesService_;
             jest.spyOn(SharedPropertiesService, "getProjectId").mockReturnValue(736);
             jest.spyOn(SharedPropertiesService, "getMilestoneId").mockReturnValue(592);
-            jest.spyOn(SharedPropertiesService, "getMilestone").mockReturnValue(milestone);
-            jest.spyOn(SharedPropertiesService, "getInitialBacklogItems").mockReturnValue(
-                initial_backlog_items
-            );
 
             NewTuleapArtifactModalService = _NewTuleapArtifactModalService_;
             jest.spyOn(NewTuleapArtifactModalService, "showCreation").mockImplementation(() => {});
@@ -226,53 +220,24 @@ describe("BacklogController -", () => {
         });
 
         describe("Given we are in a milestone context", function () {
-            it(
-                "If a milestone has been injected, then use it",
-                angular.mock.inject(function () {
-                    jest.spyOn(BacklogController, "loadBacklog");
+            it("will retrieve the milestone", () => {
+                const milestone = {
+                    id: 592,
+                    resources: {
+                        backlog: { accept: { trackers: [{ id: 99, label: "story" }] } },
+                        content: { accept: { trackers: [{ id: 99, label: "story" }] } },
+                    },
+                    sub_milestone_type: { id: 66, label: "sprints" },
+                };
 
-                    BacklogController.$onInit();
-
-                    expect(BacklogController.loadBacklog).toHaveBeenCalledWith(milestone);
-                    expect(MilestoneService.defineAllowedBacklogItemTypes).toHaveBeenCalledWith(
-                        milestone
-                    );
-                    expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
-                })
-            );
-
-            it("If no milestone has been injected, then it will be retrived", () => {
-                var milestone_request = $q.defer();
-
-                SharedPropertiesService.getMilestone.mockImplementation(() => {});
-                MilestoneService.getMilestone.mockReturnValue(milestone_request.promise);
+                MilestoneService.getMilestone.mockReturnValue($q.when({ results: milestone }));
                 jest.spyOn(BacklogController, "loadBacklog");
 
                 BacklogController.$onInit();
-                milestone_request.resolve({
-                    results: milestone,
-                });
                 $scope.$apply();
 
                 expect(BacklogService.loadMilestoneBacklog).toHaveBeenCalledWith(milestone);
             });
-        });
-
-        it("Load injected backlog items", () => {
-            SharedPropertiesService.getMilestoneId.mockImplementation(() => {});
-            SharedPropertiesService.getInitialBacklogItems.mockReturnValue(initial_backlog_items);
-            jest.spyOn(BacklogController, "loadInitialBacklogItems");
-
-            BacklogController.$onInit();
-
-            expect(BacklogController.loadInitialBacklogItems).toHaveBeenCalledWith(
-                initial_backlog_items
-            );
-            expect(BacklogController.all_backlog_items).toEqual({
-                7: { id: 7 },
-            });
-            expect(BacklogService.appendBacklogItems).toHaveBeenCalledWith([{ id: 7 }]);
-            expect(BacklogService.filterItems).toHaveBeenCalledWith("");
         });
     });
 
@@ -411,6 +376,7 @@ describe("BacklogController -", () => {
                     total: 34,
                 })
             );
+            BacklogController.all_backlog_items = { 7: { id: 7 } };
 
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
@@ -438,6 +404,7 @@ describe("BacklogController -", () => {
                     total: 85,
                 })
             );
+            BacklogController.all_backlog_items = { 7: { id: 7 } };
 
             var promise = BacklogController.fetchBacklogItems(60, 25);
             expect(BacklogController.backlog_items.loading).toBeTruthy();
@@ -458,25 +425,29 @@ describe("BacklogController -", () => {
             jest.spyOn(BacklogController, "fetchAllBacklogItems").mockImplementation(() => {});
         });
 
-        it("Given that all items had not been loaded, when I filter the backlog, then all the backlog items will be loaded and filtered", () => {
+        it(`Given that all items had not been loaded,
+            when I filter the backlog,
+            then all the backlog items will be loaded and filtered`, () => {
             BacklogController.fetchAllBacklogItems.mockReturnValue($q.when(50));
             BacklogController.filter.terms = "flamboyantly";
 
             BacklogController.filterBacklog();
             $scope.$apply();
 
-            expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
+            expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
             expect(BacklogService.filterItems).toHaveBeenCalledWith("flamboyantly");
         });
 
-        it("Given that all items had already been loaded, when I filter the backlog, then all the backlog items will be filtered", () => {
+        it(`Given that all items had already been loaded,
+            when I filter the backlog,
+            then all the backlog items will be filtered`, () => {
             BacklogController.fetchAllBacklogItems.mockReturnValue($q.reject(99));
             BacklogController.filter.terms = "Jeffersonianism";
 
             BacklogController.filterBacklog();
             $scope.$apply();
 
-            expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 50);
+            expect(BacklogController.fetchAllBacklogItems).toHaveBeenCalledWith(50, 0);
             expect(BacklogService.filterItems).toHaveBeenCalledWith("Jeffersonianism");
         });
     });
@@ -487,9 +458,9 @@ describe("BacklogController -", () => {
             item_type = { id: 50 };
         });
 
-        it("Given an event and an item_type, when I show the new artifact modal, then the NewTuleapArtifactModalService will be called with a callback", () => {
-            SharedPropertiesService.getMilestone.mockReturnValue(undefined);
-
+        it(`Given an event and an item_type,
+            when I show the new artifact modal,
+            then the NewTuleapArtifactModalService will be called with a callback`, () => {
             BacklogController.showAddBacklogItemParentModal(item_type);
 
             expect(NewTuleapArtifactModalService.showCreation).toHaveBeenCalledWith(
@@ -541,9 +512,10 @@ describe("BacklogController -", () => {
             item_type = { id: 50 };
         });
 
-        it("Given an event and an item_type object, when I show the new artifact modal, then the event's default action will be prevented and the NewTuleapArtifactModalService will be called with a callback", () => {
-            SharedPropertiesService.getMilestone.mockReturnValue(undefined);
-
+        it(`Given an event and an item_type object,
+            when I show the new artifact modal,
+            then the event's default action will be prevented
+            and the NewTuleapArtifactModalService will be called with a callback`, () => {
             BacklogController.showAddBacklogItemModal(event, item_type);
 
             expect(event.preventDefault).toHaveBeenCalled();

@@ -1,3 +1,22 @@
+/*
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 import moment from "moment";
 import { setAccessibilityMode } from "./user-accessibility-mode.js";
 
@@ -17,12 +36,6 @@ function MainController($element, SharedPropertiesService, amMoment, gettextCata
         SharedPropertiesService.setProjectId(project_id);
         const milestone_id = planning_init_data.milestoneId;
         SharedPropertiesService.setMilestoneId(milestone_id);
-        const milestone = JSON.parse(planning_init_data.milestone);
-        SharedPropertiesService.setMilestone(milestone);
-        const initial_backlog_items = JSON.parse(planning_init_data.paginatedBacklogItems);
-        SharedPropertiesService.setInitialBacklogItems(initial_backlog_items);
-        const initial_milestones = JSON.parse(planning_init_data.paginatedMilestones);
-        SharedPropertiesService.setInitialMilestones(initial_milestones);
         const view_mode = planning_init_data.viewMode;
         SharedPropertiesService.setViewMode(view_mode);
         const is_in_explicit_top_backlog = planning_init_data.isInExplicitTopBacklog;

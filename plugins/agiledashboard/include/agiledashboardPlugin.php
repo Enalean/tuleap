@@ -55,7 +55,6 @@ use Tuleap\AgileDashboard\KanbanJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Masschange\AdditionalMasschangeActionProcessor;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
 use Tuleap\AgileDashboard\Milestone\Pane\Details\DetailsPaneInfo;
-use Tuleap\AgileDashboard\Milestone\ParentTrackerRetriever;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneBacklogItemDao;
 use Tuleap\AgileDashboard\MonoMilestone\MonoMilestoneItemsFinder;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
@@ -64,7 +63,6 @@ use Tuleap\AgileDashboard\Planning\PlanningJavascriptDependenciesProvider;
 use Tuleap\AgileDashboard\Planning\PlanningTrackerBacklogChecker;
 use Tuleap\AgileDashboard\RealTime\RealTimeArtifactMessageController;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
-use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentationFactory;
 use Tuleap\AgileDashboard\Semantic\Dao\SemanticDoneDao;
 use Tuleap\AgileDashboard\Semantic\MoveChangesetXMLUpdater;
 use Tuleap\AgileDashboard\Semantic\MoveSemanticInitialEffortChecker;
@@ -91,7 +89,6 @@ use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogJsonParser;
 use Tuleap\AgileDashboard\Workflow\REST\v1\AddToTopBacklogRepresentation;
 use Tuleap\BurningParrotCompatiblePageEvent;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
-use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
 use Tuleap\layout\HomePage\StatisticsCollectionCollector;
@@ -116,7 +113,6 @@ use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
 use Tuleap\Tracker\Events\MoveArtifactParseFieldChangeNodes;
 use Tuleap\Tracker\FormElement\Event\MessageFetcherAdditionalWarnings;
-use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\CanValueBeHiddenStatementsCollection;
 use Tuleap\Tracker\FormElement\Field\ListFields\FieldValueMatcher;
 use Tuleap\Tracker\Masschange\TrackerMasschangeGetExternalActionsEvent;
@@ -1799,37 +1795,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    private function getMilestoneRepresentationBuilder(): AgileDashboard_Milestone_MilestoneRepresentationBuilder
-    {
-        return new AgileDashboard_Milestone_MilestoneRepresentationBuilder(
-            $this->getMilestoneFactory(),
-            $this->getBacklogFactory(),
-            EventManager::instance(),
-            $this->getMonoMileStoneChecker(),
-            new ParentTrackerRetriever($this->getPlanningFactory())
-        );
-    }
-
-    private function getPaginatedBacklogItemsRepresentationsBuilder(): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
-    {
-        $color_builder = new BackgroundColorBuilder(new BindDecoratorRetriever());
-        $item_factory  = new BacklogItemRepresentationFactory(
-            $color_builder,
-            UserManager::instance(),
-            EventManager::instance()
-        );
-
-        return new AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder(
-            $item_factory,
-            $this->getBacklogItemCollectionFactory(
-                $this->getMilestoneFactory(),
-                new AgileDashboard_Milestone_Backlog_BacklogItemBuilder()
-            ),
-            $this->getBacklogFactory(),
-            new ExplicitBacklogDao()
-        );
-    }
-
     public function getMilestonePaneFactory(): Planning_MilestonePaneFactory
     {
         $request = HTTPRequest::instance();
@@ -1843,9 +1808,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $planning_factory,
             $mono_milestone_checker
         );
-
-        $milestone_representation_builder                = $this->getMilestoneRepresentationBuilder();
-        $paginated_backlog_items_representations_builder = $this->getPaginatedBacklogItemsRepresentationsBuilder();
 
         $pane_info_factory = new AgileDashboard_PaneInfoFactory(
             $submilestone_finder
@@ -1867,8 +1829,6 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             ),
             $submilestone_finder,
             $pane_info_factory,
-            $milestone_representation_builder,
-            $paginated_backlog_items_representations_builder,
             $event_manager
         );
     }
