@@ -11,7 +11,9 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
     <span
       class="test-plan-test-definition-xref"
     >
-      #123
+      
+            test_def #123
+        
     </span>
      
     <span

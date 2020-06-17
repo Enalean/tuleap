@@ -36,6 +36,7 @@ final class BacklogItemTest extends \RestBase
 
         $linked_test_definition = $linked_test_definitions[0];
         $this->assertEquals('Expected Test Def 1', $linked_test_definition['summary']);
+        $this->assertEquals('test_case', $linked_test_definition['short_type']);
     }
 
     private function getBacklogItemID(): int

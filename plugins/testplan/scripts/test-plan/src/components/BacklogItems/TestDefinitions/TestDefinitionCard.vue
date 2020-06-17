@@ -24,7 +24,9 @@
         class="tlp-card tlp-card-selectable test-plan-test-definition-card"
     >
         <div class="test-plan-test-definition-xref-title">
-            <span class="test-plan-test-definition-xref">#{{ test_definition.id }}</span>
+            <span class="test-plan-test-definition-xref">
+                {{ test_definition.short_type }} #{{ test_definition.id }}
+            </span>
             <span class="test-plan-test-definition-title">
                 {{ test_definition.summary }}
             </span>

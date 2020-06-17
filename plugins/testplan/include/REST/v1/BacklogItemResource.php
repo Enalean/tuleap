@@ -28,10 +28,6 @@ use TrackerFactory;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\TestManagement\ArtifactDao;
-use Tuleap\TestManagement\ConfigConformanceValidator;
-use Tuleap\TestManagement\REST\v1\DefinitionRepresentationBuilder;
-use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
-use Tuleap\TestManagement\REST\v1\RequirementRetriever;
 use Tuleap\TestPlan\TestDefinition\TestPlanLinkedTestDefinitionsRetriever;
 
 final class BacklogItemResource extends AuthenticatedResource
@@ -58,8 +54,8 @@ final class BacklogItemResource extends AuthenticatedResource
      * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
      * @param int $offset Position of the first element to display {@min 0}
      *
-     * @return array {@type MinimalDefinitionRepresentation}
-     * @psalm-return MinimalDefinitionRepresentation[]
+     * @return array {@type DefinitionLinkedToABacklogItemRepresentation}
+     * @psalm-return DefinitionLinkedToABacklogItemRepresentation[]
      *
      * @throws RestException 404
      */
@@ -98,19 +94,20 @@ final class BacklogItemResource extends AuthenticatedResource
             \Tuleap\AgileDashboard\REST\v1\BacklogItemResource::MAX_LIMIT,
         );
 
-        $definition_representation_builder = new DefinitionRepresentationBuilder(
-            Tracker_FormElementFactory::instance(),
-            new ConfigConformanceValidator($testmanagement_config),
-            new RequirementRetriever($artifact_factory, $testmanagement_artifact_dao, $testmanagement_config),
-            \Codendi_HTMLPurifier::instance()
-        );
+        $formelement_factory = Tracker_FormElementFactory::instance();
 
         $representations = [];
 
         foreach ($linked_test_definitions->getRequestedLinkedTestDefinitions() as $linked_test_definition) {
-            $representations[] = $definition_representation_builder->getMinimalRepresentation($user, $linked_test_definition);
+            $representation = new DefinitionLinkedToABacklogItemRepresentation();
+            $representation->build(
+                $linked_test_definition,
+                $formelement_factory,
+                $user,
+            );
+            $representations[] = $representation;
         }
 
-        return array_filter($representations);
+        return $representations;
     }
 }
