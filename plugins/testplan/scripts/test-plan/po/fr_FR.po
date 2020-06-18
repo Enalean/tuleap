@@ -37,6 +37,9 @@ msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"
 msgstr[1] "%{ nb } tests"
 
+msgid "Add a test"
+msgstr "Ajouter un test"
+
 msgid "All tests"
 msgstr "Tous les tests"
 

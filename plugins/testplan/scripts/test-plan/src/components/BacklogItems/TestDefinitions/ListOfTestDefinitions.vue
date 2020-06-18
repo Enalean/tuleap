@@ -20,7 +20,7 @@
 
 <template>
     <div class="test-plan-list-of-test-definitions">
-        <test-definition
+        <test-definition-card
             v-for="test_definition of backlog_item.test_definitions"
             v-bind:key="test_definition.id"
             v-bind:test_definition="test_definition"
@@ -28,6 +28,10 @@
         <test-definition-skeleton v-if="backlog_item.is_loading_test_definitions" />
         <test-definition-empty-state v-if="should_empty_state_be_displayed" />
         <test-definition-error-state v-if="should_error_state_be_displayed" />
+        <add-test-button
+            v-bind:backlog_item="backlog_item"
+            v-bind:should_empty_state_be_displayed="should_empty_state_be_displayed"
+        />
     </div>
 </template>
 
@@ -40,14 +44,16 @@ import { namespace } from "vuex-class";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
+import AddTestButton from "./AddTestButton.vue";
 
 const backlog_item_store = namespace("backlog_item");
 
 @Component({
     components: {
+        AddTestButton,
         TestDefinitionErrorState,
         TestDefinitionEmptyState,
-        TestDefinition: TestDefinitionCard,
+        TestDefinitionCard,
         TestDefinitionSkeleton,
     },
 })

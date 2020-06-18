@@ -44,7 +44,9 @@ final class RedirectTest extends TestCase
     public function testDetectWhenRedirectionStaysInTracker(): void
     {
         $redirection = new Tracker_Artifact_Redirect();
-        $redirection->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
+        $redirection->mode = Tracker_Artifact_Redirect::STATE_STAY;
+        $this->assertTrue($redirection->stayInTracker());
+        $redirection->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
         $this->assertTrue($redirection->stayInTracker());
         $redirection->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         $this->assertFalse($redirection->stayInTracker());

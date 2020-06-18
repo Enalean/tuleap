@@ -41,7 +41,7 @@ abstract class Tracker_Artifact_EditAbstractRenderer extends Tracker_Artifact_Ar
         $this->artifact = $artifact;
 
         $this->redirect->query_parameters = array(
-            'aid'       => $this->artifact->getId(),
+            'aid'       => (string) $this->artifact->getId(),
             'func'      => 'artifact-update',
         );
         $this->visit_recorder = $visit_recorder;
