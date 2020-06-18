@@ -138,9 +138,9 @@ class Tracker_Action_CreateArtifact
             if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
                 $art_link_key = 'artifact[' . $art_link->getId() . '][new_values]';
                 $redirect_params = array(
-                    'tracker'     => $parent_tracker->getId(),
+                    'tracker'     => (string) $parent_tracker->getId(),
                     'func'        => 'new-artifact',
-                    $art_link_key => $artifact->getId()
+                    $art_link_key => (string) $artifact->getId()
                 );
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;
@@ -173,8 +173,10 @@ class Tracker_Action_CreateArtifact
 
         $stay      = $request->get('submit_and_stay');
         $continue  = $request->get('submit_and_continue');
-        if ($stay || $continue) {
-            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
+        if ($stay) {
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
+        } elseif ($continue) {
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_CONTINUE;
         } else {
             $redirect->mode = Tracker_Artifact_Redirect::STATE_SUBMIT;
         }

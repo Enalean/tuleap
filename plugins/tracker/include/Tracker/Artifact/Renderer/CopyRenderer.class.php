@@ -39,7 +39,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
     ) {
         parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
         $this->redirect->query_parameters = array(
-            'tracker' => $artifact->getTrackerId(),
+            'tracker' => (string) $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',
         );
     }

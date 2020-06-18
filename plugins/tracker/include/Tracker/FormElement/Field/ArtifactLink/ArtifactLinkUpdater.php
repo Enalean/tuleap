@@ -115,6 +115,10 @@ class ArtifactLinkUpdater
         return array_diff($new_linked_artifact_ids, $elements_already_linked);
     }
 
+    /**
+     * @throws Tracker_NoArtifactLinkFieldException
+     * @throws \Tracker_Exception
+     */
     public function updateArtifactLinks(
         PFUser $user,
         Tracker_Artifact $artifact,

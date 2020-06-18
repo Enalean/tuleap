@@ -18,6 +18,9 @@
  */
 
 .test-plan-list-of-test-definitions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: $tlp-half-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-top: 0;
@@ -34,6 +37,7 @@
 }
 
 .test-plan-test-definition-skeleton {
+    width: 100%;
     min-height: inherit;
     margin: 0 0 $tlp-half-spacing;
     padding: $tlp-half-spacing;
@@ -52,8 +56,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
     margin: 0 0 $tlp-half-spacing;
     padding: $tlp-half-spacing;
+
+    &:last-of-type {
+        margin: 0;
+    }
 }
 
 .test-plan-test-definition-xref-title {
@@ -78,4 +87,12 @@
 .test-plan-test-definition-icon-automated-tests {
     opacity: .5;
     color: $tlp-ui-dimmed;
+}
+
+.test-plan-add-test-button {
+    margin: $tlp-medium-spacing - $tlp-half-spacing;
+
+    &.test-plan-add-test-button-with-empty-state {
+        margin: 0 0 $tlp-large-spacing - $tlp-half-spacing;
+    }
 }

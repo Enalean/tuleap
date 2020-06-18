@@ -27,6 +27,8 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\CollectRoutesEvent;
 use Tuleap\TestManagement\GetURIForMilestoneFromTTM;
 use Tuleap\TestPlan\REST\ResourcesInjector;
+use Tuleap\TestPlan\TestDefinition\EventRedirectAfterArtifactCreationOrUpdateProcessor;
+use Tuleap\TestPlan\TestDefinition\RedirectParameterInjector;
 use Tuleap\TestPlan\TestPlanController;
 use Tuleap\TestPlan\TestPlanPane;
 use Tuleap\TestPlan\TestPlanPaneDisplayable;
@@ -35,6 +37,7 @@ use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../../tracker/include/trackerPlugin.php';
@@ -44,6 +47,7 @@ require_once __DIR__ . '/../../testmanagement/include/testmanagementPlugin.php';
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 final class testplanPlugin extends Plugin
 {
+
     public function __construct(?int $id)
     {
         parent::__construct($id);
@@ -80,6 +84,8 @@ final class testplanPlugin extends Plugin
         $this->addHook(GetURIForMilestoneFromTTM::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
+        $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
+        $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
 
         return parent::getHooksAndCallbacks();
     }
@@ -120,7 +126,7 @@ final class testplanPlugin extends Plugin
     }
 
     /**
-     * @see Event::REST_RESOURCES
+     * @see         Event::REST_RESOURCES
      *
      * @psalm-param array{restler: \Luracast\Restler\Restler} $params
      */
@@ -136,7 +142,7 @@ final class testplanPlugin extends Plugin
             throw new RuntimeException('Cannot instantiate Agiledashboard plugin');
         }
 
-        $tracker_factory = TrackerFactory::instance();
+        $tracker_factory       = TrackerFactory::instance();
         $testmanagement_config = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory);
 
         return new TestPlanController(
@@ -183,5 +189,54 @@ final class testplanPlugin extends Plugin
         );
 
         return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject());
+    }
+
+    /**
+     * @see TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION
+     */
+    public function trackerEventBuildArtifactFormAction(array $params): void
+    {
+        $request = $params['request'];
+        assert($request instanceof Codendi_Request);
+
+        $redirect = $params['redirect'];
+        assert($redirect instanceof Tracker_Artifact_Redirect);
+
+        (new RedirectParameterInjector())->inject($request, $redirect);
+    }
+
+    /**
+     * @see TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE
+     */
+    public function trackerEventRedirectAfterArtifactCreationOrUpdate(array $params): void
+    {
+        $request = $params['request'];
+        assert($request instanceof Codendi_Request);
+
+        $redirect = $params['redirect'];
+        assert($redirect instanceof Tracker_Artifact_Redirect);
+
+        $artifact = $params['artifact'];
+        assert($artifact instanceof Tracker_Artifact);
+
+        $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
+
+        $priority_manager = new Tracker_Artifact_PriorityManager(
+            new Tracker_Artifact_PriorityDao(),
+            new Tracker_Artifact_PriorityHistoryDao(),
+            UserManager::instance(),
+            $tracker_artifact_factory
+        );
+
+        $artifactlink_updater = new ArtifactLinkUpdater(
+            $priority_manager
+        );
+
+        $processor = new EventRedirectAfterArtifactCreationOrUpdateProcessor(
+            $tracker_artifact_factory,
+            $artifactlink_updater,
+            new RedirectParameterInjector()
+        );
+        $processor->process($request, $redirect, $artifact);
     }
 }

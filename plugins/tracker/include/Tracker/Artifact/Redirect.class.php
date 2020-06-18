@@ -20,17 +20,33 @@
 
 class Tracker_Artifact_Redirect
 {
-    public const STATE_CREATE_PARENT    = 'to_parent';
-    public const STATE_STAY_OR_CONTINUE = 'stay_continue';
-    public const STATE_SUBMIT           = 'submit';
+    public const STATE_CREATE_PARENT = 'to_parent';
+    public const STATE_STAY          = 'stay';
+    public const STATE_CONTINUE      = 'continue';
+    public const STATE_SUBMIT        = 'submit';
 
+    /**
+     * @var string
+     */
     public $mode = '';
+    /**
+     * @var string
+     */
     public $base_url = '';
+    /**
+     * @var array<string, string>
+     */
     public $query_parameters = [];
 
     public function toUrl(): string
     {
-        return rtrim((string) $this->base_url, '/') . '/?' . http_build_query($this->query_parameters);
+        $base_url = rtrim((string) $this->base_url, '/');
+
+        if (empty($this->query_parameters)) {
+            return $base_url;
+        }
+
+        return $base_url . '/?' . http_build_query($this->query_parameters);
     }
 
     public function stayInTracker(): bool

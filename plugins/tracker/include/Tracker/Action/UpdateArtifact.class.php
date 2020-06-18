@@ -133,7 +133,7 @@ class Tracker_Action_UpdateArtifact
         $redirect->base_url         = TRACKER_BASE_URL;
         $redirect->query_parameters = $this->calculateRedirectParams($stay, $from_aid);
         if ($stay) {
-            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY_OR_CONTINUE;
+            $redirect->mode = Tracker_Artifact_Redirect::STATE_STAY;
         }
         return $redirect;
     }
