@@ -24,7 +24,7 @@ use Luracast\Restler\RestException;
 use PFUser;
 use Tracker_Artifact_PriorityManager;
 use Tracker_ArtifactFactory;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class ResourcesPatcher
 {

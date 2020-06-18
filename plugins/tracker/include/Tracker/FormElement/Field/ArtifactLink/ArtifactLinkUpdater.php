@@ -19,8 +19,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\REST\v1;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
+use Exception;
 use PFUser;
 use Tracker_Artifact;
 use Tracker_Artifact_Exception_CannotRankWithMyself;
@@ -28,7 +29,6 @@ use Tracker_Artifact_PriorityManager;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_NoArtifactLinkFieldException;
 use Tracker_NoChangeException;
-use Exception;
 
 class ArtifactLinkUpdater
 {
@@ -47,10 +47,10 @@ class ArtifactLinkUpdater
         Tracker_Artifact $artifact,
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
-        $type
-    ) {
+        string $type
+    ): void {
         $artlink_field = $artifact->getAnArtifactLinkField($current_user);
-        if (!$artlink_field) {
+        if (! $artlink_field) {
             return;
         }
 
@@ -72,8 +72,8 @@ class ArtifactLinkUpdater
         PFUser $current_user,
         IFilterValidElementsToUnkink $filter,
         array $new_linked_artifact_ids,
-        $type
-    ) {
+        string $type
+    ): array {
         $artifact_ids_already_linked = $this->getElementsAlreadyLinkedToArtifact($artifact, $current_user);
 
         $artifact_ids_to_be_unlinked = $this->getAllArtifactsToBeRemoved(
@@ -91,50 +91,71 @@ class ArtifactLinkUpdater
         return $this->formatFieldDatas($artlink_field, $artifact_ids_to_be_linked, $artifact_ids_to_be_unlinked, $type);
     }
 
-    private function getAllArtifactsToBeRemoved(PFUser $user, IFilterValidElementsToUnkink $filter, array $elements_already_linked, array $new_ids)
-    {
+    /**
+     * @return array<int>
+     */
+    private function getAllArtifactsToBeRemoved(
+        PFUser $user,
+        IFilterValidElementsToUnkink $filter,
+        array $elements_already_linked,
+        array $new_ids
+    ): array {
         $artifacts_to_be_removed = $this->getAllLinkedArtifactsThatShouldBeRemoved($elements_already_linked, $new_ids);
 
         return $filter->filter($user, $artifacts_to_be_removed);
     }
 
-    private function getAllLinkedArtifactsThatShouldBeRemoved(array $elements_already_linked, array $new_ids)
+    private function getAllLinkedArtifactsThatShouldBeRemoved(array $elements_already_linked, array $new_ids): array
     {
         return array_diff($elements_already_linked, $new_ids);
     }
 
-    private function getElementsToLink(array $elements_already_linked, array $new_linked_artifact_ids)
+    private function getElementsToLink(array $elements_already_linked, array $new_linked_artifact_ids): array
     {
         return array_diff($new_linked_artifact_ids, $elements_already_linked);
     }
 
-    public function updateArtifactLinks(PFUser $user, Tracker_Artifact $artifact, array $to_add, array $to_remove, $type)
-    {
-        if (!$artifact->getAnArtifactLinkField($user)) {
+    public function updateArtifactLinks(
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        array $to_add,
+        array $to_remove,
+        string $type
+    ): void {
+        if (! $artifact->getAnArtifactLinkField($user)) {
             throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field');
         }
 
         try {
-            $fields_data = $this->formatFieldDatas($artifact->getAnArtifactLinkField($user), $to_add, $to_remove, $type);
-            $artifact->createNewChangeset($fields_data, '', $user, '');
+            $fields_data = $this->formatFieldDatas(
+                $artifact->getAnArtifactLinkField($user),
+                $to_add,
+                $to_remove,
+                $type
+            );
+            $artifact->createNewChangeset($fields_data, '', $user, false);
         } catch (Tracker_NoChangeException $exception) {
         }
     }
 
-    private function unlinkAndLinkElements(Tracker_Artifact $artifact, array $fields_data, PFUser $current_user, array $linked_artifact_ids)
-    {
+    private function unlinkAndLinkElements(
+        Tracker_Artifact $artifact,
+        array $fields_data,
+        PFUser $current_user,
+        array $linked_artifact_ids
+    ): void {
         try {
-            $artifact->createNewChangeset($fields_data, '', $current_user, '');
+            $artifact->createNewChangeset($fields_data, '', $current_user, false);
         } catch (Tracker_NoChangeException $exception) {
             //Do nothing. Just need to reorder the items
         } catch (Exception $exception) {
-            return false;
+            return;
         }
 
         $this->setOrderWithoutHistoryChangeLogging($linked_artifact_ids);
     }
 
-    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user)
+    public function getElementsAlreadyLinkedToArtifact(Tracker_Artifact $artifact, PFUser $user): array
     {
         return array_map(
             function (Tracker_Artifact $artifact) {
@@ -144,7 +165,7 @@ class ArtifactLinkUpdater
         );
     }
 
-    private function setOrderWithoutHistoryChangeLogging(array $linked_artifact_ids)
+    private function setOrderWithoutHistoryChangeLogging(array $linked_artifact_ids): void
     {
         $predecessor = null;
 
@@ -160,14 +181,19 @@ class ArtifactLinkUpdater
         }
     }
 
-    public function setOrderWithHistoryChangeLogging(array $linked_artifact_ids, $context_id, $project_id)
+    public function setOrderWithHistoryChangeLogging(array $linked_artifact_ids, int $context_id, int $project_id): void
     {
         $predecessor = null;
 
         foreach ($linked_artifact_ids as $linked_artifact_id) {
             if (isset($predecessor)) {
                 try {
-                    $this->priority_manager->moveArtifactAfterWithHistoryChangeLogging($linked_artifact_id, $predecessor, $context_id, $project_id);
+                    $this->priority_manager->moveArtifactAfterWithHistoryChangeLogging(
+                        $linked_artifact_id,
+                        $predecessor,
+                        $context_id,
+                        $project_id
+                    );
                 } catch (Tracker_Artifact_Exception_CannotRankWithMyself $exception) {
                     throw new ItemListedTwiceException($linked_artifact_id);
                 }
@@ -180,14 +206,23 @@ class ArtifactLinkUpdater
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
         array $elements_to_be_unlinked,
-        $type
-    ) {
-        $field_datas = array();
+        string $type
+    ): array {
+        $field_datas = [];
 
-        $field_datas[$artifactlink_field->getId()]['new_values']     = $this->formatLinkedElementForNewChangeset($elements_to_be_linked);
-        $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset($elements_to_be_unlinked);
+        $field_datas[$artifactlink_field->getId()]['new_values'] = $this->formatLinkedElementForNewChangeset(
+            $elements_to_be_linked
+        );
+        $field_datas[$artifactlink_field->getId()]['removed_values'] = $this->formatElementsToBeUnlinkedForNewChangeset(
+            $elements_to_be_unlinked
+        );
 
-        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage($artifactlink_field, $elements_to_be_linked, $field_datas, $type);
+        $this->augmentFieldDatasRegardingArtifactLinkTypeUsage(
+            $artifactlink_field,
+            $elements_to_be_linked,
+            $field_datas,
+            $type
+        );
 
         return $field_datas;
     }
@@ -196,9 +231,14 @@ class ArtifactLinkUpdater
         Tracker_FormElement_Field_ArtifactLink $artifactlink_field,
         array $elements_to_be_linked,
         array &$field_datas,
-        $type
-    ) {
-        if (!$artifactlink_field->getTracker()->isProjectAllowedToUseNature()) {
+        string $type
+    ): void {
+        $tracker = $artifactlink_field->getTracker();
+        if (! $tracker) {
+            return;
+        }
+
+        if (! $tracker->isProjectAllowedToUseNature()) {
             return;
         }
 
@@ -207,14 +247,14 @@ class ArtifactLinkUpdater
         }
     }
 
-    private function formatLinkedElementForNewChangeset(array $linked_elements)
+    private function formatLinkedElementForNewChangeset(array $linked_elements): string
     {
         return implode(',', $linked_elements);
     }
 
-    private function formatElementsToBeUnlinkedForNewChangeset(array $elements_to_be_unlinked)
+    private function formatElementsToBeUnlinkedForNewChangeset(array $elements_to_be_unlinked): array
     {
-        $formated_elements = array();
+        $formated_elements = [];
 
         foreach ($elements_to_be_unlinked as $element_to_be_unlinked) {
             $formated_elements[$element_to_be_unlinked] = 1;
