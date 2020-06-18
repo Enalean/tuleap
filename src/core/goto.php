@@ -56,7 +56,7 @@ $keyword = $request->get('key');
 $value   = $request->get('val');
 $args    = explode("/", $value);
 
-if ($keyword == 'wiki') {
+if ($keyword === 'wiki') {
     $wiki = new WikiDao();
     // Wiki Specific
     //If wiki page exists, we keep the value to handle 'toto/titi' wiki page
@@ -64,7 +64,7 @@ if ($keyword == 'wiki') {
     //wiki page name to handle 'toto/titi/1' (1 is the version number)
     if ($wiki->retrieveWikiPageId($value, $group_id) != null) {
         $args = array($value);
-    } elseif (preg_match('%^(.*)/(\d+)$%', $val, $matches)) {
+    } elseif (preg_match('%^(.*)/(\d+)$%', $value, $matches)) {
         $args = array($matches[1], $matches[2]);
     }
 }
