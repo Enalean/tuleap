@@ -68,6 +68,18 @@ class TestPlanPresenter
      * @psalm-readonly
      */
     public $test_definition_tracker_name = '';
+    /**
+     * @var int
+     *
+     * @psalm-readonly
+     */
+    public $expand_backlog_item_id;
+    /**
+     * @var int
+     *
+     * @psalm-readonly
+     */
+    public $highlight_test_definition_id;
 
     public function __construct(
         AgileDashboard_MilestonePresenter $milestone_presenter,
@@ -75,13 +87,17 @@ class TestPlanPresenter
         string $milestone_title,
         int $project_id,
         bool $user_can_create_campaign,
-        ?\Tracker $test_definition_tracker
+        ?\Tracker $test_definition_tracker,
+        int $expand_backlog_item_id,
+        int $highlight_test_definition_id
     ) {
         $this->milestone_presenter          = $milestone_presenter;
         $this->milestone_id                 = $milestone_id;
         $this->milestone_title              = $milestone_title;
         $this->project_id                   = $project_id;
         $this->user_can_create_campaign     = $user_can_create_campaign;
+        $this->expand_backlog_item_id       = $expand_backlog_item_id;
+        $this->highlight_test_definition_id = $highlight_test_definition_id;
         if ($test_definition_tracker !== null) {
             $this->test_definition_tracker_id   = $test_definition_tracker->getId();
             $this->test_definition_tracker_name = $test_definition_tracker->getName();

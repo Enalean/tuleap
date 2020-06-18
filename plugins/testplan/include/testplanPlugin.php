@@ -120,7 +120,7 @@ final class testplanPlugin extends Plugin
         $event->getRouteCollector()->addGroup(
             TestPlanPaneInfo::URL,
             function (RouteCollector $r): void {
-                $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}', $this->getRouteHandler('routeGetPlan'));
+                $r->get('/{project_name:[A-z0-9-]+}/{id:\d+}[/backlog_item/{backlog_item_id:\d+}/test/{test_definition_id:\d+}]', $this->getRouteHandler('routeGetPlan'));
             }
         );
     }

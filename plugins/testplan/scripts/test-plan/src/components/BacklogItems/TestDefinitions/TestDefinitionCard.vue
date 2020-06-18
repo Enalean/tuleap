@@ -22,6 +22,7 @@
     <a
         v-bind:href="'/plugins/tracker/?aid=' + encodeURIComponent(test_definition.id)"
         class="tlp-card tlp-card-selectable test-plan-test-definition-card"
+        v-bind:class="classname"
     >
         <div class="test-plan-test-definition-xref-title">
             <span class="test-plan-test-definition-xref">
@@ -45,11 +46,42 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
-import { TestDefinition } from "../../../type";
+import { BacklogItem, TestDefinition } from "../../../type";
+import { RemoveIsJustRefreshedFlagOnTestDefinitionPayload } from "../../../store/backlog-item/type";
+import { namespace } from "vuex-class";
+
+const backlog_item_store = namespace("backlog_item");
 
 @Component
 export default class TestDefinitionCard extends Vue {
     @Prop({ required: true })
     readonly test_definition!: TestDefinition;
+
+    @Prop({ required: true })
+    readonly backlog_item!: BacklogItem;
+
+    @backlog_item_store.Mutation
+    readonly removeIsJustRefreshedFlagOnTestDefinition!: (
+        payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload
+    ) => void;
+
+    mounted(): void {
+        if (this.test_definition.is_just_refreshed) {
+            setTimeout(() => {
+                this.removeIsJustRefreshedFlagOnTestDefinition({
+                    backlog_item: this.backlog_item,
+                    test_definition: this.test_definition,
+                });
+            }, 1000);
+        }
+    }
+
+    get classname(): string {
+        if (this.test_definition.is_just_refreshed) {
+            return "test-plan-test-definition-is-just-refreshed";
+        }
+
+        return "";
+    }
 }
 </script>

@@ -36,6 +36,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const project_id = Number.parseInt(vue_mount_point.dataset.projectId || "0", 10);
     const milestone_id = Number.parseInt(vue_mount_point.dataset.milestoneId || "0", 10);
+    const expand_backlog_item_id = Number.parseInt(
+        vue_mount_point.dataset.expandBacklogItemId || "0",
+        10
+    );
+    const highlight_test_definition_id = Number.parseInt(
+        vue_mount_point.dataset.highlightTestDefinitionId || "0",
+        10
+    );
     const milestone_title = vue_mount_point.dataset.milestoneTitle || "";
     const user_can_create_campaign = vue_mount_point.dataset.userCanCreateCampaign === "1";
     let testdefinition_tracker_id: number | null = Number.parseInt(
@@ -62,6 +70,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_can_create_campaign,
         testdefinition_tracker_id,
         testdefinition_tracker_name,
+        expand_backlog_item_id,
+        highlight_test_definition_id,
     } as unknown) as RootState;
 
     new AppComponent({

@@ -36,6 +36,8 @@ describe("BacklogItem state actions", () => {
             dispatch: jest.fn(),
             rootState: {
                 milestone_id: 42,
+                expand_backlog_item_id: 1000,
+                highlight_test_definition_id: 1001,
             } as RootState,
         } as unknown) as ActionContext<BacklogItemState, RootState>;
         tlpRecursiveGetMock = jest.spyOn(tlp, "recursiveGet");
@@ -67,6 +69,51 @@ describe("BacklogItem state actions", () => {
                 {
                     id: 124,
                     is_expanded: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
+            ] as BacklogItem[]);
+        });
+
+        it("Marks an item as expanded if app wants to expand it", async () => {
+            tlpRecursiveGetMock.mockImplementation((route, config) => {
+                config.getCollectionCallback([
+                    { id: 123 },
+                    { id: 124 },
+                    { id: 1000 },
+                ] as BacklogItem[]);
+            });
+
+            await loadBacklogItems(context);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
+            expect(context.commit).toHaveBeenCalledWith("endLoadingBacklogItems");
+            expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/milestones/42/content`, {
+                params: { limit: 100 },
+                getCollectionCallback: expect.any(Function),
+            });
+            expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [
+                {
+                    id: 123,
+                    is_expanded: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
+                {
+                    id: 124,
+                    is_expanded: false,
+                    are_test_definitions_loaded: false,
+                    is_loading_test_definitions: false,
+                    has_test_definitions_loading_error: false,
+                    test_definitions: [] as TestDefinition[],
+                },
+                {
+                    id: 1000,
+                    is_expanded: true,
                     are_test_definitions_loaded: false,
                     is_loading_test_definitions: false,
                     has_test_definitions_loading_error: false,
@@ -118,7 +165,46 @@ describe("BacklogItem state actions", () => {
             );
             expect(context.commit).toHaveBeenCalledWith("addTestDefinitions", {
                 backlog_item,
-                test_definitions: [{ id: 123 }, { id: 124 }] as TestDefinition[],
+                test_definitions: [
+                    { id: 123, is_just_refreshed: false },
+                    { id: 124, is_just_refreshed: false },
+                ] as TestDefinition[],
+            });
+            expect(context.commit).toHaveBeenCalledWith(
+                "markTestDefinitionsAsBeingLoaded",
+                backlog_item
+            );
+            expect(context.commit).toHaveBeenCalledWith("endLoadingTestDefinition", backlog_item);
+        });
+
+        it("Marks the test definition as just refreshed if app wants to highlight it", async () => {
+            tlpRecursiveGetMock.mockImplementation((route, config) => {
+                config.getCollectionCallback([
+                    { id: 123 },
+                    { id: 124 },
+                    { id: 1001 },
+                ] as TestDefinition[]);
+            });
+
+            const backlog_item = { id: 101 } as BacklogItem;
+
+            await loadTestDefinitions(context, backlog_item);
+
+            expect(context.commit).toHaveBeenCalledWith("beginLoadingTestDefinition", backlog_item);
+            expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
+                `/api/v1/backlog_items/101/test_definitions`,
+                {
+                    params: { limit: 100 },
+                    getCollectionCallback: expect.any(Function),
+                }
+            );
+            expect(context.commit).toHaveBeenCalledWith("addTestDefinitions", {
+                backlog_item,
+                test_definitions: [
+                    { id: 123, is_just_refreshed: false },
+                    { id: 124, is_just_refreshed: false },
+                    { id: 1001, is_just_refreshed: true },
+                ] as TestDefinition[],
             });
             expect(context.commit).toHaveBeenCalledWith(
                 "markTestDefinitionsAsBeingLoaded",

@@ -21,7 +21,12 @@ import { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type
 import { ActionContext } from "vuex";
 import { RootState } from "../type";
 import { FetchWrapperError, recursiveGet } from "tlp";
-import { BacklogItem, BacklogItemFromREST, TestDefinition } from "../../type";
+import {
+    BacklogItem,
+    BacklogItemFromREST,
+    TestDefinition,
+    TestDefinitionFromREST,
+} from "../../type";
 
 export async function loadBacklogItems(
     context: ActionContext<BacklogItemState, RootState>
@@ -36,9 +41,9 @@ export async function loadBacklogItems(
                 },
                 getCollectionCallback: (collection: BacklogItemFromREST[]): BacklogItem[] => {
                     const backlog_items: BacklogItem[] = collection.map(
-                        (campaign: BacklogItemFromREST): BacklogItem => ({
-                            ...campaign,
-                            is_expanded: false,
+                        (item: BacklogItemFromREST): BacklogItem => ({
+                            ...item,
+                            is_expanded: item.id === context.rootState.expand_backlog_item_id,
                             is_loading_test_definitions: false,
                             are_test_definitions_loaded: false,
                             has_test_definitions_loading_error: false,
@@ -73,7 +78,14 @@ export async function loadTestDefinitions(
                 params: {
                     limit: 100,
                 },
-                getCollectionCallback: (test_definitions: TestDefinition[]): TestDefinition[] => {
+                getCollectionCallback: (collection: TestDefinitionFromREST[]): TestDefinition[] => {
+                    const test_definitions: TestDefinition[] = collection.map(
+                        (test: TestDefinitionFromREST): TestDefinition => ({
+                            ...test,
+                            is_just_refreshed:
+                                test.id === context.rootState.highlight_test_definition_id,
+                        })
+                    );
                     const payload: AddTestDefinitionsToBacklogItemPayload = {
                         backlog_item,
                         test_definitions,

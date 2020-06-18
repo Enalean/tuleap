@@ -17,8 +17,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { AddTestDefinitionsToBacklogItemPayload, BacklogItemState } from "./type";
-import { BacklogItem } from "../../type";
+import {
+    AddTestDefinitionsToBacklogItemPayload,
+    BacklogItemState,
+    RemoveIsJustRefreshedFlagOnTestDefinitionPayload,
+} from "./type";
+import { BacklogItem, TestDefinition } from "../../type";
 
 export function beginLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
     updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: true }));
@@ -26,6 +30,32 @@ export function beginLoadingTestDefinition(state: BacklogItemState, item: Backlo
 
 export function endLoadingTestDefinition(state: BacklogItemState, item: BacklogItem): void {
     updateBacklogItem(state, item, (item) => ({ ...item, is_loading_test_definitions: false }));
+}
+
+export function removeIsJustRefreshedFlagOnTestDefinition(
+    state: BacklogItemState,
+    payload: RemoveIsJustRefreshedFlagOnTestDefinitionPayload
+): void {
+    updateBacklogItem(state, payload.backlog_item, (item) => {
+        const test_definition_index = item.test_definitions.findIndex(
+            (state_test_definition: TestDefinition): boolean =>
+                state_test_definition.id === payload.test_definition.id
+        );
+        if (test_definition_index === -1) {
+            throw Error("Unable to find the test definition to update");
+        }
+
+        const test_definitions = [...item.test_definitions];
+        const state_test_definition = test_definitions[test_definition_index];
+
+        test_definitions.splice(test_definition_index, 1, {
+            ...state_test_definition,
+            is_just_refreshed: false,
+        });
+
+        return { ...item, test_definitions };
+    });
+    history.replaceState(null, "", location.href.replace(/\/backlog_item\/\d+\/test\/\d+/, ""));
 }
 
 export function addTestDefinitions(

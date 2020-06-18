@@ -236,7 +236,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
 
         $this->processor->process($request, $redirect, $artifact);
 
-        $this->assertEquals('/testplan/my-project/42', $redirect->base_url);
+        $this->assertEquals('/testplan/my-project/42/backlog_item/123/test/1001', $redirect->base_url);
         $this->assertEquals([], $redirect->query_parameters);
     }
 
