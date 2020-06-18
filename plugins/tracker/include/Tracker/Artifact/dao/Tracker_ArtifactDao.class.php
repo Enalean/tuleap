@@ -999,7 +999,6 @@ class Tracker_ArtifactDao extends DataAccessObject
      * Retrieve all artifacts linked to any of the given ones that are of a specific tracker type
      *
      * @param string $artifact_ids string of comma separated list of artifact IDs e.g '12,568,12,4589'
-     * @param int $artifact_ids comma separated list of artifact IDs
      * @return array|false
      * @psalm-ignore-falsable-return
      */

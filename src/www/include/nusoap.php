@@ -5050,8 +5050,6 @@ class wsdl extends nusoap_base
      * - multi-ref serialization
      * - validate PHP values against type definitions, return errors if invalid
      *
-     * @param string $ type name
-     * @param mixed $ param value
      * @return mixed new param or false if initial value didn't validate
      * @access public
      * @deprecated

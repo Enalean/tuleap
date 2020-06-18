@@ -99,8 +99,7 @@ class Tracker_DateReminderDao extends DataAccessObject
      * @param int $notificationType 0 if before, 1 if after the value of the date field
      * @param int $distance Distance from the value of the date fiels
      *
-     * @return bool
-     * @return int
+     * @return bool|int
      */
     public function addDateReminder($trackerId, $fieldId, $ugroups, $roles, $notificationType = 0, $distance = 0)
     {

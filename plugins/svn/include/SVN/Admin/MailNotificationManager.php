@@ -315,12 +315,9 @@ class MailNotificationManager
     }
 
     /**
-     * @return bool
-     *
      * @throws CannotAddUsersNotificationException
-     * @return bool
      */
-    private function notificationAddUsers(MailNotification $notification)
+    private function notificationAddUsers(MailNotification $notification): bool
     {
         $users           = $notification->getNotifiedUsers();
         $users_not_added = array();
