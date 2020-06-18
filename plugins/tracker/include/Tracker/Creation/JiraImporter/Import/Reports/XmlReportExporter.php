@@ -46,8 +46,8 @@ class XmlReportExporter
         $reports_node = $trackers_node->addChild('reports');
         $report_node  = $reports_node->addChild('report');
 
-        $this->cdata_factory->insert($report_node, 'name', 'Default');
-        $this->cdata_factory->insert($report_node, 'description', 'The system default artifact report');
+        $this->cdata_factory->insert($report_node, 'name', 'All issues');
+        $this->cdata_factory->insert($report_node, 'description', 'All the issues in this tracker');
 
         $summary_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME);
         $description_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME);

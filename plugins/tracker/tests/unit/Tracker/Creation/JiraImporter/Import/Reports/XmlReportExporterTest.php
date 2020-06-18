@@ -45,10 +45,10 @@ final class XmlReportExporterTest extends TestCase
         $this->assertNotNull($report_node);
 
         $report_node_name = $report_node->name;
-        $this->assertEquals("Default", $report_node_name);
+        $this->assertEquals("All issues", $report_node_name);
 
         $reports_node_description = $report_node->description;
-        $this->assertEquals('The system default artifact report', $reports_node_description);
+        $this->assertEquals('All the issues in this tracker', $reports_node_description);
 
         $criterias = $report_node->criterias;
         $this->assertNotNull($criterias);
