@@ -261,7 +261,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @param bool $ignore_perms
      * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
      * @param string                          $format           mail format
-     * @param bool $ignore_perms
      *
      * @return string
      */

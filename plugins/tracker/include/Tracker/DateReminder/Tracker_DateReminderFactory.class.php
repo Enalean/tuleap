@@ -73,14 +73,7 @@ class Tracker_DateReminderFactory
         return $reminders;
     }
 
-    /**
-     * Add new reminder
-     *
-     * @param HTTPRequest $request Request object
-     *
-     * @return bool
-     */
-    public function addNewReminder(HTTPRequest $request)
+    public function addNewReminder(HTTPRequest $request): bool
     {
         try {
             $fieldId          = $this->date_reminder_renderer->validateFieldId($request);
@@ -106,7 +99,7 @@ class Tracker_DateReminderFactory
             $roles = implode(",", $roles);
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName() . ":" . $fieldId, $this->getTracker()->getGroupId(), array($distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles));
-            return $reminder;
+            return (bool) $reminder;
         } else {
             $errorMessage = $GLOBALS['Language']->getText(
                 'plugin_tracker_date_reminder',
