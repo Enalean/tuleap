@@ -19,6 +19,7 @@
 
 namespace Tuleap\Project\REST;
 
+use Project;
 use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 use Exception;
@@ -60,14 +61,25 @@ class UserGroupRepresentation
      */
     public $key;
 
-    public function build(int $project_id, ProjectUGroup $ugroup): self
+    /**
+     * @var MinimalProjectRepresentation
+     */
+    public $project;
+
+    public function build(Project $project, ProjectUGroup $ugroup): self
     {
-        $this->id         = self::getRESTIdForProject($project_id, $ugroup->getId());
+        $this->id         = self::getRESTIdForProject((int) $project->getGroupId(), $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id;
         $this->label      = NameTranslator::getUserGroupDisplayName($ugroup->getName());
         $this->key        = $ugroup->getName();
         $this->users_uri  = self::ROUTE . '/' . $this->id . '/users';
         $this->short_name = $ugroup->getNormalizedName();
+
+        if (! $project->isError()) {
+            $this->project = new MinimalProjectRepresentation();
+            $this->project->buildMinimal($project);
+        }
+
         return $this;
     }
 
@@ -83,7 +95,7 @@ class UserGroupRepresentation
         return $project_id . '_' . $user_group_id;
     }
 
-    public static function getProjectAndUserGroupFromRESTId($identifier)
+    public static function getProjectAndUserGroupFromRESTId(string $identifier): array
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {
             return array(
@@ -98,9 +110,11 @@ class UserGroupRepresentation
                 'user_group_id' => $complex_id[2]
             );
         }
+
+        throw new Exception('Invalid ID format(' . $identifier . ')');
     }
 
-    public static function checkRESTIdIsAppropriate(string $identifier)
+    public static function checkRESTIdIsAppropriate(string $identifier): void
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier, $simple_id)) {
             $id = (int) $simple_id[0];

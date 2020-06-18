@@ -30,7 +30,7 @@ use ProjectUGroup;
 use Tuleap\FRS\FRSPermission;
 use Tuleap\FRS\FRSPermissionFactory;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 class ServiceRepresentationBuilder
 {
@@ -93,7 +93,7 @@ class ServiceRepresentationBuilder
         foreach ($frs_permissions as $frs_permission) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $frs_permission->getUGroupId());
             if ($ugroup && (int) $ugroup->getId() !== ProjectUGroup::NONE) {
-                $ugroups[] = (new UserGroupRepresentation())->build((int) $project->getID(), $ugroup);
+                $ugroups[] = (new MinimalUserGroupRepresentation())->build((int) $project->getID(), $ugroup);
             }
         }
         return $ugroups;

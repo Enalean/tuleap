@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\REST\Tracker;
 
 use Tracker;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 
 class PermissionsRepresentationBuilder
@@ -82,7 +82,7 @@ class PermissionsRepresentationBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new UserGroupRepresentation();
+            $representation = new MinimalUserGroupRepresentation();
             $representation->build((int) $tracker->getProject()->getID(), $ugroup);
             $ugroup_representations[] = $representation;
         }

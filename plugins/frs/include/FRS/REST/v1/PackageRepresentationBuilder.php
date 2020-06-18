@@ -28,7 +28,7 @@ use IPermissionsManagerNG;
 use PFUser;
 use Project;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use UGroupManager;
 
 class PackageRepresentationBuilder
@@ -83,7 +83,7 @@ class PackageRepresentationBuilder
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
             if ($ugroup) {
-                $ugroup_representation = new UserGroupRepresentation();
+                $ugroup_representation = new MinimalUserGroupRepresentation();
                 $ugroup_representation->build((int) $project->getID(), $ugroup);
                 $permissions_for_groups[] = $ugroup_representation;
             }

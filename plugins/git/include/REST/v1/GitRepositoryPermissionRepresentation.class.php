@@ -22,7 +22,7 @@
 namespace Tuleap\Git\REST\v1;
 
 use Tuleap\REST\v1\GitRepositoryPermissionRepresentationBase;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use GitRepository;
 use GitRepositoryPermissionsManager;
 use GitDao;
@@ -76,7 +76,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
         $ugroup_representations = array();
         foreach ($ugroup_rows as $row) {
             $ugroup = $this->ugroup_manager->getById($row['ugroup_id']);
-            $rewind_ugroup_representation = new UserGroupRepresentation();
+            $rewind_ugroup_representation = new MinimalUserGroupRepresentation();
             $rewind_ugroup_representation->build((int) $repository->getProjectId(), $ugroup);
 
             $ugroup_representations[] = $rewind_ugroup_representation;

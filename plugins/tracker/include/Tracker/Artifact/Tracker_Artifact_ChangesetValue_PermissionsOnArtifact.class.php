@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactFullRepresentation;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValuePermissionsOnArtifactRepresentation;
@@ -221,7 +222,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     {
         $ugroup_manager = new UGroupManager($this->getDao());
         $u_group        = $ugroup_manager->getById($u_group_id);
-        $representation = new UserGroupRepresentation();
+        $representation = new MinimalUserGroupRepresentation();
 
         $representation->build($this->getField()->getTracker()->getProject()->getID(), $u_group);
 

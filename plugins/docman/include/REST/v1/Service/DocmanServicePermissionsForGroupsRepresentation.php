@@ -25,7 +25,7 @@ namespace Tuleap\Docman\REST\v1\Service;
 final class DocmanServicePermissionsForGroupsRepresentation
 {
     /**
-     * @var array {@type \Tuleap\Project\REST\UserGroupRepresentation}
+     * @var array {@type \Tuleap\Project\REST\MinimalUserGroupRepresentation}
      * @psalm-var \Tuleap\Project\REST\UserGroupRepresentation[]
      */
     public $can_admin = [];

@@ -64,7 +64,7 @@ use Tuleap\Project\Registration\Template\InvalidTemplateException;
 use Tuleap\Project\Registration\Template\TemplateFactory;
 use Tuleap\Project\REST\HeartbeatsRepresentation;
 use Tuleap\Project\REST\ProjectRepresentation;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\XML\XMLFileContentRetriever;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Event\ProjectGetSvn;
@@ -717,7 +717,7 @@ class ProjectResource extends AuthenticatedResource
         $user_groups = [];
 
         foreach ($ugroups as $ugroup) {
-            $representation = new UserGroupRepresentation();
+            $representation = new MinimalUserGroupRepresentation();
             $representation->build((int) $project_id, $ugroup);
             $user_groups[] = $representation;
         }

@@ -767,7 +767,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
 
         $project_groups       = array();
-        $representation_class = '\\Tuleap\\Project\\REST\\UserGroupRepresentation';
+        $representation_class = '\\Tuleap\\Project\\REST\\MinimalUserGroupRepresentation';
         foreach ($user_groups as $user_group) {
             try {
                 call_user_func_array($representation_class . '::checkRESTIdIsAppropriate', array($user_group));

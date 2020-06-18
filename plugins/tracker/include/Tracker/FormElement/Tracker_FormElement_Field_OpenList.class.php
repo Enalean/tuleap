@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticValueUnchanged;
@@ -945,7 +945,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
             $values = array();
             foreach ($user_groups as $ugroup) {
-                $ugroup_representation = new UserGroupRepresentation();
+                $ugroup_representation = new MinimalUserGroupRepresentation();
                 $ugroup_representation->build($project->getID(), $ugroup);
                 $values[] = $ugroup_representation;
             }

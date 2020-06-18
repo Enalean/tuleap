@@ -20,7 +20,7 @@
 
 namespace Tuleap\Tracker\REST\v1\TrackerFieldsRepresentations;
 
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 class PermissionsOnArtifacts
 {
@@ -28,7 +28,7 @@ class PermissionsOnArtifacts
     public $is_used_by_default;
 
     /**
-     * @var UserGroupRepresentation[]
+     * @var MinimalUserGroupRepresentation[]
      */
     public $ugroup_representations;
 
@@ -37,7 +37,7 @@ class PermissionsOnArtifacts
         $ugroup_representations = array();
 
         foreach ($ugroups as $user_group) {
-            $ugroup_representation = new UserGroupRepresentation();
+            $ugroup_representation = new MinimalUserGroupRepresentation();
             $ugroup_representation->build((int) $project_id, $user_group);
             $ugroup_representations[] = $ugroup_representation;
         }

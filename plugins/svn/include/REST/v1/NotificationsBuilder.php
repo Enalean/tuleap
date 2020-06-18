@@ -20,7 +20,7 @@
 
 namespace Tuleap\SVN\REST\v1;
 
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\SVN\Admin\MailNotification;
 use Tuleap\SVN\Notifications\UgroupsToNotifyDao;
 use Tuleap\SVN\Notifications\UsersToNotifyDao;
@@ -116,7 +116,7 @@ class NotificationsBuilder
     }
 
     /**
-     * @return UserGroupRepresentation[]
+     * @return MinimalUserGroupRepresentation[]
      */
     private function extractUGroups(MailNotification $notification)
     {
@@ -125,7 +125,7 @@ class NotificationsBuilder
         foreach ($this->ugroup_dao->searchUgroupsByNotificationId($notification->getId()) as $row) {
             $group = $this->ugroup_manager->getById($row['ugroup_id']);
 
-            $ugroup_representation = new UserGroupRepresentation();
+            $ugroup_representation = new MinimalUserGroupRepresentation();
             $ugroup_representation->build((int) $notification->getRepository()->getProject()->getID(), $group);
 
             $ugroups[] = $ugroup_representation;

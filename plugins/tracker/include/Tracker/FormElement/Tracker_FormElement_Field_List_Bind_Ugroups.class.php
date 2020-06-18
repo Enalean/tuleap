@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
@@ -692,7 +693,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if (! $ugroup) {
             throw new \Tuleap\Project\UGroups\InvalidUGroupException($value->getUgroupId());
         }
-        $ugroup_representation = new UserGroupRepresentation();
+        $ugroup_representation = new MinimalUserGroupRepresentation();
         $ugroup_representation->build((int) $project->getID(), $ugroup);
 
         $representation = new FieldListBindUGroupValueRepresentation();
@@ -708,7 +709,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         $rest_array = array();
         foreach ($bind_values as $value) {
-            $representation = new UserGroupRepresentation();
+            $representation = new MinimalUserGroupRepresentation();
             $representation->build((int) $project_id, $value->getUgroup());
             $rest_array[] = $representation;
         }
@@ -763,7 +764,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
-        $ugroup_representation = new UserGroupRepresentation();
+        $ugroup_representation = new MinimalUserGroupRepresentation();
 
         $ugroup_manager = new UGroupManager();
         $project        = $this->getField()->getTracker()->getProject();

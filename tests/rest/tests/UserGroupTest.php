@@ -63,17 +63,15 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
             REST_TestDataBuilder::TEST_USER_2_NAME
         );
 
-        $this->assertEquals(
-            $response->json(),
-            array(
-                'id'         => (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID,
-                'uri'        => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID,
-                'label'      => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'users_uri'  => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users',
-                'key'        => REST_TestDataBuilder::STATIC_UGROUP_2_LABEL,
-                'short_name' => 'static_ugroup_2'
-            )
-        );
+        $json = $response->json();
+
+        $this->assertEquals($json['id'], (string) REST_TestDataBuilder::STATIC_UGROUP_2_ID);
+        $this->assertEquals($json['uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID);
+        $this->assertEquals($json['label'], REST_TestDataBuilder::STATIC_UGROUP_2_LABEL);
+        $this->assertEquals($json['users_uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_2_ID . '/users');
+        $this->assertEquals($json['key'], REST_TestDataBuilder::STATIC_UGROUP_2_LABEL);
+        $this->assertEquals($json['short_name'], 'static_ugroup_2');
+
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -746,17 +744,17 @@ class UserGroupTest extends RestBase // phpcs:ignore PSR1.Classes.ClassDeclarati
      */
     private function assertGETId($response): void
     {
-        $this->assertEquals(
-            $response->json(),
-            array(
-                'id'         => (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'uri'        => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID,
-                'label'      => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'users_uri'  => 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users',
-                'key'        => REST_TestDataBuilder::STATIC_UGROUP_1_LABEL,
-                'short_name' => 'static_ugroup_1'
-            )
-        );
+        $json = $response->json();
+
+        $this->assertEquals($json['id'], (string) REST_TestDataBuilder::STATIC_UGROUP_1_ID);
+        $this->assertEquals($json['uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID);
+        $this->assertEquals($json['label'], REST_TestDataBuilder::STATIC_UGROUP_1_LABEL);
+        $this->assertEquals($json['users_uri'], 'user_groups/' . REST_TestDataBuilder::STATIC_UGROUP_1_ID . '/users');
+        $this->assertEquals($json['key'], REST_TestDataBuilder::STATIC_UGROUP_1_LABEL);
+        $this->assertEquals($json['short_name'], 'static_ugroup_1');
+
+        $this->assertArrayHasKey('project', $json);
+
         $this->assertEquals(200, $response->getStatusCode());
     }
 }

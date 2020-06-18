@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\REST\FormElement;
 
 use Tracker_Artifact;
 use Tracker_FormElement;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Tracker\PermissionsFunctionsWrapper;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldDetector;
 
@@ -103,7 +103,7 @@ class PermissionsForGroupsBuilder
     {
         $ugroup = $this->ugroup_manager->getUGroup($tracker->getProject(), $result_array['ugroup']['id']);
         if ($ugroup) {
-            $representation = new UserGroupRepresentation();
+            $representation = new MinimalUserGroupRepresentation();
             $representation->build((int) $ugroup->getProjectId(), $ugroup);
             $ugroups_collection[] = $representation;
         }
