@@ -21,10 +21,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Tracker_ArtifactFactory;
-use Planning_Milestone;
 use PFUser;
-use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
+use Planning_Milestone;
+use Tracker_ArtifactFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\IFilterValidElementsToUnkink;
 
 class FilterValidContent implements IFilterValidElementsToUnkink
 {
@@ -43,7 +43,7 @@ class FilterValidContent implements IFilterValidElementsToUnkink
         }
     }
 
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed)
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
         $valid_artifact_ids = array();
         foreach ($artifact_ids_to_be_removed as $id) {

@@ -33,7 +33,7 @@ use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\REST\v1\MilestoneResourceValidator;
 use Tuleap\AgileDashboard\REST\v1\ResourcesPatcher;
 use Tuleap\DB\DBTransactionExecutor;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 class MilestoneElementMover
 {

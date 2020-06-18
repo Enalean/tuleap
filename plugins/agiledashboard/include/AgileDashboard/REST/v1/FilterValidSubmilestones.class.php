@@ -21,10 +21,10 @@
 
 namespace Tuleap\AgileDashboard\REST\v1;
 
-use Planning_MilestoneFactory;
-use Planning_Milestone;
 use PFUser;
-use Tuleap\Tracker\REST\v1\IFilterValidElementsToUnkink;
+use Planning_Milestone;
+use Planning_MilestoneFactory;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\IFilterValidElementsToUnkink;
 
 class FilterValidSubmilestones implements IFilterValidElementsToUnkink
 {
@@ -45,7 +45,7 @@ class FilterValidSubmilestones implements IFilterValidElementsToUnkink
         $this->milestone         = $milestone;
     }
 
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed)
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
         $submilestones = array();
 
@@ -53,7 +53,10 @@ class FilterValidSubmilestones implements IFilterValidElementsToUnkink
             $candidate_submilestone = $this->milestone_factory->getBareMilestoneByArtifactId($user, $artifact_to_be_removed);
 
             if ($candidate_submilestone && $this->milestone->milestoneCanBeSubmilestone($candidate_submilestone)) {
-                $submilestones[] = $candidate_submilestone->getArtifactId();
+                $artifact_id = $candidate_submilestone->getArtifactId();
+                if ($artifact_id) {
+                    $submilestones[] = $artifact_id;
+                }
             }
         }
 

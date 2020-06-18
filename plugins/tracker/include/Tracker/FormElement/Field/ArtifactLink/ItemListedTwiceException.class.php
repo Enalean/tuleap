@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\AgileDashboard\REST\v1;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use Exception;
 
 class ItemListedTwiceException extends Exception
 {
-
-    public function __construct($artifact_id)
+    public function __construct(int $artifact_id)
     {
-        parent::__construct('You cannot put the same submilestone twice (sumilestone ' . $artifact_id . ').');
+        parent::__construct('You cannot put the same artifact twice (artifact ' . $artifact_id . ').');
     }
 }

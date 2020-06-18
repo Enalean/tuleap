@@ -45,8 +45,8 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\REST\ProjectStatusVerificator;
 use Tuleap\Tracker\Artifact\SlicedArtifactsBuilder;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use UserManager;
 
 /**
@@ -65,7 +65,7 @@ class BacklogItemResource extends AuthenticatedResource
     /** @var TrackerFactory */
     private $tracker_factory;
 
-    /** @var BacklogItemsUpdater */
+    /** @var ArtifactLinkUpdater */
     private $artifactlink_updater;
 
     /** @var ResourcesPatcher */

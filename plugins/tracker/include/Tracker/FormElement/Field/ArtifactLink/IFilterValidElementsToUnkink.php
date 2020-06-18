@@ -19,11 +19,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-namespace Tuleap\Tracker\REST\v1;
+namespace Tuleap\Tracker\FormElement\Field\ArtifactLink;
 
 use PFUser;
 
 interface IFilterValidElementsToUnkink
 {
-    public function filter(PFUser $user, array $artifact_ids_to_be_removed);
+    /**
+     * @param array<int>  $artifact_ids_to_be_removed
+     *
+     * @return array<int>
+     */
+    public function filter(PFUser $user, array $artifact_ids_to_be_removed): array;
 }

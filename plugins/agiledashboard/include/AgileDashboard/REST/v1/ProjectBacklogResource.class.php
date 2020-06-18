@@ -62,8 +62,9 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColorBuilder;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\Header;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\ItemListedTwiceException;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorRetriever;
-use Tuleap\Tracker\REST\v1\ArtifactLinkUpdater;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
@@ -245,7 +246,7 @@ class ProjectBacklogResource
         $this->validateArtifactIdsAreInUnassignedTopBacklog($ids, $user, $project);
 
         try {
-            $this->artifactlink_updater->setOrderWithHistoryChangeLogging($ids, self::TOP_BACKLOG_IDENTIFIER, $project->getId());
+            $this->artifactlink_updater->setOrderWithHistoryChangeLogging($ids, (int) self::TOP_BACKLOG_IDENTIFIER, $project->getId());
         } catch (ItemListedTwiceException $exception) {
             throw new RestException(400, $exception->getMessage());
         }
