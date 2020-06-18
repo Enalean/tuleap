@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 

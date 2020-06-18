@@ -25,8 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PFUser;
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\IssueSnapshotCollectionBuilder;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot\Snapshot;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use XML_SimpleXMLCDATAFactory;
 
@@ -47,14 +48,21 @@ class DataChangesetXMLExporter
      */
     private $issue_snapshot_collection_builder;
 
+    /**
+     * @var CommentXMLExporter
+     */
+    private $comment_xml_exporter;
+
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         FieldChangeXMLExporter $field_change_xml_exporter,
-        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder
+        IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder,
+        CommentXMLExporter $comment_xml_exporter
     ) {
         $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
         $this->field_change_xml_exporter         = $field_change_xml_exporter;
         $this->issue_snapshot_collection_builder = $issue_snapshot_collection_builder;
+        $this->comment_xml_exporter              = $comment_xml_exporter;
     }
 
     public function exportIssueDataInChangesetXML(
@@ -93,7 +101,10 @@ class DataChangesetXMLExporter
             $format = ['format' => 'ISO8601']
         );
 
-        $changeset_node->addChild('comments');
+        $this->comment_xml_exporter->exportComment(
+            $snapshot,
+            $changeset_node
+        );
 
         $this->field_change_xml_exporter->exportFieldChanges(
             $snapshot,

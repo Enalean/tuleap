@@ -21,10 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use DateTimeImmutable;
 use PFUser;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 
 class Snapshot
 {
@@ -46,11 +47,22 @@ class Snapshot
      */
     private $date;
 
-    public function __construct(PFUser $user, DateTimeImmutable $date, array $field_snapshots)
-    {
-        $this->user            = $user;
-        $this->date            = $date;
-        $this->field_snapshots = $field_snapshots;
+    /**
+     * @var Comment|null
+     * @psalm-readonly
+     */
+    private $comment_snapshot;
+
+    public function __construct(
+        PFUser $user,
+        DateTimeImmutable $date,
+        array $field_snapshots,
+        ?Comment $comment_snapshot
+    ) {
+        $this->user             = $user;
+        $this->date             = $date;
+        $this->field_snapshots  = $field_snapshots;
+        $this->comment_snapshot = $comment_snapshot;
     }
 
     /**
@@ -90,5 +102,13 @@ class Snapshot
     public function getUser(): PFUser
     {
         return $this->user;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getCommentSnapshot(): ?Comment
+    {
+        return $this->comment_snapshot;
     }
 }

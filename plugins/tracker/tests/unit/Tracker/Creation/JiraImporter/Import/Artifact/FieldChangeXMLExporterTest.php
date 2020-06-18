@@ -27,6 +27,8 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
@@ -81,16 +83,17 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot(
+        $snapshot = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
-                new Changelog\Snapshot\FieldSnapshot(
+                new FieldSnapshot(
                     $mapping,
                     "h1. Coin\r\n\r\nLorem *ipsum* _doloret_ plop.",
                     "<h1><a name=\"Coin\"></a>Coin</h1>\n\n<p>Lorem <b>ipsum</b> <em>doloret</em> plop.</p>"
                 )
-            ]
+            ],
+            null
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -117,11 +120,11 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot(
+        $snapshot = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
-                new Changelog\Snapshot\FieldSnapshot(
+                new FieldSnapshot(
                     $mapping,
                     [
                         'self' => 'URL/rest/api/2/priority/3',
@@ -131,7 +134,8 @@ class FieldChangeXMLExporterTest extends TestCase
                     ],
                     null
                 )
-            ]
+            ],
+            null
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -154,11 +158,11 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot(
+        $snapshot = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
-                new Changelog\Snapshot\FieldSnapshot(
+                new FieldSnapshot(
                     $mapping,
                     [
                         'self' => 'URL/rest/api/2/customFieldOption/10005',
@@ -167,7 +171,8 @@ class FieldChangeXMLExporterTest extends TestCase
                     ],
                     null
                 )
-            ]
+            ],
+            null
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -190,11 +195,11 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot(
+        $snapshot = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
-                new Changelog\Snapshot\FieldSnapshot(
+                new FieldSnapshot(
                     $mapping,
                     [
                         [
@@ -211,7 +216,8 @@ class FieldChangeXMLExporterTest extends TestCase
                     ],
                     null
                 )
-            ]
+            ],
+            null
         );
         $this->exporter->exportFieldChanges(
             $snapshot,
@@ -235,11 +241,11 @@ class FieldChangeXMLExporterTest extends TestCase
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
-        $snapshot = new Changelog\Snapshot\Snapshot(
+        $snapshot = new Snapshot(
             Mockery::mock(PFUser::class),
             new \DateTimeImmutable(),
             [
-                new Changelog\Snapshot\FieldSnapshot(
+                new FieldSnapshot(
                     $mapping,
                     [
                         'self' => 'URL/rest/api/2/status/10001',
@@ -258,7 +264,8 @@ class FieldChangeXMLExporterTest extends TestCase
                     ],
                     null
                 )
-            ]
+            ],
+            null
         );
         $this->exporter->exportFieldChanges(
             $snapshot,

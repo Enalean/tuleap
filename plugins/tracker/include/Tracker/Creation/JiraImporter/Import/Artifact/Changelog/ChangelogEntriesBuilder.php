@@ -71,6 +71,10 @@ class ChangelogEntriesBuilder
             foreach ($changelog_representation->getValues() as $changelog) {
                 $changelog_entries[] = $changelog;
             }
+
+            $is_last = $changelog_representation->getTotal() <=
+                ($changelog_representation->getStartAt() + $changelog_representation->getMaxResults());
+            $count_loop++;
         }
 
         return $changelog_entries;

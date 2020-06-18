@@ -21,16 +21,16 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
-class ChangelogResponseRepresentation
+class CommentResponseRepresentation
 {
     /**
      * @var array
      */
-    private $values;
+    private $comments;
 
     /**
      * @var int
@@ -48,12 +48,12 @@ class ChangelogResponseRepresentation
     private $start_at;
 
     public function __construct(
-        array $values,
+        array $comments,
         int $max_results,
         int $total,
         int $start_at
     ) {
-        $this->values      = $values;
+        $this->comments    = $comments;
         $this->max_results = $max_results;
         $this->total       = $total;
         $this->start_at    = $start_at;
@@ -62,29 +62,29 @@ class ChangelogResponseRepresentation
     /**
      * @throws JiraConnectionException
      */
-    public static function buildFromAPIResponse(?array $changelog_response): self
+    public static function buildFromAPIResponse(?array $comment_response): self
     {
-        if ($changelog_response === null) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
+        if ($comment_response === null) {
+            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueCommentsException();
         }
 
         if (
-            ! isset($changelog_response['values']) ||
-            ! is_array($changelog_response['values']) ||
-            ! isset($changelog_response['maxResults']) ||
-            ! isset($changelog_response['total']) ||
-            ! array_key_exists('startAt', $changelog_response)
+            ! isset($comment_response['comments']) ||
+            ! is_array($comment_response['comments']) ||
+            ! isset($comment_response['maxResults']) ||
+            ! isset($comment_response['total']) ||
+            ! array_key_exists('startAt', $comment_response)
         ) {
-            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueChangelogsException();
+            throw JiraConnectionException::canNotRetrieveFullCollectionOfIssueCommentsException();
         }
 
-        $values      = $changelog_response['values'];
-        $max_results = (int) $changelog_response['maxResults'];
-        $total       = (int) $changelog_response['total'];
-        $start_at    = (int) $changelog_response['startAt'];
+        $comments    = $comment_response['comments'];
+        $max_results = (int) $comment_response['maxResults'];
+        $total       = (int) $comment_response['total'];
+        $start_at    = (int) $comment_response['startAt'];
 
         return new self(
-            $values,
+            $comments,
             $max_results,
             $total,
             $start_at
@@ -96,9 +96,9 @@ class ChangelogResponseRepresentation
         return $this->total;
     }
 
-    public function getValues(): array
+    public function getComments(): array
     {
-        return $this->values;
+        return $this->comments;
     }
 
     public function getMaxResults(): int

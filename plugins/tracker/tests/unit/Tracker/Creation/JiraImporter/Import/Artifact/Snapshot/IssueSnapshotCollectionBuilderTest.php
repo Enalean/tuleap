@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use DateTimeImmutable;
 use Mockery;
@@ -29,6 +29,8 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -81,6 +83,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
      */
     private $jira_base_url;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|CommentValuesBuilder
+     */
+    private $comment_values_builder;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -89,12 +96,14 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->current_snapshot_builder   = Mockery::mock(CurrentSnapshotBuilder::class);
         $this->initial_snapshot_builder   = Mockery::mock(InitialSnapshotBuilder::class);
         $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
+        $this->comment_values_builder     = Mockery::mock(CommentValuesBuilder::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
             $this->current_snapshot_builder,
             $this->initial_snapshot_builder,
-            $this->changelog_snapshot_builder
+            $this->changelog_snapshot_builder,
+            $this->comment_values_builder
         );
 
         $this->user           = Mockery::mock(PFUser::class);
@@ -130,6 +139,12 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->buildSecondChangelogSnapshot($this->user)
         );
 
+        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn(
+            [
+                $this->buildCommentSnapshot()
+            ]
+        );
+
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
             $this->jira_issue_api,
@@ -137,18 +152,19 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->jira_base_url
         );
 
-        $this->assertCount(3, $collection);
+        $this->assertCount(4, $collection);
         $this->assertSame(
             [
                 1585141750,
                 1585141810,
-                1585141870
+                1585141870,
+                1585141930
             ],
             array_keys($collection)
         );
     }
 
-    public function testItSkipInCollectionSnapshotsWithoutChangedFileds(): void
+    public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -172,6 +188,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->buildFirstChangelogSnapshot($this->user),
             $this->buildEmptySecondChangelogSnapshot($this->user)
         );
+
+        $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn([]);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
@@ -206,7 +224,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                     'aaaaaaaa',
                     'aaaaaaaa'
                 )
-            ]
+            ],
+            null
         );
     }
 
@@ -236,7 +255,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                     '11',
                     null
                 )
-            ]
+            ],
+            null
         );
     }
 
@@ -266,7 +286,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                     '9',
                     null
                 )
-            ]
+            ],
+            null
         );
     }
 
@@ -286,7 +307,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                     '9',
                     null
                 )
-            ]
+            ],
+            null
         );
     }
 
@@ -306,7 +328,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                     '11',
                     null
                 )
-            ]
+            ],
+            null
         );
     }
 
@@ -315,7 +338,16 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         return new Snapshot(
             $user,
             new DateTimeImmutable("2020-03-25T14:11:10.823+0100"),
-            []
+            [],
+            null
+        );
+    }
+
+    private function buildCommentSnapshot(): Comment
+    {
+        return new Comment(
+            new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
+            "Comment 01"
         );
     }
 

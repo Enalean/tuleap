@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\Snapshot;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use DateTimeImmutable;
 use Mockery;
@@ -256,7 +256,8 @@ class InitialSnapshotBuilderTest extends TestCase
                     "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
                     null
                 ),
-            ]
+            ],
+            null
         );
     }
 }

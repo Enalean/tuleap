@@ -114,6 +114,17 @@ class JiraConnectionException extends \Exception
         );
     }
 
+    public static function canNotRetrieveFullCollectionOfIssueCommentsException(): self
+    {
+        return new self(
+            "can not retrieve full collection of issue comments",
+            dgettext(
+                'tuleap-tracker',
+                "Fail to retrieve the full collection of issue comments in selected tracker."
+            )
+        );
+    }
+
     public static function urlIsInvalid(): self
     {
         return new self(
