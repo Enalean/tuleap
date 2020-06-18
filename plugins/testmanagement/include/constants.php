@@ -25,4 +25,4 @@ define('TESTMANAGEMENT_GETTEXT_DIR', TESTMANAGEMENT_BASE_DIR . '/site-content');
 define('CAMPAIGN_TRACKER_SHORTNAME', 'campaign');
 define('DEFINITION_TRACKER_SHORTNAME', 'test_def');
 define('EXECUTION_TRACKER_SHORTNAME', 'test_exec');
-define('ISSUE_TRACKER_SHORTNAME', 'bugs');
+define('ISSUE_TRACKER_SHORTNAME', 'bug');
