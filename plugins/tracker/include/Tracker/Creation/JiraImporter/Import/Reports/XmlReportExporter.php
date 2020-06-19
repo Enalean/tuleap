@@ -25,29 +25,17 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
-use XML_SimpleXMLCDATAFactory;
 
 class XmlReportExporter
 {
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
-    public function __construct(XML_SimpleXMLCDATAFactory $cdata_factory)
-    {
-        $this->cdata_factory = $cdata_factory;
-    }
-
-    public function exportReports(SimpleXMLElement $trackers_node, FieldMappingCollection $field_mapping_collection): void
-    {
+    public function exportReports(
+        SimpleXMLElement $trackers_node,
+        FieldMappingCollection $field_mapping_collection,
+        XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
+        XmlReportOpenIssuesExporter $xml_report_open_issues_exporter
+    ): void {
         $reports_node = $trackers_node->addChild('reports');
-        $report_node  = $reports_node->addChild('report');
-
-        $this->cdata_factory->insert($report_node, 'name', 'All issues');
-        $this->cdata_factory->insert($report_node, 'description', 'All the issues in this tracker');
 
         $summary_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_SUMMARY_FIELD_NAME);
         $description_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_DESCRIPTION_FIELD_NAME);
@@ -55,68 +43,24 @@ class XmlReportExporter
         $priority_field    = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME);
         $link_field        = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
 
-        $criterias_fields = array_filter([
+
+
+        $xml_report_all_issues_exporter->exportJiraLikeReport(
+            $reports_node,
             $summary_field,
             $description_field,
             $status_field,
-            $priority_field
-        ]);
-
-        $this->exportCriterias(
-            $report_node,
-            $criterias_fields
+            $priority_field,
+            $link_field
         );
 
-        $renderers_node = $report_node->addChild('renderers');
-        $renderer_node  = $renderers_node->addChild('renderer');
-        $renderer_node->addAttribute('rank', "0");
-        $renderer_node->addAttribute('type', "table");
-        $renderer_node->addAttribute('chunksz', "15");
-
-        $this->cdata_factory->insert($renderer_node, 'name', 'Results');
-
-        $column_fields = array_filter([
+        $xml_report_open_issues_exporter->exportJiraLikeReport(
+            $reports_node,
             $summary_field,
+            $description_field,
             $status_field,
-            $link_field,
-            $priority_field
-        ]);
-
-        $this->exportReportColumns(
-            $renderer_node,
-            $column_fields
+            $priority_field,
+            $link_field
         );
-    }
-
-    /**
-     * @param FieldMapping[] $field_mappings
-     */
-    private function exportCriterias(
-        SimpleXMLElement $report_node,
-        array $field_mappings
-    ): void {
-        $criterias_node = $report_node->addChild('criterias');
-        $rank_in_node = 0;
-        foreach ($field_mappings as $field_mapping) {
-            $criteria_node  = $criterias_node->addChild('criteria');
-            $criteria_node->addAttribute("rank", (string) $rank_in_node);
-            $criteria_field_node = $criteria_node->addChild("field");
-            $criteria_field_node->addAttribute("REF", $field_mapping->getXMLId());
-            $rank_in_node++;
-        }
-    }
-
-    /**
-     * @param FieldMapping[] $field_mappings
-     */
-    private function exportReportColumns(
-        SimpleXMLElement $renderer_node,
-        array $field_mappings
-    ): void {
-        $columns_node = $renderer_node->addChild('columns');
-        foreach ($field_mappings as $field_mapping) {
-            $field_node = $columns_node->addChild('field');
-            $field_node->addAttribute('REF', $field_mapping->getXMLId());
-        }
     }
 }

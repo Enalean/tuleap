@@ -37,7 +37,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotC
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\DataChangesetXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\FieldChangeXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportAllIssuesExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportOpenIssuesExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -112,6 +116,16 @@ class JiraXmlExporter
      */
     private $always_there_fields_exporter;
 
+    /**
+     * @var XmlReportAllIssuesExporter
+     */
+    private $xml_report_all_issues_exporter;
+
+    /**
+     * @var XmlReportOpenIssuesExporter
+     */
+    private $xml_report_open_issues_exporter;
+
     public function __construct(
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
@@ -123,7 +137,9 @@ class JiraXmlExporter
         SemanticsXMLExporter $semantics_xml_exporter,
         StatusValuesCollection $status_values_collection,
         ContainersXMLCollectionBuilder $containers_xml_collection_builder,
-        AlwaysThereFieldsExporter $always_there_fields_exporter
+        AlwaysThereFieldsExporter $always_there_fields_exporter,
+        XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
+        XmlReportOpenIssuesExporter $xml_report_open_issues_exporter
     ) {
         $this->error_collector                   = $error_collector;
         $this->jira_field_retriever              = $jira_field_retriever;
@@ -136,6 +152,8 @@ class JiraXmlExporter
         $this->status_values_collection          = $status_values_collection;
         $this->containers_xml_collection_builder = $containers_xml_collection_builder;
         $this->always_there_fields_exporter      = $always_there_fields_exporter;
+        $this->xml_report_all_issues_exporter    = $xml_report_all_issues_exporter;
+        $this->xml_report_open_issues_exporter   = $xml_report_open_issues_exporter;
     }
 
     public static function build(
@@ -152,13 +170,18 @@ class JiraXmlExporter
             new FieldNameFormatter()
         );
 
-        $jira_field_mapper  = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector);
+        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector);
+        $report_table_exporter     = new XmlReportTableExporter($cdata_factory);
+        $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
+        $status_values_collection  = new StatusValuesCollection(
+            $wrapper
+        );
 
         return new self(
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
-            new XmlReportExporter($cdata_factory),
+            new XmlReportExporter(),
             new FieldMappingCollection(),
             new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
@@ -206,14 +229,23 @@ class JiraXmlExporter
                 )
             ),
             new SemanticsXMLExporter(),
-            new StatusValuesCollection(
-                $wrapper
-            ),
+            $status_values_collection,
             new ContainersXMLCollectionBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
             new AlwaysThereFieldsExporter(
                 $field_xml_exporter
+            ),
+            new XmlReportAllIssuesExporter(
+                $default_criteria_exporter,
+                $cdata_factory,
+                $report_table_exporter
+            ),
+            new XmlReportOpenIssuesExporter(
+                $default_criteria_exporter,
+                $cdata_factory,
+                $report_table_exporter,
+                $status_values_collection
             )
         );
     }
@@ -256,7 +288,12 @@ class JiraXmlExporter
         );
 
         $node_tracker->addChild('rules');
-        $this->report_exporter->exportReports($node_tracker, $this->jira_field_mapping_collection);
+        $this->report_exporter->exportReports(
+            $node_tracker,
+            $this->jira_field_mapping_collection,
+            $this->xml_report_all_issues_exporter,
+            $this->xml_report_open_issues_exporter
+        );
         $node_tracker->addChild('workflow');
 
         $this->permissions_xml_exporter->exportFieldsPermissions(
