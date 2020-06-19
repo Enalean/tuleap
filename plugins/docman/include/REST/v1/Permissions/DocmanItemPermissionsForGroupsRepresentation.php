@@ -22,30 +22,30 @@ declare(strict_types=1);
 
 namespace Tuleap\Docman\REST\v1\Permissions;
 
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 final class DocmanItemPermissionsForGroupsRepresentation
 {
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
-     * @psalm-var \Tuleap\Project\REST\UserGroupRepresentation[]
+     * @var array {@type Tuleap\Project\REST\MinimalUserGroupRepresentation}
+     * @psalm-var \Tuleap\Project\REST\MinimalUserGroupRepresentation[]
      */
     public $can_read = [];
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
-     * @psalm-var \Tuleap\Project\REST\UserGroupRepresentation[]
+     * @var array {@type Tuleap\Project\REST\MinimalUserGroupRepresentation}
+     * @psalm-var \Tuleap\Project\REST\MinimalUserGroupRepresentation[]
      */
     public $can_write = [];
     /**
-     * @var array {@type Tuleap\Project\REST\UserGroupRepresentation}
-     * @psalm-var \Tuleap\Project\REST\UserGroupRepresentation[]
+     * @var array {@type Tuleap\Project\REST\MinimalUserGroupRepresentation}
+     * @psalm-var \Tuleap\Project\REST\MinimalUserGroupRepresentation[]
      */
     public $can_manage = [];
 
     /**
-     * @param UserGroupRepresentation[] $can_read
-     * @param UserGroupRepresentation[] $can_write
-     * @param UserGroupRepresentation[] $can_manage
+     * @param MinimalUserGroupRepresentation[] $can_read
+     * @param MinimalUserGroupRepresentation[] $can_write
+     * @param MinimalUserGroupRepresentation[] $can_manage
      */
     public static function build(array $can_read, array $can_write, array $can_manage): self
     {

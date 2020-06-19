@@ -17,6 +17,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use Tuleap\Project\REST\UserGroupRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormElement_Field_List_BindValue
@@ -88,7 +89,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
-        $ugroup_representation = new UserGroupRepresentation();
+        $ugroup_representation = new MinimalUserGroupRepresentation();
 
         $ugroup_manager = new UGroupManager();
         $project        = $field->getTracker()->getProject();

@@ -27,7 +27,7 @@ use FRSRelease;
 use IPermissionsManagerNG;
 use PFUser;
 use Tuleap\FRS\FRSPermissionManager;
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 use UGroupManager;
 
 class ReleasePermissionsForGroupsBuilder
@@ -73,7 +73,7 @@ class ReleasePermissionsForGroupsBuilder
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getUGroup($release->getProject(), $ugroup_id);
             if ($ugroup) {
-                $can_read[] = (new UserGroupRepresentation())->build((int) $release->getProject()->getID(), $ugroup);
+                $can_read[] = (new MinimalUserGroupRepresentation())->build((int) $release->getProject()->getID(), $ugroup);
             }
         }
         return $can_read;

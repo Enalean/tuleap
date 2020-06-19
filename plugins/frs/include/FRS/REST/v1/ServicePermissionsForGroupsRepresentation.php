@@ -23,25 +23,25 @@ declare(strict_types=1);
 
 namespace Tuleap\FRS\REST\v1;
 
-use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
 
 class ServicePermissionsForGroupsRepresentation
 {
     /**
-     * @var array {@type \Tuleap\Project\REST\UserGroupRepresentation}
-     * @psalm-var UserGroupRepresentation[]
+     * @var array {@type \Tuleap\Project\REST\MinimalUserGroupRepresentation}
+     * @psalm-var MinimalUserGroupRepresentation[]
      */
     public $can_admin = [];
 
     /**
-     * @var array {@type \Tuleap\Project\REST\UserGroupRepresentation}
-     * @psalm-var UserGroupRepresentation[]
+     * @var array {@type \Tuleap\Project\REST\MinimalUserGroupRepresentation}
+     * @psalm-var MinimalUserGroupRepresentation[]
      */
     public $can_read = [];
 
     /**
-     * @param UserGroupRepresentation[] $can_admin
-     * @param UserGroupRepresentation[] $can_read
+     * @param MinimalUserGroupRepresentation[] $can_admin
+     * @param MinimalUserGroupRepresentation[] $can_read
      * @return ServicePermissionsForGroupsRepresentation
      */
     public function build(array $can_admin, array $can_read): self

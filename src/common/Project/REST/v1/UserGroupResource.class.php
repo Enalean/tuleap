@@ -101,29 +101,30 @@ class UserGroupResource extends AuthenticatedResource
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
      * - format: ugroupId for all other groups (registered users, custom groups, ...)
      *
-     * @throws RestException 400
+     * @return \Tuleap\Project\REST\UserGroupRepresentation
      * @throws RestException 403
      * @throws RestException 404
      *
-     * @return \Tuleap\Project\REST\UserGroupRepresentation
+     * @throws RestException 400
      */
     public function getId($id)
     {
         $this->checkAccess();
 
         $ugroup     = $this->user_group_retriever->getExistingUserGroup($id);
-        $project_id = $ugroup->getProjectId();
+        $project    = $ugroup->getProject();
+        $project_id = $project->getGroupId();
 
         if ($project_id) {
             ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
                 $this->user_manager->getCurrentUser(),
-                $ugroup->getProject()
+                $project
             );
             $this->userCanSeeUserGroups($project_id);
         }
 
         $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build((int) $project_id, $ugroup);
+        $ugroup_representation->build($project, $ugroup);
         $this->sendAllowHeadersForUserGroupId();
 
         return $ugroup_representation;
@@ -547,7 +548,7 @@ class UserGroupResource extends AuthenticatedResource
      *
      * @param \Tuleap\Project\REST\UserGroupPOSTRepresentation $user_group_representation Ugroup representation {@from body}
      *
-     * @return UserGroupRepresentation {@type \Tuleap\Project\REST\v1\UserGroupRepresentation}
+     * @return UserGroupRepresentation {@type \Tuleap\Project\REST\UserGroupRepresentation}
      *
      * @throws RestException 401
      * @throws RestException 403
@@ -578,7 +579,7 @@ class UserGroupResource extends AuthenticatedResource
 
             $new_ugroup                = $this->ugroup_manager->getById($new_ugroup_id);
             $new_ugroup_representation = new UserGroupRepresentation();
-            $new_ugroup_representation->build((int) $project_id, $new_ugroup);
+            $new_ugroup_representation->build($project, $new_ugroup);
 
             return $new_ugroup_representation;
         } catch (CannotCreateUGroupException $exception) {
