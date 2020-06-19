@@ -51,6 +51,7 @@ use Tuleap\Tracker\Artifact\Changeset\NewChangesetFieldsWithoutRequiredValidatio
 use Tuleap\Tracker\Artifact\PermissionsCache;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
 use Tuleap\Tracker\Artifact\XMLImport\TrackerNoXMLImportLoggedConfig;
 use Tuleap\Tracker\FormElement\ChartCachedDaysComparator;
 use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
@@ -1977,12 +1978,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect)
     {
         $this->getEventManager()->processEvent(
-            TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
-            array(
-                'request'  => $request,
-                'artifact' => $this,
-                'redirect' => $redirect
-            )
+            new RedirectAfterArtifactCreationOrUpdateEvent($request, $redirect, $this)
         );
     }
 

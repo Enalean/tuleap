@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright Enalean (c) 2013 - 2018. All rights reserved.
+/**
+ * Copyright Enalean (c) 2013 - Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registrated trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -21,6 +21,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 
 /**
  * I'm responsible of rendering artifact to user (creation, update, view...)
@@ -158,12 +160,6 @@ abstract class Tracker_Artifact_ArtifactRenderer
 
     protected function enhanceRedirect(Codendi_Request $request)
     {
-        $this->event_manager->processEvent(
-            TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
-            array(
-                'request'  => $request,
-                'redirect' => $this->redirect,
-            )
-        );
+        $this->event_manager->processEvent(new BuildArtifactFormActionEvent($request, $this->redirect));
     }
 }

@@ -29,6 +29,8 @@ use Tuleap\Cardwall\Semantic\BackgroundColorDao;
 use Tuleap\Cardwall\Semantic\BackgroundColorSemanticFactory;
 use Tuleap\Cardwall\Semantic\FieldUsedInSemanticObjectChecker;
 use Tuleap\Layout\IncludeAssets;
+use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
+use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\Events\AllowedFieldTypeChangesRetriever;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\Report\Renderer\ImportRendererFromXmlEvent;
@@ -71,8 +73,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
             $this->addHook('tracker_report_renderer_types');
             $this->addHook('tracker_report_renderer_instance');
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
-            $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
-            $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
+            $this->addHook(BuildArtifactFormActionEvent::NAME);
+            $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(Event::JAVASCRIPT);
             $this->addHook(Event::IMPORT_XML_PROJECT_TRACKER_DONE);
             $this->addHook(AllowedFieldTypeChangesRetriever::NAME);
@@ -450,10 +452,10 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
-        $cardwall = $params['request']->get('cardwall');
-        $redirect = $params['redirect'];
+        $cardwall = $event->getRequest()->get('cardwall');
+        $redirect = $event->getRedirect();
         if ($cardwall) {
             if (!$redirect->stayInTracker()) {
                 $redirect_to     = key($cardwall);
@@ -500,11 +502,11 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $cardwall = $params['request']->get('cardwall');
+        $cardwall = $event->getRequest()->get('cardwall');
         if ($cardwall) {
-            $this->appendCardwallParameter($params['redirect'], $cardwall);
+            $this->appendCardwallParameter($event->getRedirect(), $cardwall);
         }
     }
 
