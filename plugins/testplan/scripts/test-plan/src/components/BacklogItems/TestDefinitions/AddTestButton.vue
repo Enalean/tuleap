@@ -24,6 +24,7 @@
         class="tlp-button-primary tlp-button-outline test-plan-add-test-button"
         v-bind:class="add_button_class"
         v-if="can_add_button_be_displayed"
+        data-test="add-test-button"
         v-translate
     >
         Add a test

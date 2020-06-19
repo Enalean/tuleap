@@ -77,6 +77,16 @@ describe("Test plan", function () {
                         cy.get("[data-test=automated-test-icon]");
                     });
                 });
+
+                it("Creates a new test", () => {
+                    const new_test_summary = "New test " + now;
+                    cy.get("[data-test=add-test-button]").click();
+                    cy.get("[data-test=summary]").type(new_test_summary + "{enter}");
+                    cy.contains("Display list of backlog items with their tests definition");
+                    cy.contains("Update artifact");
+                    cy.contains("Send beeper notification");
+                    cy.contains(new_test_summary);
+                });
             });
         });
     });
