@@ -25,7 +25,7 @@ namespace Tuleap\TestPlan\TestDefinition;
 final class TestPlanLinkedTestDefinitions
 {
     /**
-     * @var \Tracker_Artifact[]
+     * @var TestPlanTestDefinitionWithTestStatus[]
      * @psalm-readonly
      */
     private $requested_linked_test_definitions;
@@ -36,7 +36,7 @@ final class TestPlanLinkedTestDefinitions
     private $total_number_of_linked_test_definitions;
 
     /**
-     * @param \Tracker_Artifact[] $requested_linked_test_definitions
+     * @param TestPlanTestDefinitionWithTestStatus[] $requested_linked_test_definitions
      */
     private function __construct(array $requested_linked_test_definitions, int $total_number_of_linked_test_definitions)
     {
@@ -48,6 +48,9 @@ final class TestPlanLinkedTestDefinitions
         $this->total_number_of_linked_test_definitions = $total_number_of_linked_test_definitions;
     }
 
+    /**
+     * @param TestPlanTestDefinitionWithTestStatus[] $requested_linked_test_definitions
+     */
     public static function subset(array $requested_linked_test_definitions, int $total_number_of_linked_test_definitions): self
     {
         return new self($requested_linked_test_definitions, $total_number_of_linked_test_definitions);
@@ -59,7 +62,7 @@ final class TestPlanLinkedTestDefinitions
     }
 
     /**
-     * @return \Tracker_Artifact[]
+     * @return TestPlanTestDefinitionWithTestStatus[]
      */
     public function getRequestedLinkedTestDefinitions(): array
     {

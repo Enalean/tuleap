@@ -33,15 +33,25 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
     /**
      * @var string
      */
-    public $short_type;
+    public $short_type = '';
+    /**
+     * @var string | null {@choice notrun,passed,failed,blocked}
+     * @psalm-var null|"notrun"|"passed"|"failed"|"blocked"
+     */
+    public $test_status;
 
+    /**
+     * @psalm-param null|"notrun"|"passed"|"failed"|"blocked" $test_status
+     */
     public function build(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        ?Tracker_Artifact_Changeset $changeset = null
+        ?Tracker_Artifact_Changeset $changeset = null,
+        ?string $test_status = null
     ): void {
         parent::build($artifact, $form_element_factory, $user, $changeset);
-        $this->short_type = $artifact->getTracker()->getItemName();
+        $this->short_type  = $artifact->getTracker()->getItemName();
+        $this->test_status = $test_status;
     }
 }

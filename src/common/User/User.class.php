@@ -496,9 +496,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public $_ugroups;
 
     /**
-     * @return ProjectUGroup[]
+     * @return array<int|string>
+     * @psalm-return non-empty-array<string|int>
      */
-    public function getUgroups($group_id, $instances)
+    public function getUgroups($group_id, $instances): array
     {
         $hash = md5(serialize($instances));
         if (!isset($this->_ugroups)) {

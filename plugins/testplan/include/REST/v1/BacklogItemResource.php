@@ -29,9 +29,14 @@ use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
 use Tuleap\TestManagement\ArtifactDao;
 use Tuleap\TestPlan\TestDefinition\TestPlanLinkedTestDefinitionsRetriever;
+use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionsTestStatusDAO;
+use Tuleap\TestPlan\TestDefinition\TestPlanTestDefinitionWithTestStatusRetriever;
+use Tuleap\TestPlan\TestDefinition\TestStatusPerTestDefinitionsInformationForUserRetriever;
 
 final class BacklogItemResource extends AuthenticatedResource
 {
+    private const MAX_LIMIT = 30;
+
     /**
      * @url OPTIONS {id}
      *
@@ -50,16 +55,17 @@ final class BacklogItemResource extends AuthenticatedResource
      * @url GET {id}/test_definitions
      * @access hybrid
      *
-     * @param int $id     ID of the backlog item
-     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
-     * @param int $offset Position of the first element to display {@min 0}
+     * @param int $id           ID of the backlog item
+     * @param int $milestone_id ID of the milestone
+     * @param int $limit        Number of elements displayed per page {@min 0} {@max 30}
+     * @param int $offset       Position of the first element to display {@min 0}
      *
      * @return array {@type DefinitionLinkedToABacklogItemRepresentation}
      * @psalm-return DefinitionLinkedToABacklogItemRepresentation[]
      *
      * @throws RestException 404
      */
-    public function getTestDefinitions(int $id, int $limit = 10, int $offset = 0): array
+    public function getTestDefinitions(int $id, int $milestone_id, int $limit = 10, int $offset = 0): array
     {
         $this->checkAccess();
         $this->options($id);
@@ -69,20 +75,31 @@ final class BacklogItemResource extends AuthenticatedResource
 
         $artifact_factory = \Tracker_ArtifactFactory::instance();
         $backlog_item     = $artifact_factory->getArtifactByIdUserCanView($user, $id);
+        $milestone        = $artifact_factory->getArtifactByIdUserCanView($user, $milestone_id);
 
-        if ($backlog_item === null) {
+        if ($backlog_item === null || $milestone === null) {
             throw new RestException(404);
         }
 
         $testmanagement_config       = new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance());
         $testmanagement_artifact_dao = new ArtifactDao();
+        $formelement_factory         = Tracker_FormElementFactory::instance();
         $linked_test_definitions_retriever = new TestPlanLinkedTestDefinitionsRetriever(
             $testmanagement_config,
             $testmanagement_artifact_dao,
-            $artifact_factory
+            $artifact_factory,
+            new TestPlanTestDefinitionWithTestStatusRetriever(
+                new TestPlanTestDefinitionsTestStatusDAO(),
+                new TestStatusPerTestDefinitionsInformationForUserRetriever(
+                    $testmanagement_config,
+                    TrackerFactory::instance(),
+                    $formelement_factory,
+                )
+            )
         );
         $linked_test_definitions = $linked_test_definitions_retriever->getDefinitionsLinkedToAnArtifact(
             $backlog_item,
+            $milestone,
             $user,
             $limit,
             $offset,
@@ -91,19 +108,19 @@ final class BacklogItemResource extends AuthenticatedResource
             $limit,
             $offset,
             $linked_test_definitions->getTotalNumberOfLinkedTestDefinitions(),
-            \Tuleap\AgileDashboard\REST\v1\BacklogItemResource::MAX_LIMIT,
+            self::MAX_LIMIT,
         );
-
-        $formelement_factory = Tracker_FormElementFactory::instance();
 
         $representations = [];
 
         foreach ($linked_test_definitions->getRequestedLinkedTestDefinitions() as $linked_test_definition) {
             $representation = new DefinitionLinkedToABacklogItemRepresentation();
             $representation->build(
-                $linked_test_definition,
+                $linked_test_definition->getTestDefinition(),
                 $formelement_factory,
                 $user,
+                null,
+                $linked_test_definition->getStatus()
             );
             $representations[] = $representation;
         }

@@ -159,7 +159,7 @@ describe("BacklogItem state actions", () => {
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
                 `/api/v1/backlog_items/101/test_definitions`,
                 {
-                    params: { limit: 100 },
+                    params: { milestone_id: 42, limit: 30 },
                     getCollectionCallback: expect.any(Function),
                 }
             );
@@ -194,7 +194,7 @@ describe("BacklogItem state actions", () => {
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(
                 `/api/v1/backlog_items/101/test_definitions`,
                 {
-                    params: { limit: 100 },
+                    params: { milestone_id: 42, limit: 30 },
                     getCollectionCallback: expect.any(Function),
                 }
             );
