@@ -50,6 +50,33 @@ export default class ListOfTestDefinitions extends Vue {
     @State
     readonly milestone_id!: number;
 
+    @State
+    readonly autoscroll_to_create_test_button_of_backlog_item_id!: number;
+
+    mounted(): void {
+        if (this.autoscroll_to_create_test_button_of_backlog_item_id === this.backlog_item.id) {
+            this.autoscroll();
+        }
+    }
+
+    autoscroll(): void {
+        if (!document.body?.parentElement) {
+            return;
+        }
+
+        const viewport_height = document.body.parentElement.clientHeight;
+        const middle_of_the_screen = viewport_height / 2;
+        const rect = this.$el.getBoundingClientRect();
+        const current_top = rect.top;
+        if (current_top > middle_of_the_screen) {
+            setTimeout(() => {
+                const rect = this.$el.getBoundingClientRect();
+                const new_top = rect.top + rect.height / 2 - middle_of_the_screen;
+                window.scrollTo({ top: new_top, behavior: "smooth" });
+            }, 1000);
+        }
+    }
+
     get add_button_class(): string {
         if (this.should_empty_state_be_displayed) {
             return "test-plan-add-test-button-with-empty-state";
