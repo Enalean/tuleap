@@ -27,6 +27,8 @@ export interface State {
     readonly user_can_create_campaign: boolean;
     readonly testdefinition_tracker_id: number | null;
     readonly testdefinition_tracker_name: string;
+    readonly expand_backlog_item_id: number;
+    readonly highlight_test_definition_id: number;
 }
 
 export interface RootState extends State {

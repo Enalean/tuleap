@@ -98,7 +98,9 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
         $project_unixname   = $artifact->getTracker()->getProject()->getUnixNameMixedCase();
         $redirect->base_url = TestPlanPaneInfo::URL
             . '/' . urlencode($project_unixname)
-            . '/' . urlencode((string) $ttm_milestone_id);
+            . '/' . urlencode((string) $ttm_milestone_id)
+            . '/backlog_item/' . urlencode((string) $ttm_backlog_item_id)
+            . '/test/' . urlencode((string) $artifact->getId());
 
         $redirect->query_parameters = [];
     }

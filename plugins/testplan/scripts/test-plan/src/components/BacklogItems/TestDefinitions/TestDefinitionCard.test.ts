@@ -19,7 +19,11 @@
 
 import { shallowMount } from "@vue/test-utils";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
-import { TestDefinition } from "../../../type";
+import { BacklogItem, TestDefinition } from "../../../type";
+import { createStoreMock } from "../../../../../../../../src/scripts/vue-components/store-wrapper-jest";
+import { RootState } from "../../../store/type";
+
+jest.useFakeTimers();
 
 describe("TestDefinitionCard", () => {
     it("Display a test definition as a card", () => {
@@ -30,6 +34,7 @@ describe("TestDefinitionCard", () => {
                     short_type: "test_def",
                     summary: "Test definition summary",
                 } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
             },
         });
 
@@ -44,10 +49,41 @@ describe("TestDefinitionCard", () => {
                     short_type: "test_def",
                     summary: "Test definition summary",
                     automated_tests: "Automated test name",
-                },
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
             },
         });
 
         expect(wrapper.find("[data-test=automated-test-icon]").exists()).toBe(true);
+    });
+
+    it("Marks the test as just refreshed", () => {
+        const $store = createStoreMock({
+            state: {
+                backlog_item: {},
+            } as RootState,
+        });
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    is_just_refreshed: true,
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+            mocks: { $store },
+        });
+
+        expect(wrapper.classes("test-plan-test-definition-is-just-refreshed")).toBe(true);
+
+        jest.advanceTimersByTime(1000);
+
+        expect($store.commit).toHaveBeenCalledWith(
+            "backlog_item/removeIsJustRefreshedFlagOnTestDefinition",
+            {
+                backlog_item: { id: 456 },
+                test_definition: { id: 123, is_just_refreshed: true },
+            }
+        );
     });
 });

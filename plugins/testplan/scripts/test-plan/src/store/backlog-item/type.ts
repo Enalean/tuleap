@@ -29,3 +29,8 @@ export interface AddTestDefinitionsToBacklogItemPayload {
     readonly backlog_item: BacklogItem;
     readonly test_definitions: TestDefinition[];
 }
+
+export interface RemoveIsJustRefreshedFlagOnTestDefinitionPayload {
+    readonly backlog_item: BacklogItem;
+    readonly test_definition: TestDefinition;
+}

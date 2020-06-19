@@ -57,8 +57,12 @@ class TestPlanPresenterBuilder
         $this->definition_tracker_retriever = $definition_tracker_retriever;
     }
 
-    public function getPresenter(\Planning_ArtifactMilestone $milestone, \PFUser $user): TestPlanPresenter
-    {
+    public function getPresenter(
+        \Planning_ArtifactMilestone $milestone,
+        \PFUser $user,
+        int $expand_backlog_item_id,
+        int $highlight_test_definition_id
+    ): TestPlanPresenter {
         $presenter_data     = $this->pane_factory->getPanePresenterData($milestone);
         $milestone_artifact = $milestone->getArtifact();
         $project            = $milestone->getProject();
@@ -70,6 +74,8 @@ class TestPlanPresenterBuilder
             (int) $project->getID(),
             $this->canUserCreateACampaign($project, $user),
             $this->definition_tracker_retriever->getTestDefinitionTracker($project, $user),
+            $expand_backlog_item_id,
+            $highlight_test_definition_id,
         );
     }
 

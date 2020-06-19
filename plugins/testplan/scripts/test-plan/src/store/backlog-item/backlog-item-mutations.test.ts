@@ -31,6 +31,7 @@ import {
     loadingErrorHasBeenCatched,
     loadingErrorHasBeenCatchedForTestDefinition,
     markTestDefinitionsAsBeingLoaded,
+    removeIsJustRefreshedFlagOnTestDefinition,
 } from "./backlog-item-mutations";
 
 jest.useFakeTimers();
@@ -292,6 +293,63 @@ describe("BacklogItem state mutations", () => {
             endLoadingTestDefinition(state, backlog_item);
 
             expect(state.backlog_items[0].test_definitions.length).toBe(2);
+        });
+    });
+
+    describe("removeIsJustRefreshedFlagOnTestDefinition", () => {
+        it("Remove is_just_refreshed flag", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    {
+                        id: 123,
+                        test_definitions: [{ id: 1001, is_just_refreshed: true }],
+                    } as BacklogItem,
+                ],
+            };
+
+            removeIsJustRefreshedFlagOnTestDefinition(state, {
+                backlog_item: { id: 123 } as BacklogItem,
+                test_definition: { id: 1001 } as TestDefinition,
+            });
+
+            expect(state.backlog_items[0].test_definitions[0].is_just_refreshed).toBe(false);
+        });
+
+        it("Throws error if backlog item cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [],
+            };
+
+            expect(() => {
+                removeIsJustRefreshedFlagOnTestDefinition(state, {
+                    backlog_item: { id: 123 } as BacklogItem,
+                    test_definition: { id: 1001 } as TestDefinition,
+                });
+            }).toThrow();
+        });
+
+        it("Throws error if test definition cannot be found", () => {
+            const state: BacklogItemState = {
+                is_loading: true,
+                has_loading_error: false,
+                backlog_items: [
+                    {
+                        id: 123,
+                        test_definitions: [] as TestDefinition[],
+                    } as BacklogItem,
+                ],
+            };
+
+            expect(() => {
+                removeIsJustRefreshedFlagOnTestDefinition(state, {
+                    backlog_item: { id: 123 } as BacklogItem,
+                    test_definition: { id: 1001 } as TestDefinition,
+                });
+            }).toThrow();
         });
     });
 });

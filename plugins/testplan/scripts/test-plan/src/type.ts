@@ -49,9 +49,13 @@ export interface BacklogItem extends BacklogItemFromREST {
     readonly test_definitions: TestDefinition[];
 }
 
-export interface TestDefinition {
+export interface TestDefinitionFromREST {
     readonly id: number;
     readonly short_type: string;
     readonly summary: string;
     readonly automated_tests: string;
+}
+
+export interface TestDefinition extends TestDefinitionFromREST {
+    readonly is_just_refreshed: boolean;
 }

@@ -59,9 +59,16 @@
     width: 100%;
     margin: 0 0 $tlp-half-spacing;
     padding: $tlp-half-spacing;
+    transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
 
     &:last-of-type {
         margin: 0;
+    }
+
+    &.test-plan-test-definition-is-just-refreshed {
+        animation: pulse-test-definition 500ms ease-in-out;
+        border-color: $tlp-ui-success;
+        background: mix($tlp-ui-white, $tlp-ui-success, 90%);
     }
 }
 
@@ -94,5 +101,19 @@
 
     &.test-plan-add-test-button-with-empty-state {
         margin: 0 0 $tlp-large-spacing - $tlp-half-spacing;
+    }
+}
+
+@keyframes pulse-test-definition {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
     }
 }

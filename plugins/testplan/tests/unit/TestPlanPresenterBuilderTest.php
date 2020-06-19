@@ -89,7 +89,12 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
         $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(true);
 
-        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
 
         $this->assertTrue($presenter->user_can_create_campaign);
     }
@@ -101,7 +106,12 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn($tracker);
         $tracker->shouldReceive('userCanSubmitArtifact')->andReturn(false);
 
-        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
 
         $this->assertFalse($presenter->user_can_create_campaign);
     }
@@ -110,7 +120,12 @@ final class TestPlanPresenterBuilderTest extends TestCase
     {
         $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(false);
 
-        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
 
         $this->assertFalse($presenter->user_can_create_campaign);
     }
@@ -120,7 +135,12 @@ final class TestPlanPresenterBuilderTest extends TestCase
         $this->testmanagement_config->shouldReceive('getCampaignTrackerId')->andReturn(145);
         $this->tracker_factory->shouldReceive('getTrackerById')->andReturn(null);
 
-        $presenter = $this->builder->getPresenter($this->milestone, UserTestBuilder::aUser()->build());
+        $presenter = $this->builder->getPresenter(
+            $this->milestone,
+            UserTestBuilder::aUser()->build(),
+            42,
+            101,
+        );
 
         $this->assertFalse($presenter->user_can_create_campaign);
     }

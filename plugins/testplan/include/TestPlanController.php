@@ -128,16 +128,30 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
             [],
             ['main_classes' => ['fluid-main']]
         );
+
+        $expand_backlog_item_id = (int) ($variables['backlog_item_id'] ?? 0);
+        $highlight_test_definition_id = (int) ($variables['test_definition_id'] ?? 0);
+
         if ($this->browser->isIE11()) {
             $this->renderer->renderToPage(
                 'test-plan-unsupported-browser',
-                $this->presenter_builder->getPresenter($milestone, $user)
+                $this->presenter_builder->getPresenter(
+                    $milestone,
+                    $user,
+                    $expand_backlog_item_id,
+                    $highlight_test_definition_id
+                )
             );
         } else {
             $layout->includeFooterJavascriptFile($this->testplan_assets->getFileURL('testplan.js'));
             $this->renderer->renderToPage(
                 'test-plan',
-                $this->presenter_builder->getPresenter($milestone, $user)
+                $this->presenter_builder->getPresenter(
+                    $milestone,
+                    $user,
+                    $expand_backlog_item_id,
+                    $highlight_test_definition_id
+                )
             );
         }
         $service->displayFooter();

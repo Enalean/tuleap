@@ -24,6 +24,7 @@
             v-for="test_definition of backlog_item.test_definitions"
             v-bind:key="test_definition.id"
             v-bind:test_definition="test_definition"
+            v-bind:backlog_item="backlog_item"
         />
         <test-definition-skeleton v-if="backlog_item.is_loading_test_definitions" />
         <test-definition-empty-state v-if="should_empty_state_be_displayed" />
