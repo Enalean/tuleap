@@ -108,6 +108,8 @@ use Tuleap\Tracker\Artifact\Event\ArtifactUpdated;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
+use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\CreateTrackerFromXMLEvent;
 use Tuleap\Tracker\Creation\DefaultTemplatesXMLFileCollection;
 use Tuleap\Tracker\Events\MoveArtifactGetExternalSemanticCheckers;
@@ -182,9 +184,9 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $this->addHook(\Tuleap\Widget\Event\ConfigureAtXMLImport::NAME);
             $this->addHook(TRACKER_EVENT_INCLUDE_CSS_FILE);
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED, 'tracker_event_trackers_duplicated', false);
-            $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
+            $this->addHook(BuildArtifactFormActionEvent::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
-            $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
+            $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
             $this->addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
             $this->addHook(TRACKER_EVENT_MANAGE_SEMANTICS, 'tracker_event_manage_semantics', false);
             $this->addHook(TRACKER_EVENT_SEMANTIC_FROM_XML, 'tracker_event_semantic_from_xml');
@@ -548,15 +550,17 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    public function tracker_event_redirect_after_artifact_creation_or_update($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
         $params_extractor        = new AgileDashboard_PaneRedirectionExtractor();
         $artifact_linker         = new Planning_ArtifactLinker($this->getArtifactFactory(), PlanningFactory::build());
-        $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($params['request'], $params['artifact']);
-        $requested_planning      = $params_extractor->extractParametersFromRequest($params['request']);
+        $request                 = $event->getRequest();
+        $artifact                = $event->getArtifact();
+        $last_milestone_artifact = $artifact_linker->linkBacklogWithPlanningItems($request, $artifact);
+        $requested_planning      = $params_extractor->extractParametersFromRequest($request);
 
         if ($requested_planning) {
-            $this->redirectOrAppend($params['request'], $params['artifact'], $params['redirect'], $requested_planning, $last_milestone_artifact);
+            $this->redirectOrAppend($request, $artifact, $event->getRedirect(), $requested_planning, $last_milestone_artifact);
         }
     }
 
@@ -669,7 +673,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
              $this->setQueryParametersFromRequest($request, $redirect);
              // Pass the right parameters so parent can be created in the right milestone (see updateBacklogs)
             if ($planning && $last_milestone_artifact && $redirect->mode == Tracker_Artifact_Redirect::STATE_CREATE_PARENT) {
-                $redirect->query_parameters['child_milestone'] = $last_milestone_artifact->getId();
+                $redirect->query_parameters['child_milestone'] = (string) $last_milestone_artifact->getId();
             }
         }
     }
@@ -706,15 +710,18 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         );
     }
 
-    public function tracker_event_build_artifact_form_action($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $this->setQueryParametersFromRequest($params['request'], $params['redirect']);
-        if ($params['request']->exist('child_milestone')) {
-            $params['redirect']->query_parameters['child_milestone'] = $params['request']->getValidated('child_milestone', 'uint', 0);
+        $request = $event->getRequest();
+        $redirect = $event->getRedirect();
+
+        $this->setQueryParametersFromRequest($request, $redirect);
+        if ($request->exist('child_milestone')) {
+            $redirect->query_parameters['child_milestone'] = $request->getValidated('child_milestone', 'uint', 0);
         }
     }
 
-    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect)
+    private function setQueryParametersFromRequest(Codendi_Request $request, Tracker_Artifact_Redirect $redirect): void
     {
         $params_extractor   = new AgileDashboard_PaneRedirectionExtractor();
         $requested_planning = $params_extractor->extractParametersFromRequest($request);

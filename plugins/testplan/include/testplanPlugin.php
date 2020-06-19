@@ -37,6 +37,8 @@ use Tuleap\TestPlan\TestPlanPresenterBuilder;
 use Tuleap\TestPlan\TestPlanTestDefinitionTrackerRetriever;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
+use Tuleap\Tracker\Artifact\RedirectAfterArtifactCreationOrUpdateEvent;
+use Tuleap\Tracker\Artifact\Renderer\BuildArtifactFormActionEvent;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkUpdater;
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -84,8 +86,8 @@ final class testplanPlugin extends Plugin
         $this->addHook(GetURIForMilestoneFromTTM::NAME);
         $this->addHook(CollectRoutesEvent::NAME);
         $this->addHook(Event::REST_RESOURCES);
-        $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
-        $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
+        $this->addHook(BuildArtifactFormActionEvent::NAME);
+        $this->addHook(RedirectAfterArtifactCreationOrUpdateEvent::NAME);
 
         return parent::getHooksAndCallbacks();
     }
@@ -191,34 +193,13 @@ final class testplanPlugin extends Plugin
         return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject());
     }
 
-    /**
-     * @see TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION
-     */
-    public function trackerEventBuildArtifactFormAction(array $params): void
+    public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        $request = $params['request'];
-        assert($request instanceof Codendi_Request);
-
-        $redirect = $params['redirect'];
-        assert($redirect instanceof Tracker_Artifact_Redirect);
-
-        (new RedirectParameterInjector())->inject($request, $redirect);
+        (new RedirectParameterInjector())->inject($event->getRequest(), $event->getRedirect());
     }
 
-    /**
-     * @see TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE
-     */
-    public function trackerEventRedirectAfterArtifactCreationOrUpdate(array $params): void
+    public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
     {
-        $request = $params['request'];
-        assert($request instanceof Codendi_Request);
-
-        $redirect = $params['redirect'];
-        assert($redirect instanceof Tracker_Artifact_Redirect);
-
-        $artifact = $params['artifact'];
-        assert($artifact instanceof Tracker_Artifact);
-
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
 
         $priority_manager = new Tracker_Artifact_PriorityManager(
@@ -237,6 +218,6 @@ final class testplanPlugin extends Plugin
             $artifactlink_updater,
             new RedirectParameterInjector()
         );
-        $processor->process($request, $redirect, $artifact);
+        $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
     }
 }

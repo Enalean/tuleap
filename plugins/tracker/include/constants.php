@@ -40,29 +40,6 @@ define('TRACKER_SERVICE_ICON', '\e80d');
 define('TRACKER_EVENT_TRACKERS_DUPLICATED', 'tracker_event_trackers_duplicated');
 
 /**
- * An artifact has just been created/updated. Redirect to a plugin specific url if needed.
- *
- * Parameters:
- * 'request'  => The initial request
- * 'artifact' => The involved artifact
- *
- * Either a redirection has been done or nothing has been done
- * (in this case plugins/tracker will commpute the redirection)
- */
-define('TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE', 'tracker_event_redirect_after_artifact_creation_or_update');
-
-/**
- * We build the form action for a new artifact. Let the plugin inject its own variable.
- *
- * Parameters:
- * 'request'          => The initial request
- * 'query_parameters' => The actual form action parameters
- *
- * No expected results than the query_parameters modified if needed
- */
-define('TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION', 'tracker_event_build_artifact_form_action');
-
-/**
  * An artifact has just been (un)associated to another one
  *
  * Parameters:
