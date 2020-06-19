@@ -39,6 +39,7 @@ export interface BacklogItemFromREST {
     readonly short_type: string;
     readonly color: string;
     readonly artifact: ArtifactReference;
+    readonly can_add_a_test: boolean;
 }
 
 export interface BacklogItem extends BacklogItemFromREST {

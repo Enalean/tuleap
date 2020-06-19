@@ -126,13 +126,14 @@ class ArtifactLinkUpdater
         array $to_remove,
         string $type
     ): void {
-        if (! $artifact->getAnArtifactLinkField($user)) {
+        $artifact_link_field = $artifact->getAnArtifactLinkField($user);
+        if (! $artifact_link_field) {
             throw new Tracker_NoArtifactLinkFieldException('Missing artifact link field');
         }
 
         try {
             $fields_data = $this->formatFieldDatas(
-                $artifact->getAnArtifactLinkField($user),
+                $artifact_link_field,
                 $to_add,
                 $to_remove,
                 $type

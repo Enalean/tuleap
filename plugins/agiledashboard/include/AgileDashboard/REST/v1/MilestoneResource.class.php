@@ -117,6 +117,10 @@ class MilestoneResource extends AuthenticatedResource
 
     /** @var Tracker_FormElementFactory  */
     private $tracker_form_element_factory;
+    /**
+     * @var ContentForMiletoneProvider
+     */
+    private $content_for_miletone_provider;
 
     public function __construct()
     {
@@ -212,6 +216,8 @@ class MilestoneResource extends AuthenticatedResource
         );
 
         $this->query_to_criterion_converter = new QueryToCriterionStatusConverter();
+
+        $this->content_for_miletone_provider = ContentForMiletoneProvider::build($this->milestone_factory);
     }
 
     /**
@@ -597,8 +603,13 @@ class MilestoneResource extends AuthenticatedResource
             $milestone->getProject()
         );
 
-        $backlog                             = $this->backlog_factory->getSelfBacklog($milestone, $limit, $offset);
-        $backlog_items                       = $this->getMilestoneContentItems($milestone, $backlog);
+        $backlog_items = $this->content_for_miletone_provider->getContent(
+            $milestone,
+            $this->getCurrentUser(),
+            $limit,
+            $offset
+        );
+
         $backlog_items_representations       = array();
         $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
@@ -1179,16 +1190,6 @@ class MilestoneResource extends AuthenticatedResource
     private function getCurrentUser()
     {
         return UserManager::instance()->getCurrentUser();
-    }
-
-    private function getMilestoneContentItems($milestone, $backlog)
-    {
-        return $this->backlog_item_collection_factory->getOpenAndClosedCollection(
-            $this->getCurrentUser(),
-            $milestone,
-            $backlog,
-            ''
-        );
     }
 
     private function checkContentLimit($limit)

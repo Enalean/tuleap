@@ -34,7 +34,7 @@ export async function loadBacklogItems(
     context.commit("beginLoadingBacklogItems");
     try {
         await recursiveGet(
-            `/api/v1/milestones/${encodeURIComponent(context.rootState.milestone_id)}/content`,
+            `/api/v1/milestones/${encodeURIComponent(context.rootState.milestone_id)}/testplan`,
             {
                 params: {
                     limit: 100,

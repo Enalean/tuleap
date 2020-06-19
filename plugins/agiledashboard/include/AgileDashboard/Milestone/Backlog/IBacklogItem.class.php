@@ -38,6 +38,12 @@ interface AgileDashboard_Milestone_Backlog_IBacklogItem
 
     public function id();
 
+    public function title(): string;
+
+    public function getShortType(): string;
+
+    public function color(): string;
+
     public function hasChildren();
 
     public function xRef();

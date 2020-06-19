@@ -44,10 +44,20 @@ describe("AddTestButton", () => {
         });
     }
 
+    it("Does not display the button if the backlog items says it can not add a test", async () => {
+        const wrapper = await createWrapper(
+            { milestone_id: 69, testdefinition_tracker_id: null } as RootState,
+            { id: 123, can_add_a_test: false } as BacklogItem,
+            false
+        );
+
+        expect(wrapper.element).toMatchInlineSnapshot(`<!---->`);
+    });
+
     it("Does not display the button if there is no test definition tracker id", async () => {
         const wrapper = await createWrapper(
             { milestone_id: 69, testdefinition_tracker_id: null } as RootState,
-            { id: 123 } as BacklogItem,
+            { id: 123, can_add_a_test: true } as BacklogItem,
             false
         );
 
@@ -57,7 +67,7 @@ describe("AddTestButton", () => {
     it("Does not display the button if the test definitions are still loading", async () => {
         const wrapper = await createWrapper(
             { milestone_id: 69, testdefinition_tracker_id: 42 } as RootState,
-            { id: 123, is_loading_test_definitions: true } as BacklogItem,
+            { id: 123, is_loading_test_definitions: true, can_add_a_test: true } as BacklogItem,
             false
         );
 
@@ -71,6 +81,7 @@ describe("AddTestButton", () => {
                 id: 123,
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: true,
+                can_add_a_test: true,
             } as BacklogItem,
             false
         );
@@ -85,6 +96,7 @@ describe("AddTestButton", () => {
                 id: 123,
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: false,
+                can_add_a_test: true,
             } as BacklogItem,
             false
         );
@@ -99,6 +111,7 @@ describe("AddTestButton", () => {
                 id: 123,
                 is_loading_test_definitions: false,
                 has_test_definitions_loading_error: false,
+                can_add_a_test: true,
             } as BacklogItem,
             true
         );
