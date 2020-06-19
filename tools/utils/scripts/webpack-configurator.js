@@ -115,11 +115,16 @@ function getLegacyConcatenatedScriptsPlugins(concatenated_files_configuration) {
     ];
 }
 
+function getIgnorePlugin() {
+    return new webpack.IgnorePlugin(/\.(?:pot|mo|po~)$/);
+}
+
 function extendDevConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "development",
             devtool: "inline-source-map",
+            plugins: [getIgnorePlugin()],
         })
     );
 }
@@ -128,7 +133,7 @@ function extendProdConfiguration(webpack_configs) {
     return webpack_configs.map((webpack_config) =>
         merge(webpack_config, {
             mode: "production",
-            plugins: [getCSSOptimizerPlugin()],
+            plugins: [getCSSOptimizerPlugin(), getIgnorePlugin()],
             stats: {
                 all: false,
                 assets: true,
