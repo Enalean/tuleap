@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         testdefinition_tracker_id = null;
     }
     const testdefinition_tracker_name = vue_mount_point.dataset.testDefinitionTrackerName || "";
+    const autoscroll_to_create_test_button_of_backlog_item_id = expand_backlog_item_id;
 
     await initVueGettext(Vue, (locale: string) =>
         import(/* webpackChunkName: "testplan-po-" */ "./po/" + getPOFileFromLocale(locale))
@@ -72,6 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         testdefinition_tracker_name,
         expand_backlog_item_id,
         highlight_test_definition_id,
+        autoscroll_to_create_test_button_of_backlog_item_id,
     } as unknown) as RootState;
 
     new AppComponent({

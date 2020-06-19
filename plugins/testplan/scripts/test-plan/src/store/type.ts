@@ -29,6 +29,7 @@ export interface State {
     readonly testdefinition_tracker_name: string;
     readonly expand_backlog_item_id: number;
     readonly highlight_test_definition_id: number;
+    autoscroll_to_create_test_button_of_backlog_item_id: number;
 }
 
 export interface RootState extends State {
