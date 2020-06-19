@@ -21,18 +21,23 @@
 
 namespace Tuleap\Request;
 
+use FastRoute;
 use Mockery;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 use PluginManager;
 use Tuleap\Layout\BaseLayout;
-use FastRoute;
 use Tuleap\Layout\ErrorRendering;
 use Tuleap\Theme\BurningParrot\BurningParrotTheme;
 
 class FrontRouterTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user;
 
     /**
      * @var FrontRouter
@@ -56,18 +61,19 @@ class FrontRouterTest extends TestCase
     {
         parent::setUp();
 
-        $this->route_collector          = Mockery::mock(RouteCollector::class);
+        $this->route_collector = Mockery::mock(RouteCollector::class);
         $this->url_verification_factory = Mockery::mock(\URLVerificationFactory::class);
-        $this->request                  = Mockery::mock(\HTTPRequest::class);
-        $this->layout                   = Mockery::mock(BaseLayout::class);
-        $this->logger                   = Mockery::mock(\Psr\Log\LoggerInterface::class);
-        $this->error_rendering          = Mockery::mock(ErrorRendering::class);
-        $this->theme_manager            = Mockery::mock(\ThemeManager::class);
-        $this->burning_parrot           = Mockery::mock(BurningParrotTheme::class);
-        $this->plugin_manager           = Mockery::mock(PluginManager::class);
-        $this->request_instrumentation  = Mockery::mock(RequestInstrumentation::class);
+        $this->request = Mockery::mock(\HTTPRequest::class);
+        $this->layout = Mockery::mock(BaseLayout::class);
+        $this->logger = Mockery::mock(\Psr\Log\LoggerInterface::class);
+        $this->error_rendering = Mockery::mock(ErrorRendering::class);
+        $this->theme_manager = Mockery::mock(\ThemeManager::class);
+        $this->burning_parrot = Mockery::mock(BurningParrotTheme::class);
+        $this->plugin_manager = Mockery::mock(PluginManager::class);
+        $this->request_instrumentation = Mockery::mock(RequestInstrumentation::class);
 
-        $this->request->shouldReceive('getCurrentUser')->andReturn(Mockery::mock(\PFUser::class));
+        $this->user = Mockery::mock(\PFUser::class);
+        $this->request->shouldReceive('getCurrentUser')->andReturn($this->user);
         $this->theme_manager->shouldReceive('getBurningParrot')->andReturn($this->burning_parrot);
         $this->theme_manager->shouldReceive('getTheme')->andReturn($this->layout);
 
@@ -89,6 +95,7 @@ class FrontRouterTest extends TestCase
     {
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REQUEST_URI']);
+        unset($_SERVER['HTTP_ACCEPT']);
         unset($GLOBALS['HTML']);
         unset($GLOBALS['Response']);
         \ForgeConfig::restore();
@@ -104,7 +111,53 @@ class FrontRouterTest extends TestCase
         $this->error_rendering->shouldReceive('rendersError')->once()->with(Mockery::any(), Mockery::any(), 404, Mockery::any(), Mockery::any());
         $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
 
-        $this->router->route($this->request, $this->layout);
+        $this->user->shouldReceive('isAnonymous')->andReturnFalse();
+        $this->request->shouldReceive('isAjax')->andReturnFalse();
+
+        $this->router->route($this->request);
+    }
+
+    public function testRouteNotFoundAnonymousUserIsNotRedirectedWhenHeaderIsNotProvided(): void
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->request->shouldReceive('getFromServer')->andReturnFalse();
+        $this->request->shouldReceive('isAjax')->andReturnFalse();
+
+        $this->route_collector->shouldReceive('collect');
+        $this->error_rendering->shouldReceive('rendersError')->once()->with(
+            Mockery::any(),
+            Mockery::any(),
+            404,
+            Mockery::any(),
+            Mockery::any()
+        );
+        $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
+
+        $this->user->shouldReceive('isAnonymous')->andReturnTrue();
+
+        $this->router->route($this->request);
+    }
+
+    public function testRouteNotFoundAnonymousUserIsNotRedirectedWhenRequestIsAjax(): void
+    {
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $_SERVER['REQUEST_URI']    = '/stuff';
+
+        $this->request->shouldReceive('isAjax')->andReturnTrue();
+
+        $this->route_collector->shouldReceive('collect');
+        $this->error_rendering->shouldReceive('rendersError')->once()->with(
+            Mockery::any(),
+            Mockery::any(),
+            404,
+            Mockery::any(),
+            Mockery::any()
+        );
+        $this->request_instrumentation->shouldReceive('increment')->with(404)->once();
+
+        $this->router->route($this->request);
     }
 
     public function testItDispatchRequestWithoutAuthz(): void
@@ -120,13 +173,14 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+
             return true;
         }));
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->router->route($this->request, $this->layout);
+        $this->router->route($this->request);
     }
 
     public function testItChecksWithURLVerificationWhenDispatchingWithRequest(): void
@@ -144,13 +198,14 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+
             return true;
         }));
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->router->route($this->request, $this->layout);
+        $this->router->route($this->request);
     }
 
     public function testItRaisesAnErrorWhenHandlerIsUnknown(): void
@@ -166,6 +221,7 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+
             return true;
         }));
 
@@ -182,7 +238,7 @@ class FrontRouterTest extends TestCase
             Mockery::any()
         );
 
-        $this->router->route($this->request, $this->layout);
+        $this->router->route($this->request);
     }
 
     public function testItDispatchWithProject(): void
@@ -202,13 +258,14 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+
             return true;
         }));
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI']    = '/stuff';
 
-        $this->router->route($this->request, $this->layout);
+        $this->router->route($this->request);
     }
 
     public function testItProvidesABurningParrotThemeWhenControllerAskForIt(): void
@@ -226,6 +283,7 @@ class FrontRouterTest extends TestCase
             $r->get('/stuff', function () use ($handler) {
                 return $handler;
             });
+
             return true;
         }));
 
@@ -264,6 +322,7 @@ class FrontRouterTest extends TestCase
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
             $r->get('/stuff', ['plugin' => 'foobar', 'handler' => 'myHandler']);
+
             return true;
         }));
 
@@ -284,6 +343,7 @@ class FrontRouterTest extends TestCase
 
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) {
             $r->get('/stuff', ['core' => true, 'handler' => 'myHandler', 'params' => ['some_param1', 'some_param2']]);
+
             return true;
         }));
 
@@ -309,8 +369,10 @@ class FrontRouterTest extends TestCase
         $this->route_collector->shouldReceive('collect')->with(Mockery::on(function (FastRoute\RouteCollector $r) use ($handler, $status_code) {
             $r->get('/stuff', function () use ($handler, $status_code) {
                 http_response_code($status_code);
+
                 return $handler;
             });
+
             return true;
         }));
 
