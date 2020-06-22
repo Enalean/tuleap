@@ -27,8 +27,8 @@ class UsageProgressPresenter
 
     public function __construct()
     {
-        $this->usage_progress_label = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_title');
-        $this->csv_export_button    = $GLOBALS['Language']->getText('plugin_statistics', 'csv_export_button');
-        $this->usage_progress_help  = $GLOBALS['Language']->getText('plugin_statistics', 'usage_progress_help');
+        $this->usage_progress_label = dgettext('tuleap-statistics', 'Usage progress');
+        $this->csv_export_button    = dgettext('tuleap-statistics', 'Export CSV');
+        $this->usage_progress_help  = dgettext('tuleap-statistics', 'Generate a CSV file that contains the progress of some data figures (number of users, number of projects) over the time. For each month, it outputs the number of created projects and user accounts.');
     }
 }

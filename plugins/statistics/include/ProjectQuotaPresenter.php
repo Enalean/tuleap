@@ -76,35 +76,35 @@ class ProjectQuotaPresenter
 
         $this->has_quota = count($quotas) > 0;
 
-        $this->frequencies_tab_label   = $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_title');
-        $this->disk_usage_tab_label    = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics');
-        $this->project_quota_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'quota_title');
-        $this->service_usage_tab_label = $GLOBALS['Language']->getText('plugin_statistics', 'services_usage');
+        $this->frequencies_tab_label   = dgettext('tuleap-statistics', 'Frequencies');
+        $this->disk_usage_tab_label    = dgettext('tuleap-statistics', 'Disk usage');
+        $this->project_quota_tab_label = dgettext('tuleap-statistics', 'Project quota');
+        $this->service_usage_tab_label = dgettext('tuleap-statistics', 'Service usage');
         $this->filter_label            = $GLOBALS['Language']->getText('global', 'search_title');
         $this->search_label            = $GLOBALS['Language']->getText('global', 'btn_search');
-        $this->project_label           = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
-        $this->motivation_label        = $GLOBALS['Language']->getText('plugin_statistics', 'motivation');
-        $this->quota_label             = $GLOBALS['Language']->getText('plugin_statistics', 'quota');
-        $this->requester_label         = $GLOBALS['Language']->getText('plugin_statistics', 'requester');
-        $this->project_placeholder     = $GLOBALS['Language']->getText('plugin_statistics', 'project_placeholder');
-        $this->no_motivation           = $GLOBALS['Language']->getText('plugin_statistics', 'no_motivation');
-        $this->add_quota_label         = $GLOBALS['Language']->getText('plugin_statistics', 'add_disk_quota');
-        $this->delete_quota_label      = $GLOBALS['Language']->getText('plugin_statistics', 'delete_quota');
-        $this->details_label           = $GLOBALS['Language']->getText('plugin_statistics', 'details');
-        $this->project_quota_label     = $GLOBALS['Language']->getText('plugin_statistics', 'project_quota');
-        $this->motivation_placeholder  = $GLOBALS['Language']->getText('plugin_statistics', 'comment');
-        $this->quota_unit              = $GLOBALS['Language']->getText('plugin_statistics', 'quota_unit');
-        $this->max_quota_label         = $GLOBALS['Language']->getText('plugin_statistics', 'max_quota', $max_quota);
-        $this->empty_filter_results    = $GLOBALS['Language']->getText('plugin_statistics', 'empty_filter_results');
+        $this->project_label           = dgettext('tuleap-statistics', 'Project');
+        $this->motivation_label        = dgettext('tuleap-statistics', 'Motivation');
+        $this->quota_label             = dgettext('tuleap-statistics', 'Quota');
+        $this->requester_label         = dgettext('tuleap-statistics', 'Requester');
+        $this->project_placeholder     = dgettext('tuleap-statistics', 'MyProject');
+        $this->no_motivation           = dgettext('tuleap-statistics', 'No motivation');
+        $this->add_quota_label         = dgettext('tuleap-statistics', 'Add quota');
+        $this->delete_quota_label      = dgettext('tuleap-statistics', 'Delete quota');
+        $this->details_label           = dgettext('tuleap-statistics', 'Details');
+        $this->project_quota_label     = dgettext('tuleap-statistics', 'Project quota');
+        $this->motivation_placeholder  = dgettext('tuleap-statistics', 'Comment...');
+        $this->quota_unit              = dgettext('tuleap-statistics', 'GB');
+        $this->max_quota_label         = sprintf(dgettext('tuleap-statistics', 'Maximum quota is %1$s GB'), $max_quota);
+        $this->empty_filter_results    = dgettext('tuleap-statistics', 'There isn\'t any quota for the selected project');
 
         $this->cancel_label      = $GLOBALS['Language']->getText('global', 'btn_cancel');
         $this->close_label       = $GLOBALS['Language']->getText('global', 'btn_close');
         $this->project_column    = $GLOBALS['Language']->getText('global', 'Project');
-        $this->delete_label      = $GLOBALS['Language']->getText('plugin_statistics', 'delete');
-        $this->requester_column  = $GLOBALS['Language']->getText('plugin_statistics', 'requester');
-        $this->quota_column      = $GLOBALS['Language']->getText('plugin_statistics', 'quota');
-        $this->motivation_column = $GLOBALS['Language']->getText('plugin_statistics', 'motivation');
-        $this->date_column       = $GLOBALS['Language']->getText('plugin_statistics', 'date');
-        $this->empty_state       = $GLOBALS['Language']->getText('plugin_statistics', 'no_projects', $default_quota);
+        $this->delete_label      = dgettext('tuleap-statistics', 'Delete');
+        $this->requester_column  = dgettext('tuleap-statistics', 'Requester');
+        $this->quota_column      = dgettext('tuleap-statistics', 'Quota');
+        $this->motivation_column = dgettext('tuleap-statistics', 'Motivation');
+        $this->date_column       = dgettext('tuleap-statistics', 'Date');
+        $this->empty_state       = sprintf(dgettext('tuleap-statistics', 'There isn\'t any projects with a custom quota. All projects have the default quota (%1$s GB).'), $default_quota);
     }
 }

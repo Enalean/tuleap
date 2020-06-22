@@ -44,13 +44,13 @@ class DiskUsageTopUsersPresenter
         $this->data_top_users = $data_top_users;
 
         $this->search_title                = $GLOBALS['Language']->getText('global', 'search_title');
-        $this->end_date_label              = $GLOBALS['Language']->getText('plugin_statistics', 'end_date');
+        $this->end_date_label              = dgettext('tuleap-statistics', 'End date');
         $this->search                      = $GLOBALS['Language']->getText('global', 'btn_search');
-        $this->top_users_pane_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'top_users_pane_title');
-        $this->table_rank_title            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_rank_title');
-        $this->table_name_title            = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_name_title');
-        $this->table_end_size_title        = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'table_end_size_title');
-        $this->no_data                     = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'no_top_users_data');
-        $this->disk_usage_user_details_btn = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_user_details_btn');
+        $this->top_users_pane_title        = dgettext('tuleap-statistics', 'Top 10 users');
+        $this->table_rank_title            = dgettext('tuleap-statistics', 'Rank');
+        $this->table_name_title            = dgettext('tuleap-statistics', 'Name');
+        $this->table_end_size_title        = dgettext('tuleap-statistics', 'End size');
+        $this->no_data                     = dgettext('tuleap-statistics', 'No matching user data');
+        $this->disk_usage_user_details_btn = dgettext('tuleap-statistics', 'User statistics');
     }
 }

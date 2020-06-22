@@ -47,9 +47,9 @@ class DiskUsageServicesSearchFieldsPresenter extends DiskUsageSearchFieldsPresen
         $this->group_by_values       = $group_by_values;
         $this->relative_y_axis_value = $relative_y_axis_value;
 
-        $this->group_by_label        = $GLOBALS['Language']->getText('plugin_statistics', 'group_by_label');
-        $this->relative_y_axis_label = $GLOBALS['Language']->getText('plugin_statistics', 'relative_y_axis_label');
-        $this->project_label         = $GLOBALS['Language']->getText('plugin_statistics', 'project_label');
-        $this->project_placeholder   = $GLOBALS['Language']->getText('plugin_statistics', 'project_placeholder');
+        $this->group_by_label        = dgettext('tuleap-statistics', 'Group by');
+        $this->relative_y_axis_label = dgettext('tuleap-statistics', 'Relative Y axis (depends on data set values)');
+        $this->project_label         = dgettext('tuleap-statistics', 'Project');
+        $this->project_placeholder   = dgettext('tuleap-statistics', 'MyProject');
     }
 }

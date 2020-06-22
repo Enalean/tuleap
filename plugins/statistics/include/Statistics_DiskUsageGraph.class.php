@@ -40,9 +40,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
-        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_title'));
+        $graph->title->Set(dgettext('tuleap-statistics', 'Services growth over time'));
 
-        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
+        $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -92,7 +92,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
             $graph->Stroke();
         } else {
-            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+            $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
         }
     }
 
@@ -108,9 +108,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textlin");
-        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_user_title'));
+        $graph->title->Set(dgettext('tuleap-statistics', 'User consumption over time'));
 
-        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
+        $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -139,7 +139,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
             $graph->Stroke();
         } else {
-            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+            $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
         }
     }
 
@@ -147,14 +147,14 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
     {
         switch ($groupBy) {
             case 'day':
-                return $GLOBALS['Language']->getText('plugin_statistics', 'day');
+                return dgettext('tuleap-statistics', 'Day');
             case 'month':
-                return $GLOBALS['Language']->getText('plugin_statistics', 'month');
+                return dgettext('tuleap-statistics', 'Month');
             case 'year':
-                return $GLOBALS['Language']->getText('plugin_statistics', 'year');
+                return dgettext('tuleap-statistics', 'Year');
             case 'week':
             default:
-                return $GLOBALS['Language']->getText('plugin_statistics', 'week');
+                return dgettext('tuleap-statistics', 'Week');
         }
     }
 
@@ -171,9 +171,9 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
     {
         $graph = new Chart(750, 450, "auto");
         $graph->SetScale("textint");
-        $graph->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_project_title'));
+        $graph->title->Set(dgettext('tuleap-statistics', 'Project by service growth over time'));
 
-        $graph->yaxis->title->Set($GLOBALS['Language']->getText('plugin_statistics_admin_page', 'graph_y_axis_title'));
+        $graph->yaxis->title->Set(dgettext('tuleap-statistics', 'Size'));
         $graph->yaxis->SetTitleMargin(60);
         $graph->yaxis->setLabelFormatCallback(array($this, 'sizeReadable'));
         if ($absolute) {
@@ -232,10 +232,10 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
                 $graph->xaxis->SetTickLabels($dates);
                 $graph->Stroke();
             } else {
-                $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+                $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
             }
         } else {
-            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+            $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
         }
     }
 
@@ -286,7 +286,7 @@ class Statistics_DiskUsageGraph extends Statistics_DiskUsageOutput
 
             $graph->Stroke();
         } else {
-            $this->displayError($GLOBALS['Language']->getText('plugin_statistics', 'no_data_error'));
+            $this->displayError(dgettext('tuleap-statistics', 'No data to display'));
         }
     }
 

@@ -190,10 +190,10 @@ class DiskUsageServicesPresenterBuilder
     private function getGroupByDateKeys()
     {
         return array(
-            self::GROUP_BY_DAY_KEY   => $GLOBALS['Language']->getText('plugin_statistics', 'day'),
-            self::GROUP_BY_WEEK_KEY  => $GLOBALS['Language']->getText('plugin_statistics', 'week'),
-            self::GROUP_BY_MONTH_KEY => $GLOBALS['Language']->getText('plugin_statistics', 'month'),
-            self::GROUP_BY_YEAR_KEY  => $GLOBALS['Language']->getText('plugin_statistics', 'year')
+            self::GROUP_BY_DAY_KEY   => dgettext('tuleap-statistics', 'Day'),
+            self::GROUP_BY_WEEK_KEY  => dgettext('tuleap-statistics', 'Week'),
+            self::GROUP_BY_MONTH_KEY => dgettext('tuleap-statistics', 'Month'),
+            self::GROUP_BY_YEAR_KEY  => dgettext('tuleap-statistics', 'Year')
         );
     }
 

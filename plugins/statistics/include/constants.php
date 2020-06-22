@@ -18,5 +18,4 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('STATISTICS_BASE_DIR', dirname(__FILE__));
 define('STATISTICS_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');

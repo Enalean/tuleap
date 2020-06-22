@@ -35,6 +35,6 @@ class SystemEventQueueStatistics extends SystemEventQueue
 
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_statistics', 'sysevents_queue');
+        return dgettext('tuleap-statistics', 'Statistics');
     }
 }

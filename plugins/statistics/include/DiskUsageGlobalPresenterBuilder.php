@@ -68,7 +68,7 @@ class DiskUsageGlobalPresenterBuilder
 
         if (isset($result['service'][Statistics_DiskUsageManager::USR_HOME])) {
             $data_global[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_statistics', 'users'),
+                'title' => dgettext('tuleap-statistics', 'Users'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::USR_HOME])
             );
         }
@@ -80,19 +80,19 @@ class DiskUsageGlobalPresenterBuilder
         }
         if (isset($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])) {
             $data_global[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_statistics', 'codendi_logs'),
+                'title' => dgettext('tuleap-statistics', 'Codendi Logs'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::CODENDI_LOGS])
             );
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP])) {
             $data_global[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_statistics', 'backup'),
+                'title' => dgettext('tuleap-statistics', 'Backup'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP])
             );
         }
         if (isset($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])) {
             $data_global[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_statistics', 'backup_old'),
+                'title' => dgettext('tuleap-statistics', 'Backup old'),
                 'size'  => $this->usage_output->sizeReadable($result['service'][Statistics_DiskUsageManager::BACKUP_OLD])
             );
         }

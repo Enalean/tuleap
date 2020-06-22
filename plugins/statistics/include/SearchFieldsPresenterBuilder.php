@@ -177,10 +177,10 @@ class SearchFieldsPresenterBuilder
     private function getListOfGroupByValuePresenter($group_by_value)
     {
         $all_group_by = array(
-            'day'   => $GLOBALS['Language']->getText('plugin_statistics', 'day'),
-            'week'  => $GLOBALS['Language']->getText('plugin_statistics', 'week'),
-            'month' => $GLOBALS['Language']->getText('plugin_statistics', 'month'),
-            'year'  => $GLOBALS['Language']->getText('plugin_statistics', 'year')
+            'day'   => dgettext('tuleap-statistics', 'Day'),
+            'week'  => dgettext('tuleap-statistics', 'Week'),
+            'month' => dgettext('tuleap-statistics', 'Month'),
+            'year'  => dgettext('tuleap-statistics', 'Year')
         );
 
         $group_by_options = array();
@@ -195,15 +195,15 @@ class SearchFieldsPresenterBuilder
     private function getListOfTypeValuePresenter(array $type_values)
     {
         $all_data = array(
-            'session'   => $GLOBALS['Language']->getText('plugin_statistics', 'session_type'),
-            'user'      => $GLOBALS['Language']->getText('plugin_statistics', 'user_type'),
-            'forum'     => $GLOBALS['Language']->getText('plugin_statistics', 'forum_type'),
-            'filedl'    => $GLOBALS['Language']->getText('plugin_statistics', 'filedl_type'),
-            'file'      => $GLOBALS['Language']->getText('plugin_statistics', 'file_type'),
-            'groups'    => $GLOBALS['Language']->getText('plugin_statistics', 'groups_type'),
-            'wikidl'    => $GLOBALS['Language']->getText('plugin_statistics', 'wikidl_type'),
-            'oartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'oartifact_type'),
-            'cartifact' => $GLOBALS['Language']->getText('plugin_statistics', 'cartifact_type'),
+            'session'   => dgettext('tuleap-statistics', 'Sessions'),
+            'user'      => dgettext('tuleap-statistics', 'Users'),
+            'forum'     => dgettext('tuleap-statistics', 'Messages in forums'),
+            'filedl'    => dgettext('tuleap-statistics', 'Files downloaded'),
+            'file'      => dgettext('tuleap-statistics', 'Files released'),
+            'groups'    => dgettext('tuleap-statistics', 'Project created'),
+            'wikidl'    => dgettext('tuleap-statistics', 'Wiki pages viewed'),
+            'oartifact' => dgettext('tuleap-statistics', 'Opened Artifacts (V3)'),
+            'cartifact' => dgettext('tuleap-statistics', 'Closed (or wished end date) Artifacts (V3)'),
         );
 
         EventManager::instance()->processEvent(
@@ -223,11 +223,11 @@ class SearchFieldsPresenterBuilder
     private function getListOfFilterValuePresenter($filter_value)
     {
         $all_filter = array(
-            'month'  => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_month'),
-            'day'    => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_day'),
-            'hour'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_group_hour'),
-            'month1' => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_month'),
-            'day1'   => $GLOBALS['Language']->getText('plugin_statistics', 'frequencies_filter_day'),
+            'month'  => dgettext('tuleap-statistics', 'Group by month'),
+            'day'    => dgettext('tuleap-statistics', 'Group by day'),
+            'hour'   => dgettext('tuleap-statistics', 'Group by hour'),
+            'month1' => dgettext('tuleap-statistics', 'Month'),
+            'day1'   => dgettext('tuleap-statistics', 'Day'),
         );
 
         $filter_options = array();

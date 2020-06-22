@@ -76,7 +76,7 @@ class StatisticsPlugin extends Plugin
 
         $this->addHook(ProjectQuotaRequester::NAME);
 
-        bindTextDomain('tuleap-statistics', STATISTICS_BASE_DIR . '/../site-content');
+        bindTextDomain('tuleap-statistics', __DIR__ . '/../site-content');
     }
 
     /** @see Event::GET_SYSTEM_EVENT_CLASS */
@@ -178,7 +178,7 @@ class StatisticsPlugin extends Plugin
         $presenter->addDropdownItem(
             NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME,
             new NavigationDropdownItemPresenter(
-                $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics'),
+                dgettext('tuleap-statistics', 'Disk usage'),
                 $this->getPluginPath() . '/project_stat.php?' . http_build_query(
                     array('group_id' => $presenter->getProjectId())
                 )
@@ -202,7 +202,7 @@ class StatisticsPlugin extends Plugin
 
         $params['links'][] = array(
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($user_url_params),
-            'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
+            'label' => dgettext('tuleap-statistics', 'Disk usage')
         );
     }
 
@@ -219,7 +219,7 @@ class StatisticsPlugin extends Plugin
         );
         $params['links'][] = array(
             'href'  => $this->getPluginPath() . '/disk_usage.php?' . http_build_query($project_url_params),
-            'label' => $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics')
+            'label' => dgettext('tuleap-statistics', 'Disk usage')
         );
     }
 

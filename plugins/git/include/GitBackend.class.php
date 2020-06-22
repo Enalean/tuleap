@@ -318,13 +318,13 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         $formatter->clearContent();
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
-        $gitShellIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShellIndex[]       = dgettext('tuleap-git', 'Month');
         $gitShell[]            = "Git shell created repositories";
-        $gitShellActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShellActiveIndex[] = dgettext('tuleap-git', 'Month');
         $gitShellActive[]      = "Git shell created repositories (still active)";
-        $gitoliteIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitoliteIndex[]       = dgettext('tuleap-git', 'Month');
         $gitolite[]            = "Gitolite created repositories";
-        $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitoliteActiveIndex[] = dgettext('tuleap-git', 'Month');
         $gitoliteActive[]      = "Gitolite created repositories (still active)";
         $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex, $gitShell, false);
         $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
@@ -372,11 +372,11 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
      */
     private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter)
     {
-        $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
-        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
-        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
-        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+        $gitIndex[]   = dgettext('tuleap-git', 'Month');
+        $gitPushes[]  = dgettext('tuleap-git', 'Total number of git pushes');
+        $gitCommits[] = dgettext('tuleap-git', 'Total number of git commits');
+        $gitUsers[]   = dgettext('tuleap-git', 'Total number of users');
+        $gitRepo[]    = dgettext('tuleap-git', 'Total number of repositories');
 
         $gitLogDao = new Git_LogDao();
         $rows      = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
@@ -403,7 +403,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             return;
         }
 
-        $header = array($GLOBALS['Language']->getText('plugin_statistics', 'scm_month'));
+        $header = array(dgettext('tuleap-git', 'Month'));
         $line   = array(dgettext('tuleap-git', 'Total number of git read access'));
         foreach ($stats as $row) {
             $header[] = $row['month'] . " " . $row['year'];

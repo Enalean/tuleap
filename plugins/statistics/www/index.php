@@ -62,7 +62,7 @@ if (
     && isset($_REQUEST['end'])
     && strtotime($_REQUEST['start']) > strtotime($_REQUEST['end'])
 ) {
-    $date_error_message = $GLOBALS['Language']->getText('plugin_statistics', 'period_error');
+    $date_error_message = dgettext('tuleap-statistics', 'You made a mistake in selecting period. Please try again!');
     $GLOBALS['Response']->addFeedback('error', $date_error_message);
 }
 
@@ -100,7 +100,7 @@ $search_fields_presenter = $search_fields_builder->buildSearchFieldsForFrequenci
     $end_date
 );
 
-$title = $GLOBALS['Language']->getText('plugin_statistics', 'index_page_title');
+$title = dgettext('tuleap-statistics', 'Statistics');
 
 $header_presenter = new AdminHeaderPresenter(
     $title,

@@ -89,12 +89,12 @@ class DiskUsageUserDetailsPresenterBuilder
         $data_user_details = array();
 
         if (! $user) {
-            $error_message = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'no_user_selected');
+            $error_message = dgettext('tuleap-statistics', 'No user selected');
         } else {
             $user_id           = $user->getId();
             $data_user_details = $this->buildUserDetails($user, $start_date_value, $end_date_value);
             if (empty($data_user_details)) {
-                $error_message = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'no_user_details_data');
+                $error_message = dgettext('tuleap-statistics', 'No matching data for this user');
             }
         }
 

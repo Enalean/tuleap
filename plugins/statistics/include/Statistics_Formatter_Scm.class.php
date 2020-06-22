@@ -50,16 +50,16 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function calculateReadStats()
     {
-        $read_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_user');
-        $total_read_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_read');
-        $read_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_read_project');
+        $read_user_label    = dgettext('tuleap-statistics', 'Total number of users with SVN read access');
+        $total_read_label   = dgettext('tuleap-statistics', 'Total number of SVN read access');
+        $read_project_label = dgettext('tuleap-statistics', 'Total number of projects with SVN read access');
         if ($this->scm === 'cvs') {
-            $read_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_user');
-            $total_read_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_read');
-            $read_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_read_project');
+            $read_user_label    = dgettext('tuleap-statistics', 'Total number of users with CVS read access');
+            $total_read_label   = dgettext('tuleap-statistics', 'Total number of CVS read access');
+            $read_project_label = dgettext('tuleap-statistics', 'Total number of projects with CVS read access');
         }
 
-        $readIndex[]          = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $readIndex[]          = dgettext('tuleap-statistics', 'Month');
         $totalRead[]          = $total_read_label;
         $readProjectsNumber[] = $read_project_label;
         $readUsersNumber[]    = $read_user_label;
@@ -86,16 +86,16 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function calculateCommitsStats()
     {
-        $commit_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_user');
-        $total_commit_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_total_commit');
-        $commit_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_svn_commit_project');
+        $commit_user_label    = dgettext('tuleap-statistics', 'Total number of users with SVN commits');
+        $total_commit_label   = dgettext('tuleap-statistics', 'Total number of SVN commits');
+        $commit_project_label = dgettext('tuleap-statistics', 'Total number of projects with SVN commits');
         if ($this->scm === 'cvs') {
-            $commit_user_label    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_user');
-            $total_commit_label   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_total_commit');
-            $commit_project_label = $GLOBALS['Language']->getText('plugin_statistics', 'scm_cvs_commit_project');
+            $commit_user_label    = dgettext('tuleap-statistics', 'Total number of users with CVS commits');
+            $total_commit_label   = dgettext('tuleap-statistics', 'Total number of CVS commits');
+            $commit_project_label = dgettext('tuleap-statistics', 'Total number of projects with CVS commits');
         }
 
-        $commitsIndex[]         = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $commitsIndex[]         = dgettext('tuleap-statistics', 'Month');
         $totalCommits[]         = $total_commit_label;
         $commitProjectsNumber[] = $commit_project_label;
         $commitUsersNumber[]    = $commit_user_label;
@@ -122,8 +122,8 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function topCommitByProject()
     {
-        $result['project'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project');
-        $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_project_commits');
+        $result['project'][] = dgettext('tuleap-statistics', 'Top projects');
+        $result['commits'][] = dgettext('tuleap-statistics', 'Top projects (number of commits)');
         $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             foreach ($commitsDar as $row) {
@@ -143,8 +143,8 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function topCommitByUser()
     {
-        $result['user'][]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user');
-        $result['commits'][] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_top_commit_user_commits');
+        $result['user'][]    = dgettext('tuleap-statistics', 'Top users');
+        $result['commits'][] = dgettext('tuleap-statistics', 'Top users (number of commits)');
         $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
         if ($commitsDar && !$commitsDar->isError()) {
             foreach ($commitsDar as $row) {
@@ -164,7 +164,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
      */
     public function repositoriesWithCommit()
     {
-        $repositories[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_repo_total');
+        $repositories[] = dgettext('tuleap-statistics', 'Total number of repositories containing commits');
         $count = 0;
         $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {

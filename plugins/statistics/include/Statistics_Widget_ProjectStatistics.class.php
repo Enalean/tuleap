@@ -50,7 +50,7 @@ class Statistics_Widget_ProjectStatistics extends Widget
      */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_statistics', 'widget_title_projectstatistics');
+        return dgettext('tuleap-statistics', 'Project statistics');
     }
 
     /**
@@ -94,7 +94,7 @@ class Statistics_Widget_ProjectStatistics extends Widget
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_statistics', 'widget_desc_projectstatistics');
+        return dgettext('tuleap-statistics', 'Show project disk statistics');
     }
 
     /**

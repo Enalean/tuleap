@@ -60,7 +60,7 @@ if ($request->valid($vPeriod)) {
 }
 
 if ($period === 'year') {
-    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_statistics', 'querying_purged_data'));
+    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-statistics', 'The chart displayed uses old data which has been purged in order to display it quickly. The purge operation keeps one day\'s worth of data for each week ended more than 3 months ago. Beyond 2 years ago, one day of each month is kept.'));
 }
 
 $disk_usage_dao     = new Statistics_DiskUsageDao();
@@ -122,7 +122,7 @@ if ($project && !$project->isError()) {
     $params['title'] = $GLOBALS['Language']->getText('admin_groupedit', 'proj_admin') . ': ' . $project->getPublicName();
     project_admin_header($params, \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME);
 
-    echo '<h2>' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'show_statistics') . '</h2>';
+    echo '<h2>' . dgettext('tuleap-statistics', 'Disk usage') . '</h2>';
     $usedProportion        = $disk_usage_manager->returnTotalProjectSize($groupId);
     $allowedQuota          = $disk_usage_manager->getProperty('allowed_quota');
     $project_quota_manager = new ProjectQuotaManager();
@@ -131,7 +131,7 @@ if ($project && !$project->isError()) {
         $allowedQuota = $customQuota;
     }
     if ($allowedQuota) {
-        echo '<div id="help_init" class="stat_help">' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_proportion', array($duHtml->sizeReadable($usedProportion),$allowedQuota . 'GiB')) . '</div>';
+        echo '<div id="help_init" class="stat_help">' . sprintf(dgettext('tuleap-statistics', 'This project uses <b>%1$s</b> of the <b>%2$s</b> allowed quota.'), $duHtml->sizeReadable($usedProportion), $allowedQuota . 'GiB') . '</div>';
 
         $pie_displayer = new DiskUsagePieDisplayer(
             $disk_usage_manager,
@@ -144,23 +144,19 @@ if ($project && !$project->isError()) {
         $pie_displayer->displayDiskUsagePie($project);
     } else {
         echo '<LABEL><b>';
-        echo $GLOBALS['Language']->getText('plugin_statistics', 'widget_total_project_size');
+        echo dgettext('tuleap-statistics', 'Total project size:');
         echo'</b></LABEL>';
         echo $duHtml->sizeReadable($usedProportion);
     }
 
-    $title = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period_year');
-    $link_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'year', $statPeriod);
+    $title = dgettext('tuleap-statistics', 'Disk usage for the last year');
+    $link_label = sprintf(dgettext('tuleap-statistics', 'View statistics for the last %1$s months'), $statPeriod);
     if ($period === 'months') {
-        $title = $GLOBALS['Language']->getText(
-            'plugin_statistics_admin_page',
-            'disk_usage_period_months',
-            [$statDuration]
-        );
-        $link_label = $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'months');
+        $title = sprintf(dgettext('tuleap-statistics', 'Disk usage for the %1$s last months'), $statDuration);
+        $link_label = dgettext('tuleap-statistics', 'View statistics for the last year');
     }
     //Display tooltip for start and end date.
-    echo '<h2><span class="plugin_statistics_period" title="' . $GLOBALS['Language']->getText('plugin_statistics_admin_page', 'disk_usage_period', array($startDate, $endDate)) . '">' . $title . '</span></h2>';
+    echo '<h2><span class="plugin_statistics_period" title="' . sprintf(dgettext('tuleap-statistics', 'From %1$s to %2$s.'), $startDate, $endDate) . '">' . $title . '</span></h2>';
     echo '<div class="stat_help">' . dgettext('tuleap-statistics', "Differences may exist between actual size of a project/service and statistics which are computed daily") . '</div>';
     echo '<p><a href="' . $link . '">' . $link_label . '</a></p>';
     echo '<form name="progress_by_service" method="get" action="?">';
