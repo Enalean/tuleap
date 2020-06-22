@@ -37,10 +37,11 @@
 }
 
 .test-plan-test-definition-skeleton {
+    display: flex;
     width: 100%;
     min-height: inherit;
     margin: 0 0 $tlp-half-spacing;
-    padding: $tlp-half-spacing;
+    padding: $tlp-spacing $tlp-half-spacing;
 }
 
 .test-plan-test-definition-skeleton-xref {
@@ -73,18 +74,14 @@
 }
 
 .test-plan-test-definition-xref-title {
-    display: flex;
-    align-items: baseline;
+    font-size: 14px;
+    line-height: 20px;
 }
 
 .test-plan-test-definition-xref {
+    margin: 0 4px 0 0;
     color: $tlp-ui-dimmed;
     font-size: 12px;
-}
-
-.test-plan-test-definition-title {
-    margin: 0 0 0 $tlp-half-spacing;
-    font-size: 14px;
 }
 
 .test-plan-test-definition-icons {
