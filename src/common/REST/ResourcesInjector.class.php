@@ -29,6 +29,8 @@ use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Project\REST\v1\ServiceRepresentation;
 use Tuleap\Project\REST\v1\ServiceResource;
 use Tuleap\Project\REST\v1\UserGroupResource;
+use Tuleap\REST\v1\ProjectFieldRepresentation;
+use Tuleap\REST\v1\ProjectFieldsResource;
 use Tuleap\SystemEvent\REST\v1\SystemEventResource;
 use Tuleap\Token\REST\TokenRepresentation;
 use Tuleap\Token\REST\v1\TokenResource;
@@ -55,6 +57,7 @@ class ResourcesInjector
         $restler->addAPIClass(UserGroupResource::class, UserGroupRepresentation::ROUTE);
         $restler->addAPIClass(UserResource::class, UserRepresentation::ROUTE);
         $restler->addAPIClass(UserMembershipResource::class, UserMembershipRepresentation::ROUTE);
+        $restler->addAPIClass(ProjectFieldsResource::class, ProjectFieldRepresentation::ROUTE);
         $restler->addAPIClass(PhpWikiResource::class, PhpWikiPageRepresentation::ROUTE);
         $restler->addAPIClass(JWTResource::class, JWTRepresentation::ROUTE);
         $restler->addAPIClass(SystemEventResource::class, SystemEventRepresentation::ROUTE);

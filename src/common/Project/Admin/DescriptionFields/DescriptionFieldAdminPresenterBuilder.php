@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,7 +20,6 @@
 
 namespace Tuleap\Project\Admin\DescriptionFields;
 
-use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 use Tuleap\Project\ProjectDescriptionUsageRetriever;
 
 class DescriptionFieldAdminPresenterBuilder
@@ -31,7 +30,7 @@ class DescriptionFieldAdminPresenterBuilder
      * @return FieldPresenter[]
      */
     public function build(
-        LegacyDataAccessResultInterface $description_fields_infos
+        array $description_fields_infos
     ): array {
         $field_presenters = [];
 

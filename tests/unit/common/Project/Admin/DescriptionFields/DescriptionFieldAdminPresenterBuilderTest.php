@@ -25,7 +25,6 @@ namespace Tuleap\Project\Admin\DescriptionFields;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use TestHelper;
 use Tuleap\GlobalLanguageMock;
 
 final class DescriptionFieldAdminPresenterBuilderTest extends TestCase
@@ -39,7 +38,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends TestCase
             'group_desc_id' => 1,
             'desc_name' => 'field_name',
             'desc_description' => 'field_description',
-            'desc_required' => true,
+            'desc_required' => 1,
             'desc_type' => 'line',
             'desc_rank' => 1
         ];
@@ -71,7 +70,7 @@ final class DescriptionFieldAdminPresenterBuilderTest extends TestCase
             ];
 
         $presenter_builder = new DescriptionFieldAdminPresenterBuilder();
-        $fields_presenters = $presenter_builder->build(TestHelper::argListToDar([$row]));
+        $fields_presenters = $presenter_builder->build([$row]);
 
         $this->assertEquals($expected_presenters, $fields_presenters);
     }
