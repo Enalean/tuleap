@@ -92,13 +92,13 @@ class WebDAVDocmanDocument extends Sabre_DAV_File
     public function getContentType()
     {
         switch (get_class($this->getItem())) {
-            case 'Docman_Wiki':
+            case Docman_Wiki::class:
                 return 'Wiki';
                 break;
-            case 'Docman_Link':
+            case Docman_Link::class:
                 return $GLOBALS['Language']->getText('plugin_webdav_common', 'link');
                 break;
-            case 'Docman_Empty':
+            case Docman_Empty::class:
                 return $GLOBALS['Language']->getText('plugin_webdav_common', 'empty');
                 break;
         }

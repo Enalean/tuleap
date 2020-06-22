@@ -206,7 +206,7 @@ class Git_URL implements \Tuleap\Git\HTTP\GitHTTPOperation
         $repository_id_is_a_int = preg_match('/^([0-9]+)$/', $repository_id);
 
         if ($repository_id_is_a_int) {
-            return $this->repository_factory->getRepositoryById($repository_id);
+            return $this->repository_factory->getRepositoryById((int) $repository_id);
         } else {
             $project = $this->getProjectFromStandardURL();
             if (! $project->isError()) {
