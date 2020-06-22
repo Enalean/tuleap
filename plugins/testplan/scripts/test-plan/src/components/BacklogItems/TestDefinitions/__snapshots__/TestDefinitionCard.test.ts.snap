@@ -15,14 +15,9 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
             test_def #123
         
     </span>
-     
-    <span
-      class="test-plan-test-definition-title"
-    >
-      
-            Test definition summary
-        
-    </span>
+    
+        Test definition summary
+    
   </div>
    
   <div

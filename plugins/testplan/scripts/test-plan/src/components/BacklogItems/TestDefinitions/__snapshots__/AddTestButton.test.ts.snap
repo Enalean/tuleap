@@ -2,16 +2,16 @@
 
 exports[`AddTestButton Displays the button if conditions are ok 1`] = `
 <a
-  class="tlp-button-primary tlp-button-outline test-plan-add-test-button"
+  class="tlp-button-primary tlp-button-small tlp-button-outline test-plan-add-test-button"
   data-current-language="en_US"
   data-msgid="
-    Add a test
+    Create a new test
 "
   data-test="add-test-button"
   href="/plugins/tracker/?tracker=42&func=new-artifact&ttm_backlog_item_id=123&ttm_milestone_id=69"
 >
   
-    Add a test
+    Create a new test
 
 </a>
 `;

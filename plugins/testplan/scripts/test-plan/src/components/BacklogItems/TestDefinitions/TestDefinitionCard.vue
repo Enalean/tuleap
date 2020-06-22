@@ -28,9 +28,7 @@
             <span class="test-plan-test-definition-xref">
                 {{ test_definition.short_type }} #{{ test_definition.id }}
             </span>
-            <span class="test-plan-test-definition-title">
-                {{ test_definition.summary }}
-            </span>
+            {{ test_definition.summary }}
         </div>
         <div class="test-plan-test-definition-icons">
             <i

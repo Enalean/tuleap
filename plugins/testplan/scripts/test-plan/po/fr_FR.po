@@ -37,9 +37,6 @@ msgid_plural "%{ nb } tests"
 msgstr[0] "%{ nb } test"
 msgstr[1] "%{ nb } tests"
 
-msgid "Add a test"
-msgstr "Ajouter un test"
-
 msgid "All tests"
 msgstr "Tous les tests"
 
@@ -68,6 +65,9 @@ msgstr "Annuler"
 
 msgid "Close"
 msgstr "Fermer"
+
+msgid "Create a new test"
+msgstr "Créer un nouveau test"
 
 msgid "Create campaign"
 msgstr "Créer la campagne"
