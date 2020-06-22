@@ -33,7 +33,8 @@ class XmlReportExporter
         SimpleXMLElement $trackers_node,
         FieldMappingCollection $field_mapping_collection,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
-        XmlReportOpenIssuesExporter $xml_report_open_issues_exporter
+        XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
+        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter
     ): void {
         $reports_node = $trackers_node->addChild('reports');
 
@@ -42,8 +43,7 @@ class XmlReportExporter
         $status_field      = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_STATUS_NAME);
         $priority_field    = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME);
         $link_field        = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
-
-
+        $created_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_CREATED_NAME);
 
         $xml_report_all_issues_exporter->exportJiraLikeReport(
             $reports_node,
@@ -51,7 +51,8 @@ class XmlReportExporter
             $description_field,
             $status_field,
             $priority_field,
-            $link_field
+            $link_field,
+            null
         );
 
         $xml_report_open_issues_exporter->exportJiraLikeReport(
@@ -60,7 +61,18 @@ class XmlReportExporter
             $description_field,
             $status_field,
             $priority_field,
-            $link_field
+            $link_field,
+            null
+        );
+
+        $xml_report_created_recently_exporter->exportJiraLikeReport(
+            $reports_node,
+            $summary_field,
+            $description_field,
+            $status_field,
+            $priority_field,
+            $link_field,
+            $created_field
         );
     }
 }

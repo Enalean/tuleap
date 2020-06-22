@@ -151,7 +151,8 @@ final class XmlReportOpenIssuesExporterTest extends TestCase
             $this->description_field_mapping,
             null,
             $this->priority_field_mapping,
-            $this->jira_issue_url_field_mapping
+            $this->jira_issue_url_field_mapping,
+            null
         );
 
         $reports_node = $this->reports_node;
@@ -178,7 +179,8 @@ final class XmlReportOpenIssuesExporterTest extends TestCase
             $this->description_field_mapping,
             $this->status_field_mapping,
             $this->priority_field_mapping,
-            $this->jira_issue_url_field_mapping
+            $this->jira_issue_url_field_mapping,
+            null
         );
 
         $reports_node = $this->reports_node;

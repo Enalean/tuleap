@@ -31,6 +31,7 @@ interface IExportJiraLikeXmlReport
         ?FieldMapping $description_field,
         ?FieldMapping $status_field,
         ?FieldMapping $priority_field,
-        ?FieldMapping $link_field
+        ?FieldMapping $link_field,
+        ?FieldMapping $created_field
     ): void;
 }
