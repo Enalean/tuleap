@@ -90,17 +90,13 @@ class ProjectResource
      *
      * @param int $id   Id of the project
      * @param string $query Search string in json format {@required}
-     * @param int $limit    Number of elements displayed per page {@from path} {@max 50}
+     * @param int $limit    Number of elements displayed per page {@from path} {@min 0} {@max 50}
      * @param int $offset   Position of the first element to display {@from path} {@min 0}
      *
      * @return CollectionOfLabeledItemsRepresentation {@type CollectionOfLabeledItemsRepresentation}
-     *
-     * @throws RestException 406
      */
     public function getLabeledItems($id, $query, $limit = 50, $offset = 0)
     {
-        $this->checkLimitValueIsAcceptable($limit);
-
         $project   = $this->getProjectForUser($id);
         $user      = $this->user_manager->getCurrentUser();
         $label_ids = $this->getLabelIdsFromQuery($query);
@@ -139,18 +135,6 @@ class ProjectResource
     private function sendAllowHeadersForLabeledItems()
     {
         Header::allowOptionsGet();
-    }
-
-    private function checkLimitValueIsAcceptable($limit)
-    {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     /**

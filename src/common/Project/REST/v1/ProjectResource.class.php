@@ -263,20 +263,18 @@ class ProjectResource extends AuthenticatedResource
      * @access hybrid
      * @oauth2-scope read:project
      *
-     * @param int    $limit  Number of elements displayed per page
-     * @param int    $offset Position of the first element to display
+     * @param int    $limit  Number of elements displayed per page {@min 0} {@max 50}
+     * @param int    $offset Position of the first element to display {@min 0}
      * @param string $query  JSON object of search criteria properties {@from path}
      *
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      *
      * @return array {@type Tuleap\Project\REST\ProjectRepresentation}
      */
     public function get($limit = 10, $offset = 0, $query = '')
     {
         $this->checkAccess();
-        $this->checkLimitValueIsAcceptable($limit);
 
         $query = trim($query);
         $user  = $this->user_manager->getCurrentUser();
@@ -656,11 +654,6 @@ class ProjectResource extends AuthenticatedResource
         );
 
         $this->sendAllowHeadersForProject();
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     /**
@@ -1081,13 +1074,6 @@ class ProjectResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    private function checkLimitValueIsAcceptable($limit)
-    {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
     }
 
     private function isUserDelegatedRestProjectManager(PFUser $user)

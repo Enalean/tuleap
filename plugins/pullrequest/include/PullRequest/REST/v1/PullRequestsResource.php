@@ -1035,19 +1035,17 @@ class PullRequestsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int    $id     Pull request id
-     * @param int    $limit  Number of fetched comments {@from path}
-     * @param int    $offset Position of the first comment to fetch {@from path}
+     * @param int    $limit  Number of fetched comments {@from path} {@min 0} {@max 50}
+     * @param int    $offset Position of the first comment to fetch {@from path} {@min 0}
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\TimelineRepresentation}
      *
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     protected function getTimeline($id, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $this->checkLimit($limit);
         $this->sendAllowHeadersForTimeline();
 
         $pull_request_with_git_reference = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser($id);
@@ -1092,20 +1090,18 @@ class PullRequestsResource extends AuthenticatedResource
      * @access protected
      *
      * @param int    $id     Pull request id
-     * @param int    $limit  Number of fetched comments {@from path}
-     * @param int    $offset Position of the first comment to fetch {@from path}
+     * @param int    $limit  Number of fetched comments {@from path} {@min 0} {@max 50}
+     * @param int    $offset Position of the first comment to fetch {@from path} {@min 0}
      * @param string $order  In which order comments are fetched. Default is asc. {@from path}{@choice asc,desc}
      *
      * @return array {@type Tuleap\PullRequest\REST\v1\CommentRepresentation}
      *
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     protected function getComments($id, $limit = 10, $offset = 0, $order = 'asc')
     {
         $this->checkAccess();
-        $this->checkLimit($limit);
         $this->sendAllowHeadersForComments();
 
         $pull_request_with_git_reference = $this->getAccessiblePullRequestWithGitReferenceForCurrentUser($id);
@@ -1264,13 +1260,6 @@ class PullRequestsResource extends AuthenticatedResource
                 403,
                 'This pull request is already closed, the reviewers can not be updated'
             );
-        }
-    }
-
-    private function checkLimit($limit)
-    {
-        if ($limit > self::MAX_LIMIT) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
         }
     }
 

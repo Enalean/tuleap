@@ -67,20 +67,18 @@ class ProjectResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type \Tuleap\FRS\REST\v1\PackageMinimalRepresentation}
      * @pslam-var PackageMinimalRepresentation[]
      *
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     public function getFRSPackages(int $id, int $limit = 10, int $offset = 0)
     {
         $this->checkAccess();
-        $this->checkLimitValueIsAcceptable($limit);
 
         $project = $this->getProjectForUser($id);
         $paginated_packages = $this->getPackages($project, $this->user_manager->getCurrentUser(), $limit, $offset);
@@ -181,20 +179,8 @@ class ProjectResource extends AuthenticatedResource
         Header::allowOptionsGet();
     }
 
-    private function checkLimitValueIsAcceptable($limit)
-    {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-    }
-
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 }

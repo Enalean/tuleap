@@ -68,11 +68,10 @@ class SystemEventResource extends AuthenticatedResource
      * @access protected
      *
      * @param string $status Number of elements displayed per page {@from path} {@choice new,done,warning,error,running}
-     * @param int    $limit  Number of elements displayed per page {@from path}{@min 1}
-     * @param int    $offset Position of the first element to display {@from path}{@min 0}
+     * @param int    $limit  Number of elements displayed per page {@from path} {@min 0} {@max 100}
+     * @param int    $offset Position of the first element to display {@from path} {@min 0}
      *
      * @throw 403
-     * @throw 406
      *
      * @return array {@type Tuleap\SystemEvent\REST\v1\SystemEventRepresentation}
      */
@@ -80,10 +79,6 @@ class SystemEventResource extends AuthenticatedResource
     {
         $this->checkAccess();
         $this->checkUserIsAllowedToSeeSystemEvents();
-
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
 
         $paginated_representation = $this->representation_builder->getAllMatchingEvents($status, $limit, $offset);
 
@@ -101,11 +96,6 @@ class SystemEventResource extends AuthenticatedResource
     private function sendAllowHeadersForProject()
     {
         Header::allowOptionsGet();
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     /**

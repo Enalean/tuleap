@@ -226,19 +226,17 @@ class BacklogItemResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the Backlog Item
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     * @param int $offset Position of the first element to display{ @min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     public function getChildren($id, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $this->checkContentLimit($limit);
 
         $current_user = $this->getCurrentUser();
         $artifact     = $this->getArtifact($id);
@@ -402,18 +400,6 @@ class BacklogItemResource extends AuthenticatedResource
     private function getSlicedArtifactsBuilder()
     {
         return new SlicedArtifactsBuilder(new Tracker_ArtifactDao(), Tracker_ArtifactFactory::instance());
-    }
-
-    private function checkContentLimit($limit)
-    {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     private function sendAllowHeader()

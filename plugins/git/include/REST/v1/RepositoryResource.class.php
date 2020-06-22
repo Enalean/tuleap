@@ -406,8 +406,8 @@ class RepositoryResource extends AuthenticatedResource
      *
      * @param int    $id     Id of the repository
      * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int    $limit  Number of elements displayed per page {@from path}
-     * @param int    $offset Position of the first element to display {@from path}
+     * @param int    $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int    $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return RepositoryPullRequestRepresentation
      *
@@ -418,7 +418,6 @@ class RepositoryResource extends AuthenticatedResource
     {
         $this->checkAccess();
         $this->checkPullRequestEndpointsAvailable();
-        $this->checkLimit($limit);
 
         $user       = $this->getCurrentUser();
         $repository = $this->getRepository($user, $id);
@@ -717,12 +716,10 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     public function getBranches($id, $offset = 0, $limit = self::MAX_LIMIT)
     {
         $this->checkAccess();
-        $this->checkLimit($limit);
 
         $repository = $this->getRepositoryForCurrentUser($id);
 
@@ -798,12 +795,10 @@ class RepositoryResource extends AuthenticatedResource
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     public function getTags($id, $offset = 0, $limit = self::MAX_LIMIT)
     {
         $this->checkAccess();
-        $this->checkLimit($limit);
 
         $repository = $this->getRepositoryForCurrentUser($id);
 
@@ -970,13 +965,6 @@ class RepositoryResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    private function checkLimit($limit)
-    {
-        if ($limit > self::MAX_LIMIT) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
     }
 
     /**

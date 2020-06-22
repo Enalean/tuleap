@@ -173,7 +173,7 @@ class ArtifactFilesTest extends ArtifactFileBase //phpcs:ignore PSR1.Classes.Cla
         $request = $this->client->put('artifact_temporary_files/' . $file_id, null, $put_resource);
 
         $response = $this->getResponse($request);
-        $this->assertEquals(406, $response->getStatusCode());
+        $this->assertEquals(400, $response->getStatusCode());
         $this->assertArrayHasKey('X-DISK-USAGE', $response->getHeaders());
     }
 

@@ -165,22 +165,19 @@ class UserGroupResource extends AuthenticatedResource
      * @param string $id Id of the ugroup This should be one of two formats<br>
      * - format: projectId_ugroupId for dynamic project user groups (project members...)<br>
      * - format: ugroupId for all other groups (registered users, custom groups, ...)
-     * @param int    $limit Number of elements displayed per page
-     * @param int    $offset Position of the first element to display
+     * @param int    $limit Number of elements displayed per page {@min 0} {@max 50}
+     * @param int    $offset Position of the first element to display {@min 0}
      * @param string $query User name to look for
      *
      *
      * @throws RestException 400
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      *
      * @return array {@type \Tuleap\User\REST\UserRepresentation}
      */
     protected function getUsers($id, $limit = 10, $offset = 0, $query = null)
     {
-        $this->checkLimitValueIsAcceptable($limit);
-
         $user_group = $this->user_group_retriever->getExistingUserGroup($id);
 
         ProjectStatusVerificator::build()->checkProjectStatusAllowsOnlySiteAdminToAccessIt(
@@ -491,25 +488,6 @@ class UserGroupResource extends AuthenticatedResource
     private function sendPaginationHeaders($limit, $offset, $size)
     {
         Header::sendPaginationHeaders($limit, $offset, $size, self::MAX_LIMIT);
-    }
-
-    /**
-     * Checks if the limit provided by the request is valid
-     *
-     * @param int $limit Number of elements displayed per page
-     *
-     * @return bool
-     *
-     * @throws RestException 406
-     */
-
-    private function checkLimitValueIsAcceptable($limit)
-    {
-        if ($limit > self::MAX_LIMIT) {
-             throw new RestException(406, 'limit value is not acceptable');
-        }
-
-        return true;
     }
 
     /**

@@ -39,8 +39,8 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type \Tuleap\REST\v1\PlanningRepresentationBase}
      */
@@ -92,8 +92,8 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
      * @param int    $id     Id of the project
      * @param string $fields Set of fields to return in the result {@choice all,slim}
      * @param string $query  JSON object of search criteria properties {@from path}
-     * @param int    $limit  Number of elements displayed per page {@from path}
-     * @param int    $offset Position of the first element to display {@from path}
+     * @param int    $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int    $offset Position of the first element to display {@from path} {@min 0}
      * @param string $order  In which order milestones are fetched. Default is asc {@from path}{@choice asc,desc}
      *
      * @return array {@type MilestoneRepresentation}
@@ -151,12 +151,10 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
-     * @param int $offset Position of the first element to display {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 100}
+     * @param int $offset Position of the first element to display {@from path} {@min 0}
      *
      * @return array {@type BacklogItemRepresentation}
-     *
-     * @throws RestException 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0)
     {

@@ -143,10 +143,6 @@ class ProjectBacklogResource
      */
     public function get(PFUser $user, Project $project, $limit, $offset)
     {
-        if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-
         try {
             $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
         } catch (Planning_NoPlanningsException $exception) {
@@ -189,11 +185,6 @@ class ProjectBacklogResource
         }
 
         return false;
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset)
