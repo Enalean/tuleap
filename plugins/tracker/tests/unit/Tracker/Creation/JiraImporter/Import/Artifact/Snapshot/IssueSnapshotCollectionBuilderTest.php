@@ -346,6 +346,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     private function buildCommentSnapshot(): Comment
     {
         return new Comment(
+            "user01",
             new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
             "Comment 01"
         );

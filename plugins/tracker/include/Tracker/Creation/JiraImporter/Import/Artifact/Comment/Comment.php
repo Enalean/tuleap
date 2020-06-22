@@ -40,17 +40,25 @@ class Comment
      */
     private $rendered_value;
 
+    /**
+     * @var string
+     */
+    private $display_name;
+
     public function __construct(
+        string $display_name,
         DateTimeImmutable $date,
         string $rendered_value
     ) {
         $this->date           = $date;
         $this->rendered_value = $rendered_value;
+        $this->display_name   = $display_name;
     }
 
     public static function buildFromAPIResponse(array $comment_response): self
     {
         if (
+            ! isset($comment_response['updateAuthor']['displayName']) ||
             ! isset($comment_response['updated']) ||
             ! isset($comment_response['renderedBody'])
         ) {
@@ -58,6 +66,7 @@ class Comment
         }
 
         return new self(
+            (string) $comment_response['updateAuthor']['displayName'],
             new DateTimeImmutable($comment_response['updated']),
             (string) $comment_response['renderedBody']
         );
@@ -71,5 +80,10 @@ class Comment
     public function getRenderedValue(): string
     {
         return $this->rendered_value;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->display_name;
     }
 }

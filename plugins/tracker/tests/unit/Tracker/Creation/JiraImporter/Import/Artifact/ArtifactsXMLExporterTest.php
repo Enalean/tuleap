@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -119,7 +120,8 @@ class ArtifactsXMLExporterTest extends TestCase
                     )
                 ),
                 new CommentXMLExporter(
-                    new XML_SimpleXMLCDATAFactory()
+                    new XML_SimpleXMLCDATAFactory(),
+                    new CommentXMLValueEnhancer()
                 )
             )
         );
