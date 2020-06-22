@@ -34,7 +34,10 @@ class CommentTest extends TestCase
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",
                 "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200"
+                "updated" => "2020-04-21T11:36:46.601+0200",
+                "updateAuthor" => [
+                    "displayName" => 'user01'
+                ]
             ]
         );
 
@@ -50,7 +53,10 @@ class CommentTest extends TestCase
             [
                 "body" => "Comment 01",
                 "created" => "2020-04-21T11:36:46.601+0200",
-                "updated" => "2020-04-21T11:36:46.601+0200"
+                "updated" => "2020-04-21T11:36:46.601+0200",
+                "updateAuthor" => [
+                    "displayName" => 'user01'
+                ]
             ]
         );
 
@@ -61,6 +67,20 @@ class CommentTest extends TestCase
                 "body" => "Comment 01",
                 "renderedBody" => "<p>Comment 01</p>",
                 "created" => "2020-04-21T11:36:46.601+0200",
+                "updateAuthor" => [
+                    "displayName" => 'user01'
+                ]
+            ]
+        );
+
+        $this->expectException(CommentAPIResponseNotWellFormedException::class);
+
+        $comment = Comment::buildFromAPIResponse(
+            [
+                "body" => "Comment 01",
+                "renderedBody" => "<p>Comment 01</p>",
+                "created" => "2020-04-21T11:36:46.601+0200",
+                "updated" => "2020-04-21T11:36:46.601+0200"
             ]
         );
     }

@@ -35,9 +35,17 @@ class CommentXMLExporter
      */
     private $simplexml_cdata_factory;
 
-    public function __construct(XML_SimpleXMLCDATAFactory $simplexml_cdata_factory)
-    {
-        $this->simplexml_cdata_factory = $simplexml_cdata_factory;
+    /**
+     * @var CommentXMLValueEnhancer
+     */
+    private $comment_xml_value_enhancer;
+
+    public function __construct(
+        XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
+        CommentXMLValueEnhancer $comment_xml_value_enhancer
+    ) {
+        $this->simplexml_cdata_factory    = $simplexml_cdata_factory;
+        $this->comment_xml_value_enhancer = $comment_xml_value_enhancer;
     }
 
     public function exportComment(
@@ -70,7 +78,7 @@ class CommentXMLExporter
         $this->simplexml_cdata_factory->insertWithAttributes(
             $comment_node,
             'body',
-            (string) $comment_snapshot->getRenderedValue(),
+            $this->comment_xml_value_enhancer->getEnhancedValueWithCommentWriterInformation($comment_snapshot),
             ['format' => Tracker_Artifact_Changeset_Comment::HTML_COMMENT]
         );
     }
