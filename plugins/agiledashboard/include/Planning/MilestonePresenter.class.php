@@ -62,7 +62,7 @@ class AgileDashboard_MilestonePresenter
 
     public function editArtifact()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item_dropdown', array($this->milestoneTitle()));
+        return sprintf(dgettext('tuleap-agiledashboard', 'Edit %1$s'), $this->milestoneTitle());
     }
 
     public function editArtifactUrl()

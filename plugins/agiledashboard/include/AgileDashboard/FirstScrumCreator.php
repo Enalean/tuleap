@@ -65,11 +65,7 @@ class AgileDashboard_FirstScrumCreator
 
         $already_existing_tracker = $this->getAlreadyExistingTracker();
         if ($already_existing_tracker) {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText(
-                'plugin_agiledashboard_first_scrum',
-                'error_existing_tracker',
-                $already_existing_tracker
-            ));
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, sprintf(dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an existing tracker (%1$s) prevented it.'), $already_existing_tracker));
             return;
         }
 
@@ -79,9 +75,9 @@ class AgileDashboard_FirstScrumCreator
 
         try {
             $this->xml_importer->import($config, $this->project->getId(), $this->template_path);
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard_first_scrum', 'created'));
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-agiledashboard', 'We created an initial scrum configuration for you. Enjoy!'));
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::WARN, $GLOBALS['Language']->getText('plugin_agiledashboard_first_scrum', 'internal_error'));
+            $GLOBALS['Response']->addFeedback(Feedback::WARN, dgettext('tuleap-agiledashboard', 'We tried to create an initial scrum configuration for you but an internal error prevented it.'));
         }
     }
 

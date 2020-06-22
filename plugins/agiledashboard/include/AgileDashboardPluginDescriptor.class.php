@@ -26,6 +26,6 @@ class AgileDashboardPluginDescriptor extends PluginDescriptor
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_agiledashboard', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_agiledashboard', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-agiledashboard', 'Agile Dashboard'), false, dgettext('tuleap-agiledashboard', 'Agile Dashboard'));
     }
 }

@@ -170,7 +170,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
      */
     public function getEditLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'edit_item');
+        return dgettext('tuleap-agiledashboard', 'Edit');
     }
 
     /**

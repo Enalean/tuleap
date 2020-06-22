@@ -54,47 +54,47 @@ class AdminKanbanPresenter
 
     public function config_title()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_title');
+        return dgettext('tuleap-agiledashboard', 'Agile Dashboard administration');
     }
 
     public function config_submit_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'config_submit_label');
+        return dgettext('tuleap-agiledashboard', 'Save');
     }
 
     public function general_settings_section()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'general_settings_section');
+        return dgettext('tuleap-agiledashboard', 'General settings');
     }
 
     public function activate_kanban_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_kanban_label');
+        return dgettext('tuleap-agiledashboard', 'Activate Kanban');
     }
 
     public function title_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title');
+        return dgettext('tuleap-agiledashboard', 'Title');
     }
 
     public function title_label_help()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'title_kanban_help');
+        return dgettext('tuleap-agiledashboard', 'This will be used to identify the Kanban section from the Agile Dashboard homepage.');
     }
 
     public function kanban_activated_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_activated_label');
+        return dgettext('tuleap-agiledashboard', 'Kanban is currently active.');
     }
 
     public function kanban_not_activated_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_not_activated_label');
+        return dgettext('tuleap-agiledashboard', 'Kanban is not currently active.');
     }
 
     public function first_kanban_will_be_created()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'first_kanban_will_be_created');
+        return dgettext('tuleap-agiledashboard', 'A first Kanban will be created during the activation. This operation can take a few seconds.');
     }
 
     public function token()

@@ -139,10 +139,10 @@ class Planning_MilestoneController extends BaseController
         $extractor          = new AgileDashboard_PaneRedirectionExtractor();
 
         if (! ($this->inconsistentArtifactsIdsAreValid($artifact_ids) && $milestone->solveInconsistencies($this->getCurrentUser(), $artifact_ids))) {
-            $this->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'error_on_inconsistencies_solving'));
+            $this->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'An error occurred while trying to solve inconsistencies.'));
         }
 
-        $this->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_agiledashboard', 'successful_inconsistencies_solving'));
+        $this->addFeedback(Feedback::INFO, dgettext('tuleap-agiledashboard', 'Inconsistencies successfully solved!'));
 
         if (! $request_has_redirect = $extractor->getRedirectToParameters($this->request, $this->project)) {
             $this->redirect(array(

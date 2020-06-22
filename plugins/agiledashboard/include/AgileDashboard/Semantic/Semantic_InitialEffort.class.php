@@ -62,7 +62,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_label');
+        return dgettext('tuleap-agiledashboard', 'Initial Effort');
     }
 
     /**
@@ -72,7 +72,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_description');
+        return dgettext('tuleap-agiledashboard', 'Define the initial effort of an artifact.');
     }
 
     /**
@@ -106,17 +106,13 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
      */
     public function display()
     {
-        echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_long_desc');
+        echo dgettext('tuleap-agiledashboard', 'This is used in the <b>Agile Dashboard</b> if enabled.');
 
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo $GLOBALS['Language']->getText(
-                'plugin_agiledashboard_admin_semantic',
-                'initial_effort_field',
-                array($purifier->purify($field->getLabel()))
-            );
+            echo sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
         } else {
-            echo $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_no_field');
+            echo dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
         }
     }
 
@@ -161,16 +157,16 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
             $submit_btn .= $purify->purify($GLOBALS['Language']->getText('global', 'save_change')) . '</button>';
 
             if (! $this->getFieldId()) {
-                $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_no_field');
+                $html .= dgettext('tuleap-agiledashboard', '<p>This tracker does not have an <em>initial effort</em> field yet.</p>');
                 $html .= '<p>' . $purify->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice'));
                 $html .= $select . ' <br> ' . $submit_btn . '</p>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_field', array($select));
+                $html .= sprintf(dgettext('tuleap-agiledashboard', '<p>The initial effort of this tracker will be represented in the Agile Dashboard by the field <strong>%1$s</strong>.</p>'), $select);
                 $html .= $submit_btn . ' ' . $purify->purify($GLOBALS['Language']->getText('global', 'or')) . ' ' . $unset_btn;
             }
             $html .= '</form>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_impossible');
+            $html .= dgettext('tuleap-agiledashboard', 'You cannot define the <em>initial effort</em> semantic since there aren\'t any numeric fields in the tracker');
         }
         $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $purify->purify($GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview')) . '</a></p>';
         echo $html;
@@ -199,21 +195,21 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
                 $this->initial_effort_field = $field;
 
                 if ($this->save()) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_now', array($field->getLabel())));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-agiledashboard', 'The initial effort is now: %1$s'), $field->getLabel()));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'unable_save_initial_effort'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'Unable to save the <em>initial effort</em>'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'bad_field_initial_effort'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'The field you submitted is not a numeric field'));
             }
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'deleted_initial_effort'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-agiledashboard', 'Initial effort semantic has been unset'));
                 $GLOBALS['Response']->redirect($this->getUrl());
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'unable_save_initial_effort'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-agiledashboard', 'Unable to save the <em>initial effort</em>'));
             }
         }
 

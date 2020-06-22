@@ -46,12 +46,12 @@ abstract class Planning_Presenter_MilestoneSummaryPresenterAbstract
 
     public function content()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
+        return dgettext('tuleap-agiledashboard', 'Overview');
     }
 
     public function cardwall()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall');
+        return dgettext('tuleap-agiledashboard', 'Cardwall');
     }
 
     public function breadcrumbs()

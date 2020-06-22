@@ -151,7 +151,7 @@ class ShowKanbanController extends BaseController
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_not_found')
+                dgettext('tuleap-agiledashboard', 'Kanban not found.')
             );
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
             $GLOBALS['Response']->addFeedback(

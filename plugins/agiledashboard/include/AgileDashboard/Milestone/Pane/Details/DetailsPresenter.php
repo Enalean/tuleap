@@ -90,7 +90,7 @@ class DetailsPresenter
 
     public function solve_inconsistencies_button()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_detailspane', 'solve_inconsistencies');
+        return dgettext('tuleap-agiledashboard', 'Import them in the backlog');
     }
 
     public function solve_inconsistencies_url()
@@ -110,7 +110,7 @@ class DetailsPresenter
 
     public function inconsistent_items_intro()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard_detailspane', 'inconsistent_items_intro');
+        return dgettext('tuleap-agiledashboard', 'Some items are not linked to this milestone.');
     }
 
     public function has_something_inconsistent()

@@ -51,7 +51,7 @@ class VirtualTopMilestoneCrumbBuilder
 
         return new BreadCrumb(
             new BreadCrumbLink(
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'top_planning_link'),
+                dgettext('tuleap-agiledashboard', 'Top Backlog Planning'),
                 $this->plugin_path . '/?' . http_build_query($url_top_parameters)
             )
         );

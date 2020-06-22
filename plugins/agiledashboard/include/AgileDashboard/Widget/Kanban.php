@@ -209,7 +209,7 @@ abstract class Kanban extends Widget
         } catch (AgileDashboard_KanbanNotFoundException $exception) {
             $widget_kanban_presenter = new WidgetKanbanPresenter(
                 $is_empty,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_not_found')
+                dgettext('tuleap-agiledashboard', 'Kanban not found.')
             );
         } catch (AgileDashboard_KanbanCannotAccessException $exception) {
             $widget_kanban_presenter = new WidgetKanbanPresenter(

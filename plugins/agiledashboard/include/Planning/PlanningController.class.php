@@ -361,7 +361,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                         ]
                     ),
                     'fa-th-large',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'cardwall')
+                    dgettext('tuleap-agiledashboard', 'Cardwall')
                 );
             }
 
@@ -493,13 +493,13 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 $xml_importer->import($config, $this->group_id, $_FILES["template_file"]["tmp_name"]);
                 $GLOBALS['Response']->addFeedback(
                     Feedback::INFO,
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'import_template_success')
+                    dgettext('tuleap-agiledashboard', 'The configuration has been successfully imported!')
                 );
             } else {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $errors);
             }
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_import'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to import the configuration!'));
         }
     }
 
@@ -512,7 +512,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $project = $this->getProjectFromRequest();
             $xml = $this->getFullConfigurationAsXML($project);
         } catch (Exception $e) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_agiledashboard', 'export_failed'));
+            $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to export the configuration'));
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
         }
 
@@ -539,7 +539,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         if ($this->scrum_mono_milestone_checker->doesScrumMonoMilestoneConfigurationAllowsPlanningCreation($this->getCurrentUser(), $this->group_id) === false) {
             $this->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'cannot_create_planning_in_scrum_v2')
+                dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.')
             );
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
@@ -562,7 +562,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             // TODO: Error message should reflect validation detail
             $this->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory')
+                dgettext('tuleap-agiledashboard', 'Planning name, backlog tracker and planning tracker are mandatory.')
             );
             $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
         }
@@ -687,7 +687,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
         } else {
             $this->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_all_fields_mandatory')
+                dgettext('tuleap-agiledashboard', 'Planning name, backlog tracker and planning tracker are mandatory.')
             );
         }
 

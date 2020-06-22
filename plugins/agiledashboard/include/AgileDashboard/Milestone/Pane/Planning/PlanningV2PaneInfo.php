@@ -44,11 +44,7 @@ class PlanningV2PaneInfo extends PaneInfo
 
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_agiledashboard',
-            'milestone_planning_pane_title',
-            $this->submilestone_tracker->getName()
-        );
+        return sprintf(dgettext('tuleap-agiledashboard', '%1$s Planning'), $this->submilestone_tracker->getName());
     }
 
     public function getIconName()

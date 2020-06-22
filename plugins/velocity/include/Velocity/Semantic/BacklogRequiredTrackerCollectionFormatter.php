@@ -52,7 +52,7 @@ class BacklogRequiredTrackerCollectionFormatter
 
         return new MissingRequiredSemanticPresenter(
             $url,
-            $GLOBALS['Language']->getText('plugin_agiledashboard_admin_semantic', 'initial_effort_label')
+            dgettext('tuleap-agiledashboard', 'Initial Effort')
         );
     }
 }

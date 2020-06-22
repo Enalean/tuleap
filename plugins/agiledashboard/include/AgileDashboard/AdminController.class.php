@@ -316,7 +316,7 @@ class AdminController extends BaseController
         if (! $tracker_id || $tracker === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_tracker_selected')
+                dgettext('tuleap-agiledashboard', 'No tracker has been selected.')
             );
 
             $this->redirectToHome();
@@ -327,7 +327,7 @@ class AdminController extends BaseController
         if ($this->kanban_manager->doesKanbanExistForTracker($tracker)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_tracker_used')
+                dgettext('tuleap-agiledashboard', 'Tracker already used by another Kanban.')
             );
 
             $this->redirectToHome();
@@ -338,12 +338,12 @@ class AdminController extends BaseController
         if ($this->kanban_manager->createKanban($kanban_name, $tracker_id)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_created', [$kanban_name])
+                sprintf(dgettext('tuleap-agiledashboard', 'Kanban %1$s successfully created.'), $kanban_name)
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_agiledashboard', 'kanban_creation_error', [$kanban_name])
+                sprintf(dgettext('tuleap-agiledashboard', 'Error while creating Kanban %1$s.'), $kanban_name)
             );
         }
 

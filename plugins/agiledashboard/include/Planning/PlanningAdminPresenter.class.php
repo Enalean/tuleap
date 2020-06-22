@@ -61,7 +61,7 @@ class Planning_PlanningAdminPresenter
 
     public function edit_action_label()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit');
+        return dgettext('tuleap-agiledashboard', 'Edit');
     }
 
     public function edit_icon_path()

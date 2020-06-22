@@ -44,17 +44,17 @@ class Planning_Presenter_MilestoneAccessPresenter
 
     public function content()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'details_pane_title');
+        return dgettext('tuleap-agiledashboard', 'Overview');
     }
 
     public function planning()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning');
+        return dgettext('tuleap-agiledashboard', 'Planning');
     }
 
     public function no_milestone()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'no_milestone');
+        return dgettext('tuleap-agiledashboard', 'There are no milestones for this period');
     }
 
     public function edit_base_link()

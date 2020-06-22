@@ -45,35 +45,35 @@ class Planning_Presenter_BaseHomePresenter
     public function nothing_set_up()
     {
         if (! $this->is_user_admin) {
-            return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_generic');
+            return dgettext('tuleap-agiledashboard', 'The Agile Dashboard has not yet been configured by a project administrator.');
         }
 
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin');
+        return dgettext('tuleap-agiledashboard', 'The Agile Dashboard has not yet been configured.');
     }
 
     public function nothing_set_up_admin_description()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_admin_description');
+        return dgettext('tuleap-agiledashboard', 'Please choose between Scrum or Kanban layout below.<br>Don\'t worry, you will be able to change your mind and customize your configuration afterwards.');
     }
 
     public function come_back_later()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'nothing_set_up_come_back');
+        return dgettext('tuleap-agiledashboard', 'Please come back later.');
     }
 
     public function start_kanban()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'start_kanban');
+        return dgettext('tuleap-agiledashboard', 'Start Kanban');
     }
 
     public function start_scrum()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'start_scrum');
+        return dgettext('tuleap-agiledashboard', 'Start Scrum');
     }
 
     public function activate_scrum_v2()
     {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'activate_scrum_v2');
+        return dgettext('tuleap-agiledashboard', 'Start Scrum V2');
     }
 
     public function create_scrum_url()

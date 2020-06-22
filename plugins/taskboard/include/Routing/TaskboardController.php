@@ -98,7 +98,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                 $GLOBALS['Language']->getText(
                     'project_service',
                     'service_not_used',
-                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
+                    dgettext('tuleap-agiledashboard', 'Agile Dashboard')
                 )
             );
         }
