@@ -757,7 +757,7 @@ class Tracker_FormElementFactory
     /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
-     * @return Tracker_FormElement_Field_ArtifactLink
+     * @return Tracker_FormElement_Field_ArtifactLink|null
      */
     public function getAnArtifactLinkField(PFUser $user, Tracker $tracker)
     {

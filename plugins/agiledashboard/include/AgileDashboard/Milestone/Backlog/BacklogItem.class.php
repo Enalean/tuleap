@@ -111,7 +111,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->id;
     }
 
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
@@ -121,7 +121,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->type;
     }
 
-    public function short_type()
+    public function getShortType(): string
     {
         return $this->short_type;
     }
@@ -143,7 +143,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItem implements AgileDashboard_Mil
         return $this->status;
     }
 
-    public function color()
+    public function color(): string
     {
         return $this->color;
     }

@@ -103,6 +103,7 @@ export default class ListOfTestDefinitions extends Vue {
 
     get can_add_button_be_displayed(): boolean {
         return (
+            this.backlog_item.can_add_a_test &&
             Boolean(this.testdefinition_tracker_id) &&
             !this.backlog_item.is_loading_test_definitions &&
             !this.backlog_item.has_test_definitions_loading_error

@@ -24,12 +24,15 @@ namespace Tuleap\TestPlan\REST;
 
 use Luracast\Restler\Restler;
 use Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation;
+use Tuleap\AgileDashboard\REST\v1\MilestoneInfoRepresentation;
 use Tuleap\TestPlan\REST\v1\BacklogItemResource;
+use Tuleap\TestPlan\REST\v1\MilestoneResource;
 
 final class ResourcesInjector
 {
     public function populate(Restler $restler): void
     {
         $restler->addAPIClass(BacklogItemResource::class, BacklogItemRepresentation::ROUTE);
+        $restler->addAPIClass(MilestoneResource::class, MilestoneInfoRepresentation::ROUTE);
     }
 }

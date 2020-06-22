@@ -72,6 +72,10 @@ class AgileDashboard_BacklogItemPresenter implements
      * @var
      */
     private $is_inconsistent;
+    /**
+     * @var string
+     */
+    private $short_type;
 
     public function __construct(Tracker_Artifact $artifact, $redirect_to_self, $is_inconsistent)
     {
@@ -82,6 +86,7 @@ class AgileDashboard_BacklogItemPresenter implements
         $this->artifact         = $artifact;
         $this->type             = $this->artifact->getTracker()->getName();
         $this->color            = $this->artifact->getTracker()->getColor()->getName();
+        $this->short_type       = $this->artifact->getTracker()->getItemName();
         $this->is_inconsistent  = $is_inconsistent;
     }
 
@@ -119,7 +124,7 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->id;
     }
 
-    public function title()
+    public function title(): string
     {
         return $this->title;
     }
@@ -181,7 +186,7 @@ class AgileDashboard_BacklogItemPresenter implements
         return $this->artifact;
     }
 
-    public function color()
+    public function color(): string
     {
         return $this->color;
     }
@@ -229,5 +234,10 @@ class AgileDashboard_BacklogItemPresenter implements
     public function setRemainingEffort($value)
     {
         $this->remaining_effort = $value;
+    }
+
+    public function getShortType(): string
+    {
+        return $this->short_type;
     }
 }
