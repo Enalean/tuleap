@@ -13,7 +13,6 @@
 widget	close_title	Remove
 widget	maximize_title	Maximize
 widget	minimize_title	Minimize
-widget	rss_title	RSS
 widget	preferences_title	Preferences
 
 widget_add	already_used	Already used
