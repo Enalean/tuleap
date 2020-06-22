@@ -145,7 +145,7 @@ class MailSender
         $link = HTTPRequest::instance()->getServerUrl() . '/plugins/tracker/?aid=' . (int) $artifact->getId() . '&func=manage-subscription';
 
         return '<a href="' . $link . '" target="_blank" rel="noreferrer">' .
-            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'mail_unsubscribe') .
+            dgettext('tuleap-tracker', 'Unsubscribe') .
             '</a>';
     }
 }

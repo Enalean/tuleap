@@ -46,7 +46,7 @@ class Tracker_FormElement_View_Admin
     public function fetchTypeNotModifiable()
     {
         $html = '';
-        $html .= '<p><label for="formElement_type">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') . ': </label>';
+        $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label>';
         $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
         $html .= '</p>';
         $html .= '<p>' . $this->formElement->getFactoryDescription() . '</p>';
@@ -56,7 +56,7 @@ class Tracker_FormElement_View_Admin
     public function fetchTypeForUpdate()
     {
         $html = '';
-        $html .= '<p><label for="formElement_type">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'type') . ': </label>';
+        $html .= '<p><label for="formElement_type">' . dgettext('tuleap-tracker', 'Type') . ': </label>';
         $html .= '<img width="16" height="16" alt="" src="' . $this->formElement->getFactoryIconUseIt() . '" style="vertical-align:middle"/> ' . $this->formElement->getFactoryLabel();
         $html .= '<p>' . $this->formElement->getFactoryDescription() . '</p>';
         $html .= '</p>';
@@ -68,7 +68,7 @@ class Tracker_FormElement_View_Admin
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= '<label for="formElement_name">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . ': </label>';
+        $html .= '<label for="formElement_name">' . dgettext('tuleap-tracker', 'Name') . ': </label>';
         $html .= '<input type="text" id="formElement_name" name="formElement_data[name]" value="' . $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         $html .= '</p>';
         return $html;
@@ -84,7 +84,7 @@ class Tracker_FormElement_View_Admin
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<p>';
-        $html    .= '<label for="formElement_label">' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label') . ': <font color="red">*</font></label> ';
+        $html    .= '<label for="formElement_label">' . dgettext('tuleap-tracker', 'Label') . ': <font color="red">*</font></label> ';
         $html    .= '<input type="text" name="formElement_data[label]" id="formElement_label" value="' . $purifier->purify($this->formElement->getLabel()) . '" size="40" />';
         $html    .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html    .= '</p>';
@@ -103,7 +103,7 @@ class Tracker_FormElement_View_Admin
         $html = '';
         $html .= '<p>';
 
-        $html .= '<label for="formElement_description">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc') . ':</label>';
+        $html .= '<label for="formElement_description">' . dgettext('tuleap-tracker', 'Description') . ':</label>';
         $html .= '<textarea name="formElement_data[description]" id="formElement_description" cols="40">' .  $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML)  . '</textarea>';
 
         $html .= '</p>';
@@ -115,7 +115,7 @@ class Tracker_FormElement_View_Admin
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= '<label>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'name') . '</label>';
+        $html .= '<label>' . dgettext('tuleap-tracker', 'Name') . '</label>';
         $html .= $hp->purify($this->formElement->getName(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</p>';
         return $html;
@@ -131,7 +131,7 @@ class Tracker_FormElement_View_Admin
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
         $html    .= '<p>';
-        $html    .= '<label>' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'field_label') . '</label>';
+        $html    .= '<label>' . dgettext('tuleap-tracker', 'Label') . '</label>';
         $html    .= $purifier->purify($this->formElement->getLabel());
         $html    .= '<input type="hidden" name="formElement_data[use_it]" value="1" />';
         $html    .= '</p>';
@@ -149,7 +149,7 @@ class Tracker_FormElement_View_Admin
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<p>';
-        $html .= '<label>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'fieldset_desc') . '</label>';
+        $html .= '<label>' . dgettext('tuleap-tracker', 'Description') . '</label>';
         $html .= $hp->purify($this->formElement->description, CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</p>';
         return $html;
@@ -186,7 +186,7 @@ class Tracker_FormElement_View_Admin
     {
         $html = '';
         $html .= '<p>';
-        $html .= '<label for="formElement_rank">' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'rank_screen') . ': <font color="red">*</font></label>';
+        $html .= '<label for="formElement_rank">' . dgettext('tuleap-tracker', 'Rank') . ': <font color="red">*</font></label>';
         $items = array();
         foreach ($this->allUsedElements as $field) {
             $items[] = $field->getRankSelectboxDefinition();
@@ -360,7 +360,7 @@ class Tracker_FormElement_View_Admin
             'style' => 'vertical-align:middle;',
         ));
         $html .= ' ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_permissions') . '</a>';
+        $html .= dgettext('tuleap-tracker', 'Edit permissions of this field') . '</a>';
         $html .= '</p>';
         return $html;
     }
@@ -376,7 +376,7 @@ class Tracker_FormElement_View_Admin
                 $t = $field->getTracker();
                 $trackers[$t->getId()] = '<a href="' . TRACKER_BASE_URL . '/?tracker=' . $t->getId() . '&func=admin-formElements">' . $t->getName() . ' (' . $hp->purify($t->getProject()->getPublicName()) . ')</a>';
             }
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_type', 'field_copied_to');
+            $html .= dgettext('tuleap-tracker', 'This field is used by the following trackers:');
             $html .= '<ul><li>';
             $html .= implode('</li><li>', $trackers);
             $html .= '</li></ul>';

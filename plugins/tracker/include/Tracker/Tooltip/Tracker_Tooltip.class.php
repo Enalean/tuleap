@@ -112,7 +112,7 @@ class Tracker_Tooltip extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_label');
+        return dgettext('tuleap-tracker', 'Tooltip');
     }
 
     /**
@@ -122,7 +122,7 @@ class Tracker_Tooltip extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_description');
+        return dgettext('tuleap-tracker', 'Manage tooltip');
     }
 
 
@@ -144,9 +144,9 @@ class Tracker_Tooltip extends Tracker_Semantic
         $html   = '';
         $fields = $this->getFields();
         if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'no_tooltip');
+            $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_fields');
+            $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
             $html .= '<blockquote>';
             $html .= '<table>';
             foreach ($fields as $field) {
@@ -160,7 +160,7 @@ class Tracker_Tooltip extends Tracker_Semantic
                 $html .= $GLOBALS['HTML']->getimage(
                     'ic/cross.png',
                     array(
-                        'alt' => $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_remove_field')
+                        'alt' => dgettext('tuleap-tracker', 'Remove the field from the tooltip')
                     )
                 );
                 $html .= '</button>';
@@ -177,7 +177,7 @@ class Tracker_Tooltip extends Tracker_Semantic
         if ($options) {
             $html .= '<form action="' . $this->getUrl() . '" method="POST">';
             $html .= $this->getCSRFToken()->fetchHTMLInput();
-            $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_add_field');
+            $html .= '<p>' . dgettext('tuleap-tracker', 'Add a field to the tooltip:');
             $html .= '<select name="field">';
             $html .= $options;
             $html .= '</select>';
@@ -185,10 +185,10 @@ class Tracker_Tooltip extends Tracker_Semantic
             $html .= '</p>';
             $html .= '</form>';
         } else {
-            $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_no_more_field') . '</em>';
+            $html .= '<em>' . dgettext('tuleap-tracker', 'There isn\'t anymore fields left to add to the tooltip') . '</em>';
         }
 
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
@@ -205,9 +205,9 @@ class Tracker_Tooltip extends Tracker_Semantic
         $fields = $this->getFields();
         $html .= '<p>';
         if (!count($fields)) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'no_tooltip');
+            $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'tooltip_fields');
+            $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
             $html .= '<ul>';
             foreach ($fields as $f) {
                 $html .=  '<li><strong>' . $hp->purify($f->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</strong></li>';

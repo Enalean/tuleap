@@ -101,7 +101,7 @@ class Tracker_REST_Artifact_ArtifactCreator
     public function checkUserCanSubmit(PFUser $user, Tracker $tracker)
     {
         if (! $tracker->userCanSubmitArtifact($user)) {
-            throw new \Luracast\Restler\RestException(403, $GLOBALS['Language']->getText('plugin_tracker', 'submit_at_least_one_field'));
+            throw new \Luracast\Restler\RestException(403, dgettext('tuleap-tracker', 'You can\'t submit an artifact because you do not have the right to submit all required fields'));
         }
     }
 }

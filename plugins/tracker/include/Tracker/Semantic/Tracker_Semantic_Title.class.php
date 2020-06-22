@@ -57,7 +57,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_label');
+        return dgettext('tuleap-tracker', 'Title');
     }
 
     /**
@@ -67,7 +67,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_description');
+        return dgettext('tuleap-tracker', 'Define the title of an artifact');
     }
 
     /**
@@ -101,16 +101,12 @@ class Tracker_Semantic_Title extends Tracker_Semantic
      */
     public function display()
     {
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_long_desc');
+        echo dgettext('tuleap-tracker', '<p>The <strong>title</strong> summarizes an artifact and will be used in RSS feeds or in the widget MyArtifact.</p>');
         if ($field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId())) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo $GLOBALS['Language']->getText(
-                'plugin_tracker_admin_semantic',
-                'title_field',
-                array($purifier->purify($field->getLabel()))
-            );
+            echo sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be summarized by the field <strong>%1$s</strong>.</p>'), $purifier->purify($field->getLabel()));
         } else {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_no_field');
+            echo dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>');
         }
     }
 
@@ -135,7 +131,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
             $html .= $this->getCSRFToken()->fetchHTMLInput();
             $select = '<select name="text_field_id">';
             if (! $this->getFieldId()) {
-                $select .= '<option value="-1" selected="selected">' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_a_field') . '</option>';
+                $select .= '<option value="-1" selected="selected">' . dgettext('tuleap-tracker', 'Choose a field...') . '</option>';
             }
             foreach ($text_fields as $text_field) {
                 if ($text_field->getId() == $this->getFieldId()) {
@@ -148,25 +144,25 @@ class Tracker_Semantic_Title extends Tracker_Semantic
             $select .= '</select>';
 
             $unset_btn  = '<button type="submit" class="btn btn-danger" name="delete">';
-            $unset_btn .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unset') . '</button>';
+            $unset_btn .= dgettext('tuleap-tracker', 'Unset this semantic') . '</button>';
 
             $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
             $submit_btn .= $GLOBALS['Language']->getText('global', 'save_change') . '</button>';
 
             if (!$this->getFieldId()) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_no_field');
-                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice') . ' ';
+                $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>');
+                $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . ' ';
                 $html .= $select . ' <br> ' . $submit_btn;
                 $html .= '</p>';
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_field', array($select));
+                $html .= sprintf(dgettext('tuleap-tracker', '<p>The artifacts of this tracker will be summarized by the field <strong>%1$s</strong>.</p>'), $select);
                 $html .= $submit_btn . ' ' . $GLOBALS['Language']->getText('global', 'or') . ' ' . $unset_btn;
             }
             $html .= '</form>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_impossible');
+            $html .= dgettext('tuleap-tracker', 'You cannot define the <em>title</em> semantic since there isn\'t any text field in the tracker');
         }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
@@ -188,21 +184,21 @@ class Tracker_Semantic_Title extends Tracker_Semantic
             if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
                 $this->text_field = $field;
                 if ($this->save()) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_now', array($field->getLabel())));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The title is now: %1$s'), $field->getLabel()));
                     $GLOBALS['Response']->redirect($this->getUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_title'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to save the title'));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'bad_field_title'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The field you submitted is not a text field'));
             }
         } elseif ($request->exist('delete')) {
             $this->getCSRFToken()->check();
             if ($this->delete()) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'deleted_title'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Title semantic has been unset'));
                 $GLOBALS['Response']->redirect($this->getUrl());
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_title'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to save the title'));
             }
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);

@@ -33,6 +33,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        bindtextdomain('tuleap-tracker_encryption', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -80,7 +81,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
         $request = HTTPRequest::instance();
         $params['fields']['Encrypted'] = "Tracker_FormElement_Field_Encrypted";
         if ($request->get('func') === 'admin-formElements') {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_encryption', 'warning_missing_key'));
+            $GLOBALS['Response']->addFeedback('warning', dgettext('tuleap-tracker_encryption', 'Please add a public key in the tracker administration in order to use encrypted field.'));
         }
     }
 
@@ -107,12 +108,12 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
             );
             $GLOBALS['Response']->addFeedback(
                 'info',
-                $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated')
+                dgettext('tuleap-tracker', 'Tracker successfully updated.')
             );
         } else {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_tracker_encryption', 'public_key_error')
+                dgettext('tuleap-tracker_encryption', 'Public key is not a valid one.')
             );
         }
     }
@@ -131,9 +132,9 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     'url'         => '/plugins/tracker_encryption/?'. http_build_query(array(
                                                                                      'tracker' => $params['tracker_id'],
                                                                                      'func' => 'admin-encryption')),
-                    'short_title' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
-                    'title'       => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
-                    'description' => $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_description'),
+                    'short_title' => dgettext('tuleap-tracker_encryption', 'Tracker Encryption'),
+                    'title'       => dgettext('tuleap-tracker_encryption', 'Tracker Encryption'),
+                    'description' => dgettext('tuleap-tracker_encryption', 'Encrypt tracker datas.'),
                     );
     }
 
@@ -148,7 +149,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                 if ($tracker !== null && $tracker->userIsAdmin()) {
                     $this->displayTrackerKeyForm($tracker_id);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
                 break;
@@ -159,7 +160,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
                     $csrf_token->check();
                     $this->editTrackerKey($tracker_id, $key);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='.$tracker_id);
                 }
                 break;
@@ -169,7 +170,7 @@ class tracker_encryptionPlugin extends PluginWithLegacyInternalRouting
     private function displayTrackerKeyForm($tracker_id)
     {
         $tracker = TrackerFactory::instance()->getTrackerById($tracker_id);
-        $title = $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name');
+        $title = dgettext('tuleap-tracker_encryption', 'Tracker Encryption');
         $layout = new TrackerManager();
         if ($tracker !== null) {
             $tracker->displayAdminHeader($layout, 'Encryption', $title);

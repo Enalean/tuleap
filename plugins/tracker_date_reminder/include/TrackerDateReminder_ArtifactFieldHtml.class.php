@@ -69,10 +69,10 @@ class TrackerDateReminder_ArtifactFieldHtml
         $baseActionUrl = '/tracker/admin/index.php?func=date_field_notification&group_id=' . $at->Group->getID() . '&atid=' . $at->getID() . '&field_id=' . $field->getID();
 
         if ($enabled) {
-            $out .= '<H3>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_title') . '</H3>';
+            $out .= '<H3>' . dgettext('tuleap-tracker_date_reminder', 'Date based email reminder activated for this field') . '</H3>';
             $out .= '<FORM ACTION="' . $baseActionUrl . '&delete_reminder=true" METHOD="POST">';
-            $out .= '<P>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_desc') . '</P>';
-            $out .= '<INPUT TYPE="SUBMIT" NAME="reminder" VALUE="' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_del_button') . '" />';
+            $out .= '<P>' . dgettext('tuleap-tracker_date_reminder', 'You can disable reminder with following button') . '</P>';
+            $out .= '<INPUT TYPE="SUBMIT" NAME="reminder" VALUE="' . dgettext('tuleap-tracker_date_reminder', 'Delete reminder on this field') . '" />';
             $out .= '</FORM>';
         }
 
@@ -81,20 +81,20 @@ class TrackerDateReminder_ArtifactFieldHtml
             <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $at->Group->getID() . '">
             <INPUT TYPE="HIDDEN" NAME="atid" VALUE="' . $at->getID() . '">';
 
-        $out .= '<h3>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notif_settings_field', array($field->getLabel())) . '</h3>';
+        $out .= '<h3>' . sprintf(dgettext('tuleap-tracker_date_reminder', 'Reminder Settings For \'%1$s\' Field'), $field->getLabel()) . '</h3>';
 
         $out .= '<div class="row-fluid" id="tv3-mail-reminders">
             <div class="span12 tv3-mail-reminder">'
-                . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part1', array($field->getLabel())) .
-                '<INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="' . $start . '"> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'days') . '
+                . sprintf(dgettext('tuleap-tracker_date_reminder', 'The notification on <b>\'%1$s\'</b> will start'), $field->getLabel()) .
+                '<INPUT TYPE="TEXT" NAME="start" SIZE="5" VALUE="' . $start . '"> ' . dgettext('tuleap-tracker_date_reminder', 'day(s)') . '
                 <SELECT NAME="notif_type">
-                    <OPTION VALUE="0" ' . $before . '>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notify_before') . '
-                    <OPTION VALUE="1" ' . $after . '>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'notify_after') . '
-                </SELECT> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part2') .
+                    <OPTION VALUE="0" ' . $before . '>' . dgettext('tuleap-tracker_date_reminder', 'before') . '
+                    <OPTION VALUE="1" ' . $after . '>' . dgettext('tuleap-tracker_date_reminder', 'after') . '
+                </SELECT> ' . dgettext('tuleap-tracker_date_reminder', 'the date set in this field.') .
             '</div>
             <div class="span12 tv3-mail-reminder">'
-                . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part3') .
-                '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="' . $recurse . '"> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part4');
+                . dgettext('tuleap-tracker_date_reminder', 'Codex will send') .
+                '<INPUT TYPE="TEXT" NAME="recurse" SIZE="5" VALUE="' . $recurse . '"> ' . dgettext('tuleap-tracker_date_reminder', 'e-mail(s) to');
 
         $artRoleNames = array(array('value' => '1', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_SUBMITTER_short_desc')),
                               array('value' => '2', 'text' => $GLOBALS['Language']->getText('tracker_common_types', 'role_ASSIGNEE_short_desc')),
@@ -119,10 +119,10 @@ class TrackerDateReminder_ArtifactFieldHtml
         $out .= html_build_multiple_select_box_from_array($groupNames, 'notified_groups[]', $notified_groups, 8, true, '', false, '', false, '', false);
 
         $out .= '</SELECT>' .
-        $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part5') .
-            ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="' . $frequency . '"> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'days') . '</div>' .
-            '<INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"></P></FORM><P>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part6', array($field->getLabel())) .
-            '<P>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_form_part7', array($field->getLabel())) . '</P>' .
+        dgettext('tuleap-tracker_date_reminder', 'with a frequency of one e-mail every') .
+            ' <INPUT TYPE="TEXT" NAME="frequency" SIZE="5" VALUE="' . $frequency . '"> ' . dgettext('tuleap-tracker_date_reminder', 'day(s)') . '</div>' .
+            '<INPUT TYPE="SUBMIT" NAME="submit_notif_settings" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"></P></FORM><P>' . sprintf(dgettext('tuleap-tracker_date_reminder', '<b>Example</b>:<br><br>The notification on \'%1$s\' date will start <b>2</b> days <b>before</b> the date set in this field.<br>Codex will send <b>3</b> e-mails to <b>Submitter</b> and <b>Assignee</b>, with a frequency of one e-mail every <b>2</b> days.'), $field->getLabel()) .
+            '<P>' . sprintf(dgettext('tuleap-tracker_date_reminder', 'It means: Codex will send to artifact submitter and assignee(s): <br> * 1 e-mail 2 days before <i>\'%1$s\'</i> date<br> * 1 e-mail on <i>\'%1$s\'</i> date <br> * 1 e-mail 2 days after <i>\'%1$s\'</i> date'), $field->getLabel()) . '</P>' .
             '<P>';
 
         echo $out;

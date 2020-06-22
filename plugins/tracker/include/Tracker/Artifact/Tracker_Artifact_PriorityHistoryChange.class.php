@@ -186,7 +186,7 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
 
     public function getFollowupContent($diff_to_previous)
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_intro') .
+        return dgettext('tuleap-tracker', 'The priority has been') .
             ' ' . $this->getRankProgression() .
             $this->getContextRepresentation() .
             ' ' . $this->getRelativeArtifactRepresentation();
@@ -197,9 +197,9 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
         $html = '<span class="rank-progression">';
 
         if ($this->hasBeenRaised()) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_raised') . ' &#8599;';
+            $html .= dgettext('tuleap-tracker', 'raised') . ' &#8599;';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_decreased') . ' &#8600;';
+            $html .= dgettext('tuleap-tracker', 'decreased') . ' &#8600;';
         }
 
         $html .= '</span>';
@@ -212,10 +212,10 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
             $html = '';
 
         if (! is_null($this->context) && $this->context !== self::NO_CONTEXT) {
-            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_in') . ' ';
+            $html .= ' ' . dgettext('tuleap-tracker', 'in') . ' ';
 
             if ($this->context === '0') {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_backlog');
+                $html .= dgettext('tuleap-tracker', 'the project\'s backlog');
             } else {
                 $artifact = $this->tracker_artifact_factory->getArtifactById($this->context);
                 if ($artifact) {
@@ -232,10 +232,10 @@ class Tracker_Artifact_PriorityHistoryChange extends Tracker_Artifact_Followup_I
     private function getRelativeArtifactRepresentation()
     {
         if ($this->moved_artifact == $this->artifact_higher) {
-            return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_before_than') . ' ' . $this->artifact_lower->fetchColoredXRef();
+            return dgettext('tuleap-tracker', 'and it\'s now placed before') . ' ' . $this->artifact_lower->fetchColoredXRef();
         }
 
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'priority_change_after_than') . ' ' . $this->artifact_higher->fetchColoredXRef();
+        return dgettext('tuleap-tracker', 'and it\'s now placed after') . ' ' . $this->artifact_higher->fetchColoredXRef();
     }
 
     /**

@@ -220,35 +220,35 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
         switch ($this->label) {
             case 'fieldset_default_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_default_bugs_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_bugs_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_status_bugs_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_bugs_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_default_patches_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_patches_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_patchtext_patches_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_patchtext_patches_lbl_key');
+                return dgettext('tuleap-tracker', 'Paste the patch here (text only)');
             case 'fieldset_status_patches_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_patches_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_default_SR_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_SR_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_status_SR_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_SR_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_default_tasks_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_tasks_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_status_tasks_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_tasks_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_default_slmbugs_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_default_slmbugs_lbl_key');
+                return dgettext('tuleap-tracker', 'Details');
             case 'fieldset_salome_slmbugs_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_salome_slmbugs_lbl_key');
+                return dgettext('tuleap-tracker', 'Salome');
             case 'fieldset_status_slmbugs_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_status_slmbugs_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_scrum_status_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_scrum_status_lbl_key');
+                return dgettext('tuleap-tracker', 'Status');
             case 'fieldset_scrum_description_lbl_key':
-                return $GLOBALS['Language']->getText('plugin_tracker_common_fieldset', 'fieldset_scrum_description_lbl_key');
+                return dgettext('tuleap-tracker', 'Description');
             default:
                 return $this->label;
         }
@@ -256,12 +256,12 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fieldset');
+        return dgettext('tuleap-tracker', 'Fieldset');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fieldset_description');
+        return dgettext('tuleap-tracker', 'Group fields in a set');
     }
 
     public static function getFactoryIconUseIt()

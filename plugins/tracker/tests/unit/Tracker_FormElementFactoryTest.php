@@ -182,9 +182,6 @@ final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //
 
     private function whenIDisplayCreateFormElement(): string
     {
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->with('plugin_tracker_formelement_admin', 'separator_label')->andReturns('Separator');
-
         $tracker_manager = Mockery::spy(\TrackerManager::class);
         $user            = Mockery::spy(\PFUser::class);
         $request         = Mockery::spy(\HTTPRequest::class);

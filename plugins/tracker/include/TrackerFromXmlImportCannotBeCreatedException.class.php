@@ -23,7 +23,7 @@ class TrackerFromXmlImportCannotBeCreatedException extends TrackerFromXmlExcepti
 {
     public function __construct($tracker_name)
     {
-        $message = $GLOBALS['Language']->getText('plugin_tracker_import', 'cannot_create', array($tracker_name));
+        $message = sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' cannot be created. Use \'--update\' to update an existing tracker.'), $tracker_name);
         parent::__construct($message);
     }
 }

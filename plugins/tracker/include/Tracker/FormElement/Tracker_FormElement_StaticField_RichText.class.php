@@ -94,12 +94,12 @@ class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_Stati
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_label');
+        return dgettext('tuleap-tracker', 'Static Text');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_rich_text_description');
+        return dgettext('tuleap-tracker', 'A static rich text element');
     }
 
     public static function getFactoryIconUseIt()

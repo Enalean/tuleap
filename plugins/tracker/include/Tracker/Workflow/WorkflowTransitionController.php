@@ -71,7 +71,7 @@ class WorkflowTransitionController implements DispatchableWithRequest, Dispatcha
         if (! $tracker->userIsAdmin($current_user)) {
             $layout->addFeedback(
                 \Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
+                dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $tracker->getId()));
         }

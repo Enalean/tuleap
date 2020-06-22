@@ -48,7 +48,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      */
     public static function getLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_int_field');
+        return dgettext('tuleap-tracker', 'Change the value of an int field');
     }
 
     /**

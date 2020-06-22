@@ -60,7 +60,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
 
         $current_user = $request->getCurrentUser();
         if (! $tracker->userIsAdmin($current_user)) {
-            $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
             $layout->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode($tracker->getId()));
         }
 
@@ -71,7 +71,7 @@ class NotificationsAdminSettingsDisplayController implements DispatchableWithReq
             return;
         }
 
-        $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mail_notif'));
+        $tracker->displayAdminItemHeader($this->tracker_manager, 'editnotifications', dgettext('tuleap-tracker', 'Email Notification Settings'));
         $this->getNotificationsManager($this->user_manager, $tracker)->displayTrackerAdministratorSettings($request, $csrf_token);
         $tracker->displayFooter($this->tracker_manager);
     }

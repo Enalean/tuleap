@@ -21,7 +21,6 @@
 class ArtifactNotificationSubscriberTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
     /** @var Tracker_ArtifactNotificationSubscriber */

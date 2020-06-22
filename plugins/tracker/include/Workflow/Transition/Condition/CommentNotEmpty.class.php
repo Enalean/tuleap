@@ -85,7 +85,7 @@ class Workflow_Transition_Condition_CommentNotEmpty extends Workflow_Transition_
         if (trim($comment_body) === '') {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('workflow_admin', 'label_define_transition_required_comment')
+                dgettext('tuleap-tracker', 'Comment must not be empty.')
             );
             return false;
         }

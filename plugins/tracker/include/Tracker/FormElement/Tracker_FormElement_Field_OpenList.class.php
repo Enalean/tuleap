@@ -289,12 +289,12 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'open_list');
+        return dgettext('tuleap-tracker', 'Open List');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'open_list_description');
+        return dgettext('tuleap-tracker', 'Provides a textbox containing a list of values, with autocompletion');
 
         return 'Provide a textbox containing an list of values, with autocompletion';
     }
@@ -975,14 +975,14 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         Tracker_FormElement_Field_List_Bind_Users $bind,
         BindParameters $parameters
     ) {
-        return $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_openlist_value_user_bind', array($this->getLabel()));
+        return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a login or an email.'), $this->getLabel());
     }
 
     public function visitListBindUgroups(
         Tracker_FormElement_Field_List_Bind_Ugroups $bind,
         BindParameters $parameters
     ) {
-        return $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_openlist_value_ugroup_bind', array($this->getLabel()));
+        return sprintf(dgettext('tuleap-tracker', '%1$s contains a value which is not a user group.'), $this->getLabel());
     }
 
     public function visitListBindNull(
@@ -1009,7 +1009,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $hp   = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<p>';
-        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'select_default_value') . '</strong><br />';
+        $html .= '<strong>' . dgettext('tuleap-tracker', 'Select default value') . '</strong><br />';
         $html .= '<div class="textboxlist">
                     <input id="tracker_field_default"
                            name="bind[default][]"

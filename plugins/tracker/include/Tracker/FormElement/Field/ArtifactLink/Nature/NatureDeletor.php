@@ -48,10 +48,7 @@ class NatureDeletor
         try {
             $this->dao->delete($shortname);
         } catch (Exception $exception) {
-            throw new UnableToDeleteNatureException($GLOBALS['Language']->getText(
-                'plugin_tracker_artifact_links_natures',
-                'db_error'
-            ));
+            throw new UnableToDeleteNatureException(dgettext('tuleap-tracker', 'error while playing with the database.  Help us improve your experience by sending an error report.'));
         }
     }
 }

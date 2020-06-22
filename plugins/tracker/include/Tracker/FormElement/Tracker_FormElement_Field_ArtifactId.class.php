@@ -175,12 +175,12 @@ class Tracker_FormElement_Field_ArtifactId extends Tracker_FormElement_Field_Int
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
+        return dgettext('tuleap-tracker', 'Artifact ID');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_description');
+        return dgettext('tuleap-tracker', 'Display the id of the artifact');
     }
 
     public static function getFactoryIconUseIt()

@@ -195,7 +195,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getFieldEmptyMessage()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field');
+        return dgettext('tuleap-tracker', 'Empty');
     }
 
     public function getStandardCalculationMode(array $artifact_ids)
@@ -251,7 +251,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
             $GLOBALS['Response']->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'warning_permissions', $this->getName())
+                sprintf(dgettext('tuleap-tracker', 'You will not able to edit by hand the field "%1$s" since no update and submit permissions will be granted.'), $this->getName())
             );
         }
 
@@ -358,7 +358,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
         $html  = '<a class="btn auto-compute" ' . $disabled . ' data-test="switch-to-autocompute">
                     <i class="fa fa-repeat fa-flip-horizontal"></i>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute');
+        $html .= dgettext('tuleap-tracker', 'Auto-compute');
         $html .= '</a>';
 
         return $html;
@@ -369,7 +369,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $purifier = Codendi_HTMLPurifier::instance();
 
         $html  = '<span class="original-value">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_original_value');
+        $html .= dgettext('tuleap-tracker', 'Computed value:');
         $html .= $purifier->purify($computed_value) . '</span>';
 
         return $html;
@@ -435,7 +435,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         }
 
         $html_computed_complete_value = $html_computed_value . '<span class="auto-computed"> (' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ')</span>';
+            dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
         if ($value === null) {
             $value = $html_computed_complete_value;
@@ -584,12 +584,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_label');
+        return dgettext('tuleap-tracker', 'Computed value');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'aggregate_description');
+        return dgettext('tuleap-tracker', 'Compute value (sum of numerical field) from linked artifacts.<p><strong>Note</strong>: <ul><li>Calculation will not check linked artifacts permissions AND will only calculate the field values of linked artifacts that have the same field name.</li></ul>');
     }
 
     public static function getFactoryIconUseIt()
@@ -684,13 +684,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html = '<div>';
         $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable ' . $extra_class . '">';
 
-        $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+        $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
         $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit ' . $submit_class . '">' . $purifier->purify($this->getLabel())  . $required . '</button>';
         $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
             '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel())  . $required . '</label>';
 
         $html .= '<span class="auto-computed ' . $auto_computed_class . '">' . $this->getNoValueLabel() . ' (' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ')</span>';
+            dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
         $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
 
@@ -704,7 +704,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $html .= $this->fetchComputedInputs($default_value_in_input, $is_autocomputed);
         $html .= $this->fetchBackToAutocomputedButton(false);
         $html .= $this->fetchComputedValueWithLabel(
-            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field')
+            dgettext('tuleap-tracker', 'Empty')
         );
 
         $html .= '</div></div></div>';
@@ -766,7 +766,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             $html    .= '<button class="tracker_formelement_edit edit-mass-change-autocompute" type="button">' .
                         $purifier->purify($this->getLabel()) . $required . '</button>';
             $html    .= '<span class="auto-computed">';
-            $html    .= $purifier->purify(ucfirst($GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field')));
+            $html    .= $purifier->purify(ucfirst(dgettext('tuleap-tracker', 'autocomputed')));
             $html    .= '</span>';
             $html    .= '</div>';
 
@@ -791,7 +791,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($computed_value === null) {
             $computed_value = $this->getFieldEmptyMessage();
         }
-        $autocomputed_label = ' (' . $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ')';
+        $autocomputed_label = ' (' . dgettext('tuleap-tracker', 'autocomputed') . ')';
         $class = 'auto-computed';
 
         $changeset = $artifact->getLastChangesetWithFieldValue($this)->getValue($this);
@@ -827,13 +827,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
         $html .= '<div class="tracker_artifact_field tracker_artifact_field-computed editable">';
 
-        $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+        $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
         $html .= '<button type="button" title="' . $title . '" class="tracker_formelement_edit tracker-formelement-edit-for-modal">' . $purifier->purify($this->getLabel())  . $required . '</button>';
         $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $purifier->purify($this->description) .
                 '" class="tracker_formelement_label">' . $purifier->purify($this->getLabel()) . $required . '</label>';
 
         $html .= '<span class="auto-computed auto-computed-for-modal">' . $computed_value . ' (' .
-        $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ')</span>';
+        dgettext('tuleap-tracker', 'autocomputed') . ')</span>';
 
         $html .= '<div class="input-append add-field" data-field-id="' . $this->getId() . '">';
         $html .= $this->fetchArtifactValue($artifact, $changeset, $submitted_values);
@@ -894,7 +894,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
                     <td class="autocomputed_override">' .
                         $this->fetchComputedValueWithLabel($computed_value) .
                         '<a href="#" ' . $data_field_id . '><i class="fa fa-repeat fa-flip-horizontal"></i>' .
-                        $GLOBALS['Language']->getText('plugin_tracker_deprecation_field', 'title_autocompute')
+                        dgettext('tuleap-tracker', 'Auto-compute')
                         . '</a>' .
                     '</td>
                     <td class="valueOf_' . $purifier->purify($this->getName()) . '"' .
@@ -1078,7 +1078,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         if ($last_changeset_value === null && ( $this->isAnEmptyValue($submitted_value) || $this->isAnEmptyArray($submitted_value)) && $hasPermission && $this->isRequired()) {
             $this->setHasErrors(true);
 
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The field %1$s is required.'), $this->getLabel() . ' (' . $this->getName() . ')'));
             return false;
         } elseif ($hasPermission) {
             if (

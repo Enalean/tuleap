@@ -24,7 +24,6 @@ class Tracker_FormElement_DateFormatterTest extends \PHPUnit\Framework\TestCase 
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_FormElement_Field_Date

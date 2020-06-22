@@ -153,7 +153,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
                 $added_arr[] = $added_element->getLink();
             }
             $added   = implode(', ', $added_arr);
-            $result = ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $added;
+            $result = ' ' . dgettext('tuleap-tracker', 'set to') . ' ' . $added;
             return $result;
         }
     }

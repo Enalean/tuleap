@@ -87,7 +87,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
      */
     public static function getLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_date_field');
+        return dgettext('tuleap-tracker', 'Change the value of a date field');
     }
 
     /**
@@ -118,11 +118,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
                 if ($field->userCanRead($current_user)) {
                     $this->addFeedback(
                         'info',
-                        $GLOBALS['Language']->getText(
-                            'workflow_postaction',
-                            'field_value_set',
-                            [$field->getLabel(), $new_date_timestamp]
-                        )
+                        sprintf(dgettext('tuleap-tracker', 'The field \'%1$s\' will be automatically set to %2$s'), $field->getLabel(), $new_date_timestamp)
                     );
                 }
             } else {
@@ -130,7 +126,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field
                 if ($field->userCanRead($current_user)) {
                     $this->addFeedback(
                         'info',
-                        $GLOBALS['Language']->getText('workflow_postaction', 'field_clear', [$field->getLabel()])
+                        sprintf(dgettext('tuleap-tracker', 'The field \'%1$s\' will be automatically cleared'), $field->getLabel())
                     );
                 }
             }

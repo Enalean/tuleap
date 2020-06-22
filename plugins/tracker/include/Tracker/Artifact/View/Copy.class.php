@@ -35,7 +35,7 @@ class Tracker_Artifact_View_Copy extends Tracker_Artifact_View_Edit
     /** @see Tracker_Artifact_View_Edit::getTitle() */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_title');
+        return dgettext('tuleap-tracker', 'Artifact');
     }
 
     /** @see Tracker_Artifact_View_Edit::fetch() */

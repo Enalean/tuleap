@@ -31,7 +31,7 @@ class Tracker_Artifact_ChangesetJsonPresenter
     public function author_updated()
     {
         $user_str = UserHelper::instance()->getDisplayNameFromUserId($this->changeset->getSubmittedBy());
-        return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_title', array($user_str));
+        return sprintf(dgettext('tuleap-tracker', '%1$s has just updated the artifact'), (string) $user_str);
     }
 
     public function time()
@@ -59,6 +59,6 @@ class Tracker_Artifact_ChangesetJsonPresenter
 
     public function got_it()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker', 'artifact_update_popup_got_it');
+        return dgettext('tuleap-tracker', 'OK, got it!');
     }
 }

@@ -24,12 +24,10 @@ use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_File;
-use Tuleap\GlobalLanguageMock;
 
 class TrackerArtifactChangesetValueFileTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Tracker_Artifact_Changeset|\Mockery\MockInterface|Tracker_Artifact_Changeset
@@ -80,11 +78,6 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
 
         $this->changeset->shouldReceive('getValue')->andReturns($file_2);
 
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'added')->andReturns('added');
-        $GLOBALS['Language']->shouldReceive('getText')
-                            ->with('plugin_tracker_artifact', 'removed')
-                            ->andReturns('removed');
-
         $this->assertEquals('Screenshot.png removed', $file_1->diff($file_2, 'text'));
         $this->assertEquals('Screenshot.png added', $file_2->diff($file_1, 'text'));
     }
@@ -123,11 +116,6 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
         $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info2));
 
         $this->changeset->shouldReceive('getValue')->andReturns($file_2);
-
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker_artifact', 'added')->andReturns('added');
-        $GLOBALS['Language']->shouldReceive('getText')
-                            ->with('plugin_tracker_artifact', 'removed')
-                            ->andReturns('removed');
 
         $this->assertEquals(
             'Screenshot2.png removed' . PHP_EOL . 'Screenshot3.png, Screenshot4.png added',

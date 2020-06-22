@@ -25,7 +25,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Transition;
-use Tuleap\GlobalLanguageMock;
 use Workflow_Transition_Condition_CommentNotEmpty;
 use Workflow_Transition_Condition_CommentNotEmpty_Dao;
 
@@ -34,7 +33,6 @@ require_once __DIR__ . '/../../../../bootstrap.php';
 class CommentNotEmpty_validateTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     private $empty_data = '';
 

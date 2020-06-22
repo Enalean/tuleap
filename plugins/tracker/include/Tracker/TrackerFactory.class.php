@@ -615,7 +615,7 @@ class TrackerFactory
             $field_mapping  = array_merge($field_mapping, $tracker_and_field_and_report_mapping['field_mapping']);
             $report_mapping = $report_mapping + $tracker_and_field_and_report_mapping['report_mapping'];
         } else {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin', 'tracker_not_duplicated', array($tracker->getName())));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Tracker %1$s not duplicated'), $tracker->getName()));
         }
 
         return [

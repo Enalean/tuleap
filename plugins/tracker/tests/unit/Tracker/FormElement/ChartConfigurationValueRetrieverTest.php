@@ -23,7 +23,6 @@ namespace Tuleap\Tracker\FormElement;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -31,7 +30,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 class ChartConfigurationValueRetrieverTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var ChartConfigurationValueRetriever

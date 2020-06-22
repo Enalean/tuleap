@@ -33,11 +33,11 @@ class TrackerAdminAllProjects extends User_ForgeUserGroupPermission
 
     public function getName()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker', 'permission_delegation_name');
+        return dgettext('tuleap-tracker', 'Global Tracker Administrator');
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker', 'permission_delegation_description');
+        return dgettext('tuleap-tracker', 'This permission grants tracker administration rights on all trackers on all projects');
     }
 }

@@ -23,6 +23,6 @@ class TrackerDateReminderPluginDescriptor extends PluginDescriptor
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-tracker_date_reminder', 'Tracker date based reminder'), false, dgettext('tuleap-tracker_date_reminder', 'Date based notification in trackers.'));
     }
 }

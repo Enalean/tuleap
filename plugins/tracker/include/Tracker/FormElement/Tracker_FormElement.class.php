@@ -237,19 +237,19 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                 break;
             case 'admin-formElement-remove':
                 if ($this->isUsedInTrigger()) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'used_in_triggers'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You cannot remove a field used in a trigger. Please update trigger rules before deleting field.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
 
                 if (Tracker_FormElementFactory::instance()->removeFormElement($this->id)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_removed'));
+                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field removed'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
                 break;
             case 'admin-formElement-delete':
                 if ($this->delete() && Tracker_FormElementFactory::instance()->deleteFormElement($this->id)) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_deleted'));
+                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field deleted'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->tracker_id . '&func=admin-formElements');
                 }
                 $this->getTracker()->displayAdminFormElements($layout, $request, $current_user);
@@ -283,7 +283,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
                         '#' . $this->getId() . ' ' . $this->getLabel() . ' (' . $this->getTracker()->getName() . ')',
                         $this->getTracker()->getProject()->getId()
                     );
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_updated'));
+                    $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field updated'));
                     if ($request->isAjax()) {
                         echo $this->fetchAdminFormElement();
                         exit;
@@ -294,9 +294,9 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         } elseif ($request->get('change-type')) {
             if (Tracker_FormElementFactory::instance()->changeFormElementType($this, $request->get('change-type'))) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_type_changed'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field type successfully changed'));
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_type_not_changed'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Field type could not be changed'));
             }
             $redirect = true;
         }
@@ -483,8 +483,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html .= '<tr><td>';
         $html .= Tracker_FormElementFactory::instance()->getFactoryButton(self::class, 'add-formElement[' . $this->id . ']', $this->getTracker(), $this->label, $this->description, $this->getFactoryIconUseIt());
         $html .= '</td><td>';
-        $html .= '<a href="' . $this->getAdminEditUrl() . '" title="' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'edit_field') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
-        $confirm = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'delete_field') . ' ' . $this->getLabel() . '?';
+        $html .= '<a href="' . $this->getAdminEditUrl() . '" title="' . dgettext('tuleap-tracker', 'Editer le champ') . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+        $confirm = dgettext('tuleap-tracker', 'Delete permanently the field') . ' ' . $this->getLabel() . '?';
         $query = http_build_query(
             array(
                 'tracker'  => $this->getTracker()->id,
@@ -760,36 +760,36 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     {
         switch ($key) {
             case 'hint':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'hint');
+                return dgettext('tuleap-tracker', 'Hint');
             case 'default_value_type':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value_type');
+                return dgettext('tuleap-tracker', 'Default value type');
             case 'size':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'size');
+                return dgettext('tuleap-tracker', 'Size');
             case 'maxchars':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'maxchars');
+                return dgettext('tuleap-tracker', 'Max. characters');
             case 'rows':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'rows');
+                return dgettext('tuleap-tracker', 'Rows');
             case 'cols':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'cols');
+                return dgettext('tuleap-tracker', 'Columns');
             case 'static_value':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'static_value');
+                return dgettext('tuleap-tracker', 'Static value');
             case 'default_value_today':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value_today');
+                return dgettext('tuleap-tracker', 'Today');
             case 'target_field_name':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'target_field_name');
+                return dgettext('tuleap-tracker', 'Target field');
             case 'use_capacity':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'use_capacity');
+                return dgettext('tuleap-tracker', 'Use "capacity" field for ideal initial effort');
             case 'include_weekends':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'include_weekends');
+                return dgettext('tuleap-tracker', 'Include week-ends');
             case 'display_time':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'display_time');
+                return dgettext('tuleap-tracker', 'Display time');
             case 'use_cache':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'use_cache');
+                return dgettext('tuleap-tracker', 'Use cache');
             case 'fast_compute':
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'fast_compute');
+                return dgettext('tuleap-tracker', 'Fast computation');
             case 'default_value':
             default:
-                return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', 'default_value');
+                return dgettext('tuleap-tracker', 'Default value');
         }
     }
 

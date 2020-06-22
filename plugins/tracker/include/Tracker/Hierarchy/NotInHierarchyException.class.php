@@ -23,6 +23,6 @@ class Tracker_Hierarchy_NotInHierarchyException extends Exception
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'tracker_not_in_hierarchy'));
+        parent::__construct(dgettext('tuleap-tracker', 'Tracker not in hierarchy'));
     }
 }

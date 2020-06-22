@@ -520,17 +520,17 @@ class ArtifactDateReminderFactory
 
         $mail = new Codendi_Mail();
         $mail->setFrom($GLOBALS['sys_noreply']);
-        $mail->setSubject("[" . $this->getTrackerName() . "] " . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_subject', array($field->getLabel(),date("j F Y", $this->getDateValue()),$art->getSummary())));
+        $mail->setSubject("[" . $this->getTrackerName() . "] " . sprintf(dgettext('tuleap-tracker_date_reminder', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $field->getLabel(), date("j F Y", $this->getDateValue()), $art->getSummary()));
 
-        $body = "\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_body_header', array($field->getLabel(),date("l j F Y", $this->getDateValue()),$week)) .
-        "\n\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_body_project', array($group->getPublicName())) .
-        "\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_body_tracker', array($this->getTrackerName())) .
-        "\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_body_art', array($art->getSummary())) .
+        $body = "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Codex was asked to remind you today that the \'%1$s\' in the artifact below is %2$s (Week %3$s).'), $field->getLabel(), date("l j F Y", $this->getDateValue()), $week) .
+        "\n\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Project: \'%1$s\''), $group->getPublicName()) .
+        "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Tracker: \'%1$s\''), $this->getTrackerName()) .
+        "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Artifact: \'%1$s\''), $art->getSummary()) .
         "\n" . $field->getLabel() . ": " . date("D j F Y", $this->getDateValue()) .
-        "\n\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_body_art_link') .
+        "\n\n" . dgettext('tuleap-tracker_date_reminder', 'You can access the artifact here:') .
         "\n" . HTTPRequest::instance()->getServerUrl() . "/tracker/?func=detail&aid=" . $this->getArtifactId() . "&atid=" . $this->getGroupArtifactId() . "&group_id=" . $this->getGroupId() .
         "\n\n______________________________________________________________________" .
-        "\n" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'reminder_mail_footer') . "\n";
+        "\n" . dgettext('tuleap-tracker_date_reminder', 'This is an automatic message sent by Codex. Please do not reply to this email.') . "\n";
         $mail->setBodyText($body);
 
         $allNotified = $this->getNotifiedPeople();

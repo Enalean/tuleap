@@ -327,7 +327,7 @@ class Tracker_Report_RendererFactory
 
     public function getTypes()
     {
-        $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report', 'table'));
+        $types = array(Tracker_Report_Renderer::TABLE => dgettext('tuleap-tracker', 'Table'));
         $this->getEventManager()
                     ->processEvent(
                         'tracker_report_renderer_types',

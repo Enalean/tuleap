@@ -29,15 +29,15 @@ class DeletedTrackersListPresenter
 
     public function __construct(array $table_content, array $tracker_ids_warning, $has_trackers)
     {
-        $this->title                       = $GLOBALS['Language']->getText('plugin_tracker', 'pending_tv5_removal');
+        $this->title                       = dgettext('tuleap-tracker', 'Trackers Pending for Deletion');
         $this->deleted_trackers_list       = $table_content;
         $this->tracker_ids_warning         = $tracker_ids_warning;
         $this->id_column_header            = $GLOBALS['Language']->getText('tracker_include_report', 'id');
         $this->tracker_column_header       = $GLOBALS['Language']->getText('tracker_import_admin', 'tracker');
         $this->project_column_header       = $GLOBALS['Language']->getText('global', 'Project');
         $this->deletion_date_column_header = $GLOBALS['Language']->getText('tracker_include_type', 'deletion_date');
-        $this->restore_action              = $GLOBALS['Language']->getText('plugin_tracker', 'tracker_action_restore');
-        $this->no_trackers_label           = $GLOBALS['Language']->getText('plugin_tracker', 'no_pending');
+        $this->restore_action              = dgettext('tuleap-tracker', 'Restore');
+        $this->no_trackers_label           = dgettext('tuleap-tracker', 'No Tracker pending for Deletion');
         $this->has_trackers                = $has_trackers;
     }
 
@@ -48,7 +48,7 @@ class DeletedTrackersListPresenter
 
     public function warning_message()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker', 'tracker_restore_warning') .
+        return dgettext('tuleap-tracker', 'The following trackers cannot be displayed (data seems missing in database):') .
         implode(',', $this->tracker_ids_warning);
     }
 

@@ -47,11 +47,7 @@ class Tracker_Artifact_PossibleParentsRetriever
 
         $paginated_possible_parents = null;
         if (! $possible_parents) {
-            $label = $GLOBALS['Language']->getText(
-                'plugin_tracker_artifact',
-                'formelement_artifactlink_open_parent',
-                array($parent_tracker->getName())
-            );
+            $label = sprintf(dgettext('tuleap-tracker', 'Open %1$s'), $parent_tracker->getName());
 
             $paginated_possible_parents = $this->artifact_factory->getPaginatedPossibleParentArtifactsUserCanView(
                 $user,

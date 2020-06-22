@@ -183,7 +183,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     {
         $url      = HTTPRequest::instance()->getServerUrl() . TRACKER_BASE_URL . '/?aid=' . $artifact_id . '#followup_' . $changeset_id;
 
-        return '<a href="' . $url . '">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'goto_diff') . '</a>';
+        return '<a href="' . $url . '">' . dgettext('tuleap-tracker', 'Go to diff') . '</a>';
     }
 
     /**
@@ -239,7 +239,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
     protected function fetchDiffInFollowUp($formated_diff)
     {
         $html  = '';
-        $html .= '<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>';
+        $html .= '<button class="btn btn-mini toggle-diff">' . dgettext('tuleap-tracker', 'Show diff') . '</button>';
         $html .= '<div class="diff" style="display: none">' . $formated_diff . '</div>';
 
         return $html;

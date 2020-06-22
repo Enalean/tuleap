@@ -30,8 +30,8 @@ class NatureIsChildPresenter extends NaturePresenter
     {
         parent::__construct(
             Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD,
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_forward'),
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', '_is_child_reverse'),
+            dgettext('tuleap-tracker', 'Child'),
+            dgettext('tuleap-tracker', 'Parent'),
             true
         );
 

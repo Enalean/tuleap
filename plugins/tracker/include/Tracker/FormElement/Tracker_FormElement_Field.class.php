@@ -485,7 +485,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 data-is-required="' . ($this->required ? 'true' : 'false') . '">';
 
             if (! $is_field_read_only && $this->userCanUpdate()) {
-                $title = $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_field', array($this->getLabel())));
+                $title = $purifier->purify(sprintf(dgettext('tuleap-tracker', 'Edit the field "%1$s"'), $this->getLabel()));
                 $html .= '<button type="button" title="' . $title . '"
                                 class="tracker_formelement_edit"
                                 data-test="edit-field-' . $this->getName() . '">' .
@@ -682,7 +682,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
     protected function getNoValueLabel()
     {
-        return "<span class='empty_value'>" . $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'no_value_for_field') . "</span>";
+        return "<span class='empty_value'>" . dgettext('tuleap-tracker', 'Empty') . "</span>";
     }
 
     protected function getHiddenArtifactValueForEdition(
@@ -1004,31 +1004,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $message = '';
 
         if ($this->isUsedInSemantics()) {
-            $message .= $GLOBALS['Language']->getText(
-                'plugin_tracker_formelement_admin',
-                'field_used_in_semantics'
-            ) . ' ';
+            $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (used in semantics)') . ' ';
         }
 
         if ($this->isUsedInWorkflow()) {
-            $message .= $GLOBALS['Language']->getText(
-                'plugin_tracker_formelement_admin',
-                'field_used_in_workflow'
-            ) . ' ';
+            $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (used in workflow)') . ' ';
         }
 
         if ($this->isUsedInTrigger()) {
-            $message .= $GLOBALS['Language']->getText(
-                'plugin_tracker_formelement_admin',
-                'field_used_in_triggers'
-            ) . ' ';
+            $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (used in triggers)') . ' ';
         }
 
         if ($this->isUsedInFieldDependency()) {
-            $message .= $GLOBALS['Language']->getText(
-                'plugin_tracker_formelement_admin',
-                'field_used_in_field_dependencies'
-            ) . ' ';
+            $message .= dgettext('tuleap-tracker', 'Impossible to delete this field (field dependencies)') . ' ';
         }
 
         return $message;
@@ -1081,11 +1069,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $is_valid = false;
             $this->setHasErrors(true);
 
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The field %1$s is required.'), $this->getLabel() . ' (' . $this->getName() . ')'));
         } elseif (((!is_array($submitted_value) && $submitted_value !== null) || (is_array($submitted_value) && !empty($submitted_value))) && ! $hasPermission) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'bad_field_permission_update', $this->getLabel()));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'You are not allowed to update the field %1$s.'), $this->getLabel()));
         } elseif ($submitted_value !== null && $hasPermission) {
             $is_valid = $this->isValidRegardingRequiredProperty($artifact, $submitted_value) && $this->validateField($artifact, $submitted_value);
         }
@@ -1115,11 +1103,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $this->has_errors = true;
         $GLOBALS['Response']->addFeedback(
             'error',
-            $GLOBALS['Language']->getText(
-                'plugin_tracker_common_artifact',
-                'err_required',
-                $this->getLabel() . ' (' . $this->getName() . ')'
-            )
+            sprintf(dgettext('tuleap-tracker', 'The field %1$s is required.'), $this->getLabel() . ' (' . $this->getName() . ')')
         );
     }
 

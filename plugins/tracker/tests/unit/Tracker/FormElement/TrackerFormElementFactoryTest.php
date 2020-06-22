@@ -30,7 +30,6 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Container_Fieldset;
 use Tracker_FormElementFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\XML\TrackerXmlImportFeedbackCollector;
 use User\XML\Import\IFindUserFromXMLReference;
@@ -38,7 +37,6 @@ use User\XML\Import\IFindUserFromXMLReference;
 class TrackerFormElementFactoryTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**

@@ -31,12 +31,12 @@ class Tracker_Permission_PermissionPresenter
 
     public function title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_tracker_permissions');
+        return dgettext('tuleap-tracker', 'Manage Tracker Permissions');
     }
 
     public function intro()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'fields_tracker_intro');
+        return dgettext('tuleap-tracker', 'Please note that project administrators and tracker administrators are granted full access to the tracker.');
     }
 
     public function form_url()
@@ -49,12 +49,12 @@ class Tracker_Permission_PermissionPresenter
 
     public function ugroup_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'ugroup');
+        return dgettext('tuleap-tracker', 'User Group');
     }
 
     public function permissions_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_permissions', 'permissions');
+        return dgettext('tuleap-tracker', 'Access Permissions');
     }
 
     public function submit_permissions()

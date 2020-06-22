@@ -24,7 +24,6 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 use UserManager;
 
 require_once __DIR__ . '/../../bootstrap.php';
@@ -32,7 +31,6 @@ require_once __DIR__ . '/../../bootstrap.php';
 class ChartMessageFetcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var \Tracker

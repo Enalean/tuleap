@@ -26,7 +26,6 @@ use Tuleap\Tracker\Workflow\WorkflowBackendLogger;
 final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
 
     private $transition_factory_test;
     private $transition_factory_instance;

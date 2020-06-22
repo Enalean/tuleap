@@ -84,12 +84,12 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'radiobtn');
+        return dgettext('tuleap-tracker', 'Radio button');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'radiobtn_desc');
+        return dgettext('tuleap-tracker', 'Radio button');
     }
 
     public static function getFactoryIconUseIt()

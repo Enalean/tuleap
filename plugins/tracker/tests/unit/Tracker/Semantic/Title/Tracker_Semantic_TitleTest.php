@@ -21,7 +21,6 @@
 
 namespace Tuleap\Tracker\Semantic;
 
-use BaseLanguage;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -29,13 +28,11 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Title;
-use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_TitleTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var SimpleXMLElement
@@ -77,16 +74,6 @@ class Tracker_Semantic_TitleTest extends TestCase
 
     public function testExport()
     {
-        $GLOBALS['Language'] = Mockery::mock(BaseLanguage::class);
-        $GLOBALS['Language']->shouldReceive('getText')->with(
-            'plugin_tracker_admin_semantic',
-            'title_label'
-        )->andReturns('Title');
-        $GLOBALS['Language']->shouldReceive('getText')->with(
-            'plugin_tracker_admin_semantic',
-            'title_description'
-        )->andReturns('Define the title of an artifact');
-
         $array_mapping = ['F13' => '102'];
         $this->semantic_title->exportToXML($this->root, $array_mapping);
 

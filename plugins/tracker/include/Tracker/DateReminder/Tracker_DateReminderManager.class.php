@@ -1,7 +1,7 @@
 <?php
 /**
+ * Copyright (c) Enalean 2017 - Present. All rights reserved
  * Copyright (c) STMicroelectronics 2012. All rights reserved
- * Copyright (c) Enalean 2017-2018. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -86,17 +86,17 @@ class Tracker_DateReminderManager
             switch ($request->get('action')) {
                 case 'new_reminder':
                     $this->getDateReminderRenderer()->getDateReminderFactory()->addNewReminder($request);
-                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_added'));
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Date Reminder successfully added'));
                     break;
                 case 'update_reminder':
                     $reminder = $this->getReminderFromRequestId($request->get('reminder_id'));
                     $this->getDateReminderRenderer()->getDateReminderFactory()->editTrackerReminder($reminder, $request);
-                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_updated'));
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Date Reminder successfully updated'));
                     break;
                 case 'confirm_delete_reminder':
                     $reminder = $this->getReminderFromRequestId($request->get('reminder_id'));
                     $this->getDateReminderRenderer()->getDateReminderFactory()->deleteTrackerReminder($reminder);
-                    $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_deleted'));
+                    $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Date Reminder successfully deleted'));
                     break;
             }
         } catch (Tracker_DateReminderException $e) {
@@ -282,7 +282,7 @@ class Tracker_DateReminderManager
      */
     public function getSubject($reminder, $artifact, $recipient)
     {
-        $s = "[" . $this->tracker->getName() . "] " . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'subject', array($reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle()));
+        $s = "[" . $this->tracker->getName() . "] " . sprintf(dgettext('tuleap-tracker', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact), $artifact->getTitle());
         return $s;
     }
 
@@ -304,9 +304,9 @@ class Tracker_DateReminderManager
         $output   = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
         $output   .= PHP_EOL;
 
-        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_header', array($GLOBALS['sys_name'], $reminder->getField()->getLabel(), $reminder->getFieldValue($artifact)));
+        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $GLOBALS['sys_name'], $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
         $output   .= PHP_EOL;
-        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_art_link', array($link));
+        $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact here: %1$s'), $link);
         $output   .= PHP_EOL;
         return $output;
     }
@@ -328,17 +328,9 @@ class Tracker_DateReminderManager
         $link     = $protocol . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
 
         $output   = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
-        $output   .= $language->getText(
-            'plugin_tracker_date_reminder',
-            'body_header',
-            array(
-                $hp->purify($GLOBALS['sys_name']),
-                $hp->purify($reminder->getField()->getLabel()),
-                $reminder->getFieldValue($artifact)
-            )
-        );
+        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify($GLOBALS['sys_name']), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
         $output   .= '<br>';
-        $output   .= $language->getText('plugin_tracker_date_reminder', 'body_art_html_link', array($link));
+        $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact <a href="%1$s">here</a>.'), $link);
         $output   .= '<br>';
         return $output;
     }

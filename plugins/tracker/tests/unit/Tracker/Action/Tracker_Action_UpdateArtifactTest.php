@@ -26,7 +26,6 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /** @var Tracker_Artifact */
     protected $task;
@@ -206,7 +205,6 @@ final class Tracker_Action_UpdateArtifactTest extends \PHPUnit\Framework\TestCas
             $this->hidden_fieldsets_detector
         );
 
-        $GLOBALS['Language']->shouldReceive('getText')->with('plugin_tracker', 'autocomputed_field')->andReturns('autocomputed');
         $this->computed_field->shouldReceive('getName')->andReturns(Tracker::REMAINING_EFFORT_FIELD_NAME);
         $task->shouldReceive('getTracker')->andReturns($tracker);
         $this->computed_field->shouldReceive('fetchCardValue')->with($task)->andReturns(42);

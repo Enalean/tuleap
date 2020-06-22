@@ -25,7 +25,7 @@ class Tracker_FormElement_View_Admin_Field_SubmittedBy extends Tracker_FormEleme
     {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_help');
+        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission user');
         $html .= '</span>';
         return $html;
     }

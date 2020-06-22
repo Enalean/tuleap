@@ -153,7 +153,7 @@ class HierarchyController
         }
 
         if (! $this->request->validArray($vChildren) && $this->request->exist('children')) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'controller_bad_request'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Your request contains invalid data, cowardly doing nothing (children parameter)'));
             $this->redirectToAdminHierarchy();
             return;
         }

@@ -87,7 +87,7 @@ class ByGroupController implements DispatchableWithRequest
 
         $tracker_manager = new \TrackerManager();
 
-        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'manage_fields_tracker_permissions');
+        $title = dgettext('tuleap-tracker', 'Manage Fields Permissions');
 
         $tracker->displayAdminPermsHeader($tracker_manager, $title);
 

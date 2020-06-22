@@ -37,7 +37,7 @@ class Tracker_DateReminder_Role_Submitter implements Tracker_DateReminder_Role
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'role_SUBMITTER');
+        return dgettext('tuleap-tracker', 'Submitter');
     }
 
     /**

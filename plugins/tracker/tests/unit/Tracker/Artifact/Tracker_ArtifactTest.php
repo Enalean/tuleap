@@ -36,7 +36,6 @@ use Tracker_Workflow_GlobalRulesViolationException;
 use Tracker_XML_Exporter_ArtifactXMLExporterBuilder;
 use Tracker_XML_Exporter_InArchiveFilePathXMLExporter;
 use Tracker_XML_Exporter_NullChildrenCollector;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Artifact\Changeset\ArtifactChangesetSaver;
 use Tuleap\Tracker\Artifact\Changeset\FieldsToBeSavedInSpecificOrderRetriever;
@@ -48,7 +47,6 @@ final class Tracker_ArtifactTest extends TestCase //phpcs:ignore Squiz.Classes.V
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
-    use GlobalLanguageMock;
 
     public function testLastChangesetIsRetrieved(): void
     {

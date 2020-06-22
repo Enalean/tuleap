@@ -57,7 +57,7 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
 
     protected function displayHeader()
     {
-        $title       = $GLOBALS['Language']->getText('plugin_tracker', 'copy_of', $this->artifact->getXRef());
+        $title       = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s'), $this->artifact->getXRef());
         $breadcrumbs = array(
             array(
                 'title' => $title,
@@ -85,9 +85,9 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
     public function fetchSubmitButton(PFUser $current_user)
     {
         $purifier            = Codendi_HTMLPurifier::instance();
-        $copy_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button');
-        $copy_children_label = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children');
-        $copy_children_title = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_submit_button_children_title');
+        $copy_label          = dgettext('tuleap-tracker', 'Copy');
+        $copy_children_label = dgettext('tuleap-tracker', 'Copy with children');
+        $copy_children_title = dgettext('tuleap-tracker', 'The copy of the children will be done "as is", you won\'t be able to edit them during the copy process.');
 
         $button = '<button class="btn btn-large btn-primary" type="submit" data-test="artifact-copy">' . $copy_label . '</button>';
 

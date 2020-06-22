@@ -26,14 +26,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_PermissionsOnArtifact;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
 class Tracker_FormElement_Field_PermissionsOnArtifactTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
-    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_PermissionsOnArtifact

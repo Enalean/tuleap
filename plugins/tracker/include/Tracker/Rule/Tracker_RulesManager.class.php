@@ -364,7 +364,7 @@ class Tracker_RulesManager
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
                 ) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_not_authorized'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Non authorized dependency.Please, select other fields.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array('tracker' => (int) $tracker_id, 'func'    => 'admin-dependencies')));
                 } else {
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
@@ -397,7 +397,7 @@ class Tracker_RulesManager
                         }
                     }
                 }
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin', 'updated'));
+                $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Transitions updated'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array('tracker' => (int) $this->tracker->id, 'func'    => 'admin-dependencies')));
             }
         } else {
@@ -408,11 +408,11 @@ class Tracker_RulesManager
     private function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_dependencies');
+        $title = dgettext('tuleap-tracker', 'Manage field dependencies');
         $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
 
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-        echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'inline_help') . '</p>';
+        echo '<p>' . dgettext('tuleap-tracker', 'Select a source field and a target field to edit dependencies between them.') . '</p>';
 
         echo '<form action="' . TRACKER_BASE_URL . '/?" method="GET">';
         echo '<input type="hidden" name="tracker" value="' . (int) $this->tracker->id . '" />';
@@ -422,7 +422,7 @@ class Tracker_RulesManager
         $source_field = $this->form_element_factory->getFormElementById($source_field_id);
         if (!$source_field) {
             echo '<select name="source_field" onchange="this.form.submit()">';
-            echo '<option value="0">' . $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'choose_source_field') . '</option>';
+            echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose source field') . '</option>';
             $sources = $this->getAllSourceFields();
             foreach ($sources as $id => $field) {
                 echo '<option value="' . $hp->purify($id) . '">';
@@ -443,7 +443,7 @@ class Tracker_RulesManager
             $disabled = 'disabled="disabled" readonly="readonly"';
         }
         echo '<select name="target_field" ' . $disabled . '>';
-        echo '<option value="0">' . $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'choose_target_field') . '</option>';
+        echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose target field') . '</option>';
         if ($source_field) {
             $sources = $this->getAllTargetFields($source_field_id);
             foreach ($sources as $id => $field) {
@@ -480,7 +480,7 @@ class Tracker_RulesManager
             }
 
             if ($dependencies) {
-                echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'choose_existing_dependency') . '</p>';
+                echo '<p>' . dgettext('tuleap-tracker', 'Or select an existing field dependency') . '</p>';
                 echo '<ul><li>' . implode('</li><li>', $dependencies) . '</li></ul>';
             }
             echo '</ul>';
@@ -492,7 +492,7 @@ class Tracker_RulesManager
     public function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_field_dependencies', 'dependencies_matrix_title');
+        $title = dgettext('tuleap-tracker', 'Define dependencies');
         $this->tracker->displayAdminItemHeader($engine, 'dependencies', $title);
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
@@ -500,14 +500,7 @@ class Tracker_RulesManager
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         $source_field_label = $source_field === null ? '' : $source_field->getLabel();
         $target_field_label = $target_field === null ? '' : $target_field->getLabel();
-        echo '<p>' . $GLOBALS['Language']->getText(
-            'plugin_tracker_field_dependencies',
-            'dependencies_matrix_help',
-            array(
-                    $source_field_label,
-                    $target_field_label
-                )
-        ) . '</p>';
+        echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Define dependencies between <b>%1$s</b> as source and <b>%2$s</b> as target:'), $source_field_label, $target_field_label) . '</p>';
 
         $this->displayDependenciesMatrix($source_field, $target_field);
     }

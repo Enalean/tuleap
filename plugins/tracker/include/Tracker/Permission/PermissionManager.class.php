@@ -54,14 +54,7 @@ class Tracker_Permission_PermissionManager
         if ($request->containsPermissionType(Tracker_Permission_Command::PERMISSION_ASSIGNEE) != null && $tracker->getContributorField() === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_admin_permissions',
-                    'no_assignee_semantic',
-                    array(
-                        TRACKER_BASE_URL . '/?' .  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())),
-                        $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'contributor_label')
-                    )
-                ),
+                sprintf(dgettext('tuleap-tracker', 'You should set a <a href="%1$s">%2$s semantic</a> before defining \'assigned to group\' permission'), TRACKER_BASE_URL . '/?' .  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())), dgettext('tuleap-tracker', 'Contributor/assignee')),
                 CODENDI_PURIFIER_DISABLED
             );
             return false;

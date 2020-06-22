@@ -113,9 +113,6 @@ class TrackerFormElementTest extends TestCase
 
     private function whenIDisplayAdminFormElement($formElement)
     {
-        $GLOBALS['Language']->shouldReceive('getText')->withArgs([
-            'plugin_tracker_include_type', 'upd_label', null
-        ])->andReturns('Update');
         $GLOBALS['HTML'] = $GLOBALS['Response'];
         $GLOBALS['HTML']->shouldReveive('getFactoryIconUseIt');
 

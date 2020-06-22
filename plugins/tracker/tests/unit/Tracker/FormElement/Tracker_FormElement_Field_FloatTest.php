@@ -34,14 +34,12 @@ use Tracker_Artifact_ChangesetValue_Float;
 use Tracker_FormElement_Field_Float;
 use Tracker_FormElement_Field_Value_FloatDao;
 use Tracker_Report_Criteria;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Semantic\Timeframe\ArtifactTimeframeHelper;
 use UserManager;
 
 final class Tracker_FormElement_Field_FloatTest extends TestCase // phpcs:ignore
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager

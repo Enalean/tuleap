@@ -37,11 +37,7 @@ class Tracker_FormElement_DateTimeFormatter extends Tracker_FormElement_DateForm
             if (! $is_valid) {
                 $GLOBALS['Response']->addFeedback(
                     'error',
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker_common_artifact',
-                        'error_datetime_value',
-                        array($this->field->getLabel(), $this->getUserDateFormatPreference())
-                    )
+                    sprintf(dgettext('tuleap-tracker', '%1$s is not a datetime, format should be %2$s hh:mm or %2$s hh:mm:ss (in the later case, seconds will be ingored).'), $this->field->getLabel(), $this->getUserDateFormatPreference())
                 );
             }
         }

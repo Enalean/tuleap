@@ -68,27 +68,27 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public function artifact_links_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_title');
+        return dgettext('tuleap-tracker', 'Artifact links');
     }
 
     public function artifact_links_readonly()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'artifact_links_readonly', array($this->artifact_uri));
+        return sprintf(dgettext('tuleap-tracker', 'In order to edit artifact links, please <a href="%1$s">switch to the full edit mode</a>.'), $this->artifact_uri);
     }
 
     public function no_artifact_links()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_artifact_links');
+        return dgettext('tuleap-tracker', 'No artifact links');
     }
 
     public function add_followup_placeholder()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'add_followup_placeholder');
+        return dgettext('tuleap-tracker', 'Add a new comment...');
     }
 
     public function followups_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'followups_title');
+        return dgettext('tuleap-tracker', 'Follow-ups');
     }
 
     public function javascript_rules()
@@ -98,12 +98,12 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public function submit()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit');
+        return dgettext('tuleap-tracker', 'Submit');
     }
 
     public function cancel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
+        return dgettext('tuleap-tracker', 'Cancel');
     }
 
     public function user_is_logged_in()
@@ -137,7 +137,7 @@ class Tracker_Artifact_Presenter_EditArtifactInPlacePresenter
 
     public function parent_artifact_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'parent_artifact');
+        return dgettext('tuleap-tracker', 'Parent artifact:');
     }
 
     public function has_hidden_fieldsets(): bool

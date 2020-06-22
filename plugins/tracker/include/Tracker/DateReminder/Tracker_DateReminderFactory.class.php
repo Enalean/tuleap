@@ -101,11 +101,7 @@ class Tracker_DateReminderFactory
             $historyDao->groupAddHistory("tracker_date_reminder_add", $this->getTracker()->getName() . ":" . $fieldId, $this->getTracker()->getGroupId(), array($distance . ' Day(s), Type: ' . $notificationType . ' ProjectUGroup(s): ' . $ugroups . 'Tracker Role(s): ' . $roles));
             return (bool) $reminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText(
-                'plugin_tracker_date_reminder',
-                'tracker_date_reminder_add_failure',
-                [$this->getTracker()->getId(), $fieldId]
-            );
+            $errorMessage = sprintf(dgettext('tuleap-tracker', 'Cannot add new date reminder on the field %1$s for the tracker %2$s'), $this->getTracker()->getId(), $fieldId);
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -189,7 +185,7 @@ class Tracker_DateReminderFactory
             $historyDao->groupAddHistory("tracker_date_reminder_edit", $this->getTracker()->getName() . ":" . $reminder->getId(), $this->getTracker()->getGroupId(), array("Id: " . $reminderId . ", Type: " . $notificationType . ", ProjectUGroup(s): " . $ugroups . ", Tracker Role(s): " . $roles . ", Day(s): " . $distance . ", Status: " . $status));
             return $updateReminder;
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_update_failure', array($reminder->getId()));
+            $errorMessage = sprintf(dgettext('tuleap-tracker', 'Cannot update the date reminder %1$s'), $reminder->getId());
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -286,11 +282,7 @@ class Tracker_DateReminderFactory
             return;
         }
         throw new Tracker_DateReminderException(
-            $GLOBALS['Language']->getText(
-                'plugin_tracker_date_reminder',
-                'tracker_date_reminder_delete_failure',
-                [$reminder->getId()]
-            )
+            sprintf(dgettext('tuleap-tracker', 'Cannot delete the date reminder %1$s'), $reminder->getId())
         );
     }
 }

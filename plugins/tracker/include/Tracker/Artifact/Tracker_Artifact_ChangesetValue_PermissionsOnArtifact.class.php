@@ -163,20 +163,20 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             }
             $added   = $this->format(implode(', ', $added_arr), $format);
             if (empty($next)) {
-                $changes = ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'cleared');
+                $changes = ' ' . dgettext('tuleap-tracker', 'cleared');
             } elseif (empty($previous)) {
-                $changes = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $added;
+                $changes = dgettext('tuleap-tracker', 'set to') . ' ' . $added;
             } elseif (count($previous) == 1 && count($next) == 1) {
-                $changes = ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . ' ' . $removed . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ' . $added;
+                $changes = ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $removed . ' ' . dgettext('tuleap-tracker', 'to') . ' ' . $added;
             } else {
                 if ($removed) {
-                    $changes = $removed . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'removed');
+                    $changes = $removed . ' ' . dgettext('tuleap-tracker', 'removed');
                 }
                 if ($added) {
                     if ($changes) {
                         $changes .= PHP_EOL;
                     }
-                    $changes .= $added . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'added');
+                    $changes .= $added . ' ' . dgettext('tuleap-tracker', 'added');
                 }
             }
         }
@@ -191,7 +191,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
                 $added_arr[] = $this->getUgroupLabel($element);
         }
         $added = $this->format(implode(', ', $added_arr), $format);
-        return ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ' . $added;
+        return ' ' . dgettext('tuleap-tracker', 'set to') . ' ' . $added;
     }
 
     private function format($value, $format)

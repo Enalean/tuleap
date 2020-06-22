@@ -407,7 +407,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function fetchAdminEditForm()
     {
         $html = '';
-        $html .= '<h3>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'bind_to_ugroups') . '</h3>';
+        $html .= '<h3>' . dgettext('tuleap-tracker', 'Bind to user groups') . '</h3>';
         $html .= self::fetchSelectUgroups('bind[values][]', $this->field, $this->values);
 
         //Select default values

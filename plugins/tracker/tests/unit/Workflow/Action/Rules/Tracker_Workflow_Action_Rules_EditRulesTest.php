@@ -72,7 +72,6 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
 
     protected function setUp(): void
     {
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('');
         $this->date_factory       = \Mockery::spy(\Tracker_Rule_Date_Factory::class);
         $this->tracker            = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns($this->tracker_id)->getMock();
         $this->token              = \Mockery::spy(\CSRFSynchronizerToken::class);

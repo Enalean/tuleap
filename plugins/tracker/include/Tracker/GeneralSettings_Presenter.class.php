@@ -89,7 +89,7 @@ class Tracker_GeneralSettings_Presenter
 
     public function tracker_emailgateway()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'emailgateway');
+        return dgettext('tuleap-tracker', 'Enable to create/reply to artifacts by mail');
     }
 
     public function is_emailgateway_used()
@@ -104,7 +104,7 @@ class Tracker_GeneralSettings_Presenter
 
     public function html_tags()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'html_tags');
+        return dgettext('tuleap-tracker', '(HTML tags allowed)');
     }
 
     public function tracker_name()
@@ -124,27 +124,27 @@ class Tracker_GeneralSettings_Presenter
 
     public function tracker_name_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'name');
+        return dgettext('tuleap-tracker', 'Name');
     }
 
     public function tracker_description_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'desc');
+        return dgettext('tuleap-tracker', 'Description');
     }
 
     public function tracker_shortname_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'short_name');
+        return dgettext('tuleap-tracker', 'Short name');
     }
 
     public function tracker_instantiate_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'instantiate');
+        return dgettext('tuleap-tracker', 'Instantiate for new projects');
     }
 
     public function tracker_log_priority_changes()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'priority_changes');
+        return dgettext('tuleap-tracker', 'Log priority changes in follow-up comments');
     }
 
     public function is_instatiate_for_new_projects()
@@ -159,7 +159,7 @@ class Tracker_GeneralSettings_Presenter
 
     public function tracker_color_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'color');
+        return dgettext('tuleap-tracker', 'Color');
     }
 
     public function tracker_color()
@@ -169,12 +169,12 @@ class Tracker_GeneralSettings_Presenter
 
     public function preview_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'preview');
+        return dgettext('tuleap-tracker', 'Preview:');
     }
 
     public function submit_instructions_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_instr');
+        return dgettext('tuleap-tracker', 'Submit instructions');
     }
 
     public function submit_instructions()
@@ -184,7 +184,7 @@ class Tracker_GeneralSettings_Presenter
 
     public function browse_instructions_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'browse_instr');
+        return dgettext('tuleap-tracker', 'Browse instructions');
     }
 
     public function browse_instructions()
@@ -199,31 +199,31 @@ class Tracker_GeneralSettings_Presenter
 
     public function reply_possible()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'reply_possible');
+        return dgettext('tuleap-tracker', 'Reply to artifact by mail is possible');
     }
 
     public function create_not_possible()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'create_not_possible');
+        return dgettext('tuleap-tracker', 'Create artifact by mail is <b>not</b> possible:');
     }
 
     public function semantic_ok()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'semantic_ok');
+        return dgettext('tuleap-tracker', 'Semantic is properly configured');
     }
 
     public function required_ok()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'required_ok');
+        return dgettext('tuleap-tracker', 'Required fields are properly configured');
     }
 
     public function semantic_ko()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'semantic_ko');
+        return dgettext('tuleap-tracker', 'Semantic title and/or description are not configured');
     }
 
     public function required_ko()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'required_ko');
+        return dgettext('tuleap-tracker', 'Other fields than title or description cannot be required');
     }
 }

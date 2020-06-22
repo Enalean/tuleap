@@ -55,8 +55,8 @@ class SemanticsXMLExporter
         $semantic_node->addAttribute("type", Tracker_Semantic_Title::NAME);
 
         $semantic_node->addChild("shortname", Tracker_Semantic_Title::NAME);
-        $semantic_node->addChild("label", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_label'));
-        $semantic_node->addChild("description", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'title_description'));
+        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Title'));
+        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the title of an artifact'));
         $field_node = $semantic_node->addChild("field");
         $field_node->addAttribute("REF", (string) $summary_field->getXMLId());
     }
@@ -72,8 +72,8 @@ class SemanticsXMLExporter
         $semantic_node->addAttribute("type", Tracker_Semantic_Description::NAME);
 
         $semantic_node->addChild("shortname", Tracker_Semantic_Description::NAME);
-        $semantic_node->addChild("label", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'description_label'));
-        $semantic_node->addChild("description", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'description_description'));
+        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Description'));
+        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the description of an artifact'));
         $field_node = $semantic_node->addChild("field");
         $field_node->addAttribute("REF", (string) $description_field->getXMLId());
     }
@@ -92,8 +92,8 @@ class SemanticsXMLExporter
         $semantic_node->addAttribute("type", Tracker_Semantic_Status::NAME);
 
         $semantic_node->addChild("shortname", Tracker_Semantic_Status::NAME);
-        $semantic_node->addChild("label", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_label'));
-        $semantic_node->addChild("description", $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_description'));
+        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Status'));
+        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the status of an artifact'));
         $field_node = $semantic_node->addChild("field");
         $field_node->addAttribute("REF", (string) $status_field->getXMLId());
         $open_values_node = $semantic_node->addChild("open_values");

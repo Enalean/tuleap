@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <semantic type="contributor">
  <shortname>contributor</shortname>
- <label>Assigned to</label>
- <description>Define the contributor of the artifact</description>
+ <label>Contributor/assignee</label>
+ <description>Define the contributor/assignee of an artifact</description>
  <field REF="F13"/>
 </semantic>

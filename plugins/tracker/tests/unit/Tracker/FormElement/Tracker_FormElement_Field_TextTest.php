@@ -26,7 +26,6 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessInterface;
 final class Tracker_FormElement_Field_TextTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
     /**

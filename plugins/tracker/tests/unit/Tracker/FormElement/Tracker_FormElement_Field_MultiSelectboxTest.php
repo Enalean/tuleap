@@ -33,14 +33,12 @@ use Tracker_FormElement_Field_List_Bind;
 use Tracker_FormElement_Field_MultiSelectbox;
 use Tracker_FormElement_RESTValueByField_NotImplementedException;
 use TrackerFactory;
-use Tuleap\GlobalLanguageMock;
 use UserManager;
 
 // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_Field_MultiSelectboxTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_MultiSelectbox

@@ -24,7 +24,7 @@ class Tracker_FormElement_View_Admin_Field_LastModifiedBy extends Tracker_FormEl
     {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastmodifiedby_help');
+        $html .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
         $html .= '</span>';
         return $html;
     }

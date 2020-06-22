@@ -23,7 +23,6 @@ declare(strict_types=1);
 final class Transition_PostAction_Field_FloatTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
     /**
@@ -52,12 +51,6 @@ final class Transition_PostAction_Field_FloatTest extends \PHPUnit\Framework\Tes
 
         $this->post_action->shouldReceive('getDao')->andReturns($dao);
         $this->post_action->shouldReceive('isDefined')->andReturns($this->field);
-
-        $GLOBALS['Language']->shouldReceive('getText')->with(
-            'workflow_postaction',
-            'field_value_set',
-            ['Remaining Effort', 1.5]
-        )->andReturns('field_value_set');
     }
 
     public function testBeforeShouldSetTheFloatField(): void

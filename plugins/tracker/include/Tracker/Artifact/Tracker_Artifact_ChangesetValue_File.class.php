@@ -242,7 +242,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $removed[] = $fi->getFilename();
             }
             if ($removed = implode(', ', $removed)) {
-                $result .= $removed . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'removed');
+                $result .= $removed . ' ' . dgettext('tuleap-tracker', 'removed');
             }
 
             $added = $this->fetchAddedFiles(array_diff($this->files, $changeset_value->getFiles()), $format, $is_for_mail);
@@ -288,7 +288,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
         $result   = '';
         if ($added) {
-            $result .= implode(', ', $added) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'added');
+            $result .= implode(', ', $added) . ' ' . dgettext('tuleap-tracker', 'added');
         }
 
         if ($previews && ! $is_for_mail) {
@@ -335,7 +335,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $previews[] = $file;
             }
         } else {
-            $reason  = $GLOBALS['Language']->getText('plugin_tracker', 'file_has_been_removed_meantime');
+            $reason  = dgettext('tuleap-tracker', 'This file has been removed meantime.');
             $added[] = '<s title="' . $purifier->purify($reason) . '">' .
                 $purifier->purify($file->getFilename())
                 . '</s>';

@@ -40,7 +40,7 @@ class Tracker_FormElement_View_Admin_Priority extends Tracker_FormElement_View_A
     protected function fetchCustomHelp()
     {
         $html  = '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_help');
+        $html .= dgettext('tuleap-tracker', 'Display the artifact rank in the context of a milestone. The value is given by the AgileDashboard plugin. Please note that this field will evolve in the future.');
         $html .= '</span>';
 
         return $html;

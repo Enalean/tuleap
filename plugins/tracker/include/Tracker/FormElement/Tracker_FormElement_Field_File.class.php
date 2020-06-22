@@ -257,11 +257,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $html .= '<div class="add-attachement">';
-        $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file') . '</p>';
+        $html .= '<p>' . dgettext('tuleap-tracker', 'Add a new file:') . '</p>';
         $html .= '<div class="tracker_artifact_add_attachment">';
         $html .= '<p>';
         $html .= '<input type="file" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][file]" data-upload-is-enabled/>';
-        $html .= '<label>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_description');
+        $html .= '<label>' . dgettext('tuleap-tracker', 'Description:');
         $html .= '</label>';
         $html .= ' <input type="text" id="tracker_field_' . $this->id . '" name="artifact[' . $this->id . '][][description]" />';
         $html .= '</p>';
@@ -467,7 +467,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $html    .= '<div class="tracker-artifact-attachement-title-list tracker_artifact_field"
                               data-field-id="' . $this->id . '"
                               data-is-required="false">';
-            $html    .= '<div class="disabled_field">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_attachment_copy') . '</div>';
+            $html    .= '<div class="disabled_field">' . dgettext('tuleap-tracker', '"Attachment" type field cannot be modified during artifact copy.') . '</div>';
             $html    .= '<ul>';
             foreach ($values as $value) {
                 $description = $value->getDescription();
@@ -629,9 +629,9 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         $html = '';
         $html .= '<div>';
-        $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file') . '</p>';
+        $html .= '<p>' . dgettext('tuleap-tracker', 'Add a new file:') . '</p>';
         $html .= '<table class="tracker_artifact_add_attachment">';
-        $html .= '<tr><td><label>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_description') . '</label></td><td><label>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_file_file') . '</label></td></tr>';
+        $html .= '<tr><td><label>' . dgettext('tuleap-tracker', 'Description:') . '</label></td><td><label>' . dgettext('tuleap-tracker', 'File:') . '</label></td></tr>';
         $html .= '<tr><td><input type="text" id="tracker_field_' . $this->id . '" /></td>';
         $html .= '<td><input type="file" id="tracker_field_' . $this->id . '" /></td></tr>';
         $html .= '</table>';
@@ -641,12 +641,12 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'file');
+        return dgettext('tuleap-tracker', 'File upload');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'file_description');
+        return dgettext('tuleap-tracker', 'Lets the user attach files to the artifact');
     }
 
     public static function getFactoryIconUseIt()
@@ -744,11 +744,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             if ($this->isAttachmentNeedsToBeValidated($i, $attachment)) {
                 if (! $rule->isValid($attachment)) {
                     $this->has_errors = true;
-                    $attachment_error = $GLOBALS['Language']->getText(
-                        'plugin_tracker_formelement_file',
-                        'attachment_in_error',
-                        array($i)
-                    );
+                    $attachment_error = sprintf(dgettext('tuleap-tracker', 'Attachment #%1$s has not been saved:'), $i);
                     $GLOBALS['Response']->addFeedback('error', $attachment_error . ' ' . $rule->getErrorMessage());
                 }
             }

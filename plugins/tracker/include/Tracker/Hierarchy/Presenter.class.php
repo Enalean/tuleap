@@ -97,16 +97,9 @@ class Tracker_Hierarchy_Presenter
         $visitor = new TreeNode_InjectPaddingInTreeNodeVisitor();
         $this->hierarchy->accept($visitor);
 
-        $this->current_full_hierarchy_title = $GLOBALS['Language']->getText(
-            'plugin_tracker_admin_hierarchy',
-            'current_full_hierarchy_title'
-        );
+        $this->current_full_hierarchy_title = dgettext('tuleap-tracker', 'Current Full Hierarchy');
 
-        $this->edit_children_title = $GLOBALS['Language']->getText(
-            'plugin_tracker_admin_hierarchy',
-            'edit_children_title',
-            $tracker->getUnhierarchizedTracker()->getName()
-        );
+        $this->edit_children_title = sprintf(dgettext('tuleap-tracker', 'Edit children of %1$s'), $tracker->getUnhierarchizedTracker()->getName());
 
         $this->can_be_defined = ! $is_child_is_disabled;
 
@@ -142,7 +135,7 @@ class Tracker_Hierarchy_Presenter
 
     public function getManageHierarchyTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_hierarchy_title');
+        return dgettext('tuleap-tracker', 'Manage hierarchy of tracker');
     }
 
     public function getSubmitLabel()

@@ -57,12 +57,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_label');
+        return dgettext('tuleap-tracker', 'Burndown Chart');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_description');
+        return dgettext('tuleap-tracker', 'Display the burndown chart for the artifact');
     }
 
     public static function getFactoryIconUseIt()
@@ -207,10 +207,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             && ! strpos($_SERVER['REQUEST_URI'], 'from_agiledashboard')
         ) {
             $html .= '<a class="btn chart-cache-button-generate" data-toggle="modal" href="#burndown-generate">' .
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker',
-                    'burndown_generate'
-                ) . '</a>';
+                dgettext('tuleap-tracker', 'Force cache regeneration') . '</a>';
 
             $html .= $this->fetchBurndownGenerationModal($artifact);
         }
@@ -220,25 +217,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     private function fetchBurndownGenerationModal(Tracker_Artifact $artifact)
     {
-        $header = $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'burndown_generate'
-        );
+        $header = dgettext('tuleap-tracker', 'Force cache regeneration');
 
-        $body = $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'force_cache_generation_info'
-        );
+        $body = dgettext('tuleap-tracker', 'Do you really want to force burndown cache generation? Cache generation will end up on a non availability of burndown for few minutes.');
 
-        $cancel = $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'burndown_cancel'
-        );
+        $cancel = dgettext('tuleap-tracker', 'Cancel');
 
-        $generate = $GLOBALS['Language']->getText(
-            'plugin_tracker',
-            'burndown_generate'
-        );
+        $generate = dgettext('tuleap-tracker', 'Force cache regeneration');
 
         return '<div id="burndown-generate" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-header">
@@ -274,7 +259,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 } catch (Tracker_FormElement_Chart_Field_Exception $e) {
                     $this->displayErrorImage($e->getMessage());
                 } catch (BurndownCacheIsCurrentlyCalculatedException $e) {
-                    $this->displayErrorImage($GLOBALS['Language']->getText('plugin_tracker', 'burndown_cache_generating'));
+                    $this->displayErrorImage(dgettext('tuleap-tracker', 'Burndown is under calculation. It will be available in few minutes.'));
                 }
                 break;
             default:
@@ -420,7 +405,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $output   = '';
         if ($format == Codendi_Mail::FORMAT_HTML) {
             $output .= '<img src="' . HTTPRequest::instance()->getServerUrl() . $this->getBurndownImageUrl($artifact) . '" alt="' . $purifier->purify($this->getLabel()) . '" width="640" height="480" />';
-            $output .= '<p><em>' . $GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today') . '</em></p>';
+            $output .= '<p><em>' . dgettext('tuleap-tracker', 'Please note that the image above is rendered in real time so it represents burndown as of today, not as when the email was sent.') . '</em></p>';
         }
         return $output;
     }
@@ -435,7 +420,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         $html .= $this->getBurndownMessageFetcher()->fetchWarnings($this, $this->getChartFieldUsage());
         $html .= '<img src="' . TRACKER_BASE_URL . '/images/fake-burndown-admin.png" />';
         $html .= '<a class="btn chart-cache-button-generate" disabled="disabled">' .
-            $GLOBALS['Language']->getText('plugin_tracker', 'burndown_generate') .
+            dgettext('tuleap-tracker', 'Force cache regeneration') .
             '</a>';
 
         return $html;
@@ -540,7 +525,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function displayErrorImage($msg)
     {
-        $error = new ErrorChart($GLOBALS['Language']->getText('plugin_tracker', 'unable_to_render_the_chart'), $msg, 640, 480);
+        $error = new ErrorChart(dgettext('tuleap-tracker', 'Unable to render the chart'), $msg, 640, 480);
         $error->Stroke();
     }
 

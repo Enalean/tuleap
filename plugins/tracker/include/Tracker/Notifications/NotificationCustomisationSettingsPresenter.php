@@ -31,11 +31,11 @@ class NotificationCustomisationSettingsPresenter
 
     public function __construct($assign_to_me_enabled, $custom_email)
     {
-        $this->notification_customisation_title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'notification_customisation_title');
+        $this->notification_customisation_title = dgettext('tuleap-tracker', 'Email subject customisation');
         $this->assign_to_me_enabled             = $assign_to_me_enabled;
-        $this->assign_to_me_description         = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'assigned_to_me_description');
-        $this->submit_changes                   = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'submit');
-        $this->custom_sender_description        = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'custom_sender_description');
+        $this->assign_to_me_description         = dgettext('tuleap-tracker', 'Include [Assigned to me] flag in subject for people who are assigned to the artifact');
+        $this->submit_changes                   = dgettext('tuleap-tracker', 'Submit Changes');
+        $this->custom_sender_description        = dgettext('tuleap-tracker', 'Enable custom sender fields for email notifications');
         $this->custom_email_enabled             = $custom_email['enabled'];
         $this->custom_email_content             = $custom_email['format'];
     }

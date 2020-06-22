@@ -38,12 +38,10 @@ use Tracker_Artifact_ChangesetValue_Integer;
 use Tracker_FormElement_Chart_Field_Exception;
 use Tracker_FormElement_Field_Date;
 use Tracker_FormElement_Field_Numeric;
-use Tuleap\GlobalLanguageMock;
 
 final class TimeframeBuilderTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var TimeframeBuilder

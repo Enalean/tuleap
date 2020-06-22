@@ -70,10 +70,9 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
      */
     public function getLabel()
     {
-        global $Language;
         $label = parent::getLabel();
         if (! $label) {
-            return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label');
+            return dgettext('tuleap-tracker', 'Separator');
         } else {
             return $label;
         }
@@ -87,12 +86,12 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_label');
+        return dgettext('tuleap-tracker', 'Separator');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'separator_description');
+        return dgettext('tuleap-tracker', 'A Line to separate elements');
     }
 
     public static function getFactoryIconUseIt()

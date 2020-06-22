@@ -179,7 +179,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
      */
     public function tracker_report_renderer_types($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['types'][self::RENDERER_TYPE] = $GLOBALS['Language']->getText('plugin_tracker_report', 'charts');
+        $params['types'][self::RENDERER_TYPE] = dgettext('tuleap-tracker', 'Chart(s)');
     }
 
      /**

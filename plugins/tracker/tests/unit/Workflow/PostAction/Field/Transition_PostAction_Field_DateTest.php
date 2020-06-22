@@ -44,8 +44,6 @@ final class Transition_PostAction_Field_DateTest extends \PHPUnit\Framework\Test
     protected function setUp(): void
     {
         $GLOBALS['Language']->shouldReceive('getText')->with('system', 'datefmt_short')->andReturns(Tracker_FormElement_DateFormatter::DATE_FORMAT);
-        $GLOBALS['Language']->shouldReceive('getText')->with('workflow_postaction', 'field_value_set', ['Close Date', 'date-of-today'])->andReturns('field_value_set');
-        $GLOBALS['Language']->shouldReceive('getText')->with('workflow_postaction', 'field_clear', ['Close Date'])->andReturns('field_clear');
 
         $this->current_user = \Mockery::spy(\PFUser::class);
 

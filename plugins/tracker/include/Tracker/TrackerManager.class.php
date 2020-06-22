@@ -69,21 +69,17 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $this->checkServiceEnabled($tracker->getProject(), $request);
 
         if (! $tracker->isActive()) {
-            throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+            throw new Tracker_CannotAccessTrackerException(dgettext('tuleap-tracker', 'This tracker does not exist.'));
         }
         if (! $tracker->userCanView($user)) {
             if ($user->isAnonymous()) {
                 $url_redirect = new URLRedirect(EventManager::instance());
 
                 throw new Tracker_CannotAccessTrackerException(
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker_common_type',
-                        'no_view_permission_anonymous',
-                        array($url_redirect->buildReturnToLogin($_SERVER))
-                    )
+                    sprintf(dgettext('tuleap-tracker', 'You don\'t have the permissions to view this tracker. Given that you are anonymous, please try to <a href="%1$s">login</a>.'), $url_redirect->buildReturnToLogin($_SERVER))
                 );
             } else {
-                throw new Tracker_CannotAccessTrackerException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission'));
+                throw new Tracker_CannotAccessTrackerException(dgettext('tuleap-tracker', 'You don\'t have the permissions to view this tracker.'));
             }
         }
     }
@@ -114,17 +110,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
                         $GLOBALS['Response']->addFeedback(
                             'error',
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_common_type',
-                                'no_view_permission_on_artifact_anonymous',
-                                array($url_redirect->buildReturnToLogin($_SERVER))
-                            ),
+                            sprintf(dgettext('tuleap-tracker', 'You don\'t have the permissions to view this artifact. Given that you are anonymous, please try to <a href="%1$s">login</a>.'), $url_redirect->buildReturnToLogin($_SERVER)),
                             CODENDI_PURIFIER_LIGHT
                         );
                     } else {
                         $GLOBALS['Response']->addFeedback(
                             'error',
-                            $GLOBALS['Language']->getText('plugin_tracker_common_type', 'no_view_permission_on_artifact')
+                            dgettext('tuleap-tracker', 'You don\'t have the permissions to view this artifact.')
                         );
                     }
 
@@ -210,7 +202,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                                     }
                                     $tracker_name = $tracker->getName();
                                     $this->restoreDeletedTracker($tracker_id);
-                                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker', 'info_tracker_restored', $tracker_name));
+                                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'The tracker \'%1$s\' has been properly restored'), $tracker_name));
                                     $GLOBALS['Response']->redirect('/tracker/admin/restore.php');
                                 } else {
                                     $this->redirectToTrackerHomepage($group_id);
@@ -262,7 +254,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $GLOBALS['Response']->addFeedback(
             Feedback::ERROR,
-            $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
+            dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
         );
 
         $url = $this->getTrackerHomepageURL($project_id);
@@ -307,7 +299,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     private function getServiceTrackerBreadcrumb(Project $project)
     {
         $service_tracker_breadcrumb = [
-            'title'     => $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
+            'title'     => dgettext('tuleap-tracker', 'Trackers'),
             'url'       => TRACKER_BASE_URL . '/?group_id=' . $project->getID(),
             'icon_name' => 'fa-list-ol'
         ];
@@ -398,7 +390,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $breadcrumbs = array(
             array(
-                'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker'),
+                'title' => dgettext('tuleap-tracker', 'Create a New Tracker'),
                 'url'   => TRACKER_BASE_URL . '/?group_id=' . $project->group_id . '&amp;func=create'
             )
         );
@@ -414,7 +406,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 <i class="fa fa-long-arrow-right"></i> ' . dgettext('tuleap-tracker', 'Switch to new tracker creation flow') .
             '</a>';
         echo '</div>';
-        echo '<h2>' . $Language->getText('plugin_tracker_include_type', 'create_tracker') . '</h2>';
+        echo '<h2>' . dgettext('tuleap-tracker', 'Create a new tracker') . '</h2>';
 
         echo '<form name="form_create" method="post" enctype="multipart/form-data" id="tracker_create_new">
           <input type="hidden" name="group_id" value="' . $project->getId() . '">
@@ -423,7 +415,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
           <table>
           <tr valign="top"><td style="padding-right:2em; border-right: 1px solid #eee;">';
 
-        echo '<p>' . $Language->getText('plugin_tracker_include_type', 'choose_creation') . '</p>';
+        echo '<p>' . dgettext('tuleap-tracker', 'First, select a template you want to start from') . '</p>';
 
         $create_mode = $request->get('create_mode');
         $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
@@ -431,19 +423,19 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         echo '</td><td style="padding-left:2em;">';
 
-        echo '<p>' . $Language->getText('plugin_tracker_include_type', 'create_tracker_fill_name') . '</p>
+        echo '<p>' . dgettext('tuleap-tracker', 'Then, fill the name, description and short name of this new tracker:') . '</p>
           <p>
-              <label for="newtracker_name"><b>' . $Language->getText('plugin_tracker_include_artifact', 'name') . '</b>: <font color="red">*</font></label><br />
+              <label for="newtracker_name"><b>' . dgettext('tuleap-tracker', 'Name') . '</b>: <font color="red">*</font></label><br />
               <input type="text" name="name" id="newtracker_name" value="' . $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) . '" required="required" />
           </p>
           <p>
-              <label for="newtracker_description"><b>' . $Language->getText('plugin_tracker_include_artifact', 'desc') . '</b>:<br />
+              <label for="newtracker_description"><b>' . dgettext('tuleap-tracker', 'Description') . '</b>:<br />
               <textarea id="newtracker_description" name="description" rows="3" cols="50">' . $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) . '</textarea>
           </p>
           <p>
-              <label for="newtracker_itemname"><b>' . $Language->getText('plugin_tracker_include_type', 'short_name') . '</b>: <font color="red">*</font></label><br />
+              <label for="newtracker_itemname"><b>' . dgettext('tuleap-tracker', 'Short name') . '</b>: <font color="red">*</font></label><br />
               <input type="text" id="newtracker_itemname" name="itemname" value="' . $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) . '" required="required" /><br />
-              <span style="color:#999;">' . $Language->getText('plugin_tracker_include_type', 'avoid_spaces') . '</span>
+              <span style="color:#999;">' . dgettext('tuleap-tracker', 'Please avoid spaces and punctuation in short names') . '</span>
           </p>';
 
         echo '<div id="check_consistency_feedback"></div>';
@@ -470,7 +462,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         if ($trackers_v3) {
             $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
-            echo $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, $GLOBALS['Language']->getText('plugin_tracker_include_type', 'from_tv3'));
+            echo $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, dgettext('tuleap-tracker', 'From a Tracker v3'));
         }
     }
 
@@ -538,7 +530,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
             if ($http_content) {
                 echo $http_content;
             } else {
-                echo '<option>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tmpl_src_no_trk') . '</option>';
+                echo '<option>' . dgettext('tuleap-tracker', 'No template found') . '</option>';
             }
             echo $html;
         } else {
@@ -548,18 +540,18 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                 $this->informUserOfOngoingMigrations($project);
             }
 
-            $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
+            $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
             $html .= '<p>';
             if (count($trackers)) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'choose_tracker');
+                $html .= dgettext('tuleap-tracker', 'Choose a tracker and you can browse/edit/add artifacts to it.');
             } else {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'no_accessible_trackers_msg');
+                $html .= dgettext('tuleap-tracker', '<strong>No trackers have been set up, or you are not allowed to view them.</strong>');
             }
             if ($this->userCanCreateTracker($project->group_id, $user)) {
                 $html .= '<br /><a id="tracker_createnewlink"  data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
                     urlencode($project->getUnixNameLowerCase()) . '/new">';
                 $html .= $GLOBALS['HTML']->getImage('ic/add.png', ['alt' => 'add']) . ' ';
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_index', 'create_new_tracker');
+                $html .= dgettext('tuleap-tracker', 'Create a New Tracker');
                 $html .= '</a>';
             }
             $html .= '</p>';
@@ -574,11 +566,11 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                             $html .= '<div style="float:right;">
                                     <a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '&amp;func=delete"
                                        onclick="return confirm(\'Do you want to delete this tracker?\');"
-                                       title=" ' . $GLOBALS['Language']->getText('plugin_tracker', 'delete_tracker', array($hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML))) . '">';
+                                       title=" ' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '">';
                             $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
                             $html .= '</a></div>';
                         } else {
-                            $cannot_delete_message = $GLOBALS['Language']->getText('plugin_tracker', 'cannot_delete_tracker', array($used_in_other_services_infos['message']));
+                            $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
                             $html .= '<div style="float:right;" class="tracker-cant-delete">';
                             $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
                             $html .= '</div>';
@@ -594,9 +586,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                         $stats = $tracker->getStats();
                         $html .= ' <span style="font-size:0.75em">( <strong>';
                         if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
-                            $html .= (int) ($stats['nb_open']) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_index', 'open') . ' / ';
+                            $html .= (int) ($stats['nb_open']) . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
                         }
-                        $html .= (int) ($stats['nb_total']) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_index', 'total');
+                        $html .= (int) ($stats['nb_total']) . ' ' . dgettext('tuleap-tracker', 'total');
                         $html .= '</strong> )</span>';
 
                         $html .= '</dt>';
@@ -698,7 +690,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $breadcrumbs = array();
         $toolbar     = array();
         $params      = array();
-        $this->displayHeader($project, $GLOBALS['Language']->getText('plugin_tracker', 'trackers'), $breadcrumbs, $toolbar, $params);
+        $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
 
         $html = '';
 
@@ -710,10 +702,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         echo ' <tr class="boxtable">';
         echo '  <td class="boxtitle">&nbsp;</td>';
         echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>' . $GLOBALS['Language']->getText('plugin_tracker_import_admin', 'art_data_import') . '</b></div>';
+        echo '   <div align="center"><b>' . dgettext('tuleap-tracker', 'Artifacts Data Import') . '</b></div>';
         echo '  </td>';
         echo '  <td class="boxtitle">';
-        echo '   <div align="center"><b>' . $GLOBALS['Language']->getText('plugin_tracker_import_admin', 'import_format') . '</b></div>';
+        echo '   <div align="center"><b>' . dgettext('tuleap-tracker', 'Import Format') . '</b></div>';
         echo '  </td>';
         echo ' </tr>';
 
@@ -721,9 +713,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         foreach ($trackers as $tracker) {
             if ($tracker->userIsAdmin($user)) {
                 echo '<tr class="' . util_get_alt_row_color($cpt) . '">';
-                echo ' <td><b>' . $GLOBALS['Language']->getText('plugin_tracker_import_admin', 'tracker') . ': ' . $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '</b></td>';
-                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=admin-csvimport">' . $GLOBALS['Language']->getText('plugin_tracker_import_admin', 'import') . '</a></td>';
-                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=csvimport-showformat">' . $GLOBALS['Language']->getText('plugin_tracker_import_admin', 'show_format') . '</a></td>';
+                echo ' <td><b>' . dgettext('tuleap-tracker', 'Tracker') . ': ' . $hp->purify($tracker->getName(), CODENDI_PURIFIER_CONVERT_HTML) . '</b></td>';
+                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=admin-csvimport">' . dgettext('tuleap-tracker', 'Import') . '</a></td>';
+                echo ' <td align="center"><a href="' . TRACKER_BASE_URL . '/?tracker=' . (int) ($tracker->getID()) . '&func=csvimport-showformat">' . dgettext('tuleap-tracker', 'Show Format') . '</a></td>';
                 echo '</tr>';
             }
         }
@@ -758,7 +750,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         if ($current_tracker) {
             $html .= $hp->purify($current_tracker->getProject()->getPublicName(), CODENDI_PURIFIER_CONVERT_HTML);
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker', 'tracker_switcher');
+            $html .= dgettext('tuleap-tracker', 'Please select a tracker');
         }
         $html .= '</strong>' . $separator;
         $html .= '<select id="tracker_select_tracker">';
@@ -974,9 +966,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $trackers_v3 = $this->getTrackersV3ForProject($project);
         if ($trackers_v3) {
             $html .= '<hr />';
-            $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tv3_migration_introduction') . '</p>';
+            $html .= '<p>' . dgettext('tuleap-tracker', 'Or you can migrate a Tracker v3...') . '</p>';
             $radio = $this->getCreateTrackerRadio('migrate_from_tv3', $requested_create_mode);
-            $html .= $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, $GLOBALS['Language']->getText('plugin_tracker_include_type', 'migrate_from_tv3'));
+            $html .= $this->getSelectBoxForTV3($requested_template_id, $radio, $trackers_v3, dgettext('tuleap-tracker', 'Migrate a Tracker v3 content'));
         }
         echo $html;
     }

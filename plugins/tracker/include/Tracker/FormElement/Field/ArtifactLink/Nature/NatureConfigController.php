@@ -71,7 +71,7 @@ class NatureConfigController
 
     public function index(CSRFSynchronizerToken $csrf, BaseLayout $base_layout)
     {
-        $title  = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+        $title  = dgettext('tuleap-tracker', 'Trackers');
 
         $assets = new IncludeAssets(
             __DIR__ . '/../../../../../../../../src/www/assets/trackers',
@@ -98,20 +98,12 @@ class NatureConfigController
 
             $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'create_success',
-                    $request->get('shortname')
-                )
+                sprintf(dgettext('tuleap-tracker', 'The type %1$s has been successfully created.'), $request->get('shortname'))
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'create_error',
-                    $exception->getMessage()
-                )
+                sprintf(dgettext('tuleap-tracker', 'Unable to create the requested type: %1$s'), $exception->getMessage())
             );
         }
         $response->redirect(self::$URL);
@@ -128,20 +120,12 @@ class NatureConfigController
 
             $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'edit_success',
-                    $request->get('shortname')
-                )
+                sprintf(dgettext('tuleap-tracker', 'The type %1$s has been successfully updated.'), $request->get('shortname'))
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'edit_error',
-                    $exception->getMessage()
-                )
+                sprintf(dgettext('tuleap-tracker', 'Unable to edit the requested type: %1$s'), $exception->getMessage())
             );
         }
         $response->redirect(self::$URL);
@@ -154,12 +138,12 @@ class NatureConfigController
 
             $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_success')
+                dgettext('tuleap-tracker', 'The type has been successfuly deleted.')
             );
         } catch (NatureManagementException $exception) {
             $response->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_error', $exception->getMessage())
+                sprintf(dgettext('tuleap-tracker', 'An error has occured during the deletion of the type: %1$s'), $exception->getMessage())
             );
         }
         $response->redirect(self::$URL);

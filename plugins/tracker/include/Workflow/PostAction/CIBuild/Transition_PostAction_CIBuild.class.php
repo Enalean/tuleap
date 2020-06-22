@@ -80,7 +80,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     /** @return string */
     public static function getLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_postaction', 'ci_build');
+        return dgettext('tuleap-tracker', 'Launch a continuous integration build');
     }
 
     /** @return bool */
@@ -124,7 +124,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
 
         try {
             $this->ci_client->launchJobBuild($this->job_url, $build_parameters);
-            $feedback = $GLOBALS['Language']->getText('workflow_postaction', 'ci_build_succeeded', array($this->job_url));
+            $feedback = sprintf(dgettext('tuleap-tracker', 'Job build launch succeeded (%1$s)'), $this->job_url);
             $GLOBALS['Response']->addFeedback('info', $feedback);
         } catch (Jenkins_ClientUnableToLaunchBuildException $exception) {
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());

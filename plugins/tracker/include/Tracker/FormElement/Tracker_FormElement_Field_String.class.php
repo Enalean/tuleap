@@ -116,7 +116,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         $value = dgettext('tuleap-tracker', 'Unchanged');
 
         if ($this->isSemanticTitle()) {
-            $html .= '<input type="text" readonly="readonly" value="' . $value . '" title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title') . '" />';
+            $html .= '<input type="text" readonly="readonly" value="' . $value . '" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '" />';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= '<input type="text" class="user-mention"
@@ -202,12 +202,12 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'string');
+        return dgettext('tuleap-tracker', 'String');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'string_description');
+        return dgettext('tuleap-tracker', 'A single line text');
     }
 
     public static function getFactoryIconUseIt()
@@ -260,11 +260,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         if (! $rule_is_a_string->isValid($value)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_string_value',
-                    array($this->getLabel())
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s is not a string.'), $this->getLabel())
             );
             return false;
         }
@@ -273,11 +269,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_string_max_characters',
-                    array($this->getLabel(), $maximum_characters_allowed)
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s can not contain more than %2$s characters.'), $this->getLabel(), $maximum_characters_allowed)
             );
             return false;
         }
@@ -286,11 +278,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text
         if (! $rule_does_not_contain_carriage_return->isValid($value)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_string_value_characters',
-                    array($this->getLabel())
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s can contain neiher carriage return nor null char.'), $this->getLabel())
             );
             return false;
         }

@@ -63,7 +63,7 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
             $html .= ' <label for="formElement_notifications" class="checkbox">';
             $html .= '<input type="hidden" name="formElement_data[notifications]" value="0" />';
             $html .= '<input type="checkbox" name="formElement_data[notifications]" id="formElement_notifications" value="1" ' . ($this->formElement->notifications ? 'checked="checked"' : '') . '" />';
-            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_field', 'notifications');
+            $html .= ' ' . dgettext('tuleap-tracker', 'Send notifications to selected people');
             $html .= '</label>';
             $html .= '</p>';
         }
@@ -83,7 +83,7 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
         $html .= '<input type="hidden" name="formElement_data[required]" value="0" />';
         $html .= '<label class="checkbox">';
         $html .= '<input type="checkbox" name="formElement_data[required]" id="formElement_required" value="1" ' . ($this->formElement->required ? 'checked="checked"' : '') . '" />';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
+        $html .= dgettext('tuleap-tracker', 'Required');
         $html .= '</label>';
         $html .= '</p>';
         return $html;

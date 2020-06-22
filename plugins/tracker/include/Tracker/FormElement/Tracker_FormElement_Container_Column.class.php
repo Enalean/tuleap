@@ -215,12 +215,12 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'column');
+        return dgettext('tuleap-tracker', 'Column');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'column_description');
+        return dgettext('tuleap-tracker', 'Group fields in a column');
     }
 
     public static function getFactoryIconUseIt()

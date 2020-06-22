@@ -229,14 +229,7 @@ class Tracker_HierarchyFactory
         }
 
         if (count($parents) > 1) {
-            $warning = $GLOBALS['Language']->getText(
-                'plugin_tracker_hierarchy',
-                'error_more_than_one_parent',
-                array(
-                    $this->getParentTitle($child),
-                    $this->getParentsList($parents)
-                )
-            );
+            $warning = sprintf(dgettext('tuleap-tracker', 'Artifact %1$s has more than one parent: %2$s'), $this->getParentTitle($child), $this->getParentsList($parents));
             $GLOBALS['Response']->addFeedback('warning', $warning, CODENDI_PURIFIER_LIGHT);
         }
         if (isset($parents[0])) {

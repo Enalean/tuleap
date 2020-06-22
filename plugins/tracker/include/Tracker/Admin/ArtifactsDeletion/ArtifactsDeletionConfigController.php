@@ -67,7 +67,7 @@ class ArtifactsDeletionConfigController
 
     public function index(CSRFSynchronizerToken $csrf)
     {
-        $title                            = $GLOBALS['Language']->getText('plugin_tracker_config', 'title');
+        $title                            = dgettext('tuleap-tracker', 'Trackers');
         $artifacts_limit                  = $this->config->getArtifactsDeletionLimit();
         $archive_deleted_items_plugin     = $this->plugin_manager->getPluginByName('archivedeleteditems');
         $is_archive_deleted_items_enabled = ($archive_deleted_items_plugin)

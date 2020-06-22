@@ -36,7 +36,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
 
     public function no_comment()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'no_comment');
+        return dgettext('tuleap-tracker', 'No comment');
     }
 
     /**

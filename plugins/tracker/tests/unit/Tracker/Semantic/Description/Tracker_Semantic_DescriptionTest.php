@@ -27,12 +27,10 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_Text;
 use Tracker_Semantic_Description;
-use Tuleap\GlobalLanguageMock;
 
 class SemanticDescriptionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Tracker_Semantic_Description

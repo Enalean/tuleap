@@ -48,7 +48,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      */
     public static function getLabel()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'post_action_change_value_float_field');
+        return dgettext('tuleap-tracker', 'Change the value of a float field');
     }
 
     /**

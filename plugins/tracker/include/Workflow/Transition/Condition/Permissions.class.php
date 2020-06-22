@@ -105,7 +105,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         if (! $this->isUserAllowedToSeeTransition($current_user, $artifact->getTracker())) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'transition_permissions_not_valid')
+                dgettext('tuleap-tracker', 'Transition permissions are not respected')
             );
             return false;
         }

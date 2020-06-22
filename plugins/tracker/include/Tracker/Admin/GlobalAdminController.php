@@ -135,7 +135,7 @@ class GlobalAdminController implements DispatchableWithRequest, DispatchableWith
         );
         $this->tracker_manager->displayHeader(
             $project,
-            $GLOBALS['Language']->getText('plugin_tracker', 'trackers'),
+            dgettext('tuleap-tracker', 'Trackers'),
             $breadcrumbs,
             $toolbar,
             $params

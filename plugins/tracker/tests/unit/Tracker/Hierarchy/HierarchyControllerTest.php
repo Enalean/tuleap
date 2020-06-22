@@ -31,13 +31,11 @@ use Tracker;
 use Tracker_Hierarchy_HierarchicalTracker;
 use Tracker_Hierarchy_HierarchicalTrackerFactory;
 use Tracker_Workflow_Trigger_RulesDao;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Admin\ArtifactLinksUsageDao;
 
 final class HierarchyControllerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     public function setUp(): void
     {

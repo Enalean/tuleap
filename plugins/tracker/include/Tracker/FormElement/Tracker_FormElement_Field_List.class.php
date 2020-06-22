@@ -832,10 +832,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                 if (is_array($field_value_to)) {
                     $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-tracker', 'The transition is not valid.'));
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_not_valid', array($field_value_to->getLabel())));
+                    $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The transition to the value "%1$s" is not valid.'), $field_value_to->getLabel()));
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_to_none'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The transition to the value "None" is not valid.'));
             }
             return false;
         }
@@ -1107,9 +1107,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }
 
         if (!$from_value) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ';
+            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
-            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . ' ' . $from_value . '  ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ';
+            $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
         }
 
         $values = array();
@@ -1586,7 +1586,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         //Select default values
         $html .= '<p>';
-        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'select_default_value') . '</strong><br />';
+        $html .= '<strong>' . dgettext('tuleap-tracker', 'Select default value') . '</strong><br />';
         $html .= '<select name="bind[default][]" class="bind_default_values" size="7" multiple="multiple">';
         foreach ($this->getAllVisibleValues() as $v) {
             $selected = isset($default_values[$v->getId()]) ? 'selected="selected"' : '';

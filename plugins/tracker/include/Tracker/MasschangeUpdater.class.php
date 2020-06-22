@@ -80,7 +80,7 @@ class Tracker_MasschangeUpdater
         if ($this->tracker->userIsAdmin($user)) {
             $masschange_aids = $request->get('masschange_aids');
             if (empty($masschange_aids)) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No artifacts have been selected'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
@@ -93,7 +93,7 @@ class Tracker_MasschangeUpdater
             $masschange_data    = $request->get('artifact');
 
             if (! $unsubscribe && empty($masschange_data)) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
+                $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No artifacts have been selected'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
             }
 
@@ -123,7 +123,7 @@ class Tracker_MasschangeUpdater
 
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker_report->getId());
         }
     }
@@ -167,19 +167,19 @@ class Tracker_MasschangeUpdater
                 $not_updated_aids[] = $aid;
                 continue;
             } catch (Tracker_Exception $e) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
+                $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Unable to update artifact %1$s'), $aid));
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
             }
         }
         if (! empty($not_updated_aids)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_failed', implode(', ', $not_updated_aids)));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The following artifacts were not updated (%1$s)'), implode(', ', $not_updated_aids)));
             return;
         }
 
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_update_success'));
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'updated_aid', implode(', ', $masschange_aids)));
+        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Successfully Updated'));
+        $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Updated %1$s'), implode(', ', $masschange_aids)));
     }
 
     private function consolidateFieldsData(array $fields_data): array
@@ -251,11 +251,7 @@ class Tracker_MasschangeUpdater
 
         $GLOBALS['Response']->addFeedback(
             'info',
-            $GLOBALS['Language']->getText(
-                'plugin_tracker_masschange_detail',
-                'unsubscribe_aids',
-                implode(', ', $masschange_aids)
-            )
+            sprintf(dgettext('tuleap-tracker', 'You are unsubscribed from notifications of artifacts %1$s'), implode(', ', $masschange_aids))
         );
     }
 
