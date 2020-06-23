@@ -55,7 +55,7 @@
 
 .test-plan-test-definition-card {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     width: 100%;
     margin: 0 0 $tlp-half-spacing;
@@ -85,7 +85,8 @@
 }
 
 .test-plan-test-definition-icons {
-    margin: 0 0 0 $tlp-medium-spacing;
+    flex: 0 0 auto;
+    margin: 2px 0 0 $tlp-medium-spacing;
 }
 
 .test-plan-test-definition-icon-automated-tests {
