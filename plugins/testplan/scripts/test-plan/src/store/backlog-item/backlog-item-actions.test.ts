@@ -54,7 +54,7 @@ describe("BacklogItem state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
             expect(context.commit).toHaveBeenCalledWith("endLoadingBacklogItems");
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/milestones/42/testplan`, {
-                params: { limit: 100 },
+                params: { limit: 30 },
                 getCollectionCallback: expect.any(Function),
             });
             expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [
@@ -91,7 +91,7 @@ describe("BacklogItem state actions", () => {
             expect(context.commit).toHaveBeenCalledWith("beginLoadingBacklogItems");
             expect(context.commit).toHaveBeenCalledWith("endLoadingBacklogItems");
             expect(tlpRecursiveGetMock).toHaveBeenCalledWith(`/api/v1/milestones/42/testplan`, {
-                params: { limit: 100 },
+                params: { limit: 30 },
                 getCollectionCallback: expect.any(Function),
             });
             expect(context.commit).toHaveBeenCalledWith("addBacklogItems", [

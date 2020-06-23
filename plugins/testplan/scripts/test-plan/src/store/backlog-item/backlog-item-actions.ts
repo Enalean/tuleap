@@ -37,7 +37,7 @@ export async function loadBacklogItems(
             `/api/v1/milestones/${encodeURIComponent(context.rootState.milestone_id)}/testplan`,
             {
                 params: {
-                    limit: 100,
+                    limit: 30,
                 },
                 getCollectionCallback: (collection: BacklogItemFromREST[]): BacklogItem[] => {
                     const backlog_items: BacklogItem[] = collection.map(

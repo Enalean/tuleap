@@ -49,8 +49,7 @@ use UserManager;
 
 final class MilestoneResource extends AuthenticatedResource
 {
-    public const TESTPLAN_ROUTE = 'testplan';
-    public const MAX_LIMIT      = 100;
+    private const MAX_LIMIT = 30;
 
     /**
      * @var Planning_MilestoneFactory
@@ -59,7 +58,7 @@ final class MilestoneResource extends AuthenticatedResource
     /**
      * @var ContentForMiletoneProvider
      */
-    private $content_for_miletone_provider;
+    private $content_for_milestone_provider;
 
     public function __construct()
     {
@@ -92,7 +91,7 @@ final class MilestoneResource extends AuthenticatedResource
             new MilestoneBurndownFieldChecker($tracker_form_element_factory)
         );
 
-        $this->content_for_miletone_provider = ContentForMiletoneProvider::build($this->milestone_factory);
+        $this->content_for_milestone_provider = ContentForMiletoneProvider::build($this->milestone_factory);
     }
 
     /**
@@ -114,7 +113,7 @@ final class MilestoneResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the milestone
-     * @param int $limit  Number of elements displayed per page {@min 0}{@max 100}
+     * @param int $limit  Number of elements displayed per page {@min 0}{@max 30}
      * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type \Tuleap\TestPlan\REST\v1\BacklogItemRepresentation}
@@ -128,7 +127,7 @@ final class MilestoneResource extends AuthenticatedResource
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
 
-        $backlog_items = $this->content_for_miletone_provider->getContent(
+        $backlog_items = $this->content_for_milestone_provider->getContent(
             $milestone,
             $user,
             $limit,
