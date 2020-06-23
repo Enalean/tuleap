@@ -80,7 +80,7 @@ class VisitRetriever
                 continue;
             }
 
-            $collection = new HistoryQuickLinkCollection($artifact);
+            $collection = new HistoryQuickLinkCollection($artifact, $entry_collection->getUser());
             \EventManager::instance()->processEvent($collection);
             $tracker = $artifact->getTracker();
 

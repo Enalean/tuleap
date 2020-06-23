@@ -59,7 +59,7 @@ class IndexController extends TestManagementController
         $this->recordVisit($current_user);
 
         if ($this->current_milestone) {
-            $event = new GetURIForMilestoneFromTTM($this->current_milestone);
+            $event = new GetURIForMilestoneFromTTM($this->current_milestone, $current_user);
             $this->event_manager->processEvent($event);
             $milestone_representation = new MilestoneRepresentation($this->current_milestone, $event->getURI());
         } else {

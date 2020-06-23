@@ -96,7 +96,7 @@ final class testplanPlugin extends Plugin
     {
         $milestone = $collector->getMilestone();
 
-        if (! $this->isTestPlanPaneDisplayable($milestone)) {
+        if (! $this->isTestPlanPaneDisplayable($milestone, $collector->getCurrentUser())) {
             return;
         }
 
@@ -156,7 +156,8 @@ final class testplanPlugin extends Plugin
                 '/assets/testplan'
             ),
             new TestPlanPaneDisplayable(
-                new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), TrackerFactory::instance())
+                new \Tuleap\TestManagement\Config(new \Tuleap\TestManagement\Dao(), $tracker_factory),
+                $tracker_factory,
             ),
             new VisitRecorder(new RecentlyVisitedDao()),
             Planning_MilestoneFactory::build(),
@@ -173,7 +174,7 @@ final class testplanPlugin extends Plugin
     public function getURIForMilestoneFromTTM(GetURIForMilestoneFromTTM $event): void
     {
         $milestone = $event->getMilestone();
-        if (! $this->isTestPlanPaneDisplayable($milestone)) {
+        if (! $this->isTestPlanPaneDisplayable($milestone, $event->getCurrentUser())) {
             return;
         }
 
@@ -181,16 +182,18 @@ final class testplanPlugin extends Plugin
         $event->setURI($pane_info->getUri());
     }
 
-    private function isTestPlanPaneDisplayable(Planning_Milestone $milestone): bool
+    private function isTestPlanPaneDisplayable(Planning_Milestone $milestone, PFUser $user): bool
     {
+        $tracker_factory            = TrackerFactory::instance();
         $test_plan_pane_displayable = new TestPlanPaneDisplayable(
             new \Tuleap\TestManagement\Config(
                 new \Tuleap\TestManagement\Dao(),
-                TrackerFactory::instance()
-            )
+                $tracker_factory,
+            ),
+            $tracker_factory,
         );
 
-        return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject());
+        return $test_plan_pane_displayable->isTestPlanPaneDisplayable($milestone->getProject(), $user);
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void

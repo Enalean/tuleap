@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan;
 
 use AgileDashboardPlugin;
+use PFUser;
 use Project;
 use testmanagementPlugin;
+use TrackerFactory;
 use Tuleap\TestManagement\Config;
 
 class TestPlanPaneDisplayable
@@ -33,13 +35,18 @@ class TestPlanPaneDisplayable
      * @var Config
      */
     private $testmanagement_config;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
 
-    public function __construct(Config $testmanagement_config)
+    public function __construct(Config $testmanagement_config, TrackerFactory $tracker_factory)
     {
         $this->testmanagement_config = $testmanagement_config;
+        $this->tracker_factory       = $tracker_factory;
     }
 
-    public function isTestPlanPaneDisplayable(Project $project): bool
+    public function isTestPlanPaneDisplayable(Project $project, PFUser $user): bool
     {
         if (
             ! $project->usesService(testmanagementPlugin::SERVICE_SHORTNAME) ||
@@ -48,6 +55,24 @@ class TestPlanPaneDisplayable
             return false;
         }
 
-        return ! $this->testmanagement_config->isConfigNeeded($project);
+        if ($this->testmanagement_config->isConfigNeeded($project)) {
+            return false;
+        }
+
+        $test_definition_tracker_id = $this->testmanagement_config->getTestDefinitionTrackerId($project);
+        if (! $test_definition_tracker_id) {
+            return false;
+        }
+
+        $tracker = $this->tracker_factory->getTrackerById($test_definition_tracker_id);
+        if (! $tracker) {
+            return false;
+        }
+
+        if (! $tracker->userCanView($user)) {
+            return false;
+        }
+
+        return true;
     }
 }

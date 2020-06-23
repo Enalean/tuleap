@@ -34,6 +34,10 @@ class GetURIForMilestoneFromTTMTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Planning_Milestone
      */
     private $milestone;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user;
 
     protected function setUp(): void
     {
@@ -45,11 +49,13 @@ class GetURIForMilestoneFromTTMTest extends TestCase
                 'getArtifactId' => 3,
             ]
         );
+
+        $this->user = Mockery::mock(\PFUser::class);
     }
 
     public function testItReturnsTheDefaultURI(): void
     {
-        $event = new GetURIForMilestoneFromTTM($this->milestone);
+        $event = new GetURIForMilestoneFromTTM($this->milestone, $this->user);
         $this->assertEquals(
             '/plugins/agiledashboard/?pane=details&action=show&group_id=1&planning_id=2&aid=3',
             $event->getURI(),
@@ -58,7 +64,7 @@ class GetURIForMilestoneFromTTMTest extends TestCase
 
     public function testItReturnsTheCustomURI(): void
     {
-        $event = new GetURIForMilestoneFromTTM($this->milestone);
+        $event = new GetURIForMilestoneFromTTM($this->milestone, $this->user);
         $event->setURI('/my/custom/uri');
         $this->assertEquals('/my/custom/uri', $event->getURI());
     }

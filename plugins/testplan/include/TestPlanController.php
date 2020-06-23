@@ -112,8 +112,17 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         }
 
         $service = $project->getService(AgileDashboardPlugin::PLUGIN_SHORTNAME);
-        if (! $service || ! $this->testplan_pane_displayable->isTestPlanPaneDisplayable($project)) {
-            throw new NotFoundException(dgettext('tuleap-testplan', "Milestone not found."));
+        if (! $service) {
+            throw new NotFoundException(dgettext('tuleap-testplan', "Project does not use agile dashboard."));
+        }
+
+        if (! $this->testplan_pane_displayable->isTestPlanPaneDisplayable($project, $user)) {
+            throw new NotFoundException(
+                dgettext(
+                    'tuleap-testplan',
+                    "Test plan cannot be displayed. Maybe you don't have enough rights to view it."
+                )
+            );
         }
 
         $this->visit_recorder->record($user, $milestone->getArtifact());

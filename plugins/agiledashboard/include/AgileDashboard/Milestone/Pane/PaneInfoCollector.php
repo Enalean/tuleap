@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\AgileDashboard\Milestone\Pane;
 
 use AgileDashboard_Pane;
+use PFUser;
 use Planning_Milestone;
 use Tuleap\Event\Dispatchable;
 
@@ -52,17 +53,23 @@ class PaneInfoCollector implements Dispatchable
      * @var ActivePaneContext|null
      */
     private $active_pane_context;
+    /**
+     * @var PFUser
+     */
+    private $current_user;
 
     public function __construct(
         Planning_Milestone $milestone,
         ?ActivePaneContext $active_pane_context,
         array $panes,
-        ?AgileDashboard_Pane $active_pane
+        ?AgileDashboard_Pane $active_pane,
+        PFUser $current_user
     ) {
         $this->milestone           = $milestone;
         $this->active_pane_context = $active_pane_context;
         $this->panes               = $panes;
         $this->active_pane         = $active_pane;
+        $this->current_user        = $current_user;
     }
 
     public function getPanes(): array
@@ -138,5 +145,10 @@ class PaneInfoCollector implements Dispatchable
     public function getActivePaneContext(): ?ActivePaneContext
     {
         return $this->active_pane_context;
+    }
+
+    public function getCurrentUser(): PFUser
+    {
+        return $this->current_user;
     }
 }
