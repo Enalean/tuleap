@@ -202,7 +202,7 @@ final class testplanPlugin extends Plugin
             Tracker_ArtifactFactory::instance(),
             $GLOBALS['Response'],
         );
-        $redirect_parameter_injector->inject($event->getRequest(), $event->getRedirect());
+        $redirect_parameter_injector->injectAndInformUserAboutBacklogItemBeingCovered($event->getRequest(), $event->getRedirect());
     }
 
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void

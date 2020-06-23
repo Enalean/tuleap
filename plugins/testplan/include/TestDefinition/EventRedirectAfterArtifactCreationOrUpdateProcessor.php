@@ -86,7 +86,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessor
         }
 
         if ($redirect->mode === Tracker_Artifact_Redirect::STATE_CONTINUE) {
-            $this->injector->inject($request, $redirect);
+            $this->injector->injectParameters($redirect, $ttm_backlog_item_id, $ttm_milestone_id);
 
             return;
         }

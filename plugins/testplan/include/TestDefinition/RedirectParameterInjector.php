@@ -47,7 +47,7 @@ class RedirectParameterInjector
         $this->response         = $response;
     }
 
-    public function inject(
+    public function injectAndInformUserAboutBacklogItemBeingCovered(
         Codendi_Request $request,
         Tracker_Artifact_Redirect $redirect
     ): void {
@@ -74,6 +74,11 @@ class RedirectParameterInjector
             CODENDI_PURIFIER_FULL
         );
 
+        $this->injectParameters($redirect, $ttm_backlog_item_id, $ttm_milestone_id);
+    }
+
+    public function injectParameters(Tracker_Artifact_Redirect $redirect, string $ttm_backlog_item_id, string $ttm_milestone_id): void
+    {
         $redirect->query_parameters[RedirectParameterInjector::TTM_BACKLOG_ITEM_ID_KEY] = $ttm_backlog_item_id;
         $redirect->query_parameters[RedirectParameterInjector::TTM_MILESTONE_ID_KEY]    = $ttm_milestone_id;
     }
