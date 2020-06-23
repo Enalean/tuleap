@@ -51,18 +51,23 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|PFUser
      */
     private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|RedirectParameterInjector
+     */
+    private $redirect_parameter_injector;
 
     public function setUp(): void
     {
         $this->user = Mockery::mock(\PFUser::class);
 
-        $this->artifact_factory      = Mockery::mock(Tracker_ArtifactFactory::class);
-        $this->artifact_link_updater = Mockery::mock(ArtifactLinkUpdater::class);
+        $this->artifact_factory            = Mockery::mock(Tracker_ArtifactFactory::class);
+        $this->artifact_link_updater       = Mockery::mock(ArtifactLinkUpdater::class);
+        $this->redirect_parameter_injector = Mockery::mock(RedirectParameterInjector::class);
 
         $this->processor = new EventRedirectAfterArtifactCreationOrUpdateProcessor(
             $this->artifact_factory,
             $this->artifact_link_updater,
-            new RedirectParameterInjector(),
+            $this->redirect_parameter_injector,
         );
     }
 
@@ -278,16 +283,9 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
                 '_covered_by'
             )->once();
 
-        $this->processor->process($request, $redirect, $artifact);
+        $this->redirect_parameter_injector->shouldReceive('inject')->with($request, $redirect);
 
-        $this->assertEquals('', $redirect->base_url);
-        $this->assertEquals(
-            [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
-            ],
-            $redirect->query_parameters
-        );
+        $this->processor->process($request, $redirect, $artifact);
     }
 
     public function testItDoesNotInjectAnythingIfWeChooseToStayInTracker(): void

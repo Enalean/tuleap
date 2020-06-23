@@ -23,12 +23,29 @@ declare(strict_types=1);
 namespace Tuleap\TestPlan\TestDefinition;
 
 use Codendi_Request;
+use Response;
 use Tracker_Artifact_Redirect;
+use Tracker_ArtifactFactory;
 
 class RedirectParameterInjector
 {
     public const TTM_BACKLOG_ITEM_ID_KEY = 'ttm_backlog_item_id';
     public const TTM_MILESTONE_ID_KEY    = 'ttm_milestone_id';
+
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var Response
+     */
+    private $response;
+
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, Response $response)
+    {
+        $this->artifact_factory = $artifact_factory;
+        $this->response         = $response;
+    }
 
     public function inject(
         Codendi_Request $request,
@@ -39,6 +56,23 @@ class RedirectParameterInjector
         if (! $ttm_backlog_item_id || ! $ttm_milestone_id) {
             return;
         }
+
+        $backlog_item = $this->artifact_factory->getArtifactByIdUserCanView(
+            $request->getCurrentUser(),
+            $ttm_backlog_item_id
+        );
+        if (! $backlog_item) {
+            return;
+        }
+
+        $this->response->addFeedback(
+            \Feedback::INFO,
+            sprintf(
+                dgettext('tuleap-testplan', 'You are creating a new test that will cover: %s'),
+                $backlog_item->getXRefAndTitle()
+            ),
+            CODENDI_PURIFIER_FULL
+        );
 
         $redirect->query_parameters[RedirectParameterInjector::TTM_BACKLOG_ITEM_ID_KEY] = $ttm_backlog_item_id;
         $redirect->query_parameters[RedirectParameterInjector::TTM_MILESTONE_ID_KEY]    = $ttm_milestone_id;
