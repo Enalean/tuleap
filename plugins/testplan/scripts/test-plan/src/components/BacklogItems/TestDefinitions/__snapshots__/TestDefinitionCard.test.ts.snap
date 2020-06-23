@@ -24,6 +24,12 @@ exports[`TestDefinitionCard Display a test definition as a card 1`] = `
     class="test-plan-test-definition-icons"
   >
     <!---->
+     
+    <i
+      aria-hidden="true"
+      class="fa fa-fw fa-question-circle test-plan-test-definition-icon-status-notrun"
+      data-test="test-status-icon"
+    />
   </div>
 </a>
 `;

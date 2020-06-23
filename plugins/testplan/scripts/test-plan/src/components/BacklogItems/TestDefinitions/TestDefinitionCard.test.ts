@@ -33,6 +33,7 @@ describe("TestDefinitionCard", () => {
                     id: 123,
                     short_type: "test_def",
                     summary: "Test definition summary",
+                    test_status: "notrun",
                 } as TestDefinition,
                 backlog_item: { id: 456 } as BacklogItem,
             },
@@ -55,6 +56,90 @@ describe("TestDefinitionCard", () => {
         });
 
         expect(wrapper.find("[data-test=automated-test-icon]").exists()).toBe(true);
+    });
+
+    it("Displays an icon for passed test", () => {
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                    test_status: "passed",
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+        });
+
+        expect(wrapper.find("[data-test=test-status-icon]").classes("fa-check-circle")).toBe(true);
+    });
+
+    it("Displays an icon for failed test", () => {
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                    test_status: "failed",
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+        });
+
+        expect(wrapper.find("[data-test=test-status-icon]").classes("fa-times-circle")).toBe(true);
+    });
+
+    it("Displays an icon for blocked test", () => {
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                    test_status: "blocked",
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+        });
+
+        expect(wrapper.find("[data-test=test-status-icon]").classes("fa-exclamation-circle")).toBe(
+            true
+        );
+    });
+
+    it("Displays an icon for notrun test", () => {
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                    test_status: "notrun",
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+        });
+
+        expect(wrapper.find("[data-test=test-status-icon]").classes("fa-question-circle")).toBe(
+            true
+        );
+    });
+
+    it("Does not display a status icon for a test that has not been planned in a campaign yet", () => {
+        const wrapper = shallowMount(TestDefinitionCard, {
+            propsData: {
+                test_definition: {
+                    id: 123,
+                    short_type: "test_def",
+                    summary: "Test definition summary",
+                    test_status: null,
+                } as TestDefinition,
+                backlog_item: { id: 456 } as BacklogItem,
+            },
+        });
+
+        expect(wrapper.find("[data-test=test-status-icon]").exists()).toBe(false);
     });
 
     it("Marks the test as just refreshed", () => {

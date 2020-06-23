@@ -55,6 +55,7 @@ export interface TestDefinitionFromREST {
     readonly short_type: string;
     readonly summary: string;
     readonly automated_tests: string;
+    readonly test_status: null | "passed" | "failed" | "blocked" | "notrun";
 }
 
 export interface TestDefinition extends TestDefinitionFromREST {
