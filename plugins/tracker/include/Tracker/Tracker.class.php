@@ -1247,7 +1247,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($date_field->userCanRead()) {
                         $html .=  '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $artifact->getSubmittedOn()) . '</td>';
                     }
-                    if ($status_field->userCanRead()) {
+                    if ($status_field !== null && $status_field->userCanRead()) {
                         $html .=  '<td>' . $artifact->getStatus() . '</td>';
                     }
                     $html .=  '</tr>';
@@ -3191,7 +3191,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     /**
      * Return the status field, or null if no status field defined
      *
-     * @return Tracker_FormElement_Field_List the status field, or null if not defined
+     * @return Tracker_FormElement_Field_List|null the status field, or null if not defined
      */
     public function getStatusField()
     {

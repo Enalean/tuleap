@@ -136,8 +136,7 @@ final class MilestoneResource extends AuthenticatedResource
 
         $backlog_items_representations = [];
         foreach ($backlog_items as $backlog_item) {
-            $representation = new BacklogItemRepresentation();
-            $representation->build($backlog_item, $user);
+            $representation = new BacklogItemRepresentation($backlog_item, $user);
             $backlog_items_representations[] = $representation;
         }
 
