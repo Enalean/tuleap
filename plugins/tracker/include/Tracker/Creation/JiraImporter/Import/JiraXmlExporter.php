@@ -44,6 +44,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteria
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportOpenIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -133,6 +134,11 @@ class JiraXmlExporter
      */
     private $xml_report_created_recently_exporter;
 
+    /**
+     * @var XmlReportUpdatedRecentlyExporter
+     */
+    private $xml_report_updated_recently_exporter;
+
     public function __construct(
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
@@ -147,7 +153,8 @@ class JiraXmlExporter
         AlwaysThereFieldsExporter $always_there_fields_exporter,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
-        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter
+        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
+        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
     ) {
         $this->error_collector                      = $error_collector;
         $this->jira_field_retriever                 = $jira_field_retriever;
@@ -163,6 +170,7 @@ class JiraXmlExporter
         $this->xml_report_all_issues_exporter       = $xml_report_all_issues_exporter;
         $this->xml_report_open_issues_exporter      = $xml_report_open_issues_exporter;
         $this->xml_report_created_recently_exporter = $xml_report_created_recently_exporter;
+        $this->xml_report_updated_recently_exporter = $xml_report_updated_recently_exporter;
     }
 
     public static function build(
@@ -261,6 +269,11 @@ class JiraXmlExporter
                 $default_criteria_exporter,
                 $cdata_factory,
                 $report_table_exporter
+            ),
+            new XmlReportUpdatedRecentlyExporter(
+                $default_criteria_exporter,
+                $cdata_factory,
+                $report_table_exporter
             )
         );
     }
@@ -308,7 +321,8 @@ class JiraXmlExporter
             $this->jira_field_mapping_collection,
             $this->xml_report_all_issues_exporter,
             $this->xml_report_open_issues_exporter,
-            $this->xml_report_created_recently_exporter
+            $this->xml_report_created_recently_exporter,
+            $this->xml_report_updated_recently_exporter
         );
         $node_tracker->addChild('workflow');
 

@@ -124,6 +124,7 @@ final class XmlReportAllIssuesExporterTest extends TestCase
             $this->status_field_mapping,
             $this->priority_field_mapping,
             $this->jira_issue_url_field_mapping,
+            null,
             null
         );
 

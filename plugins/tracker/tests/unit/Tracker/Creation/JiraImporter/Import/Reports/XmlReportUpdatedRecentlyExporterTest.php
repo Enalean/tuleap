@@ -28,9 +28,10 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
-final class XmlReportCreatedRecentlyExporterTest extends TestCase
+final class XmlReportUpdatedRecentlyExporterTest extends TestCase
 {
     /**
      * @var XmlReportCreatedRecentlyExporter
@@ -70,7 +71,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
     /**
      * @var FieldMapping
      */
-    private $created_field_mapping;
+    private $updated_field_mapping;
 
     protected function setUp(): void
     {
@@ -109,24 +110,24 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
             Tracker_FormElementFactory::FIELD_STRING_TYPE
         );
 
-        $this->created_field_mapping = new FieldMapping(
-            'created',
-            'Fcreated',
-            'created',
+        $this->updated_field_mapping = new FieldMapping(
+            'updated',
+            'Fupdated',
+            'updated',
             Tracker_FormElementFactory::FIELD_DATE_TYPE
         );
 
         $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');
         $this->reports_node = $tracker_node->addChild('reports');
         $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
-        $this->report_export = new XmlReportCreatedRecentlyExporter(
+        $this->report_export = new XmlReportUpdatedRecentlyExporter(
             new XmlReportDefaultCriteriaExporter(),
             $cdata_factory,
             new XmlReportTableExporter($cdata_factory)
         );
     }
 
-    public function testItDoesNotExportWhenNoCreatedField(): void
+    public function testItDoesNotExportWhenNoUpdatedField(): void
     {
         $this->report_export->exportJiraLikeReport(
             $this->reports_node,
@@ -152,8 +153,8 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
             $this->status_field_mapping,
             $this->priority_field_mapping,
             $this->jira_issue_url_field_mapping,
-            $this->created_field_mapping,
-            null
+            null,
+            $this->updated_field_mapping
         );
 
         $reports_node = $this->reports_node;
@@ -163,13 +164,13 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
         $this->assertNotNull($report_node);
 
         $report_node_name = $report_node->name;
-        $this->assertEquals("Created recently", $report_node_name);
+        $this->assertEquals("Updated recently", $report_node_name);
 
         $reports_node_description = $report_node->description;
-        $this->assertEquals('All issues created recently in this tracker', $reports_node_description);
+        $this->assertEquals('All issues updated recently in this tracker', $reports_node_description);
         $this->assertEquals('0', $report_node['is_default']);
         $this->assertEquals('1', $report_node['is_in_expert_mode']);
-        $this->assertEquals('created BETWEEN(NOW() - 1w, NOW())', (string) $report_node['expert_query']);
+        $this->assertEquals('updated BETWEEN(NOW() - 1w, NOW())', (string) $report_node['expert_query']);
 
         $criterias = $report_node->criterias;
         $this->assertNotNull($criterias);
@@ -185,7 +186,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
         $this->assertSame("Fpriority", (string) $criterion_03->field['REF']);
 
         $criterion_04 = $criterias->criteria[3];
-        $this->assertSame("Fcreated", (string) $criterion_04->field['REF']);
+        $this->assertSame("Fupdated", (string) $criterion_04->field['REF']);
 
         $renderers_node = $report_node->renderers;
         $this->assertNotNull($renderers_node);
@@ -217,7 +218,7 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
         $this->assertEquals("Fpriority", (string) $field_04['REF']);
 
         $field_05 = $columns_node->field[4];
-        $this->assertEquals("Fcreated", (string) $field_05['REF']);
+        $this->assertEquals("Fupdated", (string) $field_05['REF']);
 
         $this->assertEquals("Results", (string) $renderer_name);
     }

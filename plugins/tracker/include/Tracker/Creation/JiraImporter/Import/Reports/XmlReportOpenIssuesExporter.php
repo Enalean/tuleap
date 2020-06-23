@@ -71,7 +71,8 @@ class XmlReportOpenIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $status_field,
         ?FieldMapping $priority_field,
         ?FieldMapping $link_field,
-        ?FieldMapping $created_field
+        ?FieldMapping $created_field,
+        ?FieldMapping $updated_field
     ): void {
         if (! $status_field) {
             return;

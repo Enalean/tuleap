@@ -26,7 +26,7 @@ use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use XML_SimpleXMLCDATAFactory;
 
-class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
+class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
 {
     /**
      * @var XmlReportDefaultCriteriaExporter
@@ -43,6 +43,9 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
      */
     private $report_table_exporter;
 
+    /**
+     * @param FieldMapping[] $column_fields
+     */
     public function __construct(
         XmlReportDefaultCriteriaExporter $default_criteria_exporter,
         XML_SimpleXMLCDATAFactory $cdata_factory,
@@ -63,32 +66,42 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $created_field,
         ?FieldMapping $updated_field
     ): void {
+        if (! $updated_field) {
+            return;
+        }
+
         $report_node = $reports_node->addChild('report');
+        $report_node->addAttribute("is_default", "0");
+        $report_node->addAttribute("is_in_expert_mode", "1");
 
-        $this->cdata_factory->insert($report_node, 'name', 'All issues');
-        $this->cdata_factory->insert($report_node, 'description', 'All the issues in this tracker');
+        $updated_field_name = $updated_field->getFieldName();
+        $report_node->addAttribute("expert_query", "$updated_field_name BETWEEN(NOW() - 1w, NOW())");
 
-        $criteria_fields = array_filter(
-            [
-                $summary_field,
-                $description_field,
-                $status_field,
-                $priority_field
-            ]
-        );
+        $this->cdata_factory->insert($report_node, 'name', 'Updated recently');
+        $this->cdata_factory->insert($report_node, 'description', 'All issues updated recently in this tracker');
+
+        $criterias_node = $report_node->addChild('criterias');
+
+        $criteria_fields = array_filter([
+            $summary_field,
+            $description_field,
+            $priority_field,
+            $updated_field
+        ]);
+
+        $this->default_criteria_exporter->exportDefaultCriteria($criteria_fields, $criterias_node);
 
         $column_fields = array_filter([
             $summary_field,
             $status_field,
             $link_field,
-            $priority_field
+            $priority_field,
+            $updated_field
         ]);
 
-        $this->default_criteria_exporter->exportDefaultCriteria(
-            $criteria_fields,
-            $report_node->addChild('criterias')
+        $this->report_table_exporter->exportResultsTable(
+            $report_node,
+            $column_fields
         );
-
-        $this->report_table_exporter->exportResultsTable($report_node, $column_fields);
     }
 }
