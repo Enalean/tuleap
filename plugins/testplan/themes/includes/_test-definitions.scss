@@ -93,6 +93,29 @@
     color: $tlp-ui-dimmed;
 }
 
+.test-plan-test-definition-icon-status-passed,
+.test-plan-test-definition-icon-status-failed,
+.test-plan-test-definition-icon-status-blocked,
+.test-plan-test-definition-icon-status-notrun {
+    margin: 0 0 0 $tlp-half-spacing;
+}
+
+.test-plan-test-definition-icon-status-passed {
+    color: $tlp-ui-success;
+}
+
+.test-plan-test-definition-icon-status-failed {
+    color: $tlp-ui-danger;
+}
+
+.test-plan-test-definition-icon-status-blocked {
+    color: $tlp-ui-info;
+}
+
+.test-plan-test-definition-icon-status-notrun {
+    color: $tlp-ui-dimmed;
+}
+
 .test-plan-add-test-button {
     margin: $tlp-medium-spacing - $tlp-half-spacing;
 
