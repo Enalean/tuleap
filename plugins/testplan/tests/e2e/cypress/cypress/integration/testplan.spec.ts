@@ -72,9 +72,30 @@ describe("Test plan", function () {
                     cy.contains(
                         "Display list of backlog items with their tests definition"
                     ).click();
-                    cy.contains("Update artifact");
+                    cy.contains("Update artifact").within(() => {
+                        cy.get("[data-test=test-status-icon]").should(
+                            "have.class",
+                            "test-plan-test-definition-icon-status-notrun"
+                        );
+                    });
                     cy.contains("Send beeper notification").within(() => {
                         cy.get("[data-test=automated-test-icon]");
+                    });
+
+                    ["failed", "passed", "notrun", "blocked"].forEach((new_status) => {
+                        cy.contains("Campaign " + now).click();
+                        cy.contains("Update artifact").click();
+                        cy.get(`[data-test=mark-test-as-${new_status}]`).click();
+                        cy.contains("Release with campaigns").click();
+                        cy.contains(
+                            "Display list of backlog items with their tests definition"
+                        ).click();
+                        cy.contains("Update artifact").within(() => {
+                            cy.get("[data-test=test-status-icon]").should(
+                                "have.class",
+                                `test-plan-test-definition-icon-status-${new_status}`
+                            );
+                        });
                     });
                 });
 
