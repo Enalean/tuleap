@@ -76,7 +76,8 @@ export async function loadTestDefinitions(
             `/api/v1/backlog_items/${encodeURIComponent(backlog_item.id)}/test_definitions`,
             {
                 params: {
-                    limit: 100,
+                    milestone_id: context.rootState.milestone_id,
+                    limit: 30,
                 },
                 getCollectionCallback: (collection: TestDefinitionFromREST[]): TestDefinition[] => {
                     const test_definitions: TestDefinition[] = collection.map(

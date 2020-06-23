@@ -39,7 +39,10 @@ final class TestPlanLinkedTestDefinitionsTest extends TestCase
 
     public function testStoreASubsetOfLinkedTestDefinitions(): void
     {
-        $artifacts = [\Mockery::mock(\Tracker_Artifact::class), \Mockery::mock(\Tracker_Artifact::class)];
+        $artifacts = [
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class)),
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class))
+        ];
         $linked_test_definitions = TestPlanLinkedTestDefinitions::subset($artifacts, 512);
 
         $this->assertEquals($artifacts, $linked_test_definitions->getRequestedLinkedTestDefinitions());
@@ -48,7 +51,10 @@ final class TestPlanLinkedTestDefinitionsTest extends TestCase
 
     public function testCannotGiveASubsetBiggerThanTheTotalNumberOfTestDefinitions(): void
     {
-        $artifacts = [\Mockery::mock(\Tracker_Artifact::class), \Mockery::mock(\Tracker_Artifact::class)];
+        $artifacts = [
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class)),
+            TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition(\Mockery::mock(\Tracker_Artifact::class))
+        ];
 
         $this->expectException(\LogicException::class);
         TestPlanLinkedTestDefinitions::subset($artifacts, 1);

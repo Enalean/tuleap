@@ -44,15 +44,24 @@ class TestPlanLinkedTestDefinitionsRetriever
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
+    /**
+     * @var TestPlanTestDefinitionWithTestStatusRetriever
+     */
+    private $test_definition_with_test_status_retriever;
 
-    public function __construct(Config $testmanagement_config, ArtifactDao $artifact_dao, Tracker_ArtifactFactory $artifact_factory)
-    {
-        $this->testmanagement_config = $testmanagement_config;
-        $this->artifact_dao          = $artifact_dao;
-        $this->artifact_factory      = $artifact_factory;
+    public function __construct(
+        Config $testmanagement_config,
+        ArtifactDao $artifact_dao,
+        Tracker_ArtifactFactory $artifact_factory,
+        TestPlanTestDefinitionWithTestStatusRetriever $test_definition_with_test_status_retriever
+    ) {
+        $this->testmanagement_config                      = $testmanagement_config;
+        $this->artifact_dao                               = $artifact_dao;
+        $this->artifact_factory                           = $artifact_factory;
+        $this->test_definition_with_test_status_retriever = $test_definition_with_test_status_retriever;
     }
 
-    public function getDefinitionsLinkedToAnArtifact(Tracker_Artifact $artifact, PFUser $user, int $limit, int $offset): TestPlanLinkedTestDefinitions
+    public function getDefinitionsLinkedToAnArtifact(Tracker_Artifact $artifact, Tracker_Artifact $milestone, PFUser $user, int $limit, int $offset): TestPlanLinkedTestDefinitions
     {
         $test_definition_tracker_id = $this->testmanagement_config->getTestDefinitionTrackerId($artifact->getTracker()->getProject());
         if ($test_definition_tracker_id === false) {
@@ -76,6 +85,9 @@ class TestPlanLinkedTestDefinitionsRetriever
             }
         }
 
-        return TestPlanLinkedTestDefinitions::subset($test_definitions, $total_number_of_linked_artifacts);
+        return TestPlanLinkedTestDefinitions::subset(
+            $this->test_definition_with_test_status_retriever->retrieveTestDefinitionWithTestStatus($milestone, $user, $test_definitions),
+            $total_number_of_linked_artifacts
+        );
     }
 }

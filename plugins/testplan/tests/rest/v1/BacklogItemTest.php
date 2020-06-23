@@ -26,9 +26,12 @@ final class BacklogItemTest extends \RestBase
 {
     public function testRetrievesLinkedTestDefinitionsToABacklogItem(): void
     {
-        $backlog_item_id = $this->getBacklogItemID();
+        $backlog_item_id = $this->getIDOfTheOnlyArtifactOfTheTracker('Sprints');
+        $milestone_id    = $this->getIDOfTheOnlyArtifactOfTheTracker('Releases');
 
-        $response = $this->getResponse($this->client->get('backlog_items/' . urlencode((string) $backlog_item_id) . '/test_definitions'));
+        $response = $this->getResponse(
+            $this->client->get('backlog_items/' . urlencode((string) $backlog_item_id) . '/test_definitions?milestone_id=' . urlencode((string) $milestone_id))
+        );
         $this->assertEquals(200, $response->getStatusCode());
         $linked_test_definitions = $response->json();
 
@@ -37,21 +40,22 @@ final class BacklogItemTest extends \RestBase
         $linked_test_definition = $linked_test_definitions[0];
         $this->assertEquals('Expected Test Def 1', $linked_test_definition['summary']);
         $this->assertEquals('test_case', $linked_test_definition['short_type']);
+        $this->assertEquals('passed', $linked_test_definition['test_status']);
     }
 
-    private function getBacklogItemID(): int
+    private function getIDOfTheOnlyArtifactOfTheTracker(string $tracker_label): int
     {
-        $sprints_tracker_id = $this->getTestPlanSprintTrackerID();
+        $tracker_id = $this->getTestPlanTrackerID($tracker_label);
 
-        $response = $this->getResponse($this->client->get('trackers/' . urlencode((string) $sprints_tracker_id) . '/artifacts'));
+        $response = $this->getResponse($this->client->get('trackers/' . urlencode((string) $tracker_id) . '/artifacts'));
         $this->assertEquals(200, $response->getStatusCode());
-        $sprints = $response->json();
-        $this->assertCount(1, $sprints);
+        $artifacts = $response->json();
+        $this->assertCount(1, $artifacts);
 
-        return $sprints[0]['id'];
+        return $artifacts[0]['id'];
     }
 
-    private function getTestPlanSprintTrackerID(): int
+    private function getTestPlanTrackerID(string $tracker_label): int
     {
         $project_id = $this->getProjectId('testplan');
         $response   = $this->getResponse($this->client->get('projects/' . urlencode((string) $project_id) . '/trackers?representation=minimal'));
@@ -60,7 +64,7 @@ final class BacklogItemTest extends \RestBase
         $trackers   = $response->json();
         $tracker_id = null;
         foreach ($trackers as $tracker) {
-            if ($tracker['label'] === 'Sprints') {
+            if ($tracker['label'] === $tracker_label) {
                 $tracker_id = $tracker['id'];
             }
         }

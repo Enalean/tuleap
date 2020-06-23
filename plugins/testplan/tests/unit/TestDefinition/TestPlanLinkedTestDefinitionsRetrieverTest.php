@@ -46,20 +46,26 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
      */
     private $artifact_factory;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|TestPlanTestDefinitionWithTestStatusRetriever
+     */
+    private $test_definition_with_test_status_retriever;
+    /**
      * @var TestPlanLinkedTestDefinitionsRetriever
      */
     private $retriever;
 
     protected function setUp(): void
     {
-        $this->testmanagement_config = \Mockery::mock(Config::class);
-        $this->artifact_dao          = \Mockery::mock(ArtifactDao::class);
-        $this->artifact_factory      = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->testmanagement_config                      = \Mockery::mock(Config::class);
+        $this->artifact_dao                               = \Mockery::mock(ArtifactDao::class);
+        $this->artifact_factory                           = \Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->test_definition_with_test_status_retriever = \Mockery::mock(TestPlanTestDefinitionWithTestStatusRetriever::class);
 
         $this->retriever = new TestPlanLinkedTestDefinitionsRetriever(
             $this->testmanagement_config,
             $this->artifact_dao,
             $this->artifact_factory,
+            $this->test_definition_with_test_status_retriever,
         );
     }
 
@@ -89,10 +95,23 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
         $project      = \Mockery::mock(\Project::class);
         $tracker->shouldReceive('getProject')->andReturn($project);
         $backlog_item->shouldReceive('getTracker')->andReturn($tracker);
+        $milestone    = \Mockery::mock(\Tracker_Artifact::class);
+        $user         = UserTestBuilder::aUser()->build();
 
-        $linked_artifacts = $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build(), 512, 0);
+        $test_definition_with_test_status = TestPlanTestDefinitionWithTestStatus::unknownTestStatusForTheDefinition($artifact_user_can_view);
+        $this->test_definition_with_test_status_retriever->shouldReceive('retrieveTestDefinitionWithTestStatus')
+            ->with($milestone, $user, [$artifact_user_can_view])
+            ->andReturn([$test_definition_with_test_status]);
 
-        $this->assertEquals([$artifact_user_can_view], $linked_artifacts->getRequestedLinkedTestDefinitions());
+        $linked_artifacts = $this->retriever->getDefinitionsLinkedToAnArtifact(
+            $backlog_item,
+            $milestone,
+            $user,
+            512,
+            0
+        );
+
+        $this->assertEquals([$test_definition_with_test_status], $linked_artifacts->getRequestedLinkedTestDefinitions());
     }
 
     public function testNoArtifactsAreFoundWhenTheTestDefinitionTrackerIsNotSetInTheTestManagementConfig(): void
@@ -107,7 +126,13 @@ final class TestPlanLinkedTestDefinitionsRetrieverTest extends TestCase
 
         $this->assertEquals(
             TestPlanLinkedTestDefinitions::empty(),
-            $this->retriever->getDefinitionsLinkedToAnArtifact($backlog_item, UserTestBuilder::aUser()->build(), 512, 0)
+            $this->retriever->getDefinitionsLinkedToAnArtifact(
+                $backlog_item,
+                \Mockery::mock(\Tracker_Artifact::class),
+                UserTestBuilder::aUser()->build(),
+                512,
+                0
+            )
         );
     }
 }
