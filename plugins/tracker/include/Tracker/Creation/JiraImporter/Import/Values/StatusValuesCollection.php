@@ -41,6 +41,11 @@ class StatusValuesCollection
     private $open_values = [];
 
     /**
+     * @var JiraFieldAPIAllowedValueRepresentation[]
+     */
+    private $closed_values = [];
+
+    /**
      * @var ClientWrapper
      */
     private $wrapper;
@@ -75,8 +80,14 @@ class StatusValuesCollection
         $status_representation = JiraFieldAPIAllowedValueRepresentation::buildFromAPIResponseStatuses($status);
         $this->all_values[] = $status_representation;
 
-        if (isset($status['statusCategory']['key']) && $status['statusCategory']['key'] !== self::DONE_STATUS_CATEGORY) {
+        if (! isset($status['statusCategory']['key'])) {
+            return;
+        }
+
+        if ($status['statusCategory']['key'] !== self::DONE_STATUS_CATEGORY) {
             $this->open_values[] = $status_representation;
+        } else {
+            $this->closed_values[] = $status_representation;
         }
     }
 
@@ -94,5 +105,13 @@ class StatusValuesCollection
     public function getOpenValues(): array
     {
         return $this->open_values;
+    }
+
+    /**
+     * @return JiraFieldAPIAllowedValueRepresentation[]
+     */
+    public function getClosedValues(): array
+    {
+        return $this->closed_values;
     }
 }

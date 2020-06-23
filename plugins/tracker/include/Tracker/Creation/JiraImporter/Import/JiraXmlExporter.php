@@ -41,6 +41,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Permissions\PermissionsXMLExport
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportAllIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDoneIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportOpenIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
@@ -139,6 +140,11 @@ class JiraXmlExporter
      */
     private $xml_report_updated_recently_exporter;
 
+    /**
+     * @var XmlReportDoneIssuesExporter
+     */
+    private $xml_report_done_issues_exporter;
+
     public function __construct(
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
@@ -153,6 +159,7 @@ class JiraXmlExporter
         AlwaysThereFieldsExporter $always_there_fields_exporter,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
+        XmlReportDoneIssuesExporter $xml_report_done_issues_exporter,
         XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
         XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
     ) {
@@ -169,6 +176,7 @@ class JiraXmlExporter
         $this->always_there_fields_exporter         = $always_there_fields_exporter;
         $this->xml_report_all_issues_exporter       = $xml_report_all_issues_exporter;
         $this->xml_report_open_issues_exporter      = $xml_report_open_issues_exporter;
+        $this->xml_report_done_issues_exporter      = $xml_report_done_issues_exporter;
         $this->xml_report_created_recently_exporter = $xml_report_created_recently_exporter;
         $this->xml_report_updated_recently_exporter = $xml_report_updated_recently_exporter;
     }
@@ -265,6 +273,12 @@ class JiraXmlExporter
                 $report_table_exporter,
                 $status_values_collection
             ),
+            new XmlReportDoneIssuesExporter(
+                $default_criteria_exporter,
+                $cdata_factory,
+                $report_table_exporter,
+                $status_values_collection
+            ),
             new XmlReportCreatedRecentlyExporter(
                 $default_criteria_exporter,
                 $cdata_factory,
@@ -321,6 +335,7 @@ class JiraXmlExporter
             $this->jira_field_mapping_collection,
             $this->xml_report_all_issues_exporter,
             $this->xml_report_open_issues_exporter,
+            $this->xml_report_done_issues_exporter,
             $this->xml_report_created_recently_exporter,
             $this->xml_report_updated_recently_exporter
         );
