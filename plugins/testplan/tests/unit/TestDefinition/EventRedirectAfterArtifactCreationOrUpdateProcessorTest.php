@@ -87,7 +87,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
+                'ttm_backlog_item_id' => "123",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -103,8 +103,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -113,7 +113,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
 
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturnNull();
 
@@ -127,8 +127,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -139,7 +139,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturn($backlog_item);
 
@@ -164,8 +164,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -176,7 +176,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturn($backlog_item);
 
@@ -205,8 +205,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -225,7 +225,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturn($backlog_item);
 
@@ -249,8 +249,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -269,7 +269,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturn($backlog_item);
 
@@ -283,7 +283,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
                 '_covered_by'
             )->once();
 
-        $this->redirect_parameter_injector->shouldReceive('inject')->with($request, $redirect);
+        $this->redirect_parameter_injector->shouldReceive('injectParameters')->with($redirect, "123", "42");
 
         $this->processor->process($request, $redirect, $artifact);
     }
@@ -292,8 +292,8 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
     {
         $request  = $this->aRequest(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ]
         );
         $redirect = new Tracker_Artifact_Redirect();
@@ -312,7 +312,7 @@ class EventRedirectAfterArtifactCreationOrUpdateProcessorTest extends TestCase
         $backlog_item = Mockery::mock(\Tracker_Artifact::class);
         $this->artifact_factory
             ->shouldReceive('getArtifactById')
-            ->with(123)
+            ->with("123")
             ->once()
             ->andReturn($backlog_item);
 

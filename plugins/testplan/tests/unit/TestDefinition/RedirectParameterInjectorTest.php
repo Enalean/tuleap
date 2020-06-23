@@ -71,7 +71,7 @@ class RedirectParameterInjectorTest extends TestCase
         $request  = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->inject($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
@@ -80,13 +80,13 @@ class RedirectParameterInjectorTest extends TestCase
     {
         $request  = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => 123,
+                'ttm_backlog_item_id' => "123",
             ],
             \Mockery::spy(\ProjectManager::class)
         );
         $redirect = new \Tracker_Artifact_Redirect();
 
-        $this->injector->inject($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
@@ -95,8 +95,8 @@ class RedirectParameterInjectorTest extends TestCase
     {
         $request  = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ],
             \Mockery::spy(\ProjectManager::class)
         );
@@ -106,11 +106,11 @@ class RedirectParameterInjectorTest extends TestCase
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 123)
+            ->with($this->user, "123")
             ->once()
             ->andReturnNull();
 
-        $this->injector->inject($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
@@ -119,8 +119,8 @@ class RedirectParameterInjectorTest extends TestCase
     {
         $request  = new \Codendi_Request(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42,
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42",
             ],
             \Mockery::spy(\ProjectManager::class)
         );
@@ -130,7 +130,7 @@ class RedirectParameterInjectorTest extends TestCase
 
         $this->artifact_factory
             ->shouldReceive('getArtifactByIdUserCanView')
-            ->with($this->user, 123)
+            ->with($this->user, "123")
             ->once()
             ->andReturn($this->backlog_item);
         $this->backlog_item->shouldReceive('getXRefAndTitle')->andReturn('story #123 - My story');
@@ -140,12 +140,12 @@ class RedirectParameterInjectorTest extends TestCase
             ->with('info', 'You are creating a new test that will cover: story #123 - My story', CODENDI_PURIFIER_FULL)
             ->once();
 
-        $this->injector->inject($request, $redirect);
+        $this->injector->injectAndInformUserAboutBacklogItemBeingCovered($request, $redirect);
 
         $this->assertEquals(
             [
-                'ttm_backlog_item_id' => 123,
-                'ttm_milestone_id'    => 42
+                'ttm_backlog_item_id' => "123",
+                'ttm_milestone_id'    => "42"
             ],
             $redirect->query_parameters
         );
