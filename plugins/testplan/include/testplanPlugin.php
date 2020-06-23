@@ -195,7 +195,11 @@ final class testplanPlugin extends Plugin
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
     {
-        (new RedirectParameterInjector())->inject($event->getRequest(), $event->getRedirect());
+        $redirect_parameter_injector = new RedirectParameterInjector(
+            Tracker_ArtifactFactory::instance(),
+            $GLOBALS['Response'],
+        );
+        $redirect_parameter_injector->inject($event->getRequest(), $event->getRedirect());
     }
 
     public function redirectAfterArtifactCreationOrUpdateEvent(RedirectAfterArtifactCreationOrUpdateEvent $event): void
@@ -216,7 +220,10 @@ final class testplanPlugin extends Plugin
         $processor = new EventRedirectAfterArtifactCreationOrUpdateProcessor(
             $tracker_artifact_factory,
             $artifactlink_updater,
-            new RedirectParameterInjector()
+            new RedirectParameterInjector(
+                Tracker_ArtifactFactory::instance(),
+                $GLOBALS['Response'],
+            )
         );
         $processor->process($event->getRequest(), $event->getRedirect(), $event->getArtifact());
     }

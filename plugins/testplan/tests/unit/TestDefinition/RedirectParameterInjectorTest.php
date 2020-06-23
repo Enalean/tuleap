@@ -22,19 +22,56 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan\TestDefinition;
 
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
 
 class RedirectParameterInjectorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
+    use GlobalResponseMock;
+
+    private $injector;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+    /**
+     * @var mixed
+     */
+    private $response;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\PFUser
+     */
+    private $user;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Artifact
+     */
+    private $backlog_item;
+
+    protected function setUp(): void
+    {
+        $this->artifact_factory = Mockery::mock(\Tracker_ArtifactFactory::class);
+        $this->response         = $GLOBALS['Response'];
+
+        $this->backlog_item = Mockery::mock(\Tracker_Artifact::class);
+        $this->user         = Mockery::mock(\PFUser::class);
+
+        $this->injector = new RedirectParameterInjector(
+            $this->artifact_factory,
+            $this->response,
+        );
+    }
 
     public function testItDoesNotInjectAnythingIfThereIsNoBacklogItemIdInTheRequest(): void
     {
         $request  = new \Codendi_Request([], \Mockery::spy(\ProjectManager::class));
         $redirect = new \Tracker_Artifact_Redirect();
 
-        (new RedirectParameterInjector())->inject($request, $redirect);
+        $this->injector->inject($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
@@ -49,12 +86,12 @@ class RedirectParameterInjectorTest extends TestCase
         );
         $redirect = new \Tracker_Artifact_Redirect();
 
-        (new RedirectParameterInjector())->inject($request, $redirect);
+        $this->injector->inject($request, $redirect);
 
         $this->assertEquals([], $redirect->query_parameters);
     }
 
-    public function testInject(): void
+    public function testItDoesNotInjectAnythingIfTheBacklogItemIsNotReadableByUser(): void
     {
         $request  = new \Codendi_Request(
             [
@@ -63,9 +100,47 @@ class RedirectParameterInjectorTest extends TestCase
             ],
             \Mockery::spy(\ProjectManager::class)
         );
+        $request->setCurrentUser($this->user);
+
         $redirect = new \Tracker_Artifact_Redirect();
 
-        (new RedirectParameterInjector())->inject($request, $redirect);
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, 123)
+            ->once()
+            ->andReturnNull();
+
+        $this->injector->inject($request, $redirect);
+
+        $this->assertEquals([], $redirect->query_parameters);
+    }
+
+    public function testInjectAndInformUserAboutBacklogItemBeingCovered(): void
+    {
+        $request  = new \Codendi_Request(
+            [
+                'ttm_backlog_item_id' => 123,
+                'ttm_milestone_id'    => 42,
+            ],
+            \Mockery::spy(\ProjectManager::class)
+        );
+        $request->setCurrentUser($this->user);
+
+        $redirect = new \Tracker_Artifact_Redirect();
+
+        $this->artifact_factory
+            ->shouldReceive('getArtifactByIdUserCanView')
+            ->with($this->user, 123)
+            ->once()
+            ->andReturn($this->backlog_item);
+        $this->backlog_item->shouldReceive('getXRefAndTitle')->andReturn('story #123 - My story');
+
+        $this->response
+            ->shouldReceive('addFeedback')
+            ->with('info', 'You are creating a new test that will cover: story #123 - My story', CODENDI_PURIFIER_FULL)
+            ->once();
+
+        $this->injector->inject($request, $redirect);
 
         $this->assertEquals(
             [

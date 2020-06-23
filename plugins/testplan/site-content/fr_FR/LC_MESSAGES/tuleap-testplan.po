@@ -28,8 +28,11 @@ msgid "Unable to link the backlog item to the new artifact"
 msgstr "Impossible de lier l'élément du backlog au nouvel artéfact"
 
 msgid "We recommend the latest version of Firefox, Chrome, or Edge."
-msgstr ""
-"Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
+msgstr "Nous recommandons d'utiliser la dernière version de Firefox, Chrome, ou Edge."
+
+#, php-format
+msgid "You are creating a new test that will cover: %s"
+msgstr "Vous êtes en train de créer un test qui couvrira : %s"
 
 msgid "Your browser is not supported."
 msgstr "Votre navigateur n'est pas supporté."
