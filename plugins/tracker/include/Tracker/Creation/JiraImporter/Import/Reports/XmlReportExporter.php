@@ -34,7 +34,8 @@ class XmlReportExporter
         FieldMappingCollection $field_mapping_collection,
         XmlReportAllIssuesExporter $xml_report_all_issues_exporter,
         XmlReportOpenIssuesExporter $xml_report_open_issues_exporter,
-        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter
+        XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
+        XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
     ): void {
         $reports_node = $trackers_node->addChild('reports');
 
@@ -44,6 +45,7 @@ class XmlReportExporter
         $priority_field    = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME);
         $link_field        = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
         $created_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_CREATED_NAME);
+        $updated_field     = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME);
 
         $xml_report_all_issues_exporter->exportJiraLikeReport(
             $reports_node,
@@ -52,6 +54,7 @@ class XmlReportExporter
             $status_field,
             $priority_field,
             $link_field,
+            null,
             null
         );
 
@@ -62,6 +65,7 @@ class XmlReportExporter
             $status_field,
             $priority_field,
             $link_field,
+            null,
             null
         );
 
@@ -72,7 +76,19 @@ class XmlReportExporter
             $status_field,
             $priority_field,
             $link_field,
-            $created_field
+            $created_field,
+            null
+        );
+
+        $xml_report_updated_recently_exporter->exportJiraLikeReport(
+            $reports_node,
+            $summary_field,
+            $description_field,
+            $status_field,
+            $priority_field,
+            $link_field,
+            null,
+            $updated_field
         );
     }
 }

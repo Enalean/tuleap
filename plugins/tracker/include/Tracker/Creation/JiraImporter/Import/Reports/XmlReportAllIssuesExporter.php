@@ -60,7 +60,8 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $status_field,
         ?FieldMapping $priority_field,
         ?FieldMapping $link_field,
-        ?FieldMapping $created_field
+        ?FieldMapping $created_field,
+        ?FieldMapping $updated_field
     ): void {
         $report_node = $reports_node->addChild('report');
         $report_node->addAttribute("is_default", "1");
