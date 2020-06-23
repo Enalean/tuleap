@@ -28,6 +28,7 @@ use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportCreatedRecentlyExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportDefaultCriteriaExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
 final class XmlReportCreatedRecentlyExporterTest extends TestCase
@@ -120,9 +121,11 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
         $this->reports_node = $tracker_node->addChild('reports');
         $cdata_factory       = new \XML_SimpleXMLCDATAFactory();
         $this->report_export = new XmlReportCreatedRecentlyExporter(
-            new XmlReportDefaultCriteriaExporter(),
-            $cdata_factory,
-            new XmlReportTableExporter($cdata_factory)
+            new XmlTQLReportExporter(
+                new XmlReportDefaultCriteriaExporter(),
+                $cdata_factory,
+                new XmlReportTableExporter($cdata_factory)
+            )
         );
     }
 

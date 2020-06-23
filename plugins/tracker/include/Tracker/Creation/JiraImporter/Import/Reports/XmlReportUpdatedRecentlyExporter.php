@@ -24,36 +24,17 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Reports;
 
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
-use XML_SimpleXMLCDATAFactory;
 
 class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
 {
     /**
-     * @var XmlReportDefaultCriteriaExporter
+     * @var XmlTQLReportExporter
      */
-    private $default_criteria_exporter;
+    private $tql_report_exporter;
 
-    /**
-     * @var XML_SimpleXMLCDATAFactory
-     */
-    private $cdata_factory;
-
-    /**
-     * @var XmlReportTableExporter
-     */
-    private $report_table_exporter;
-
-    /**
-     * @param FieldMapping[] $column_fields
-     */
-    public function __construct(
-        XmlReportDefaultCriteriaExporter $default_criteria_exporter,
-        XML_SimpleXMLCDATAFactory $cdata_factory,
-        XmlReportTableExporter $report_table_exporter
-    ) {
-        $this->default_criteria_exporter = $default_criteria_exporter;
-        $this->cdata_factory             = $cdata_factory;
-        $this->report_table_exporter     = $report_table_exporter;
+    public function __construct(XmlTQLReportExporter $tql_report_exporter)
+    {
+        $this->tql_report_exporter = $tql_report_exporter;
     }
 
     public function exportJiraLikeReport(
@@ -70,37 +51,32 @@ class XmlReportUpdatedRecentlyExporter implements IExportJiraLikeXmlReport
             return;
         }
 
-        $report_node = $reports_node->addChild('report');
-        $report_node->addAttribute("is_default", "0");
-        $report_node->addAttribute("is_in_expert_mode", "1");
-
         $updated_field_name = $updated_field->getFieldName();
-        $report_node->addAttribute("expert_query", "$updated_field_name BETWEEN(NOW() - 1w, NOW())");
+        $criteria_fields    = array_filter(
+            [
+                $summary_field,
+                $description_field,
+                $priority_field,
+                $updated_field
+            ]
+        );
+        $column_fields = array_filter(
+            [
+                $summary_field,
+                $status_field,
+                $link_field,
+                $priority_field,
+                $updated_field
+            ]
+        );
 
-        $this->cdata_factory->insert($report_node, 'name', 'Updated recently');
-        $this->cdata_factory->insert($report_node, 'description', 'All issues updated recently in this tracker');
-
-        $criterias_node = $report_node->addChild('criterias');
-
-        $criteria_fields = array_filter([
-            $summary_field,
-            $description_field,
-            $priority_field,
-            $updated_field
-        ]);
-
-        $this->default_criteria_exporter->exportDefaultCriteria($criteria_fields, $criterias_node);
-
-        $column_fields = array_filter([
-            $summary_field,
-            $status_field,
-            $link_field,
-            $priority_field,
-            $updated_field
-        ]);
-
-        $this->report_table_exporter->exportResultsTable(
-            $report_node,
+        $this->tql_report_exporter->exportTQLReport(
+            $reports_node,
+            'Updated recently',
+            'All issues updated recently in this tracker',
+            false,
+            "$updated_field_name BETWEEN(NOW() - 1w, NOW())",
+            $criteria_fields,
             $column_fields
         );
     }
