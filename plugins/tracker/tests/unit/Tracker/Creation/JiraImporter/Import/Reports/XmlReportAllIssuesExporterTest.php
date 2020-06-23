@@ -132,6 +132,7 @@ final class XmlReportAllIssuesExporterTest extends TestCase
 
         $report_node = $reports_node->report;
         $this->assertNotNull($report_node);
+        $this->assertEquals('1', $report_node['is_default']);
 
         $report_node_name = $report_node->name;
         $this->assertEquals("All issues", $report_node_name);

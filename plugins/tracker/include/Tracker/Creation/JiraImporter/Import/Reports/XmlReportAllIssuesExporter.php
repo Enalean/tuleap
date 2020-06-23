@@ -63,6 +63,7 @@ class XmlReportAllIssuesExporter implements IExportJiraLikeXmlReport
         ?FieldMapping $created_field
     ): void {
         $report_node = $reports_node->addChild('report');
+        $report_node->addAttribute("is_default", "1");
 
         $this->cdata_factory->insert($report_node, 'name', 'All issues');
         $this->cdata_factory->insert($report_node, 'description', 'All the issues in this tracker');
