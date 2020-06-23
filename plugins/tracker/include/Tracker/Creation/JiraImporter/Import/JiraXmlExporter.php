@@ -46,6 +46,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportOpenIssuesExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportTableExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlReportUpdatedRecentlyExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Reports\XmlTQLReportExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\ContainersXMLCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -202,6 +203,12 @@ class JiraXmlExporter
             $wrapper
         );
 
+        $tql_report_exporter = new XmlTQLReportExporter(
+            $default_criteria_exporter,
+            $cdata_factory,
+            $report_table_exporter
+        );
+
         return new self(
             $error_collector,
             new JiraFieldRetriever($wrapper),
@@ -279,16 +286,8 @@ class JiraXmlExporter
                 $report_table_exporter,
                 $status_values_collection
             ),
-            new XmlReportCreatedRecentlyExporter(
-                $default_criteria_exporter,
-                $cdata_factory,
-                $report_table_exporter
-            ),
-            new XmlReportUpdatedRecentlyExporter(
-                $default_criteria_exporter,
-                $cdata_factory,
-                $report_table_exporter
-            )
+            new XmlReportCreatedRecentlyExporter($tql_report_exporter),
+            new XmlReportUpdatedRecentlyExporter($tql_report_exporter)
         );
     }
 
