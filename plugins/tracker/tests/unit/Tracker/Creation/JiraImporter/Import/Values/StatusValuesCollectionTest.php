@@ -67,6 +67,7 @@ class StatusValuesCollectionTest extends TestCase
 
         $this->assertCount(3, $this->collection->getAllValues());
         $this->assertCount(2, $this->collection->getOpenValues());
+        $this->assertCount(1, $this->collection->getClosedValues());
     }
 
     private function getAPIResponse(): array
