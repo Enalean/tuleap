@@ -18,6 +18,12 @@ msgstr "Intégration entre les plugins agiledashboard et testmanagement"
 msgid "Milestone not found."
 msgstr "Le jalon n'a pas été trouvé."
 
+msgid "Project does not use agile dashboard."
+msgstr "Le projet n'utilise pas le dashboard agile."
+
+msgid "Test plan cannot be displayed. Maybe you don't have enough rights to view it."
+msgstr "Le plan de test ne peut pas être affiché. Peut-être que vous n'avez pas les droits suffisants pour le voir."
+
 msgid "TestPlan"
 msgstr "TestPlan"
 

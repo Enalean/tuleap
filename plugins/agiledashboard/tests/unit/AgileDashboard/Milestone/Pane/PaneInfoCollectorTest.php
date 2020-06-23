@@ -42,7 +42,8 @@ class PaneInfoCollectorTest extends TestCase
             Mockery::mock(\Planning_Milestone::class),
             null,
             [],
-            null
+            null,
+            Mockery::mock(\PFUser::class),
         );
     }
 
@@ -148,7 +149,8 @@ class PaneInfoCollectorTest extends TestCase
             Mockery::mock(\Planning_Milestone::class),
             null,
             [],
-            $active_pane
+            $active_pane,
+            Mockery::mock(\PFUser::class),
         );
 
         $this->assertNull($collector->getActivePane());
@@ -164,7 +166,8 @@ class PaneInfoCollectorTest extends TestCase
             Mockery::mock(\Planning_Milestone::class),
             null,
             [],
-            $active_pane
+            $active_pane,
+            Mockery::mock(\PFUser::class),
         );
 
         $this->assertEquals($active_pane, $collector->getActivePane());
@@ -180,7 +183,8 @@ class PaneInfoCollectorTest extends TestCase
             Mockery::mock(\Planning_Milestone::class),
             null,
             [],
-            $default_active_pane
+            $default_active_pane,
+            Mockery::mock(\PFUser::class),
         );
 
         $collector->setActivePaneBuilder(

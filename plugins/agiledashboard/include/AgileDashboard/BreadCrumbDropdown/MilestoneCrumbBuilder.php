@@ -102,16 +102,16 @@ class MilestoneCrumbBuilder
     private function getSubItems(PFUser $user, Planning_Milestone $milestone)
     {
         $sub_items = new BreadCrumbSubItems();
-        $this->addDefaultSection($milestone, $sub_items);
+        $this->addDefaultSection($milestone, $sub_items, $user);
         $this->addSiblingsSection($user, $milestone, $sub_items);
 
         return $sub_items;
     }
 
-    private function addDefaultSection(Planning_Milestone $milestone, BreadCrumbSubItems $sub_items)
+    private function addDefaultSection(Planning_Milestone $milestone, BreadCrumbSubItems $sub_items, PFUser $user): void
     {
         $links = [];
-        $panes = $this->pane_factory->getListOfPaneInfo($milestone);
+        $panes = $this->pane_factory->getListOfPaneInfo($milestone, $user);
         foreach ($panes as $pane) {
             $links[] = new BreadCrumbLinkWithIcon(
                 $pane->getTitle(),

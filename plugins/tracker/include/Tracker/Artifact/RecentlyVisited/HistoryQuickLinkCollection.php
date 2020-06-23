@@ -37,10 +37,15 @@ class HistoryQuickLinkCollection implements Dispatchable
      * @var Tracker_Artifact
      */
     private $artifact;
+    /**
+     * @var \PFUser
+     */
+    private $current_user;
 
-    public function __construct(Tracker_Artifact $artifact)
+    public function __construct(Tracker_Artifact $artifact, \PFUser $current_user)
     {
-        $this->artifact = $artifact;
+        $this->artifact     = $artifact;
+        $this->current_user = $current_user;
     }
 
     public function getLinks(): array
@@ -56,5 +61,10 @@ class HistoryQuickLinkCollection implements Dispatchable
     public function getArtifact(): Tracker_Artifact
     {
         return $this->artifact;
+    }
+
+    public function getCurrentUser(): \PFUser
+    {
+        return $this->current_user;
     }
 }

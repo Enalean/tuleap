@@ -97,7 +97,7 @@ class Planning_MilestoneController extends BaseController
 
     private function getActivePaneIdentifier()
     {
-        return $this->pane_factory->getActivePane($this->milestone)->getIdentifier();
+        return $this->pane_factory->getActivePane($this->milestone, $this->request->getCurrentUser())->getIdentifier();
     }
 
     public function getHeaderOptions()

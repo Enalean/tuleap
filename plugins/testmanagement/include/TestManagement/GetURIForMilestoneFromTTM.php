@@ -39,15 +39,15 @@ class GetURIForMilestoneFromTTM implements Dispatchable
      * @var string
      */
     private $uri = "";
-
     /**
-     *
-     *
-     * @param $milestone
+     * @var \PFUser
      */
-    public function __construct(\Planning_Milestone $milestone)
+    private $current_user;
+
+    public function __construct(\Planning_Milestone $milestone, \PFUser $current_user)
     {
-        $this->milestone = $milestone;
+        $this->milestone    = $milestone;
+        $this->current_user = $current_user;
     }
 
     public function getMilestone(): \Planning_Milestone
@@ -76,5 +76,10 @@ class GetURIForMilestoneFromTTM implements Dispatchable
                     'aid'         => $this->milestone->getArtifactId(),
                 ]
             );
+    }
+
+    public function getCurrentUser(): \PFUser
+    {
+        return $this->current_user;
     }
 }

@@ -1770,7 +1770,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
 
         $pane_factory = $this->getMilestonePaneFactory();
 
-        foreach ($pane_factory->getListOfPaneInfo($milestone) as $pane) {
+        foreach ($pane_factory->getListOfPaneInfo($milestone, $collection->getCurrentUser()) as $pane) {
             $collection->add(
                 new HistoryQuickLink(
                     $pane->getTitle(),

@@ -77,6 +77,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             null,
             [],
             null,
+            $user,
         );
         EventManager::instance()->processEvent($pane_info_collector);
 
