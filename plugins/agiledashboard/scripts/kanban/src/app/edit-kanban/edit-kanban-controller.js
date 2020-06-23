@@ -116,6 +116,7 @@ function EditKanbanCtrl(
         columnsCanBeManaged,
         updateWidgetTitle,
         saveReports,
+        slugifyLabel,
     });
 
     function init() {
@@ -332,5 +333,10 @@ function EditKanbanCtrl(
             var kanban_title = kanban_widget.find(".dashboard-widget-header-title");
             kanban_title[0].textContent = label;
         }
+    }
+
+    //For testing purpose
+    function slugifyLabel(label) {
+        return label.replace(/\s/g, "_").toLowerCase();
     }
 }

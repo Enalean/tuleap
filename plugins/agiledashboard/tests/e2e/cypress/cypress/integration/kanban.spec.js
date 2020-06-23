@@ -15,7 +15,6 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see http://www.gnu.org/licenses/.
- *
  */
 
 describe("Kanban for the Agile Dashboard service", () => {
@@ -43,7 +42,78 @@ describe("Kanban for the Agile Dashboard service", () => {
             .debug()
             .as("kanban_url");
     });
-
+    context("As Project Admin", function () {
+        beforeEach(function () {
+            cy.ProjectAdministratorLogin();
+            cy.visit(this.kanban_url);
+            cy.server();
+        });
+        it(`can rename the kanban`, function () {
+            cy.get("[data-test=kanban-header-title]").contains("Activities");
+            cy.get("[data-test=kanban-header-edit-button]").click();
+            cy.get("[data-test=edit-kanban-label-form]").within(() => {
+                cy.get("[data-test=input-kanban-label]").clear().type("Brabus");
+                cy.root().submit();
+            });
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+            cy.contains("[data-test=kanban-header-title]", "Brabus");
+            // The name of the kanban should be persisted after reload.
+            cy.reload();
+            cy.contains("[data-test=kanban-header-title]", "Brabus");
+        });
+        it(`can add columns`, function () {
+            cy.get("[data-test=kanban-column-header").should("have.length", 3);
+            cy.get("[data-test=kanban-header-edit-button]").click();
+            cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
+            cy.get("[data-test=edit-modal-add-column-button]").click();
+            cy.get("[data-test=edit-kanban-add-column-form]").within(() => {
+                cy.get("[data-test=edit-kanban-add-column-form-input]").clear().type("B 35 S");
+                cy.root().submit();
+            });
+            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
+            cy.get("[data-test=edit-kanban-column-b_35_s").should("contain", "B 35 S");
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+            // The number of columns should be the same after reload + the name of the last column should not change
+            cy.reload();
+            cy.get("[data-test=kanban-column-header").should("have.length", 4);
+            cy.get("[data-test=kanban-column-b_35_s]").should("contain", "B 35 S");
+        });
+        it(`can edit the last column of kanban`, function () {
+            cy.get("[data-test=kanban-column-header").should("have.length", 4);
+            cy.get("[data-test=kanban-header-edit-button]").click();
+            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
+            cy.get("[data-test=edit-kanban-column-button-b_35_s]").click();
+            cy.get("[data-test=edit-kanban-edit-column-container-form]").within(() => {
+                cy.get("[data-test=edit-kanban-edit-column-container-form-input]")
+                    .clear()
+                    .type("Bullit");
+                cy.root().submit();
+            });
+            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
+            cy.get("[data-test=edit-kanban-column-bullit").should("contain", "Bullit");
+            // The number of columns should be the same after reload + the name of the last column should not change
+            cy.reload();
+            cy.get("[data-test=kanban-column-header").should("have.length", 4);
+            cy.get("[data-test=kanban-column-header").last().should("contain", "Bullit");
+        });
+        it(`can remove the last column of kanban`, function () {
+            cy.get("[data-test=kanban-column-header").should("have.length", 4);
+            cy.get("[data-test=kanban-header-edit-button]").click();
+            cy.get("[data-test=edit-kanban-column").should("have.length", 4);
+            cy.get("[data-test=edit-kanban-column-bullit").should("contain", "Bullit");
+            cy.get("[data-test=edit-modal-remove-column-button-bullit").click();
+            cy.get("[data-test=edit-kanban-column-button-confirm-deletion-bullit").click();
+            cy.get("[data-test=edit-kanban-column").should("have.length", 3);
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+            // The number of columns should be the same after reload + the last column must not be Bullit
+            cy.reload();
+            cy.get("[data-test=kanban-column-header").should("have.length", 3);
+            cy.get("[data-test=kanban-column-review]").should("contain", "Review");
+        });
+    });
     context("As Project member", function () {
         beforeEach(function () {
             cy.projectMemberLogin();
@@ -54,7 +124,7 @@ describe("Kanban for the Agile Dashboard service", () => {
         it(`I can manipulate cards`, function () {
             cy.route("POST", "/api/v1/kanban_items").as("post_kanban_item");
 
-            cy.get("[data-test=kanban-column]")
+            cy.get("[data-test=kanban-column-to_be_done]")
                 .first()
                 .within(() => {
                     cy.get("[data-test=add-in-place]").invoke("css", "pointer-events", "all");
@@ -82,8 +152,9 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("body").type("{esc}");
 
             cy.contains("[data-test=kanban-column-header-wip-count]", "3");
+        });
 
-            // Move the second card to the top
+        it(`I can move second card to top`, function () {
             cy.get("[data-test=tuleap-simple-field-name]").spread(
                 (first_card, second_card, third_card) => {
                     expect(first_card).to.contain("Think about my revenge");
@@ -105,8 +176,9 @@ describe("Kanban for the Agile Dashboard service", () => {
                     expect(third_card).to.contain("i30 Namyang");
                 }
             );
+        });
 
-            // Move the first card to the bottom
+        it(`I can move the first card to the bottom`, function () {
             cy.get("[data-test=kanban-item]")
                 .first()
                 .within(() => {
@@ -120,8 +192,9 @@ describe("Kanban for the Agile Dashboard service", () => {
                     expect(third_card).to.contain("Still speedin'");
                 }
             );
+        });
 
-            // expand the first card
+        it(`I can expand the first card`, function () {
             cy.get("[data-test=kanban-item-content-expand-collapse-icon]").should(
                 "have.class",
                 "fa-angle-down"
@@ -140,8 +213,9 @@ describe("Kanban for the Agile Dashboard service", () => {
                 "have.class",
                 "fa-angle-down"
             );
+        });
 
-            // change the display view
+        it(`I can change the display view`, function () {
             cy.get("[data-test=kanban-header-detailed-toggler]").invoke(
                 "css",
                 "visibility",
@@ -151,8 +225,9 @@ describe("Kanban for the Agile Dashboard service", () => {
             // The display of the cards should be persisted after reload
             cy.reload();
             cy.get("[data-test=kanban-header-detailed-toggler]").should("be.checked");
+        });
 
-            // Filter card by name
+        it(`I can filter cards`, function () {
             cy.get("[data-test=kanban-item]").should("have.length", 3);
             cy.get("[data-test=kanban-header-search]").type("speedin");
             cy.get("[data-test=kanban-item]").should("have.length", 1);
