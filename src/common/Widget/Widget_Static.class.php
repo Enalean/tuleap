@@ -32,7 +32,7 @@ require_once "Widget.class.php";
  * $w->display();
  * </pre>
  */
-class Widget_Static extends Widget
+class Widget_Static extends Widget // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 {
     /**
      * Title
@@ -45,12 +45,6 @@ class Widget_Static extends Widget
      * @var String
      */
     protected $content = "";
-
-    /**
-     * Rss Url
-     * @var unknown_type
-     */
-    protected $rss     = "";
 
     /**
      * Icon
@@ -116,32 +110,6 @@ class Widget_Static extends Widget
     public function getContent()
     {
         return $this->content;
-    }
-
-    /**
-     * Rss Url setter
-     *
-     * @param String $rss Rss url
-     */
-    public function setRssUrl($rss)
-    {
-        $this->rss = $rss;
-    }
-
-    /**
-     * Rss Url getter
-     */
-    public function getRssUrl($a, $b)
-    {
-        return $this->rss;
-    }
-
-    /**
-     * Return true if widget has rss
-     */
-    public function hasRss()
-    {
-        return ($this->rss !== "");
     }
 
     public function setIcon($icon)

@@ -263,45 +263,18 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function displayStaticWidget(Widget_Static $widget)
     {
-        $owner_id            = null;
-        $owner_type          = null;
+        $purifier = Codendi_HTMLPurifier::instance();
 
-        $purifier   = Codendi_HTMLPurifier::instance();
-        $element_id = 'widget_' . $widget->id . '-' . $widget->getInstanceId();
+        echo '<div class="widget">';
 
-        echo '<div class="widget" id="' . $element_id . '">';
         echo '<div class="widget_titlebar">';
         echo '<div class="widget_titlebar_title">' . $purifier->purify($widget->getTitle()) . '</div>';
-
-        if ($widget->hasRss()) {
-            echo '<div class="widget_titlebar_rss" title="' . $GLOBALS['Language']->getText('widget', 'rss_title') . '"><a href="' . $widget->getRssUrl($owner_id, $owner_type) . '" class="fa fa-rss"></a></div>';
-        }
         echo '</div>';
+
         echo '<div class="widget_content">';
-
-        if ($widget->isAjax()) {
-            echo '<div id="' . $element_id . '-ajax">';
-            echo '</div>';
-        } else {
-            echo $widget->getContent();
-        }
+        echo $widget->getContent();
         echo '</div>';
-        if ($widget->isAjax()) {
-            echo '<script type="text/javascript">' . "
-            document.observe('dom:loaded', function () {
-                $('$element_id-ajax').update('<div style=\"text-align:center\">" . $this->getImage('ic/spinner.gif') . "</div>');
-                new Ajax.Updater('$element_id-ajax',
-                                 '" . $widget->getAjaxUrl($owner_id, $owner_type, null) . "',
-                                 {
-                                     onComplete: function() {
-                                        codendi.Tooltip.load('$element_id-ajax');
-                                        codendi.Toggler.init($('$element_id-ajax'));
-                                     }
-                                 }
-                );
-            });
-            </script>";
-        }
+
         echo '</div>';
     }
 
