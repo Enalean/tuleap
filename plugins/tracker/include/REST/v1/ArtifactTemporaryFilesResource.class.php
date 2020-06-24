@@ -33,7 +33,6 @@ use Tracker_Artifact_Attachment_TemporaryFile as TemporaryFile;
 use Tracker_Artifact_Attachment_TemporaryFileManager as FileManager;
 use Tracker_Artifact_Attachment_TemporaryFileManagerDao as FileManagerDao;
 use Tracker_FileInfo_InvalidFileInfoException as InvalidFileInfoException;
-use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
 use Tuleap\Tracker\Artifact\Attachment\QuotaExceededException;
 use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
@@ -109,18 +108,15 @@ class ArtifactTemporaryFilesResource
      * @url GET {id}
      * @oauth2-scope read:tracker
      * @param int $id     Id of the file
-     * @param int $offset Where to start to read the file
-     * @param int $limit  How much to read the file
+     * @param int $offset Where to start to read the file {@min 0}
+     * @param int $limit  How much to read the file {@min 0} {@max 1048576}
      *
      * @return FileDataRepresentation
      *
      * @throws RestException 404
-     * @throws RestException 406
      */
     protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT)
     {
-        $this->checkLimitValue($limit);
-
         $chunk = $this->getTemporaryFileContent($id, $offset, $limit);
         $size  = $this->getTemporaryFileSize($id);
 
@@ -176,7 +172,6 @@ class ArtifactTemporaryFilesResource
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
      * @throws RestException 500
-     * @throws RestException 406
      * @throws RestException 403
      */
     protected function post($name, $mimetype, $content, $description = null)
@@ -190,11 +185,11 @@ class ArtifactTemporaryFilesResource
         } catch (CannotCreateException $e) {
             $this->raiseError(500);
         } catch (ChunkTooBigException $e) {
-            $this->raiseError(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
+            $this->raiseError(400, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidPathException $e) {
             $this->raiseError(500, $e->getMessage());
         } catch (QuotaExceededException $e) {
-            $this->raiseError(406, 'You exceeded your quota. Please remove existing temporary files before continuing.');
+            $this->raiseError(400, 'You exceeded your quota. Please remove existing temporary files before continuing.');
         }
 
         if (! $append) {
@@ -227,7 +222,6 @@ class ArtifactTemporaryFilesResource
      * @param int    $offset  Used to check that the chunk uploaded is the next one (minimum value is 2) {@from body}
      *
      * @return \Tuleap\Tracker\REST\Artifact\FileInfoRepresentation
-     * @throws RestException 406
      */
     protected function putId($id, $content, $offset)
     {
@@ -239,11 +233,11 @@ class ArtifactTemporaryFilesResource
             $this->file_manager->validateChunkSize($this->user, $content);
             $this->file_manager->appendChunk($content, $file, $offset);
         } catch (ChunkTooBigException $e) {
-            $this->raiseError(406, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
+            $this->raiseError(400, 'Uploaded content exceeds maximum size of ' . $this->file_manager->getMaximumChunkSize());
         } catch (InvalidOffsetException $e) {
-            $this->raiseError(406, 'Invalid offset received. Expected: ' . ($file->getCurrentChunkOffset() + 1));
+            $this->raiseError(400, 'Invalid offset received. Expected: ' . ($file->getCurrentChunkOffset() + 1));
         } catch (QuotaExceededException $e) {
-            $this->raiseError(406, 'You exceeded your quota. Please remove existing temporary files before continuing.');
+            $this->raiseError(400, 'You exceeded your quota. Please remove existing temporary files before continuing.');
         }
 
         $this->sendAllowHeadersForArtifactFilesId();
@@ -388,16 +382,6 @@ class ArtifactTemporaryFilesResource
     {
         if (! $this->file_manager->isFileIdTemporary($id)) {
             $this->raiseError(404);
-        }
-    }
-
-    /**
-     * @throws RestException 406
-     */
-    private function checkLimitValue($limit)
-    {
-        if ($limit > self::DEFAULT_LIMIT) {
-            throw new LimitOutOfBoundsException(self::DEFAULT_LIMIT);
         }
     }
 

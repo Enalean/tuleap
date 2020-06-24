@@ -25,7 +25,6 @@ use Tracker_FileInfo;
 use Tracker_FileInfo_InvalidFileInfoException;
 use Tracker_FileInfo_UnauthorisedException;
 use Tuleap\Tracker\REST\Artifact\FileDataRepresentation;
-use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
 use UserManager;
 use PFUser;
@@ -62,19 +61,16 @@ class ArtifactFilesResource
      * @url GET {id}
      * @oauth2-scope read:tracker
      * @param int $id     Id of the file
-     * @param int $offset Where to start to read the file
-     * @param int $limit  How much to read the file
+     * @param int $offset Where to start to read the file {@min 0}
+     * @param int $limit  How much to read the file {@min 0} {@max 1048576}
      *
      *
      * @throws RestException 401
      * @throws RestException 403
      * @throws RestException 404
-     * @throws RestException 406
      */
     protected function getId($id, $offset = 0, $limit = self::DEFAULT_LIMIT): FileDataRepresentation
     {
-        $this->checkLimitValue($limit);
-
         $file_info = $this->getAttachedFileInfo($id);
         $size      = $file_info->getFilesize();
 
@@ -113,16 +109,6 @@ class ArtifactFilesResource
         }
 
         return $file_info;
-    }
-
-    /**
-     * @throws RestException 406
-     */
-    private function checkLimitValue($limit)
-    {
-        if ($limit > self::DEFAULT_LIMIT) {
-            throw new LimitOutOfBoundsException(self::DEFAULT_LIMIT);
-        }
     }
 
     private function sendAllowHeadersForArtifactFilesId()

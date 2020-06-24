@@ -67,12 +67,10 @@ final class AgileDashboardProjectResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the project
-     * @param int $limit  Number of elements displayed per page {@from path}
+     * @param int $limit  Number of elements displayed per page {@from path} {@min 0} {@max 50}
      * @param int $offset Position of the first element to display {@from path}
      *
      * @return BacklogRepresentation
-     *
-     * @throws RestException 406
      */
     public function getBacklog($id, $limit = 10, $offset = 0)
     {

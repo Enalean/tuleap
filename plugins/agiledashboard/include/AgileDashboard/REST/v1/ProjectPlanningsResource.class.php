@@ -22,7 +22,6 @@ namespace Tuleap\AgileDashboard\REST\v1;
 use PlanningFactory;
 use PFUser;
 use Project;
-use Luracast\Restler\RestException;
 use Tuleap\REST\Header;
 
 /**
@@ -34,10 +33,6 @@ class ProjectPlanningsResource
 
     public function get(PFUser $user, Project $project, $limit, $offset)
     {
-        if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-
         $planning_representations = array();
         $project_id               = $project->getId();
 
@@ -54,11 +49,6 @@ class ProjectPlanningsResource
         $this->sendPaginationHeaders($limit, $offset, count($all_plannings));
 
         return $planning_representations;
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset)

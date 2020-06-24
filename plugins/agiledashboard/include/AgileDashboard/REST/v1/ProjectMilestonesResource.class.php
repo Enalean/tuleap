@@ -157,10 +157,6 @@ class ProjectMilestonesResource
      */
     public function get(PFUser $user, $project, $representation_type, $query, $limit, $offset, $order)
     {
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-
         try {
             $builder = $this->query_to_milestone_representation_builder_converter->convert($query);
         } catch (MalformedQueryParameterException $exception) {
@@ -177,11 +173,6 @@ class ProjectMilestonesResource
             $this->sendPaginationHeaders($limit, $offset, 0);
             return [];
         }
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset)

@@ -86,8 +86,8 @@ class ProjectTrackersResource extends AuthenticatedResource
      *
      * @param int    $id             Id of the project
      * @param string $representation Whether you want to fetch full or reference only representations {@from path}{@choice full,minimal}
-     * @param int    $limit          Number of elements displayed per page {@from path}
-     * @param int    $offset         Position of the first element to display {@from path}
+     * @param int    $limit          Number of elements displayed per page {@from path} {@min 0} {@max 50}
+     * @param int    $offset         Position of the first element to display {@from path} {@min 0}
      * @param string $query          JSON object of search criteria properties {@from path}
      *
      * @return array {@type Tuleap\Tracker\REST\TrackerRepresentation}
@@ -106,10 +106,6 @@ class ProjectTrackersResource extends AuthenticatedResource
         $user    = \UserManager::instance()->getCurrentUser();
 
         ProjectAuthorization::userCanAccessProject($user, $project, new Tracker_URLVerification());
-
-        if (! $this->limitValueIsAcceptable($limit)) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
 
         $json_decoder                                = new JsonDecoder();
         $json_query                                  = $json_decoder->decodeAsAnArray('query', $query);
@@ -157,11 +153,6 @@ class ProjectTrackersResource extends AuthenticatedResource
         $checker->checkQuery($json_decoder->decodeAsAnArray('query', $query));
 
         return true;
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     private function sendPaginationHeaders($limit, $offset, $size)

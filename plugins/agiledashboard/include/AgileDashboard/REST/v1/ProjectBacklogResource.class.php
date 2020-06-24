@@ -210,9 +210,6 @@ class ProjectBacklogResource
      */
     public function get(PFUser $user, Project $project, $limit, $offset)
     {
-        if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
-        }
         $this->sendAllowHeaders();
 
         try {
@@ -227,11 +224,6 @@ class ProjectBacklogResource
             $this->sendPaginationHeaders($limit, $offset, 0);
             return [];
         }
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     public function options(PFUser $user, Project $project, $limit, $offset)

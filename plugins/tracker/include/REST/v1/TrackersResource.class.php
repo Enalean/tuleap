@@ -40,7 +40,6 @@ use TransitionFactory;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\REST\AuthenticatedResource;
-use Tuleap\REST\Exceptions\LimitOutOfBoundsException;
 use Tuleap\REST\Header;
 use Tuleap\REST\I18NRestException;
 use Tuleap\REST\InvalidParameterTypeException;
@@ -256,7 +255,7 @@ class TrackersResource extends AuthenticatedResource
      * @oauth2-scope read:tracker
      *
      * @param int $id Id of the tracker
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 1000}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\ReportRepresentation}
@@ -266,7 +265,6 @@ class TrackersResource extends AuthenticatedResource
     public function getReports($id, $limit = 10, $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
-        $this->checkLimitValue($limit);
 
         $user        = $this->user_manager->getCurrentUser();
         $tracker     = $this->getTrackerById($user, $id);
@@ -337,7 +335,7 @@ class TrackersResource extends AuthenticatedResource
      *
      * @param int    $id             ID of the tracker
      * @param string $values         Which fields to include in the response. Default is no field values {@from path}{@choice ,all}
-     * @param int    $limit          Number of elements displayed per page {@from path}{@min 1}
+     * @param int    $limit          Number of elements displayed per page {@from path}{@min 1}{@max 1000}
      * @param int    $offset         Position of the first element to display {@from path}{@min 0}
      * @param string $query          JSON object of search criteria properties {@from path}
      * @param string $expert_query   Query with AND, OR, BETWEEN(), NOW(), IN(), NOT IN(), MYSELF(), parenthesis
@@ -361,7 +359,6 @@ class TrackersResource extends AuthenticatedResource
         $order = self::ORDER_ASC
     ) {
         $this->checkAccess();
-        $this->checkLimitValue($limit);
 
         $user          = $this->user_manager->getCurrentUser();
         $valid_tracker = $this->getTrackerById($user, $id);
@@ -527,7 +524,7 @@ class TrackersResource extends AuthenticatedResource
      * @oauth2-scope read:tracker
      *
      * @param int $id
-     * @param int $limit Number of elements displayed per page {@from path}{@min 1}
+     * @param int $limit Number of elements displayed per page {@from path}{@min 1}{@max 1000}
      * @param int $offset Position of the first element to display {@from path}{@min 0}
      *
      * @return array {@type Tuleap\Tracker\REST\Artifact\ParentArtifactReference}
@@ -537,7 +534,6 @@ class TrackersResource extends AuthenticatedResource
     public function getParentArtifacts($id, $limit = self::DEFAULT_LIMIT, $offset = self::DEFAULT_OFFSET)
     {
         $this->checkAccess();
-        $this->checkLimitValue($limit);
 
         $user    = $this->user_manager->getCurrentUser();
         $tracker = $this->getTrackerById($user, $id);
@@ -942,13 +938,6 @@ class TrackersResource extends AuthenticatedResource
     private function sendAllowHeaderForTracker()
     {
         Header::allowOptionsGetPatch();
-    }
-
-    private function checkLimitValue($limit)
-    {
-        if ($limit > self::MAX_LIMIT) {
-            throw new LimitOutOfBoundsException(self::MAX_LIMIT);
-        }
     }
 
     private function getJsonDecoder()

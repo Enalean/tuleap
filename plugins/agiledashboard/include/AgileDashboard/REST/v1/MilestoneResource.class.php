@@ -583,8 +583,8 @@ class MilestoneResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the milestone
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
@@ -594,7 +594,6 @@ class MilestoneResource extends AuthenticatedResource
     public function getContent($id, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $this->checkContentLimit($limit);
 
         $milestone = $this->getMilestoneById($this->getCurrentUser(), $id);
 
@@ -811,8 +810,8 @@ class MilestoneResource extends AuthenticatedResource
      * @access hybrid
      *
      * @param int $id     Id of the milestone
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 100}
+     * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type Tuleap\AgileDashboard\REST\v1\BacklogItemRepresentation}
      *
@@ -822,7 +821,6 @@ class MilestoneResource extends AuthenticatedResource
     public function getBacklog($id, $limit = 10, $offset = 0)
     {
         $this->checkAccess();
-        $this->checkContentLimit($limit);
 
         $user      = $this->getCurrentUser();
         $milestone = $this->getMilestoneById($user, $id);
@@ -1190,18 +1188,6 @@ class MilestoneResource extends AuthenticatedResource
     private function getCurrentUser()
     {
         return UserManager::instance()->getCurrentUser();
-    }
-
-    private function checkContentLimit($limit)
-    {
-        if (! $this->limitValueIsAcceptable($limit)) {
-             throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-    }
-
-    private function limitValueIsAcceptable($limit)
-    {
-        return $limit <= self::MAX_LIMIT;
     }
 
     private function sendAllowHeaderForContent()

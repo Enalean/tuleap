@@ -67,22 +67,18 @@ class UserMembershipResource extends AuthenticatedResource
      *
      * @url GET
      * @access protected
-     * @throws RestException 406
+     * @throws RestException 400
      *
      * @param string $query Criterion to filter the results {@choice with_ssh_key}
-     * @param int $limit  Number of elements displayed per page
-     * @param int $offset Position of the first element to display
+     * @param int $limit  Number of elements displayed per page {@min 0} {@max 1000}
+     * @param int $offset Position of the first element to display {@min 0}
      *
      * @return array {@type Tuleap\User\REST\v1\UserMembershipRepresentation}
      */
     public function get($query, $offset = 0, $limit = 10)
     {
-        if ($limit > self::MAX_LIMIT) {
-            throw new RestException(406, 'Maximum value for limit exceeded');
-        }
-
         if ($query !== self::CRITERION_WITH_SSH_KEY) {
-            throw new RestException(406, 'Invalid query criteria');
+            throw new RestException(400, 'Invalid query criteria');
         }
 
         $current_user = $this->user_manager->getCurrentUser();
