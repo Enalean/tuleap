@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getReleaseIdFromREST() {
+function getReleaseIdFromREST(): Chainable<Response> {
     return cy
         .getProjectId("taskboard-project")
-        .then((project_id) =>
+        .then((project_id: JQuery<HTMLElement>) =>
             cy.getFromTuleapAPI(`/api/projects/${project_id}/milestones?fields=slim`)
         )
         .then((response) => response.body[0].id);
@@ -32,8 +32,8 @@ describe(`Taskboard`, function () {
         cy.projectMemberLogin();
         getReleaseIdFromREST()
             .as("release_id")
-            .then((release_id) => {
-                cy.visit(`/taskboard/taskboard-project/${release_id}`);
+            .then(function () {
+                cy.visit(`/taskboard/taskboard-project/${this.release_id}`);
             });
     });
 

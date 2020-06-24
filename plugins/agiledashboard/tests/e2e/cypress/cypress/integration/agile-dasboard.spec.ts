@@ -18,7 +18,7 @@
  */
 
 describe("Agile Dashboard", function () {
-    let project_id;
+    let project_id: string;
     context("Project administrators", function () {
         before(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");

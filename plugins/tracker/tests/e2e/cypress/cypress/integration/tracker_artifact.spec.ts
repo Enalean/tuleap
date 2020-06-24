@@ -18,12 +18,12 @@
  *
  */
 
-function submitAndStay() {
+function submitAndStay(): void {
     cy.get("[data-test=artifact-submit-options]").click();
     cy.get("[data-test=artifact-submit-and-stay]").click();
 }
 
-function createNewBug(bug_title) {
+function createNewBug(bug_title: string): void {
     cy.visitProjectService("tracker-artifact", "Trackers");
     cy.get("[data-test=tracker-link-bug]").click();
     cy.get("[data-test=new-artifact]").click();
@@ -31,7 +31,7 @@ function createNewBug(bug_title) {
 }
 
 describe("Tracker artifacts", function () {
-    let artifact_id, project_id;
+    let artifact_id: string, project_id: string;
 
     describe("Site admin specific settings for move/deletion", function () {
         it("must be able to set the artifact deletion setting", function () {
@@ -41,7 +41,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=platform-administration-link]").click();
             cy.get("[data-test=admin-tracker]").click();
             cy.get("[data-test=artifact-deletion]").click();
-            cy.get("[data-test=input-artifacts-limit]").clear().type(50);
+            cy.get("[data-test=input-artifacts-limit]").clear().type("50");
             cy.get("[data-test=artifact-deletion-button]").click();
             cy.get("[data-test=feedback]").contains("Limit successfully updated.");
         });
@@ -117,7 +117,7 @@ describe("Tracker artifacts", function () {
                 cy.get("[data-test=tracker-artifact-value-summary]").contains("My new bug");
 
                 cy.get("[data-test=current-artifact-id]").should(($input) => {
-                    artifact_id = $input.val();
+                    artifact_id = String($input.val());
                 });
             });
 
@@ -153,7 +153,7 @@ describe("Tracker artifacts", function () {
 
                 //edit field and set 20 as values
                 cy.get("[data-test=edit-field-remaining_effort]").click();
-                cy.get("[data-test=remaining_effort]").clear().type(20);
+                cy.get("[data-test=remaining_effort]").clear().type("20");
 
                 // submit and check
                 submitAndStay();

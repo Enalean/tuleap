@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function disableSpecificErrorThrownByCkeditor() {
+function disableSpecificErrorThrownByCkeditor(): void {
     cy.on("uncaught:exception", (err) => {
         // the message bellow is only thown by ckeditor, if any other js exception is thrown
         // the test will fail

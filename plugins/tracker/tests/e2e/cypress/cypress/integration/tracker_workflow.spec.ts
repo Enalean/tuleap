@@ -21,7 +21,7 @@
 import { PROJECT_ADMINISTRATORS_ID } from "../../../../../../../src/scripts/user/user-group-constants.js";
 import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants.js";
 
-function getTrackerIdFromTrackerListPage() {
+function getTrackerIdFromTrackerListPage(): Chainable<JQuery<HTMLElement>> {
     cy.visitProjectService("tracker-project", "Trackers");
     return cy.get("[data-test=tracker-link-workflow]").should("have.attr", "data-test-tracker-id");
 }
