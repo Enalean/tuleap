@@ -55,7 +55,7 @@ class CampaignRepresentation
     /** @var PFUser */
     private $user;
 
-    /** @var int ID of the artifact */
+    /** @var string ID of the artifact */
     public $id;
 
     /** @var String Label of the campaign */
@@ -99,7 +99,7 @@ class CampaignRepresentation
         $this->tracker_id           = $artifact->getTrackerId();
         $this->form_element_factory = $form_element_factory;
         $this->user                 = $user;
-        $this->id                   = $artifact->getId();
+        $this->id                   = (string) $artifact->getId();
         $this->uri                  = self::ROUTE . '/' . $this->id;
 
         $label_field  = $this->getLabelField();

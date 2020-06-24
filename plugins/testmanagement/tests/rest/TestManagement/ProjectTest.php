@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2017. All rights reserved
+ * Copyright (c) Enalean, 2014 - Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -23,12 +23,10 @@ namespace Tuleap\TestManagement;
 use Guzzle\Http\Message\Response;
 use REST_TestDataBuilder;
 
-require_once dirname(__FILE__) . '/../bootstrap.php';
-
 /**
  * @group TestManagementTest
  */
-class ProjectTest extends BaseTest
+final class ProjectTest extends BaseTest
 {
 
     public function testGetCampaigns(): void
@@ -48,9 +46,6 @@ class ProjectTest extends BaseTest
         $this->assertGETCampaings($response);
     }
 
-    /**
-     * @param $response
-     */
     private function assertGETCampaings(Response $response): void
     {
         $campaigns = $response->json();
@@ -59,6 +54,7 @@ class ProjectTest extends BaseTest
 
         $first_campaign = $campaigns[0];
         $this->assertArrayHasKey('id', $first_campaign);
+        $this->assertIsString($first_campaign['id']);
         $this->assertEquals($first_campaign['label'], 'Tuleap 7.3');
         $this->assertEquals($first_campaign['status'], 'Open');
 
