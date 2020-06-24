@@ -1,6 +1,6 @@
 [Tuleap]
 name=Tuleap
-baseurl=https://ci.tuleap.net/yum/tuleap/rhel/6/dev/$basearch
+baseurl=https://ci.tuleap.net/yum/tuleap/rhel/7/dev/$basearch
 enabled=1
 gpgcheck=1
 gpgkey=https://tuleap.net/pub/tuleap/yum/gpg.key

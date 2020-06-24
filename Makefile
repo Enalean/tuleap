@@ -118,11 +118,11 @@ npm-build:
 
 redeploy-nginx: ## Redeploy nginx configuration
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/tools/utils/php73/run.php --module=nginx
-	@$(DOCKER_COMPOSE) exec web service nginx restart
+	@$(DOCKER_COMPOSE) exec web systemctl restart nginx
 
 restart-services: redeploy-nginx ## Restart nginx, apache and fpm
-	@$(DOCKER_COMPOSE) exec web service php73-php-fpm restart
-	@$(DOCKER_COMPOSE) exec web service httpd restart
+	@$(DOCKER_COMPOSE) exec web systemctl restart tuleap-php-fpm
+	@$(DOCKER_COMPOSE) exec web systemctl restart httpd
 
 generate-po: ## Generate translatable strings
 	@tools/utils/generate-po.php `pwd` "$(PLUGIN)"
@@ -304,14 +304,14 @@ dev-forgeupgrade: ## Run forgeupgrade in Docker Compose environment
 dev-clear-cache: ## Clear caches in Docker Compose environment
 	@$(DOCKER_COMPOSE) exec web /usr/share/tuleap/src/utils/tuleap --clear-caches
 
-start-php73-centos7: ## Start Tuleap web with php73 & nginx on CentOS7
+start-php73-centos7 start: ## Start Tuleap web with php73 & nginx on CentOS7
 	@echo "Start Tuleap in PHP 7.3 on CentOS 7"
-	@$(DOCKER_COMPOSE) -f docker-compose-centos7.yml up --build -d reverse-proxy
+	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
-start-php73 start: ## Start Tuleap web with php73 & nginx
+start-php73-centos6: ## Start Tuleap web with php73 & nginx on CentOS6
 	@echo "Start Tuleap in PHP 7.3"
-	@$(DOCKER_COMPOSE) up --build -d reverse-proxy
+	@$(DOCKER_COMPOSE) -f docker-compose-centos6.yml up --build -d reverse-proxy
 	@echo "Update tuleap-web.tuleap-aio-dev.docker in /etc/hosts with: $(call get_ip_addr,reverse-proxy)"
 
 start-distlp:

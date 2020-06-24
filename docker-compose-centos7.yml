@@ -1,9 +1,0 @@
-version: "2"
-
-services:
-  web:
-    image: enalean/tuleap-aio-dev:c7-php73-nginx
-    volumes:
-    - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    - .env:/root/.tuleap_env:ro
-    tmpfs: /run
