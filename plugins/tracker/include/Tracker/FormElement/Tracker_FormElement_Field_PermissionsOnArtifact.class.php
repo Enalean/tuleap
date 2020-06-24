@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Project\REST\UserGroupRepresentation;
 use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 use Tuleap\Tracker\FormElement\Field\PermissionsOnArtifact\ChangesChecker;
 use Tuleap\Tracker\FormElement\PermissionsOnArtifactUGroupRetriever;
@@ -767,11 +768,10 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         }
 
         $project_groups       = array();
-        $representation_class = '\\Tuleap\\Project\\REST\\MinimalUserGroupRepresentation';
         foreach ($user_groups as $user_group) {
             try {
-                call_user_func_array($representation_class . '::checkRESTIdIsAppropriate', array($user_group));
-                $value            = call_user_func_array($representation_class . '::getProjectAndUserGroupFromRESTId', array($user_group));
+                UserGroupRepresentation::checkRESTIdIsAppropriate($user_group);
+                $value = UserGroupRepresentation::getProjectAndUserGroupFromRESTId($user_group);
 
                 if ($value['project_id'] && $value['project_id'] != $this->getTracker()->getProject()->getID()) {
                     throw new Tracker_FormElement_InvalidFieldException('Invalid value "' . $user_group . '" for field ' . $this->getId());
