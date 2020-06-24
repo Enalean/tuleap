@@ -1480,6 +1480,20 @@
                 "md",
                 "parser"
             ],
+            "funding": [
+                {
+                    "url": "https://github.com/colinodell",
+                    "type": "github"
+                },
+                {
+                    "url": "https://www.patreon.com/colinodell",
+                    "type": "patreon"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/league%2fcommonmark",
+                    "type": "tidelift"
+                }
+            ],
             "time": "2020-02-28T18:53:50+00:00"
         },
         {
@@ -3171,16 +3185,16 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.17.0",
+            "version": "v1.17.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "e94c8b1bbe2bc77507a1056cdb06451c75b427f9"
+                "reference": "2edd75b8b35d62fd3eeabba73b26b8f1f60ce13d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/e94c8b1bbe2bc77507a1056cdb06451c75b427f9",
-                "reference": "e94c8b1bbe2bc77507a1056cdb06451c75b427f9",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/2edd75b8b35d62fd3eeabba73b26b8f1f60ce13d",
+                "reference": "2edd75b8b35d62fd3eeabba73b26b8f1f60ce13d",
                 "shasum": ""
             },
             "require": {
@@ -3193,6 +3207,10 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "1.17-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
                 }
             },
             "autoload": {
@@ -3239,7 +3257,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-12T16:14:59+00:00"
+            "time": "2020-06-06T08:46:27+00:00"
         },
         {
             "name": "symfony/polyfill-intl-idn",
@@ -6355,16 +6373,16 @@
         },
         {
             "name": "vimeo/psalm",
-            "version": "3.11.6",
+            "version": "3.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "7fc1f50f54bd6b174b1c43a37c1b0b151915d55c"
+                "reference": "9b860214d58c48b5cbe99bdb17914d0eb723c9cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/7fc1f50f54bd6b174b1c43a37c1b0b151915d55c",
-                "reference": "7fc1f50f54bd6b174b1c43a37c1b0b151915d55c",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/9b860214d58c48b5cbe99bdb17914d0eb723c9cd",
+                "reference": "9b860214d58c48b5cbe99bdb17914d0eb723c9cd",
                 "shasum": ""
             },
             "require": {
@@ -6448,7 +6466,7 @@
                 "inspection",
                 "php"
             ],
-            "time": "2020-06-17T20:40:35+00:00"
+            "time": "2020-06-23T00:24:34+00:00"
         },
         {
             "name": "webmozart/glob",
