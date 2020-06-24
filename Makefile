@@ -216,6 +216,10 @@ psalm-with-info: ## Run Psalm (PHP static analysis tool) with INFO findings. Use
 	$(eval THREADS ?= 2)
 	$(PHP) tests/psalm/psalm-config-plugins-git-ignore.php tests/psalm/psalm.xml ./src/vendor/bin/psalm --show-info=true -c={config_path} $(FILES)
 
+.PHONY:psalm-taint-analysis
+psalm-taint-analysis: ## Run Psalm (PHP static analysis tool) taint analysis. Use FILES variables to execute on a given set of files or directories.
+	$(PHP) ./src/vendor/bin/psalm --taint-analysis -c=tests/psalm/psalm.xml $(FILES)
+
 psalm-baseline-update: ## Update the baseline used by Psalm (PHP static analysis tool).
 	$(eval TMPPSALM := $(shell mktemp -d))
 	git checkout-index -a --prefix="$(TMPPSALM)/"

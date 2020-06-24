@@ -87,6 +87,10 @@ abstract class BaseLayout extends Response
     protected $uri_sanitizer;
 
     /**
+     * @var \URLVerification
+     */
+    private $url_verification;
+    /**
      * @var CssAssetCollection
      */
     protected $css_assets;
@@ -104,9 +108,10 @@ abstract class BaseLayout extends Response
         $this->breadcrumbs = new BreadCrumbCollection();
         $this->toolbar     = array();
 
-        $this->include_asset = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
-        $this->uri_sanitizer = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
-        $this->css_assets    = new CssAssetCollection([]);
+        $this->include_asset  = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
+        $this->uri_sanitizer  = new URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
+        $this->url_verification = new \URLVerification();
+        $this->css_assets     = new CssAssetCollection([]);
     }
 
     abstract public function header(array $params);
@@ -224,8 +229,13 @@ abstract class BaseLayout extends Response
     /**
      * @psalm-return never-return
      */
-    public function redirect($url)
+    public function redirect(string $url): void
     {
+        /**
+         * @psalm-taint-escape text
+         */
+        $url = $this->url_verification->isInternal($url) ? $url : '/';
+
         $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
         if (($is_anon && (headers_sent() || $has_feedback)) || (!$is_anon && headers_sent())) {
@@ -235,7 +245,7 @@ abstract class BaseLayout extends Response
             if ($has_feedback) {
                 echo 'setTimeout(function() {';
             }
-            echo " location.href = '" . $url . "';";
+            echo " location.href = '" . Codendi_HTMLPurifier::instance()->purify($url, Codendi_HTMLPurifier::CONFIG_JS_QUOTE) . "';";
             if ($has_feedback) {
                 echo '}, 5000);';
             }

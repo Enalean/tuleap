@@ -162,10 +162,8 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     /**
      * Check if an URI is internal to the application or not. We reject all URLs
      * except /path/to/feature
-     *
-     * @return bool
      */
-    public function isInternal($uri)
+    public function isInternal(string $uri): bool
     {
         $url_decoded = urldecode($uri);
         return preg_match('/^\/[[:alnum:]]+/', $url_decoded) === 1;

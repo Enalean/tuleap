@@ -186,9 +186,9 @@ class ReferenceAdministrationViews extends Views
 
         echo '<TR>';
         if ($ref->getGroupId() == 100) {
-            echo '<TD><a href="/project/admin/reference.php?view=edit&group_id=' . $ref->getGroupId() . '&reference_id=' . $ref->getId() . '" title="' . $description . '">' . $ref->getId() . '</TD>';
+            echo '<TD><a href="/project/admin/reference.php?view=edit&group_id=' . $purifier->purify($ref->getGroupId()) . '&reference_id=' . $purifier->purify($ref->getId()) . '" title="' . $description . '">' . $purifier->purify($ref->getId()) . '</TD>';
         }
-        echo '<TD><a href="/project/admin/reference.php?view=edit&group_id=' . $ref->getGroupId() . '&reference_id=' . $ref->getId() . '" title="' . $description . '">' . $purifier->purify($ref->getKeyword()) . '</TD>';
+        echo '<TD><a href="/project/admin/reference.php?view=edit&group_id=' . $purifier->purify($ref->getGroupId()) . '&reference_id=' . $purifier->purify($ref->getId()) . '" title="' . $description . '">' . $purifier->purify($ref->getKeyword()) . '</TD>';
         echo '<TD>' . $description . '</TD>';
         echo '<TD>' . $nature_desc . '</TD>';
 
@@ -203,7 +203,7 @@ class ReferenceAdministrationViews extends Views
         }
 
         if ($can_be_deleted) {
-            echo '<TD align="center"><a href="/project/admin/reference.php?group_id=' . $ref->getGroupId() . '&reference_id=' . $ref->getId() . '&action=do_delete" onClick="return confirm(\'';
+            echo '<TD align="center"><a href="/project/admin/reference.php?group_id=' . $purifier->purify($ref->getGroupId()) . '&reference_id=' . $purifier->purify($ref->getId()) . '&action=do_delete" onClick="return confirm(\'';
             if ($ref->getScope() == "S") {
                 echo $purifier->purify($GLOBALS['Language']->getText('project_reference', 'warning_del_r', $ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
             } else {
