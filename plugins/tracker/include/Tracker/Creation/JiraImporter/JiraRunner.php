@@ -40,12 +40,6 @@ use XML_ParseException;
 class JiraRunner
 {
     /**
-     * Toggle display of "Create from Jira" in Tracker creation page
-     *
-     * @tlp-config-key
-     */
-    public const DISPLAY_JIRA_IMPORTER = 'display_jira_importer';
-    /**
      * @var QueueFactory
      */
     private $queue_factory;
@@ -100,10 +94,6 @@ class JiraRunner
 
     public function canBeProcessedAsynchronously(): bool
     {
-        if ((bool) ForgeConfig::get(self::DISPLAY_JIRA_IMPORTER) === false) {
-            return false;
-        }
-
         if (ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
             return false;
         }
