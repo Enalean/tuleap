@@ -520,96 +520,81 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
 
         $toolbar = [];
 
-        if (HTTPRequest::instance()->isAjax()) {
-            $http_content = '';
-            foreach ($trackers as $tracker) {
-                if ($tracker->userCanView($user)) {
-                    $http_content .= '<option value="' . $tracker->getId() . '">' . $hp->purify($tracker->getName()) . '</option>';
-                }
-            }
-            if ($http_content) {
-                echo $http_content;
-            } else {
-                echo '<option>' . dgettext('tuleap-tracker', 'No template found') . '</option>';
-            }
-            echo $html;
-        } else {
-            $params = array();
+        $params = array();
 
-            if ($this->userIsTrackerAdmin($project, $user)) {
-                $this->informUserOfOngoingMigrations($project);
-            }
-
-            $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
-            $html .= '<p>';
-            if (count($trackers)) {
-                $html .= dgettext('tuleap-tracker', 'Choose a tracker and you can browse/edit/add artifacts to it.');
-            } else {
-                $html .= dgettext('tuleap-tracker', '<strong>No trackers have been set up, or you are not allowed to view them.</strong>');
-            }
-            if ($this->userCanCreateTracker($project->group_id, $user)) {
-                $html .= '<br /><a id="tracker_createnewlink"  data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
-                    urlencode($project->getUnixNameLowerCase()) . '/new">';
-                $html .= $GLOBALS['HTML']->getImage('ic/add.png', ['alt' => 'add']) . ' ';
-                $html .= dgettext('tuleap-tracker', 'Create a New Tracker');
-                $html .= '</a>';
-            }
-            $html .= '</p>';
-            foreach ($trackers as $tracker) {
-                if ($this->trackerCanBeDisplayed($tracker, $user)) {
-                    $html .= '<dt>';
-
-                    $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
-
-                    if ($tracker->userCanDeleteTracker()) {
-                        if ($used_in_other_services_infos['can_be_deleted']) {
-                            $html .= '<div style="float:right;">
-                                    <a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '&amp;func=delete"
-                                       onclick="return confirm(\'Do you want to delete this tracker?\');"
-                                       title=" ' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '">';
-                            $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
-                            $html .= '</a></div>';
-                        } else {
-                            $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
-                            $html .= '<div style="float:right;" class="tracker-cant-delete">';
-                            $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
-                            $html .= '</div>';
-                        }
-                    }
-                    $html .= '<div class="tracker_homepage_info">';
-                    $html .= '<a class="link-to-tracker" href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '" data-test="tracker-link-' . $tracker->getItemName() . '" data-test-tracker-id="' . $tracker->getId() . '">';
-                    $html .= '<i class="fa fa-circle tracker_color_info ' . $hp->purify($tracker->getColor()->getName()) . '"></i>';
-                    $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
-                    $html .= '</a>';
-
-                    if ($tracker->userHasFullAccess()) {
-                        $stats = $tracker->getStats();
-                        $html .= ' <span style="font-size:0.75em">( <strong>';
-                        if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
-                            $html .= (int) ($stats['nb_open']) . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
-                        }
-                        $html .= (int) ($stats['nb_total']) . ' ' . dgettext('tuleap-tracker', 'total');
-                        $html .= '</strong> )</span>';
-
-                        $html .= '</dt>';
-                        $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
-                        $html .= $tracker->fetchStats();
-                        $html .= '</dd>';
-                    } else {
-                        $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
-                        $html .= '</dd>';
-                    }
-
-                    $html .= '</div>';
-                }
-            }
-            if ($html) {
-                echo '<table cellspacing="0" cellpadding="0" border="0"><tr><td><dl class="tracker_alltrackers">';
-                echo $html;
-                echo '</dl></td></tr></table>';
-            }
-            $this->displayFooter($project);
+        if ($this->userIsTrackerAdmin($project, $user)) {
+            $this->informUserOfOngoingMigrations($project);
         }
+
+        $this->displayHeader($project, dgettext('tuleap-tracker', 'Trackers'), $breadcrumbs, $toolbar, $params);
+        $html .= '<p>';
+        if (count($trackers)) {
+            $html .= dgettext('tuleap-tracker', 'Choose a tracker and you can browse/edit/add artifacts to it.');
+        } else {
+            $html .= dgettext('tuleap-tracker', '<strong>No trackers have been set up, or you are not allowed to view them.</strong>');
+        }
+        if ($this->userCanCreateTracker($project->group_id, $user)) {
+            $html .= '<br /><a id="tracker_createnewlink"  data-test="new-tracker-creation" href="' . TRACKER_BASE_URL . '/' .
+                urlencode($project->getUnixNameLowerCase()) . '/new">';
+            $html .= $GLOBALS['HTML']->getImage('ic/add.png', ['alt' => 'add']) . ' ';
+            $html .= dgettext('tuleap-tracker', 'Create a New Tracker');
+            $html .= '</a>';
+        }
+        $html   .= '</p>';
+        foreach ($trackers as $tracker) {
+            if ($this->trackerCanBeDisplayed($tracker, $user)) {
+                $html .= '<dt>';
+
+                $used_in_other_services_infos = $tracker->getInformationsFromOtherServicesAboutUsage();
+
+                if ($tracker->userCanDeleteTracker()) {
+                    if ($used_in_other_services_infos['can_be_deleted']) {
+                        $html .= '<div style="float:right;">
+                                <a href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '&amp;func=delete"
+                                   onclick="return confirm(\'Do you want to delete this tracker?\');"
+                                   title=" ' . sprintf(dgettext('tuleap-tracker', 'Delete tracker %1$s'), $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML)) . '">';
+                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('alt' => 'delete'));
+                        $html .= '</a></div>';
+                    } else {
+                        $cannot_delete_message = sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $used_in_other_services_infos['message']);
+                        $html .= '<div style="float:right;" class="tracker-cant-delete">';
+                        $html .= $GLOBALS['HTML']->getImage('ic/bin_closed.png', array('title' => $cannot_delete_message));
+                        $html .= '</div>';
+                    }
+                }
+                $html .= '<div class="tracker_homepage_info">';
+                $html .= '<a class="link-to-tracker" href="' . TRACKER_BASE_URL . '/?tracker=' . $tracker->id . '" data-test="tracker-link-' . $tracker->getItemName() . '" data-test-tracker-id="' . $tracker->getId() . '">';
+                $html .= '<i class="fa fa-circle tracker_color_info ' . $hp->purify($tracker->getColor()->getName()) . '"></i>';
+                $html .= $hp->purify($tracker->name, CODENDI_PURIFIER_CONVERT_HTML);
+                $html .= '</a>';
+
+                if ($tracker->userHasFullAccess()) {
+                    $stats = $tracker->getStats();
+                    $html .= ' <span style="font-size:0.75em">( <strong>';
+                    if ($tracker->hasSemanticsStatus() && $stats['nb_total']) {
+                        $html .= (int) ($stats['nb_open']) . ' ' . dgettext('tuleap-tracker', 'open') . ' / ';
+                    }
+                    $html .= (int) ($stats['nb_total']) . ' ' . dgettext('tuleap-tracker', 'total');
+                    $html .= '</strong> )</span>';
+
+                    $html .= '</dt>';
+                    $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
+                    $html .= $tracker->fetchStats();
+                    $html .= '</dd>';
+                } else {
+                    $html .= '<dd>' . $hp->purify($tracker->description, CODENDI_PURIFIER_CONVERT_HTML);
+                    $html .= '</dd>';
+                }
+
+                $html .= '</div>';
+            }
+        }
+        if ($html) {
+            echo '<table cellspacing="0" cellpadding="0" border="0"><tr><td><dl class="tracker_alltrackers">';
+            echo $html;
+            echo '</dl></td></tr></table>';
+        }
+        $this->displayFooter($project);
     }
 
     public function displayDeletedTrackers()
