@@ -49,8 +49,7 @@ class BacklogItemRepresentationTest extends TestCase
         $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
         $user = Mockery::mock(PFUser::class);
 
-        $representation = new BacklogItemRepresentation();
-        $representation->build($backlog_item, $user);
+        $representation = new BacklogItemRepresentation($backlog_item, $user);
 
         $this->assertFalse($representation->can_add_a_test);
     }
@@ -74,8 +73,7 @@ class BacklogItemRepresentationTest extends TestCase
         $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
         $user = Mockery::mock(PFUser::class);
 
-        $representation = new BacklogItemRepresentation();
-        $representation->build($backlog_item, $user);
+        $representation = new BacklogItemRepresentation($backlog_item, $user);
 
         $this->assertFalse($representation->can_add_a_test);
     }
@@ -99,8 +97,7 @@ class BacklogItemRepresentationTest extends TestCase
         $backlog_item->shouldReceive('getArtifact')->andReturn($artifact);
         $user = Mockery::mock(PFUser::class);
 
-        $representation = new BacklogItemRepresentation();
-        $representation->build($backlog_item, $user);
+        $representation = new BacklogItemRepresentation($backlog_item, $user);
 
         $this->assertFalse($representation->can_add_a_test);
     }

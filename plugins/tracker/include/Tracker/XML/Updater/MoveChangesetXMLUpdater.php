@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -227,6 +227,7 @@ class MoveChangesetXMLUpdater
                 continue;
             } elseif (
                 $status_semantic_can_be_moved &&
+                $target_status_field !== null &&
                 $this->isFieldChangeCorrespondingToStatusSemanticField($changeset_xml, $source_status_field, $index)
             ) {
                 $this->useTargetTrackerFieldName($changeset_xml, $target_status_field, $index);
@@ -322,12 +323,15 @@ class MoveChangesetXMLUpdater
         return false;
     }
 
+    /**
+     * @psalm-assert-if-true !null $source_status_field
+     */
     private function isFieldChangeCorrespondingToStatusSemanticField(
         SimpleXMLElement $changeset_xml,
-        Tracker_FormElement_Field $source_status_field,
+        ?Tracker_FormElement_Field $source_status_field,
         $index
     ) {
-        return $this->isFieldChangeCorrespondingToField($changeset_xml, $source_status_field, $index);
+        return $source_status_field !== null && $this->isFieldChangeCorrespondingToField($changeset_xml, $source_status_field, $index);
     }
 
     private function isFieldChangeCorrespondingToContributorSemanticField(

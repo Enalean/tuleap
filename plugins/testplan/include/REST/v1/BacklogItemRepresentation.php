@@ -28,31 +28,37 @@ use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 class BacklogItemRepresentation
 {
     /**
-     * @var Int
+     * @var int
+     * @psalm-readonly
      */
     public $id;
     /**
-     * @var String
+     * @var string
+     * @psalm-readonly
      */
     public $label;
     /**
-     * @var String
+     * @var string
+     * @psalm-readonly
      */
     public $short_type;
     /**
-     * @var String
+     * @var string
+     * @psalm-readonly
      */
     public $color;
     /**
      * @var \Tuleap\Tracker\REST\Artifact\ArtifactReference
+     * @psalm-readonly
      */
     public $artifact;
     /**
      * @var bool
+     * @psalm-readonly
      */
     public $can_add_a_test;
 
-    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, \PFUser $user): void
+    public function __construct(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, \PFUser $user)
     {
         $this->id         = JsonCast::toInt($backlog_item->id());
         $this->label      = $backlog_item->title();

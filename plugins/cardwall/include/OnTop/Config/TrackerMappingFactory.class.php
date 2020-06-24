@@ -89,7 +89,7 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
             } else {
                 $status_field   = $mapping_tracker->getStatusField();
                 if ($status_field) {
-                    $mapping = $this->instantiateMappingStatus($tracker, $mappings, $mapping_tracker, $available_fields, $columns);
+                    $mapping = $this->instantiateMappingStatus($status_field, $mapping_tracker, $available_fields, $columns);
                 } else {
                     $mapping = $this->instantiateNoFieldMapping($mapping_tracker, $available_fields);
                 }
@@ -101,10 +101,8 @@ class Cardwall_OnTop_Config_TrackerMappingFactory
     /**
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
-    private function instantiateMappingStatus(Tracker $tracker, array &$mappings, Tracker $mapping_tracker, array $available_fields, Cardwall_OnTop_Config_ColumnCollection $columns)
+    private function instantiateMappingStatus(Tracker_FormElement_Field_List $status_field, Tracker $mapping_tracker, array $available_fields, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        $mapping_values = array();
-        $status_field   = $mapping_tracker->getStatusField();
         $mapping_values = $this->value_mapping_factory->getStatusMappings($mapping_tracker, $columns);
         return new Cardwall_OnTop_Config_TrackerMappingStatus(
             $mapping_tracker,
