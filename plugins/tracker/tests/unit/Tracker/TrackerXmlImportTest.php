@@ -41,7 +41,6 @@ use Tracker_Workflow_Trigger_RulesManager;
 use TrackerFactory;
 use TrackerFromXmlImportCannotBeCreatedException;
 use TrackerXmlImport;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Project\UGroupRetrieverWithLegacy;
 use Tuleap\Project\XML\Import\ExternalFieldsExtractor;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -61,7 +60,6 @@ use XML_RNGValidator;
 final class TrackerXmlImportTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface

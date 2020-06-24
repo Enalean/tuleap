@@ -56,25 +56,21 @@ class MailGatewayConfigPresenter
         $this->is_token_based_emailgateway_enabled = $config->isTokenBasedEmailgatewayEnabled();
         $this->is_emailgateway_disabled            = $config->isEmailgatewayDisabled();
 
-        $this->email_gateway            = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway');
-        $this->email_gateway_pane_title = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway_pane_title');
-        $this->email_gateway_desc       = $GLOBALS['Language']->getText('plugin_tracker_config', 'email_gateway_desc');
-        $this->disable                  = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable');
-        $this->disable_desc             = $GLOBALS['Language']->getText('plugin_tracker_config', 'disable_desc');
-        $this->token                    = $GLOBALS['Language']->getText('plugin_tracker_config', 'token');
-        $this->token_desc               = $GLOBALS['Language']->getText('plugin_tracker_config', 'token_desc');
-        $this->insecure                 = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure');
-        $this->insecure_desc            = $GLOBALS['Language']->getText('plugin_tracker_config', 'insecure_desc');
+        $this->email_gateway            = dgettext('tuleap-tracker', 'Email Gateway');
+        $this->email_gateway_pane_title = dgettext('tuleap-tracker', 'Email Gateway configuration');
+        $this->email_gateway_desc       = dgettext('tuleap-tracker', 'Allow user to interact with trackers by email.');
+        $this->disable                  = dgettext('tuleap-tracker', 'Disable email gateway');
+        $this->disable_desc             = dgettext('tuleap-tracker', 'The feature is deactivated, nobody can interact with trackers by email.');
+        $this->token                    = dgettext('tuleap-tracker', 'Token based email gateway');
+        $this->token_desc               = dgettext('tuleap-tracker', 'Users can interact with trackers by email. Authentication is done through token that is injected in the headers of the email. This decreases the risk of a forged email, we can moderately trust the sender.<br>As of today, only reply (add a follow-up comment) by email is supported by this option.');
+        $this->insecure                 = dgettext('tuleap-tracker', 'Insecure email gateway');
+        $this->insecure_desc            = dgettext('tuleap-tracker', 'Users can interact with trackers by email. Authentication is not done at all.<span class="text-error"><i class="fa fa-warning"></i> With this option we <strong>cannot trust the sender of the email</strong>. This means that villains can easily forge an email and pretend to be someone they are not.</span><br>As of today, users can create artifacts and reply (add a follow-up comment) by email with this option.');
         $this->save_conf                = $GLOBALS['Language']->getText('admin_main', 'save_conf');
 
         $this->sections = new EmailGateWayPresenter();
 
         $this->is_localinc_obsolete      = $this->isLocalIncObsolete($localinc_path);
-        $this->localinc_obsolete_message = $GLOBALS['Language']->getText(
-            'plugin_tracker_config',
-            'localinc_obsolete_message',
-            $localinc_path
-        );
+        $this->localinc_obsolete_message = sprintf(dgettext('tuleap-tracker', '<h4><i class="fa fa-exclamation-triangle"></i> Your local.inc file is outdated!</h4><p>It appears that your local.inc file contains definitions of variables that are unused and it may lead to confusion.</p><p>Please edit <code>%1$s</code> and remove the following variable: <code>$sys_enable_reply_by_mail</code>.</p>'), $localinc_path);
     }
 
     private function isLocalIncObsolete($localinc_path)

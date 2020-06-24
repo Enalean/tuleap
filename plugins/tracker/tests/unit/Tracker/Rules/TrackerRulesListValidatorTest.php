@@ -26,13 +26,11 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field_Selectbox;
 use Tracker_Rule_Date_Factory;
 use Tracker_Rule_List;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
 class TrackerRulesListValidatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**

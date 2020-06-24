@@ -106,10 +106,10 @@ class GlobalAdminPresenter
         $this->csrf_token                      = $csrf_token;
         $this->are_artifact_link_types_enabled = $are_artifact_link_types_enabled;
 
-        $this->available_types     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
-        $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
-        $this->forward_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
-        $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
+        $this->available_types     = dgettext('tuleap-tracker', 'Available types');
+        $this->shortname_label     = dgettext('tuleap-tracker', 'Shortname');
+        $this->forward_label_label = dgettext('tuleap-tracker', 'Forward label');
+        $this->reverse_label_label = dgettext('tuleap-tracker', 'Reverse label');
         $this->switch_button_label = dgettext('tuleap-tracker', 'Use');
         $this->artifact_link_types = $artifact_link_types;
 

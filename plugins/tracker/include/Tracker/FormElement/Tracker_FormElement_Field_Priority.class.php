@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
             return $augmented_value;
         }
 
-        return '<span class="non-displayable" title="' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable_tooltip') . '">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable') . '</span>';
+        return '<span class="non-displayable" title="' . dgettext('tuleap-tracker', 'The rank of an artifact only exists in the context of a milestone. You must filter by milestone to view artifact ranks.') . '">' . dgettext('tuleap-tracker', 'N/A') . '</span>';
     }
 
     public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value, $report)
@@ -65,7 +65,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
             return $augmented_value;
         }
 
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'non_displayable');
+        return dgettext('tuleap-tracker', 'N/A');
     }
 
     private function getAugmentedFieldValue($artifact_id, Tracker_Report $report)
@@ -193,12 +193,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_label');
+        return dgettext('tuleap-tracker', 'Rank');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'priority_description');
+        return dgettext('tuleap-tracker', 'Rank');
     }
 
     public static function getFactoryIconUseIt()
@@ -312,7 +312,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
         if ($submitted_value !== null && ! $this->userCanUpdate()) {
             $is_valid = true;
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $this->getName()));
         }
 
         return $is_valid;

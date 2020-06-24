@@ -317,7 +317,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         <tr>
                             <td colspan="3" align="left">
                                 <h2>' .
-                                    $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot') . '
+                                    dgettext('tuleap-tracker', 'Snapshot') . '
                                 </h2>
                             </td>
                         </tr>
@@ -743,7 +743,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     if ($field === null || ! $field->userCanRead($current_user)) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
-                            $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied')
+                            dgettext('tuleap-tracker', 'Permission Denied')
                         );
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . urlencode((string) $this->getTrackerId()));
                     }
@@ -798,7 +798,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $this->unlinkArtifact($artlink_fields, $linked_artifact_id, $current_user);
                     $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'));
                     $GLOBALS['Response']->sendStatusCode(400);
                 }
                 break;
@@ -838,7 +838,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
             case 'copy-artifact':
                 $art_link = $this->fetchDirectLinkToArtifact();
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_mode_info', array($art_link)), CODENDI_PURIFIER_LIGHT);
+                $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'You are currently copying the artifact %1$s.'), $art_link), CODENDI_PURIFIER_LIGHT);
                 EventManager::instance()->processEvent(
                     self::DISPLAY_COPY_OF_ARTIFACT,
                     array(
@@ -913,7 +913,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     private function sendUserDoesNotHavePermissionsErrorCode()
     {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'unsufficient_permissions_for_ranking'));
+        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You are not allowed to rank on this planning. Your action was not taken into account. Please reload the page.'));
         $GLOBALS['Response']->sendStatusCode(403);
     }
 
@@ -1649,7 +1649,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 return false;
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'The artifact doesn\'t have an artifact link field or you have not the permission to modify it, please reconfigure your tracker'));
         }
     }
 

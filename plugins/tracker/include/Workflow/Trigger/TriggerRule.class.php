@@ -129,16 +129,16 @@ class Tracker_Workflow_Trigger_TriggerRule implements Tracker_IProvideJsonFormat
         foreach ($this->getTriggers() as $trigger) {
             $trg[] = $trigger->getAsChangesetComment($this->getCondition());
         }
-        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'rule_comment') .
+        return dgettext('tuleap-tracker', 'Current artifact children satisfy the following condition(s):') .
                '<ul><li>' . implode('</li><li>' . $this->getConditionOperatorLabel() . ' ', $trg) . '</li></ul>';
     }
 
     private function getConditionOperatorLabel()
     {
         if ($this->getCondition() === 'all_of') {
-            return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_all_of');
+            return dgettext('tuleap-tracker', 'and');
         }
 
-        return $GLOBALS['Language']->getText('workflow_trigger_rules_processor', 'condition_operator_at_least_one');
+        return dgettext('tuleap-tracker', 'or');
     }
 }

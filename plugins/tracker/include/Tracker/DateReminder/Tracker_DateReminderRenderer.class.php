@@ -67,12 +67,12 @@ class Tracker_DateReminderRenderer
         $output .= '<input type="hidden" name="action" value="new_reminder">';
         $output .= $csrf_token->fetchHTMLInput();
         $output .= '<table border="0" cellpadding="5"><tr>';
-        $output .= '<td><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_send_to') . ':</label></td>';
-        $output .= '<td colspan=3><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_when') . ':</label></td>';
-        $output .= '<td><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_field') . ':</label></td></tr>';
+        $output .= '<td><label>' . dgettext('tuleap-tracker', 'Send an email to') . ':</label></td>';
+        $output .= '<td colspan=3><label>' . dgettext('tuleap-tracker', 'When') . ':</label></td>';
+        $output .= '<td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td></tr>';
         $output .= '<tr valign="top"><td>' . $this->getAllowedNotifiedForTracker() . '</td>';
         $output .= '<td><input type="text" name="distance" size="3" width="40" /></td>';
-        $output .= '<td style="padding-top: 7px;">' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_distance_label') . '</td>';
+        $output .= '<td style="padding-top: 7px;">' . dgettext('tuleap-tracker', 'day(s)') . '</td>';
         $output .= '<td><select name="notif_type">
                         <option value="0"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '
                         <option value="1"> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '
@@ -113,19 +113,19 @@ class Tracker_DateReminderRenderer
             }
             $purifier = Codendi_HTMLPurifier::instance();
 
-            $output .= "<h3>" . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_edit_title') . "</h3>";
+            $output .= "<h3>" . dgettext('tuleap-tracker', 'Update reminder') . "</h3>";
             $output .= '<form method="post" name="update_date_field_reminder" class="form-inline">';
             $output .= '<input type="hidden" name="action" value="update_reminder">';
             $output .= '<input type="hidden" name="reminder_id" value="' . $reminderId . '">
                         <input type="hidden" name="reminder_field_date" value="' . $reminder->getField()->getId() . '">';
             $output .= '<table border="0" cellpadding="5"><tr>';
             $output .= $csrf_token->fetchHTMLInput();
-            $output .= '<td><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_send_to') . ':</label></td>
-                        <td colspan=3><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_when') . ':</label></td>
-                        <td><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_field') . ':</label></td>
-                        <td><label>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_status') . ':</label></td></tr>';
+            $output .= '<td><label>' . dgettext('tuleap-tracker', 'Send an email to') . ':</label></td>
+                        <td colspan=3><label>' . dgettext('tuleap-tracker', 'When') . ':</label></td>
+                        <td><label>' . dgettext('tuleap-tracker', 'Field') . ':</label></td>
+                        <td><label>' . dgettext('tuleap-tracker', 'Status') . ':</label></td></tr>';
             $output .= '<tr valign="top"><td>' . $this->getAllowedNotifiedForTracker($reminderId) . '</td>';
-            $output .= '<td><input type="text" name="distance" value="' . $reminder->getDistance() . '" size="3" style="width: auto"></td><td style="padding-top: 7px;">' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_distance_label') . '</td>';
+            $output .= '<td><input type="text" name="distance" value="' . $reminder->getDistance() . '" size="3" style="width: auto"></td><td style="padding-top: 7px;">' . dgettext('tuleap-tracker', 'day(s)') . '</td>';
             $output .= '<td><select name="notif_type" class="input-small">
                             <option value="0" ' . $before . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_before') . '
                             <option value="1" ' . $after . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_after') . '
@@ -135,7 +135,7 @@ class Tracker_DateReminderRenderer
                             <option value="0" ' . $disabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_disabled') . '
                             <option value="1" ' . $enabled . '> ' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_enabled') . '
                             </select></td>';
-            $output .= '</tr><tr height="35" valign="bottom"><td colspan=6><input type="submit" name="submit" value="' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'submit') . '"></td></tr>';
+            $output .= '</tr><tr height="35" valign="bottom"><td colspan=6><input type="submit" name="submit" value="' . dgettext('tuleap-tracker', 'Submit Changes') . '"></td></tr>';
             $output .= '</table></form>';
         }
         return $output;
@@ -391,10 +391,10 @@ class Tracker_DateReminderRenderer
      */
     public function displayAllReminders()
     {
-        $titles           = array($GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_send_to'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_when'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_field'),
-                                  $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_actions'));
+        $titles           = array(dgettext('tuleap-tracker', 'Send an email to'),
+                                  dgettext('tuleap-tracker', 'When'),
+                                  dgettext('tuleap-tracker', 'Field'),
+                                  dgettext('tuleap-tracker', 'Actions'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
         if (!empty($trackerReminders)) {
@@ -408,10 +408,10 @@ class Tracker_DateReminderRenderer
                 }
                 $output .= '<td>' . $reminder->getUgroupsLabel();
                 $output .= $reminder->getRolesLabel() . '</td>';
-                $output .= '<td>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())) . '</td>';
+                $output .= '<td>' . sprintf(dgettext('tuleap-tracker', '%1$s day(s) %2$s'), $reminder->getDistance(), $reminder->getNotificationTypeLabel()) . '</td>';
                 $output .= '<td>' . $purifier->purify($reminder->getField()->getLabel()) . '</td>';
-                $output .= '<td><span style="float:left;"><a href="?reminder_id=' . (int) $reminder->getId() . '&amp;action=update_reminder" id="update_reminder"> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_update_action') . ' ' . $GLOBALS['Response']->getimage('ic/edit.png') . '</a></span>';
-                $output .= '&nbsp;&nbsp;&nbsp;<span style="float:right;"><a href="?action=delete_reminder&amp;reminder_id=' . $reminder->getId() . '" id="delete_reminder"> ' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_delete_action') . ' ' . $GLOBALS['Response']->getimage('ic/bin.png') . '</a></span></td>';
+                $output .= '<td><span style="float:left;"><a href="?reminder_id=' . (int) $reminder->getId() . '&amp;action=update_reminder" id="update_reminder"> ' . dgettext('tuleap-tracker', 'Update') . ' ' . $GLOBALS['Response']->getimage('ic/edit.png') . '</a></span>';
+                $output .= '&nbsp;&nbsp;&nbsp;<span style="float:right;"><a href="?action=delete_reminder&amp;reminder_id=' . $reminder->getId() . '" id="delete_reminder"> ' . dgettext('tuleap-tracker', 'Delete') . ' ' . $GLOBALS['Response']->getimage('ic/bin.png') . '</a></span></td>';
                 $output .= '</tr>';
             }
             $html_table = new HTML_Table_Bootstrap();
@@ -433,20 +433,20 @@ class Tracker_DateReminderRenderer
     {
         $purifier        = Codendi_HTMLPurifier::instance();
         $reminder        = $this->dateReminderFactory->getReminder($reminderId);
-        $reminderString  = '<b>' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_send_to');
+        $reminderString  = '<b>' . dgettext('tuleap-tracker', 'Send an email to');
         $reminderString .= '&nbsp;' . $reminder->getUgroupsLabel() . '&nbsp;';
-        $reminderString .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_notification_details', array($reminder->getDistance(), $reminder->getNotificationTypeLabel())) . '&nbsp;"';
+        $reminderString .= sprintf(dgettext('tuleap-tracker', '%1$s day(s) %2$s'), $reminder->getDistance(), $reminder->getNotificationTypeLabel()) . '&nbsp;"';
         $reminderString .= $purifier->purify($reminder->getField()->getLabel()) . '"</b>';
 
         $output = '<p><form id="delete_reminder" method="POST" class="date_reminder_confirm_delete">';
         $output .= $csrf_token->fetchHTMLInput();
-        $output .= $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_txt', array($reminderString));
+        $output .= sprintf(dgettext('tuleap-tracker', '<h3>Confirm deletion of date reminder</h3><p>You are going to delete this date reminder:</p><p>%1$s</p><p>Are you sure that you want to continue?</p>'), $reminderString);
         $output .= '<div class="date_reminder_confirm_delete_buttons">';
         $output .= '<input type="hidden" name="action" value="confirm_delete_reminder" />';
         $output .= '<input type="hidden" name="tracker" value="' . (int) $this->tracker->id . '" />';
         $output .= '<input type="hidden" name="reminder_id" value="' . $reminderId . '" />';
-        $output .= '<input type="submit" name="cancel_delete_reminder" value="' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_cancel') . '" />';
-        $output .= '<input type="submit" name="confirm_delete" value="' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_adate_reminder_delete_confirm') . '" />';
+        $output .= '<input type="submit" name="cancel_delete_reminder" value="' . dgettext('tuleap-tracker', 'No, I do not want to delete it') . '" />';
+        $output .= '<input type="submit" name="confirm_delete" value="' . dgettext('tuleap-tracker', 'Yes, I am sure!') . '" />';
         $output .= '</div>';
         $output .= '</form></p>';
         return $output;
@@ -467,9 +467,9 @@ class Tracker_DateReminderRenderer
             $output .= $this->displayConfirmDelete($request->get('reminder_id'), $csrf_token);
         }
         $output .= $this->displayAllReminders();
-        $output .= '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_add_title') . '<input type="image" src="' . util_get_image_theme('ic/add.png') . '" id="add_reminder" value="' . (int) $this->tracker->id . '"></label></div>';
+        $output .= '<div id="tracker_reminder" style="display:none;"><p><label for="New Reminder">' . dgettext('tuleap-tracker', 'Add reminder') . '<input type="image" src="' . util_get_image_theme('ic/add.png') . '" id="add_reminder" value="' . (int) $this->tracker->id . '"></label></div>';
         $output .= '<noscript>
-        <p><a href="?action=add_reminder" id="add_reminder">' . $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'tracker_date_reminder_add_title') . '</a>
+        <p><a href="?action=add_reminder" id="add_reminder">' . dgettext('tuleap-tracker', 'Add reminder') . '</a>
         </noscript>';
         if ($request->get('action') == 'add_reminder') {
             $output .= $this->getNewDateReminderForm($csrf_token);

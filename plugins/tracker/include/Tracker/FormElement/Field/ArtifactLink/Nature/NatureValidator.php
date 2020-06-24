@@ -39,12 +39,12 @@ class NatureValidator
     {
         if (! $shortname) {
             throw new InvalidNatureParameterException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_shortname')
+                dgettext('tuleap-tracker', 'missing shortname')
             );
         }
         if (! preg_match('/^' . self::SHORTNAME_PATTERN . '$/', $shortname)) {
             throw new InvalidNatureParameterException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help')
+                dgettext('tuleap-tracker', 'Only letters and underscore are allowed for shortname (must start with a letter though).')
             );
         }
     }
@@ -54,7 +54,7 @@ class NatureValidator
     {
         if (! $forward_label) {
             throw new InvalidNatureParameterException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_forward_label')
+                dgettext('tuleap-tracker', 'missing forward label')
             );
         }
     }
@@ -64,7 +64,7 @@ class NatureValidator
     {
         if (! $reverse_label) {
             throw new InvalidNatureParameterException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'missing_reverse_label')
+                dgettext('tuleap-tracker', 'missing reverse label')
             );
         }
     }
@@ -73,7 +73,7 @@ class NatureValidator
     {
         if ($this->dao->isOrHasBeenUsed($shortname)) {
             throw new UnableToDeleteNatureException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete')
+                dgettext('tuleap-tracker', 'type can\'t be deleted because it is or has been already used.')
             );
         }
     }

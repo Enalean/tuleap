@@ -59,7 +59,7 @@ class HTMLOutputStrategy implements OutputStrategy
     {
         return $this->getDefaultFormatWithWarning(
             $artifact_link_info,
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_format')
+            dgettext('tuleap-tracker', 'Cannot be formatted because at least one field needed for the format is missing.')
         );
     }
 
@@ -68,7 +68,7 @@ class HTMLOutputStrategy implements OutputStrategy
     {
         return $this->getDefaultFormatWithWarning(
             $artifact_link_info,
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'unsupported_field')
+            dgettext('tuleap-tracker', 'A field needed for the format cannot be formatted.')
         );
     }
 

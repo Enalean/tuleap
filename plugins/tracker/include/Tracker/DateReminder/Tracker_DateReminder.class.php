@@ -372,7 +372,7 @@ class Tracker_DateReminder
      *
      * @param Tracker_Artifact $artifact The artifact
      *
-     * @return date
+     * @return string|false
      */
     public function getFieldValue(Tracker_Artifact $artifact)
     {

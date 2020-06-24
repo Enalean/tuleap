@@ -28,14 +28,12 @@ use Tracker_Rule_List;
 use Tracker_RuleFactory;
 use Tracker_RulesManager;
 use TrackerFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use Tuleap\Tracker\Workflow\PostAction\FrozenFields\FrozenFieldsDao;
 
 class TrackerRulesManagerValidationTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**

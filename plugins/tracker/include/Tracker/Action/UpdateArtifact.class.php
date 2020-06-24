@@ -77,7 +77,7 @@ class Tracker_Action_UpdateArtifact
             $this->artifact->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, true, $comment_format);
 
             $art_link = $this->artifact->fetchDirectLinkToArtifact();
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
+            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Successfully Updated (%1$s)'), $art_link), CODENDI_PURIFIER_LIGHT);
 
             $redirect = $this->getRedirectUrlAfterArtifactUpdate($request);
             $this->artifact->summonArtifactRedirectors($request, $redirect);
@@ -193,7 +193,7 @@ class Tracker_Action_UpdateArtifact
             $artifact->getTracker()->hasFormElementWithNameAndType($remaining_effort_field->getName(), array('computed'))
             && $remaining_effort_field->isArtifactValueAutocomputed($artifact)
         ) {
-            $remaining_effort .= " (" . $GLOBALS['Language']->getText('plugin_tracker', 'autocomputed_field') . ")";
+            $remaining_effort .= " (" . dgettext('tuleap-tracker', 'autocomputed') . ")";
         }
 
         return $remaining_effort;

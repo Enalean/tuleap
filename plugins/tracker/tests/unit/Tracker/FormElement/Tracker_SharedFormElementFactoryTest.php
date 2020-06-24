@@ -41,16 +41,6 @@ class Tracker_SharedFormElementFactoryTest extends \PHPUnit\Framework\TestCase /
         $this->tracker = Mockery::mock(Tracker::class);
         $this->tracker->shouldReceive('getProject')->andReturn($this->project);
         $this->tracker->shouldReceive('getId')->andReturn(1);
-
-        $language            = \Mockery::mock(\BaseLanguage::class);
-        $GLOBALS['Language'] = $language;
-        $GLOBALS['Language']->shouldReceive('getText');
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        parent::tearDown();
     }
 
     public function testCreateFormElementExtractsDataFromOriginalFieldThenForwardsToFactory()

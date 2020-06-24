@@ -53,11 +53,7 @@ class Tracker_Masschange_Presenter
 
     public function changing_items()
     {
-        return $GLOBALS['Language']->getText(
-            'plugin_tracker_artifact_masschange',
-            'changing_items',
-            array(count($this->masschange_aids))
-        );
+        return sprintf(dgettext('tuleap-tracker', 'Changing %1$s artifact(s):'), count($this->masschange_aids));
     }
 
     public function tracker_base_url()
@@ -67,36 +63,36 @@ class Tracker_Masschange_Presenter
 
     public function artifact_fields_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact_fields_title');
+        return dgettext('tuleap-tracker', 'Artifacts fields');
     }
 
     public function masschange_info_title()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'info');
+        return dgettext('tuleap-tracker', 'Masschange information');
     }
 
     public function unsubscribe_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'unsubscribe');
+        return dgettext('tuleap-tracker', 'Unsubscribe me from these artifacts\' notifications');
     }
 
     public function add_comment()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment');
+        return dgettext('tuleap-tracker', 'Add a follow-up comment');
     }
 
     public function notification_label()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_masschange', 'send_notifications');
+        return dgettext('tuleap-tracker', 'Send notifications to people monitoring these artifacts');
     }
 
     public function masschange_submit()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_type', 'submit_mass_change');
+        return dgettext('tuleap-tracker', 'Submit');
     }
 
     public function default_comment()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change');
+        return dgettext('tuleap-tracker', 'Mass Change');
     }
 }

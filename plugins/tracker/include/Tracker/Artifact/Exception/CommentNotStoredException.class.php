@@ -24,7 +24,7 @@ class Tracker_CommentNotStoredException extends Tracker_Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_tracker', 'comment_not_stored_exception')
+            dgettext('tuleap-tracker', 'The comment cannot be stored.')
         );
     }
 }

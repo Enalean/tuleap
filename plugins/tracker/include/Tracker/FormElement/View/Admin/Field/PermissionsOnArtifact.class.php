@@ -25,7 +25,7 @@ class Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact extends Tracker
     {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_help');
+        $html .= dgettext('tuleap-tracker', 'Warning : use that field only once.');
         $html .= '</span>';
         return $html;
     }

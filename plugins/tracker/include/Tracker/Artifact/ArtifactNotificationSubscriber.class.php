@@ -44,7 +44,7 @@ class Tracker_ArtifactNotificationSubscriber
         $this->sendResponse(
             $request,
             'info',
-            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'user_unsubscribed'),
+            dgettext('tuleap-tracker', 'You will no-longer receive notifications for this artifact'),
             true
         );
 
@@ -70,7 +70,7 @@ class Tracker_ArtifactNotificationSubscriber
         $this->sendResponse(
             $request,
             'info',
-            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'user_subscribed'),
+            dgettext('tuleap-tracker', 'You are now receiving notifications for this artifact'),
             false
         );
 
@@ -83,7 +83,7 @@ class Tracker_ArtifactNotificationSubscriber
             $this->sendResponse(
                 $request,
                 'error',
-                $GLOBALS['Language']->getText('plugin_tracker_artifact', 'request_not_valid'),
+                dgettext('tuleap-tracker', 'The request is not valid'),
                 null
             );
             return false;

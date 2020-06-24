@@ -28,7 +28,6 @@ final class TrackerHierarchyFactoryGetParentArtifactTest extends \PHPUnit\Framew
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|HierarchyDAO

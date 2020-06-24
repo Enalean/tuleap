@@ -29,11 +29,9 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_List;
 use Tracker_FormElement_Field_List;
 use Tracker_FormElement_Field_List_BindValue;
-use Tuleap\GlobalLanguageMock;
 
 class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 {
-    use GlobalLanguageMock;
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
     /**
@@ -49,22 +47,6 @@ class Tracker_Artifact_ChavesetValue_ListTest extends TestCase // phpcs:ignore S
     protected function setUp(): void
     {
         parent::setUp();
-
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_tracker_artifact', 'changed_from'])
-            ->andReturn('changed from');
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_tracker_artifact', 'to'])
-            ->andReturn('to');
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_tracker_artifact', 'set_to'])
-            ->andReturn('set to');
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_tracker_artifact', 'added'])
-            ->andReturn('added');
-        $GLOBALS['Language']->shouldReceive('getText')
-            ->withArgs(['plugin_tracker_artifact', 'removed'])
-            ->andReturn('removed');
 
         $this->changeset = Mockery::mock(Tracker_Artifact_Changeset::class);
         $this->field     = Mockery::mock(Tracker_FormElement_Field_List::class);

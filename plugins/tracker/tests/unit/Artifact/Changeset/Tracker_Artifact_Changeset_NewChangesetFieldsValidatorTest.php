@@ -22,7 +22,6 @@
 final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
 
     /** @var Tracker_Artifact_Changeset_NewChangesetFieldsValidator */
     private $new_changeset_fields_validator;
@@ -130,8 +129,6 @@ final class Tracker_Artifact_Changeset_NewChangesetFieldsValidatorTest extends \
 
         $this->workflow->shouldReceive('validate')->andReturns(true);
         $this->changeset_value1->shouldReceive('getValue')->andReturns(999);
-
-        $GLOBALS['Language']->shouldReceive('getText')->never();
 
         $user        = \Mockery::spy(\PFUser::class);
         $fields_data = [];

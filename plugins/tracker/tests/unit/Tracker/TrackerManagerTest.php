@@ -148,7 +148,6 @@ class TrackerManagerTest extends TestCase
         $this->formElement->shouldReceive('process')->never();
         $this->tracker->shouldReceive('userCanView')->once()->andReturns(false);
         $GLOBALS['Response']->expect('addFeedback', array('error', '*', '*'));
-        $GLOBALS['Language']->expect('getText', array('plugin_tracker_common_type', 'no_view_permission'));
         $this->tm->shouldReceive('displayAllTrackers')->once();
 
         $request_artifact = Mockery::spy(HTTPRequest::class);

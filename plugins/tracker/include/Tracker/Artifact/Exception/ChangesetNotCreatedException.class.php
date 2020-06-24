@@ -24,7 +24,7 @@ class Tracker_ChangesetNotCreatedException extends Tracker_Exception
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_tracker', 'changeset_not_stored_exception')
+            dgettext('tuleap-tracker', 'The changeset cannot be stored.')
         );
     }
 }

@@ -68,17 +68,6 @@ class BurndownRemainingEffortAdderForRESTTest extends TestCase
         $this->artifact->shouldReceive('getId')->andReturn(101);
         $this->user     = Mockery::mock(PFUser::class);
         $this->user->shouldReceive('toRow');
-
-        $language = Mockery::mock(\BaseLanguage::class);
-        $language->shouldReceive('getLanguageFromAcceptLanguage');
-        $GLOBALS['Language'] = $language;
-        $GLOBALS['Language']->shouldReceive('getText');
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['Language']);
-        parent::tearDown();
     }
 
     public function testItDoesNotDoAnyAdditionWhenBurndownDoesNotHaveARemainingEffortField()

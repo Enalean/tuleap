@@ -243,7 +243,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
      */
     public function fetchWidgetGoToReport()
     {
-        return $this->fetchLinkGoTo('[' . $GLOBALS['Language']->getText('plugin_tracker_report_widget', 'go_to_report') . ']');
+        return $this->fetchLinkGoTo('[' . dgettext('tuleap-tracker', 'Go to report') . ']');
     }
 
     /**
@@ -258,7 +258,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     {
         $html = '';
         $html .= '<div class="tracker-form-element-artifactlink-gototracker">';
-        $html .=  $this->fetchLinkGoTo($GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'go_to_tracker'), array('target' => '_blank', 'rel' => 'noreferrer'));
+        $html .=  $this->fetchLinkGoTo(dgettext('tuleap-tracker', 'Go see this tracker'), array('target' => '_blank', 'rel' => 'noreferrer'));
         $html .= '</div>';
         return $html;
     }

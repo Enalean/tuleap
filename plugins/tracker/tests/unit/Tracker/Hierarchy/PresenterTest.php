@@ -21,7 +21,6 @@
 final class Tracker_Hierarchy_PresenterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
 
     public function testGetPossibleChildrenReturnsAttributesForSelect(): void
     {

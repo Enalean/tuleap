@@ -37,7 +37,7 @@ class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_date_reminder', 'role_COMMENTER');
+        return dgettext('tuleap-tracker', 'Commenter');
     }
 
     /**

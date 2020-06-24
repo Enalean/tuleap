@@ -211,7 +211,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $separator = '&nbsp;';
         if ($format == 'text') {
             $separator = PHP_EOL;
-            $output .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label');
+            $output .= dgettext('tuleap-tracker', 'Restrict access to this artifact for the following user groups:');
         }
 
         $ugroups  = permission_fetch_selected_ugroups(self::PERMISSION_TYPE, $artifact->getId(), $this->getTracker()->getGroupId());
@@ -334,9 +334,9 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ';
+            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
-            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . ' ' . $from_value . '  ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ';
+            $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $to_value['value'];
@@ -358,12 +358,12 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions');
+        return dgettext('tuleap-tracker', 'Permissions on artifact');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'permissions_description');
+        return dgettext('tuleap-tracker', 'Allow user to give permissions to an artefact');
     }
 
     public static function getFactoryIconUseIt()
@@ -913,7 +913,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
             ) . '][use_artifact_permissions]" value="1" />';
         }
 
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'permissions_label') . '</label>';
+        $html .= dgettext('tuleap-tracker', 'Restrict access to this artifact for the following user groups:') . '</label>';
         $html .= '</p>';
 
         return $html;

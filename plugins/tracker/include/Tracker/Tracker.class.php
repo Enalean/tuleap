@@ -537,7 +537,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -563,7 +563,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userCanSubmitArtifact($current_user)) {
                     $this->displaySubmit($layout, $request, $current_user, $link);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                 }
                 break;
             case 'delete':
@@ -572,11 +572,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($service_usage_for_tracker['can_be_deleted'] === false) {
                         $GLOBALS['Response']->addFeedback(
                             Feedback::ERROR,
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker',
-                                'cannot_delete_tracker',
-                                [$service_usage_for_tracker['message']]
-                            )
+                            sprintf(dgettext('tuleap-tracker', 'You can\'t delete this tracker because it is used in: %1$s'), $service_usage_for_tracker['message'])
                         );
                     } elseif ($this->getTrackerFactory()->markAsDeleted($this->id)) {
                         $event_manager = EventManager::instance();
@@ -584,19 +580,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                                           'tracker_id' => $this->getId()));
                         $GLOBALS['Response']->addFeedback(
                             'info',
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_admin_index',
-                                'delete_success',
-                                $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)
-                            )
+                            sprintf(dgettext('tuleap-tracker', 'Tracker \'%1$s\' - Successfully Deleted'), $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML))
                         );
                         $GLOBALS['Response']->addFeedback(
                             'info',
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_admin_index',
-                                'tracker_deleted',
-                                $GLOBALS['sys_email_admin']
-                            ),
+                            sprintf(dgettext('tuleap-tracker', 'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next 10 days.'), $GLOBALS['sys_email_admin']),
                             CODENDI_PURIFIER_FULL
                         );
                         $reference_manager =  ReferenceManager::instance();
@@ -609,15 +597,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                     } else {
                         $GLOBALS['Response']->addFeedback(
                             'error',
-                            $GLOBALS['Language']->getText(
-                                'plugin_tracker_admin_index',
-                                'deletion_failed',
-                                $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)
-                            )
+                            sprintf(dgettext('tuleap-tracker', 'Tracker \'%1$s\' - Deletion Failed -'), $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML))
                         );
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                 }
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?group_id=' . $this->group_id);
                 break;
@@ -628,7 +612,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     }
                     $this->displayAdminOptions($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -637,7 +621,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getPermissionController()->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -647,7 +631,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if (is_array($request->get('add-formElement'))) {
                         $formElement_id = key($request->get('add-formElement'));
                         if (Tracker_FormElementFactory::instance()->addFormElement($formElement_id)) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_index', 'field_added'));
+                            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Field added to the form'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-formElements');
                         }
                     } elseif (is_array($request->get('create-formElement'))) {
@@ -673,7 +657,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     }
                     $this->displayAdminFormElements($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -687,7 +671,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $this->displayAdminFormElements($layout, $request, $current_user);
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -695,7 +679,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getTrackerSemanticManager()->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -704,7 +688,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getCannedResponseManager()->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -717,7 +701,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -726,7 +710,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $admin_webhook = new AdminWebhooks($this, $this->getWebhookFactory(), $this->getWebhookLogsRetriever());
                     $admin_webhook->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -741,16 +725,16 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $csv_body   = $session->get('csv_body');
 
                         if ($this->importFromCSV($request, $current_user, $csv_header, $csv_body)) {
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_succeed'));
+                            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Import succeed.'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                         } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'import_failed'));
+                            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Import failed.'));
                             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                         }
                     }
                     $this->displayAdminCSVImport($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -760,7 +744,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
                     $this->sendXML($this->exportToXML($xml_element));
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -768,7 +752,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getGlobalRulesManager()->process($layout, $request, $current_user);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -819,11 +803,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                 break;
             case 'admin-hierarchy':
                 if ($this->userIsAdmin($current_user)) {
-                    $this->displayAdminHeader($layout, 'hierarchy', $GLOBALS['Language']->getText('plugin_tracker_admin', 'hierarchy'));
+                    $this->displayAdminHeader($layout, 'hierarchy', dgettext('tuleap-tracker', 'Hierarchy'));
                     $this->getHierarchyController($request)->edit();
                     $this->displayAdminFooter($layout);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -831,7 +815,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->getHierarchyController($request)->update();
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -839,7 +823,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 if ($this->userIsAdmin($current_user)) {
                     $this->displayAdminClean($layout);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -852,11 +836,11 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($artifact && $artifact->getTrackerId() == $this->id) {
                         $this->displayAdminConfirmDelete($layout, $artifact);
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_error_noart', array($request->get('id'))));
+                        $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId() . '&func=admin-clean');
                     }
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
@@ -869,22 +853,22 @@ class Tracker implements Tracker_Dispatchable_Interface
                         if ($artifact && $artifact->getTrackerId() == $this->getId()) {
                             $artifact_deletor = ArtifactDeletorBuilder::build();
                             $artifact_deletor->delete($artifact, $current_user);
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info_deleted', array($request->get('id'))));
+                            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s successfully deleted'), $request->get('id')));
                         } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_error_noart', array($request->get('id'))));
+                            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact %1$s doesn\'t exist or doesn\'t belong to current tracker'), $request->get('id')));
                         }
                     } else {
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel_deleted'));
+                        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Delete canceled'));
                     }
                     $GLOBALS['Response']->redirect($this->getAdministrationUrl());
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
                 break;
             case 'create_new_public_report':
                 if (! $this->userIsAdmin($current_user)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
 
@@ -893,7 +877,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $validator->required();
 
                 if (! $request->valid($validator)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_invalid'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Invalid name for a report'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->getId());
                 }
 
@@ -1020,7 +1004,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             }
 
             echo $linked_artifact->fetchTitleWithoutUnsubscribeButton(
-                $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'title_prefix')
+                dgettext('tuleap-tracker', 'Select artifacts to link to&nbsp;')
             );
 
             echo '<input type="hidden" id="link-artifact-id" value="' . (int) $link_artifact_id . '" />';
@@ -1034,12 +1018,12 @@ class Tracker implements Tracker_Dispatchable_Interface
             echo '<div id="tracker-link-artifact-manual-way">';
             echo '<div class="boxtitle">';
             echo $GLOBALS['HTML']->getImage('ic/lightning-white.png', array('style' => 'vertical-align:middle')) . '&nbsp;';
-            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_title');
+            echo dgettext('tuleap-tracker', 'Manually');
             echo '</div>';
             echo '<div class="tracker-link-artifact-manual-way-content">';
-            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_desc');
+            echo dgettext('tuleap-tracker', 'If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.');
             echo '<p><label for="link-artifact-manual-field">';
-            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'manual_panel_label');
+            echo dgettext('tuleap-tracker', 'Artifact id(s)');
             echo '</label><br />';
             echo '<input type="text" name="link-artifact[manual]" value="" id="link-artifact-manual-field" />';
             echo '</p>';
@@ -1050,7 +1034,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             echo '<div id="tracker-link-artifact-recentitems-way">';
             echo '<div class="boxtitle">';
             echo $GLOBALS['HTML']->getImage('ic/star-white.png', array('style' => 'vertical-align:middle')) . '&nbsp;';
-            echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_title');
+            echo dgettext('tuleap-tracker', 'Recent artifacts');
             echo '</div>';
             echo '<div class="tracker-link-artifact-recentitems-way-content">';
             $visit_retriever            = new VisitRetriever(
@@ -1063,7 +1047,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 self::MAXIMUM_RECENT_ARTIFACTS_TO_DISPLAY
             );
             if (! empty($recently_visited_artifacts)) {
-                echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'recent_panel_desc');
+                echo dgettext('tuleap-tracker', 'Pick artifacts to be linked from your recently viewed items:');
                 echo '<ul>';
                 foreach ($recently_visited_artifacts as $artifact) {
                     if ((int) $artifact->getId() !== $link_artifact_id) {
@@ -1088,7 +1072,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 echo '<td><div id="tracker-link-artifact-slow-way">';
                 echo '<div class="boxtitle">';
                 echo $GLOBALS['HTML']->getImage('ic/magnifier-white.png', array('style' => 'vertical-align:middle')) . '&nbsp;';
-                echo $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'search_panel_title');
+                echo dgettext('tuleap-tracker', 'Search artifacts');
                 echo '</div>';
                 echo '<div id="tracker-link-artifact-slow-way-content">';
             }
@@ -1098,16 +1082,16 @@ class Tracker implements Tracker_Dispatchable_Interface
             $report->process($layout, $request, $current_user);
         } elseif (!$link_artifact_id) {
             $this->displayHeader($layout, $this->name, array(), $this->getDefaultToolbar());
-            echo $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
+            echo dgettext('tuleap-tracker', 'No reports available');
 
             if ($this->userIsAdmin($current_user)) {
                 $action = '?tracker=' . (int) $this->getID() . '&func=create_new_public_report';
 
                 echo '<form class="form-inline" action="' . $action . '" method="POST">'
                     . '<fieldset>'
-                        . '<legend>' . $GLOBALS['Language']->getText('plugin_tracker', 'create_new_report') . '</legend>'
-                        . '<input required type="text" name="new_report_name" placeholder="' . $GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_name') . '" />'
-                        . '<button type="submit" class="btn">' . $GLOBALS['Language']->getText('plugin_tracker', 'create_new_report_submit') . '</button>'
+                        . '<legend>' . dgettext('tuleap-tracker', 'Create a new one') . '</legend>'
+                        . '<input required type="text" name="new_report_name" placeholder="' . dgettext('tuleap-tracker', 'name') . '" />'
+                        . '<button type="submit" class="btn">' . dgettext('tuleap-tracker', 'Create Report') . '</button>'
                     . '</fieldset></form>';
             }
 
@@ -1175,7 +1159,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $breadcrumbs = array(
                 array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker_browse', 'search_result'),
+                        'title' => dgettext('tuleap-tracker', 'Search Result'),
                         'url'   => TRACKER_BASE_URL . '/?tracker=' . $this->getId(),
                 ),
         );
@@ -1214,7 +1198,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $summary_field = $this->getTitleField();
             if ($summary_field && $summary_field->userCanRead()) {
-                $title_arr[] = $GLOBALS['Language']->getText('plugin_tracker_search_index', 'artifact_title');
+                $title_arr[] = dgettext('tuleap-tracker', 'Artifact Title');
             }
             $submitted_field = $art_field_fact->getFormElementByName($this->getId(), 'submitted_by');
             if ($submitted_field && $submitted_field->userCanRead()) {
@@ -1397,19 +1381,19 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         if (UserManager::instance()->getCurrentUser()->isLoggedIn()) {
             $toolbar[] = array(
-                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'notifications'),
+                    'title' => dgettext('tuleap-tracker', 'Notifications'),
                     'url'   => TRACKER_BASE_URL . '/notifications/my/' . urlencode($this->id) . '/',
             );
         }
         if ($this->userIsAdmin()) {
             $toolbar[] = array(
-                    'title' => $GLOBALS['Language']->getText('plugin_tracker', 'administration'),
+                    'title' => dgettext('tuleap-tracker', 'Administration'),
                     'url'   => $this->getAdministrationUrl(),
                     'data-test' => "tracker-administration"
             );
         }
         $toolbar[] = array(
-                'title' => $GLOBALS['Language']->getText('plugin_tracker', 'help'),
+                'title' => dgettext('tuleap-tracker', 'Help'),
                 'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/tracker.html\');',
         );
 
@@ -1466,12 +1450,12 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     private function buildAndDisplayAdministrationHeader(Tracker_IDisplayTrackerLayout $layout, $title, $breadcrumbs, array $params): void
     {
-        $title = ($title ? $title . ' - ' : '') . $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration');
+        $title = ($title ? $title . ' - ' : '') . dgettext('tuleap-tracker', 'Administration');
         if ($this->userIsAdmin()) {
             $breadcrumbs = array_merge(
                 array(
                     array(
-                        'title' => $GLOBALS['Language']->getText('plugin_tracker_include_type', 'administration'),
+                        'title' => dgettext('tuleap-tracker', 'Administration'),
                         'url' => $this->getAdministrationUrl(),
                     ),
                 ),
@@ -1553,7 +1537,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function displayAdminFormElements(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         $this->displayAdminFormElementsWarnings();
-        $title = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'mng_field_usage');
+        $title = dgettext('tuleap-tracker', 'Manage Field Usage');
         $this->displayAdminFormElementsHeader($layout, $title);
 
         $this->displayAdminFormElementsNewLayoutModal($current_user);
@@ -1599,9 +1583,9 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         $this->formElementFactory->displayFactories($this);
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'unused_elements'));
+        $w = new Widget_Static(dgettext('tuleap-tracker', 'Unused elements'));
         $unused_elements_content = '';
-        $unused_elements_content = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'unused_elements_desc');
+        $unused_elements_content = dgettext('tuleap-tracker', 'Below is a catalog of preconfigured elements ready for use.');
         $unused_elements_content .= '<div class="tracker-admin-palette-content"><table>';
         foreach (Tracker_FormElementFactory::instance()->getUnusedFormElementForTracker($this) as $f) {
             $unused_elements_content .= $f->fetchAdminAdd();
@@ -1620,7 +1604,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
     public function displayAdminCSVImport(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
-        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import');
+        $title = dgettext('tuleap-tracker', 'CSV Import');
         $this->displayAdminCSVImportHeader($layout, $title);
 
         echo '<h2 class="almost-tlp-title">' . $title . ' ' . help_button('tracker.html#tracker-artifact-import') . '</h2>';
@@ -1628,14 +1612,14 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
         echo '<span class="smaller"><em>';
-        echo $GLOBALS['Language']->getText('plugin_tracker_import', 'file_upload_instructions', formatByteToMb($GLOBALS['sys_max_size_upload']));
+        echo sprintf(dgettext('tuleap-tracker', '(The maximum upload file size is %1$s Mb. The file must be encoded in UTF-8)'), formatByteToMb($GLOBALS['sys_max_size_upload']));
         echo '</em></span>';
         echo '<br>';
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'send_notifications');
+        echo dgettext('tuleap-tracker', 'Send notifications:');
         echo '<input type="checkbox" name="notify" value="ok" />';
         echo '<br>';
         echo '<input type="hidden" name="action" value="import_preview">';
-        echo '<input type="submit" value="' . $GLOBALS['Language']->getText('plugin_tracker_import', 'submit_info') . '">';
+        echo '<input type="submit" value="' . dgettext('tuleap-tracker', 'Load artifacts') . '">';
         echo '</form>';
         $this->displayAdminFooter($layout);
     }
@@ -1646,10 +1630,10 @@ class Tracker implements Tracker_Dispatchable_Interface
         $title = dgettext('tuleap-tracker', 'Delete artifacts');
         $this->displayAdminItemHeader($layout, 'clean', $title);
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-        echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_info') . '</p>';
+        echo '<p>' . dgettext('tuleap-tracker', 'Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.') . '</p>';
         echo '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact-confirm">';
         echo $token->fetchHTMLInput();
-        echo '<label>' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_id') . ' <input type="text" name="id" value=""></label>';
+        echo '<label>' . dgettext('tuleap-tracker', 'Id of the artifact to delete:') . ' <input type="text" name="id" value=""></label>';
         echo '<br>';
         echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '">';
         echo '</form>';
@@ -1661,15 +1645,15 @@ class Tracker implements Tracker_Dispatchable_Interface
         $token = new CSRFSynchronizerToken(TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact');
         $this->displayAdminItemHeader($layout, 'clean', dgettext('tuleap-tracker', 'Delete artifacts'));
         echo '<div class="tracker_confirm_delete">';
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm_text', array($artifact->getXRefAndTitle()));
+        echo sprintf(dgettext('tuleap-tracker', '<h3>You are about to delete permanently the artifact "%1$s".</h3><p><strong>There is no way to restore the artifact.</strong></p>'), $artifact->getXRefAndTitle());
         echo '<div class="tracker_confirm_delete_preview">';
         echo $this->fetchFormElementsReadOnly($artifact, []);
         echo '</div>';
         echo '<form name="delete_artifact" method="post" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-delete-artifact">';
         echo $token->fetchHTMLInput();
         echo '<div class="tracker_confirm_delete_buttons">';
-        echo '<input type="submit" tabindex="2" name="confirm" value="' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_confirm') . '" />';
-        echo '<input type="submit" tabindex="1" name="cancel" value="' . $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel') . '" />';
+        echo '<input type="submit" tabindex="2" name="confirm" value="' . dgettext('tuleap-tracker', 'Confirm') . '" />';
+        echo '<input type="submit" tabindex="1" name="cancel" value="' . dgettext('tuleap-tracker', 'Cancel') . '" />';
         echo '</div>';
         echo '<input type="hidden" name="id" value="' . $artifact->getId() . '" />';
         echo '</form>';
@@ -1681,7 +1665,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     {
         $breadcrumbs = array(
             array(
-                'title' => $GLOBALS['Language']->getText('plugin_tracker_index', 'mass_change'),
+                'title' => dgettext('tuleap-tracker', 'Mass Change'),
                 'url'   => '#' //TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=display-masschange-form',
             ),
         );
@@ -1767,7 +1751,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
             $dao = new TrackerDao();
             if ($dao->save($this)) {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_tracker_admin', 'successfully_updated'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-tracker', 'Tracker successfully updated.'));
             } else {
                 $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('global', 'error'));
             }
@@ -2481,7 +2465,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $lines = array();
                 while ($line = fgetcsv($f, 0, $separator)) {
                     if ($line === false) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'error_in_csv_file', array($i)));
+                        $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Error in CSV file at line %1$s'), $i));
                         $is_valid = false;
                     } else {
                         $lines[] = $this->getCSVLine($line, $i);
@@ -2494,7 +2478,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if (count($lines) >= 2) {
                         $is_valid = $this->isValidCSV($lines, $separator);
 
-                        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'csv_import');
+                        $title = dgettext('tuleap-tracker', 'CSV Import');
                         $this->displayAdminCSVImportHeader($layout, $title);
 
                         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
@@ -2553,24 +2537,24 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $html_table .=  '</table>';
 
                             echo '<p>';
-                            echo $GLOBALS['Language']->getText('plugin_tracker_import', 'check_data') . '<br />';
+                            echo dgettext('tuleap-tracker', 'Please, check your data before importing, especially the dates.') . '<br />';
 
                             $expected_format = 'MM/DD/YYYY';
                             if ($this->_getCSVDateformat($current_user) === CSVFormatter::DAY_MONTH_YEAR) {
                                 $expected_format = 'DD/MM/YYYY';
                             }
 
-                            echo $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'date_format_help', [$expected_format]);
+                            echo sprintf(dgettext('tuleap-tracker', 'Expected date format is <strong>%1$s</strong>. <a href="/account/">Change import/export date format</a>'), $expected_format);
                             echo '</p>';
 
                             if ($is_valid) {
                                 echo '<form name="form1" method="POST" enctype="multipart/form-data" action="' . TRACKER_BASE_URL . '/?tracker=' . (int) $this->id . '&amp;func=admin-csvimport">';
-                                echo '<p>' . $GLOBALS['Language']->getText('plugin_tracker_import', 'ready', array($nb_lines, $nb_artifact_creation, $nb_artifact_update)) . '</p>';
+                                echo '<p>' . sprintf(dgettext('tuleap-tracker', 'Ready to import %1$s artifact(s): %2$s new artifact(s), %3$s existing artifact(s)'), $nb_lines, $nb_artifact_creation, $nb_artifact_update) . '</p>';
                                 echo '<input type="hidden" name="action" value="import">';
                                 if ($request->exist('notify') && $request->get('notify') == 'ok') {
                                     echo '<input type="hidden" name="notify" value="ok">';
                                 }
-                                echo '<input type="submit" class="csv-preview-import-button" value="' . $GLOBALS['Language']->getText('plugin_tracker_import', 'import_new_hdr') . '">';
+                                echo '<input type="submit" class="csv-preview-import-button" value="' . dgettext('tuleap-tracker', 'Import Artifacts') . '">';
                             }
                             echo $html_table;
                             if ($is_valid) {
@@ -2584,14 +2568,14 @@ class Tracker implements Tracker_Dispatchable_Interface
                         $this->displayAdminFooter($layout);
                         exit();
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'no_data'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No data to import'));
                     }
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_open_file', array($_FILES['csv_filename']['tmp_name'])));
+                $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Unable to open file %1$s'), $_FILES['csv_filename']['tmp_name']));
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'file_not_found'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'File not found'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . (int) $this->getId() . '&func=admin-csvimport');
         }
     }
@@ -2617,7 +2601,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if (! $artifactbyemail_status->isSemanticConfigured($this)) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'semantic_missing')
+                dgettext('tuleap-tracker', 'Semantic title and description for creating an artifact by mail are not defined.')
             );
         }
     }
@@ -2636,7 +2620,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if (! $artifactbyemail_status->isRequiredFieldsConfigured($this)) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'invalid_required_fields')
+                dgettext('tuleap-tracker', 'Only fields selected in title or description semantic can be required if you want to create artifacts by email.')
             );
         }
     }
@@ -2651,7 +2635,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         ) {
             $GLOBALS['Response']->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText('plugin_tracker_emailgateway', 'invalid_configuration')
+                dgettext('tuleap-tracker', 'Creating artifact by mail is not possible due to the current configuration of the tracker.')
             );
         }
     }
@@ -2668,7 +2652,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         if (count($header_line) == 1) {
             // not sure it is an error, so don't set is_valid to false.
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'separator_not_found', array($separator)), CODENDI_PURIFIER_FULL);
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'CSV separator not found (%1$s). Either you want to import only one field, or you\'re using the wrong separator.<br />If so, you can <a href="/account/">change the CSV import/export separator</a>'), $separator), CODENDI_PURIFIER_FULL);
         }
 
         if ($this->hasBlockingError($header_line, $lines)) {
@@ -2694,7 +2678,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             foreach ($lines as $line) {
                 if ($line[$aid_key] != '') {
                     if (!$this->aidExists($line[$aid_key])) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'aid_does_not_exist', array($line[$aid_key])));
+                        $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact Id %1$s does not exist'), $line[$aid_key]));
                         $has_unknown = true;
                     }
                 }
@@ -2735,7 +2719,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     }
 
                     if ($field && ! $field->isCSVImportable()) {
-                        $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field_name));
+                        $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $field->getName()));
                         continue;
                     }
 
@@ -2768,7 +2752,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         if ($data[$field->getId()] === null) {
                             $GLOBALS['Response']->addFeedback(
                                 'error',
-                                $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name))
+                                sprintf(dgettext('tuleap-tracker', 'Unknown value: "%1$s" for field "%2$s"'), $line[$idx], $field_name)
                             );
                             $has_blocking_error = true;
                         }
@@ -2806,10 +2790,10 @@ class Tracker implements Tracker_Dispatchable_Interface
             }
         }
         if (count($unknown_fields) > 0) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_field', array(implode(',', $unknown_fields))));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Unknown field: %1$s'), implode(',', $unknown_fields)));
         }
         if (count($error_nature) > 0) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'importing_nature', array(implode(',', $error_nature))));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'Columns using type will not be taken into account during import : %1$s.'), implode(',', $error_nature)));
         }
 
         return $has_blocking_error;
@@ -2834,13 +2818,13 @@ class Tracker implements Tracker_Dispatchable_Interface
                 $key = array_search($field->getName(), $header_line);
                 if ($key === false) {
                     //search if field  is in the CSV file header line
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field', array($field->getName())));
+                    $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Missing required field: %1$s'), $field->getName()));
                     $is_missing = true;
                 } else {
                     //search if there is a value at each line for that field
                     foreach ($lines as $line) {
                         if (! isset($line[$key]) || $line[$key] == '') {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field_value', array($field->getName())));
+                            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Missing value on a required field: %1$s'), $field->getName()));
                             $is_missing = true;
                         }
                     }
@@ -2907,7 +2891,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             if (! $artifact) {
                                 $GLOBALS['Response']->addFeedback(
                                     Feedback::ERROR,
-                                    $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_artifact', array($artifact_id))
+                                    sprintf(dgettext('tuleap-tracker', 'Unknown artifact %1$s'), $artifact_id)
                                 );
                                 $is_error = true;
                             }
@@ -2917,7 +2901,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         if ($field->isCSVImportable()) {
                             $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell, $artifact);
                         } else {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', $field->getName()));
+                            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $field->getName()));
                         }
                     }
                 }
@@ -2927,7 +2911,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                     if ($artifact = $af->createArtifact($this, $fields_data, $current_user, null, $send_notifications)) {
                         $nb_artifact_creation++;
                     } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_create_artifact'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to create artifact'));
                         $is_error = true;
                     }
                 } else {
@@ -2951,7 +2935,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                             $is_error = true;
                         } catch (Tracker_Exception $e) {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Unable to update artifact %1$s'), $artifact_id));
                             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
@@ -2960,14 +2944,14 @@ class Tracker implements Tracker_Dispatchable_Interface
             }
             if (! $is_error) {
                 if ($nb_artifact_creation > 0) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'nb_created_import', array($nb_artifact_creation)));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', '%1$s Artifact(s) created'), $nb_artifact_creation));
                 }
                 if ($nb_artifact_update > 0) {
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'nb_updated_import', array($nb_artifact_update)));
+                    $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', '%1$s Artifact(s) updated'), $nb_artifact_update));
                 }
             }
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'no_data'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No data to import'));
             $is_error = true;
         }
         return ! $is_error;
@@ -3104,20 +3088,20 @@ class Tracker implements Tracker_Dispatchable_Interface
             $html .= '<div class="tracker_statistics">';
             $html .= '<div style="text-align:right;font-size:0.825em;">#' . $this->id . '</div>';
             if ($row['nb_total'] && $this->hasSemanticsStatus()) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_stat', 'number_open_artifacts') . ' ' . $row['nb_open'] . '<br />';
+                $html .= dgettext('tuleap-tracker', 'Number of open artifacts:') . ' ' . $row['nb_open'] . '<br />';
             }
 
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_stat', 'total_number_artifacts') . ' ' . $row['nb_total'] . '<br />';
+            $html .= dgettext('tuleap-tracker', 'Total number of artifacts:') . ' ' . $row['nb_total'] . '<br />';
             if ($row['last_creation'] && $row['last_update']) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_stat', 'recent_activity');
+                $html .= dgettext('tuleap-tracker', 'Recent activity:');
                 $html .= '<ul>';
                 if ($row['last_update']) {
-                    $html .= '<li>' . $GLOBALS['Language']->getText('plugin_tracker_stat', 'last_update') . ' ';
+                    $html .= '<li>' . dgettext('tuleap-tracker', 'Last update') . ' ';
                     $html .= DateHelper::timeAgoInWords($row['last_update'], true, true);
                     $html .= '</li>';
                 }
                 if ($row['last_creation']) {
-                    $html .= '<li>' . $GLOBALS['Language']->getText('plugin_tracker_stat', 'last_artifact_created') . ' ';
+                    $html .= '<li>' . dgettext('tuleap-tracker', 'Last artifact created') . ' ';
                     $html .= DateHelper::timeAgoInWords($row['last_creation'], true, true);
                     $html .= '</li>';
                 }

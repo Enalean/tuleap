@@ -24,7 +24,6 @@ use Tuleap\Tracker\Hierarchy\HierarchyDAO;
 final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
     /**

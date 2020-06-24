@@ -28,7 +28,7 @@ class Nature extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'hierarchy_title');
+        return dgettext('tuleap-tracker', 'Children');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

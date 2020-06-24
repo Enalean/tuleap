@@ -1,0 +1,143 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: Nicolas Terray <nicolas.terray@enalean.com>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#, php-format
+msgid "'%1$s' Reminder Settings Update Failed."
+msgstr ""
+
+#, php-format
+msgid "'%1$s' Reminder Settings Update Successful."
+msgstr ""
+
+#, php-format
+msgid ""
+"<b>Example</b>:<br><br>The notification on '%1$s' date will start <b>2</b> "
+"days <b>before</b> the date set in this field.<br>Codex will send <b>3</b> e-"
+"mails to <b>Submitter</b> and <b>Assignee</b>, with a frequency of one e-"
+"mail every <b>2</b> days."
+msgstr ""
+
+#, php-format
+msgid "Artifact: '%1$s'"
+msgstr ""
+
+#, php-format
+msgid ""
+"Codex was asked to remind you today that the '%1$s' in the artifact below is "
+"%2$s (Week %3$s)."
+msgstr ""
+
+msgid "Codex will send"
+msgstr ""
+
+msgid "Date Fields Email Notification"
+msgstr ""
+
+msgid "Date based email reminder activated for this field"
+msgstr ""
+
+msgid "Date based notification in trackers."
+msgstr ""
+
+msgid "Delete reminder on this field"
+msgstr ""
+
+msgid "Error. You must specify a positive value."
+msgstr ""
+
+msgid "Error. You must specify the notification frequency."
+msgstr ""
+
+msgid "Error. You must specify the notification start date."
+msgstr ""
+
+msgid "Error. You must specify the number of mails to be sent."
+msgstr ""
+
+msgid "Error. You must specify the users to be notified."
+msgstr ""
+
+#, php-format
+msgid ""
+"It means: Codex will send to artifact submitter and assignee(s): <br> * 1 e-"
+"mail 2 days before <i>'%1$s'</i> date<br> * 1 e-mail on <i>'%1$s'</i> date "
+"<br> * 1 e-mail 2 days after <i>'%1$s'</i> date"
+msgstr ""
+
+msgid "Notification Settings"
+msgstr ""
+
+msgid "Notification Status"
+msgstr ""
+
+#, php-format
+msgid "Project: '%1$s'"
+msgstr ""
+
+#, php-format
+msgid "Reminder Settings For '%1$s' Field"
+msgstr ""
+
+#, php-format
+msgid "Reminder: '%1$s' %2$s for '%3$s'"
+msgstr ""
+
+#, php-format
+msgid "The notification on <b>'%1$s'</b> will start"
+msgstr ""
+
+msgid ""
+"This is an automatic message sent by Codex. Please do not reply to this "
+"email."
+msgstr ""
+
+msgid "Tracker Administration - Date Fields Reminder Settings"
+msgstr ""
+
+msgid "Tracker date based reminder"
+msgstr ""
+
+#, php-format
+msgid "Tracker: '%1$s'"
+msgstr ""
+
+msgid "You can access the artifact here:"
+msgstr ""
+
+msgid "You can disable reminder with following button"
+msgstr ""
+
+msgid "active"
+msgstr ""
+
+msgid "after"
+msgstr ""
+
+msgid "before"
+msgstr ""
+
+msgid "day(s)"
+msgstr ""
+
+msgid "disabled"
+msgstr ""
+
+msgid "e-mail(s) to"
+msgstr ""
+
+msgid "the date set in this field."
+msgstr ""
+
+msgid "with a frequency of one e-mail every"
+msgstr ""

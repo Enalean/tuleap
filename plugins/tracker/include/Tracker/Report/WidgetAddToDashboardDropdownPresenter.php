@@ -70,8 +70,8 @@ class WidgetAddToDashboardDropdownPresenter
         $this->has_project_dashboard          = count($project_dashboards_presenter) > 0;
         $this->has_only_one_project_dashboard = count($project_dashboards_presenter) === 1;
 
-        $this->my_dashboard      = $GLOBALS['Language']->getText('plugin_tracker_report', 'my_dashboard');
-        $this->project_dashboard = $GLOBALS['Language']->getText('plugin_tracker_report', 'project_dashboard');
-        $this->dashboard         = $GLOBALS['Language']->getText('plugin_tracker_report', 'dashboard');
+        $this->my_dashboard      = dgettext('tuleap-tracker', 'Add to my dashboard');
+        $this->project_dashboard = dgettext('tuleap-tracker', 'Add to project dashboard');
+        $this->dashboard         = dgettext('tuleap-tracker', 'Add to dashboard');
     }
 }

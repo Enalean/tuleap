@@ -88,11 +88,7 @@ class Tracker_FormElement_DateFormatter
             if (! $is_valid) {
                 $GLOBALS['Response']->addFeedback(
                     'error',
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker_common_artifact',
-                        'error_date_value',
-                        array($this->field->getLabel())
-                    )
+                    sprintf(dgettext('tuleap-tracker', '%1$s is not a date.'), $this->field->getLabel())
                 );
             }
         }

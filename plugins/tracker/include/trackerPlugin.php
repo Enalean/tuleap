@@ -387,7 +387,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $params['plugins'][] = array(
-            'label' => $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name'),
+            'label' => dgettext('tuleap-tracker', 'Tracker'),
             'href'  => $this->getPluginPath() . '/config.php',
             'has_shortname' => true,
             'shortname' => 'admin-tracker'
@@ -568,34 +568,34 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if (!$params['name']) {
             switch ($params['permission_type']) {
                 case 'PLUGIN_TRACKER_FIELD_SUBMIT':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_submit');
+                    $params['name'] = dgettext('tuleap-tracker', 'Can submit tracker field');
                     break;
                 case 'PLUGIN_TRACKER_FIELD_READ':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_read');
+                    $params['name'] = dgettext('tuleap-tracker', 'Can read tracker field');
                     break;
                 case 'PLUGIN_TRACKER_FIELD_UPDATE':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_field_update');
+                    $params['name'] = dgettext('tuleap-tracker', 'Can update tracker field');
                     break;
                 case Tracker::PERMISSION_SUBMITTER_ONLY:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_submitter_only_access');
+                    $params['name'] = dgettext('tuleap-tracker', 'Access to tracker artifacts the user submitted');
                     break;
                 case Tracker::PERMISSION_SUBMITTER:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_submitter_access');
+                    $params['name'] = dgettext('tuleap-tracker', 'Access to tracker artifacts submitted by group');
                     break;
                 case Tracker::PERMISSION_ASSIGNEE:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_assignee_access');
+                    $params['name'] = dgettext('tuleap-tracker', 'Access to tracker artifacts assigned to group');
                     break;
                 case Tracker::PERMISSION_FULL:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_full_access');
+                    $params['name'] = dgettext('tuleap-tracker', 'Access to all tracker artifacts');
                     break;
                 case Tracker::PERMISSION_ADMIN:
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_admin');
+                    $params['name'] = dgettext('tuleap-tracker', 'Admin of the tracker');
                     break;
                 case 'PLUGIN_TRACKER_ARTIFACT_ACCESS':
-                    $params['name'] = $GLOBALS['Language']->getText('plugin_tracker_permissions', 'plugin_tracker_artifact_access');
+                    $params['name'] = dgettext('tuleap-tracker', 'Access to an artifact');
                     break;
                 case 'PLUGIN_TRACKER_WORKFLOW_TRANSITION':
-                    $params['name'] = $GLOBALS['Language']->getText('workflow_admin', 'permissions_transition');
+                    $params['name'] = dgettext('tuleap-tracker', 'Can make the transition');
                     break;
                 default:
                     break;
@@ -785,7 +785,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 if ($artifact && $artifact->getTracker()->isActive()) {
                     $event->setOutput($artifact->fetchTooltip($event->getUser()));
                 } else {
-                    $event->setOutput($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
+                    $event->setOutput(dgettext('tuleap-tracker', 'This artifact does not exist.'));
                 }
             }
         }
@@ -884,7 +884,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     $area = '';
                     $area .= '<a href="' . TRACKER_BASE_URL . '/?group_id=' . urlencode($project->getGroupId()) . '">';
                     $area .= '<i class="dashboard-widget-content-projectpublicareas ' . $purifier->purify($service->getIcon()) . '"></i>';
-                    $area .= $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
+                    $area .= dgettext('tuleap-tracker', 'Trackers');
                     $area .= '</a>';
 
                     $area .= '<ul><li>' . implode('</li><li>', $entries) . '</li></ul>';
@@ -1303,7 +1303,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $project = $params['project'];
         if ($project->usesService($this->getServiceShortname())) {
-            $params['services'][] = $GLOBALS['Language']->getText('plugin_tracker', 'service_lbl_key');
+            $params['services'][] = dgettext('tuleap-tracker', 'Trackers');
         }
     }
 

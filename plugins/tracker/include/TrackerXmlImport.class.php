@@ -471,11 +471,7 @@ class TrackerXmlImport
 
         if (! empty($trackers_name_error)) {
             $list_trackers_name = implode(', ', $trackers_name_error);
-            $errors = $GLOBALS['Language']->getText(
-                'plugin_tracker_common_type',
-                'trackers_cant_be_imported',
-                array($list_trackers_name)
-            );
+            $errors = sprintf(dgettext('tuleap-tracker', 'The following trackers cannot be imported due to invalid data, name or short name already in use: %1$s'), $list_trackers_name);
         }
 
         return $errors;
@@ -776,7 +772,7 @@ class TrackerXmlImport
                 $tracker->setId($tracker_id);
             } else {
                 throw new TrackerFromXmlException(
-                    $GLOBALS['Language']->getText('plugin_tracker_admin', 'error_during_creation')
+                    dgettext('tuleap-tracker', 'Oops. Something weird occured. Unable to create the tracker. Please try again.')
                 );
             }
         } else {

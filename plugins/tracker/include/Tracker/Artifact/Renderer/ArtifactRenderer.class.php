@@ -125,8 +125,8 @@ abstract class Tracker_Artifact_ArtifactRenderer
     protected function getConcurrentEditMessage()
     {
         return '<div id="artifact-submit-keeper-message">
-                    <span class="help_title">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_title') . '</span>
-                    ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'submission_keeper_warning_msg') . '
+                    <span class="help_title">' . dgettext('tuleap-tracker', 'Warning: concurrent edit') . '</span>
+                    ' . dgettext('tuleap-tracker', '<p>Someone updated this artifact while you were editing it.</p><p>Please acknowledge all notifications before submit.</p><p>Beware, on submit, your modifications will be applied on top of previous changes.</p>') . '
                 </div>';
     }
 
@@ -138,7 +138,7 @@ abstract class Tracker_Artifact_ArtifactRenderer
     public function fetchAnonymousEmailForm()
     {
         $html = '<p>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'not_logged_in', array('/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI'])));
+        $html .= sprintf(dgettext('tuleap-tracker', '<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="%1$s">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don\'t have a user account, then enter your email address instead:'), '/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
         $html .= '<br />';
         $html .= '<input type="text" name="email" id="email" size="50" maxsize="100" />';
         $html .= '</p>';

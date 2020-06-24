@@ -38,11 +38,7 @@ class NatureDao extends DataAccessObject
         if ($nature->count() > 0) {
             $this->rollBack();
             throw new UnableToCreateNatureException(
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'create_same_name_error',
-                    $shortname
-                )
+                sprintf(dgettext('tuleap-tracker', 'a type with %1$s as shortname already exists.'), $shortname)
             );
         }
 

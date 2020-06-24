@@ -51,11 +51,7 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
             return null;
         }
 
-        return $GLOBALS['Language']->getText(
-            'plugin_tracker_modal_artifact',
-            'artifact_to_link_title',
-            array($this->artifact_to_link->getTitle())
-        );
+        return sprintf(dgettext('tuleap-tracker', 'The artifact will be linked to %1$s'), (string) $this->artifact_to_link->getTitle());
     }
 
     public function has_linked_artifact()
@@ -74,11 +70,11 @@ class Tracker_Artifact_Presenter_CreateArtifactInPlacePresenter
 
     public function submit()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'submit');
+        return dgettext('tuleap-tracker', 'Submit');
     }
 
     public function cancel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_modal_artifact', 'cancel');
+        return dgettext('tuleap-tracker', 'Cancel');
     }
 }

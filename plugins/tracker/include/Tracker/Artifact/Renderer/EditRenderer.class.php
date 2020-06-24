@@ -97,7 +97,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $parents = $this->retriever->getParentsHierarchy($this->artifact);
             if ($parents->isGraph()) {
                 $html .= "<div class='alert alert-warning'>" .
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'error_multiple_parents') . "</div>";
+                dgettext('tuleap-tracker', 'The artifact has more than one parent. Cannot display rest of hierarchy.') . "</div>";
             }
             $html .= $this->fetchTitleIsGraph($parents);
         } else {

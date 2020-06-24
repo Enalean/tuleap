@@ -346,7 +346,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs();
         } else {
-            $html .= '<div>' . "<span class='empty_value'>" . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') . "</span>" . '</div>';
+            $html .= '<div>' . "<span class='empty_value'>" . dgettext('tuleap-tracker', 'References list is empty') . "</span>" . '</div>';
         }
         return $html;
     }
@@ -435,18 +435,18 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     protected function fetchAdminFormElement()
     {
         $html = '';
-        $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'display_references') . '</div>';
+        $html .= '<div>' . dgettext('tuleap-tracker', 'Display in & out references') . '</div>';
         return $html;
     }
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'crossreferences_label');
+        return dgettext('tuleap-tracker', 'Cross References');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'crossreferences_description');
+        return dgettext('tuleap-tracker', 'Display the cross references for the artifact');
     }
 
     public static function getFactoryIconUseIt()
@@ -473,7 +473,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         if ($crossref_fact->getNbReferences()) {
             $html .= $crossref_fact->getHTMLDisplayCrossRefs($with_links = false, $condensed = true);
         } else {
-            $html .= '<div>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') . '</div>';
+            $html .= '<div>' . dgettext('tuleap-tracker', 'References list is empty') . '</div>';
         }
         return $html;
     }

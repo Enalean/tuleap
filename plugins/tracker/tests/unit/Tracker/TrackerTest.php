@@ -24,13 +24,11 @@ namespace Tuleap\Tracker;
 
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 
 class TrackerTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     private $tracker;
     private $formelement_factory;

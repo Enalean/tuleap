@@ -51,18 +51,18 @@ class Tracker_Widget_MyArtifacts extends Widget
     {
         switch (strtolower($this->artifact_show)) {
             case 'a':
-                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'a');
+                $abbreviation = dgettext('tuleap-tracker', 'A');
                 break;
             case 's':
-                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 's');
+                $abbreviation = dgettext('tuleap-tracker', 'S');
                 break;
             case 'as':
             default:
-                $abbreviation = $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'as');
+                $abbreviation = dgettext('tuleap-tracker', 'AS');
                 break;
         }
 
-        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'my_arts') . ' [' . $abbreviation . ']';
+        return dgettext('tuleap-tracker', 'My Artifacts') . ' [' . $abbreviation . ']';
     }
 
     public function updatePreferences(Codendi_Request $request)
@@ -104,7 +104,7 @@ class Tracker_Widget_MyArtifacts extends Widget
         return '
             <div class="tlp-form-element">
                 <label class="tlp-label" for="show-' . (int) $widget_id . '">
-                    ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'display_arts')) . '
+                    ' . $purifier->purify(dgettext('tuleap-tracker', 'Display artifacts:')) . '
                 </label>
                 <select type="text"
                     class="tlp-select"
@@ -112,13 +112,13 @@ class Tracker_Widget_MyArtifacts extends Widget
                     name="show"
                 >
                     <option value="A" ' . $selected_a . '>
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'a_info')) . '
+                        ' . $purifier->purify(dgettext('tuleap-tracker', 'assigned to me [A]')) . '
                     </option>
                     <option value="S" ' . $selected_s . '>
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 's_info')) . '
+                        ' . $purifier->purify(dgettext('tuleap-tracker', 'submitted by me [S]')) . '
                     </option>
                     <option value="AS" ' . $selected_as . '>
-                        ' . $purifier->purify($GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'as_info')) . '
+                        ' . $purifier->purify(dgettext('tuleap-tracker', 'assigned to or submitted by me [AS]')) . '
                     </option>
                 </select>
             </div>
@@ -179,7 +179,7 @@ class Tracker_Widget_MyArtifacts extends Widget
                     </svg>
                 </div>
                 <p class="empty-pane-text">' .
-                $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'no_artifacts')
+                dgettext('tuleap-tracker', 'You don\'t have any </br> artifacts yet')
                 . '</p>
                 </div>';
         }
@@ -240,7 +240,7 @@ class Tracker_Widget_MyArtifacts extends Widget
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_widget_myartifacts', 'description');
+        return dgettext('tuleap-tracker', 'List artifacts you have submitted or assigned to you, by project.');
     }
 
     public function getStylesheetDependencies(): CssAssetCollection

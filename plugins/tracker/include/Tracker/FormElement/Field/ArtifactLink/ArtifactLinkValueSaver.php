@@ -204,11 +204,7 @@ class ArtifactLinkValueSaver
         if ($from_tracker->isProjectAllowedToUseNature()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'no_child',
-                    $artifactlinkinfo->getArtifactId()
-                )
+                sprintf(dgettext('tuleap-tracker', 'As per config (hierarchy), the type _is_child cannot be used for the link to artifact #%1$s'), $artifactlinkinfo->getArtifactId())
             );
         }
     }
@@ -224,11 +220,7 @@ class ArtifactLinkValueSaver
         ) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'force_child',
-                    $artifactlinkinfo->getArtifactId()
-                )
+                sprintf(dgettext('tuleap-tracker', 'As per config (hierarchy), force use of _is_child type for the link to artifact #%1$s'), $artifactlinkinfo->getArtifactId())
             );
         }
     }
@@ -268,11 +260,7 @@ class ArtifactLinkValueSaver
         if ($from_tracker->isProjectAllowedToUseNature()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact_links_natures',
-                    'override_nature',
-                    array($artifactlinkinfo->getArtifactId(), $existing_nature, $nature_by_plugin)
-                )
+                sprintf(dgettext('tuleap-tracker', 'Override link type "%2$s" to artifact #%1$s with type "%3$s" returned by another service'), $artifactlinkinfo->getArtifactId(), $existing_nature, $nature_by_plugin)
             );
         }
     }

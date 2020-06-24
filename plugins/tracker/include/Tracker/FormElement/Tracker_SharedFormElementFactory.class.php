@@ -40,7 +40,7 @@ class Tracker_SharedFormElementFactory
     {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
         if (!$formElement) {
-            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'wrong_field_id', $formElement_data['field_id']);
+            $exception_message = sprintf(dgettext('tuleap-tracker', 'There is no field with ID:%1$s'), $formElement_data['field_id']);
             throw new Exception($exception_message);
         }
         $field = $this->getRootOriginalField($formElement);
@@ -79,7 +79,7 @@ class Tracker_SharedFormElementFactory
             ! ($field->userCanRead($user)
               && $field->getTracker()->userCanView($user))
         ) {
-            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
+            $exception_message = dgettext('tuleap-tracker', 'Permission Denied');
             throw new Exception($exception_message);
         }
     }
@@ -90,7 +90,7 @@ class Tracker_SharedFormElementFactory
             ! ($field instanceof Tracker_FormElement_Field_Selectbox
                 && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)
         ) {
-            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'field_must_be_static');
+            $exception_message = dgettext('tuleap-tracker', 'Can only share static selectbox fields');
             throw new Exception($exception_message);
         }
     }

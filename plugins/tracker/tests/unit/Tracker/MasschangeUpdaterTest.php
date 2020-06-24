@@ -41,13 +41,11 @@ use Tracker_MasschangeUpdater;
 use Tracker_Report;
 use Tracker_Rule_List;
 use Tracker_RuleFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 
 final class MasschangeUpdaterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     protected function setUp(): void
     {

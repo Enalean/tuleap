@@ -120,7 +120,7 @@ class MilestoneCrumbBuilder
             );
         }
         $links[] = new BreadCrumbLinkWithIcon(
-            $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact'),
+            dgettext('tuleap-tracker', 'Artifact'),
             $this->getArtifactUrl($milestone),
             'fa-list-ol'
         );

@@ -21,14 +21,12 @@
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class TrackerFactoryPossibleChildrenTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
     use GlobalResponseMock;
 
     public function testGetPossibleChildrenShouldNotContainSelf()

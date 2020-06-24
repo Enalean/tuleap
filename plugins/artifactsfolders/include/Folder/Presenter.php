@@ -35,12 +35,12 @@ class Presenter
 
     public function __construct(array $artifacts)
     {
-        $this->id_label           = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
-        $this->summary_label      = $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'summary');
-        $this->status_label       = $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_label');
-        $this->last_update_label  = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');
-        $this->submitted_by_label = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedby_label');
-        $this->assigned_to_label  = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'assignedto_label');
+        $this->id_label           = dgettext('tuleap-tracker', 'Artifact ID');
+        $this->summary_label      = dgettext('tuleap-tracker', 'Summary');
+        $this->status_label       = dgettext('tuleap-tracker', 'Status');
+        $this->last_update_label  = dgettext('tuleap-tracker', 'Last Update Date');
+        $this->submitted_by_label = dgettext('tuleap-tracker', 'Submitted By');
+        $this->assigned_to_label  = dgettext('tuleap-tracker', 'Assigned to');
         $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'column_label');
         $this->empty_state        = $GLOBALS['Language']->getText('plugin_folders', 'empty_state');
         $this->artifacts          = $artifacts;

@@ -116,11 +116,7 @@ class ArtifactLinkValidator
         if ($artifact_id === "") {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_artifactlink_value',
-                    array($field->getLabel(), $artifact_id)
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s: %2$s is not an artifact id.'), $field->getLabel(), $artifact_id)
             );
 
             return false;
@@ -140,11 +136,7 @@ class ArtifactLinkValidator
         if ($artifact === null) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_artifactlink_value',
-                    array($field->getLabel(), $artifact_id)
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s: %2$s is not an artifact id.'), $field->getLabel(), $artifact_id)
             );
 
             return null;
@@ -166,11 +158,7 @@ class ArtifactLinkValidator
         if ($artifact->getTracker()->isDeleted()) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_artifactlink_value_not_exist',
-                    array($field->getLabel(), $artifact_id)
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s : artifact #%2$s does not exist.'), $field->getLabel(), $artifact_id)
             );
 
             return true;
@@ -212,11 +200,7 @@ class ArtifactLinkValidator
                 if (! $nature) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText(
-                            'plugin_tracker_common_artifact',
-                            'error_artifactlink_nature_missing',
-                            array($artifact->getId())
-                        )
+                        sprintf(dgettext('tuleap-tracker', 'Type is missing for artifact #%1$s.'), $artifact->getId())
                     );
 
                     return false;

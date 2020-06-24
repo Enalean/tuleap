@@ -94,14 +94,14 @@ class Tracker_Action_CopyArtifact
     ) {
         if (! $this->tracker->userCanSubmitArtifact($current_user)) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied')
+                dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.')
             );
             return;
         }
         $from_artifact = $this->artifact_factory->getArtifactByIdUserCanView($current_user, $request->get('from_artifact_id'));
         if (! $from_artifact || $from_artifact->getTracker() !== $this->tracker) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+                dgettext('tuleap-tracker', 'Missing Parameters')
             );
             return;
         }
@@ -109,7 +109,7 @@ class Tracker_Action_CopyArtifact
         $from_changeset = $from_artifact->getChangeset($request->get('from_changeset_id'));
         if (! $from_changeset) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+                dgettext('tuleap-tracker', 'Missing Parameters')
             );
             return;
         }
@@ -117,7 +117,7 @@ class Tracker_Action_CopyArtifact
         $submitted_values = $request->get('artifact');
         if (! is_array($submitted_values)) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_missing_param')
+                dgettext('tuleap-tracker', 'Missing Parameters')
             );
             return;
         }
@@ -125,7 +125,7 @@ class Tracker_Action_CopyArtifact
         try {
             $this->processCopy($from_changeset, $current_user, $submitted_values);
         } catch (Tracker_XML_Exporter_TooManyChildrenException $exception) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'copy_too_many_children', array(Tracker_XML_ChildrenCollector::MAX)));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The artifact has too many children (limit is set to %1$s).'), Tracker_XML_ChildrenCollector::MAX));
             $this->redirectToArtifact($from_artifact);
         }
     }
@@ -156,11 +156,7 @@ class Tracker_Action_CopyArtifact
 
         if (count($xml_artifacts->artifact) < 1) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker',
-                    'error_create_copy',
-                    $from_changeset->getArtifact()->getId()
-                )
+                sprintf(dgettext('tuleap-tracker', 'An error occured while creating a copy of the artifact #%1$s.'), $from_changeset->getArtifact()->getId())
             );
             return;
         }
@@ -176,11 +172,7 @@ class Tracker_Action_CopyArtifact
 
         if ($new_artifacts == null) {
             $this->logsErrorAndRedirectToTracker(
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker',
-                    'error_create_copy',
-                    $from_changeset->getArtifact()->getId()
-                )
+                sprintf(dgettext('tuleap-tracker', 'An error occured while creating a copy of the artifact #%1$s.'), $from_changeset->getArtifact()->getId())
             );
             return;
         }
@@ -243,14 +235,7 @@ class Tracker_Action_CopyArtifact
     ) {
         $original_artifact = $from_changeset->getArtifact();
         $comment           = $this->logger->getAllLogs();
-        $comment[]         = $GLOBALS['Language']->getText(
-            'plugin_tracker_artifact',
-            'copy_artifact_finished',
-            array(
-                $original_artifact->getTracker()->getItemName(),
-                $original_artifact->getId()
-            )
-        );
+        $comment[]         = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s #%2$s is finished.'), $original_artifact->getTracker()->getItemName(), $original_artifact->getId());
         $artifact->createNewChangesetWhitoutRequiredValidation(
             array(),
             implode("\n", $comment),

@@ -460,7 +460,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html .= '<div style="text-align:right">';
         $value = isset($criteria_value['from_date']) ? $this->formatDateForReport($criteria_value['from_date']) : '';
         $html .= '<label>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field', 'start') . ' ';
+        $html .= dgettext('tuleap-tracker', 'Start') . ' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_" . $this->id . "_from",
             "criteria[" . $this->id . "][from_date]",
@@ -472,7 +472,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $html .= '</label>';
         $value = isset($criteria_value['to_date']) ? $this->formatDateForReport($criteria_value['to_date']) : '';
         $html .= '<label>';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_field', 'end') . ' ';
+        $html .= dgettext('tuleap-tracker', 'End') . ' ';
         $html .= $GLOBALS['HTML']->getBootstrapDatePicker(
             "criteria_" . $this->id . "_to",
             "criteria[" . $this->id . "][to_date]",
@@ -514,16 +514,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
                 "name"      => 'criteria[' . $this->id . '][op]',
                 "criterias" => array(
                     ">" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'after'),
+                        "html_value" => dgettext('tuleap-tracker', 'After'),
                         "selected"   => $gt_selected
 
                     ),
                     "=" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'asof'),
+                        "html_value" => dgettext('tuleap-tracker', 'As of'),
                         "selected"   => $eq_selected
                     ),
                     "<" => array(
-                        "html_value" => $GLOBALS['Language']->getText('plugin_tracker_include_field', 'before'),
+                        "html_value" => dgettext('tuleap-tracker', 'Before'),
                         "selected"   => $lt_selected
                     ),
                 )
@@ -755,9 +755,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     {
         $html = '';
         if (!$from || !($from_value = $this->getValue($from['value_id']))) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ';
+            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . ' ' . $this->formatDate($from_value['value']) . ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ';
+            $html .= dgettext('tuleap-tracker', 'changed from') . ' ' . $this->formatDate($from_value['value']) . ' ' . dgettext('tuleap-tracker', 'to') . ' ';
         }
         $to_value = $this->getValue($to['value_id']);
         $html .= $this->formatDate($to_value['value']);
@@ -782,12 +782,12 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'date');
+        return dgettext('tuleap-tracker', 'Date');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'date_description');
+        return dgettext('tuleap-tracker', 'Allows user to select a date with a calendar');
     }
 
     public static function getFactoryIconUseIt()
@@ -1046,7 +1046,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
      * Return the field last value
      *
      *
-     * @return Date
+     * @return string|false
      */
     public function getLastValue(Tracker_Artifact $artifact)
     {

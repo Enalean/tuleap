@@ -57,7 +57,7 @@ class OngoingCreationFeedbackNotifier
         if ($this->tv3_migration_manager->thereAreMigrationsOngoingForProject($project)) {
             $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'tv3_being_migrated')
+                dgettext('tuleap-tracker', 'Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.')
             );
             $this->informUntruncatedEmailWillBeSent($project, $response);
         }
@@ -68,7 +68,7 @@ class OngoingCreationFeedbackNotifier
         if ($project->getTruncatedEmailsUsage()) {
             $response->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_tracker_include_type', 'untruncated_migration_email')
+                dgettext('tuleap-tracker', 'An email not truncated will be sent at the end of the migration process.')
             );
         }
     }

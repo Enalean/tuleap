@@ -47,13 +47,13 @@ class Tracker_SemanticManager
 
     public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user)
     {
-        $title = $GLOBALS['Language']->getText('plugin_tracker_admin', 'manage_semantic');
+        $title = dgettext('tuleap-tracker', 'Manage Semantic');
         $this->tracker->displayWarningArtifactByEmailSemantic();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic', $title);
 
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
         echo '<p>';
-        echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'semantic_intro');
+        echo dgettext('tuleap-tracker', 'As trackers can be fully customized, you may want to define what is the title of your artifacts, or when you consider an artifact to be open or close. This information is used in the application to display artifact summary, and tooltip for instance.');
         echo '</p>';
 
         foreach ($this->getSemantics() as $semantic) {

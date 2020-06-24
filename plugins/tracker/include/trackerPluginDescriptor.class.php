@@ -25,6 +25,6 @@ class trackerPluginDescriptor extends PluginDescriptor
 
     public function __construct()
     {
-        parent::__construct($GLOBALS['Language']->getText('plugin_tracker', 'descriptor_name'), false, $GLOBALS['Language']->getText('plugin_tracker', 'descriptor_description'));
+        parent::__construct(dgettext('tuleap-tracker', 'Tracker'), false, dgettext('tuleap-tracker', 'Trackers new generation'));
     }
 }

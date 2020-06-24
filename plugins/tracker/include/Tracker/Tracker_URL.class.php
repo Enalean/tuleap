@@ -36,7 +36,7 @@ class Tracker_URL extends URL
             if ($artifact = $this->getArtifactFactory()->getArtifactByid($request->get('aid'))) {
                 return $artifact;
             } else {
-                throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
+                throw new Tracker_ResourceDoesntExistException(dgettext('tuleap-tracker', 'This artifact does not exist.'));
             }
         } elseif ((int) $request->get('report')) {
             $store_in_session = true;
@@ -46,7 +46,7 @@ class Tracker_URL extends URL
             if ($report = $this->getArtifactReportFactory()->getReportById($request->get('report'), $user->getId(), $store_in_session)) {
                 return $report;
             } else {
-                throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'report_not_exist'));
+                throw new Tracker_ResourceDoesntExistException(dgettext('tuleap-tracker', 'This report does not exist.'));
             }
         } elseif ((int) $request->get('tracker') || (int) $request->get('atid')) {
             $tracker_id = (int) $request->get('tracker');
@@ -56,7 +56,7 @@ class Tracker_URL extends URL
             if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id))) {
                 return $tracker;
             } else {
-                throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'tracker_not_exist'));
+                throw new Tracker_ResourceDoesntExistException(dgettext('tuleap-tracker', 'This tracker does not exist.'));
             }
         } elseif ((int) $request->get('formElement')) {
             if ($formElement = $this->getTracker_FormElementFactory()->getFormElementByid($request->get('formElement'))) {
@@ -66,13 +66,13 @@ class Tracker_URL extends URL
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('id'))) {
                 return $artifact;
             } else {
-                throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
+                throw new Tracker_ResourceDoesntExistException(dgettext('tuleap-tracker', 'This artifact does not exist.'));
             }
         } elseif ((int) $request->get('link-artifact-id')) {
             if ($artifact = Tracker_ArtifactFactory::instance()->getArtifactByid($request->get('link-artifact-id'))) {
                 return $artifact;
             } else {
-                throw new Tracker_ResourceDoesntExistException($GLOBALS['Language']->getText('plugin_tracker_common_type', 'artifact_not_exist'));
+                throw new Tracker_ResourceDoesntExistException(dgettext('tuleap-tracker', 'This artifact does not exist.'));
             }
         }
         throw new Tracker_NoMachingResourceException();

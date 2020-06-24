@@ -111,7 +111,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
-            return '<p>' . $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') . '</p>';
+            return '<p>' . dgettext('tuleap-tracker', 'No artifact found.') . '</p>';
         }
 
         $artifact_ids     = explode(',', $matching_ids['id']);

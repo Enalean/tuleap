@@ -28,12 +28,10 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Contributor;
-use Tuleap\GlobalLanguageMock;
 
 class TrackerSemanticContributorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Tracker_FormElement_Field_List|\Mockery\MockInterface|Tracker_FormElement_Field_List
@@ -59,13 +57,6 @@ class TrackerSemanticContributorTest extends TestCase
         $this->field->shouldReceive('getId')->andReturn(102);
 
         $this->semantic = new Tracker_Semantic_Contributor($this->tracker, $this->field);
-
-        $GLOBALS['Language']->shouldReceive('getText')
-                            ->with('plugin_tracker_admin_semantic', 'contributor_label')
-                            ->andReturns('Assigned to');
-        $GLOBALS['Language']->shouldReceive('getText')
-                            ->with('plugin_tracker_admin_semantic', 'contributor_description')
-                            ->andReturns('Define the contributor of the artifact');
     }
 
     public function testExport()

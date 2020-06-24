@@ -28,7 +28,6 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Semantic\SemanticsXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -37,7 +36,6 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesCollection;
 
 class SemanticsXMLExporterTest extends TestCase
 {
-    use GlobalLanguageMock;
     use MockeryPHPUnitIntegration;
 
     public function testExportsTheSemantics(): void

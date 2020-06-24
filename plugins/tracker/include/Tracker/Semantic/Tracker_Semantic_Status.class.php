@@ -76,7 +76,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     public function getLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_label');
+        return dgettext('tuleap-tracker', 'Status');
     }
 
     /**
@@ -86,7 +86,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_description');
+        return dgettext('tuleap-tracker', 'Define the status of an artifact');
     }
 
     /**
@@ -169,10 +169,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     public function getLocalizedStatusLabel(Tracker_Artifact $artifact)
     {
         if ($this->isOpen($artifact)) {
-            return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_Open');
+            return dgettext('tuleap-tracker', 'Open');
         }
 
-        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_Closed');
+        return dgettext('tuleap-tracker', 'Closed');
     }
 
     /**
@@ -215,11 +215,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     {
         if ($this->list_field) {
             $purifier = Codendi_HTMLPurifier::instance();
-            echo $GLOBALS['Language']->getText(
-                'plugin_tracker_admin_semantic',
-                'status_long_desc',
-                array($purifier->purify($this->list_field->getLabel()))
-            );
+            echo sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $purifier->purify($this->list_field->getLabel()));
             if ($this->open_values) {
                 echo '<ul>';
                 $field_values = $this->list_field->getAllValues();
@@ -230,10 +226,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                 }
                 echo '</ul>';
             } else {
-                echo '<blockquote><em>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_no_value') . '</em></blockquote>';
+                echo '<blockquote><em>' . dgettext('tuleap-tracker', 'No value has been set') . '</em></blockquote>';
             }
         } else {
-            echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_no_field');
+            echo dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
         }
     }
 
@@ -269,7 +265,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             if (! $this->list_field) {
                 $selected = 'selected="selected"';
             }
-            $select .= '<option value="-1" ' . $selected . '>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_a_field') . '</option>';
+            $select .= '<option value="-1" ' . $selected . '>' . dgettext('tuleap-tracker', 'Choose a field...') . '</option>';
 
             foreach ($list_fields as $list_field) {
                 $selected = '';
@@ -310,8 +306,8 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             $submit = '<input type="submit" name="update" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
 
             if (!$this->getFieldId()) {
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_no_field');
-                $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'choose_one_advice') . $select . ' ' . $submit . '</p>';
+                $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
+                $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . $select . ' ' . $submit . '</p>';
             } else {
                 $event = new SemanticStatusFieldCanBeUpdated($this->tracker);
 
@@ -322,13 +318,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic
                     $select = $this->getField()->getLabel();
                 }
 
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_long_desc', array($select)) . $values . ' ' . $submit;
+                $html .= sprintf(dgettext('tuleap-tracker', '<p>An artifact is considered to be <strong>open</strong> when its field <strong>%1$s</strong> will have one of the following values:</p>'), $select) . $values . ' ' . $submit;
             }
             $html .= '</form>';
         } else {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_impossible');
+            $html .= dgettext('tuleap-tracker', 'You cannot define the <em>status</em> semantic since there isn\'t any list field in the tracker');
         }
-        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'go_back_overview') . '</a></p>';
+        $html .= '<p><a href="' . TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId() . '&amp;func=admin-semantic">&laquo; ' . dgettext('tuleap-tracker', 'go back to semantic overview') . '</a></p>';
 
         $sm->displaySemanticHeader($this, $tracker_manager);
         echo $html;
@@ -607,7 +603,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         if (! $field) {
             $GLOBALS['Response']->addFeedback(
                 'error',
-                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'bad_field_status')
+                dgettext('tuleap-tracker', 'The field you submitted is not a list field')
             );
             return;
         }
@@ -637,13 +633,13 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         if ($this->save()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::INFO,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_now', [$field->getLabel()])
+                sprintf(dgettext('tuleap-tracker', 'The status is now bind to: %1$s'), $field->getLabel())
             );
             $GLOBALS['Response']->redirect($this->getUrl());
         } else {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'unable_save_status')
+                dgettext('tuleap-tracker', 'Unable to save the status')
             );
         }
     }

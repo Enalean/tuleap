@@ -27,7 +27,6 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TestCase //phpcs:ignore
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset

@@ -74,7 +74,7 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
         global $Language;
         $label = parent::getLabel();
         if (! $label) {
-            return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
+            return dgettext('tuleap-tracker', 'Line Break');
         } else {
             return $label;
         }
@@ -88,12 +88,12 @@ class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_Stat
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label');
+        return dgettext('tuleap-tracker', 'Line Break');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_description');
+        return dgettext('tuleap-tracker', 'An invisible Line Break');
     }
 
     public static function getFactoryIconUseIt()

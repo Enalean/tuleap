@@ -28,13 +28,11 @@ use SimpleXMLElement;
 use Tracker;
 use Tracker_FormElement_Field_List;
 use Tracker_Semantic_Status;
-use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Semantic_StatusTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker
@@ -50,15 +48,6 @@ class Tracker_Semantic_StatusTest extends TestCase
         $this->tracker = Mockery::mock(Tracker::class);
         $this->field   = Mockery::mock(Tracker_FormElement_Field_List::class);
         $this->field->shouldReceive('getId')->andReturn(103);
-
-        $GLOBALS['Language']->shouldReceive('getText')->with(
-            'plugin_tracker_admin_semantic',
-            'status_label'
-        )->andReturns('Status');
-        $GLOBALS['Language']->shouldReceive('getText')->with(
-            'plugin_tracker_admin_semantic',
-            'status_description'
-        )->andReturns('Define the status of an artifact');
     }
 
     public function testExport()

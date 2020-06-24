@@ -26,9 +26,9 @@ class PluginDescriptor extends \PluginDescriptor
     public function __construct()
     {
         parent::__construct(
-            $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_name'),
+            dgettext('tuleap-tracker_encryption', 'Tracker Encryption'),
             false,
-            $GLOBALS['Language']->getText('plugin_tracker_encryption', 'descriptor_description')
+            dgettext('tuleap-tracker_encryption', 'Encrypt tracker datas.')
         );
     }
 }

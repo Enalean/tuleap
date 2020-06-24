@@ -265,11 +265,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
             if (!$rule->isValid($submitted_step_description) || !$rule->isValid($value['expected_results'][$key])) {
                 $GLOBALS['Response']->addFeedback(
                     \Feedback::ERROR,
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker_common_artifact',
-                        'error_text_value',
-                        $this->getLabel()
-                    )
+                    sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel())
                 );
 
                 return false;

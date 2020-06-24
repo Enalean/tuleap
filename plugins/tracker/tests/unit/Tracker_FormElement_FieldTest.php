@@ -24,7 +24,6 @@ declare(strict_types=1);
 final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
     use \Tuleap\GlobalResponseMock;
 
     public function testValidateField(): void
@@ -110,14 +109,6 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
                 case 'R':
                     $field->shouldReceive('isValid')->never();
                     $field->shouldReceive('setHasErrors')->andReturn([true]);
-                    $GLOBALS['Language']->shouldReceive(
-                        'getText',
-                        [
-                            'plugin_tracker_common_artifact',
-                            'err_required',
-                            $field->getLabel() . ' (' . $field->getName() . ')'
-                        ]
-                    );
                     $GLOBALS['Response']->shouldReceive('addFeedback', ['error', '*']);
                     $is_valid = false;
                     break;
@@ -125,14 +116,6 @@ final class Tracker_FormElement_FieldTest extends \PHPUnit\Framework\TestCase //
                 case 'P':
                     $field->shouldReceive('isValid')->never();
                     $field->shouldReceive('setHasErrors')->andReturn([true]);
-                    $GLOBALS['Language']->shouldReceive(
-                        'getText',
-                        [
-                            'plugin_tracker_common_artifact',
-                            'bad_field_permission_update',
-                            $field->getLabel()
-                        ]
-                    );
                     $GLOBALS['Response']->expectOnce('addFeedback', ['error', '*']);
                     $is_valid = false;
                     break;

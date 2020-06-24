@@ -23,13 +23,10 @@ namespace Tuleap\Tracker\FormElement;
 
 use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_StaticField_Separator;
-use Tuleap\GlobalLanguageMock;
 
 //phpcs:ignore Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_FormElement_SeparatorTest extends TestCase
 {
-    use GlobalLanguageMock;
-
     public function testFetchDescription()
     {
         $expected_message = '';

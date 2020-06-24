@@ -47,7 +47,7 @@ class NatureEditor
 
         if (! $this->dao->edit($shortname, $forward_label, $reverse_label)) {
             throw new UnableToEditNatureException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'db_error')
+                dgettext('tuleap-tracker', 'error while playing with the database.  Help us improve your experience by sending an error report.')
             );
         }
     }

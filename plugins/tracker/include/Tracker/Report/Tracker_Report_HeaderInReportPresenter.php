@@ -117,32 +117,32 @@ class Tracker_Report_HeaderInReportPresenter
 
     public function haschanged_explainations()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_explanations');
+        return dgettext('tuleap-tracker', 'Report has been modified. You can either');
     }
 
     public function isobsolete_explainations()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'isobsolete_explanations', array($this->updated_by_username));
+        return sprintf(dgettext('tuleap-tracker', 'Report has been modified by <span class="tracker_report_updated_by">%1$s</span>. You can either:'), $this->updated_by_username);
     }
 
     public function report_haschanged_and_isobsolete_explainations()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'haschanged_isobsolete_explanations', array($this->updated_by_username));
+        return sprintf(dgettext('tuleap-tracker', 'Report has been modified by <span class="tracker_report_updated_by">%1$s</span>. You can either:'), $this->updated_by_username);
     }
 
     public function report_name()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'report_name');
+        return dgettext('tuleap-tracker', 'Report name:');
     }
 
     public function save_report_as()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'save_report_as');
+        return dgettext('tuleap-tracker', 'Save report as');
     }
 
     public function copy_of()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'copy_of') . ' ' . $this->report_name;
+        return dgettext('tuleap-tracker', 'Copy of') . ' ' . $this->report_name;
     }
 
     public function cancel()
@@ -157,12 +157,12 @@ class Tracker_Report_HeaderInReportPresenter
 
     public function save_new_report()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'save_new_report');
+        return dgettext('tuleap-tracker', 'Save new report');
     }
 
     public function revert()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_report', 'revert');
+        return dgettext('tuleap-tracker', 'Revert');
     }
 
     public function has_warnings()

@@ -25,7 +25,6 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     private $condition;
     private $empty_data = '';

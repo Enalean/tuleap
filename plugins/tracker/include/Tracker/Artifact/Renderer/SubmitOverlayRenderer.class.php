@@ -75,14 +75,7 @@ class Tracker_Artifact_SubmitOverlayRenderer extends Tracker_Artifact_SubmitAbst
             $project = $this->source_artifact->getTracker()->getProject();
             $GLOBALS['Response']->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker',
-                    'linked_to',
-                    array(
-                        $this->source_artifact->fetchDirectLinkToArtifact(),
-                        $this->tracker_switcher->fetchTrackerSwitcher($current_user, ' ', $project, $this->tracker),
-                    )
-                ),
+                sprintf(dgettext('tuleap-tracker', 'This artifact (of %2$s) will be linked to %1$s'), $this->source_artifact->fetchDirectLinkToArtifact(), $this->tracker_switcher->fetchTrackerSwitcher($current_user, ' ', $project, $this->tracker)),
                 CODENDI_PURIFIER_DISABLED
             );
         } else {

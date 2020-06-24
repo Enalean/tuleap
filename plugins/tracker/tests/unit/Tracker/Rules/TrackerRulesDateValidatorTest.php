@@ -25,14 +25,12 @@ namespace Tuleap\Tracker\Workflow;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tracker_Rule_Date;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Tracker\Rule\TrackerRulesDateValidator;
 
 class TrackerRulesDateValidatorTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var TrackerRulesDateValidator
@@ -103,8 +101,7 @@ class TrackerRulesDateValidatorTest extends TestCase
         $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([12])->andReturns($source_field);
         $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([13])->andReturns($target_field);
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('this is a text');
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'this is a text']);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', 'Error on the date value : aaaaa must be > to bbbbb.']);
         $source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $target_field->shouldReceive('setHasErrors')->withArgs([true]);
 
@@ -142,10 +139,8 @@ class TrackerRulesDateValidatorTest extends TestCase
         $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([12])->andReturns($source_field);
         $this->formelement_factory->shouldReceive('getFormElementById')->withArgs([13])->andReturns($target_field);
 
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('this is a text : ');
-        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'this is a text : aaaaa']);
-        $GLOBALS['Language']->shouldReceive('getText')->andReturn('this is a text : ');
-        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'this is a text : bbbbb']);
+        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'Missing field in data:aaaaa']);
+        $GLOBALS['Response']->shouldReceive('addUniqueFeedback')->withArgs(['error', 'Missing field in data:bbbbb']);
         $source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $target_field->shouldReceive('setHasErrors')->withArgs([true]);
 

@@ -124,12 +124,12 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'float');
+        return dgettext('tuleap-tracker', 'Float');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'float_description');
+        return dgettext('tuleap-tracker', 'A field which accepts only floats');
     }
 
     public static function getFactoryIconUseIt()
@@ -162,7 +162,7 @@ class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric
      */
     protected function getValidatorErrorMessage()
     {
-        return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_float_value');
+        return $this->getLabel() . ' ' . dgettext('tuleap-tracker', 'is not a float.');
     }
 
     /**

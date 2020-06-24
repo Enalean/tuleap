@@ -37,7 +37,7 @@ class Computed extends Tracker_FormElement_View_Admin_Field
                 $title    = '';
                 if (! $this->canUpgrade()) {
                     $disabled = 'disabled="disabled"';
-                    $title    = 'title="' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '"';
+                    $title    = 'title="' . dgettext('tuleap-tracker', 'We are unable to update the computed field. The target field should be equal to the computed field\'s name.') . '"';
                 }
 
                 $html .= '
@@ -45,15 +45,15 @@ class Computed extends Tracker_FormElement_View_Admin_Field
                                name="formElement_data[specific_properties][' . $key . ']"
                                value="0">';
                 $html .= '<div class="alert alert-warning">';
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_description');
-                $html .= '<h6>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '</h6>';
+                $html .= dgettext('tuleap-tracker', '<h5>Please update this computed field</h5><p>The legacy Computed fields will be gone in Tuleap 9.4.<br/>Upon update, the following changes will take effect:</p><ul><li>The computation will take into account all linked artifacts recursively, regardless of link type.</li><li>The target field will no longer be configurable, the field\'s name will now be used instead.</li><li>Permissions will not be taken into account.</li></ul><p>For example, a user can see artifact A linked to B and C. Artifact A has a computed field called "Remaining effort".<br/>Even if user cannot access artifacts B or C, the "Remaining effort" field in A will sum the values from the "Remaining Effort" fields in B and C.</p>');
+                $html .= '<h6>' . dgettext('tuleap-tracker', 'We are unable to update the computed field. The target field should be equal to the computed field\'s name.') . '</h6>';
                 $html .= '<button class="btn"
                                     name="formElement_data[specific_properties][' . $key . ']"
                                     value="1"
                                     ' . $title . '
                                     ' . $disabled . '
                                     type="submit">';
-                $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_button');
+                $html .= dgettext('tuleap-tracker', 'Update to overridable computed field');
                 $html .= '</button>';
                 $html .= '</div>';
                 break;
@@ -68,7 +68,7 @@ class Computed extends Tracker_FormElement_View_Admin_Field
 
                 if (! $this->canUpgrade()) {
                     $html .= '<div class="alert alert-warning">';
-                    $html .= '<h6>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'upgrade_computed_field_set_target_field') . '</h6>';
+                    $html .= '<h6>' . dgettext('tuleap-tracker', 'We are unable to update the computed field. The target field should be equal to the computed field\'s name.') . '</h6>';
                 }
                 $html .= parent::fetchAdminSpecificProperty($key, $property);
 

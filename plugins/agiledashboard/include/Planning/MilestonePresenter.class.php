@@ -57,7 +57,7 @@ class AgileDashboard_MilestonePresenter
 
     public function artifact()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'artifact');
+        return dgettext('tuleap-tracker', 'Artifact');
     }
 
     public function editArtifact()

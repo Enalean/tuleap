@@ -450,12 +450,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public static function fetchAdminCreateForm($field)
     {
         $html = '';
-        $h = new HTML_Element_Input_Checkbox($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alphabetically_sort'), 'bind[is_rank_alpha]', 0);
+        $h = new HTML_Element_Input_Checkbox(dgettext('tuleap-tracker', 'alphabetically sort values'), 'bind[is_rank_alpha]', 0);
         $h->setId('is_rank_alpha');
         $html .= '<p>' . $h->render() . '</p>';
         $html .= '<p>';
         $html .= '<textarea name="formElement_data[bind][add]" rows="5" cols="30"></textarea><br />';
-        $html .= '<span style="color:#999; font-size:0.8em;">' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_row') . '</span>';
+        $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext('tuleap-tracker', 'Add one value per row') . '</span>';
         $html .= '</p>';
         return $html;
     }
@@ -477,9 +477,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     private function fetchAdminEditFormModifiable()
     {
         $html = '';
-        $html .= '<h3>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_values') . '</h3>';
+        $html .= '<h3>' . dgettext('tuleap-tracker', 'Static values') . '</h3>';
 
-        $h = new HTML_Element_Input_Checkbox($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alphabetically_sort'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
+        $h = new HTML_Element_Input_Checkbox(dgettext('tuleap-tracker', 'alphabetically sort values'), 'bind[is_rank_alpha]', $this->is_rank_alpha);
         $h->setId('is_rank_alpha');
         $h->addParam('class', 'is_rank_alpha');
         $html .= '<p>' . $h->render() . '</p>';
@@ -495,9 +495,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         //Add new values
         $html .= '<p id="tracker-admin-bind-static-addnew">';
-        $html .= '<strong>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_new_values') . '</strong><br />';
+        $html .= '<strong>' . dgettext('tuleap-tracker', 'Add new values') . '</strong><br />';
         $html .= '<textarea name="bind[add]" rows="5" cols="30"></textarea><br />';
-        $html .= '<span style="color:#999; font-size:0.8em;">' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'add_row') . '</span><br />';
+        $html .= '<span style="color:#999; font-size:0.8em;">' . dgettext('tuleap-tracker', 'Add one value per row') . '</span><br />';
         $html .= '</p>';
 
         //Select default values
@@ -550,11 +550,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             $html .= '<input type="hidden" name="bind[edit][' . $v->getId() . '][is_hidden]" value="1" />';
             $html .= '<input type="checkbox" name="bind[edit][' . $v->getId() . '][is_hidden]" value="0" ' . $checked . ' class="tracker_admin_static_value_hidden_chk" />';
             $img_params['alt'] = 'show/hide value';
-            $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value');
+            $img_params['title'] = dgettext('tuleap-tracker', 'Show/hide this value');
         } else {
             $icon_suffix = '--exclamation-hidden';
             $img_params['alt'] = 'cannot hide';
-            $img_params['title'] = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'hide_value_impossible');
+            $img_params['title'] = dgettext('tuleap-tracker', 'You can\'t hide this value since it is used in a semantic, in workflow or in field dependency');
         }
         $html .= $GLOBALS['HTML']->getImage('ic/eye' . $icon_suffix . '.png', $img_params);
 
@@ -578,7 +578,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
 
         $html .= '<span class="tracker-admin-bindvalue_label">';
         $html .= '<input type="text" name="bind[edit][' . $v->getId() . '][label]" required value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
-        $placeholder = $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'description_placeholder');
+        $placeholder = dgettext('tuleap-tracker', 'Enter description...');
         $html .= '<textarea name="bind[edit][' . $v->getId() . '][description]" class="tracker-admin-bindvalue_description_field" placeholder="' . $placeholder . '" cols="50" rows="3">';
         $html .= $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
@@ -592,7 +592,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     {
         $html = '';
 
-        $html .= '<h3>' . $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'static_values') . '</h3>';
+        $html .= '<h3>' . dgettext('tuleap-tracker', 'Static values') . '</h3>';
         $html .= '<table cellpadding="2" cellspacing="0" border="0">';
         foreach ($this->getAllValues() as $v) {
             $html .= $this->fetchAdminEditRowNotModifiable($v);
@@ -670,7 +670,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         if (! empty($this->field->getSharedTargets())) {
                             $this->getDao()->updateChildrenAlphaRank($this->field->id, $is_rank_alpha);
                         }
-                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'alpha_ranking_updated'));
+                        $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-tracker', 'Alpha Ranking updated'));
                     }
                     break;
                 case 'delete':

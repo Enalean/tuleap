@@ -368,9 +368,9 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         assert($to instanceof Tracker_Artifact_ChangesetValue_Numeric);
         $html = '';
         if (!$from || !($from_value = $from->getNumeric())) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'set_to') . ' ';
+            $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
-            $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'changed_from') . ' ' . $from_value . '  ' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'to') . ' ';
+            $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
         }
         $html .= $to->getNumeric();
         return $html;

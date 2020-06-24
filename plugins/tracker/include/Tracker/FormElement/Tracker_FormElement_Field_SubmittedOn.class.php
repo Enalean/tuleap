@@ -115,12 +115,12 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_label');
+        return dgettext('tuleap-tracker', 'Submitted On');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_description');
+        return dgettext('tuleap-tracker', 'Display the date the artifact was submitted on');
     }
 
     public static function getFactoryIconUseIt()
@@ -276,10 +276,10 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel() . ' (' . $this->getName() . ')'));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The field %1$s is required.'), $this->getLabel() . ' (' . $this->getName() . ')'));
         } elseif ($submitted_value !== null && ! $this->userCanUpdate()) {
             $is_valid = true;
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $this->getName()));
         }
         return $is_valid;
     }
@@ -343,7 +343,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
         $html = '';
         $html .= '<div>' . $this->formatDateTime(time()) . '</div>';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'submittedon_help');
+        $html .= dgettext('tuleap-tracker', 'The field is automatically set to artifact submission date');
         $html .= '</span>';
         return $html;
     }
@@ -357,7 +357,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      *
      * @param Tracker_Artifact $artifact The artifact
      *
-     * @return date
+     * @return string|false
      */
     public function getLastValue(Tracker_Artifact $artifact)
     {

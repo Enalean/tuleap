@@ -136,7 +136,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
                     } catch (Tracker_Artifact_Exception_CannotCreateNewChangeset $exception) {
                         $GLOBALS['Response']->addFeedback(
                             'error',
-                            $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update')
+                            dgettext('tuleap-tracker', 'Unable to update the artifact')
                         );
                         throw new Tracker_ChangesetNotCreatedException();
                     }
@@ -254,11 +254,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
             ) {
                 $purifier = Codendi_HTMLPurifier::instance();
                 throw new Tracker_FieldValueNotStoredException(
-                    $GLOBALS['Language']->getText(
-                        'plugin_tracker',
-                        'field_not_stored_exception',
-                        [$purifier->purify($field->getLabel())]
-                    )
+                    sprintf(dgettext('tuleap-tracker', 'The field "%1$s" cannot be stored.'), $purifier->purify($field->getLabel()))
                 );
             }
         }
@@ -314,7 +310,7 @@ abstract class Tracker_Artifact_Changeset_NewChangesetCreatorBase extends Tracke
         $email
     ): bool {
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
-            $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
+            $message = dgettext('tuleap-tracker', 'You are not logged in.');
             throw new Tracker_Exception($message);
         }
 

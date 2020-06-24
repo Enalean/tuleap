@@ -48,7 +48,7 @@ class NatureCreator
 
         if (! $this->dao->create($shortname, $forward_label, $reverse_label)) {
             throw new UnableToCreateNatureException(
-                $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'db_error')
+                dgettext('tuleap-tracker', 'error while playing with the database.  Help us improve your experience by sending an error report.')
             );
         }
     }

@@ -25,13 +25,11 @@ namespace Tuleap\Tracker\Creation;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportDao;
 
 class OngoingCreationFeedbackNotifierTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|\Tracker_Migration_MigrationManager
@@ -61,15 +59,6 @@ class OngoingCreationFeedbackNotifierTest extends TestCase
 
         $this->project = Mockery::mock(\Project::class)->shouldReceive(['getId' => 42])->getMock();
         $this->response = Mockery::mock(\Response::class);
-
-        $GLOBALS['Language']
-            ->shouldReceive('getText')
-            ->with('plugin_tracker_include_type', 'tv3_being_migrated')
-            ->andReturn('Some migrations are being processed. Your new trackers will appear as soon as the migrations are completed.');
-        $GLOBALS['Language']
-            ->shouldReceive('getText')
-            ->with('plugin_tracker_include_type', 'untruncated_migration_email')
-            ->andReturn('An email not truncated will be sent at the end of the migration process.');
 
         $this->feedback_notifier = new OngoingCreationFeedbackNotifier(
             $this->tv3_migration_manager,

@@ -99,11 +99,7 @@ abstract class Transition_PostAction_Field extends Transition_PostAction
                 if (count($already_used)) {
                     $this->addFeedback(
                         'error',
-                        $GLOBALS['Language']->getText(
-                            'workflow_admin',
-                            'postaction_on_field_already_exist',
-                            [$new_field->getLabel()]
-                        )
+                        sprintf(dgettext('tuleap-tracker', 'An action on the field \'%1$s\' already exists.'), $new_field->getLabel())
                     );
                 } else {
                     $field_id = $new_field->getId();

@@ -1,12 +1,1 @@
-plugin_tracker_encryption	descriptor_description	Chiffrement des données du suivi
-plugin_tracker_encryption	descriptor_name	Chiffrement du suivi
-plugin_tracker_encryption_formelement_admin	encrypted	Un champ chiffré
-plugin_tracker_encryption	encryption_error	Le chiffrement des données n'est pas possible. Veuillez ajouter une clé RSA publique valide dans l'administration du suivi pour pouvoir crypter des données.
-plugin_tracker_encryption	public_key_error	La clé publique n'est pas valide.
-plugin_tracker_encryption	warning_missing_key	Veuillez ajouter une clé publique dans l'administration du suivi afin d'utiliser un champ chiffré.
-plugin_tracker_encryption	field_label	Champ chiffré
-plugin_tracker_encryption	cancel	Annuler
-plugin_tracker_encryption	key	Clé du Tracker
-plugin_tracker_encryption	update_key_warning	Si vous modifiez votre clé vous allez perdre toutes vos valeurs de champs chiffrés pour ce suivi.
-plugin_tracker_encryption	tracker_encryption_help	Veuillez ajouter une clé RSA publique valide. Cette clé va etre utilisée pour chiffrer l'élément de type "chiffré" pour tout ce suivi.
 project_admin_utils	Tracker_key	Clé du Tracker

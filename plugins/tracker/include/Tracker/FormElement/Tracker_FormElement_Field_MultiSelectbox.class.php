@@ -62,12 +62,12 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'multiselectbox');
+        return dgettext('tuleap-tracker', 'Multi Select Box');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'multiselectbox_description');
+        return dgettext('tuleap-tracker', 'The user can choose some values among others');
     }
 
     public static function getFactoryIconUseIt()

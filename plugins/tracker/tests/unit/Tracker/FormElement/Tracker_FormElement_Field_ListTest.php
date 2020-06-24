@@ -28,7 +28,6 @@ final class Tracker_FormElement_Field_ListTest extends \PHPUnit\Framework\TestCa
 {
     use \Tuleap\GlobalResponseMock;
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_ChangesetValue_List

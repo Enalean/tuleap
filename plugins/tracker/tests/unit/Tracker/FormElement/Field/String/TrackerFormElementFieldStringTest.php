@@ -27,14 +27,12 @@ use Rule_NoCr;
 use Rule_String;
 use Tracker_Artifact;
 use Tracker_FormElement_Field_String;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 
 class TrackerFormElementFieldStringTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
-    use GlobalLanguageMock;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|Tracker_Artifact

@@ -29,8 +29,8 @@ class ArtifactCopyButtonPresenterBuilder
     {
         if ($user->isLoggedIn() && ! $this->isAlreadyCopyingArtifact()) {
             return new ArtifactCopyButtonPresenter(
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
-                $GLOBALS['Language']->getText('plugin_tracker', 'copy_this_artifact'),
+                dgettext('tuleap-tracker', 'Duplicate this artifact'),
+                dgettext('tuleap-tracker', 'Duplicate this artifact'),
                 TRACKER_BASE_URL . '/?func=copy-artifact&aid=' . $artifact->getId()
             );
         }

@@ -22,7 +22,6 @@
 final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\TestCase //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Artifact_Changeset
@@ -63,7 +62,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
     {
         $text_1 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'Problems during <ins> installation', 'text');
         $text_2 = new Tracker_Artifact_ChangesetValue_Text(111, $this->changeset, $this->field, false, 'FullTextSearch does not work on Wiki pages', 'text');
-        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>' .
+        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . dgettext('tuleap-tracker', 'Show diff') . '</button>' .
                                                     '<div class="diff" style="display: none">' .
                                                     '<div class="block">' .
                                                         '<div class="difftext">' .
@@ -80,7 +79,7 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
                                                         '</div>' .
                                                     '</div>' .
                                                     '</div>', $text_1->diff($text_2));
-        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'toggle_diff') . '</button>' .
+        $this->assertEquals('<button class="btn btn-mini toggle-diff">' . dgettext('tuleap-tracker', 'Show diff') . '</button>' .
                                                     '<div class="diff" style="display: none">' .
                                                     '<div class="block">' .
                                                         '<div class="difftext">' .

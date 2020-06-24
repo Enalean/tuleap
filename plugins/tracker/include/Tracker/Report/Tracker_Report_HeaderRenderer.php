@@ -100,7 +100,7 @@ class Tracker_Report_HeaderRenderer
             'header_in_report',
             new Tracker_Report_HeaderInReportPresenter(
                 $this->purifier->purify($report->getTracker()->getBrowseInstructions(), CODENDI_PURIFIER_FULL),
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'current_report'),
+                dgettext('tuleap-tracker', 'Report:'),
                 $this->getSelectReportUrl($request, $report),
                 $this->getReportSelector($report, $reports),
                 $this->getReportOptionsDropdown($current_user, $report, $options_params, $reports),
@@ -123,14 +123,14 @@ class Tracker_Report_HeaderRenderer
         if ($report->userCanUpdate($current_user)) {
             $default_save = new Templating_Presenter_ButtonDropdownsOption(
                 'tracker_report_updater_save',
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'save'),
+                dgettext('tuleap-tracker', 'Save'),
                 false,
                 '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVE)))
             );
             $extra_save =  array(
                 new Templating_Presenter_ButtonDropdownsOptionWithModal(
                     'tracker_report_updater_saveas',
-                    $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as'),
+                    dgettext('tuleap-tracker', 'Save as...'),
                     false,
                     '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVEAS))) . '#tracker_report_updater_saveas-modal'
                 )
@@ -138,7 +138,7 @@ class Tracker_Report_HeaderRenderer
         } elseif (! $current_user->isAnonymous()) {
             $default_save = new Templating_Presenter_ButtonDropdownsOptionWithModal(
                 'tracker_report_updater_saveas',
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as'),
+                dgettext('tuleap-tracker', 'Save as...'),
                 false,
                 '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVEAS))) . '#tracker_report_updater_saveas-modal'
             );
@@ -175,7 +175,7 @@ class Tracker_Report_HeaderRenderer
     {
         return new Templating_Presenter_ButtonDropdowns(
             'tracker_report_options',
-            $GLOBALS['Language']->getText('plugin_tracker_report', 'options'),
+            dgettext('tuleap-tracker', 'Options'),
             $this->getReportOptionsList($current_user, $report, $options_params, $reports)
         );
     }
@@ -189,7 +189,7 @@ class Tracker_Report_HeaderRenderer
             $is_public = ($report->user_id ? 0 : 1);
             $states_list[] = new Templating_Presenter_ButtonDropdownsOption(
                 'tracker_report_updater_scope',
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'public'),
+                dgettext('tuleap-tracker', 'Public'),
                 $is_public,
                 '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SCOPE, 'report_scope_public' => intval(! $is_public))))
             );
@@ -198,7 +198,7 @@ class Tracker_Report_HeaderRenderer
         if (count($reports) > 1 && $report->getTracker()->userIsAdmin($current_user)) {
             $states_list[] = new Templating_Presenter_ButtonDropdownsOption(
                 'tracker_report_updater_default',
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'default'),
+                dgettext('tuleap-tracker', 'Default'),
                 $report->is_default,
                 '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_DEFAULT, 'report_default' => intval(! $report->is_default))))
             );
@@ -207,7 +207,7 @@ class Tracker_Report_HeaderRenderer
         if (! $current_user->isAnonymous()) {
             $actions_list[] = new Templating_Presenter_ButtonDropdownsOptionWithModal(
                 'tracker_report_updater_duplicate',
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as'),
+                dgettext('tuleap-tracker', 'Save as...'),
                 false,
                 '?' . http_build_query(array_merge($options_params, array('func' => Tracker_Report::ACTION_SAVEAS))) . '#tracker_report_updater_saveas-modal'
             );
@@ -242,7 +242,7 @@ class Tracker_Report_HeaderRenderer
         $this->renderer->renderToPage(
             'header_in_artifact_link_modal',
             new Tracker_Report_HeaderInArtifactLinkModalPresenter(
-                $GLOBALS['Language']->getText('plugin_tracker_report', 'current_report'),
+                dgettext('tuleap-tracker', 'Report:'),
                 $layout->fetchTrackerSwitcher($current_user, '<br />', $project, $report->getTracker()),
                 $this->getSelectReportUrl($request, $report),
                 $this->getReportSelector($report, $reports)
@@ -313,7 +313,7 @@ class Tracker_Report_HeaderRenderer
         }
 
         if (! $public_reports_exist) {
-            $warnings[] = $GLOBALS['Language']->getText('plugin_tracker_report', 'no_public_reports');
+            $warnings[] = dgettext('tuleap-tracker', 'None of the reports for this tracker are public, please ensure that at least one report is public! Tracker access should be managed via the permission settings.');
         }
 
         return $warnings;

@@ -63,13 +63,13 @@ class ExpertModePresenter
 
         $this->initAllowedFields($allowed_fields);
 
-        $this->allowed_fields_label   = $GLOBALS['Language']->getText('plugin_tracker_report', 'allowed_fields_label');
-        $this->query_label            = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_label');
-        $this->query_placeholder      = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_placeholder');
-        $this->title                  = $GLOBALS['Language']->getText('plugin_tracker_report', 'search');
-        $this->btn_report_normal_mode = $GLOBALS['Language']->getText('plugin_tracker_report', 'btn_report_normal_mode');
+        $this->allowed_fields_label   = dgettext('tuleap-tracker', 'Allowed fields');
+        $this->query_label            = dgettext('tuleap-tracker', 'Query');
+        $this->query_placeholder      = dgettext('tuleap-tracker', 'Example: (field_1 = \'value\' OR field_2 = \'value\') AND field_3 = \'value\'');
+        $this->title                  = dgettext('tuleap-tracker', 'Search');
+        $this->btn_report_normal_mode = dgettext('tuleap-tracker', 'Normal mode');
         $this->btn_search             = $GLOBALS['Language']->getText('global', 'btn_search');
-        $this->query_tooltip          = $GLOBALS['Language']->getText('plugin_tracker_report', 'query_tooltip');
+        $this->query_tooltip          = dgettext('tuleap-tracker', 'You can use: AND, OR, BETWEEN(), NOW(), MYSELF(), IN(), NOT IN(), parenthesis. Autocomplete is activated with Ctrl + Space.');
     }
 
     private function initAllowedFields(array $allowed_fields)

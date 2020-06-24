@@ -48,7 +48,7 @@ class ArtifactIncomingEmailButtonPresenterBuilder
             return;
         }
 
-        $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
+        $raw_email_button_title = dgettext('tuleap-tracker', 'Display original email');
         $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
 
         return new ArtifactOriginalEmailButtonPresenter(

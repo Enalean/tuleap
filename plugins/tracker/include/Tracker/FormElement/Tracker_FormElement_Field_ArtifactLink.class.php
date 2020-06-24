@@ -451,17 +451,17 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         $possible_parents = $paginated_possible_parents->getArtifacts();
         if ($display_selector) {
             $html .= '<label>';
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $purifier->purify($parent_tracker->getItemName()));
+            $html .= sprintf(dgettext('tuleap-tracker', 'Select %1$s parent:'), $purifier->purify($parent_tracker->getItemName()));
             $html .= '<select name="' . $purifier->purify($name) . '[parent]">';
             $html .= '<option value="">' . $GLOBALS['Language']->getText('global', 'please_choose_dashed') . '</option>';
             if ($can_create) {
-                $html .= '<option value="' . self::CREATE_NEW_PARENT_VALUE . '">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') . '</option>';
+                $html .= '<option value="' . self::CREATE_NEW_PARENT_VALUE . '">' . dgettext('tuleap-tracker', 'Create a new one') . '</option>';
             }
             $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents);
             $html .= '</select>';
             $html .= '</label>';
         } elseif (count($possible_parents) > 0) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_will_have_as_parent', array($possible_parents[0]->fetchDirectLinkToArtifactWithTitle()));
+            $html .= sprintf(dgettext('tuleap-tracker', 'Will have %1$s as parent.'), $possible_parents[0]->fetchDirectLinkToArtifactWithTitle());
         }
         $html .= '</p>';
         return $html;
@@ -519,7 +519,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
         if ($reverse_artifact_links) {
             $html .= '<div class="artifact-link-value-reverse">';
-            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse">' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_display_reverse') . '</a>';
+            $html .= '<a href="" class="btn" id="display-tracker-form-element-artifactlink-reverse">' . dgettext('tuleap-tracker', 'Display reverse artifact links') . '</a>';
             $html .= '<div id="tracker-form-element-artifactlink-reverse" style="display: none">';
         } else {
             $html .= '<div class="artifact-link-value">';
@@ -559,7 +559,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                              size="40"
                              data-preview-label="' . $hp->purify(dgettext('tuleap-tracker', 'Preview')) . '"
                              value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
-                             title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
+                             title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
             if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
                 $natures        = $this->getNaturePresenterFactory()->getAllUsableTypesInProject($artifact->getTracker()->getProject());
                 $natures_presenter = array();
@@ -596,7 +596,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
                 /** @var ArtifactLinksToRenderForPerTrackerTable $artifact_links_per_tracker */
                 $renderer = $artifact_links_per_tracker->getRenderer();
                 if ($renderer === null) {
-                    $html .= $GLOBALS['Language']->getText('plugin_tracker', 'no_reports_available');
+                    $html .= dgettext('tuleap-tracker', 'No reports available');
                     continue;
                 }
 
@@ -698,10 +698,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     private function getWidgetTitle($reverse_artifact_links)
     {
         if ($reverse_artifact_links) {
-            return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_reverse_title');
+            return dgettext('tuleap-tracker', 'Reverse artifact links');
         }
 
-        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_title');
+        return dgettext('tuleap-tracker', 'Artifact links');
     }
 
     /**
@@ -915,7 +915,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html .= '<input type="text"
                              ' . $html_name_new . '
                              value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
-                             title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
+                             title="' . dgettext('tuleap-tracker', 'Enter artifact ids separated with a comma') . '" />';
             $html .= '<br />';
         }
         if ($artifact_links) {
@@ -1431,12 +1431,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_label');
+        return dgettext('tuleap-tracker', 'Artifact Link');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifact_link_description');
+        return dgettext('tuleap-tracker', 'Links to other artifacts');
     }
 
     public static function getFactoryIconUseIt()

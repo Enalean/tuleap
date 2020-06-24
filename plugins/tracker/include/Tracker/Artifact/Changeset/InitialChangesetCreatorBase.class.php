@@ -159,7 +159,7 @@ abstract class Tracker_Artifact_Changeset_InitialChangesetCreatorBase extends Tr
         PFUser $submitter
     ): bool {
         if ($submitter->isAnonymous() && ! trim($submitter->getEmail())) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'You are not logged in.'));
             return false;
         }
 

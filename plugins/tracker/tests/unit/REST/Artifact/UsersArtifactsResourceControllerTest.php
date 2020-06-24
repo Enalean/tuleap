@@ -29,14 +29,12 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_ArtifactFactory;
 use Tracker_Semantic_Title;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Tracker\Artifact\MyArtifactsCollection;
 use Tuleap\Tracker\TrackerColor;
 
 class UsersArtifactsResourceControllerTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var M\MockInterface|Tracker_ArtifactFactory

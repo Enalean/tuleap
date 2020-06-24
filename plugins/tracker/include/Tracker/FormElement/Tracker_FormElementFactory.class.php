@@ -1341,7 +1341,7 @@ class Tracker_FormElementFactory
                 $form_element_data['name'] = $this->deductNameFromLabel($form_element_data['name']);
                 if ($existing_field = $this->getFormElementByName($form_element->getTracker()->getId(), $form_element_data['name'])) {
                     if ($existing_field->getId() != $form_element->getId()) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_include_type', 'error_uniq_name'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Unable to change the name of the element, it is already in use by another one'));
                         unset($form_element_data['name']);
                     }
                 }
@@ -1471,15 +1471,15 @@ class Tracker_FormElementFactory
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'fields'));
+        $w = new Widget_Static(dgettext('tuleap-tracker', 'Fields'));
         $w->setContent($this->fetchFactoryButtons($this->classnames, $tracker));
         $w->display();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'dynamic_fields'));
+        $w = new Widget_Static(dgettext('tuleap-tracker', 'Dynamic fields'));
         $w->setContent($this->fetchFactoryButtons($this->special_classnames, $tracker));
         $w->display();
 
-        $w = new Widget_Static($GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'structural_elements'));
+        $w = new Widget_Static(dgettext('tuleap-tracker', 'Structural elements'));
         $w->setContent($this->fetchFactoryButtons(array_merge($this->group_classnames, $this->staticfield_classnames), $tracker));
         $w->display();
     }

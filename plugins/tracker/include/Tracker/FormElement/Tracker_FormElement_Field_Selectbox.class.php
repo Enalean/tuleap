@@ -26,12 +26,12 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'selectbox');
+        return dgettext('tuleap-tracker', 'Selectbox');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'selectbox_description');
+        return dgettext('tuleap-tracker', 'The user can choose one value among others');
     }
 
     public static function getFactoryIconUseIt()

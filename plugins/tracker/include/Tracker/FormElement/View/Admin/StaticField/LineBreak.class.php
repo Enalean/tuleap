@@ -45,7 +45,7 @@ class Tracker_FormElement_View_Admin_StaticField_LineBreak extends Tracker_FormE
     {
         $html = '';
         $html .= '<span class="tracker-admin-form-element-help">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'line_break_label_help');
+        $html .= dgettext('tuleap-tracker', 'The label will not appear in form.');
         $html .= '</span>';
         return $html;
     }

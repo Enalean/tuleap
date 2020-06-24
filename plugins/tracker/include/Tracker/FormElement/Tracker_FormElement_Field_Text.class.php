@@ -235,7 +235,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
         //check if this field is the title we do not allow to change it
         if ($this->isSemanticTitle()) {
-            $html .= '<textarea readonly="readonly" title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact_masschange', 'cannot_masschange_title') . '">' . $value . '</textarea>';
+            $html .= '<textarea readonly="readonly" title="' . dgettext('tuleap-tracker', 'This field is the title of the artifact. It is not allowed to masschange it.') . '">' . $value . '</textarea>';
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $html .= '<textarea id = field_' . $this->id . ' class="user-mention"
@@ -445,12 +445,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'text');
+        return dgettext('tuleap-tracker', 'Text');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'text_description');
+        return dgettext('tuleap-tracker', 'Paragraph, long text field');
     }
 
     public static function getFactoryIconUseIt()
@@ -526,7 +526,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $rule = $this->getRuleString();
         $content = $this->getRightContent($value);
         if (!($is_valid = $rule->isValid($content))) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_text_value', array($this->getLabel())));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel()));
         }
         return $is_valid;
     }

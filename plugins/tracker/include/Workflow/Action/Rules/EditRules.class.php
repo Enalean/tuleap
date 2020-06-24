@@ -85,7 +85,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
     {
         $fields_are_different = $source_field !== $target_field;
         if (! $fields_are_different) {
-            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
+            $error_msg = dgettext('tuleap-tracker', 'The two fields must be different');
             $GLOBALS['Response']->addFeedback('error', $error_msg);
         }
         return $fields_are_different;
@@ -155,7 +155,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
             }
         }
         if ($nb_updated) {
-            $update_msg = $GLOBALS['Language']->getText('workflow_admin', 'updated_rules');
+            $update_msg = dgettext('tuleap-tracker', 'Rule(s) successfully updated');
             $GLOBALS['Response']->addFeedback('info', $update_msg);
         }
     }
@@ -212,7 +212,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
                 }
             }
             if ($nb_deleted) {
-                $delete_msg = $GLOBALS['Language']->getText('workflow_admin', 'deleted_rules');
+                $delete_msg = dgettext('tuleap-tracker', 'Rule(s) successfully deleted');
                 $GLOBALS['Response']->addFeedback('info', $delete_msg);
             }
         }
@@ -229,19 +229,19 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
                 $this->tracker->getId(),
                 $comparator
             );
-            $create_msg = $GLOBALS['Language']->getText('workflow_admin', 'created_rule');
+            $create_msg = dgettext('tuleap-tracker', 'Rule successfully created');
             $GLOBALS['Response']->addFeedback('info', $create_msg);
         }
     }
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout)
     {
-        $title = $GLOBALS['Language']->getText('workflow_admin', 'title_define_global_date_rules');
+        $title = dgettext('tuleap-tracker', 'Define global date rules');
 
         $this->displayHeader($layout, $title);
         echo '<div class="workflow_rules">';
         echo '<h2 class="almost-tlp-title">' . $title . '</h2>';
-        echo '<p class="help">' . $GLOBALS['Language']->getText('workflow_admin', 'hint_date_rules_definition') . '</p>';
+        echo '<p class="help">' . dgettext('tuleap-tracker', 'Those rules will be applied on each creation/update of artifacts.') . '</p>';
         echo '<form method="post" action="' . $this->url_query . '">';
         // CSRF Protection
         echo $this->token->fetchHTMLInput();
@@ -303,7 +303,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action
         echo '<p class="add_new_rule">';
         echo '<span class="add_new_rule_title">';
         echo '<i class="fa fa-plus"></i> ';
-        echo $GLOBALS['Language']->getText('workflow_admin', 'add_new_rule') . ' ';
+        echo dgettext('tuleap-tracker', 'Add a new rule') . ' ';
         echo '</span>';
         echo '<span>';
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE . '[' . self::PARAMETER_SOURCE_FIELD . ']', $selected);

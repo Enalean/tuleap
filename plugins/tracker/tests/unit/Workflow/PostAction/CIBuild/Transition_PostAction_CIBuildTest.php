@@ -24,7 +24,6 @@ final class Transition_PostAction_CIBuildTest extends \PHPUnit\Framework\TestCas
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @var array

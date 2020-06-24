@@ -506,7 +506,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $html .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
 
         //  Query title
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'search') . '</h4>';
+        $html .= dgettext('tuleap-tracker', 'Search') . '</h4>';
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
@@ -618,7 +618,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $html  = '<button id="tracker-report-expert-query-button" type="button" class="btn btn-mini tracker-report-query-button">';
         $html .= '<i class="fa fa-random"></i> ';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'btn_report_expert_mode');
+        $html .= dgettext('tuleap-tracker', 'Expert mode');
         $html .= '</button>';
 
         return $html;
@@ -628,7 +628,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $add_criteria_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_criteria_dropdown',
-            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria'),
+            dgettext('tuleap-tracker', 'Criteria'),
             $this->getFieldsAsDropdownOptions('tracker_report_add_criterion', $used, self::TYPE_CRITERIA)
         );
         $add_criteria_presenter->setIcon('fa fa-eye-slash');
@@ -687,13 +687,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
         if (! empty($criteria_advanced_options)) {
             $simple_columns_title = new Templating_Presenter_ButtonDropdownsOptionTitle(
-                $GLOBALS['Language']->getText('plugin_tracker_renderer_table', 'simple_columns')
+                dgettext('tuleap-tracker', 'Simple columns')
             );
             array_unshift($criteria_options, $simple_columns_title);
 
             $divider              = new Templating_Presenter_ButtonDropdownsOptionDivider();
             $custom_columns_title = new Templating_Presenter_ButtonDropdownsOptionTitle(
-                $GLOBALS['Language']->getText('plugin_tracker_renderer_table', 'custom_columns')
+                dgettext('tuleap-tracker', 'Custom columns based on...')
             );
             array_unshift($criteria_advanced_options, $divider, $custom_columns_title);
         }
@@ -710,7 +710,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $column_id = $id . '_';
         $option = new Templating_Presenter_ButtonDropdownsOption(
             $id,
-            $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature'),
+            dgettext('tuleap-tracker', 'No type'),
             isset($used[$column_id]),
             '#'
         );
@@ -940,7 +940,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">';
-                    $html .= '<span>' . $GLOBALS['Language']->getText('plugin_tracker', 'Description:') . ' </span>';
+                    $html .= '<span>' . dgettext('tuleap-tracker', 'Description:') . ' </span>';
                     $html .= $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC);
                     $html .= '</p>';
                 }
@@ -1038,7 +1038,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
         if ($options) {
             $html .= '<select name="add_criteria" id="tracker_report_add_criteria" autocomplete="off">';
-            $html .= '<option selected="selected" value="">' . '-- ' . $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_criteria') . '</option>';
+            $html .= '<option selected="selected" value="">' . '-- ' . dgettext('tuleap-tracker', 'Criteria') . '</option>';
             $html .= $options;
             $html .= '</select>';
         }
@@ -1267,7 +1267,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         if ($request->exist('tracker') && $request->get('tracker') != $tracker->getId()) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText('plugin_tracker_admin', 'invalid_request')
+                dgettext('tuleap-tracker', 'The request is not valid.')
             );
 
             $GLOBALS['Response']->redirect('?' . http_build_query(array(
@@ -1291,12 +1291,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     }
 
                     if (empty($masschange_aids)) {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
+                        $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'No artifacts have been selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
                     }
                     $tracker->displayMasschangeForm($layout, $current_user, $masschange_aids);
                 } else {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $tracker->getId());
                 }
                 break;
@@ -1362,7 +1362,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 break;
             case 'rename-renderer':
                 if ($request->get('new_name') == '') {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_report', 'renderer_name_mandatory'));
+                    $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Renderer name is mandatory.'));
                 } elseif (! $current_user->isAnonymous() && (int) $request->get('renderer') && trim($request->get('new_name'))) {
                     $this->report_session->renameRenderer((int) $request->get('renderer'), trim($request->get('new_name')), trim($request->get('new_description')));
                     $this->report_session->setHasChanged();
@@ -1856,15 +1856,15 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $update_renderer .= '
             <label class="radio">
                 <input type="radio" name="func" value="rename-renderer" id="tracker_renderer_updater_rename" />
-                ' . $GLOBALS['Language']->getText('plugin_tracker_report', 'update') . '
+                ' . dgettext('tuleap-tracker', 'Update') . '
             </label>
             <div class="tracker-renderer-details">
-               <label for="tracker_renderer_updater_rename_name">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'name') . '</label>
+               <label for="tracker_renderer_updater_rename_name">' . dgettext('tuleap-tracker', 'Name') . '</label>
                <input type="text"
                       name="new_name"
                       id="tracker_renderer_updater_rename_name"
                       value="' .  $hp->purify($renderer->name, CODENDI_PURIFIER_CONVERT_HTML)  . '" /><br />
-               <label for="tracker_renderer_updater_rename_description">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'description') . '</label>
+               <label for="tracker_renderer_updater_rename_description">' . dgettext('tuleap-tracker', 'Description') . '</label>
                <textarea
                       name="new_description"
                       rows="5"
@@ -1873,9 +1873,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                       >' .  $hp->purify($renderer->description, CODENDI_PURIFIER_CONVERT_HTML)  . '</textarea>
             </div>
         ';
-        $update_renderer .= '<label class="radio"><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" />' . $GLOBALS['Language']->getText('plugin_tracker_report', 'delete') . '</label>';
+        $update_renderer .= '<label class="radio"><input type="radio" name="func" value="delete-renderer" id="tracker_renderer_updater_delete" />' . dgettext('tuleap-tracker', 'Delete') . '</label>';
         $update_renderer .= '<br/>';
-        $update_renderer .= '<input type="submit" class="btn btn-primary" value="' .  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  . '" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\'' . $GLOBALS['Language']->getText('plugin_tracker_report', 'confirm_delete_renderer') . '\');"/> ';
+        $update_renderer .= '<input type="submit" class="btn btn-primary" value="' .  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  . '" onclick="if ($(\'tracker_renderer_updater_delete\').checked) return confirm(\'' . dgettext('tuleap-tracker', 'Are you sure that you want to delete it?') . '\');"/> ';
         $update_renderer .= '</form>';
 
         return $update_renderer;
@@ -1903,12 +1903,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         } else {
             $type = current($types);
         }
-        $add_renderer .= '<p><strong>' . $GLOBALS['Language']->getText('plugin_tracker_report', 'add_new') . ' ' . $type . '</strong></p>';
+        $add_renderer .= '<p><strong>' . dgettext('tuleap-tracker', 'Add a new') . ' ' . $type . '</strong></p>';
         $add_renderer .= '<p>';
-        $add_renderer .= '<label for="tracker_renderer_add_name">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'name') . '</label>
+        $add_renderer .= '<label for="tracker_renderer_add_name">' . dgettext('tuleap-tracker', 'Name') . '</label>
                          <input type="text" name="new_name" value="" id="tracker_renderer_add_name" />';
 
-        $add_renderer .= '<label for="tracker_renderer_add_description">' . $GLOBALS['Language']->getText('plugin_tracker_report', 'description') . '</label>
+        $add_renderer .= '<label for="tracker_renderer_add_description">' . dgettext('tuleap-tracker', 'Description') . '</label>
                          <textarea
                             name="new_description"
                             id="tracker_renderer_add_description"
@@ -1916,7 +1916,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                             cols="30"></textarea>';
 
         $add_renderer .= '</p>';
-        $add_renderer .= '<input type="submit" class="btn btn-primary" value="' .  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  . '" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\'' . $GLOBALS['Language']->getText('plugin_tracker_report', 'name_mandatory') . '\'); return false;}"/> ';
+        $add_renderer .= '<input type="submit" class="btn btn-primary" value="' .  $hp->purify($GLOBALS['Language']->getText('global', 'btn_submit'), CODENDI_PURIFIER_CONVERT_HTML)  . '" onclick="if (!$(\'tracker_renderer_add_name\').getValue()) { alert(\'' . dgettext('tuleap-tracker', 'Name is mandatory') . '\'); return false;}"/> ';
         $add_renderer .= '</form>';
 
         return $add_renderer;

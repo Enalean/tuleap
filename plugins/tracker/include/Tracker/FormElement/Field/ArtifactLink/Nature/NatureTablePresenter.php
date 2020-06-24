@@ -55,14 +55,14 @@ class NatureTablePresenter
         $this->tracker_id            = $field->getTracker()->getId();
 
         $language                 = $GLOBALS['Language'];
-        $this->id_label           = $language->getText('plugin_tracker_formelement_admin', 'artifactid_label');
-        $this->project_label      = $language->getText('plugin_tracker_include_artifact', 'project');
-        $this->tracker_label      = $language->getText('plugin_tracker_import_admin', 'tracker');
-        $this->summary_label      = $language->getText('plugin_tracker_include_artifact', 'summary');
-        $this->status_label       = $language->getText('plugin_tracker_admin_semantic', 'status_label');
-        $this->last_update_label  = $language->getText('plugin_tracker_formelement_admin', 'lastupdatedate_label');
-        $this->submitted_by_label = $language->getText('plugin_tracker_formelement_admin', 'submittedby_label');
-        $this->assigned_to_label  = $language->getText('plugin_tracker_formelement_admin', 'assignedto_label');
+        $this->id_label           = dgettext('tuleap-tracker', 'Artifact ID');
+        $this->project_label      = dgettext('tuleap-tracker', 'Project');
+        $this->tracker_label      = dgettext('tuleap-tracker', 'Tracker');
+        $this->summary_label      = dgettext('tuleap-tracker', 'Summary');
+        $this->status_label       = dgettext('tuleap-tracker', 'Status');
+        $this->last_update_label  = dgettext('tuleap-tracker', 'Last Update Date');
+        $this->submitted_by_label = dgettext('tuleap-tracker', 'Submitted By');
+        $this->assigned_to_label  = dgettext('tuleap-tracker', 'Assigned to');
 
         $art_factory = \Tracker_ArtifactFactory::instance();
         $this->artifact_links = array();
@@ -72,7 +72,7 @@ class NatureTablePresenter
             $this->artifact_links[] = new ArtifactInNatureTablePresenter($artifact, $html_classes, $field);
         }
 
-        $this->mass_unlink_title = $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title');
+        $this->mass_unlink_title = dgettext('tuleap-tracker', 'Mark all links to be removed');
     }
 
     public static function buildForHeader(NaturePresenter $nature_presenter, Tracker_FormElement_Field_ArtifactLink $field)

@@ -23,7 +23,6 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\GlobalResponseMock;
-    use \Tuleap\GlobalLanguageMock;
 
     /**
      * @return \Mockery\Mock | Tracker_FormElement_Field_Integer

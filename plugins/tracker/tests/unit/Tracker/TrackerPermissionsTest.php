@@ -42,7 +42,6 @@ use Tracker_ReportFactory;
 use Tracker_SemanticManager;
 use TrackerFactory;
 use TrackerManager;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\Layout\BaseLayout;
 use UserManager;
 use Workflow;
@@ -52,7 +51,6 @@ use WorkflowManager;
 class TrackerPermissionsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     private $all_trackers_admin_user;
     /**
@@ -505,7 +503,7 @@ class TrackerPermissionsTest extends TestCase
 
         $this->tracker->shouldReceive('userCanView')->withArgs([$this->registered_user])->andReturn(true);
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can submit artifacts
@@ -544,7 +542,7 @@ class TrackerPermissionsTest extends TestCase
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
         // site admin can delete trackers
         $this->tf->shouldReceive('markAsDeleted')->once();
@@ -569,7 +567,7 @@ class TrackerPermissionsTest extends TestCase
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null]);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
         $GLOBALS['Response']->shouldReceive('redirect');
 
         // tracker admin can NOT delete trackers if he's not project admin
@@ -582,7 +580,7 @@ class TrackerPermissionsTest extends TestCase
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null]);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
         $GLOBALS['Response']->shouldReceive('redirect');
 
         // project member can NOT delete tracker
@@ -595,7 +593,7 @@ class TrackerPermissionsTest extends TestCase
         $request_delete_tracker = Mockery::mock(Codendi_Request::class);
         $request_delete_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('delete');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null]);
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()]);
         $GLOBALS['Response']->shouldReceive('redirect');
 
         // registered user can NOT delete trackers
@@ -649,7 +647,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_tracker->shouldReceive('get')->withArgs(['add-formElement'])->once();
         $request_admin_tracker->shouldReceive('get')->withArgs(['create-formElement'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -666,7 +664,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_tracker->shouldReceive('get')->withArgs(['add-formElement'])->once();
         $request_admin_tracker->shouldReceive('get')->withArgs(['create-formElement'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -681,7 +679,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -694,7 +692,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -763,7 +761,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -787,7 +785,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['update'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -810,7 +808,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_editoptions_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -823,7 +821,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_editoptions_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_editoptions_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-editoptions');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -869,7 +867,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_perms_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
         // tracker admin can access tracker admin part
         $this->permission_controller1->shouldReceive('process')->once();
@@ -883,7 +881,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_perms_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -898,7 +896,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_perms_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -911,7 +909,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_perms_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_perms_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-perms');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -977,7 +975,7 @@ class TrackerPermissionsTest extends TestCase
             'admin-perms-tracker'
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1002,7 +1000,7 @@ class TrackerPermissionsTest extends TestCase
             'admin-perms-tracker'
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1027,7 +1025,7 @@ class TrackerPermissionsTest extends TestCase
             'admin-perms-tracker'
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -1046,7 +1044,7 @@ class TrackerPermissionsTest extends TestCase
             'admin-perms-tracker'
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -1108,7 +1106,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['add-formElement'])->once();
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['create-formElement'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1133,7 +1131,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['add-formElement'])->once();
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['create-formElement'])->once();
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
         // tracker admin can access tracker admin part
         $this->tracker1->shouldReceive('displayAdminFormElements')->never();
@@ -1155,7 +1153,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_formelement_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -1168,7 +1166,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_formelement_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_formelement_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-formElements');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -1221,7 +1219,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_semantic_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1235,7 +1233,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_semantic_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1249,7 +1247,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_semantic_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -1262,7 +1260,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_semantic_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_semantic_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-semantic');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -1307,7 +1305,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_canned_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1321,7 +1319,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_canned_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1335,7 +1333,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_canned_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -1348,7 +1346,7 @@ class TrackerPermissionsTest extends TestCase
         $request_admin_canned_tracker = Mockery::mock(Codendi_Request::class);
         $request_admin_canned_tracker->shouldReceive('get')->withArgs(['func'])->andReturns('admin-canned');
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part
@@ -1409,7 +1407,7 @@ class TrackerPermissionsTest extends TestCase
             Workflow::FUNC_ADMIN_TRANSITIONS
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1425,7 +1423,7 @@ class TrackerPermissionsTest extends TestCase
             Workflow::FUNC_ADMIN_TRANSITIONS
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // tracker admin can access tracker admin part
@@ -1441,7 +1439,7 @@ class TrackerPermissionsTest extends TestCase
             Workflow::FUNC_ADMIN_TRANSITIONS
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // project member can NOT access tracker admin part
@@ -1456,7 +1454,7 @@ class TrackerPermissionsTest extends TestCase
             Workflow::FUNC_ADMIN_TRANSITIONS
         );
 
-        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', null])->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->withArgs(['error', Mockery::any()])->once();
         $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         // registered user can NOT access tracker admin part

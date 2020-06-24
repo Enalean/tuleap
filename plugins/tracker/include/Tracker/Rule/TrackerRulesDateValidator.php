@@ -50,15 +50,7 @@ class TrackerRulesDateValidator
             if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
                 $source_field = $this->getFieldById($rule->getSourceFieldId());
                 $target_field = $this->getFieldById($rule->getTargetFieldId());
-                $feedback = $GLOBALS['Language']->getText(
-                    'plugin_tracker_artifact',
-                    'rules_date_not_valid',
-                    [
-                        $source_field->getLabel() ,
-                        $rule->getComparator(),
-                        $target_field->getLabel()
-                    ]
-                );
+                $feedback = sprintf(dgettext('tuleap-tracker', 'Error on the date value : %1$s must be %2$s to %3$s.'), $source_field->getLabel(), $rule->getComparator(), $target_field->getLabel());
 
                 $GLOBALS['Response']->addFeedback('error', $feedback);
 
@@ -76,7 +68,7 @@ class TrackerRulesDateValidator
         $is_valid = true;
         if (! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
             $source_field = $this->getFieldById($rule->getSourceFieldId());
-            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
+            $feedback = dgettext('tuleap-tracker', 'Missing field in data:') . $source_field->getLabel();
 
             $GLOBALS['Response']->addUniqueFeedback(Feedback::ERROR, $feedback);
             $source_field->setHasErrors(true);
@@ -85,7 +77,7 @@ class TrackerRulesDateValidator
 
         if (! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
             $target_field = $this->getFieldById($rule->getTargetFieldId());
-            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
+            $feedback = dgettext('tuleap-tracker', 'Missing field in data:') . $target_field->getLabel();
             $GLOBALS['Response']->addUniqueFeedback(Feedback::ERROR, $feedback);
             $target_field->setHasErrors(true);
             $is_valid = false;

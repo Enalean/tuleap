@@ -31,7 +31,6 @@ use Tracker_Artifact_Changeset;
 use Tracker_Artifact_ChangesetValue_ArtifactLink;
 use Tracker_FormElement_Field_ArtifactLink;
 use Tracker_FormElementFactory;
-use Tuleap\GlobalLanguageMock;
 use Tuleap\GlobalResponseMock;
 use UserManager;
 
@@ -39,7 +38,6 @@ use UserManager;
 class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
     use GlobalResponseMock;
 
     /**
@@ -180,9 +178,6 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
 
         $artifact->shouldReceive('createNewChangeset')->never();
         $GLOBALS['Response']->shouldReceive('sendStatusCode')->with(400)->once();
-        $GLOBALS['Language']->shouldReceive('getText')
-                            ->with('plugin_tracker', 'must_have_artifact_link_field')
-                            ->andReturns('The destination artifact must have a artifact link field.');
         $GLOBALS['Response']->shouldReceive('addFeedback')
                             ->withArgs(['error', 'The destination artifact must have a artifact link field.']);
 

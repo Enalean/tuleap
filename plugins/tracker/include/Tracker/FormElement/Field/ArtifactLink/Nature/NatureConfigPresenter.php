@@ -55,31 +55,31 @@ class NatureConfigPresenter
 
     public function __construct($title, array $natures_usage, CSRFSynchronizerToken $csrf)
     {
-        $this->desc                = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'desc');
-        $this->available_natures   = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'available_natures');
-        $this->shortname_label     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname');
-        $this->forward_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label');
-        $this->reverse_label_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label');
-        $this->btn_submit          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'update_button');
-        $this->btn_close           = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cancel_modal');
+        $this->desc                = dgettext('tuleap-tracker', 'Links between artifacts may have a type for a better semantics between artifacts. Here is the list of allowed types for this platform.');
+        $this->available_natures   = dgettext('tuleap-tracker', 'Available types');
+        $this->shortname_label     = dgettext('tuleap-tracker', 'Shortname');
+        $this->forward_label_label = dgettext('tuleap-tracker', 'Forward label');
+        $this->reverse_label_label = dgettext('tuleap-tracker', 'Reverse label');
+        $this->btn_submit          = dgettext('tuleap-tracker', 'Update type');
+        $this->btn_close           = dgettext('tuleap-tracker', 'Cancel');
 
-        $this->shortname_help     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_help');
-        $this->forward_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_help');
-        $this->reverse_label_help = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_help');
+        $this->shortname_help     = dgettext('tuleap-tracker', 'Only letters and underscore are allowed for shortname (must start with a letter though).');
+        $this->forward_label_help = dgettext('tuleap-tracker', 'E.g. for the fixed_in type, a bug will be fixed in a release so the forward label will be "Fixed in".');
+        $this->reverse_label_help = dgettext('tuleap-tracker', 'E.g. for the fixed_in type, a bug is fixed in a release so the reverse label will be "Fixed" (the release has "Fixed" bugs).');
 
-        $this->shortname_placeholder     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'shortname_placeholder');
-        $this->forward_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'forward_label_placeholder');
-        $this->reverse_label_placeholder = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'reverse_label_placeholder');
+        $this->shortname_placeholder     = dgettext('tuleap-tracker', 'fixed_in');
+        $this->forward_label_placeholder = dgettext('tuleap-tracker', 'Fixed in');
+        $this->reverse_label_placeholder = dgettext('tuleap-tracker', 'Fixed');
 
-        $this->create_new_nature        = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'create_new_nature');
-        $this->edit_nature              = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_nature');
-        $this->edit_icon_label          = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_icon_label');
-        $this->edit_system_nature_title = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'edit_system_nature_title');
-        $this->delete_icon_label        = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_icon_label');
-        $this->cannot_delete_title      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'cannot_delete_title');
-        $this->delete_modal_title       = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_title');
-        $this->delete_modal_submit      = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_submit');
-        $this->delete_modal_content     = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'delete_modal_content');
+        $this->create_new_nature        = dgettext('tuleap-tracker', 'Add type');
+        $this->edit_nature              = dgettext('tuleap-tracker', 'Edit type');
+        $this->edit_icon_label          = dgettext('tuleap-tracker', 'Edit');
+        $this->edit_system_nature_title = dgettext('tuleap-tracker', 'Editing system types is disallowed.');
+        $this->delete_icon_label        = dgettext('tuleap-tracker', 'Delete');
+        $this->cannot_delete_title      = dgettext('tuleap-tracker', 'This type can\'t be deleted because it is or has been already used.');
+        $this->delete_modal_title       = dgettext('tuleap-tracker', 'Delete type');
+        $this->delete_modal_submit      = dgettext('tuleap-tracker', 'Delete');
+        $this->delete_modal_content     = dgettext('tuleap-tracker', 'You are about to delete a type. This action is action is irreversible. Do you confirm this deletion?');
         $this->shortname_pattern        = NatureValidator::SHORTNAME_PATTERN;
 
         $this->sections = new ArtifactLinkTypePresenter();
@@ -87,7 +87,7 @@ class NatureConfigPresenter
         $this->title         = $title;
         $this->natures_usage = $natures_usage;
         $this->has_natures   = count($this->natures_usage) > 0;
-        $this->no_natures    = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'there_is_no_nature');
+        $this->no_natures    = dgettext('tuleap-tracker', 'There no artifact links types');
         $this->csrf_token    = $csrf->fetchHTMLInput();
     }
 }

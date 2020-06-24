@@ -69,12 +69,12 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox');
+        return dgettext('tuleap-tracker', 'Checkbox');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'checkbox_desc');
+        return dgettext('tuleap-tracker', 'Checkbox');
     }
 
     public static function getFactoryIconUseIt()

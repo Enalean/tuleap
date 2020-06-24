@@ -22,12 +22,10 @@ namespace Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use Tuleap\GlobalLanguageMock;
 
 final class NatureValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-    use GlobalLanguageMock;
 
     /**
      * @var NatureValidator

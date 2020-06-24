@@ -96,12 +96,12 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastmodifiedby_label');
+        return dgettext('tuleap-tracker', 'Last Updated By');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastmodifiedby_description');
+        return dgettext('tuleap-tracker', 'The last person to update the artifact');
     }
 
     public static function getFactoryIconUseIt()
@@ -255,7 +255,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         $is_submission = null
     ) {
         if ($submitted_value !== null) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+            $GLOBALS['Response']->addFeedback('warning', sprintf(dgettext('tuleap-tracker', 'The field "%1$s" will not be taken into account.'), $this->getName()));
         }
 
         return true;
@@ -268,7 +268,7 @@ class Tracker_FormElement_Field_LastModifiedBy extends Tracker_FormElement_Field
         $fake_value = new Tracker_FormElement_Field_List_Bind_UsersValue(UserManager::instance()->getCurrentUser()->getId());
         $html      .= $purifier->purify($fake_value->getLabel()) . '<br />';
         $html      .= '<span class="tracker-admin-form-element-help">';
-        $html      .= $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'lastmodifiedby_help');
+        $html      .= dgettext('tuleap-tracker', 'The field is automatically set to the last person who modified the artifact');
         $html      .= '</span>';
         return $html;
     }

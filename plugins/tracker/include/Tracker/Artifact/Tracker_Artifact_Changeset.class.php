@@ -288,7 +288,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         $html  = '';
         $html .= '<a href="#" class="tracker_artifact_followup_comment_controls_edit">';
-        $html .= '<button class="btn btn-mini"><i class="fa fa-pencil-square-o"></i> ' . $GLOBALS['Language']->getText('plugin_tracker_fieldeditor', 'edit') . '</button>';
+        $html .= '<button class="btn btn-mini"><i class="fa fa-pencil-square-o"></i> ' . dgettext('tuleap-tracker', 'Edit') . '</button>';
         $html .= '</a>';
 
         return $html;
@@ -306,7 +306,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
             return '';
         }
 
-        $raw_email_button_title = $GLOBALS['Language']->getText('plugin_tracker', 'raw_email_button_title');
+        $raw_email_button_title = dgettext('tuleap-tracker', 'Display original email');
         $raw_mail               = Codendi_HTMLPurifier::instance()->purify($raw_mail);
 
         $html = '<button type="button" class="btn btn-mini tracker_artifact_followup_comment_controls_raw_email" data-raw-email="' . $raw_mail . '">

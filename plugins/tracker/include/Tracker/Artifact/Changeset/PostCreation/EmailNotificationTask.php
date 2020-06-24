@@ -362,7 +362,7 @@ final class EmailNotificationTask implements PostCreationTask
         $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
         $output .= ' <' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $art->getId() . '>';
         $output .= PHP_EOL;
-        $output .= $language->getText('plugin_tracker_include_artifact', 'last_edited');
+        $output .= dgettext('tuleap-tracker', 'last edited by:');
         $output .= ' ' . $this->user_helper->getDisplayNameFromUserId($changeset->getSubmittedBy());
         $output .= ' on ' . \DateHelper::formatForLanguage($language, $changeset->getSubmittedOn());
         if ($comment = $changeset->getComment()) {
@@ -370,11 +370,11 @@ final class EmailNotificationTask implements PostCreationTask
             $output .= $comment->fetchMailFollowUp($format);
         }
         $output .= PHP_EOL;
-        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ';
+        $output .= ' -------------- ' . dgettext('tuleap-tracker', 'CHANGESET') . ' ---------------- ';
         $output .= PHP_EOL;
         $output .= $changeset->diffToPrevious($format, $recipient_user, $ignore_perms);
         $output .= PHP_EOL;
-        $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_artifact') . ' ---------------- ';
+        $output .= ' -------------- ' . dgettext('tuleap-tracker', 'ARTIFACT') . ' ---------------- ';
         $output .= PHP_EOL;
         $output .= $art->fetchMail($recipient_user, $format, $ignore_perms);
         $output .= PHP_EOL;
@@ -416,7 +416,7 @@ final class EmailNotificationTask implements PostCreationTask
             $output .=
                 '<tr>
                     <td colspan="2" align="left">
-                        <h2>' . $language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset') . '
+                        <h2>' . dgettext('tuleap-tracker', 'Latest modifications') . '
                         </h2>
                     </td>
                 </tr>';
@@ -540,7 +540,7 @@ final class EmailNotificationTask implements PostCreationTask
             $assigned_to_users = $artifact->getAssignedTo($recipient);
             foreach ($assigned_to_users as $assigned_to_user) {
                 if ((int) $assigned_to_user->getId() === (int) $recipient->getId()) {
-                    return '[' . $recipient->getLanguage()->getText('plugin_tracker_include_type', 'assigned_to_me') . '] ';
+                    return '[' . dgettext('tuleap-tracker', 'Assigned to me') . '] ';
                 }
             }
         }

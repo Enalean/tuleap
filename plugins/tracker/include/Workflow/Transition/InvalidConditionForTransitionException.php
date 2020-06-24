@@ -24,9 +24,9 @@ class Tracker_Workflow_Transition_InvalidConditionForTransitionException extends
     {
         $field_value_to = $transition->getFieldValueTo();
         if ($field_value_to !== null) {
-            $message = $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_not_valid', array($field_value_to->getLabel()));
+            $message = sprintf(dgettext('tuleap-tracker', 'The transition to the value "%1$s" is not valid.'), $field_value_to->getLabel());
         } else {
-            $message = $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'transition_to_none');
+            $message = dgettext('tuleap-tracker', 'The transition to the value "None" is not valid.');
         }
 
         parent::__construct($message);

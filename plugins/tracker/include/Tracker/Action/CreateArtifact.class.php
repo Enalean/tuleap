@@ -41,7 +41,7 @@ class Tracker_Action_CreateArtifact
         if ($this->tracker->userCanSubmitArtifact($current_user)) {
             $this->processCreate($layout, $request, $current_user);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker', 'Access denied. You don\'t have permissions to perform this action.'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?tracker=' . $this->tracker->getId());
         }
     }
@@ -116,7 +116,7 @@ class Tracker_Action_CreateArtifact
             echo '<script>window.parent.codendi.tracker.artifact.artifactLink.newArtifact(' . (int) $artifact->getId() . ');</script>';
             exit;
         } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'create_success', array($artifact->fetchXRefLink())), CODENDI_PURIFIER_LIGHT);
+            $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-tracker', 'Artifact Successfully Created (%1$s)'), $artifact->fetchXRefLink()), CODENDI_PURIFIER_LIGHT);
             $GLOBALS['Response']->redirect($redirect->toUrl());
         }
     }

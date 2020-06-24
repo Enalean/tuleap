@@ -53,7 +53,7 @@ class Tracker_FormElement_View_Admin_UpdateVisitor extends Tracker_FormElement_V
     public function display(TrackerManager $tracker_manager, HTTPRequest $request)
     {
         $label            = $this->element->getLabel();
-        $title            = $GLOBALS['Language']->getText('plugin_tracker_include_type', 'upd_label', $label);
+        $title            = sprintf(dgettext('tuleap-tracker', 'Update Field \'%1$s\''), $label);
         $url              = $this->element->getAdminEditUrl();
 
         echo $this->displayForm($tracker_manager, $request, $url, $title, $this->fetchForm());

@@ -433,10 +433,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         $message = '';
 
         if (! $this->canBeRemovedFromUsage()) {
-            $message = $GLOBALS['Language']->getText(
-                'plugin_tracker_common_fieldset_factory',
-                'delete_only_empty_fieldset'
-            );
+            $message = dgettext('tuleap-tracker', 'Not allowed to delete non-empty field set.');
         }
 
         return $message;

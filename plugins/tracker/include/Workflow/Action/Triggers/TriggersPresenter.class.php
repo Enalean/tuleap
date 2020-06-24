@@ -39,22 +39,22 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter
 
     public function title_define_triggers()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'title_define_triggers');
+        return dgettext('tuleap-tracker', 'Define cross-tracker triggers');
     }
 
     public function title_existing_triggers()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'title_existing_triggers');
+        return dgettext('tuleap-tracker', 'Existing triggers');
     }
 
     public function title_new_trigger()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'title_new_trigger');
+        return dgettext('tuleap-tracker', 'Create new trigger');
     }
 
     public function triggers_definition()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'hint_triggers_definition');
+        return dgettext('tuleap-tracker', 'The triggers will be applied on each creation/update of artifacts.');
     }
 
     public function triggers_form_action()
@@ -64,7 +64,7 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter
 
     public function triggers_add_new()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'add_new_trigger');
+        return dgettext('tuleap-tracker', 'Add a new trigger');
     }
 
     public function triggers_submit()
@@ -79,61 +79,61 @@ class Tracker_Workflow_Action_Triggers_TriggersPresenter
 
     public function new_trigger_select_target_field_name()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_new_trigger_select_target_field_name');
+        return dgettext('tuleap-tracker', 'select current tracker field');
     }
 
     public function new_trigger_select_target_field_value()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_new_trigger_select_target_field_value');
+        return dgettext('tuleap-tracker', 'select value');
     }
 
     public function condition_select_tracker_name()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_condition_select_tracker_name');
+        return dgettext('tuleap-tracker', 'select child tracker name');
     }
 
     public function condition_select_tracker_field()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_condition_select_tracker_field');
+        return dgettext('tuleap-tracker', 'select child tracker field');
     }
 
     public function condition_select_tracker_field_value()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_condition_select_tracker_field_value');
+        return dgettext('tuleap-tracker', 'select value');
     }
 
     public function condition_of_type()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_condition_of_type');
+        return dgettext('tuleap-tracker', 'of type');
     }
 
     public function condition_set_to()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_set_to');
+        return dgettext('tuleap-tracker', 'set to');
     }
 
     public function condition_will_be_set_to()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_will_be_set_to');
+        return dgettext('tuleap-tracker', 'will be set to');
     }
 
     public function new_trigger_triggering_field_list_intro()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_new_trigger_triggering_field_list_intro');
+        return dgettext('tuleap-tracker', 'When');
     }
 
     public function new_trigger_target_intro()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_new_trigger_target_intro');
+        return dgettext('tuleap-tracker', 'Then the tracker field');
     }
 
     public function cancel()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_cancel');
+        return dgettext('tuleap-tracker', 'cancel');
     }
 
     public function no_children()
     {
-        return $GLOBALS['Language']->getText('workflow_admin', 'tab_triggers_no_children');
+        return dgettext('tuleap-tracker', 'There are no child trackers defined for this tracker');
     }
 }

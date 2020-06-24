@@ -433,7 +433,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if ($this->sortHasUsedField() && ! $this->columnsCanBeTechnicallySorted($queries)) {
             $html .= '<div class="tracker_report_renderer_table_sort_warning">
                 <ul class="feedback_warning">
-                    <li>' . $GLOBALS['Language']->getText('plugin_tracker_report', 'too_many_columns_sort') . '</li>
+                    <li>' . dgettext('tuleap-tracker', 'You have too many columns, the sort won\'t work. Please remove some columns (and refresh the page) to be able to sort.') . '</li>
                 </ul>
             </div>';
         }
@@ -532,18 +532,18 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $my_items['export'] .= '<div class="btn-group">';
         $my_items['export'] .= '<a class="btn btn-mini dropdown-toggle" data-toggle="dropdown" href="#">';
         $my_items['export'] .= '<i class="fa fa-download"></i> ';
-        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_report', 'export');
+        $my_items['export'] .= dgettext('tuleap-tracker', 'Export');
         $my_items['export'] .= ' <span class="caret"></span>';
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '<ul class="dropdown-menu">';
         $my_items['export'] .= '<li>';
         $my_items['export'] .= '<a href="' . $this->getExportResultURL(self::EXPORT_LIGHT) . '">';
-        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'export_only_report_columns');
+        $my_items['export'] .= dgettext('tuleap-tracker', 'Export all report columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
         $my_items['export'] .= '<li>';
         $my_items['export'] .= '<a href="' . $this->getExportResultURL(self::EXPORT_FULL) . '">';
-        $my_items['export'] .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'export_all_columns');
+        $my_items['export'] .= dgettext('tuleap-tracker', 'Export all columns');
         $my_items['export'] .= '</a>';
         $my_items['export'] .= '</li>';
 
@@ -642,7 +642,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
     private function fetchMatchingNumber($total_rows)
     {
-        $html = '<p>' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'matching', $total_rows) . '</p>';
+        $html = '<p>' . sprintf(dgettext('tuleap-tracker', 'Matching artifacts: <strong>%1$s</strong>'), $total_rows) . '</p>';
         return $html;
     }
 
@@ -652,7 +652,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html         = '<div class="tracker_report_table_sortby_panel">';
         $sort_columns = $this->getSort();
         if ($this->sortHasUsedField()) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'sort_by');
+            $html .= dgettext('tuleap-tracker', 'Sort by:');
             $html .= ' ';
             $sort = array();
             foreach ($sort_columns as $row) {
@@ -680,7 +680,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $add_columns_presenter = new Templating_Presenter_ButtonDropdownsMini(
             'tracker_report_add_columns_dropdown',
-            $GLOBALS['Language']->getText('plugin_tracker_report', 'toggle_columns'),
+            dgettext('tuleap-tracker', 'Columns'),
             $this->report->getFieldsAsDropdownOptions('tracker_report_add_column', $this->getColumns(), Tracker_Report::TYPE_TABLE)
         );
         $add_columns_presenter->setIcon('fa fa-eye-slash');
@@ -692,9 +692,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         $html = '';
         $html .= '<span class="tracker_report_table_pager_range">';
-        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_report', 'items');
+        $html .= dgettext('tuleap-tracker', 'Items');
         $html .= ' <strong>' . $from . '</strong> – <strong>' . $to . '</strong>';
-        $html .= ' ' . $GLOBALS['Language']->getText('plugin_tracker_renderer_table', 'items_range_of') . ' <strong>' . $total_rows . '</strong>';
+        $html .= ' ' . dgettext('tuleap-tracker', 'of') . ' <strong>' . $total_rows . '</strong>';
         $html .= $additionnal_html;
         $html .= '</span>';
 
@@ -718,7 +718,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $url = '?' . http_build_query($parameters);
 
             $chunk  = '<span class="tracker_report_table_pager_chunk">';
-            $chunk .= $GLOBALS['Language']->getText('plugin_tracker', 'items_per_page');
+            $chunk .= dgettext('tuleap-tracker', 'Items per page :');
             $chunk .= ' ';
             if ($report_can_be_modified) {
                 $chunk .= '<div class="input-append">';
@@ -875,7 +875,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $classname .= 'link';
             } elseif ($extracolumn === self::EXTRACOLUMN_UNLINK) {
                 $classname .= 'unlink';
-                $content = '<input type="checkbox" disabled title="' . $GLOBALS['Language']->getText('plugin_tracker_artifactlink', 'mass_unlink_title') . '" class="tracker-artifact-link-mass-unlink">';
+                $content = '<input type="checkbox" disabled title="' . dgettext('tuleap-tracker', 'Mark all links to be removed') . '" class="tracker-artifact-link-mass-unlink">';
             } else {
                 $display_extracolumn = false;
             }
@@ -947,7 +947,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                     if ($nature) {
                         $nature_label = $nature->forward_label;
                         if (! $nature_label) {
-                            $nature_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+                            $nature_label = dgettext('tuleap-tracker', 'No type');
                         }
                         $field_label .= " ($nature_label)";
                     }
@@ -1009,7 +1009,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             }
         }
         if ($is_nature_col) {
-            $nature_label = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'column_label');
+            $nature_label = dgettext('tuleap-tracker', 'Type');
             $html .= "<th>$nature_label</th>";
         }
         $html .= '</tr>';
@@ -1172,7 +1172,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                             class="direct-link-to-artifact"
                             data-test="direct-link-to-artifact"
                             href="' . $url . '"
-                            title="' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'show') . ' artifact #' . $row['id'] . '">';
+                            title="' . dgettext('tuleap-tracker', 'Show') . ' artifact #' . $row['id'] . '">';
                         $html .= '<i class="fa fa-edit"></i>';
                         $html .= '</td>';
                     }
@@ -1368,20 +1368,20 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     {
         switch ($function) {
             case 'AVG':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'AVG');
+                return dgettext('tuleap-tracker', 'Average');
             case 'COUNT':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'COUNT');
+                return dgettext('tuleap-tracker', 'Count');
             case 'COUNT_GRBY':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'COUNT_GRBY');
+                return dgettext('tuleap-tracker', 'Count (group by)');
             case 'MAX':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'MAX');
+                return dgettext('tuleap-tracker', 'Maximum');
             case 'MIN':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'MIN');
+                return dgettext('tuleap-tracker', 'Minimum');
             case 'STD':
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'STD');
+                return dgettext('tuleap-tracker', 'Std deviation');
             case 'SUM':
             default:
-                return $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'SUM');
+                return dgettext('tuleap-tracker', 'Sum');
         }
     }
 
@@ -1461,7 +1461,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         $html .= '<div class="btn-group">';
         $html .= '<a href="#"
             class="btn btn-mini dropdown-toggle"
-            title="' . $GLOBALS['Language']->getText('plugin_tracker_aggregate', 'toggle') . '"
+            title="' . dgettext('tuleap-tracker', 'Toggle an aggregate function') . '"
             data-toggle="dropdown">';
         $html .= '<i class="fa fa-plus"></i> ';
         $html .= '<span class="caret"></span>';
@@ -1693,8 +1693,8 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= '<form method="POST" action="" id="tracker_report_table_masschange_form">';
             $html .= '<input type="hidden" name="func" value="display-masschange-form" />';
             $html .= '<div id="tracker_report_table_masschange_panel">';
-            $html .= '<input id="masschange_btn_checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_checked', $first_row, $last_row) . '" /> ';
-            $html .= '<input id="masschange_btn_all" type="submit" class="btn" name="renderer_table[masschange_all]" value="' . $GLOBALS['Language']->getText('plugin_tracker_include_report', 'mass_change_all', $total_rows) . '" />';
+            $html .= '<input id="masschange_btn_checked" type="submit" class="btn" name="renderer_table[masschange_checked]" value="' . dgettext('tuleap-tracker', 'Mass Change Checked') . '" /> ';
+            $html .= '<input id="masschange_btn_all" type="submit" class="btn" name="renderer_table[masschange_all]" value="' . sprintf(dgettext('tuleap-tracker', 'Mass Change All (%1$s artifacts)'), $total_rows) . '" />';
             $html .= '</div>';
             $html .= '</form>';
         }
@@ -2072,7 +2072,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if (isset($column['artlink_nature'])) {
             $nature = $column['artlink_nature'];
             if (!$nature) {
-                $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+                $nature = dgettext('tuleap-tracker', 'No type');
             }
             $title .= " (" . $nature . ")";
         }
@@ -2089,9 +2089,11 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $head[] = $title;
                 foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
                     if (! $nature) {
-                        $nature = $GLOBALS['Language']->getText('plugin_tracker_artifact_links_natures', 'no_nature');
+                        $shortname = dgettext('tuleap-tracker', 'No type');
+                    } else {
+                        $shortname = $nature->shortname;
                     }
-                    $head[] = $title . " (" . $nature . ")";
+                    $head[] = $title . " (" . $shortname . ")";
                 }
             } else {
                 $head[] = $title;
@@ -2497,7 +2499,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             );
             $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($reset_sort_params) . '">'
                 . '<i class="fa fa-reply"></i> '
-                . $GLOBALS['Language']->getText('plugin_tracker_report', 'reset_sort')
+                . dgettext('tuleap-tracker', 'Reset sort')
                 . '</a></div> ';
 
             //toggle multisort
@@ -2507,9 +2509,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 'func'                      => 'renderer',
                 'renderer_table[multisort]' => 1
             );
-            $multisort_label = $GLOBALS['Language']->getText('plugin_tracker_report', 'enable_multisort');
+            $multisort_label = dgettext('tuleap-tracker', 'Enable multisort');
             if ($this->multisort) {
-                $multisort_label = $GLOBALS['Language']->getText('plugin_tracker_report', 'disable_multisort');
+                $multisort_label = dgettext('tuleap-tracker', 'Disable multisort');
             }
             $html .= '<div class="btn-group"><a class="btn btn-mini" href="?' . http_build_query($multisort_params) . '">'
                 . '<i class="fa fa-sort"></i> '

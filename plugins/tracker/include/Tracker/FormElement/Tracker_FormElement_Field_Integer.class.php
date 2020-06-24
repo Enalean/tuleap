@@ -104,12 +104,12 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'integer');
+        return dgettext('tuleap-tracker', 'Integer');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'integer_description');
+        return dgettext('tuleap-tracker', 'A textfield wich accept only integers');
     }
 
     public static function getFactoryIconUseIt()
@@ -142,7 +142,7 @@ class Tracker_FormElement_Field_Integer extends Tracker_FormElement_Field_Numeri
      */
     protected function getValidatorErrorMessage()
     {
-        return $this->getLabel() . ' ' . $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_integer_value');
+        return $this->getLabel() . ' ' . dgettext('tuleap-tracker', 'is not an integer.');
     }
 
     /**

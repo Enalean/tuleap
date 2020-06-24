@@ -123,12 +123,12 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_label');
+        return dgettext('tuleap-tracker', 'Per tracker id');
     }
 
     public static function getFactoryDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_description');
+        return dgettext('tuleap-tracker', 'Display the in-tracker numerotation');
     }
 
     public static function getFactoryIconUseIt()

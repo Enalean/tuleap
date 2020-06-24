@@ -64,12 +64,12 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
 
     public static function getFactoryLabel()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_encryption', 'field_label');
+        return dgettext('tuleap-tracker_encryption', 'Encrypted field');
     }
 
     public static function getFactoryDescription()
     {
-          return $GLOBALS['Language']->getText('plugin_tracker_encryption', 'field_label');
+          return dgettext('tuleap-tracker_encryption', 'Encrypted field');
     }
 
     public static function getFactoryIconUseIt()
@@ -96,11 +96,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
         if ($maximum_characters_allowed !== 0 && mb_strlen($value) > $maximum_characters_allowed) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                $GLOBALS['Language']->getText(
-                    'plugin_tracker_common_artifact',
-                    'error_string_max_characters',
-                    array($this->getLabel(), $maximum_characters_allowed)
-                )
+                sprintf(dgettext('tuleap-tracker', '%1$s can not contain more than %2$s characters.'), $this->getLabel(), $maximum_characters_allowed)
             );
             return false;
         }

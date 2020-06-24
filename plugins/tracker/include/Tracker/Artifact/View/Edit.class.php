@@ -67,7 +67,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle()
     {
-        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_title');
+        return dgettext('tuleap-tracker', 'Artifact');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */
@@ -117,7 +117,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $html .= '<div id="tracker_artifact_followup_comments" class="' . $classname . '">';
         $html .= '<div id="tracker_artifact_followup_comments-content">';
         $html .= $this->fetchSettingsButton($invert_order, $display_changes);
-        $html .= '<h1 id="tracker_artifact_followups">' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'follow_ups') . '</h1>';
+        $html .= '<h1 id="tracker_artifact_followups">' . dgettext('tuleap-tracker', 'Follow-ups') . '</h1>';
         $html .= '<ul class="tracker_artifact_followups" data-test="artifact-followups">';
 
         $comments = $this->artifact->getFollowupsContent();
@@ -140,9 +140,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
 
     private function fetchSettingsButton($invert_order, $display_changes)
     {
-        $settings_label        = $GLOBALS['Language']->getText('plugin_tracker', 'followup_settings_label');
-        $invert_comment_label  = $GLOBALS['Language']->getText('plugin_tracker', 'followup_invert_comment_label');
-        $display_changes_label = $GLOBALS['Language']->getText('plugin_tracker', 'followup_display_changes_label');
+        $settings_label        = dgettext('tuleap-tracker', 'Display settings');
+        $invert_comment_label  = dgettext('tuleap-tracker', 'Comments are in reversed order');
+        $display_changes_label = dgettext('tuleap-tracker', 'Changes are displayed');
 
         $invert_order_style = '';
         if (! $invert_order) {
@@ -213,7 +213,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $hp = Codendi_HTMLPurifier::instance();
 
         if (count($responses = $tracker->getCannedResponseFactory()->getCannedResponses($tracker))) {
-            $html .= '<p><b>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
+            $html .= '<p><b>' . dgettext('tuleap-tracker', 'Use a Canned Response:') . '</b>&nbsp;';
             $html .= '<select id="tracker_artifact_canned_response_sb">';
             $html .= '<option selected="selected" value="">--</option>';
             foreach ($responses as $r) {
@@ -280,7 +280,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         if ($this->canUpdateArtifactByMail()) {
             $email = Codendi_HTMLPurifier::instance()->purify($this->artifact->getInsecureEmailAddress());
             $html .= '<p class="email-tracker-help"><i class="fa fa-info-circle"></i> ';
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'reply_by_mail_help', $email);
+            $html .= sprintf(dgettext('tuleap-tracker', 'You can also reply to this artifact <a href="javascript:;" class="email-tracker email-tracker-reply" data-email="%1$s"><span>by email</span></a>.'), $email);
             $html .= '</p>';
         }
 

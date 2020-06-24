@@ -155,7 +155,7 @@ class Tracker_Artifact_Changeset_Comment
         $uh   = UserHelper::instance();
         $html = '<div class="tracker_artifact_followup_comment_edited_by">';
         if ($this->parent_id) {
-            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+            $html .= dgettext('tuleap-tracker', 'last edited by:');
             $html .= ' ' . $uh->getLinkOnUserFromUserId($this->submitted_by) . ' ';
             $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
         }
@@ -168,7 +168,7 @@ class Tracker_Artifact_Changeset_Comment
                 value="' . $this->bodyFormat . '" />';
             $html .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && !trim($this->body)) {
-                $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') . '</em>';
+                $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
             } else {
                 $html .= $this->getPurifiedBodyForHTML();
             }
