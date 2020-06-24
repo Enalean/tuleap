@@ -5,6 +5,7 @@
     <input type="text"
            pattern="\d*"
            name="release[artifact-id]"
+           data-test="release-artifact-id"
            {{# has_a_linked_artifact }} value="{{ linked_artifact_id }}" {{/ has_a_linked_artifact }}
     />
 </td>

@@ -1,0 +1,832 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+  ~
+  ~ This file is a part of Tuleap.
+  ~
+  ~ Tuleap is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ Tuleap is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<project unix-name="frs-plugin" full-name="frs plugin" description="frs" access="public">
+  <long-description/>
+  <services>
+    <service shortname="summary" enabled="1"/>
+    <service shortname="admin" enabled="1"/>
+    <service shortname="file" enabled="1"/>
+    <service shortname="plugin_tracker" enabled="1"/>
+    <service shortname="plugin_agiledashboard" enabled="1"/>
+  </services>
+  <ugroups>
+    <ugroup name="project_admins" description="Administrateurs du projet">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+    <ugroup name="project_members" description="Membres du projet">
+      <members>
+        <member format="username">ProjectAdministrator</member>
+        <member format="username">ProjectMember</member>
+      </members>
+    </ugroup>
+  </ugroups>
+  <trackers use-natures="true">
+    <tracker id="T23" parent_id="0" instantiate_for_new_projects="1">
+      <name><![CDATA[Bugs]]></name>
+      <item_name><![CDATA[bug]]></item_name>
+      <description><![CDATA[Incident, anomalies]]></description>
+      <color><![CDATA[fiesta-red]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="fieldset" ID="F583" rank="48" id="583" tracker_id="23" parent_id="0" required="1">
+          <name><![CDATA[description]]></name>
+          <label><![CDATA[Description]]></label>
+          <formElements>
+            <formElement type="string" ID="F584" rank="0" id="584" tracker_id="23" parent_id="583" required="1">
+              <name><![CDATA[summary]]></name>
+              <label><![CDATA[Summary]]></label>
+              <description><![CDATA[One line description of the artifact]]></description>
+              <properties maxchars="150" size="60"/>
+            </formElement>
+            <formElement type="sb" ID="F590" rank="1" id="590" tracker_id="23" parent_id="583">
+              <name><![CDATA[status]]></name>
+              <label><![CDATA[Status]]></label>
+              <description><![CDATA[How you have decided to fix the artifact (Fixed, Work for me, Duplicate,..)]]></description>
+              <bind type="static" is_rank_alpha="0">
+                <items>
+                  <item ID="V219" label="New" is_hidden="0">
+                    <description><![CDATA[New entry, no progress done so far]]></description>
+                  </item>
+                  <item ID="V220" label="On going" is_hidden="0">
+                    <description><![CDATA[The team is working on the subject]]></description>
+                  </item>
+                  <item ID="V221" label="Invalid" is_hidden="0">
+                    <description><![CDATA[The submitted bug is not valid for some reason (wrong description, using incorrect software version,...)]]></description>
+                  </item>
+                  <item ID="V222" label="Wont Fix" is_hidden="0">
+                    <description><![CDATA[The bug won't be fixed (probably because it is very minor)]]></description>
+                  </item>
+                  <item ID="V224" label="Duplicate" is_hidden="0">
+                    <description><![CDATA[This bug is already covered by another bug description (see related bugs list)]]></description>
+                  </item>
+                  <item ID="V223" label="Works for me" is_hidden="0">
+                    <description><![CDATA[The project team was unable to reproduce the bug]]></description>
+                  </item>
+                  <item ID="V225" label="Fixed" is_hidden="0">
+                    <description><![CDATA[The bug was resolved]]></description>
+                  </item>
+                </items>
+                <decorators>
+                  <decorator REF="V219" tlp_color_name="acid-green"/>
+                  <decorator REF="V220" tlp_color_name="clockwork-orange"/>
+                  <decorator REF="V221" tlp_color_name="chrome-silver"/>
+                  <decorator REF="V222" tlp_color_name="inca-silver"/>
+                  <decorator REF="V223" tlp_color_name="firemist-silver"/>
+                  <decorator REF="V224" tlp_color_name="teddy-brown"/>
+                  <decorator REF="V225" tlp_color_name="army-green"/>
+                </decorators>
+                <default_values>
+                  <value REF="V219"/>
+                </default_values>
+              </bind>
+            </formElement>
+            <formElement type="float" ID="F597" rank="2" id="597" tracker_id="23" parent_id="583">
+              <name><![CDATA[initial_effort]]></name>
+              <label><![CDATA[Initial Effort]]></label>
+              <properties size="5"/>
+            </formElement>
+            <formElement type="art_link" ID="F601" rank="3" id="601" tracker_id="23" parent_id="583">
+              <name><![CDATA[links]]></name>
+              <label><![CDATA[Links]]></label>
+            </formElement>
+          </formElements>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Titre]]></label>
+          <description><![CDATA[Définir le titre d'un artéfact]]></description>
+          <field REF="F584"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[État]]></label>
+          <description><![CDATA[Définir l'état d'un artifact]]></description>
+          <field REF="F590"/>
+          <open_values>
+            <open_value REF="V219"/>
+            <open_value REF="V220"/>
+            <open_value REF="V223"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values>
+            <closed_value REF="V221"/>
+            <closed_value REF="V222"/>
+            <closed_value REF="V224"/>
+            <closed_value REF="V225"/>
+          </closed_values>
+        </semantic>
+        <semantic type="tooltip"/>
+        <semantic type="plugin_cardwall_card_fields"/>
+        <semantic type="initial_effort">
+          <shortname><![CDATA[initial_effort]]></shortname>
+          <label><![CDATA[Initial Effort]]></label>
+          <description><![CDATA[Define the initial effort of an artifact.]]></description>
+          <field REF="F597"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[All Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F584"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F590"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R182" type="table" rank="0" chunksz="15">
+              <name><![CDATA[All Bugs]]></name>
+              <columns>
+                <field REF="F584"/>
+                <field REF="F590"/>
+              </columns>
+            </renderer>
+            <renderer ID="R183" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[Bug Charts]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0" base="F590">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0" group="F590">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R184" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+        <report is_default="0" is_in_expert_mode="1" expert_query="assigned_to = MYSELF() and status IN (&quot;New&quot;, &quot;On going&quot;)">
+          <name><![CDATA[My Bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F584"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F590"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R185" type="table" rank="0" chunksz="15">
+              <name><![CDATA[My Bugs]]></name>
+              <columns>
+                <field REF="F584"/>
+                <field REF="F590"/>
+              </columns>
+            </renderer>
+            <renderer ID="R186" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[My Bugs chart]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R187" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+        <report is_default="0" is_in_expert_mode="1" expert_query="status = &quot;New&quot; and submitted_on &gt; NOW() - 1w and assigned_to = &quot;&quot;">
+          <name><![CDATA[New submitted bugs]]></name>
+          <description><![CDATA[Bugs Report]]></description>
+          <criterias>
+            <criteria rank="1">
+              <field REF="F584"/>
+            </criteria>
+            <criteria rank="2" is_advanced="1">
+              <field REF="F590"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R188" type="table" rank="0" chunksz="15">
+              <name><![CDATA[New submitted bugs]]></name>
+              <columns>
+                <field REF="F584"/>
+                <field REF="F590"/>
+              </columns>
+            </renderer>
+            <renderer ID="R189" type="plugin_graphontrackersv5" rank="1">
+              <name><![CDATA[Graph]]></name>
+              <description><![CDATA[Graphic Report By Default For Bugs]]></description>
+              <charts>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Status]]></title>
+                </chart>
+                <chart type="pie" width="600" height="400" rank="0">
+                  <title><![CDATA[Assignment]]></title>
+                  <description><![CDATA[Number of Artifacts by Assignee]]></description>
+                </chart>
+                <chart type="bar" width="600" height="400" rank="0">
+                  <title><![CDATA[Severity]]></title>
+                  <description><![CDATA[Number of Artifacts by severity level]]></description>
+                </chart>
+              </charts>
+            </renderer>
+            <renderer ID="R190" type="plugin_cardwall" rank="2">
+              <name><![CDATA[CardWall]]></name>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F584" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F584" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F584" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F590" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F590" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F590" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F597" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F601" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F601" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="18">
+          <changeset id="CHANGESET_32">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:10:53+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[bug 1]]></value>
+            </field_change>
+            <field_change type="text" field_name="details">
+              <value format="text"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[219]]></value>
+            </field_change>
+            <field_change field_name="severity" type="list" bind="static">
+              <value format="id"><![CDATA[226]]></value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+            <field_change field_name="close_date" type="date">
+              <value format="ISO8601"><![CDATA[1970-01-01T01:00:00+01:00]]></value>
+            </field_change>
+            <field_change type="float" field_name="initial_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change type="float" field_name="remaining_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="19">
+          <changeset id="CHANGESET_34">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:11:02+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[bug 2]]></value>
+            </field_change>
+            <field_change type="text" field_name="details">
+              <value format="text"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[219]]></value>
+            </field_change>
+            <field_change field_name="severity" type="list" bind="static">
+              <value format="id"><![CDATA[226]]></value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+            <field_change field_name="close_date" type="date">
+              <value format="ISO8601"><![CDATA[1970-01-01T01:00:00+01:00]]></value>
+            </field_change>
+            <field_change type="float" field_name="initial_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change type="float" field_name="remaining_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+        </artifact>
+        <artifact id="20">
+          <changeset id="CHANGESET_37">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:13:49+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[reverse 1]]></value>
+            </field_change>
+            <field_change type="text" field_name="details">
+              <value format="text"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[219]]></value>
+            </field_change>
+            <field_change field_name="severity" type="list" bind="static">
+              <value format="id"><![CDATA[226]]></value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+            <field_change field_name="close_date" type="date">
+              <value format="ISO8601"><![CDATA[1970-01-01T01:00:00+01:00]]></value>
+            </field_change>
+            <field_change type="float" field_name="initial_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change type="float" field_name="remaining_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset id="CHANGESET_44">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:16:33+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:16:33+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="fixed_in"><![CDATA[17]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+        <artifact id="21">
+          <changeset id="CHANGESET_38">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:14:02+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="summary">
+              <value><![CDATA[reverse 2]]></value>
+            </field_change>
+            <field_change type="text" field_name="details">
+              <value format="text"><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="cc" type="open_list" bind="users">
+              <value/>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[219]]></value>
+            </field_change>
+            <field_change field_name="severity" type="list" bind="static">
+              <value format="id"><![CDATA[226]]></value>
+            </field_change>
+            <field_change field_name="assigned_to" type="list" bind="users">
+              <value format="username">None</value>
+            </field_change>
+            <field_change field_name="close_date" type="date">
+              <value format="ISO8601"><![CDATA[1970-01-01T01:00:00+01:00]]></value>
+            </field_change>
+            <field_change type="float" field_name="initial_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change type="float" field_name="remaining_effort">
+              <value><![CDATA[]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset id="CHANGESET_45">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:16:45+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:16:45+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="_covered_by"><![CDATA[17]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_1119">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-07-03T10:59:30+02:00</submitted_on>
+            <comments>
+              <comment>
+                <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-07-03T10:59:30+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="attachment" type="file">
+              <value/>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature="fixed_in"><![CDATA[17]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <tracker id="T25" parent_id="0" instantiate_for_new_projects="1" notifications_level="1">
+      <name><![CDATA[Releases]]></name>
+      <item_name><![CDATA[rel]]></item_name>
+      <description><![CDATA[releases]]></description>
+      <color><![CDATA[clockwork-orange]]></color>
+      <cannedResponses/>
+      <formElements>
+        <formElement type="string" ID="F620" rank="58" id="620" tracker_id="25" parent_id="0" required="1">
+          <name><![CDATA[release_number]]></name>
+          <label><![CDATA[Release Number]]></label>
+          <description><![CDATA[E.g. 1.4.12 or v0.2]]></description>
+          <properties size="30"/>
+        </formElement>
+        <formElement type="date" ID="F623" rank="59" id="623" tracker_id="25" parent_id="0" required="1">
+          <name><![CDATA[start_date]]></name>
+          <label><![CDATA[Start Date]]></label>
+          <properties display_time="0"/>
+        </formElement>
+        <formElement type="date" ID="F624" rank="60" id="624" tracker_id="25" parent_id="0" required="1">
+          <name><![CDATA[end_date]]></name>
+          <label><![CDATA[End Date]]></label>
+          <properties display_time="0"/>
+        </formElement>
+        <formElement type="sb" ID="F627" rank="61" id="627" tracker_id="25" parent_id="0">
+          <name><![CDATA[status]]></name>
+          <label><![CDATA[Status]]></label>
+          <bind type="static" is_rank_alpha="0">
+            <items>
+              <item ID="V231" label="Planned" is_hidden="0"/>
+              <item ID="V232" label="In development" is_hidden="0"/>
+              <item ID="V233" label="Delivered to customer" is_hidden="0"/>
+              <item ID="V234" label="End of life" is_hidden="0"/>
+            </items>
+            <default_values>
+              <value REF="V231"/>
+            </default_values>
+          </bind>
+        </formElement>
+        <formElement type="computed" ID="F628" rank="62" id="628" tracker_id="25" parent_id="0">
+          <name><![CDATA[remaining_effort]]></name>
+          <label><![CDATA[Total Remaining effort]]></label>
+        </formElement>
+        <formElement type="art_link" ID="F631" rank="63" id="631" tracker_id="25" parent_id="0">
+          <name><![CDATA[links]]></name>
+          <label><![CDATA[Links]]></label>
+        </formElement>
+      </formElements>
+      <semantics>
+        <semantic type="title">
+          <shortname><![CDATA[title]]></shortname>
+          <label><![CDATA[Titre]]></label>
+          <description><![CDATA[Définir le titre d'un artéfact]]></description>
+          <field REF="F620"/>
+        </semantic>
+        <semantic type="status">
+          <shortname><![CDATA[status]]></shortname>
+          <label><![CDATA[État]]></label>
+          <description><![CDATA[Définir l'état d'un artifact]]></description>
+          <field REF="F627"/>
+          <open_values>
+            <open_value REF="V231"/>
+            <open_value REF="V232"/>
+          </open_values>
+        </semantic>
+        <semantic type="done">
+          <shortname><![CDATA[done]]></shortname>
+          <label><![CDATA[Done]]></label>
+          <description><![CDATA[Define the closed status that are considered Done]]></description>
+          <closed_values>
+            <closed_value REF="V233"/>
+            <closed_value REF="V234"/>
+          </closed_values>
+        </semantic>
+        <semantic type="timeframe">
+          <start_date_field REF="F623"/>
+          <end_date_field REF="F624"/>
+        </semantic>
+        <semantic type="tooltip">
+          <field REF="F620"/>
+          <field REF="F627"/>
+        </semantic>
+        <semantic type="plugin_cardwall_card_fields">
+          <field REF="F627"/>
+          <field REF="F628"/>
+          <field REF="F631"/>
+        </semantic>
+      </semantics>
+      <rules>
+        <date_rules/>
+        <list_rules/>
+      </rules>
+      <reports>
+        <report is_default="0">
+          <name><![CDATA[Releases]]></name>
+          <description><![CDATA[The system default artifact report]]></description>
+          <criterias>
+            <criteria rank="0" is_advanced="1">
+              <field REF="F627"/>
+            </criteria>
+            <criteria rank="1">
+              <field REF="F623"/>
+            </criteria>
+            <criteria rank="2">
+              <field REF="F624"/>
+            </criteria>
+          </criterias>
+          <renderers>
+            <renderer ID="R192" type="table" rank="0" chunksz="15">
+              <name><![CDATA[Releases]]></name>
+              <columns>
+                <field REF="F620"/>
+                <field REF="F627"/>
+                <field REF="F623"/>
+                <field REF="F628"/>
+                <field REF="F631"/>
+              </columns>
+            </renderer>
+          </renderers>
+        </report>
+      </reports>
+      <permissions>
+        <permission scope="tracker" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_ACCESS_FULL"/>
+        <permission scope="field" REF="F620" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F620" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F620" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F623" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F623" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F623" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F624" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F624" ugroup="UGROUP_REGISTERED" type="PLUGIN_TRACKER_FIELD_SUBMIT"/>
+        <permission scope="field" REF="F624" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F627" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F627" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+        <permission scope="field" REF="F628" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F631" ugroup="UGROUP_ANONYMOUS" type="PLUGIN_TRACKER_FIELD_READ"/>
+        <permission scope="field" REF="F631" ugroup="UGROUP_PROJECT_MEMBERS" type="PLUGIN_TRACKER_FIELD_UPDATE"/>
+      </permissions>
+      <artifacts>
+        <artifact id="17">
+          <changeset id="CHANGESET_31">
+            <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:10:43+02:00</submitted_on>
+            <comments/>
+            <field_change type="string" field_name="release_number">
+              <value><![CDATA[R1]]></value>
+            </field_change>
+            <field_change field_name="start_date" type="date">
+              <value format="ISO8601"><![CDATA[2020-06-22T00:00:00+02:00]]></value>
+            </field_change>
+            <field_change field_name="end_date" type="date">
+              <value format="ISO8601"><![CDATA[2020-06-29T00:00:00+02:00]]></value>
+            </field_change>
+            <field_change field_name="status" type="list" bind="static">
+              <value format="id"><![CDATA[231]]></value>
+            </field_change>
+            <field_change field_name="links" type="art_link"/>
+          </changeset>
+          <changeset id="CHANGESET_33">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:10:54+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:10:54+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[18]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_35">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:11:02+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:11:02+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_36">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:12:02+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:12:02+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="capacity" type="computed">
+              <is_autocomputed>1</is_autocomputed>
+            </field_change>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_39">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:14:07+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:14:07+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+              <value nature=""><![CDATA[20]]></value>
+              <value nature=""><![CDATA[21]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_40">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:14:30+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:14:30+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_41">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:14:48+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:14:48+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+              <value nature=""><![CDATA[20]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_42">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:14:59+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:14:59+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature=""><![CDATA[19]]></value>
+              <value nature=""><![CDATA[18]]></value>
+              <value nature=""><![CDATA[20]]></value>
+              <value nature=""><![CDATA[21]]></value>
+            </field_change>
+          </changeset>
+          <changeset id="CHANGESET_43">
+             <submitted_by format="username">ProjectMember</submitted_by>
+            <submitted_on format="ISO8601">2020-06-23T11:16:15+02:00</submitted_on>
+            <comments>
+              <comment>
+                 <submitted_by format="username">ProjectMember</submitted_by>
+                <submitted_on format="ISO8601"><![CDATA[2020-06-23T11:16:15+02:00]]></submitted_on>
+                <body format="text"><![CDATA[]]></body>
+              </comment>
+            </comments>
+            <field_change field_name="links" type="art_link">
+              <value nature="fixed_in"><![CDATA[19]]></value>
+              <value nature="fixed_in"><![CDATA[18]]></value>
+              <value nature=""><![CDATA[20]]></value>
+              <value nature=""><![CDATA[21]]></value>
+            </field_change>
+          </changeset>
+        </artifact>
+      </artifacts>
+    </tracker>
+    <triggers/>
+  </trackers>
+  <natures>
+    <nature><![CDATA[_is_child]]></nature>
+    <nature><![CDATA[_covered_by]]></nature>
+  </natures>
+  <agiledashboard>
+    <plannings>
+      <planning name="Release Planning" plan_title="Release Plan" planning_tracker_id="T25" backlog_title="Product Backlog">
+        <backlogs>
+          <backlog>T23</backlog>
+        </backlogs>
+      </planning>
+    </plannings>
+    <kanban_list title="Kanban"/>
+  </agiledashboard>
+  <cardwall>
+    <trackers>
+      <tracker id="T25">
+        <columns>
+          <column label="Todo" id="C17" tlp_color_name="daphne-blue"/>
+          <column label="On Going" id="C18" tlp_color_name="lake-placid-blue"/>
+          <column label="Review" id="C19" tlp_color_name="deep-blue"/>
+          <column label="Done" id="C20" tlp_color_name="neon-green"/>
+        </columns>
+        <mappings>
+          <mapping tracker_id="T23" field_id="F590">
+            <values>
+              <value value_id="V219" column_id="C17"/>
+              <value value_id="V220" column_id="C18"/>
+              <value value_id="V221" column_id="C20"/>
+              <value value_id="V222" column_id="C20"/>
+              <value value_id="V223" column_id="C20"/>
+              <value value_id="V224" column_id="C20"/>
+              <value value_id="V225" column_id="C20"/>
+            </values>
+          </mapping>
+        </mappings>
+      </tracker>
+    </trackers>
+  </cardwall>
+</project>

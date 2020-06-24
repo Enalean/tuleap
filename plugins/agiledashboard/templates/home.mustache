@@ -91,7 +91,12 @@
                                         {{# milestone_summary_presenters }}
                                             <div class="milestone">
                                                 <div class="header">
-                                                    <p class="title">{{ milestone_title }} <a href="{{ edit_base_link }}{{ artifact_id }}" class="backlog-item-link" data-artifact-id="{{ artifact_id }}"><i class="fa fa-pencil-square-o"></i></a></p>
+                                                    <p class="title">{{ milestone_title }}
+                                                        <a href="{{ edit_base_link }}{{ artifact_id }}"
+                                                           class="backlog-item-link"
+                                                           data-test="release-id"
+                                                           data-artifact-id="{{ artifact_id }}"><i class="fa fa-pencil-square-o"></i>
+                                                        </a></p>
                                                     <p class="hierarchy">
                                                     <i class="fa fa-angle-right"></i>
                                                     {{# breadcrumbs }}

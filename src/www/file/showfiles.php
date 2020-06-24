@@ -87,7 +87,7 @@ function buildReleaseNotesLink(FRSRelease $release): string
     $img_src    = util_get_image_theme("ic/text.png");
     $alt_text   = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
     $title_text = $GLOBALS['Language']->getText('file_showfiles', 'read_notes');
-    return '<a href="' . $link_url . '"><img src="' . $img_src . '" alt="' . $alt_text . '" title="' . $title_text . '" ></a>';
+    return '<a href="' . $link_url . '" data-test="release-note-access"><img src="' . $img_src . '" alt="' . $alt_text . '" title="' . $title_text . '" ></a>';
 }
 
 // Retain only packages the user is authorized to access, or packages containing releases the user is authorized to access...
@@ -199,7 +199,7 @@ foreach ($packages as $package_id => $package_for_display) {
         $html .= '<legend>';
         if (!$pv) {
             $frs_icon = $package_for_display['is_collapsed'] ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
-            $html    .= '<a href="#" onclick="javascript:toggle_package(\'p_' . $package_id . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . '" /></a>&nbsp;';
+            $html    .= '<a href="#"  data-test="toggle-package" onclick="javascript:toggle_package(\'p_' . $package_id . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . '" /></a>&nbsp;';
         }
         $html             .= " <$emphasis data-test='package-name'>" . $hp->purify(util_unconvert_htmlspecialchars($package->getName()))
             . "</$emphasis>";

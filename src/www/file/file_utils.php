@@ -700,7 +700,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
             </TR>
             <TR id="release_notes_area">
                 <TD width="100%">
-                    <TEXTAREA NAME="release[release_notes]" rows="7" cols="70"><?php echo $hp->purify($release->getNotes(), CODENDI_PURIFIER_CONVERT_HTML);?></TEXTAREA>
+                    <TEXTAREA NAME="release[release_notes]" rows="7" cols="70" data-test="release-note"><?php echo $hp->purify($release->getNotes(), CODENDI_PURIFIER_CONVERT_HTML);?></TEXTAREA>
                 </TD>
             </TR>
             <TR id="change_log_title">

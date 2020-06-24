@@ -76,6 +76,8 @@ setup_database() {
     $MYSQLROOT -e "DELETE FROM tuleap.password_configuration"
     $MYSQLROOT -e "INSERT INTO tuleap.password_configuration values (0)"
 
+    enable_plugins
+
     $MYSQLROOT $MYSQL_DBNAME < "/usr/share/tuleap/tests/e2e/full/tuleap/cypress_database_init_values.sql"
 }
 
@@ -93,7 +95,7 @@ load_project() {
         $user_mapping
 }
 
-seed_data() {
+enable_plugins() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php tracker" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php cardwall" -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php agiledashboard" -l codendiadm
@@ -109,6 +111,10 @@ seed_data() {
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php projectmilestones " -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php testmanagement " -l codendiadm
     su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php testplan " -l codendiadm
+    su -c "/usr/share/tuleap/src/utils/php-launcher.sh /usr/share/tuleap/tools/utils/admin/activate_plugin.php frs " -l codendiadm
+}
+
+seed_data() {
     sed -i -e 's#/var/lib/codendi#/var/lib/tuleap#g' /etc/tuleap/plugins/docman/etc/docman.inc
 
     for project in $(find /usr/share/tuleap/tests/e2e/_fixtures/ -maxdepth 1 -mindepth 1 -type d) ; do
