@@ -721,7 +721,6 @@ final class GerritRESTTest extends TestCase
     public function testAddsSSHKeyForUser(): void
     {
         $ssh_key         = 'AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw==';
-        $encoded_ssh_key = "AAAAB3NzaC1yc2EAAAABIwAAAQEA0T...YImydZAw\u003d\u003d";
 
         $this->logger->shouldReceive('info');
 
@@ -732,7 +731,7 @@ final class GerritRESTTest extends TestCase
         $request = $this->http_client->getLastRequest();
         assert($request instanceof RequestInterface);
         $this->assertEquals('POST', $request->getMethod());
-        $this->assertEquals($encoded_ssh_key, $request->getBody()->getContents());
+        $this->assertEquals($ssh_key, $request->getBody()->getContents());
         $this->assertEquals(Git_Driver_GerritREST::MIME_TEXT, $request->getHeaderLine(Git_Driver_GerritREST::HEADER_CONTENT_TYPE));
         $request_uri = $request->getUri();
         $this->assertEquals('/a/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys', $request_uri->getPath());
