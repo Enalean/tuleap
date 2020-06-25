@@ -25,7 +25,8 @@ namespace Tuleap\Git\Repository\View;
 class LanguageDetectorForPrismJS
 {
     private const FILENAMES = [
-        'CMakeLists.txt' => 'cmake'
+        'CMakeLists.txt' => 'cmake',
+        'Dockerfile'     => 'dockerfile',
     ];
 
     private const EXTENSIONS = [

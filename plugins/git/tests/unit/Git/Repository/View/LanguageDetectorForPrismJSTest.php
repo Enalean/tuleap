@@ -30,6 +30,7 @@ final class LanguageDetectorForPrismJSTest extends TestCase
     {
         $detector = new LanguageDetectorForPrismJS();
         $this->assertEquals('cmake', $detector->getLanguage('CMakeLists.txt'));
+        $this->assertEquals('dockerfile', $detector->getLanguage('Dockerfile'));
     }
 
     public function testDetectLanguageFromAKnownExtension(): void
