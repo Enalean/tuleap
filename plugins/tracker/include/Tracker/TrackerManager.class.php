@@ -162,7 +162,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         } catch (Tracker_CannotAccessTrackerException $e) {
             if (isset($object) && ! $request->isAjax()) {
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-                $this->displayAllTrackers($object->getTracker()->getProject(), $user);
+                $this->redirectToTrackerHomepage($object->getTracker()->getProject()->getID());
             } else {
                 $GLOBALS['Response']->send401UnauthorizedHeader();
             }

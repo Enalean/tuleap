@@ -140,15 +140,15 @@ class TrackerManagerTest extends TestCase
         $this->tm->process($request_artifact, $this->user);
     }
 
-    public function testProcessTrackerWithNoOermissionsToView()
+    public function testProcessTrackerWithNoPermissionsToView()
     {
         $this->artifact->shouldReceive('process')->never();
         $this->report->shouldReceive('process')->never();
         $this->tracker->shouldReceive('process')->never(); //user can't view the tracker. so don't process the request in tracker
         $this->formElement->shouldReceive('process')->never();
         $this->tracker->shouldReceive('userCanView')->once()->andReturns(false);
-        $GLOBALS['Response']->expect('addFeedback', array('error', '*', '*'));
-        $this->tm->shouldReceive('displayAllTrackers')->once();
+        $GLOBALS['Response']->shouldReceive('addFeedback')->with('error', Mockery::any())->once();
+        $GLOBALS['Response']->shouldReceive('redirect')->once();
 
         $request_artifact = Mockery::spy(HTTPRequest::class);
 
