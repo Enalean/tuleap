@@ -22,43 +22,55 @@ declare(strict_types=1);
 
 namespace Tuleap\Markdown;
 
-use Codendi_HTMLPurifier;
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Environment;
-use League\CommonMark\Extension\ExtensionInterface;
+use PHPUnit\Framework\TestCase;
 
-final class CommonMarkInterpreter implements ContentInterpretor
+final class TableTLPExtensionTest extends TestCase
 {
-    /**
-     * @var Codendi_HTMLPurifier
-     */
-    private $html_purifier;
     /**
      * @var CommonMarkConverter
      */
     private $converter;
 
-    private function __construct(Codendi_HTMLPurifier $html_purifier, CommonMarkConverter $converter)
-    {
-        $this->html_purifier = $html_purifier;
-        $this->converter     = $converter;
-    }
-
-    public static function build(Codendi_HTMLPurifier $html_purifier, ExtensionInterface ...$extensions): self
+    protected function setUp(): void
     {
         $environment = Environment::createCommonMarkEnvironment();
+
         $environment->addExtension(new TableTLPExtension());
-        foreach ($extensions as $extension) {
-            $environment->addExtension($extension);
-        }
-        return new self($html_purifier, new CommonMarkConverter(['max_nesting_level' => 10], $environment));
+        $this->converter = new CommonMarkConverter([], $environment);
     }
 
-    public function getInterpretedContent(string $content): string
+    public function testRendersTableWithTheTLPClass(): void
     {
-        return $this->html_purifier->purify(
-            $this->converter->convertToHtml($content),
-            CODENDI_PURIFIER_FULL
+        $result = $this->converter->convertToHtml(
+            <<<MARKDOWN_TABLE
+            | Case ID | Case Acronym | Case Full Name |
+            |---------|--------------|----------------|
+            | 301     | PW           | Plane Wave     |
+            MARKDOWN_TABLE
+        );
+
+        $this->assertEquals(
+            <<<EXPECTED_HTML
+            <table class="tlp-table">
+            <thead>
+            <tr>
+            <th>Case ID</th>
+            <th>Case Acronym</th>
+            <th>Case Full Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+            <td>301</td>
+            <td>PW</td>
+            <td>Plane Wave</td>
+            </tr>
+            </tbody>
+            </table>\n
+            EXPECTED_HTML,
+            $result
         );
     }
 }

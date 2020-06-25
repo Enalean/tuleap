@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,7 +22,6 @@
 namespace Tuleap\Widget\Note;
 
 use Codendi_Request;
-use Michelf\MarkdownExtra;
 use Project;
 use TemplateRenderer;
 use Tuleap\Markdown\CommonMarkInterpreter;
@@ -141,6 +140,5 @@ class ProjectNote extends \Widget
     public function getContent()
     {
         return CommonMarkInterpreter::build(\Codendi_HTMLPurifier::instance())->getInterpretedContent($this->content);
-        return \Codendi_HTMLPurifier::instance()->purify(MarkdownExtra::defaultTransform($this->content), CODENDI_PURIFIER_FULL);
     }
 }
