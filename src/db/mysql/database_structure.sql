@@ -497,22 +497,8 @@ CREATE TABLE groups (
   svn_box varchar(20) NOT NULL default 'svn1',
   register_time int(11) NOT NULL default '0',
   rand_hash text,
-  new_bug_address text NOT NULL,
-  new_patch_address text NOT NULL,
-  new_support_address text NOT NULL,
-  new_task_address text default '',
   type int(11) NOT NULL default '1',
   built_from_template int(11) NOT NULL default '100',
-  send_all_bugs int(11) NOT NULL default '0',
-  send_all_patches int(11) NOT NULL default '0',
-  send_all_support int(11) NOT NULL default '0',
-  send_all_tasks int(11) NOT NULL default '0',
-  bug_preamble text NOT NULL,
-  support_preamble text NOT NULL,
-  patch_preamble text NOT NULL,
-  pm_preamble text NOT NULL,
-  xrx_export_ettm int(11) NOT NULL default '0',
-  bug_allow_anon int(11) NOT NULL default '1',
   cvs_tracker int(11)   NOT NULL default '1',
   cvs_watch_mode int(11)   NOT NULL default '0',
   cvs_events_mailing_list text NOT NULL,
@@ -790,17 +776,6 @@ CREATE TABLE stats_project_tmp (
   KEY idx_project_stats_day (day),
   KEY idx_project_stats_week (week),
   KEY idx_project_stats_month (month)
-);
-
-#
-# Table structure for table 'tmp_projs_releases_tmp'
-#
-
-CREATE TABLE tmp_projs_releases_tmp (
-  year int(11) NOT NULL default '0',
-  month int(11) NOT NULL default '0',
-  total_proj int(11) NOT NULL default '0',
-  total_releases int(11) NOT NULL default '0'
 );
 
 #
@@ -1348,12 +1323,6 @@ CREATE TABLE wiki_link (
 
 # Plugin tables
 # {{{
-CREATE TABLE priority_plugin_hook (
-plugin_id INT NOT NULL,
-hook VARCHAR(100) NOT NULL,
-priority INT NOT NULL
-);
-
 CREATE TABLE plugin (
   id int(11) NOT NULL auto_increment,
   name varchar(100) NOT NULL,
@@ -1371,10 +1340,6 @@ CREATE TABLE project_plugin (
   UNIQUE project_plugin (project_id, plugin_id)
 );
 
-CREATE TABLE user_plugin (
-user_id INT NOT NULL ,
-plugin_id INT NOT NULL
-);
 # }}}
 
 #
@@ -1441,16 +1406,6 @@ CREATE TABLE IF NOT EXISTS widget_rss (
   KEY (owner_id, owner_type)
 );
 
-DROP TABLE IF EXISTS widget_twitterfollow;
-CREATE TABLE IF NOT EXISTS widget_twitterfollow (
-  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
-  owner_id int(11) unsigned NOT NULL default '0',
-  owner_type varchar(1) NOT NULL default 'u',
-  title varchar(255) NOT NULL,
-  user TEXT NOT NULL,
-  KEY (owner_id, owner_type)
-);
-
 DROP TABLE IF EXISTS widget_image;
 CREATE TABLE IF NOT EXISTS widget_image (
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
@@ -1458,17 +1413,6 @@ CREATE TABLE IF NOT EXISTS widget_image (
   owner_type varchar(1) NOT NULL default 'u',
   title varchar(255) NOT NULL,
   url TEXT NOT NULL,
-  KEY (owner_id, owner_type)
-);
-
-DROP TABLE IF EXISTS widget_wikipage;
-CREATE TABLE IF NOT EXISTS widget_wikipage (
-  id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
-  owner_id int(11) unsigned NOT NULL default '0',
-  owner_type varchar(1) NOT NULL default 'u',
-  title varchar(255) NOT NULL,
-  group_id int(11) unsigned NOT NULL default '0',
-  wiki_page TEXT NULL,
   KEY (owner_id, owner_type)
 );
 

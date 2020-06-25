@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
@@ -127,14 +127,6 @@ class PluginDao extends DataAccessObject
                        ' WHERE id = %d',
             $pluginId
         );
-        return $this->retrieve($sql);
-    }
-
-    public function searchAvailableAndPriorities()
-    {
-        $sql = "SELECT p.*, h.hook AS hook, h.priority AS priority
-                FROM priority_plugin_hook h RIGHT JOIN plugin p ON (h.plugin_id = p.id) 
-                WHERE p.available = 1";
         return $this->retrieve($sql);
     }
 
