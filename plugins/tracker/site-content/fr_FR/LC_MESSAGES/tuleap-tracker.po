@@ -1989,9 +1989,6 @@ msgstr "Aucun rapport disponible"
 msgid "No semantic defined in this tracker."
 msgstr "Aucune sémantique n'est définie pour cet outil de suivi."
 
-msgid "No template found"
-msgstr "Pas de modèle"
-
 msgid "No type"
 msgstr "Sans nature"
 
