@@ -27,7 +27,7 @@ use Tuleap\DB\DBConnection;
 use Tuleap\DB\DBCreator;
 use Tuleap\DB\DBFactory;
 
-final class DBTablesDaoLoadKnowDataTest extends TestCase
+abstract class DBTablesDaoLoadKnowDataTest extends TestCase
 {
     private const DB_TEST_NAME = 'testdb_dbtablesloadknowdata';
 
@@ -42,7 +42,7 @@ final class DBTablesDaoLoadKnowDataTest extends TestCase
 
     protected function setUp(): void
     {
-        DBFactory::getMainTuleapDBConnection()->getDB()->run('CREATE DATABASE ' . self::DB_TEST_NAME . ' DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci');
+        $this->createDatabase(self::DB_TEST_NAME);
 
         $this->db_connection = new DBConnection(new DBCreator(self::DB_TEST_NAME));
         $this->db_tables_dao = new DBTablesDao($this->db_connection);
@@ -52,6 +52,8 @@ final class DBTablesDaoLoadKnowDataTest extends TestCase
     {
         DBFactory::getMainTuleapDBConnection()->getDB()->run('DROP DATABASE ' . self::DB_TEST_NAME);
     }
+
+    abstract protected function createDatabase(string $db_name): void;
 
     public function testLoadCoreDatabaseStructureAndValues(): void
     {
