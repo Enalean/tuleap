@@ -568,10 +568,10 @@ CREATE TABLE svn_cache_parameter (
 CREATE TABLE group_desc (
   group_desc_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
   desc_required BOOL NOT NULL DEFAULT FALSE,
-  desc_name VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
-  desc_description text CHARACTER SET utf8 COLLATE utf8_general_ci NULL ,
+  desc_name VARCHAR( 255 ) NOT NULL ,
+  desc_description text NULL ,
   desc_rank INT( 11 ) NOT NULL DEFAULT '0',
-  desc_type ENUM( 'line', 'text' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT 'text',
+  desc_type ENUM( 'line', 'text' ) NOT NULL DEFAULT 'text',
   PRIMARY KEY (group_desc_id),
   UNIQUE (desc_name)
 );
@@ -583,7 +583,7 @@ CREATE TABLE group_desc_value (
   desc_value_id INT( 11 ) NOT NULL AUTO_INCREMENT ,
   group_id INT( 11 ) NOT NULL ,
   group_desc_id INT( 11 ) NOT NULL ,
-  value text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  value text NOT NULL ,
   PRIMARY KEY (desc_value_id),
   INDEX idx (group_id)
 );
@@ -1183,7 +1183,7 @@ CREATE TABLE ugroup_user (
 #
 CREATE TABLE permissions (
   permission_type VARCHAR(255) NOT NULL,
-  object_id VARCHAR(255) CHARACTER SET utf8 NOT NULL,
+  object_id VARCHAR(255) NOT NULL,
   ugroup_id int(11) NOT NULL,
   INDEX object_id (object_id (10))
 );
@@ -1435,11 +1435,11 @@ CREATE TABLE IF NOT EXISTS cross_references (
   id int(11) unsigned NOT NULL AUTO_INCREMENT,
   created_at INT(11) NOT NULL DEFAULT '0',
   user_id INT(11) unsigned NOT NULL DEFAULT '0',
-  source_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  source_type VARCHAR( 255 ) NOT NULL ,
   source_keyword VARCHAR( 32 ) NOT NULL ,
   source_id VARCHAR( 255 ) NOT NULL DEFAULT '0',
   source_gid INT(11) unsigned NOT NULL DEFAULT '0',
-  target_type VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ,
+  target_type VARCHAR( 255 ) NOT NULL ,
   target_keyword VARCHAR( 32 ) NOT NULL ,
   target_id VARCHAR( 255 )  NOT NULL DEFAULT '0',
   target_gid INT(11) unsigned NOT NULL DEFAULT '0',
