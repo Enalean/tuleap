@@ -21,10 +21,14 @@ $tlp-switch-height: 28px;
 $tlp-switch-width: 65px;
 $tlp-switch-large-height: 46px;
 $tlp-switch-large-width: 92px;
+$tlp-switch-mini-height: 15px;
+$tlp-switch-mini-width: 40px;
+$tlp-switch-mini-background: $tlp-theme-color;
 $tlp-switch-background: $tlp-ui-border-dark;
 $tlp-switch-button-background: #ffffff;
 $tlp-switch-button-width: 38px;
 $tlp-switch-large-button-width: 53px;
+$tlp-switch-mini-button-width: 22px;
 $tlp-switch-button-padding: 1px;
 $tlp-switch-button-slider-margin: 1px;
 $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-padding + $tlp-switch-button-slider-margin);
@@ -132,4 +136,33 @@ $tlp-switch-button-spinner-size: $tlp-switch-height - 2 * ($tlp-switch-button-pa
 .tlp-switch-checkbox:disabled + .tlp-switch-button {
     opacity: .5;
     cursor: not-allowed;
+}
+
+.tlp-switch-mini > .tlp-switch-button {
+    width: $tlp-switch-mini-width;
+    height: $tlp-switch-mini-height;
+
+
+    &::before {
+        content: '';
+        border-radius: $tlp-switch-mini-height / 2;
+        background-color: $tlp-switch-background;
+    }
+
+    &::after {
+        content: '';
+        width: $tlp-switch-mini-button-width;
+        border-radius: ($tlp-switch-mini-height - (2 * $tlp-switch-button-padding)) / 2;
+    }
+}
+
+.tlp-switch-mini > .tlp-switch-checkbox:checked + .tlp-switch-button:not(.loading) {
+    &::before {
+        background-color: $tlp-switch-mini-background;
+    }
+
+    &::after {
+        left: 16px;
+        color: $tlp-switch-mini-background;
+    }
 }
