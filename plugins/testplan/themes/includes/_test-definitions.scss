@@ -89,16 +89,16 @@
     margin: 2px 0 0 $tlp-medium-spacing;
 }
 
-.test-plan-test-definition-icon-automated-tests {
+.test-plan-test-definition-icon-automated-tests:last-child {
+    margin: 0 26px 0 0;
     opacity: .5;
-    color: $tlp-ui-dimmed;
 }
 
 .test-plan-test-definition-icon-status-passed,
 .test-plan-test-definition-icon-status-failed,
 .test-plan-test-definition-icon-status-blocked,
 .test-plan-test-definition-icon-status-notrun {
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 2px;
 }
 
 .test-plan-test-definition-icon-status-passed {
