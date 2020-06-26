@@ -107,7 +107,13 @@
                                 </span>
                                 {{ execution.definition.summary}}
                             </span>
-                            <i class="fa fa-cogs test-automated-icon"
+                            <i class="fa test-automated-icon"
+                               ng-class="{
+                                    'fa-tlp-robot': execution.status === 'notrun',
+                                    'fa-tlp-robot blocked': execution.status === 'blocked',
+                                    'fa-tlp-robot-happy passed': execution.status === 'passed',
+                                    'fa-tlp-robot-unhappy failed': execution.status === 'failed'
+                                }"
                                ng-if="execution.definition.automated_tests !== ''"
                                title="{{ 'This is an automated test' | translate }}"></i>
                             <i class="fa fa-check-circle test-status-icon passed"
