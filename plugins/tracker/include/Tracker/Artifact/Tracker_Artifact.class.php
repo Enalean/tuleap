@@ -628,7 +628,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get the artifact status, or null if no status defined in semantics
      *
-     * @return string the status of the artifact, or null if no status defined in semantics
+     * @return string | null the status of the artifact, or null if no status defined in semantics
      */
     public function getStatusForChangeset(Tracker_Artifact_Changeset $changeset)
     {

@@ -37,7 +37,7 @@ class PreviousResultRepresentation
     public $submitted_by;
 
     /**
-     * @var String
+     * @var String | null
      */
     public $status;
 
@@ -54,7 +54,7 @@ class PreviousResultRepresentation
     public function build(
         int $submitted_on,
         UserRepresentation $submitted_by,
-        string $status,
+        ?string $status,
         string $result,
         bool $has_been_run_at_least_once
     ): void {
