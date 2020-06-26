@@ -34,8 +34,10 @@ describe("ExecutionListController -", () => {
             ExecutionRestService = _ExecutionRestService_;
         });
 
+        const $element = angular.element("<div></div>");
         $ctrl = $controller(BaseController, {
             $scope,
+            $element,
             ExecutionService,
             SharedPropertiesService,
             ExecutionRestService,

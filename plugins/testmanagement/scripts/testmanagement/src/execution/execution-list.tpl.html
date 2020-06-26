@@ -24,48 +24,64 @@
     <div class="test-campaign-tests">
         <section class="tlp-pane tests-pane">
             <div class="tlp-pane-container">
-                <section class="tlp-pane-section tests-list-filters">
-                    <input type="search"
-                           class="tlp-search tlp-search-small tests-list-filter-search"
-                           placeholder="{{ 'Id, summary, category…' | translate }}"
-                           ng-model="search">
-
-                    <div class="tlp-button-bar">
-                        <div class="tlp-button-bar-item">
-                            <input type="checkbox" id="status-filter-passed" class="tlp-button-bar-checkbox">
-                            <label for="status-filter-passed"
-                                   class="tlp-button-small tlp-button-outline tlp-button-success"
-                                   ng-click="toggleStatus('passed')"
-                                   title="{{ 'Passed' | translate }}">
-                                <i class="fa fa-fw fa-lg fa-check-circle test-status-icon passed"></i>
-                            </label>
-                        </div>
-                        <div class="tlp-button-bar-item">
-                            <input type="checkbox" id="status-filter-failed" class="tlp-button-bar-checkbox">
-                            <label for="status-filter-failed"
-                                   class="tlp-button-small tlp-button-outline tlp-button-danger"
-                                   ng-click="toggleStatus('failed')"
-                                   title="{{ 'Failed' | translate }}">
-                                <i class="fa fa-fw fa-lg fa-times-circle test-status-icon failed"></i>
-                            </label>
-                        </div>
-                        <div class="tlp-button-bar-item">
-                            <input type="checkbox" id="status-filter-blocked" class="tlp-button-bar-checkbox">
-                            <label for="status-filter-blocked"
-                                   class="tlp-button-small tlp-button-outline tlp-button-info"
-                                   ng-click="toggleStatus('blocked')"
-                                   title="{{ 'Blocked' | translate }}">
-                                <i class="fa fa-fw fa-lg fa-exclamation-circle test-status-icon blocked"></i>
-                            </label>
-                        </div>
-                        <div class="tlp-button-bar-item">
-                            <input type="checkbox" id="status-filter-notrun" class="tlp-button-bar-checkbox">
-                            <label for="status-filter-notrun"
-                                   class="tlp-button-small tlp-button-outline tlp-button-secondary"
-                                   ng-click="toggleStatus('notrun')"
-                                   title="{{ 'Not run' | translate }}">
-                                <i class="fa fa-fw fa-lg fa-question-circle test-status-icon notrun"></i>
-                            </label>
+                <section class="tlp-pane-section tests-list-filters ">
+                    <div class="tests-filter-bar tlp-search tlp-search-small">
+                        <i class="fa fa-sliders tests-search-bar-icon"></i>
+                        <input
+                            type="search"
+                            class="tests-list-filter-search"
+                            placeholder="{{ 'Id, summary, category…' | translate }}"
+                            ng-model="search"
+                        >
+                        <div class="tlp-dropdown tests-filters-dropdown">
+                            <div id="toggle-filters-dropdown" class="tests-toggle-filters">
+                                <i class="fa fa-check-circle test-status-icon passed" ng-class="{'filtered-status': isStatusHidden('passed')}"></i>
+                                <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}"></i>
+                                <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}"></i>
+                                <i class="fa fa-question-circle test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}"></i>
+                            </div>
+                            <div id="filters-dropdown-menu" class="tlp-dropdown-menu" role="menu">
+                                <div class="tests-filter-option">
+                                    <div class="tests-filter-option-title">
+                                        <i class="fa fa-fw fa-check-circle test-status-icon passed"></i>
+                                        {{ 'Passed' | translate }}
+                                    </div>
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input type="checkbox" id="status-filter-passed" class="tlp-switch-checkbox">
+                                        <label for="status-filter-passed" class="tlp-switch-button" ng-click="toggleStatus('passed')"></label>
+                                    </div>
+                                </div>
+                                <div class="tests-filter-option">
+                                    <div class="tests-filter-option-title">
+                                        <i class="fa fa-fw fa-times-circle test-status-icon failed"></i>
+                                        {{ 'Failed' | translate }}
+                                    </div>
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input type="checkbox" id="status-filter-failed" class="tlp-switch-checkbox">
+                                        <label for="status-filter-failed" class="tlp-switch-button" ng-click="toggleStatus('failed')"></label>
+                                    </div>
+                                </div>
+                                <div class="tests-filter-option">
+                                    <div class="tests-filter-option-title">
+                                        <i class="fa fa-fw fa-exclamation-circle test-status-icon blocked"></i>
+                                        {{ 'Blocked' | translate }}
+                                    </div>
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input type="checkbox" id="status-filter-blocked" class="tlp-switch-checkbox">
+                                        <label for="status-filter-blocked" class="tlp-switch-button" ng-click="toggleStatus('blocked')"></label>
+                                    </div>
+                                </div>
+                                <div class="tests-filter-option">
+                                    <div class="tests-filter-option-title">
+                                        <i class="fa fa-fw fa-question-circle test-status-icon notrun"></i>
+                                        {{ 'Not run' | translate }}
+                                    </div>
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input type="checkbox" id="status-filter-notrun" class="tlp-switch-checkbox">
+                                        <label for="status-filter-notrun" class="tlp-switch-button" ng-click="toggleStatus('notrun')"></label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
