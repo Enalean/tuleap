@@ -239,16 +239,19 @@ $toolbar-height: 46px;
     > .tests-filter-option {
         display: flex;
         justify-content: space-between;
-        margin: 0 0 $tlp-spacing 0;
-        padding: 0 16px;
+        margin: 0 0 $tlp-medium-spacing 0;
+        padding: 0 $tlp-medium-spacing;
         white-space: nowrap;
 
         &:last-child {
             margin: 0;
+            padding: $tlp-medium-spacing $tlp-medium-spacing $tlp-half-spacing $tlp-medium-spacing;
+            border-top: 1px solid $tlp-ui-border-light;
         }
 
         > .tests-filter-option-title {
             margin: 0 42px 0 0;
+            white-space: nowrap;
         }
     }
 }

@@ -19,6 +19,7 @@ import ExecutionListCtrl from "./execution-list-controller.js";
 import ExecutionDetailCtrl from "./execution-detail-controller.js";
 import ExecutionTimerDirective from "./timer/execution-timer-directive.js";
 import ExecutionListFilter from "./execution-list-filter.js";
+import AutomatedTestsFilter from "./automated-tests-filter.js";
 import ExecutionListHeader from "./execution-list-header/execution-list-header-component.js";
 import ExecutionDetailJustUpdated from "./execution-detail-just-updated-component.js";
 import ExecutionWithSteps from "./execution-with-steps/execution-with-steps-component.js";
@@ -46,4 +47,5 @@ export default angular
     .component("executionListHeader", ExecutionListHeader)
     .component("executionWithSteps", ExecutionWithSteps)
     .component("step", Step)
-    .filter("ExecutionListFilter", ExecutionListFilter).name;
+    .filter("ExecutionListFilter", ExecutionListFilter)
+    .filter("AutomatedTestsFilter", AutomatedTestsFilter).name;
