@@ -197,6 +197,9 @@ class FromJiraTrackerCreator
     ): JiraXmlExporter {
         $jira_credentials = new JiraCredentials($jira_url, $jira_username, $jira_token);
 
-        return JiraXmlExporter::build($jira_credentials);
+        return JiraXmlExporter::build(
+            $jira_credentials,
+            $this->logger
+        );
     }
 }
