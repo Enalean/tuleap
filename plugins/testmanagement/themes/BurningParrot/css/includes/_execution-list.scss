@@ -13,6 +13,7 @@
 }
 
 $toolbar-height: 46px;
+
 .toolbar ~ #testmanagement-app .test-campaign {
     height: calc(100vh - #{$navbar-height} - 75px - #{$toolbar-height});
 }
@@ -55,7 +56,7 @@ $toolbar-height: 46px;
 
 .test-campaign-header-trophy {
     margin: 0 0 0 $tlp-medium-spacing;
-    color: #F3B13A;
+    color: #f3b13a;
     font-size: 22px;
     cursor: pointer;
 }
@@ -147,7 +148,13 @@ $toolbar-height: 46px;
 }
 
 .test-automated-icon {
-    margin: 0 5px 0 0;
+    margin: 0 20px 0 0;
+
+    &.passed,
+    &.failed,
+    &.blocked {
+        margin: 0 $tlp-half-spacing 0 0;
+    }
 }
 
 .tests-list-section {
