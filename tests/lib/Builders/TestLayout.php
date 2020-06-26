@@ -64,7 +64,7 @@ final class TestLayout extends BaseLayout
     {
     }
 
-    public function redirect($url)
+    public function redirect(string $url): void
     {
         $this->inspector->setRedirectUrl($url);
     }

@@ -251,10 +251,13 @@ class Codendi_HTMLPurifier
      *
      * - CONFIG_DISABLED
      *   No filter at all.
+     *
+     *
+     * @psalm-taint-specialize
+     * @psalm-taint-escape html
      */
     public function purify($html, $level = 0, $groupId = 0)
     {
-        $clean = '';
         switch ($level) {
             case self::CONFIG_DISABLED:
                 $clean = $html;
