@@ -233,7 +233,7 @@ final class SetupMysqlInitCommand extends Command
             $output->writeln(sprintf('<info>Database %s already exists</info>', $app_dbname));
         } else {
             $output->writeln(sprintf('<info>Create database %s</info>', $app_dbname));
-            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci', $db->escapeIdentifier($app_dbname)));
+            $db->run(sprintf('CREATE DATABASE %s DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci', $db->escapeIdentifier($app_dbname)));
         }
 
         $output->writeln(sprintf('<info>Grant privileges on %s to %s</info>', $app_dbname, $app_user));
