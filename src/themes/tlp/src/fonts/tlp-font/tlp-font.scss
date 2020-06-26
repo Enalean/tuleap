@@ -56,7 +56,10 @@ $tlp-fontawesome-icons: (
     user-pencil: '\f025',
     gerrit: '\f026',
     tuleap: '\f027',
-    zip-download: '\f028'
+    zip-download: '\f028',
+    robot: '\f029',
+    robot-happy: '\f030',
+    robot-unhappy: '\f031'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
