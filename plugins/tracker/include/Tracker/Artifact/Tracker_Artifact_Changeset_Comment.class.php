@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CommonMarkInterpreter;
+
 class Tracker_Artifact_Changeset_Comment
 {
 
@@ -31,6 +33,8 @@ class Tracker_Artifact_Changeset_Comment
      * @const Changeset comment format is HTML
      */
     public const HTML_COMMENT = 'html';
+
+    public const MARKDOWN_COMMENT = 'markdown';
 
     /**
     * @const Changeset available comment formats
@@ -58,16 +62,16 @@ class Tracker_Artifact_Changeset_Comment
      * @var array of purifier levels to be used when the comment is displayed in text/plain context
      */
     public static $PURIFIER_LEVEL_IN_TEXT = array(
-        'html' => CODENDI_PURIFIER_STRIP_HTML,
-        'text' => CODENDI_PURIFIER_DISABLED,
+        self::HTML_COMMENT => CODENDI_PURIFIER_STRIP_HTML,
+        self::TEXT_COMMENT => CODENDI_PURIFIER_DISABLED,
     );
 
     /**
      * @var array of purifier levels to be used when the comment is displayed in text/html context
      */
     public static $PURIFIER_LEVEL_IN_HTML = array(
-        'html' => CODENDI_PURIFIER_FULL,
-        'text' => CODENDI_PURIFIER_BASIC,
+        self::HTML_COMMENT => CODENDI_PURIFIER_FULL,
+        self::TEXT_COMMENT => CODENDI_PURIFIER_BASIC,
     );
 
     /**
@@ -116,7 +120,7 @@ class Tracker_Artifact_Changeset_Comment
 
     public function getPurifiedBodyForHTML(): string
     {
-        if ($this->bodyFormat === 'html') {
+        if ($this->bodyFormat === self::HTML_COMMENT) {
             return $this->purifyHTMLBody();
         }
 
@@ -162,13 +166,21 @@ class Tracker_Artifact_Changeset_Comment
         $html .= '</div>';
 
         if (!empty($this->body)) {
-            $html .= '<input type="hidden"
+            // consider markdown format to be similar to text one for now
+            $considered_body_format = $this->bodyFormat;
+            if ($considered_body_format === self::MARKDOWN_COMMENT) {
+                $considered_body_format = self::TEXT_COMMENT;
+            }
+            $html        .= '<input type="hidden"
                 id="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
                 name="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
-                value="' . $this->bodyFormat . '" />';
-            $html .= '<div class="tracker_artifact_followup_comment_body">';
+                value="' . $considered_body_format . '" />';
+            $html        .= '<div class="tracker_artifact_followup_comment_body">';
             if ($this->parent_id && !trim($this->body)) {
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
+            } elseif ($this->bodyFormat === self::MARKDOWN_COMMENT) {
+                $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
+                $html .= $content_interpretor->getInterpretedContent($this->body);
             } else {
                 $html .= $this->getPurifiedBodyForHTML();
             }
@@ -193,9 +205,9 @@ class Tracker_Artifact_Changeset_Comment
      * @param String  $format Format of the output
      * @return string the HTML code of this comment
      */
-    public function fetchMailFollowUp($format = 'html')
+    public function fetchMailFollowUp($format = self::HTML_COMMENT)
     {
-        if ($format != 'html') {
+        if ($format !== self::HTML_COMMENT) {
             if ($this->hasEmptyBody()) {
                 return '';
             }
