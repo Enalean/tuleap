@@ -32,7 +32,8 @@
         </div>
         <div class="test-plan-test-definition-icons">
             <i
-                class="fa fa-cogs test-plan-test-definition-icon-automated-tests"
+                class="fa test-plan-test-definition-icon-automated-tests"
+                v-bind:class="automated_icon_status"
                 aria-hidden="true"
                 v-if="test_definition.automated_tests"
                 data-test="automated-test-icon"
@@ -101,6 +102,21 @@ export default class TestDefinitionCard extends Vue {
                 return "fa-question-circle test-plan-test-definition-icon-status-notrun";
             default:
                 return "";
+        }
+    }
+
+    get automated_icon_status(): string {
+        switch (this.test_definition.test_status) {
+            case "passed":
+                return "fa-tlp-robot-happy test-plan-test-definition-icon-status-passed";
+            case "failed":
+                return "fa-tlp-robot-unhappy test-plan-test-definition-icon-status-failed";
+            case "blocked":
+                return "fa-tlp-robot test-plan-test-definition-icon-status-blocked";
+            case "notrun":
+                return "fa-tlp-robot test-plan-test-definition-icon-status-notrun";
+            default:
+                return "fa-tlp-robot";
         }
     }
 }
