@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Markdown\CommonMarkInterpreter;
 use Tuleap\Tracker\REST\Artifact\ArtifactFieldValueTextRepresentation;
 
 /**
@@ -35,6 +36,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @const Changeset comment format is HTML
      */
     public const HTML_CONTENT = 'html';
+
+    public const MARKDOWN_CONTENT = 'markdown';
 
     private static $MAX_LENGTH_FOR_DIFF = 20000;
 
@@ -74,6 +77,12 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         if ($this->format == null) {
             return self::TEXT_CONTENT;
         }
+
+        // consider markdown format to be similar to text one for now
+        if ($this->format === self::MARKDOWN_CONTENT) {
+            return self::TEXT_CONTENT;
+        }
+
         return $this->format;
     }
 
@@ -112,6 +121,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
 
         if ($this->isInHTMLFormat()) {
             return $hp->purifyHTMLWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
+        } elseif ($this->format === self::MARKDOWN_CONTENT) {
+            $content_interpretor = CommonMarkInterpreter::build($hp);
+
+            return $content_interpretor->getInterpretedContent($this->getText());
         }
         return $hp->purifyTextWithReferences($this->getText(), $this->field->getTracker()->getProject()->getID());
     }
@@ -267,8 +280,8 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
         return $this->getText();
     }
 
-    private function isInHTMLFormat()
+    private function isInHTMLFormat(): bool
     {
-        return $this->getFormat() == self::HTML_CONTENT;
+        return $this->getFormat() === self::HTML_CONTENT;
     }
 }

@@ -155,4 +155,61 @@ final class Tracker_Artifact_ChangesetValue_TextTest extends \PHPUnit\Framework\
 
         return $field;
     }
+
+    public function testItReturnsTheTextValue(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT
+        );
+        $this->assertEquals('Problems with my code: &lt;b&gt;example&lt;/b&gt;', $text->getValue());
+    }
+
+    public function testItReturnsTheHTMLValue(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: <b>example</b>',
+            Tracker_Artifact_ChangesetValue_Text::HTML_CONTENT
+        );
+        $this->assertEquals('Problems with my code: <b>example</b>', $text->getValue());
+    }
+
+    public function testItReturnsTheMarkdownValue(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: **example**',
+            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+        );
+        $this->assertEquals("<p>Problems with my code: <strong>example</strong></p>\n", $text->getValue());
+    }
+
+    public function testItConsidersMarkdownAsTextFormat(): void
+    {
+        $field = $this->getTextFieldWithProject();
+        $text = new Tracker_Artifact_ChangesetValue_Text(
+            111,
+            \Mockery::spy(\Tracker_Artifact_Changeset::class),
+            $field,
+            false,
+            'Problems with my code: **example**',
+            Tracker_Artifact_ChangesetValue_Text::MARKDOWN_CONTENT
+        );
+
+        $this->assertEquals(Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT, $text->getFormat());
+    }
 }
