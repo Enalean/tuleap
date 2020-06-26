@@ -59,6 +59,9 @@ msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
 
+msgid "Auto scroll to current test"
+msgstr "Défilement automatique jusqu'au test courant"
+
 msgid "Automated"
 msgstr "Automatisés"
 
@@ -273,7 +276,8 @@ msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"
 
 msgid "You are not allowed to upload images bigger than {{ max_size }}"
-msgstr "Vous n'êtes pas autorisé à insérer des images plus lourdes que {{ max_size }}"
+msgstr ""
+"Vous n'êtes pas autorisé à insérer des images plus lourdes que {{ max_size }}"
 
 msgid ""
 "You have just updated the test definition, so it has been reset. Please "

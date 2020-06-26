@@ -66,6 +66,8 @@ function ExecutionListCtrl(
         hideDetailsForRemovedTestExecution,
         shouldShowEmptyState,
         isStatusHidden,
+        scrollToCurrentTest,
+        isScrollToTestButtonDisabled,
     });
 
     function checkActiveClassOnExecution(execution) {
@@ -164,6 +166,7 @@ function ExecutionListCtrl(
             notrun: true,
         };
         $scope.are_automated_tests_shown = false;
+        $scope.is_scrolling_to_current_test = false;
 
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
@@ -234,6 +237,7 @@ function ExecutionListCtrl(
                 SharedPropertiesService.getCurrentUser()
             );
             $scope.execution_id = current_execution_id;
+            scrollToCurrentTest();
         });
     }
 
@@ -284,5 +288,31 @@ function ExecutionListCtrl(
         }
 
         return self.should_show_empty_state;
+    }
+
+    function scrollToCurrentTest() {
+        if ($scope.is_scrolling_to_current_test === true) {
+            return;
+        }
+
+        const list_item = angular.element(`[data-exec-id=${$scope.execution_id}]`)[0];
+
+        if (!list_item) {
+            return;
+        }
+
+        $scope.is_scrolling_to_current_test = true;
+
+        list_item.scrollIntoView();
+        list_item.classList.toggle("current-test-highlight");
+
+        setTimeout(() => {
+            list_item.classList.toggle("current-test-highlight");
+            $scope.is_scrolling_to_current_test = false;
+        }, 1000);
+    }
+
+    function isScrollToTestButtonDisabled() {
+        return !$scope.execution_id;
     }
 }
