@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
@@ -54,12 +55,18 @@ class FromJiraTrackerCreatorTest extends TestCase
      */
     private $tracker_xml_import;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
     protected function setUp(): void
     {
         $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
         $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
         $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
         $this->xml_cdata_factory     = new XML_SimpleXMLCDATAFactory();
+        $this->logger                = Mockery::mock(LoggerInterface::class);
     }
 
     public function testItDuplicatedATrackerFromJira(): void
@@ -75,7 +82,8 @@ class FromJiraTrackerCreatorTest extends TestCase
                 $this->tracker_xml_import,
                 $this->tracker_factory,
                 $this->creation_data_checker,
-                $this->xml_cdata_factory
+                $this->xml_cdata_factory,
+                $this->logger
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -85,6 +93,8 @@ class FromJiraTrackerCreatorTest extends TestCase
         $jira_exporter->shouldReceive('exportJiraToXml')->once();
         $this->tracker_xml_import->shouldReceive('import')->once()->andReturn([1]);
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(Mockery::mock(Tracker::class));
+
+        $this->logger->shouldReceive('info');
 
         $creator->createFromJira(
             $project,

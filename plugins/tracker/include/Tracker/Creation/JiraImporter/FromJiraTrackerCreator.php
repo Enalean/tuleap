@@ -25,10 +25,12 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use BackendLogger;
 use Project;
+use Psr\Log\LoggerInterface;
 use Tracker;
 use Tracker_Exception;
 use TrackerFactory;
 use TrackerFromXmlException;
+use TrackerFromXmlImportCannotBeCreatedException;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
@@ -44,6 +46,8 @@ use XMLImportHelper;
 
 class FromJiraTrackerCreator
 {
+    private const LOG_IDENTIFIER = "jira_import_syslog";
+
     /**
      * @var TrackerXmlImport
      */
@@ -61,22 +65,31 @@ class FromJiraTrackerCreator
      */
     private $cdata_section_factory;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
         TrackerFactory $tracker_factory,
         TrackerCreationDataChecker $creation_data_checker,
-        XML_SimpleXMLCDATAFactory $cdata_section_factory
+        XML_SimpleXMLCDATAFactory $cdata_section_factory,
+        LoggerInterface $logger
     ) {
         $this->tracker_xml_import    = $tracker_xml_import;
         $this->tracker_factory       = $tracker_factory;
         $this->creation_data_checker = $creation_data_checker;
         $this->cdata_section_factory = $cdata_section_factory;
+        $this->logger                = $logger;
     }
 
     public static function build(): self
     {
         $user_finder        = new XMLImportHelper(UserManager::instance());
         $tracker_xml_import = TrackerXmlImport::build($user_finder, BackendLogger::getDefaultLogger());
+
+        $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
 
         return new self(
             $tracker_xml_import,
@@ -87,7 +100,8 @@ class FromJiraTrackerCreator
                 new PendingJiraImportDao(),
                 TrackerFactory::instance()
             ),
-            new XML_SimpleXMLCDATAFactory()
+            new XML_SimpleXMLCDATAFactory(),
+            $logger
         );
     }
 
@@ -112,6 +126,10 @@ class FromJiraTrackerCreator
         string $jira_issue_type_name,
         \PFUser $user
     ): Tracker {
+        $this->logger->info("Begin import from jira.");
+        $this->logger->info("Selected jira project: $jira_project_id");
+        $this->logger->info("Selected jira issue type: $jira_issue_type_name");
+
         $this->creation_data_checker->checkAtProjectCreation((int) $project->getID(), $name, $itemname);
         $jira_exporter = $this->getJiraExporter($jira_token, $jira_username, $jira_url);
 
@@ -130,20 +148,38 @@ class FromJiraTrackerCreator
         $tracker_xml->addChild('cannedResponses');
 
         $jira_exporter->exportJiraToXml($tracker_xml, $jira_url, $jira_project_id, $jira_issue_type_name);
-        $trackers = $this->tracker_xml_import->import(
-            new ImportConfig(),
-            $project,
-            $xml,
-            new MappingsRegistry(),
-            \ForgeConfig::get('tmp_dir'),
-            $user
-        );
+
+        try {
+            $trackers = $this->tracker_xml_import->import(
+                new ImportConfig(),
+                $project,
+                $xml,
+                new MappingsRegistry(),
+                \ForgeConfig::get('tmp_dir'),
+                $user
+            );
+        } catch (
+            TrackerFromXmlException |
+            TrackerFromXmlImportCannotBeCreatedException |
+            Tracker_Exception |
+            XML_ParseException $exception
+        ) {
+            $this->logger->info("Ending import from jira with errors.");
+            $xml_content = $tracker_xml->asXML();
+            if ($xml_content !== false && is_string($xml_content)) {
+                $this->logger->debug("Generated XML content: $xml_content");
+            }
+
+            throw $exception;
+        }
+
 
         if ($trackers && count($trackers) === 1) {
             $tracker_id = (int) array_values($trackers)[0];
 
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker) {
+                $this->logger->info("Ending import from jira without error.");
                 return $tracker;
             }
         }
