@@ -328,10 +328,10 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
     public function searchProjectRepositoryByPath($projectId, $repositoryPath)
     {
-        //COLLATE utf8_bin used in query in order to create a case sensitive match
+        // BINARY ? used in query in order to create a case sensitive match
         return $this->getDB()->row(
             'SELECT * FROM plugin_git
-                       WHERE repository_path COLLATE utf8_bin = ? AND project_id = ?
+                       WHERE repository_path = BINARY ? AND project_id = ?
                             AND repository_deletion_date = "0000-00-00 00:00:00"',
             $repositoryPath,
             $projectId

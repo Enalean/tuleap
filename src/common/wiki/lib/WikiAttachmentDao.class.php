@@ -126,7 +126,7 @@ class WikiAttachmentDao extends DataAccessObject
 
     /**
      * Return attachment id for a file in a project.
-     * The utf8_bin collation enforce case sensitivity within where clause
+     * The BINARY string usage enforce case sensitivity within where clause
      *
      * @param int $gid group id
      * @param string  $filename attachement name
@@ -136,7 +136,7 @@ class WikiAttachmentDao extends DataAccessObject
     {
         $qry = sprintf(
             'SELECT id FROM wiki_attachment'
-                       . ' WHERE name COLLATE utf8_bin =%s'
+                       . ' WHERE name = BINARY %s'
                        . ' AND group_id=%d'
                        . ' AND delete_date IS NULL',
             $this->da->quoteSmart($filename),
