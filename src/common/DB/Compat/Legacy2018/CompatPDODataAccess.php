@@ -20,7 +20,6 @@
 
 namespace Tuleap\DB\Compat\Legacy2018;
 
-use ForgeConfig;
 use Tuleap\DB\DBConnection;
 
 /**
@@ -132,10 +131,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
         if (! $has_error) {
             return '';
         }
-        if (! ForgeConfig::get('DEBUG_MODE')) {
-            return 'DB error';
-        }
-        return $error_info[2];
+        return 'DB error';
     }
 
     /**

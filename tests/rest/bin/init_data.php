@@ -29,5 +29,4 @@ $data_builder
     ->delegateForgePermissions()
     ->deleteTracker()
     ->deleteProject()
-    ->suspendProject()
-    ->activateDebug();
+    ->suspendProject();

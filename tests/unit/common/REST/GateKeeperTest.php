@@ -57,7 +57,7 @@ final class GateKeeperTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['DEBUG_MODE'], $_SERVER['HTTP_REFERER']);
+        unset($_SERVER['HTTP_REFERER']);
     }
 
     public function testItThrowsExceptionWhenTokenOrAccessKeyAuthenticationWithoutSSL(): void
@@ -71,15 +71,6 @@ final class GateKeeperTest extends TestCase
     public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithSSL(): void
     {
         $this->request->shouldReceive('isSecure')->andReturns(true);
-
-        $this->gate_keeper->assertAccess($this->anonymous, $this->request);
-        $this->assertTrue(true, 'No exception should be raised');
-    }
-
-    public function testItLetsPassWhenTokenOrAccessKeyAuthenticationWithoutSSLButWithDebug(): void
-    {
-        $this->request->shouldReceive('isSecure')->andReturns(false);
-        $GLOBALS['DEBUG_MODE'] = 1;
 
         $this->gate_keeper->assertAccess($this->anonymous, $this->request);
         $this->assertTrue(true, 'No exception should be raised');

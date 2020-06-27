@@ -24,5 +24,4 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $data_builder = new REST_TestDataBuilder();
 $data_builder
-    ->activateDebug()
     ->initPlugins();

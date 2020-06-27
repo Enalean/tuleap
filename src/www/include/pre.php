@@ -41,10 +41,6 @@ $local_inc = ForgeConfig::loadLocalInc();
 $GLOBALS['db_config_file'] = ForgeConfig::loadDatabaseInc();
 require($local_inc);
 require($GLOBALS['db_config_file']);
-if (isset($GLOBALS['DEBUG_MODE'])) {
-    ForgeConfig::loadFromFile($GLOBALS['codendi_dir'] . '/src/etc/development.inc.dist');
-    ForgeConfig::loadFromFile(dirname($local_inc) . '/development.inc');
-}
 ForgeConfig::loadFromDatabase();
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 
@@ -227,9 +223,6 @@ if (!IS_SCRIPT) {
 if ($request->exist('postExpected') && !$request->exist('postReceived')) {
     $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
     exit_error('Error', $e);
-}
-if (ForgeConfig::get('DEBUG_MODE')) {
-    $GLOBALS['DEBUG_TIME_IN_PRE'] = microtime(1) - $GLOBALS['debug_time_start'];
 }
 
 if ($request->isAjax()) {

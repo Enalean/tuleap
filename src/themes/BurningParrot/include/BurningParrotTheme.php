@@ -20,7 +20,6 @@ namespace Tuleap\Theme\BurningParrot;
 
 use Event;
 use EventManager;
-use ForgeConfig;
 use HTTPRequest;
 use PFUser;
 use Project;
@@ -214,10 +213,6 @@ class BurningParrotTheme extends BaseLayout
             $this->version->getFullDescriptiveVersion()
         );
         $this->renderer->renderToPage('footer', $footer);
-
-        if ($this->isInDebugMode()) {
-            $this->showDebugInfo();
-        }
     }
 
     /**
@@ -250,11 +245,6 @@ class BurningParrotTheme extends BaseLayout
     private function getTemplateDir()
     {
         return __DIR__ . '/../templates/';
-    }
-
-    private function isInDebugMode()
-    {
-        return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 
     private function getSidebarFromParams(array $params)
