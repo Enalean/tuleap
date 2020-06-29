@@ -228,4 +228,29 @@ class URLVerificationTest extends TestCase
         $chunks = $urlVerification->getUrlChunks();
         $this->assertFalse(isset($chunks['host']));
     }
+
+    public function testItChecksUriInternal(): void
+    {
+        ForgeConfig::set('sys_default_domain', 'default.example.test');
+        ForgeConfig::set('sys_https_host', 'default');
+        $url_verification = new URLVerification();
+
+        $this->assertFalse($url_verification->isInternal('http://evil.example.com/'));
+        $this->assertFalse($url_verification->isInternal('https://evil.example.com/'));
+        $this->assertFalse($url_verification->isInternal('javascript:alert(1)'));
+        $this->assertTrue($url_verification->isInternal('/path/to/feature'));
+        $this->assertTrue($url_verification->isInternal('?report=111'));
+        $this->assertFalse(
+            $url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
+        );
+        $this->assertFalse(
+            $url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
+        );
+
+        $this->assertFalse($url_verification->isInternal('//example.com'));
+        $this->assertFalse($url_verification->isInternal('/\example.com'));
+        $this->assertFalse($url_verification->isInternal(
+            'https://' . ForgeConfig::get('sys_https_host') . '@evil.example.com'
+        ));
+    }
 }

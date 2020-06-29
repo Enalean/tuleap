@@ -166,7 +166,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     public function isInternal(string $uri): bool
     {
         $url_decoded = urldecode($uri);
-        return preg_match('/^\/[[:alnum:]]+/', $url_decoded) === 1;
+        return preg_match('/^[\/?][[:alnum:]]+/', $url_decoded) === 1;
     }
 
     /**
