@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -36,11 +37,14 @@ class CurrentSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForIssueCurrentData(): void
     {
-        $builder = new CurrentSnapshotBuilder();
+        $logger = Mockery::mock(LoggerInterface::class);
+        $builder = new CurrentSnapshotBuilder($logger);
 
         $user                          = Mockery::mock(PFUser::class);
         $jira_issue_api                = $this->buildIssueAPIResponse();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
+
+        $logger->shouldReceive('debug');
 
         $snapshot = $builder->buildCurrentSnapshot(
             $user,

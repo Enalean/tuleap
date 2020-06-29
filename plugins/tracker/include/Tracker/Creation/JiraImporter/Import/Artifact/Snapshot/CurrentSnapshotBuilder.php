@@ -24,20 +24,34 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class CurrentSnapshotBuilder
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function buildCurrentSnapshot(
         PFUser $forge_user,
         array $issue,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
+        $this->logger->debug("Build current snapshot...");
+
         $field_snapshots = [];
         foreach ($issue['fields'] as $key => $value) {
             $rendered_value = $issue['renderedFields'][$key] ?? null;
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
+
             if ($mapping !== null && $value !== null) {
                 $field_snapshots[] = new FieldSnapshot(
                     $mapping,
@@ -53,6 +67,8 @@ class CurrentSnapshotBuilder
             $field_snapshots,
             null
         );
+
+        $this->logger->debug("Current snapshot built successfully");
 
         return $current_snapshot;
     }

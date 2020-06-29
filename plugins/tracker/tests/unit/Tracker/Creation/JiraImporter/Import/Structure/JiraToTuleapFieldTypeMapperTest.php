@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -34,6 +35,11 @@ use XML_SimpleXMLCDATAFactory;
 final class JiraToTuleapFieldTypeMapperTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|FieldXmlExporter
@@ -67,10 +73,12 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->logger = Mockery::mock(LoggerInterface::class);
         $this->field_exporter = Mockery::mock(FieldXmlExporter::class);
         $this->mapper         = new JiraToTuleapFieldTypeMapper(
             $this->field_exporter,
-            new ErrorCollector()
+            new ErrorCollector(),
+            $this->logger
         );
 
         $form_elements = new SimpleXMLElement("<formElements/>");
@@ -497,6 +505,27 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $collection
             ]
         );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->containers_collection,
+            $collection
+        );
+    }
+
+    public function testUnsupportedFieldIsLoggedForDebugPurpose(): void
+    {
+        $jira_field = new JiraFieldAPIRepresentation(
+            'votes_id',
+            'Votes',
+            false,
+            'votes',
+            []
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->logger->shouldReceive('debug')->with(" |_ Field votes_id (votes) ignored ")->once();
 
         $this->mapper->exportFieldToXml(
             $jira_field,

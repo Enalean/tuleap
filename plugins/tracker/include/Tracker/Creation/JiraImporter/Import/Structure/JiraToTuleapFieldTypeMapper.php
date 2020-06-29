@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -37,13 +38,19 @@ class JiraToTuleapFieldTypeMapper
      * @var ErrorCollector
      */
     private $error_collector;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         FieldXmlExporter $field_xml_exporter,
-        ErrorCollector $error_collector
+        ErrorCollector $error_collector,
+        LoggerInterface $logger
     ) {
         $this->field_xml_exporter = $field_xml_exporter;
         $this->error_collector    = $error_collector;
+        $this->logger             = $logger;
     }
 
     public function exportFieldToXml(
@@ -312,6 +319,7 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.pyxis.greenhopper.jira:gh-epic-label':
                 case 'com.pyxis.greenhopper.jira:gh-epic-status':
                 case 'issuetype':
+                    $this->logger->debug(" |_ Field " . $id . " (" . $jira_type . ") ignored ");
                     break;
                 default:
                     $this->error_collector->addError("Unknonw mapping type " . $jira_type);
