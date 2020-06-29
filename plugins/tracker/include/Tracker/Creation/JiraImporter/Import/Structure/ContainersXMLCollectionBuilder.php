@@ -30,8 +30,9 @@ use XML_SimpleXMLCDATAFactory;
 
 class ContainersXMLCollectionBuilder
 {
-    public const DETAILS_FIELDSET_NAME = 'details_fieldset';
-    public const CUSTOM_FIELDSET_NAME  = 'custom_fieldset';
+    public const DETAILS_FIELDSET_NAME    = 'details_fieldset';
+    public const CUSTOM_FIELDSET_NAME     = 'custom_fieldset';
+    public const ATTACHMENT_FIELDSET_NAME = 'attachment_fieldset';
 
     public const LEFT_COLUMN_NAME  = 'left_column';
     public const RIGHT_COLUMN_NAME = 'right_column';
@@ -74,6 +75,14 @@ class ContainersXMLCollectionBuilder
             2
         );
 
+        $attachment_fieldset_node = $this->buildFieldsetXMLNode(
+            $form_elements,
+            self::ATTACHMENT_FIELDSET_NAME,
+            'Attachments',
+            3,
+            3
+        );
+
         $collection->addContainerInCollection(
             self::DETAILS_FIELDSET_NAME,
             $details_fieldset_node
@@ -82,6 +91,11 @@ class ContainersXMLCollectionBuilder
         $collection->addContainerInCollection(
             self::CUSTOM_FIELDSET_NAME,
             $custom_fieldset_node
+        );
+
+        $collection->addContainerInCollection(
+            self::ATTACHMENT_FIELDSET_NAME,
+            $attachment_fieldset_node
         );
     }
 

@@ -40,6 +40,7 @@ class Tracker_FormElementFactory
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';
     public const FIELD_MULTI_SELECT_BOX_TYPE = 'msb';
+    public const FIELD_FILE_TYPE             = 'file';
 
     public const CONTAINER_COLUMN_TYPE   = 'column';
     public const CONTAINER_FIELDSET_TYPE = 'fieldset';
@@ -68,8 +69,8 @@ class Tracker_FormElementFactory
         self::FIELD_SELECT_BOX_TYPE       => 'Tracker_FormElement_Field_Selectbox',
         self::FIELD_RADIO_BUTTON_TYPE     => 'Tracker_FormElement_Field_Radiobutton',
         self::FIELD_MULTI_SELECT_BOX_TYPE => 'Tracker_FormElement_Field_MultiSelectbox',
+        self::FIELD_FILE_TYPE             => 'Tracker_FormElement_Field_File',
         'cb'       => 'Tracker_FormElement_Field_Checkbox',
-        'file'     => 'Tracker_FormElement_Field_File',
         'int'      => 'Tracker_FormElement_Field_Integer',
         'tbl'      => 'Tracker_FormElement_Field_OpenList',
         'art_link' => 'Tracker_FormElement_Field_ArtifactLink',

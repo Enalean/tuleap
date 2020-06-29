@@ -205,6 +205,23 @@ class AlwaysThereFieldsExporterTest extends TestCase
             ]
         )->once();
 
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return isset($fieldset_xml->formElements);
+                }),
+                Tracker_FormElementFactory::FIELD_FILE_TYPE,
+                "attachment",
+                "Attachments",
+                "attachment",
+                1,
+                false,
+                [],
+                [],
+                $this->field_mapping_collection
+            ]
+        )->once();
+
         $this->exporter->exportFields(
             $this->containers_collection,
             $this->field_mapping_collection,
