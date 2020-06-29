@@ -5,25 +5,31 @@ exports[`BacklogItemCard Displays the backlog item as a card 1`] = `
   class="tlp-card tlp-card-selectable test-plan-backlog-item-card"
   href="/plugins/tracker/?aid=42"
 >
-  <i
-    aria-hidden="true"
-    class="fa fa-fw test-plan-backlog-item-caret fa-caret-right"
+  <div>
+    <i
+      aria-hidden="true"
+      class="fa fa-fw test-plan-backlog-item-caret fa-caret-right"
+    />
+     
+    <span
+      class="tlp-badge-outline tlp-badge-fiesta-red"
+    >
+      
+            bug #123
+        
+    </span>
+     
+    <span
+      class="test-plan-backlog-item-title"
+    >
+      
+            A backlog item
+        
+    </span>
+  </div>
+   
+  <backlog-item-coverage-stub
+    backlog_item="[object Object]"
   />
-   
-  <span
-    class="tlp-badge-outline tlp-badge-fiesta-red"
-  >
-    
-        bug #123
-    
-  </span>
-   
-  <span
-    class="test-plan-backlog-item-title"
-  >
-    
-        A backlog item
-    
-  </span>
 </a>
 `;

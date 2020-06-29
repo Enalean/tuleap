@@ -41,13 +41,10 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import TestDefinitionSkeleton from "./TestDefinitionSkeleton.vue";
 import { BacklogItem } from "../../../type";
-import { namespace } from "vuex-class";
 import TestDefinitionCard from "./TestDefinitionCard.vue";
 import TestDefinitionEmptyState from "./TestDefinitionEmptyState.vue";
 import TestDefinitionErrorState from "./TestDefinitionErrorState.vue";
 import AddTestButton from "./AddTestButton.vue";
-
-const backlog_item_store = namespace("backlog_item");
 
 @Component({
     components: {
@@ -61,15 +58,6 @@ const backlog_item_store = namespace("backlog_item");
 export default class ListOfTestDefinitions extends Vue {
     @Prop({ required: true })
     readonly backlog_item!: BacklogItem;
-
-    @backlog_item_store.Action
-    readonly loadTestDefinitions!: (backlog_item: BacklogItem) => Promise<void>;
-
-    mounted(): void {
-        if (!this.backlog_item.are_test_definitions_loaded) {
-            this.loadTestDefinitions(this.backlog_item);
-        }
-    }
 
     get should_empty_state_be_displayed(): boolean {
         return (
