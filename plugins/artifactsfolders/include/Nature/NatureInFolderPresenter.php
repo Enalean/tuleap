@@ -31,8 +31,8 @@ class NatureInFolderPresenter extends NaturePresenter
     {
         parent::__construct(
             self::NATURE_IN_FOLDER,
-            $GLOBALS['Language']->getText('plugin_folders', '_in_folder_forward'),
-            $GLOBALS['Language']->getText('plugin_folders', '_in_folder_reverse'),
+            dgettext('tuleap-artifactsfolders', 'Folder'),
+            dgettext('tuleap-artifactsfolders', 'In folder'),
             false
         );
 

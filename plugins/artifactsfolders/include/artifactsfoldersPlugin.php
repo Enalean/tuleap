@@ -51,6 +51,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+        bindtextdomain('tuleap-artifactsfolders', __DIR__ . '/../site-content');
     }
 
     public function getHooksAndCallbacks()
@@ -366,13 +367,10 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
 
         $GLOBALS['Response']->addFeedback(
             Feedback::WARN,
-            $GLOBALS['Language']->getText(
-                'plugin_folders',
-                'no_copy',
-                array(
-                    $purifier->purify($folder->getUri()),
-                    $folder->getXRefAndTitle()
-                )
+            sprintf(
+                dgettext('tuleap-artifactsfolders', 'The link between the artifact and the folder <a href="%s">%s</a> won\'t be copied.'),
+                $purifier->purify($folder->getUri()),
+                $folder->getXRefAndTitle(),
             ),
             CODENDI_PURIFIER_FULL
         );

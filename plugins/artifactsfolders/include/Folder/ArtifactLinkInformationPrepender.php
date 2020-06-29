@@ -120,7 +120,7 @@ class ArtifactLinkInformationPrepender
         $purifier = Codendi_HTMLPurifier::instance();
         return '<select name="new-artifact-folder" ' . $purifier->purify($class) . '>
             <option value="" class="not-anymore-in-folder">'
-            . $GLOBALS['Language']->getText('plugin_folders', 'no_folder') . '</option>'
+            . dgettext('tuleap-artifactsfolders', 'Not in a folder') . '</option>'
             . implode('', $options) . '</select>';
     }
 
@@ -133,7 +133,7 @@ class ArtifactLinkInformationPrepender
 
         $purifier = Codendi_HTMLPurifier::instance();
         return '<span ' . $purifier->purify($class) . '>' .
-            $GLOBALS['Language']->getText('plugin_folders', 'current_folder') .
+            dgettext('tuleap-artifactsfolders', 'Currently in folder:') .
             '</span>';
     }
 }
