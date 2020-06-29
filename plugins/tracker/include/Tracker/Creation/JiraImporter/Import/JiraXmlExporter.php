@@ -269,7 +269,8 @@ class JiraXmlExporter
                         new XML_SimpleXMLCDATAFactory(),
                         new CommentXMLValueEnhancer()
                     )
-                )
+                ),
+                $logger
             ),
             new SemanticsXMLExporter(),
             $status_values_collection,

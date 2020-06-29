@@ -26,6 +26,7 @@ namespace Tracker\Creation\JiraImporter\Import\Artifact;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -73,12 +74,18 @@ class ArtifactsXMLExporterTest extends TestCase
      */
     private $user_manager;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->wrapper      = Mockery::mock(ClientWrapper::class);
         $this->user_manager = Mockery::mock(UserManager::class);
+        $this->logger       = Mockery::mock(LoggerInterface::class);
 
         $this->exporter = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -123,11 +130,14 @@ class ArtifactsXMLExporterTest extends TestCase
                     new XML_SimpleXMLCDATAFactory(),
                     new CommentXMLValueEnhancer()
                 )
-            )
+            ),
+            $this->logger
         );
 
         $this->mockChangelogForKey01();
         $this->mockChangelogForKey02();
+
+        $this->logger->shouldReceive('debug');
     }
 
     public function testItExportsArtifacts(): void

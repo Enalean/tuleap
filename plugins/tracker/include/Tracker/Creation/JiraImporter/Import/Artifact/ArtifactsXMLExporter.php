@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
@@ -48,14 +49,21 @@ class ArtifactsXMLExporter
      */
     private $data_changeset_xml_exporter;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         ClientWrapper $wrapper,
         UserManager $user_manager,
-        DataChangesetXMLExporter $data_changeset_xml_exporter
+        DataChangesetXMLExporter $data_changeset_xml_exporter,
+        LoggerInterface $logger
     ) {
         $this->wrapper                     = $wrapper;
         $this->user_manager                = $user_manager;
         $this->data_changeset_xml_exporter = $data_changeset_xml_exporter;
+        $this->logger                      = $logger;
     }
 
     public function exportArtifacts(
@@ -161,9 +169,16 @@ class ArtifactsXMLExporter
             return;
         }
 
+        $this->logger->debug("Exporting batch of issues.");
+
         foreach ($jira_issues as $issue) {
+            $issue_id  = $issue['id'];
+            $issue_key = $issue['key'];
+
+            $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
+
             $artifact_node = $artifacts_node->addChild('artifact');
-            $artifact_node->addAttribute('id', $issue['id']);
+            $artifact_node->addAttribute('id', $issue_id);
 
             $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
                 $user,
