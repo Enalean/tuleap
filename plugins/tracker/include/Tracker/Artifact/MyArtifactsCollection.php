@@ -78,7 +78,7 @@ class MyArtifactsCollection implements \Countable
 
     public function getArtifactsInTrackerCount(Tracker $tracker): int
     {
-        return count($this->artifacts[(int) $tracker->getId()]);
+        return count($this->getArtifactsInTracker($tracker));
     }
 
     /**
@@ -86,7 +86,7 @@ class MyArtifactsCollection implements \Countable
      */
     public function getArtifactsInTracker(Tracker $tracker): array
     {
-        return $this->artifacts[(int) $tracker->getId()];
+        return $this->artifacts[(int) $tracker->getId()] ?? [];
     }
 
     public function getArtifacts(): \Generator
@@ -96,11 +96,6 @@ class MyArtifactsCollection implements \Countable
                 yield $artifact;
             }
         }
-    }
-
-    public function getTrackerById(int $tracker_id): Tracker
-    {
-        return $this->trackers[$tracker_id];
     }
 
     public function setTracker(int $tracker_id, PFUser $user): Tracker
