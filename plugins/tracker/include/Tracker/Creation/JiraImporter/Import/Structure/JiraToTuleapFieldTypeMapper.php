@@ -232,6 +232,8 @@ class JiraToTuleapFieldTypeMapper
                         $jira_field_mapping_collection
                     );
                     break;
+                case 'assignee':
+                case 'attachment':
                 case 'status':
                 case 'creator':
                 case 'created':
@@ -310,12 +312,10 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.pyxis.greenhopper.jira:gh-epic-label':
                 case 'com.pyxis.greenhopper.jira:gh-epic-status':
                 case 'issuetype':
-                    return;
+                    break;
                 default:
                     $this->error_collector->addError("Unknonw mapping type " . $jira_type);
             }
         }
-
-        $this->error_collector->addError("Unknonw mapping type " . $jira_type);
     }
 }

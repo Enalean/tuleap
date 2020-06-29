@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
@@ -146,7 +147,13 @@ class JiraXmlExporter
      */
     private $xml_report_done_issues_exporter;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
+        LoggerInterface $logger,
         ErrorCollector $error_collector,
         JiraFieldRetriever $jira_field_retriever,
         JiraToTuleapFieldTypeMapper $field_type_mapper,
@@ -164,6 +171,7 @@ class JiraXmlExporter
         XmlReportCreatedRecentlyExporter $xml_report_created_recently_exporter,
         XmlReportUpdatedRecentlyExporter $xml_report_updated_recently_exporter
     ) {
+        $this->logger                               = $logger;
         $this->error_collector                      = $error_collector;
         $this->jira_field_retriever                 = $jira_field_retriever;
         $this->field_type_mapper                    = $field_type_mapper;
@@ -183,7 +191,8 @@ class JiraXmlExporter
     }
 
     public static function build(
-        JiraCredentials $jira_credentials
+        JiraCredentials $jira_credentials,
+        LoggerInterface $logger
     ): self {
         $error_collector = new ErrorCollector();
 
@@ -210,6 +219,7 @@ class JiraXmlExporter
         );
 
         return new self(
+            $logger,
             $error_collector,
             new JiraFieldRetriever($wrapper),
             $jira_field_mapper,
@@ -355,7 +365,7 @@ class JiraXmlExporter
 
         if ($this->error_collector->hasError()) {
             foreach ($this->error_collector->getErrors() as $error) {
-                echo $error . '<br>';
+                $this->logger->error($error);
             }
         }
     }

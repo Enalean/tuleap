@@ -78,9 +78,6 @@ class IssueSnapshotCollectionBuilder
         FieldMappingCollection $jira_field_mapping_collection,
         string $jira_base_url
     ): array {
-        $logger = new \BackendLogger('/tmp/jira.log');
-        $logger->info(__METHOD__);
-
         $jira_issue_key = $jira_issue_api['key'];
 
         $snapshots_collection = [];
