@@ -1,13 +1,23 @@
 <?php
 /**
-* Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-*
-*
-*
-* Docman_View_Redirect
-*/
-
-require_once('Docman_View_View.class.php');
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 {
@@ -36,23 +46,35 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
     }
     public function visitWiki(&$item, $params = array())
     {
-        $project_id = $item->getGroupId();
+        $project_id = urlencode($item->getGroupId());
         $pagename   = urlencode($item->getPagename());
         return '/wiki/?group_id=' . $project_id . '&pagename=' . $pagename;
     }
 
     public function visitLink(&$item, $params = array())
     {
+        $url = null;
         if (isset($params['version_number'])) {
             $version_factory = new Docman_LinkVersionFactory();
 
             $version = $version_factory->getSpecificVersion($item, $params['version_number']);
             if ($version) {
-                return $version->getLink();
+                $url = $version->getLink();
             }
         }
 
-        return $item->getUrl();
+        if ($url === null) {
+            $url = $item->getUrl();
+        }
+
+        $valid_localuri = new Valid_LocalURI();
+        $valid_ftp      = new Valid_FTPURI();
+        if (! $valid_localuri->validate($url) && ! $valid_ftp->validate($url)) {
+            return '/';
+        }
+
+        header('Location: ' . $url);
+        exit();
     }
 
     public function visitFile(&$item, $params = array())
