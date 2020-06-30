@@ -37,6 +37,7 @@ class AlwaysThereFieldsExporter
     public const JIRA_DESCRIPTION_FIELD_NAME = "description";
     public const JIRA_STATUS_NAME            = "status";
     public const JIRA_PRIORITY_NAME          = "priority";
+    public const JIRA_ATTACHMENT_NAME        = "attachment";
 
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
@@ -52,6 +53,8 @@ class AlwaysThereFieldsExporter
     public const JIRA_PRIORITY_RANK         = 5;
     private const JIRA_ARTIFACT_ID_RANK     = 6;
     private const JIRA_LINK_RANK            = 7;
+
+    private const JIRA_ATTACHMENT_RANK = 1;
 
     public const JIRA_SUMMARY_RANK     = 1;
     public const JIRA_DESCRIPTION_RANK = 2;
@@ -148,6 +151,19 @@ class AlwaysThereFieldsExporter
             false,
             [],
             $status_values_collection->getAllValues(),
+            $field_mapping_collection
+        );
+
+        $this->field_xml_exporter->exportField(
+            $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::ATTACHMENT_FIELDSET_NAME),
+            Tracker_FormElementFactory::FIELD_FILE_TYPE,
+            self::JIRA_ATTACHMENT_NAME,
+            "Attachments",
+            self::JIRA_ATTACHMENT_NAME,
+            self::JIRA_ATTACHMENT_RANK,
+            false,
+            [],
+            [],
             $field_mapping_collection
         );
     }

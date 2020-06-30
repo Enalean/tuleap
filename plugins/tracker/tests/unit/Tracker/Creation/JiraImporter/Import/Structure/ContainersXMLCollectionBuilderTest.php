@@ -37,7 +37,7 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $parent_node = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><formElements/>');
 
         $builder->buildCollectionOfJiraContainersXML($parent_node);
-        $this->assertCount(2, $parent_node->children());
+        $this->assertCount(3, $parent_node->children());
 
         $details_fieldset = $parent_node->formElement[0];
         $this->assertEquals("fieldset", $details_fieldset['type']);
@@ -74,5 +74,18 @@ class ContainersXMLCollectionBuilderTest extends TestCase
         $this->assertEquals("column", $right_column['type']);
         $this->assertEquals("Fcol2", $right_column['ID']);
         $this->assertEquals("2", $right_column['rank']);
+
+        $attachment_fieldset = $parent_node->formElement[2];
+        $this->assertEquals("fieldset", $attachment_fieldset['type']);
+        $this->assertEquals("F3", $attachment_fieldset['ID']);
+        $this->assertEquals("3", $attachment_fieldset['rank']);
+        $this->assertEquals("1", $attachment_fieldset['use_it']);
+
+        $form_element_name = $attachment_fieldset->name;
+        $this->assertNotNull($form_element_name);
+        $this->assertEquals("attachment_fieldset", (string) $form_element_name);
+        $form_element_label = $attachment_fieldset->label;
+        $this->assertNotNull($form_element_label);
+        $this->assertEquals("Attachments", (string) $form_element_label);
     }
 }

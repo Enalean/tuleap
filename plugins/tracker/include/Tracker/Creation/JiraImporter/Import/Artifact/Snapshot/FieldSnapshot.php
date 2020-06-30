@@ -25,6 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 
+/**
+ * @psalm-immutable
+ */
 class FieldSnapshot
 {
     /**
@@ -44,8 +47,9 @@ class FieldSnapshot
 
     /**
      * @param mixed $value
+     * @param mixed $rendered_value
      */
-    public function __construct(FieldMapping $field_mapping, $value, ?string $rendered_value)
+    public function __construct(FieldMapping $field_mapping, $value, $rendered_value)
     {
         $this->field_mapping  = $field_mapping;
         $this->value          = $value;
@@ -65,7 +69,10 @@ class FieldSnapshot
         return $this->value;
     }
 
-    public function getRenderedValue(): ?string
+    /**
+     * @return mixed
+     */
+    public function getRenderedValue()
     {
         return $this->rendered_value;
     }
