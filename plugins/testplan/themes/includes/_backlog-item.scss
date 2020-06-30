@@ -42,6 +42,9 @@
 }
 
 .test-plan-backlog-item-card {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     margin: 0;
 }
 
@@ -69,4 +72,47 @@
     color: $tlp-ui-dimmed;
     font-weight: 600;
     line-height: 24px;
+}
+
+.test-plan-backlog-item-coverage {
+    margin: 0 0 0 $tlp-large-spacing;
+    white-space: nowrap;
+}
+
+.test-plan-backlog-item-coverage-text-skeleton {
+    width: 50px;
+}
+
+.test-plan-backlog-item-coverage-icon-skeleton {
+    width: 24px;
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
+.test-plan-backlog-item-coverage-text {
+    color: $tlp-ui-dimmed;
+    font-size: 14px;
+}
+
+.test-plan-backlog-item-coverage-icon {
+    margin: 0 0 0 $tlp-medium-spacing;
+}
+
+.test-plan-backlog-item-coverage-icon-symbol {
+    color: $tlp-ui-white;
+}
+
+.test-plan-backlog-item-coverage-icon-failed {
+    color: $tlp-ui-danger;
+}
+
+.test-plan-backlog-item-coverage-icon-blocked {
+    color: $tlp-ui-info;
+}
+
+.test-plan-backlog-item-coverage-icon-passed {
+    color: $tlp-ui-success;
+}
+
+.test-plan-backlog-item-coverage-icon-notrun {
+    color: $tlp-ui-dimmed;
 }

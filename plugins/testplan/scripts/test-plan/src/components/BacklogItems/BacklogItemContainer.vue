@@ -33,6 +33,9 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import BacklogItemCard from "./BacklogItemCard.vue";
 import { BacklogItem } from "../../type";
+import { namespace } from "vuex-class";
+
+const backlog_item_store = namespace("backlog_item");
 
 @Component({
     components: {
@@ -46,5 +49,14 @@ import { BacklogItem } from "../../type";
 export default class BacklogItemContainer extends Vue {
     @Prop({ required: true })
     readonly backlog_item!: BacklogItem;
+
+    @backlog_item_store.Action
+    readonly loadTestDefinitions!: (backlog_item: BacklogItem) => Promise<void>;
+
+    mounted(): void {
+        if (!this.backlog_item.are_test_definitions_loaded) {
+            this.loadTestDefinitions(this.backlog_item);
+        }
+    }
 }
 </script>

@@ -25,17 +25,20 @@
         v-bind:class="classname"
         v-on:click.prevent.stop="toggle"
     >
-        <i
-            class="fa fa-fw test-plan-backlog-item-caret"
-            v-bind:class="caret"
-            aria-hidden="true"
-        ></i>
-        <span class="tlp-badge-outline" v-bind:class="badge_color">
-            {{ backlog_item.short_type }} #{{ backlog_item.id }}
-        </span>
-        <span class="test-plan-backlog-item-title">
-            {{ backlog_item.label }}
-        </span>
+        <div>
+            <i
+                class="fa fa-fw test-plan-backlog-item-caret"
+                v-bind:class="caret"
+                aria-hidden="true"
+            ></i>
+            <span class="tlp-badge-outline" v-bind:class="badge_color">
+                {{ backlog_item.short_type }} #{{ backlog_item.id }}
+            </span>
+            <span class="test-plan-backlog-item-title">
+                {{ backlog_item.label }}
+            </span>
+        </div>
+        <backlog-item-coverage v-bind:backlog_item="backlog_item" />
     </a>
 </template>
 
@@ -44,10 +47,12 @@ import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { BacklogItem } from "../../type";
 import { namespace } from "vuex-class";
+import BacklogItemCoverage from "./BacklogItemCoverage.vue";
 
 const backlog_item_store = namespace("backlog_item");
-
-@Component
+@Component({
+    components: { BacklogItemCoverage },
+})
 export default class BacklogItemCard extends Vue {
     @Prop({ required: true })
     readonly backlog_item!: BacklogItem;
