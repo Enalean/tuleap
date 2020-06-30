@@ -28,6 +28,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -70,22 +71,25 @@ class CurrentSnapshotBuilderTest extends TestCase
         }
     }
 
-    private function buildIssueAPIResponse(): array
+    private function buildIssueAPIResponse(): IssueAPIRepresentation
     {
-        return [
-            'id'     => '10042',
-            'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
-            'key'    => 'key01',
-            'fields' => [
-                'summary'   => 'summary01',
-                'issuetype' =>
-                    [
-                        'id' => '10004'
-                    ],
-                'created' => '2020-03-25T14:10:10.823+0100',
-                'updated' => '2020-04-25T14:10:10.823+0100'
+        return IssueAPIRepresentation::buildFromAPIResponse(
+            [
+                'id'     => '10042',
+                'self'   => 'https://jira_instance/rest/api/latest/issue/10042',
+                'key'    => 'key01',
+                'fields' => [
+                    'summary'   => 'summary01',
+                    'issuetype' =>
+                        [
+                            'id' => '10004'
+                        ],
+                    'created' => '2020-03-25T14:10:10.823+0100',
+                    'updated' => '2020-04-25T14:10:10.823+0100'
+                ],
+                'renderedFields' => []
             ]
-        ];
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection

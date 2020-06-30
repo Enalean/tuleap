@@ -28,6 +28,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class InitialSnapshotBuilder
@@ -53,7 +54,7 @@ class InitialSnapshotBuilder
         Snapshot $current_snapshot,
         array $changelog_entries,
         FieldMappingCollection $jira_field_mapping_collection,
-        array $jira_issue_api,
+        IssueAPIRepresentation $issue_api_representation,
         string $jira_base_url
     ): Snapshot {
         $already_seen_fields_keys = [];
@@ -77,13 +78,13 @@ class InitialSnapshotBuilder
         $this->addJiraLinkInformation(
             $field_snapshots,
             $jira_field_mapping_collection,
-            $jira_issue_api,
+            $issue_api_representation,
             $jira_base_url
         );
 
         $initial_snapshot = new Snapshot(
             $forge_user,
-            new \DateTimeImmutable($jira_issue_api['fields'][AlwaysThereFieldsExporter::JIRA_CREATED_NAME]),
+            new \DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_CREATED_NAME)),
             $field_snapshots,
             null
         );
@@ -157,7 +158,7 @@ class InitialSnapshotBuilder
     private function addJiraLinkInformation(
         array &$field_snapshots,
         FieldMappingCollection $jira_field_mapping_collection,
-        array $jira_issue_api,
+        IssueAPIRepresentation $issue_api_representation,
         string $jira_base_url
     ): void {
         $jira_link_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
@@ -165,7 +166,7 @@ class InitialSnapshotBuilder
             return;
         }
 
-        $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($jira_issue_api['key']);
+        $jira_link = rtrim($jira_base_url, "/") . "/browse/" . urlencode($issue_api_representation->getKey());
 
         $field_snapshots[] = new FieldSnapshot(
             $jira_link_field_mapping,

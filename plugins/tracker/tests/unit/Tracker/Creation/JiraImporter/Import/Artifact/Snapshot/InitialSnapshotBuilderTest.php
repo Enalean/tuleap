@@ -30,6 +30,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -44,22 +45,25 @@ class InitialSnapshotBuilderTest extends TestCase
         );
 
         $user             = Mockery::mock(PFUser::class);
-        $jira_issue_api   = [
-            "key" => "key01",
-            "fields" => [
-                "created" => "2020-03-25T14:10:10.823+0100",
-                "updated" => "2020-04-25T14:10:10.823+0100",
-                "customfield_10036" => "11",
-                "status" => "10001",
-                "customfield_10040" => [
-                    "10009", "10010"
+        $jira_issue_api   = IssueAPIRepresentation::buildFromAPIResponse(
+            [
+                "id" => "10001",
+                "key" => "key01",
+                "fields" => [
+                    "created" => "2020-03-25T14:10:10.823+0100",
+                    "updated" => "2020-04-25T14:10:10.823+0100",
+                    "customfield_10036" => "11",
+                    "status" => "10001",
+                    "customfield_10040" => [
+                        "10009", "10010"
+                    ],
+                    "description" => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
                 ],
-                "description" => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
-            ],
-            'renderedFields' => [
-                "description" => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
+                'renderedFields' => [
+                    "description" => "<p>dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq</p>"
+                ]
             ]
-        ];
+        );
 
         $jira_base_url = 'URL';
 

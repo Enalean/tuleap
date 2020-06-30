@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class CurrentSnapshotBuilder
@@ -42,14 +43,14 @@ class CurrentSnapshotBuilder
 
     public function buildCurrentSnapshot(
         PFUser $forge_user,
-        array $issue,
+        IssueAPIRepresentation $issue_api_representation,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
         $this->logger->debug("Build current snapshot...");
 
         $field_snapshots = [];
-        foreach ($issue['fields'] as $key => $value) {
-            $rendered_value = $issue['renderedFields'][$key] ?? null;
+        foreach ($issue_api_representation->getFields() as $key => $value) {
+            $rendered_value = $issue_api_representation->getRenderedFieldByKey($key);
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
 
             if ($mapping !== null && $value !== null) {
@@ -63,7 +64,7 @@ class CurrentSnapshotBuilder
 
         $current_snapshot = new Snapshot(
             $forge_user,
-            new \DateTimeImmutable($issue['fields'][AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME]),
+            new \DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME)),
             $field_snapshots,
             null
         );

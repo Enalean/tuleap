@@ -172,19 +172,21 @@ class ArtifactsXMLExporter
         $this->logger->debug("Exporting batch of issues.");
 
         foreach ($jira_issues as $issue) {
-            $issue_id  = $issue['id'];
-            $issue_key = $issue['key'];
+            $issue_api_representation = IssueAPIRepresentation::buildFromAPIResponse($issue);
+
+            $issue_id  = $issue_api_representation->getId();
+            $issue_key = $issue_api_representation->getKey();
 
             $this->logger->debug("Exporting issue $issue_key (id: $issue_id)");
 
             $artifact_node = $artifacts_node->addChild('artifact');
-            $artifact_node->addAttribute('id', $issue_id);
+            $artifact_node->addAttribute('id', (string) $issue_id);
 
             $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
                 $user,
                 $artifact_node,
                 $jira_field_mapping_collection,
-                $issue,
+                $issue_api_representation,
                 $jira_base_url
             );
         }
