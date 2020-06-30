@@ -113,7 +113,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 ),
                 new IssueSnapshotCollectionBuilder(
                     new ChangelogEntriesBuilder(
-                        $this->wrapper
+                        $this->wrapper,
+                        $this->logger
                     ),
                     new CurrentSnapshotBuilder($this->logger),
                     new InitialSnapshotBuilder(
@@ -121,11 +122,14 @@ class ArtifactsXMLExporterTest extends TestCase
                         $this->logger
                     ),
                     new ChangelogSnapshotBuilder(
-                        new CreationStateListValueFormatter()
+                        new CreationStateListValueFormatter(),
+                        $this->logger
                     ),
                     new CommentValuesBuilder(
-                        $this->wrapper
-                    )
+                        $this->wrapper,
+                        $this->logger
+                    ),
+                    $this->logger
                 ),
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),

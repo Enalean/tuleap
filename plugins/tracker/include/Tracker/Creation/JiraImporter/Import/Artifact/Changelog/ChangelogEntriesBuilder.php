@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
@@ -32,11 +33,17 @@ class ChangelogEntriesBuilder
      * @var ClientWrapper
      */
     private $wrapper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
-        ClientWrapper $wrapper
+        ClientWrapper $wrapper,
+        LoggerInterface $logger
     ) {
         $this->wrapper = $wrapper;
+        $this->logger  = $logger;
     }
 
     /**
@@ -45,6 +52,8 @@ class ChangelogEntriesBuilder
      */
     public function buildEntriesCollectionForIssue(string $jira_issue_key): array
     {
+        $this->logger->debug("  Start build changelog entries collection ...");
+
         $changelog_entries = [];
 
         $changelog_response = $this->wrapper->getUrl(
@@ -77,6 +86,8 @@ class ChangelogEntriesBuilder
             $count_loop++;
         }
 
+        $this->logger->debug("  Changelog entries built with success");
+
         return $changelog_entries;
     }
 
@@ -94,6 +105,10 @@ class ChangelogEntriesBuilder
         if ($max_results !== null) {
             $params['maxResults'] = $max_results;
         }
+
+        $this->logger->debug(
+            "  GET /issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params)
+        );
 
         return "/issue/" . urlencode($jira_issue_key) . "/changelog" . http_build_query($params);
     }

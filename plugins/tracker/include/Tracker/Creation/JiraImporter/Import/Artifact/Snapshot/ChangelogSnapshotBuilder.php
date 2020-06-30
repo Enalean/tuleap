@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
@@ -35,10 +36,17 @@ class ChangelogSnapshotBuilder
      * @var CreationStateListValueFormatter
      */
     private $creation_state_list_value_formatter;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(CreationStateListValueFormatter $creation_state_list_value_formatter)
-    {
+    public function __construct(
+        CreationStateListValueFormatter $creation_state_list_value_formatter,
+        LoggerInterface $logger
+    ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
+        $this->logger                              = $logger;
     }
 
     public function buildSnapshotFromChangelogEntry(
@@ -47,12 +55,14 @@ class ChangelogSnapshotBuilder
         ChangelogEntryValueRepresentation $changelog_entry,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
+        $this->logger->debug("Start build snapshot from changelog...");
         $fields_snapshot = [];
         foreach ($changelog_entry->getItemRepresentations() as $item_representation) {
             $field_id      = $item_representation->getFieldId();
             $field_mapping = $jira_field_mapping_collection->getMappingFromJiraField($field_id);
 
             if ($field_mapping === null) {
+                $this->logger->debug("  |_ Field mapping not found for field " . $field_id);
                 continue;
             }
 
@@ -67,6 +77,7 @@ class ChangelogSnapshotBuilder
                     ),
                     null
                 );
+                $this->logger->debug("  |_ Generate list value for " . $field_id);
                 continue;
             }
 
@@ -86,6 +97,8 @@ class ChangelogSnapshotBuilder
                     $changed_field_to_string,
                     $rendered_value
                 );
+
+                $this->logger->debug("  |_ Generate string value for " . $field_id);
                 continue;
             }
         }

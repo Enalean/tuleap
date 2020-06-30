@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
@@ -32,11 +33,17 @@ class CommentValuesBuilder
      * @var ClientWrapper
      */
     private $wrapper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
-        ClientWrapper $wrapper
+        ClientWrapper $wrapper,
+        LoggerInterface $logger
     ) {
         $this->wrapper = $wrapper;
+        $this->logger  = $logger;
     }
 
     /**
@@ -45,6 +52,7 @@ class CommentValuesBuilder
      */
     public function buildCommentCollectionForIssue(string $jira_issue_key): array
     {
+        $this->logger->debug("Start build comment collection ...");
         $comment_collection = [];
 
         $comment_response = $this->wrapper->getUrl(
@@ -77,6 +85,8 @@ class CommentValuesBuilder
             $count_loop++;
         }
 
+        $this->logger->debug("End build comment collection ...");
+
         return $comment_collection;
     }
 
@@ -97,6 +107,9 @@ class CommentValuesBuilder
             $params['maxResults'] = $max_results;
         }
 
-        return '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query($params);
+        $url = '/issue/' . urlencode($jira_issue_key) . '/comment?' . http_build_query($params);
+        $this->logger->debug("  GET " .  $url);
+
+        return $url;
     }
 }

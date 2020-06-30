@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -55,19 +56,25 @@ class IssueSnapshotCollectionBuilder
      * @var CommentValuesBuilder
      */
     private $comment_values_builder;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         ChangelogEntriesBuilder $changelog_entries_builder,
         CurrentSnapshotBuilder $current_snapshot_builder,
         InitialSnapshotBuilder $initial_snapshot_builder,
         ChangelogSnapshotBuilder $changelog_snapshot_builder,
-        CommentValuesBuilder $comment_values_builder
+        CommentValuesBuilder $comment_values_builder,
+        LoggerInterface $logger
     ) {
         $this->initial_snapshot_builder   = $initial_snapshot_builder;
         $this->changelog_entries_builder  = $changelog_entries_builder;
         $this->changelog_snapshot_builder = $changelog_snapshot_builder;
         $this->current_snapshot_builder   = $current_snapshot_builder;
         $this->comment_values_builder     = $comment_values_builder;
+        $this->logger                     = $logger;
     }
 
     /**
@@ -79,6 +86,8 @@ class IssueSnapshotCollectionBuilder
         FieldMappingCollection $jira_field_mapping_collection,
         string $jira_base_url
     ): array {
+        $this->logger->debug("Start build collection of snapshot ...");
+
         $jira_issue_key = $issue_api_representation->getKey();
 
         $snapshots_collection = [];
@@ -129,6 +138,8 @@ class IssueSnapshotCollectionBuilder
         }
 
         ksort($snapshots_collection);
+
+        $this->logger->debug("End build collection of snapshot");
 
         return $snapshots_collection;
     }

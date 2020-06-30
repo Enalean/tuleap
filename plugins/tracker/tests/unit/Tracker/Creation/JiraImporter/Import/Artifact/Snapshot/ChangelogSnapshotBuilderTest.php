@@ -27,6 +27,7 @@ use DateTimeImmutable;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -38,9 +39,13 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
     public function testItBuildsASnapshotFromChangelogEntry(): void
     {
+        $logger  = Mockery::mock(LoggerInterface::class);
         $builder = new ChangelogSnapshotBuilder(
-            new CreationStateListValueFormatter()
+            new CreationStateListValueFormatter(),
+            $logger
         );
+
+        $logger->shouldReceive('debug');
 
         $user                          = Mockery::mock(PFUser::class);
         $changelog_entry               = $this->buildChangelogEntry();
