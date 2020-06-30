@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
@@ -36,11 +37,17 @@ class InitialSnapshotBuilder
      * @var CreationStateListValueFormatter
      */
     private $creation_state_list_value_formatter;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
-        CreationStateListValueFormatter $creation_state_list_value_formatter
+        CreationStateListValueFormatter $creation_state_list_value_formatter,
+        LoggerInterface $logger
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
+        $this->logger = $logger;
     }
 
     /**
@@ -59,6 +66,8 @@ class InitialSnapshotBuilder
         $already_seen_fields_keys = [];
         $field_snapshots          = [];
 
+        $this->logger->debug("Build initial snapshot ... ");
+
         foreach ($changelog_entries as $changelog_entry) {
             $this->retrieveInitialFieldsValueInChangelogEntry(
                 $changelog_entry,
@@ -67,12 +76,14 @@ class InitialSnapshotBuilder
                 $already_seen_fields_keys
             );
         }
+        $this->logger->debug("Initial fields values built successfully ");
 
         $this->retrieveFieldsNotModifiedSinceIssueCreation(
             $current_snapshot,
             $field_snapshots,
             $already_seen_fields_keys
         );
+        $this->logger->debug("Fields not modified since creation built successfully ");
 
         $this->addJiraLinkInformation(
             $field_snapshots,
@@ -80,6 +91,7 @@ class InitialSnapshotBuilder
             $jira_issue_api,
             $jira_base_url
         );
+        $this->logger->debug("Link to Jira built successfully ");
 
         $initial_snapshot = new Snapshot(
             $forge_user,
@@ -121,6 +133,7 @@ class InitialSnapshotBuilder
                 $already_seen_fields_keys[$changed_field_id] = true;
 
                 if ($current_snapshot_field === null) {
+                    $this->logger->debug(" |_ Current snapshot field is null for " . $changed_field_id);
                     continue;
                 }
 
@@ -128,6 +141,7 @@ class InitialSnapshotBuilder
                 $changed_field_from_string = $changed_field->getFromString();
 
                 if ($this->fieldHasNoInitialValue($changed_field)) {
+                    $this->logger->debug(" |_ Field " . $changed_field_id . " has no initial value");
                     continue;
                 }
 
@@ -139,6 +153,7 @@ class InitialSnapshotBuilder
                         ),
                         $current_snapshot_field->getRenderedValue()
                     );
+                    $this->logger->debug(" |_ List field " . $changed_field_id . " has an initial value");
                     continue;
                 }
 
@@ -148,6 +163,7 @@ class InitialSnapshotBuilder
                         $changed_field_from_string,
                         null
                     );
+                    $this->logger->debug(" |_ Text field " . $changed_field_id . " has an initial value");
                     continue;
                 }
             }
@@ -162,6 +178,7 @@ class InitialSnapshotBuilder
     ): void {
         $jira_link_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_LINK_FIELD_NAME);
         if ($jira_link_field_mapping === null) {
+            $this->logger->debug("No mapping found for artifact link");
             return;
         }
 

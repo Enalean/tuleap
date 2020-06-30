@@ -256,7 +256,8 @@ class JiraXmlExporter
                         ),
                         new CurrentSnapshotBuilder($logger),
                         new InitialSnapshotBuilder(
-                            new CreationStateListValueFormatter()
+                            new CreationStateListValueFormatter(),
+                            $logger
                         ),
                         new ChangelogSnapshotBuilder(
                             new CreationStateListValueFormatter()

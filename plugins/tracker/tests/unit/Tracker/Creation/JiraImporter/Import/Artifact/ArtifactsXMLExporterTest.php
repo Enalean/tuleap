@@ -117,7 +117,8 @@ class ArtifactsXMLExporterTest extends TestCase
                     ),
                     new CurrentSnapshotBuilder($this->logger),
                     new InitialSnapshotBuilder(
-                        new CreationStateListValueFormatter()
+                        new CreationStateListValueFormatter(),
+                        $this->logger
                     ),
                     new ChangelogSnapshotBuilder(
                         new CreationStateListValueFormatter()

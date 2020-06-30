@@ -28,6 +28,7 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -39,9 +40,13 @@ class InitialSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
+        $logger    = Mockery::mock(LoggerInterface::class);
         $generator = new InitialSnapshotBuilder(
-            new CreationStateListValueFormatter()
+            new CreationStateListValueFormatter(),
+            $logger
         );
+
+        $logger->shouldReceive('debug');
 
         $user             = Mockery::mock(PFUser::class);
         $jira_issue_api   = [
