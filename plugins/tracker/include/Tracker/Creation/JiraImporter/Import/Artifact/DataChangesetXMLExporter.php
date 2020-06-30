@@ -69,12 +69,12 @@ class DataChangesetXMLExporter
         PFUser $user,
         SimpleXMLElement $artifact_node,
         FieldMappingCollection $jira_field_mapping_collection,
-        array $issue,
+        IssueAPIRepresentation $issue_api_representation,
         string $jira_base_url
     ): void {
         $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(
             $user,
-            $issue,
+            $issue_api_representation,
             $jira_field_mapping_collection,
             $jira_base_url
         );

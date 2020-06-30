@@ -31,6 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -107,9 +108,13 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         );
 
         $this->user           = Mockery::mock(PFUser::class);
-        $this->jira_issue_api = [
-            'key' => 'key01'
-        ];
+        $this->jira_issue_api = new IssueAPIRepresentation(
+            "key01",
+            10001,
+            [],
+            []
+        );
+
         $this->jira_field_mapping_collection = new FieldMappingCollection();
         $this->jira_base_url                 = 'URL';
     }

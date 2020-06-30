@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use PFUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class IssueSnapshotCollectionBuilder
@@ -74,18 +75,18 @@ class IssueSnapshotCollectionBuilder
      */
     public function buildCollectionOfSnapshotsForIssue(
         PFUser $forge_user,
-        array $jira_issue_api,
+        IssueAPIRepresentation $issue_api_representation,
         FieldMappingCollection $jira_field_mapping_collection,
         string $jira_base_url
     ): array {
-        $jira_issue_key = $jira_issue_api['key'];
+        $jira_issue_key = $issue_api_representation->getKey();
 
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
 
         $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
             $forge_user,
-            $jira_issue_api,
+            $issue_api_representation,
             $jira_field_mapping_collection
         );
 
@@ -94,7 +95,7 @@ class IssueSnapshotCollectionBuilder
             $current_snapshot,
             $changelog_entries,
             $jira_field_mapping_collection,
-            $jira_issue_api,
+            $issue_api_representation,
             $jira_base_url
         );
 
