@@ -203,13 +203,20 @@ class ReferenceAdministrationViews extends Views
         }
 
         if ($can_be_deleted) {
-            echo '<TD align="center"><a href="/project/admin/reference.php?group_id=' . $purifier->purify($ref->getGroupId()) . '&reference_id=' . $purifier->purify($ref->getId()) . '&action=do_delete" onClick="return confirm(\'';
+            $base_url   = '/project/admin/reference.php?group_id=' . urlencode($purifier->purify($ref->getGroupId()));
+            $csrf_token = new \CSRFSynchronizerToken($base_url);
+
+            $action_url = $base_url . '&reference_id=' . $purifier->purify($ref->getId()) . '&action=do_delete';
+
+            echo '<TD align="center"><form method="post" action="' . $action_url . '" style="margin: 0;" onsubmit="return confirm(\'';
             if ($ref->getScope() == "S") {
                 echo $purifier->purify($GLOBALS['Language']->getText('project_reference', 'warning_del_r', $ref->getKeyword()), CODENDI_PURIFIER_JS_QUOTE);
             } else {
                 echo $GLOBALS['Language']->getText('project_reference', 'del_r');
             }
-            echo '\')"><IMG SRC="' . util_get_image_theme("ic/trash.png") . '" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE"></A></TD>';
+            echo '\')"><input type="image" SRC="' . util_get_image_theme("ic/trash.png") . '" HEIGHT="16" WIDTH="16" BORDER="0" ALT="DELETE">';
+            echo $csrf_token->fetchHTMLInput();
+            echo '</form></TD>';
         } else {
             echo '<td></td>';
         }
@@ -219,19 +226,21 @@ class ReferenceAdministrationViews extends Views
 
     public function creation()
     {
-        $request = HTTPRequest::instance();
-        $group_id = $request->get('group_id');
-        $purifier = Codendi_HTMLPurifier::instance();
+        $request    = HTTPRequest::instance();
+        $group_id   = $request->get('group_id');
+        $purifier   = Codendi_HTMLPurifier::instance();
+        $url        = '/project/admin/reference.php?group_id=' . urlencode($purifier->purify($group_id));
+        $csrf_token = new \CSRFSynchronizerToken($url);
 
         $su = false;
         if (user_is_super_user()) {
             $su = true;
         }
-
         echo '
 <h3>' . $GLOBALS['Language']->getText('project_reference', 'r_creation') . '</h3>
-<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . urlencode($purifier->purify($group_id)) . '">
+<form name="form_create" method="post" action="' . $url . '">
 <input type="hidden" name="action" VALUE="do_create">
+' . $csrf_token->fetchHTMLInput() . '
 <input type="hidden" name="view" VALUE="browse">
 <input type="hidden" name="group_id" VALUE="' . $purifier->purify($group_id) . '">
 
@@ -321,6 +330,9 @@ class ReferenceAdministrationViews extends Views
         $pm      = ProjectManager::instance();
         $project = $pm->getProject($group_id);
 
+        $url        = '/project/admin/reference.php?group_id=' . urlencode($group_id);
+        $csrf_token = new \CSRFSynchronizerToken($url);
+
         $refid = $request->get('reference_id');
 
         if (! $refid) {
@@ -358,8 +370,9 @@ class ReferenceAdministrationViews extends Views
 
         echo '
 <h3>' . $GLOBALS['Language']->getText('project_reference', 'edit_r') . '</h3>
-<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . urlencode($purifier->purify($group_id)) . '">
+<form name="form_create" method="post" action="' . $url . '">
 <input type="hidden" name="action" VALUE="do_edit">
+' . $csrf_token->fetchHTMLInput() . '
 <input type="hidden" name="view" VALUE="browse">
 <input type="hidden" name="group_id" VALUE="' . $purifier->purify($group_id) . '">
 <input type="hidden" name="reference_id" VALUE="' . $purifier->purify($refid) . '">
