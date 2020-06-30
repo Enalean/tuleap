@@ -171,6 +171,8 @@ project_admin_header(
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
+$purifier = Codendi_HTMLPurifier::instance();
+
 echo '
 <h2>' . $Language->getText('project_admin_utils', 'user_perms') . '</h2>';
 echo '<FORM action="userperms.php" name = "form_search" method="post" class="form-inline">';
@@ -178,8 +180,8 @@ echo '<FORM action="userperms.php" name = "form_search" method="post" class="for
 echo $Language->getText('project_admin_utils', 'search_user');
 echo '&nbsp;';
 echo '<div class="input-append">';
-echo '<INPUT type="text" name="search" value="' . $pattern . '" id="search_user">
-<INPUT type="hidden" name="group_id" value="' . $group_id . '">';
+echo '<INPUT type="text" name="search" value="' . $purifier->purify($pattern) . '" id="search_user">
+<INPUT type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">';
 $js = "new UserAutoCompleter('search_user',
                           '" . util_get_dir_image_theme() . "',
                           true);";
@@ -192,8 +194,8 @@ $frs_permission_manager = FRSPermissionManager::build();
 
 if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     echo '<FORM action="userperms.php" name= "form_update" method="post">
-<INPUT type="hidden" name="group_id" value="' . $group_id . '">
-<INPUT type="hidden" name="offset" value="' . $offset . '">';
+<INPUT type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
+<INPUT type="hidden" name="offset" value="' . $purifier->purify($offset) . '">';
 
     echo '<TABLE class="table">';
 
@@ -212,7 +214,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     if ($project->usesTracker() && $at_arr) {
         $should_display_submit_button = true;
         for ($j = 0; $j < count($at_arr); $j++) {
-              $head .= '<th>' . $at_arr[$j]->getName() . '</th>';
+              $head .= '<th>' . $purifier->purify($at_arr[$j]->getName()) . '</th>';
         }
     }
 
@@ -223,17 +225,16 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
     $i = 0;
 
     $uh = new UserHelper();
-    $hp = Codendi_HTMLPurifier::instance();
 
     while ($row_dev = db_fetch_array($res_dev)) {
         $i++;
         print '<TR class="' . util_get_alt_row_color($i) . '">';
-        $user_name = $hp->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
-        echo '<td><input type="hidden" name="update_user_' . urlencode($row_dev['user_id']) . '">' . $user_name . '</td>';
+        $user_name = $purifier->purify($uh->getDisplayName($row_dev['user_name'], $row_dev['realname']), CODENDI_PURIFIER_CONVERT_HTML);
+        echo '<td><input type="hidden" name="' . $purifier->purify('update_user_' . $row_dev['user_id']) . '">' . $user_name . '</td>';
      // svn
         if ($project->usesSVN()) {
             $cell = '';
-            $cell .= '<TD><SELECT name="svn_user_' . $row_dev['user_id'] . '">';
+            $cell .= '<TD><SELECT name="' . $purifier->purify('svn_user_' . $row_dev['user_id']) . '">';
             $cell .= '<OPTION value="0"' . (($row_dev['svn_flags'] == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
             $cell .= '<OPTION value="2"' . (($row_dev['svn_flags'] == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_index', 'admin');
             $cell .= '</SELECT></TD>';
@@ -247,7 +248,7 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
                 $atid = $at_arr[$j]->getID();
                 $perm = $row_dev['perm_level_' . $atid];
                 $cell = '';
-                $cell .= '<TD><SELECT name="tracker_user_' . $row_dev['user_id'] . '_' . $atid . '">';
+                $cell .= '<TD><SELECT name="' . $purifier->purify('tracker_user_' . $row_dev['user_id']) . '_' . $purifier->purify($atid) . '">';
                 $cell .= '<OPTION value="0"' . (($perm == 0) ? " selected" : "") . '>' . $Language->getText('global', 'none');
                 $cell .= '<OPTION value="3"' . (($perm == 3 || $perm == 2) ? " selected" : "") . '>' . $Language->getText('project_admin_userperms', 'admin');
                 $cell .= '</SELECT></TD>';
@@ -269,24 +270,20 @@ if ($res_dev && db_numrows($res_dev) > 0 && $number_per_page > 0) {
         //Jump to page
         $nb_of_pages = ceil($num_total_rows / $number_per_page);
         $current_page = round($offset / $number_per_page);
-        if (isset($pattern) && $pattern != '') {
-            $search = '&amp;search=' . $pattern;
-        } else {
-            $search = '';
-        }
+
         echo '<div style="font-family:Verdana">Page: ';
         $width = 10;
         for ($i = 0; $i < $nb_of_pages; ++$i) {
             if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                echo '<a href="?' .
-                'group_id=' . (int) $group_id .
-                '&amp;offset=' . (int) ($i * $number_per_page) .
-                $search .
-                '">';
+                $link_parameters = ['group_id' => $group_id, 'offset' => $i * $number_per_page];
+                if (isset($pattern) && $pattern !== '') {
+                    $link_parameters['search'] = $pattern;
+                }
+                echo '<a href="?' . $purifier->purify(http_build_query($link_parameters)) . '">';
                 if ($i == $current_page) {
-                    echo '<b>' . ($i + 1) . '</b>';
+                    echo '<b>' . $purifier->purify($i + 1) . '</b>';
                 } else {
-                    echo $i + 1;
+                    echo $purifier->purify($i + 1);
                 }
                 echo '</a>&nbsp;';
             } elseif ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
