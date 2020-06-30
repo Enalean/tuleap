@@ -73,7 +73,7 @@ class ReferenceAdministrationViews extends Views
         print '
 <P>
 <H3>' . $GLOBALS['Language']->getText('project_reference', 'new_s') . '</H3>
-<a href="/project/admin/reference.php?view=creation&group_id=' . $request->get('group_id') . '">' . $GLOBALS['Language']->getText('project_reference', 'create_s') . '</a>
+<a href="/project/admin/reference.php?view=creation&group_id=' . urlencode($purifier->purify($request->get('group_id'))) . '">' . $GLOBALS['Language']->getText('project_reference', 'create_s') . '</a>
 <p>
 
 
@@ -221,6 +221,7 @@ class ReferenceAdministrationViews extends Views
     {
         $request = HTTPRequest::instance();
         $group_id = $request->get('group_id');
+        $purifier = Codendi_HTMLPurifier::instance();
 
         $su = false;
         if (user_is_super_user()) {
@@ -229,10 +230,10 @@ class ReferenceAdministrationViews extends Views
 
         echo '
 <h3>' . $GLOBALS['Language']->getText('project_reference', 'r_creation') . '</h3>
-<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . $group_id . '">
+<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . urlencode($purifier->purify($group_id)) . '">
 <input type="hidden" name="action" VALUE="do_create">
 <input type="hidden" name="view" VALUE="browse">
-<input type="hidden" name="group_id" VALUE="' . $group_id . '">
+<input type="hidden" name="group_id" VALUE="' . $purifier->purify($group_id) . '">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
 <tr><td width="10%"><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_keyword_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_keyword') . ':</a>&nbsp;<font color="red">*</font></td>
@@ -255,7 +256,7 @@ class ReferenceAdministrationViews extends Views
                 )
             );
             if ($can_create) {
-                echo '<option value="' . $nature_key . '">' . $nature_desc['label'] . '</option>';
+                echo '<option value="' . $purifier->purify($nature_key) . '">' . $purifier->purify($nature_desc['label']) . '</option>';
             }
         }
 
@@ -357,11 +358,11 @@ class ReferenceAdministrationViews extends Views
 
         echo '
 <h3>' . $GLOBALS['Language']->getText('project_reference', 'edit_r') . '</h3>
-<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . $group_id . '">
+<form name="form_create" method="post" action="/project/admin/reference.php?group_id=' . urlencode($purifier->purify($group_id)) . '">
 <input type="hidden" name="action" VALUE="do_edit">
 <input type="hidden" name="view" VALUE="browse">
-<input type="hidden" name="group_id" VALUE="' . $group_id . '">
-<input type="hidden" name="reference_id" VALUE="' . $refid . '">
+<input type="hidden" name="group_id" VALUE="' . $purifier->purify($group_id) . '">
+<input type="hidden" name="reference_id" VALUE="' . $purifier->purify($refid) . '">
 
 <table width="100%" cellspacing=0 cellpadding=3 border=0>
 <tr><td width="10%"><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'r_keyword_desc') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_keyword') . ':</a>' . $star . '</td>
