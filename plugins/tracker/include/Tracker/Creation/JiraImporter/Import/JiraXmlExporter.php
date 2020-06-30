@@ -205,7 +205,7 @@ class JiraXmlExporter
             new FieldNameFormatter()
         );
 
-        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector);
+        $jira_field_mapper         = new JiraToTuleapFieldTypeMapper($field_xml_exporter, $error_collector, $logger);
         $report_table_exporter     = new XmlReportTableExporter($cdata_factory);
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
         $status_values_collection  = new StatusValuesCollection(
@@ -254,7 +254,7 @@ class JiraXmlExporter
                         new ChangelogEntriesBuilder(
                             $wrapper
                         ),
-                        new CurrentSnapshotBuilder(),
+                        new CurrentSnapshotBuilder($logger),
                         new InitialSnapshotBuilder(
                             new CreationStateListValueFormatter()
                         ),
@@ -377,6 +377,7 @@ class JiraXmlExporter
         string $jira_issue_type_name
     ): void {
         $fields = $this->jira_field_retriever->getAllJiraFields($jira_project_id, $jira_issue_type_name);
+        $this->logger->debug("Start exporting jira field structure ...");
         foreach ($fields as $key => $field) {
             $this->field_type_mapper->exportFieldToXml(
                 $field,
@@ -384,5 +385,6 @@ class JiraXmlExporter
                 $this->jira_field_mapping_collection
             );
         }
+        $this->logger->debug("Field structure exported successfully");
     }
 }
