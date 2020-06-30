@@ -232,7 +232,7 @@ class URLVerificationTest extends TestCase
     public function testItChecksUriInternal(): void
     {
         ForgeConfig::set('sys_default_domain', 'default.example.test');
-        ForgeConfig::set('sys_https_host', 'default');
+        ForgeConfig::set('sys_https_host', 'default.https.test');
         $url_verification = new URLVerification();
 
         $this->assertFalse($url_verification->isInternal('http://evil.example.com/'));
@@ -243,7 +243,7 @@ class URLVerificationTest extends TestCase
         $this->assertFalse(
             $url_verification->isInternal('http://' . ForgeConfig::get('sys_default_domain') . '/smthing')
         );
-        $this->assertFalse(
+        $this->assertTrue(
             $url_verification->isInternal('https://' . ForgeConfig::get('sys_https_host') . '/smthing')
         );
 
