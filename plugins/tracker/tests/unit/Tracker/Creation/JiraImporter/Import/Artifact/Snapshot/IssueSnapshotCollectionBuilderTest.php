@@ -27,6 +27,7 @@ use DateTimeImmutable;
 use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
@@ -38,6 +39,11 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 class IssueSnapshotCollectionBuilderTest extends TestCase
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var IssueSnapshotCollectionBuilder
@@ -98,13 +104,15 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->initial_snapshot_builder   = Mockery::mock(InitialSnapshotBuilder::class);
         $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
         $this->comment_values_builder     = Mockery::mock(CommentValuesBuilder::class);
+        $this->logger                     = Mockery::mock(LoggerInterface::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
             $this->current_snapshot_builder,
             $this->initial_snapshot_builder,
             $this->changelog_snapshot_builder,
-            $this->comment_values_builder
+            $this->comment_values_builder,
+            $this->logger
         );
 
         $this->user           = Mockery::mock(PFUser::class);
@@ -121,6 +129,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
 
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
     {
+        $this->logger->shouldReceive('debug');
+
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
             ->andReturn(
@@ -171,6 +181,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
 
     public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
+        $this->logger->shouldReceive('debug');
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
             ->andReturn(

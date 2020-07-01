@@ -252,7 +252,8 @@ class JiraXmlExporter
                     ),
                     new IssueSnapshotCollectionBuilder(
                         new ChangelogEntriesBuilder(
-                            $wrapper
+                            $wrapper,
+                            $logger
                         ),
                         new CurrentSnapshotBuilder($logger),
                         new InitialSnapshotBuilder(
@@ -260,11 +261,14 @@ class JiraXmlExporter
                             $logger
                         ),
                         new ChangelogSnapshotBuilder(
-                            new CreationStateListValueFormatter()
+                            new CreationStateListValueFormatter(),
+                            $logger
                         ),
                         new CommentValuesBuilder(
-                            $wrapper
-                        )
+                            $wrapper,
+                            $logger
+                        ),
+                        $logger
                     ),
                     new CommentXMLExporter(
                         new XML_SimpleXMLCDATAFactory(),
