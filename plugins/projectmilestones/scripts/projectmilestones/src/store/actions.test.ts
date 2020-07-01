@@ -137,6 +137,85 @@ describe("Store actions", () => {
                 expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
             });
         });
+
+        it("When totals of backlog and upcoming releases are received, Then releases are sorted by id", async () => {
+            const trackers: TrackerAgileDashboard[] = [
+                {
+                    id: 1,
+                    label: "one",
+                    color_name: "red_fiesta",
+                },
+                {
+                    id: 2,
+                    label: "two",
+                    color_name: "lake_placid_blue",
+                },
+            ];
+
+            context.state = {
+                project_id: 102,
+                nb_backlog_items: 0,
+                nb_upcoming_releases: 0,
+                error_message: null,
+                is_loading: false,
+                current_milestones: [] as MilestoneData[],
+                offset: 0,
+                limit: 50,
+                trackers_agile_dashboard: trackers,
+                label_tracker_planning: "Release",
+                is_timeframe_duration: true,
+                label_start_date: "start date",
+                label_timeframe: "duration",
+                last_release: null,
+            } as State;
+
+            const milestones: MilestoneData[] = [
+                {
+                    id: 3,
+                } as MilestoneData,
+                {
+                    id: 1,
+                } as MilestoneData,
+                {
+                    id: 2,
+                } as MilestoneData,
+            ];
+
+            const milestones_sorted: MilestoneData[] = [
+                {
+                    id: 3,
+                } as MilestoneData,
+                {
+                    id: 2,
+                } as MilestoneData,
+                {
+                    id: 1,
+                } as MilestoneData,
+            ];
+
+            const last_release: MilestoneData[] = [
+                {
+                    id: 10,
+                } as MilestoneData,
+            ];
+
+            jest.spyOn(rest_querier, "getLastRelease").mockReturnValue(
+                Promise.resolve(last_release)
+            );
+
+            jest.spyOn(rest_querier, "getCurrentMilestones").mockReturnValue(
+                Promise.resolve(milestones)
+            );
+
+            jest.spyOn(rest_querier, "getNbOfPastRelease").mockReturnValue(Promise.resolve(10));
+
+            await actions.getMilestones(context);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoading", true);
+            expect(context.commit).toHaveBeenCalledWith("setCurrentMilestones", milestones_sorted);
+            expect(context.commit).toHaveBeenCalledWith("setNbPastReleases", 10);
+            expect(context.commit).toHaveBeenCalledWith("setLastRelease", last_release[0]);
+            expect(context.commit).toHaveBeenCalledWith("setIsLoading", false);
+        });
     });
 
     describe("getEnhancedMilestones()", () => {
