@@ -107,7 +107,7 @@ $tlp-tabs-transition: 75ms ease-out;
     position: relative;
     flex: 0 0 auto;
     align-items: center;
-    padding: 16px 30px 14px;
+    padding: $tlp-medium-spacing $tlp-large-spacing ($tlp-medium-spacing - 2);
     transition: color $tlp-tabs-transition, border-bottom-color $tlp-tabs-transition;
     border-bottom: 2px solid transparent;
     color: $tlp-ui-dimmed;

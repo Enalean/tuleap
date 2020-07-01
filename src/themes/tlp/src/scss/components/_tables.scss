@@ -17,11 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-table-cell-padding: 10px;
-@if $tlp-density == $tlp-density-condensed {
-    $tlp-table-cell-padding: 6px;
-}
-
+$tlp-table-cell-padding: $tlp-half-spacing;
 
 /**
  * Table actions
@@ -196,4 +192,24 @@ $tlp-table-cell-padding: 10px;
 
 .tlp-table-sort-icon {
     margin: 0 0 0 ($tlp-medium-spacing / 2);
+}
+
+
+.tlp-pane-section > .tlp-table {
+    width: calc(100% + 2 * #{$tlp-medium-spacing});
+    margin: 0 (-$tlp-medium-spacing);
+
+    &:last-child {
+        margin: 0 (-$tlp-medium-spacing) (-$tlp-medium-spacing);
+    }
+
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+        padding-left: $tlp-medium-spacing;
+    }
+
+    > thead > tr > th:last-child,
+    > tbody > tr > td:last-child {
+        padding-right: $tlp-medium-spacing;
+    }
 }
