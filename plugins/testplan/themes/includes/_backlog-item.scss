@@ -46,6 +46,7 @@
     align-items: baseline;
     justify-content: space-between;
     margin: 0;
+    padding: $tlp-medium-spacing ($tlp-medium-spacing - 1px) $tlp-medium-spacing $tlp-medium-spacing;
 }
 
 .test-plan-backlog-item-card-expanded {
@@ -94,25 +95,33 @@
 }
 
 .test-plan-backlog-item-coverage-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
     margin: 0 0 0 $tlp-medium-spacing;
+    border-radius: 50%;
+    font-size: 15px;
 }
 
 .test-plan-backlog-item-coverage-icon-symbol {
     color: $tlp-ui-white;
+    line-height: 0;
 }
 
 .test-plan-backlog-item-coverage-icon-failed {
-    color: $tlp-ui-danger;
+    background: $tlp-ui-danger;
 }
 
 .test-plan-backlog-item-coverage-icon-blocked {
-    color: $tlp-ui-info;
+    background: $tlp-ui-info;
 }
 
 .test-plan-backlog-item-coverage-icon-passed {
-    color: $tlp-ui-success;
+    background: $tlp-ui-success;
 }
 
 .test-plan-backlog-item-coverage-icon-notrun {
-    color: $tlp-ui-dimmed;
+    background: $tlp-ui-dimmed;
 }
