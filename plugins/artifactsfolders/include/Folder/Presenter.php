@@ -41,8 +41,8 @@ class Presenter
         $this->last_update_label  = dgettext('tuleap-tracker', 'Last Update Date');
         $this->submitted_by_label = dgettext('tuleap-tracker', 'Submitted By');
         $this->assigned_to_label  = dgettext('tuleap-tracker', 'Assigned to');
-        $this->folder_label       = $GLOBALS['Language']->getText('plugin_folders', 'column_label');
-        $this->empty_state        = $GLOBALS['Language']->getText('plugin_folders', 'empty_state');
+        $this->folder_label       = dgettext('tuleap-artifactsfolders', 'Folder');
+        $this->empty_state        = dgettext('tuleap-artifactsfolders', 'There isn\'t any artifact in this folder.');
         $this->artifacts          = $artifacts;
     }
 }

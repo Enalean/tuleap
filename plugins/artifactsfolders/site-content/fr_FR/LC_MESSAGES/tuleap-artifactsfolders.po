@@ -1,0 +1,38 @@
+msgid ""
+msgstr ""
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Add a \"Folder\" tab in an artifact"
+msgstr "Ajoute un onglet \"Dossier\" dans un artéfact"
+
+msgid "Artifacts Folders"
+msgstr "Dossier artéfacts"
+
+msgid "Currently in folder:"
+msgstr "Actuellement dans le dossier :"
+
+msgid "Folder"
+msgstr "Dossier"
+
+msgid "Folder Content"
+msgstr "Contenu du Dossier"
+
+msgid "In folder"
+msgstr "Dans le dossier"
+
+msgid "Not in a folder"
+msgstr "Pas dans un dossier"
+
+#, php-format
+msgid ""
+"The link between the artifact and the folder <a href=\"%s\">%s</a> won't be "
+"copied."
+msgstr ""
+"Le lien entre l'artéfact et le dossier <a href=\"%s\">%s</a> ne sera pas copié."
+
+msgid "There isn't any artifact in this folder."
+msgstr "Il n'y a pas d'artéfact dans ce dossier."
