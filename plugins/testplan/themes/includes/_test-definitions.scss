@@ -26,7 +26,7 @@
     border-top: 0;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    background: darken($tlp-theme-color-dimmed-background, 1%);
+    background: $tlp-theme-color-dimmed-background;
 }
 
 .test-plan-list-of-test-definitions-empty-text {
@@ -91,7 +91,12 @@
 
 .test-plan-test-definition-icon-automated-tests:last-child {
     margin: 0 26px 0 0;
+}
+
+.test-plan-test-definition-icon-automated-tests.test-plan-test-definition-icon-status-notrun,
+.test-plan-test-definition-icon-automated-tests:last-child {
     opacity: .5;
+    color: $tlp-ui-dimmed;
 }
 
 .test-plan-test-definition-icon-status-passed,
