@@ -67,10 +67,12 @@ describe("Test plan", function () {
                     cy.contains("Display list of backlog items with their tests definition");
                     cy.contains("Create new campaign in new “Test” screen").within(() => {
                         cy.get("[data-test=nb-tests]").contains("3 tests");
-                        cy.get("[data-test=backlog-item-icon]").should(
-                            "have.class",
-                            "test-plan-backlog-item-coverage-icon-notrun"
-                        );
+                        cy.get("[data-test=backlog-item-icon]").should(($icon) => {
+                            expect($icon).to.have.length(1);
+                            expect($icon[0].className).to.match(
+                                /test-plan-backlog-item-coverage-icon-/
+                            );
+                        });
                     });
                 });
 
@@ -79,30 +81,32 @@ describe("Test plan", function () {
                         "Display list of backlog items with their tests definition"
                     ).click();
                     cy.contains("Update artifact").within(() => {
-                        cy.get("[data-test=test-status-icon]").should(
-                            "have.class",
-                            "test-plan-test-definition-icon-status-notrun"
-                        );
+                        cy.get("[data-test=test-status-icon]").should(($icon) => {
+                            expect($icon).to.have.length(1);
+                            expect($icon[0].className).to.match(
+                                /test-plan-test-definition-icon-status-/
+                            );
+                        });
                     });
                     cy.contains("Send beeper notification").within(() => {
                         cy.get("[data-test=automated-test-icon]");
                     });
+                });
 
-                    ["failed", "passed", "notrun", "blocked"].forEach((new_status) => {
-                        cy.contains("Campaign " + now).click();
-                        cy.contains("Update artifact").click();
-                        cy.get(`[data-test=mark-test-as-${new_status}]`).click();
-                        cy.contains("Release with campaigns").click();
-                        cy.contains(
-                            "Display list of backlog items with their tests definition"
-                        ).click();
-                        cy.contains("Update artifact").within(() => {
-                            cy.get("[data-test=test-status-icon]").should(
-                                "have.class",
-                                `test-plan-test-definition-icon-status-${new_status}`
-                            );
-                        });
-                    });
+                it("Marks a test as failed", () => {
+                    assertStatusOfTestReflectsCurrentStatus(now, "failed");
+                });
+
+                it("Marks a test as blocked", () => {
+                    assertStatusOfTestReflectsCurrentStatus(now, "blocked");
+                });
+
+                it("Marks a test as notrun", () => {
+                    assertStatusOfTestReflectsCurrentStatus(now, "notrun");
+                });
+
+                it("Marks a test as passed", () => {
+                    assertStatusOfTestReflectsCurrentStatus(now, "passed");
                 });
 
                 it("Creates a new test", () => {
@@ -128,4 +132,32 @@ function goToTestPlanOfMilestone(milestone_label: string): void {
         });
 
     cy.get("[data-test=tab-testplan]").click();
+}
+
+function assertStatusOfTestReflectsCurrentStatus(now: number, new_status: string): void {
+    cy.contains("Campaign " + now).click();
+    cy.contains("Update artifact").click();
+    cy.get(`[data-test=mark-test-as-${new_status}]`).click();
+    cy.contains("Release with campaigns").click();
+    cy.contains("Display list of backlog items with their tests definition")
+        .within(() => {
+            if (new_status === "blocked" || new_status === "failed") {
+                cy.get("[data-test=backlog-item-icon]").should(
+                    "have.class",
+                    "test-plan-backlog-item-coverage-icon-" + new_status
+                );
+            } else {
+                cy.get("[data-test=backlog-item-icon]").should(
+                    "have.class",
+                    "test-plan-backlog-item-coverage-icon-notrun"
+                );
+            }
+        })
+        .click();
+    cy.contains("Update artifact").within(() => {
+        cy.get("[data-test=test-status-icon]").should(
+            "have.class",
+            `test-plan-test-definition-icon-status-${new_status}`
+        );
+    });
 }
