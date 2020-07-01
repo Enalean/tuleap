@@ -150,7 +150,10 @@ class ArtifactsXMLExporter
             $params['maxResults'] = $max_results;
         }
 
-        return '/search?' . http_build_query($params);
+        $url = '/search?' . http_build_query($params);
+        $this->logger->debug($url);
+
+        return $url;
     }
 
     private function exportBatchOfIssuesInArtifactXMLFormat(

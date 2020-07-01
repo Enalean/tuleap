@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\JiraFieldAPIAllowedValueRepresentation;
 
@@ -49,18 +50,27 @@ class StatusValuesCollection
      * @var ClientWrapper
      */
     private $wrapper;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
-    public function __construct(ClientWrapper $wrapper)
+    public function __construct(ClientWrapper $wrapper, LoggerInterface $logger)
     {
         $this->wrapper = $wrapper;
+        $this->logger = $logger;
     }
 
     public function initCollectionForProjectAndIssueType(string $jira_project_key, string $jira_issue_type_name): void
     {
+        $this->logger->debug("Build status collection ...");
         $statuses_url     = "project/" . urlencode($jira_project_key) . "/statuses";
+
+        $this->logger->debug("  GET " . $statuses_url);
         $statuses_content = $this->wrapper->getUrl($statuses_url);
 
         if ($statuses_content === null) {
+            $this->logger->debug("No statuses defined");
             return;
         }
 
@@ -73,6 +83,8 @@ class StatusValuesCollection
                 $this->addStatusInCollections($status);
             }
         }
+
+        $this->logger->debug("Status collection successfully built.");
     }
 
     private function addStatusInCollections(array $status): void

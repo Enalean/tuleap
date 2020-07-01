@@ -209,7 +209,8 @@ class JiraXmlExporter
         $report_table_exporter     = new XmlReportTableExporter($cdata_factory);
         $default_criteria_exporter = new XmlReportDefaultCriteriaExporter();
         $status_values_collection  = new StatusValuesCollection(
-            $wrapper
+            $wrapper,
+            $logger
         );
 
         $tql_report_exporter = new XmlTQLReportExporter(
@@ -273,7 +274,8 @@ class JiraXmlExporter
                     new CommentXMLExporter(
                         new XML_SimpleXMLCDATAFactory(),
                         new CommentXMLValueEnhancer()
-                    )
+                    ),
+                    $logger
                 ),
                 $logger
             ),
@@ -316,28 +318,35 @@ class JiraXmlExporter
         string $jira_project_key,
         string $jira_issue_type_name
     ): void {
+        $this->logger->debug("Start export Jira to XML");
+
+        $this->logger->debug("Add root formelement");
         $root_form_elements = $node_tracker->addChild('formElements');
         $containers_collection = $this->containers_xml_collection_builder->buildCollectionOfJiraContainersXML(
             $root_form_elements
         );
 
+        $this->logger->debug("Handle status");
         $this->status_values_collection->initCollectionForProjectAndIssueType(
             $jira_project_key,
             $jira_issue_type_name
         );
 
+        $this->logger->debug("Export always there jira fields");
         $this->always_there_fields_exporter->exportFields(
             $containers_collection,
             $this->jira_field_mapping_collection,
             $this->status_values_collection
         );
 
+        $this->logger->debug("Export custom jira fields");
         $this->exportJiraField(
             $containers_collection,
             $jira_project_key,
             $jira_issue_type_name
         );
 
+        $this->logger->debug("Export semantics");
         $this->semantics_xml_exporter->exportSemantics(
             $node_tracker,
             $this->jira_field_mapping_collection,
@@ -345,6 +354,8 @@ class JiraXmlExporter
         );
 
         $node_tracker->addChild('rules');
+
+        $this->logger->debug("Export reports");
         $this->report_exporter->exportReports(
             $node_tracker,
             $this->jira_field_mapping_collection,
@@ -356,11 +367,13 @@ class JiraXmlExporter
         );
         $node_tracker->addChild('workflow');
 
+        $this->logger->debug("Export permissions");
         $this->permissions_xml_exporter->exportFieldsPermissions(
             $node_tracker,
             $this->jira_field_mapping_collection
         );
 
+        $this->logger->debug("Export artifact");
         $this->artifacts_xml_exporter->exportArtifacts(
             $node_tracker,
             $this->jira_field_mapping_collection,
