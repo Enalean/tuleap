@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -49,12 +49,16 @@ class ReferenceAdministrationActions extends Actions
             (! $request->get('group_id'))
             || (! $request->get('keyword'))
             || (! $request->get('link'))
+            || ! $request->isPost()
         ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
             );
         }
+
+        $this->checkCSRFToken($request->get('group_id'));
+
         $force = $request->get('force');
         if (! user_is_super_user()) {
             $force = false;
@@ -109,12 +113,16 @@ class ReferenceAdministrationActions extends Actions
         if (
             (! $request->get('group_id'))
             || (! $request->get('reference_id'))
+            || ! $request->isPost()
         ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
             );
         }
+
+        $this->checkCSRFToken($request->get('group_id'));
+
         $reference_manager = ReferenceManager::instance();
 
         $force = $request->get('force');
@@ -209,12 +217,16 @@ class ReferenceAdministrationActions extends Actions
         if (
             (! $request->get('group_id'))
             || (! $request->get('reference_id'))
+            || ! $request->isPost()
         ) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('project_reference', 'missing_parameter')
             );
         }
+
+        $this->checkCSRFToken($request->get('group_id'));
+
         $reference_manager = ReferenceManager::instance();
         // Load existing reference from DB
         $ref = $reference_manager->loadReference($request->get('reference_id'), $request->get('group_id'));
@@ -242,6 +254,13 @@ class ReferenceAdministrationActions extends Actions
                 $GLOBALS['Language']->getText('project_reference', 'del_fail', db_error())
             );
         }
+    }
+
+    private function checkCSRFToken(int $project_id): void
+    {
+        $url        = '/project/admin/reference.php?group_id=' . $project_id;
+        $csrf_token = new \CSRFSynchronizerToken($url);
+        $csrf_token->check();
     }
 
     private function getCrossReferenceDao()
