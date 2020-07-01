@@ -326,16 +326,18 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                ";
     }
 
-/**
-     * Get the "from" statement to retrieve field values with the RGB values of their decorator
-     * Has no sense for fields other than lists
-     * @return string
-     */
-    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list')
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list'): string
     {
-        $R2 = 'R2_' . $this->field->id;
+        $current_field_id = (int) $this->field->id;
+        $R2               = 'R2_' . $current_field_id;
+        $none_value       = (int) self::NONE_VALUE;
 
-        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON ($R2.field_id = color.field_id AND color.value_id = $R2.id)";
+        $sql = "LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (
+                ($R2.field_id = color.field_id AND color.value_id = $R2.id)
+                OR ($R2.field_id IS null AND color.value_id = $none_value AND color.field_id = $current_field_id)
+            )";
+
+        return $this->getQueryFrom($changesetvalue_table) . $sql;
     }
 
     /**
