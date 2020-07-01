@@ -72,7 +72,7 @@ class Git_Mirror_MirrorDataMapper
      * @throws Git_Mirror_MissingDataException
      * @throws Git_Mirror_CreateException
      */
-    public function save($url, $hostname, $ssh_key, $password, $name)
+    public function save($url, $hostname, $ssh_key, \Tuleap\Cryptography\ConcealedString $password, $name)
     {
         if (! $url || ! $ssh_key || ! $name) {
             throw new Git_Mirror_MissingDataException();
@@ -135,7 +135,7 @@ class Git_Mirror_MirrorDataMapper
         return true;
     }
 
-    private function createUserForMirror($mirror_id, $password, $ssh_key)
+    private function createUserForMirror($mirror_id, \Tuleap\Cryptography\ConcealedString $password, $ssh_key): PFUser
     {
         $user = new PFUser(array(
             'user_name'       => self::MIRROR_OWNER_PREFIX . $mirror_id,
