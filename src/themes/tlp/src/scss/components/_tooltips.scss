@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$tlp-tooltip-background: #444444;
+$tlp-tooltip-background: $tlp-theme-sidebar-background-color;
 $tlp-tooltip-arrow-size: 5px;
 $tlp-tooltip-border-radius: 4px;
 $tlp-tooltip-margin: 5px;
