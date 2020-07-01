@@ -87,8 +87,8 @@ class Tracker_CannedResponseManager
                                                         'edit'    => (int) $response->id)) . '">';
                 echo '<strong>' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '</strong></a>';
                 //excerpt
-                echo '<pre>' . $hp->purify(substr($response->body, 0, 160), CODENDI_PURIFIER_CONVERT_HTML);
-                echo strlen($response->body) > 160 ? '<b>...</b>' : '';
+                echo '<pre>' . $hp->purify(mb_substr($response->body, 0, 160), CODENDI_PURIFIER_CONVERT_HTML);
+                echo mb_strlen($response->body) > 160 ? '<b>...</b>' : '';
                 echo '</pre>';
 
                 echo '</td>';
