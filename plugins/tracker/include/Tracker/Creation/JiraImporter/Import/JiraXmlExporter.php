@@ -27,6 +27,9 @@ use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
@@ -61,6 +64,7 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\Creation\JiraImporter\JiraCredentials;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -249,6 +253,7 @@ class JiraXmlExporter
                             new XML_SimpleXMLCDATAFactory(),
                             UserXMLExporter::build()
                         ),
+                        new FieldChangeFileBuilder(),
                         new StatusValuesTransformer()
                     ),
                     new IssueSnapshotCollectionBuilder(
@@ -276,6 +281,11 @@ class JiraXmlExporter
                         new CommentXMLValueEnhancer()
                     ),
                     $logger
+                ),
+                new AttachmentCollectionBuilder(),
+                new AttachmentXMLExporter(
+                    AttachmentDownloader::build($jira_credentials),
+                    new XML_SimpleXMLCDATAFactory()
                 ),
                 $logger
             ),

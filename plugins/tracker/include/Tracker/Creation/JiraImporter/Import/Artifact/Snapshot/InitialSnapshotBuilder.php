@@ -25,7 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
@@ -34,6 +36,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 
 class InitialSnapshotBuilder
 {
+    private const EXCLUDED_FIELDS = [
+        Tracker_FormElementFactory::FIELD_FILE_TYPE
+    ];
+
     /**
      * @var CreationStateListValueFormatter
      */
@@ -53,6 +59,7 @@ class InitialSnapshotBuilder
 
     /**
      * @param ChangelogEntryValueRepresentation[] $changelog_entries
+     * @param Attachment[] $attachment_collection
      *
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
@@ -62,12 +69,18 @@ class InitialSnapshotBuilder
         array $changelog_entries,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
+        array $attachment_collection,
         string $jira_base_url
     ): Snapshot {
         $already_seen_fields_keys = [];
         $field_snapshots          = [];
 
         $this->logger->debug("Build initial snapshot ... ");
+
+        $this->markExcludedFieldsAsAlreadySeen(
+            $current_snapshot,
+            $already_seen_fields_keys
+        );
 
         foreach ($changelog_entries as $changelog_entry) {
             $this->retrieveInitialFieldsValueInChangelogEntry(
@@ -94,6 +107,13 @@ class InitialSnapshotBuilder
         );
         $this->logger->debug("Link to Jira built successfully ");
 
+        //Add attachments
+        $this->addAttachments(
+            $field_snapshots,
+            $jira_field_mapping_collection,
+            $attachment_collection
+        );
+
         $initial_snapshot = new Snapshot(
             $forge_user,
             new \DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_CREATED_NAME)),
@@ -104,12 +124,25 @@ class InitialSnapshotBuilder
         return $initial_snapshot;
     }
 
+    private function markExcludedFieldsAsAlreadySeen(
+        Snapshot $current_snapshot,
+        array &$already_seen_fields_keys
+    ): void {
+        foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
+            $field_mapping = $field_snapshot->getFieldMapping();
+
+            if (in_array($field_mapping->getType(), self::EXCLUDED_FIELDS)) {
+                $already_seen_fields_keys[$field_mapping->getJiraFieldId()] = true;
+            }
+        }
+    }
+
     private function retrieveFieldsNotModifiedSinceIssueCreation(
-        Snapshot $initial_snapshot,
+        Snapshot $current_snapshot,
         array &$field_snapshots,
         array &$already_seen_fields_keys
     ): void {
-        foreach ($initial_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
+        foreach ($current_snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $jira_field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
 
             if (array_key_exists($jira_field_id, $already_seen_fields_keys)) {
@@ -188,6 +221,32 @@ class InitialSnapshotBuilder
         $field_snapshots[] = new FieldSnapshot(
             $jira_link_field_mapping,
             $jira_link,
+            null
+        );
+    }
+
+    /**
+     * @param Attachment[] $attachment_collection
+     */
+    private function addAttachments(
+        array &$field_snapshots,
+        FieldMappingCollection $jira_field_mapping_collection,
+        array $attachment_collection
+    ): void {
+        $jira_attachment_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME);
+        if ($jira_attachment_field_mapping === null) {
+            $this->logger->debug("No mapping found for attachment");
+            return;
+        }
+
+        $attachment_ids = [];
+        foreach ($attachment_collection as $attachment) {
+            $attachment_ids[] = $attachment->getId();
+        }
+
+        $field_snapshots[] = new FieldSnapshot(
+            $jira_attachment_field_mapping,
+            $attachment_ids,
             null
         );
     }

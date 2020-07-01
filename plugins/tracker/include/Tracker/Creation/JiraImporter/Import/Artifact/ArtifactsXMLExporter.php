@@ -27,6 +27,8 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
@@ -54,16 +56,29 @@ class ArtifactsXMLExporter
      */
     private $logger;
 
+    /**
+     * @var AttachmentCollectionBuilder
+     */
+    private $attachment_collection_builder;
+    /**
+     * @var AttachmentXMLExporter
+     */
+    private $attachment_xml_exporter;
+
     public function __construct(
         ClientWrapper $wrapper,
         UserManager $user_manager,
         DataChangesetXMLExporter $data_changeset_xml_exporter,
+        AttachmentCollectionBuilder $attachment_collection_builder,
+        AttachmentXMLExporter $attachment_xml_exporter,
         LoggerInterface $logger
     ) {
-        $this->wrapper                     = $wrapper;
-        $this->user_manager                = $user_manager;
-        $this->data_changeset_xml_exporter = $data_changeset_xml_exporter;
-        $this->logger                      = $logger;
+        $this->wrapper                       = $wrapper;
+        $this->user_manager                  = $user_manager;
+        $this->data_changeset_xml_exporter   = $data_changeset_xml_exporter;
+        $this->attachment_collection_builder = $attachment_collection_builder;
+        $this->attachment_xml_exporter       = $attachment_xml_exporter;
+        $this->logger                        = $logger;
     }
 
     public function exportArtifacts(
@@ -157,7 +172,7 @@ class ArtifactsXMLExporter
     }
 
     private function exportBatchOfIssuesInArtifactXMLFormat(
-        PFUser $user,
+        PFUser $forge_user,
         SimpleXMLElement $artifacts_node,
         array $jira_issues_response,
         string $jira_base_url,
@@ -185,12 +200,23 @@ class ArtifactsXMLExporter
             $artifact_node = $artifacts_node->addChild('artifact');
             $artifact_node->addAttribute('id', (string) $issue_id);
 
+            $attachment_collection = $this->attachment_collection_builder->buildCollectionOfAttachment(
+                $issue_api_representation
+            );
+
             $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
-                $user,
+                $forge_user,
                 $artifact_node,
                 $jira_field_mapping_collection,
                 $issue_api_representation,
+                $attachment_collection,
                 $jira_base_url
+            );
+
+            //Export file info in XML
+            $this->attachment_xml_exporter->exportCollectionOfAttachmentInXML(
+                $attachment_collection,
+                $artifact_node
             );
         }
     }

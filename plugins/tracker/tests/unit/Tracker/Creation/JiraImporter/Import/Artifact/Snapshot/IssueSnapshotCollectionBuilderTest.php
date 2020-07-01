@@ -95,6 +95,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
      */
     private $comment_values_builder;
 
+    /**
+     * @var array
+     */
+    private $attachment_collection;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -125,6 +130,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
 
         $this->jira_field_mapping_collection = new FieldMappingCollection();
         $this->jira_base_url                 = 'URL';
+        $this->attachment_collection         = [];
     }
 
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
@@ -163,6 +169,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
             $this->jira_issue_api,
+            $this->attachment_collection,
             $this->jira_field_mapping_collection,
             $this->jira_base_url
         );
@@ -210,6 +217,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
             $this->user,
             $this->jira_issue_api,
+            $this->attachment_collection,
             $this->jira_field_mapping_collection,
             $this->jira_base_url
         );

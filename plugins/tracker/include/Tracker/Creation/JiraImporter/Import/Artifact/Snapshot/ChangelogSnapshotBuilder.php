@@ -32,6 +32,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection
 
 class ChangelogSnapshotBuilder
 {
+    private const EXCLUDED_FIELDS_FOR_HISTORY = [
+        Tracker_FormElementFactory::FIELD_FILE_TYPE
+    ];
+
     /**
      * @var CreationStateListValueFormatter
      */
@@ -63,6 +67,11 @@ class ChangelogSnapshotBuilder
 
             if ($field_mapping === null) {
                 $this->logger->debug("  |_ Field mapping not found for field " . $field_id);
+                continue;
+            }
+
+            if (in_array($field_mapping->getType(), self::EXCLUDED_FIELDS_FOR_HISTORY)) {
+                $this->logger->debug("  |_ Field " . $field_mapping->getFieldName() . "not taken into account into history.");
                 continue;
             }
 
