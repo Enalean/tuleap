@@ -29,13 +29,12 @@
                 {{ nb_tests_title }}
             </span>
             <span
-                class="fa-stack test-plan-backlog-item-coverage-icon"
+                class="test-plan-backlog-item-coverage-icon"
                 v-bind:class="stack_class"
                 data-test="backlog-item-icon"
             >
-                <i class="fa fa-circle fa-stack-2x" v-if="icon_class"></i>
                 <i
-                    class="fa fa-fw fa-stack-1x test-plan-backlog-item-coverage-icon-symbol"
+                    class="fa test-plan-backlog-item-coverage-icon-symbol"
                     v-bind:class="icon_class"
                 ></i>
             </span>
