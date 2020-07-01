@@ -120,7 +120,7 @@ Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: 1.2
 Release: @@VERSION@@_@@RELEASE@@%{?dist}
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, tuleap-core-subversion-modperl, perl-CGI
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, subversion, mod_dav_svn, subversion-perl, tuleap-core-subversion-modperl
 Requires: perl-libwww-perl
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: sha1collisiondetector
@@ -142,7 +142,7 @@ seems to have memory leak issues.
 %package core-cvs
 Summary: CVS component for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph, perl-CGI
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, xinetd, rcs, cvsgraph
 Requires: perl-libwww-perl
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: cvs-tuleap
