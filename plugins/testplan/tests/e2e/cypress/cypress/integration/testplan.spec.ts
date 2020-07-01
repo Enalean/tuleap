@@ -65,7 +65,13 @@ describe("Test plan", function () {
             context("Test plan", () => {
                 it("Display the backlog items", () => {
                     cy.contains("Display list of backlog items with their tests definition");
-                    cy.contains("Create new campaign in new “Test” screen");
+                    cy.contains("Create new campaign in new “Test” screen").within(() => {
+                        cy.get("[data-test=nb-tests]").contains("3 tests");
+                        cy.get("[data-test=backlog-item-icon]").should(
+                            "have.class",
+                            "test-plan-backlog-item-coverage-icon-notrun"
+                        );
+                    });
                 });
 
                 it("Expand a backlog items to see its test coverage", () => {
