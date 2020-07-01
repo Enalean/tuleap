@@ -274,8 +274,14 @@ describe("Store actions", () => {
                 },
             } as MilestoneData;
 
-            const sprint = {
+            const sprint_open = {
                 id: 10,
+                semantic_status: "open",
+            } as MilestoneData;
+
+            const sprint_closed = {
+                id: 11,
+                semantic_status: "closed",
             } as MilestoneData;
 
             const enriched_milestones = {
@@ -284,7 +290,7 @@ describe("Store actions", () => {
                     {
                         id: 1,
                         label: "one",
-                        total_artifact: 2,
+                        total_artifact: 4,
                         color_name: "red_fiesta",
                     },
                     {
@@ -295,9 +301,9 @@ describe("Store actions", () => {
                     },
                 ],
                 initial_effort: 15,
-                total_sprint: 11,
-                total_closed_sprint: 10,
-                open_sprints: [sprint],
+                total_sprint: 2,
+                total_closed_sprint: 1,
+                open_sprints: [sprint_open],
             };
 
             const milestone_content = [
@@ -327,11 +333,26 @@ describe("Store actions", () => {
                 },
             ];
 
-            jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
+            const item_in_sprint = [
+                {
+                    initial_effort: 15,
+                    artifact: {
+                        tracker: {
+                            id: 1,
+                        },
+                    },
+                },
+            ];
+
+            jest.spyOn(rest_querier, "getMilestonesBacklog").mockReturnValue(
                 Promise.resolve(milestone_content)
             );
-            jest.spyOn(rest_querier, "getOpenSprints").mockReturnValue(Promise.resolve([sprint]));
-            jest.spyOn(rest_querier, "getNbOfClosedSprints").mockReturnValue(Promise.resolve(10));
+            jest.spyOn(rest_querier, "getAllSprints").mockReturnValue(
+                Promise.resolve([sprint_closed, sprint_open])
+            );
+            jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
+                Promise.resolve(item_in_sprint)
+            );
 
             const enriched_milestones_received = await actions.getEnhancedMilestones(
                 context,

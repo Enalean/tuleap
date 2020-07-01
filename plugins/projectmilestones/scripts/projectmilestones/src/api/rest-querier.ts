@@ -29,13 +29,13 @@ import {
 
 export {
     getCurrentMilestones,
-    getOpenSprints,
     getMilestonesContent,
     getChartData,
-    getNbOfClosedSprints,
     getNbOfPastRelease,
     getLastRelease,
     getTestManagementCampaigns,
+    getMilestonesBacklog,
+    getAllSprints,
 };
 
 function recursiveGetProjectMilestonesWithQuery(
@@ -65,38 +65,16 @@ function getCurrentMilestones({
     return recursiveGetProjectMilestonesWithQuery(project_id, query, limit, offset);
 }
 
-function getOpenSprints(
+function getAllSprints(
     milestone_id: number,
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneData[]> {
-    const query = JSON.stringify({
-        status: "open",
-    });
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`, {
         params: {
             limit,
             offset,
-            query,
         },
     });
-}
-
-async function getNbOfClosedSprints(milestone_id: number): Promise<number> {
-    const query = JSON.stringify({
-        status: "closed",
-    });
-    const response = await get(
-        `/api/v1/milestones/${encodeURIComponent(milestone_id)}/milestones`,
-        {
-            params: {
-                offset: 0,
-                limit: 1,
-                query,
-            },
-        }
-    );
-
-    return getPaginationSizeFromHeader(response.headers);
 }
 
 function getMilestonesContent(
@@ -104,6 +82,18 @@ function getMilestonesContent(
     { limit, offset }: ParametersRequestWithoutId
 ): Promise<MilestoneContent[]> {
     return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/content`, {
+        params: {
+            limit,
+            offset,
+        },
+    });
+}
+
+function getMilestonesBacklog(
+    id_release: number,
+    { limit, offset }: ParametersRequestWithoutId
+): Promise<MilestoneContent[]> {
+    return recursiveGet(`/api/v1/milestones/${encodeURIComponent(id_release)}/backlog`, {
         params: {
             limit,
             offset,
