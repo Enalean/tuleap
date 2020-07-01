@@ -498,8 +498,8 @@ class Commit extends GitObject
             $this->ReadData();
         }
 
-        if (($trim > 0) && (strlen($this->title) > $trim)) {
-            return substr($this->title, 0, $trim) . '…';
+        if (($trim > 0) && (mb_strlen($this->title) > $trim)) {
+            return mb_substr($this->title, 0, $trim) . '…';
         }
 
         return $this->title;

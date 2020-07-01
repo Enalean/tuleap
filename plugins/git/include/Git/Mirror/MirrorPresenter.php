@@ -53,7 +53,7 @@ class MirrorPresenter
         $this->owner_id               = $mirror->owner_id;
         $this->owner_name             = $mirror->owner_name;
         $this->ssh_key_value          = $mirror->ssh_key;
-        $this->ssh_key_ellipsis_value = substr($mirror->ssh_key, 0, 40) . '...' . substr($mirror->ssh_key, -40);
+        $this->ssh_key_ellipsis_value = mb_substr($mirror->ssh_key, 0, 40) . '...' . mb_substr($mirror->ssh_key, -40);
 
         $nb_repositories        = $this->getNbOfRepositories($repository_list_for_projects);
         $this->has_repositories = $nb_repositories > 0;

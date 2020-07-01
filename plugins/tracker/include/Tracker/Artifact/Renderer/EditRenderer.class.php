@@ -121,7 +121,7 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
     {
         $title = sprintf(
             '%s - %s #%d',
-            substr($this->artifact->getTitle() ?? '', 0, 64),
+            mb_substr($this->artifact->getTitle() ?? '', 0, 64),
             $this->tracker->getItemName(),
             $this->artifact->getId()
         );
