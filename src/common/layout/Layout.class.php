@@ -403,9 +403,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         codendi.imgroot = \'' . $this->imgroot . '\';
         </script>' . "\n";
 
-        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A'))) {
-            echo '<script type="text/javascript" src="/scripts/codendi/debug_reserved_names.js"></script>' . "\n";
-        }
         $this->includeJavascriptPolyfills();
 
         $em = EventManager::instance();
@@ -684,10 +681,6 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
         echo '<footer class="footer">';
         include($Language->getContent('layout/footer'));
         echo '</footer>';
-
-        if (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A'))) {
-            $this->showDebugInfo();
-        }
 
         echo $this->displayFooterJavascriptElements();
         echo '</body>';

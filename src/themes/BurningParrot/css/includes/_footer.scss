@@ -38,37 +38,3 @@ $footer-white: #e5e8e9;
 .footer-link {
     line-height: 25px;
 }
-
-/* stylelint-disable-next-line selector-id-pattern */
-#footer_debug_separator {
-    margin-top: 50px;
-    padding-top: 24px;
-    padding-bottom: 1em;
-    background: #ffffff url('../images/debug_gradient.png') top left repeat-x;
-    color: #333333;
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#footer_debug {
-    margin-top: 10px;
-}
-
-/* stylelint-disable-next-line selector-id-pattern */
-#footer_debug_content {
-    padding: 10px;
-    background: #ebebeb;
-    color: #333333;
-
-    fieldset legend {
-        padding-left: 1em;
-        color: #333333;
-    }
-
-    td {
-        color: #333333;
-    }
-
-    pre {
-        color: #404040;
-    }
-}

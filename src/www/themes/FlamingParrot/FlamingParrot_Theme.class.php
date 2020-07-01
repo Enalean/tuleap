@@ -397,16 +397,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $this->displayFooterJavascriptElements();
 
-        if ($this->isInDebugMode()) {
-            $this->showDebugInfo();
-        }
-
         $this->render('end-of-page', null);
-    }
-
-    private function isInDebugMode()
-    {
-        return (ForgeConfig::get('DEBUG_MODE') && (ForgeConfig::get('DEBUG_DISPLAY_FOR_ALL') || user_ismember(1, 'A')));
     }
 
     private function getUserActions(PFUser $current_user)

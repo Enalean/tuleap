@@ -112,12 +112,6 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $GLOBALS['sys_lf'] = '\n';
     }
 
-    public function activateDebug()
-    {
-        ForgeConfig::set('DEBUG_MODE', 1);
-        return $this;
-    }
-
     protected function activatePlugin($name)
     {
         $plugin_factory = PluginFactory::instance();

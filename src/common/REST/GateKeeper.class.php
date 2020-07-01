@@ -52,12 +52,7 @@ class GateKeeper
 
     private function canReachApiWithoutHTTPS()
     {
-        return $this->isInDebugMode() || ForgeConfig::get('sys_rest_api_over_http');
-    }
-
-    private function isInDebugMode()
-    {
-        return isset($GLOBALS['DEBUG_MODE']) && $GLOBALS['DEBUG_MODE'] == 1;
+        return ForgeConfig::get('sys_rest_api_over_http');
     }
 
     /**
