@@ -170,6 +170,7 @@ class UGroupDao extends DataAccessObject
         $public                = $this->da->quoteSmart(Project::ACCESS_PUBLIC);
         $private               = $this->da->quoteSmart(Project::ACCESS_PRIVATE);
         $private_wo_restricted = $this->da->quoteSmart(Project::ACCESS_PRIVATE_WO_RESTRICTED);
+        $active                = $this->da->quoteSmart(Project::STATUS_ACTIVE);
 
         $sql = "SELECT ug.*
                 FROM ugroup_user AS ug_u
@@ -199,7 +200,8 @@ class UGroupDao extends DataAccessObject
                             g.access NOT IN ($private, $private_wo_restricted)
                         )
                     )
-                  )";
+                  )
+                  AND g.status = $active";
 
         return $this->retrieve($sql);
     }
