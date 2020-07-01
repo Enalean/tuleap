@@ -70,8 +70,7 @@ class DefinitionRepresentationTest extends TestCase
         $purifier = \Mockery::mock(\Codendi_HTMLPurifier::class);
         $purifier->shouldReceive('purifyHTMLWithReferences')->andReturn("description")->once();
 
-        $representation = new DefinitionRepresentation($purifier);
-        $representation->build($artifact, $this->form_element_factory, $user);
+        $representation = new DefinitionRepresentation($purifier, $artifact, $this->form_element_factory, $user);
 
         $this->assertEquals("description", $representation->description);
         $this->assertEquals([], $representation->steps);

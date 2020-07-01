@@ -271,16 +271,14 @@ class ExecutionRepresentationBuilder
         Tracker_Artifact $definition,
         array $definitions_changeset_ids
     ): DefinitionRepresentation {
-        $definition_representation = new DefinitionRepresentation($this->purifier);
-        $definition_representation->build(
+        return new DefinitionRepresentation(
+            $this->purifier,
             $definition,
             $this->tracker_form_element_factory,
             $user,
             $this->getSpecificDefinitionChangesetForExecution($execution, $definition, $definitions_changeset_ids),
             $this->requirement_retriever->getRequirementForDefinition($definition, $user)
         );
-
-        return $definition_representation;
     }
 
     /**
