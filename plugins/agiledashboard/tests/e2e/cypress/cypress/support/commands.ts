@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
  *
- *  This file is a part of Tuleap.
+ * This file is a part of Tuleap.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see http://www.gnu.org/licenses/.
  *
  */
 
-import "./commands";
-import "../../../../../../../tests/e2e/full/cypress/support/index";
+export interface Chainable<Subject> {
+    dragAndDrop(): void;
+}
+
+Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(source).trigger("mousedown", { which: 1 });
+    // eslint-disable-next-line cypress/require-data-selectors
+    cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
+});

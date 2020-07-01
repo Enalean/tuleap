@@ -113,6 +113,51 @@ describe("Kanban for the Agile Dashboard service", () => {
             cy.get("[data-test=kanban-column-header").should("have.length", 3);
             cy.get("[data-test=kanban-column-review]").should("contain", "Review");
         });
+        it(`reorders column`, function () {
+            cy.get("[data-test=kanban-column-header").should("have.length", 3);
+            cy.get("[data-test=kanban-header-edit-button]").click();
+
+            cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
+            cy.get("[data-test=edit-kanban-column-label]").spread(
+                (first_column, second_column, third_column) => {
+                    expect(first_column).to.contain("To be done");
+                    expect(second_column).to.contain("On going");
+                    expect(third_column).to.contain("Review");
+                }
+            );
+            cy.dragAndDrop(
+                "[data-test=edit-kanban-column-review]",
+                "[data-test=edit-kanban-column-on_going]",
+                "top"
+            );
+            cy.get("[data-test=edit-kanban-column]").should("have.length", 3);
+            cy.get("[data-test=edit-kanban-column-label]").spread(
+                (first_column, second_column, third_column) => {
+                    expect(first_column).to.contain("To be done");
+                    expect(second_column).to.contain("Review");
+                    expect(third_column).to.contain("On going");
+                }
+            );
+
+            // eslint-disable-next-line cypress/require-data-selectors
+            cy.get("body").type("{esc}");
+            cy.get("[data-test=kanban-column-header]").spread(
+                (first_column, second_column, third_column) => {
+                    expect(first_column).to.contain("To be done");
+                    expect(second_column).to.contain("Review");
+                    expect(third_column).to.contain("On going");
+                }
+            );
+            // The order of the columns should not change after reload
+            cy.reload();
+            cy.get("[data-test=kanban-column-header]").spread(
+                (first_column, second_column, third_column) => {
+                    expect(first_column).to.contain("To be done");
+                    expect(second_column).to.contain("Review");
+                    expect(third_column).to.contain("On going");
+                }
+            );
+        });
     });
     context("As Project member", function () {
         beforeEach(function () {
