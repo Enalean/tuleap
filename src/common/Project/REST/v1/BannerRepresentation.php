@@ -22,6 +22,9 @@ namespace Tuleap\Project\REST\v1;
 
 use Tuleap\Project\Banner\Banner;
 
+/**
+ * @psalm-immutable
+ */
 class BannerRepresentation
 {
     /**
@@ -29,7 +32,7 @@ class BannerRepresentation
      */
     public $message;
 
-    public function build(Banner $banner): void
+    public function __construct(Banner $banner)
     {
         $this->message = $banner->getMessage();
     }

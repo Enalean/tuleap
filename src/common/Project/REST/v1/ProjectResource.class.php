@@ -896,10 +896,7 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(404, 'No banner set for this project');
         }
 
-        $representation = new BannerRepresentation();
-        $representation->build($banner);
-
-        return $representation;
+        return new BannerRepresentation($banner);
     }
 
     private function getRepositoryNameFromQuery($query)
