@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -36,75 +36,68 @@ class MinimalDefinitionRepresentation
 
     /**
      * @var int ID of the artifact
+     *
+     * @psalm-readonly
      */
     public $id;
 
     /**
      * @var String
+     *
+     * @psalm-readonly
      */
     public $uri;
 
     /**
      * @var String
+     *
+     * @psalm-readonly
      */
     public $summary;
 
     /**
      * @var string | null
+     *
+     * @psalm-readonly
      */
     public $category;
 
     /**
      * @var string
+     *
+     * @psalm-readonly
      */
     public $automated_tests;
 
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
-
-    /**
-     * @var int
-     */
-    private $tracker_id;
-
-    /**
-     * @var Tracker_Artifact
-     */
-    private $artifact;
-
-    /**
-     * @var PFUser
-     */
-    private $user;
-
-    /**
-     * @var Tracker_Artifact_Changeset|null
-     */
-    private $changeset;
-
-    /**
-     * @return void
-     */
-    public function build(
+    public function __construct(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset = null
     ) {
-        $this->form_element_factory = $form_element_factory;
-        $this->artifact             = $artifact;
-        $this->tracker_id           = $artifact->getTrackerId();
-        $this->user                 = $user;
-        $this->id                   = JsonCast::toInt($artifact->getId());
-        $this->uri                  = self::ROUTE . '/' . $this->id;
+        $tracker_id = $artifact->getTrackerId();
+        $this->id   = JsonCast::toInt($artifact->getId());
+        $this->uri  = self::ROUTE . '/' . $this->id;
 
-        $this->changeset            = $changeset ?: $artifact->getLastChangeset();
+        $changeset = $changeset ?: $artifact->getLastChangeset();
 
-        $this->summary         = $this->getTextFieldValue(self::FIELD_SUMMARY);
-        $this->category        = $this->getCategory();
-        $this->automated_tests = $this->getTextFieldValue(self::FIELD_AUTOMATED_TESTS);
+        $this->summary         = self::getTextFieldValue(
+            $form_element_factory,
+            $tracker_id,
+            $user,
+            $artifact,
+            $changeset,
+            self::FIELD_SUMMARY
+        );
+        $this->category        = self::getCategory($form_element_factory, $tracker_id, $user, $changeset);
+        $this->automated_tests = self::getTextFieldValue(
+            $form_element_factory,
+            $tracker_id,
+            $user,
+            $artifact,
+            $changeset,
+            self::FIELD_AUTOMATED_TESTS
+        );
     }
 
     /**
@@ -112,9 +105,15 @@ class MinimalDefinitionRepresentation
      *
      * @return string
      */
-    protected function getTextFieldValue($field_shortname)
-    {
-        $field_value = $this->getFieldValue($field_shortname);
+    final protected static function getTextFieldValue(
+        Tracker_FormElementFactory $form_element_factory,
+        int $tracker_id,
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_Changeset $changeset,
+        $field_shortname
+    ) {
+        $field_value = self::getFieldValue($form_element_factory, $tracker_id, $user, $artifact, $changeset, $field_shortname);
         \assert($field_value instanceof \Tracker_Artifact_ChangesetValue_Text);
         if (! $field_value) {
             return '';
@@ -128,34 +127,44 @@ class MinimalDefinitionRepresentation
      *
      * @return \Tracker_Artifact_ChangesetValue|null
      */
-    protected function getFieldValue($field_shortname)
-    {
-        $field = $this->form_element_factory->getUsedFieldByNameForUser(
-            $this->tracker_id,
+    final protected static function getFieldValue(
+        Tracker_FormElementFactory $form_element_factory,
+        int $tracker_id,
+        PFUser $user,
+        Tracker_Artifact $artifact,
+        ?Tracker_Artifact_Changeset $changeset,
+        $field_shortname
+    ) {
+        $field = $form_element_factory->getUsedFieldByNameForUser(
+            $tracker_id,
             $field_shortname,
-            $this->user
+            $user
         );
 
         if (! $field) {
             return null;
         }
 
-        return $this->artifact->getValue($field, $this->changeset);
+        return $artifact->getValue($field, $changeset);
     }
 
-    private function getCategory(): ?string
-    {
-        $field_status = $this->form_element_factory->getSelectboxFieldByNameForUser(
-            $this->tracker_id,
+    private static function getCategory(
+        Tracker_FormElementFactory $form_element_factory,
+        int $tracker_id,
+        PFUser $user,
+        ?Tracker_Artifact_Changeset $changeset
+    ): ?string {
+        $field_status = $form_element_factory->getSelectboxFieldByNameForUser(
+            $tracker_id,
             self::FIELD_CATEGORY,
-            $this->user
+            $user
         );
         \assert($field_status instanceof \Tracker_FormElement_Field_List);
 
-        if (! $field_status || ! $this->changeset) {
+        if (! $field_status || ! $changeset) {
             return null;
         }
 
-        return $field_status->getFirstValueFor($this->changeset);
+        return $field_status->getFirstValueFor($changeset);
     }
 }

@@ -36,41 +36,43 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
 
     /**
      * @var String
+     *
+     * @psalm-readonly
      */
     public $description;
 
     /**
      * @var array {@type StepDefinitionRepresentation}
+     *
+     * @psalm-readonly
      */
     public $steps;
 
     /**
      * @var ArtifactRepresentation | null
+     *
+     * @psalm-readonly
      */
     public $requirement;
-    /**
-     * @var \Codendi_HTMLPurifier
-     */
-    private $purifier;
 
-    public function __construct(\Codendi_HTMLPurifier $purifier)
-    {
-        $this->purifier = $purifier;
-    }
-
-    /**
-     * @return void
-     */
-    public function build(
+    public function __construct(
+        \Codendi_HTMLPurifier $purifier,
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
         ?Tracker_Artifact_Changeset $changeset = null,
         ?Tracker_Artifact $requirement = null
     ) {
-        parent::build($artifact, $form_element_factory, $user, $changeset);
+        parent::__construct($artifact, $form_element_factory, $user, $changeset);
 
-        $this->description = $this->getTextFieldValueWithCrossReferences($artifact, self::FIELD_DESCRIPTION);
+        $this->description = self::getTextFieldValueWithCrossReferences(
+            $purifier,
+            $form_element_factory,
+            $user,
+            $changeset,
+            $artifact,
+            self::FIELD_DESCRIPTION
+        );
 
         $artifact_representation = null;
 
@@ -85,7 +87,14 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $this->requirement = $artifact_representation;
 
         $this->steps = [];
-        $value = $this->getFieldValue(self::FIELD_STEPS);
+        $value = self::getFieldValue(
+            $form_element_factory,
+            $artifact->getTrackerId(),
+            $user,
+            $artifact,
+            $changeset,
+            self::FIELD_STEPS
+        );
         \assert($value instanceof StepDefinitionChangesetValue || $value === null);
         if (! $value) {
             return;
@@ -93,20 +102,27 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
 
         foreach ($value->getValue() as $step) {
             $representation = new StepDefinitionRepresentation();
-            $representation->build($step, $this->purifier, $artifact);
+            $representation->build($step, $purifier, $artifact);
 
             $this->steps[] = $representation;
         }
     }
 
-    private function getTextFieldValueWithCrossReferences(Tracker_Artifact $artifact, string $field_shortname): string
+    private static function getTextFieldValueWithCrossReferences(\Codendi_HTMLPurifier $html_purifier, Tracker_FormElementFactory $form_element_factory, PFUser $user, ?Tracker_Artifact_Changeset $changeset, Tracker_Artifact $artifact, string $field_shortname): string
     {
-        $field_value = $this->getFieldValue($field_shortname);
+        $field_value = self::getFieldValue(
+            $form_element_factory,
+            $artifact->getTrackerId(),
+            $user,
+            $artifact,
+            $changeset,
+            $field_shortname
+        );
         assert($field_value instanceof Tracker_Artifact_ChangesetValue_Text);
         if (! $field_value) {
             return '';
         }
 
-        return $this->purifier->purifyHTMLWithReferences($field_value->getText(), $artifact->getTracker()->getGroupId());
+        return $html_purifier->purifyHTMLWithReferences($field_value->getText(), $artifact->getTracker()->getGroupId());
     }
 }

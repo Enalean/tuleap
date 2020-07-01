@@ -24,7 +24,6 @@ namespace Tuleap\TestPlan\REST\v1;
 
 use PFUser;
 use Tracker_Artifact;
-use Tracker_Artifact_Changeset;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\REST\v1\MinimalDefinitionRepresentation;
 
@@ -32,25 +31,28 @@ final class DefinitionLinkedToABacklogItemRepresentation extends MinimalDefiniti
 {
     /**
      * @var string
+     *
+     * @psalm-readonly
      */
     public $short_type = '';
     /**
      * @var string | null {@choice notrun,passed,failed,blocked}
      * @psalm-var null|"notrun"|"passed"|"failed"|"blocked"
+     *
+     * @psalm-readonly
      */
     public $test_status;
 
     /**
      * @psalm-param null|"notrun"|"passed"|"failed"|"blocked" $test_status
      */
-    public function build(
+    public function __construct(
         Tracker_Artifact $artifact,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user,
-        ?Tracker_Artifact_Changeset $changeset = null,
-        ?string $test_status = null
-    ): void {
-        parent::build($artifact, $form_element_factory, $user, $changeset);
+        ?string $test_status
+    ) {
+        parent::__construct($artifact, $form_element_factory, $user, null);
         $this->short_type  = $artifact->getTracker()->getItemName();
         $this->test_status = $test_status;
     }

@@ -114,15 +114,12 @@ final class BacklogItemResource extends AuthenticatedResource
         $representations = [];
 
         foreach ($linked_test_definitions->getRequestedLinkedTestDefinitions() as $linked_test_definition) {
-            $representation = new DefinitionLinkedToABacklogItemRepresentation();
-            $representation->build(
+            $representations[] = new DefinitionLinkedToABacklogItemRepresentation(
                 $linked_test_definition->getTestDefinition(),
                 $formelement_factory,
                 $user,
-                null,
                 $linked_test_definition->getStatus()
             );
-            $representations[] = $representation;
         }
 
         return $representations;

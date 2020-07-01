@@ -68,16 +68,14 @@ class DefinitionRepresentationBuilder
         $requirement = $this->requirement_retriever->getRequirementForDefinition($definition_artifact, $user);
         $changeset   = null;
 
-        $definition_representation = new DefinitionRepresentation($this->purifier);
-        $definition_representation->build(
+        return new DefinitionRepresentation(
+            $this->purifier,
             $definition_artifact,
             $this->tracker_form_element_factory,
             $user,
             $changeset,
             $requirement
         );
-
-        return $definition_representation;
     }
 
     public function getMinimalRepresentation(PFUser $user, Tracker_Artifact $artifact): ?MinimalDefinitionRepresentation
@@ -88,14 +86,11 @@ class DefinitionRepresentationBuilder
 
         $changeset = null;
 
-        $definition_representation = new MinimalDefinitionRepresentation();
-        $definition_representation->build(
+        return new MinimalDefinitionRepresentation(
             $artifact,
             $this->tracker_form_element_factory,
             $user,
             $changeset
         );
-
-        return $definition_representation;
     }
 }
