@@ -134,7 +134,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
                     new CommentXMLValueEnhancer()
-                )
+                ),
+                $this->logger
             ),
             $this->logger
         );

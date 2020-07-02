@@ -26,11 +26,17 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Values;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 
 class StatusValuesCollectionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var StatusValuesCollection
@@ -47,9 +53,11 @@ class StatusValuesCollectionTest extends TestCase
         parent::setUp();
 
         $this->wrapper = Mockery::mock(ClientWrapper::class);
+        $this->logger  = Mockery::mock(LoggerInterface::class);
 
         $this->collection = new StatusValuesCollection(
-            $this->wrapper
+            $this->wrapper,
+            $this->logger
         );
     }
 
@@ -57,6 +65,8 @@ class StatusValuesCollectionTest extends TestCase
     {
         $jira_project_key = 'key';
         $jira_issue_type  = 'bug';
+
+        $this->logger->shouldReceive('debug');
 
         $this->wrapper->shouldReceive('getUrl')->with('project/key/statuses')->andReturn($this->getAPIResponse());
 

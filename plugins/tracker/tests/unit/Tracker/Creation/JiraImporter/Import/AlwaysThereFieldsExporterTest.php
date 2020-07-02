@@ -26,6 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -39,6 +40,11 @@ use XML_SimpleXMLCDATAFactory;
 class AlwaysThereFieldsExporterTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var AlwaysThereFieldsExporter
@@ -85,9 +91,12 @@ class AlwaysThereFieldsExporterTest extends TestCase
             $this->getStatusesAPIResponse()
         );
 
+        $this->logger                   = Mockery::mock(LoggerInterface::class);
         $this->status_values_collection = new StatusValuesCollection(
-            $wrapper
+            $wrapper,
+            $this->logger
         );
+        $this->logger->shouldReceive('debug');
 
         $this->status_values_collection->initCollectionForProjectAndIssueType(
             'TEST',

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PFUser;
+use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
@@ -52,17 +53,23 @@ class DataChangesetXMLExporter
      * @var CommentXMLExporter
      */
     private $comment_xml_exporter;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     public function __construct(
         XML_SimpleXMLCDATAFactory $simplexml_cdata_factory,
         FieldChangeXMLExporter $field_change_xml_exporter,
         IssueSnapshotCollectionBuilder $issue_snapshot_collection_builder,
-        CommentXMLExporter $comment_xml_exporter
+        CommentXMLExporter $comment_xml_exporter,
+        LoggerInterface $logger
     ) {
         $this->simplexml_cdata_factory           = $simplexml_cdata_factory;
         $this->field_change_xml_exporter         = $field_change_xml_exporter;
         $this->issue_snapshot_collection_builder = $issue_snapshot_collection_builder;
         $this->comment_xml_exporter              = $comment_xml_exporter;
+        $this->logger                            = $logger;
     }
 
     public function exportIssueDataInChangesetXML(
@@ -72,6 +79,7 @@ class DataChangesetXMLExporter
         IssueAPIRepresentation $issue_api_representation,
         string $jira_base_url
     ): void {
+        $this->logger->debug("Start exporting data in changeset XML...");
         $snapshot_collection = $this->issue_snapshot_collection_builder->buildCollectionOfSnapshotsForIssue(
             $user,
             $issue_api_representation,
@@ -83,6 +91,8 @@ class DataChangesetXMLExporter
             $changeset_node = $artifact_node->addChild('changeset');
             $this->exportSnapshotInXML($snapshot, $changeset_node);
         }
+
+        $this->logger->debug("End exporting data in changeset XML...");
     }
 
     private function exportSnapshotInXML(Snapshot $snapshot, SimpleXMLElement $changeset_node): void
