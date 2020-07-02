@@ -1,3 +1,6 @@
+# This file is deployed and managed by Tuleap.
+# DO NOT EDIT.
+
 location ^~ /plugins/%name%/ {
     alias /usr/share/tuleap/plugins/%name%/www/;
 
