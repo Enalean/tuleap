@@ -87,7 +87,7 @@ class DbaDatabase
                 $mode = "w";
             }
             // conflict: wait some random time to unlock (see ethernet)
-            $secs = 0.5 + ((double) rand(1, 32767) / 32767);
+            $secs = 0.5 + ((double) random_int(1, 32767) / 32767);
             sleep($secs);
             $watchdog -= $secs;
             if (strlen($mode) == 2) {

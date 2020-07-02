@@ -632,12 +632,7 @@ class FileDiff
         } else {
             $tmpdir = TmpDir::GetInstance();
 
-            $pid = 0;
-            if (function_exists('posix_getpid')) {
-                $pid = posix_getpid();
-            } else {
-                $pid = rand();
-            }
+            $pid = posix_getpid();
 
             $fromTmpFile = null;
             $toTmpFile = null;

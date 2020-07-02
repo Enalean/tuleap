@@ -37,6 +37,18 @@
             <property name="spacing" value="1"/>
         </properties>
     </rule>
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array">
+                <element key="rand" value="random_int"/>
+                <element key="mt_rand" value="random_int"/>
+                <element key="openssl_random_pseudo_bytes" value="random_bytes"/>
+                <element key="srand" value="null"/>
+                <element key="mt_srand" value="null"/>
+                <element key="uniqid" value="random_bytes"/>
+            </property>
+        </properties>
+    </rule>
     <!-- Comments -->
     <!-- Forbid comments starting with # -->
     <rule ref="PEAR.Commenting.InlineComment"/>

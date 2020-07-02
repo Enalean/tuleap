@@ -53,7 +53,7 @@ class ValidHelperTest extends TestCase
         $this->assertInstanceOf('Valid_UInt', ValidFactory::getInstance('uint'));
         $this->assertNull(ValidFactory::getInstance('machinbidulechose'));
 
-        $key = md5(uniqid(rand(), true));
+        $key = bin2hex(random_bytes(16));
         $w = ValidFactory::getInstance('string', $key);
         $this->assertEquals($key, $w->getKey());
     }

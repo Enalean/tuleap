@@ -82,7 +82,6 @@ class WikiPlugin_RandomPage extends WikiPlugin
 
         $allpages = $dbi->getAllPages(false, $sortby, $limit, $exclude);
         $pagearray = $allpages->asArray();
-        better_srand(); // Start with a good seed.
 
         if (($numpages == 1) && $pagearray) {
             $page = $pagearray[array_rand($pagearray)];

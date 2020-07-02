@@ -41,7 +41,7 @@ class Tracker_Migration_V3
         $dao = new Tracker_Migration_V3_Dao();
         $logger = BackendLogger::getDefaultLogger(Tracker_Migration_MigrationManager::LOG_FILE);
 
-        $log_prefix = '[' . uniqid() . ']';
+        $log_prefix = '[' . bin2hex(random_bytes(7)) . ']';
         $logger->info("$log_prefix Start migration of tracker v3: " . $tv3->getID());
         // 010 & 020
         if ($id = $dao->create($project->getId(), $name, $description, $itemname, $tv3->getID())) {

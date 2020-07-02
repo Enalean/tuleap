@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,21 +25,6 @@
  */
 class TestHelper
 {
-    /**
-     * Generate a partial mock.
-     *
-     * @param String $className The class to mock
-     * @param Array  $methods   The list of methods to mock
-     *
-     * @return Object
-     */
-    public static function getPartialMock($className, $methods)
-    {
-        $partialName = $className . '_Partial' . uniqid();
-        Mock::generatePartial($className, $partialName, $methods);
-        return new $partialName();
-    }
-
     /**
      * Generate a DataAccessResult
      */

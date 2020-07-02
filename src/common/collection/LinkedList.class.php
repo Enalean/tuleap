@@ -57,7 +57,7 @@ class LinkedList extends Collection
                 $val2 = $it2->current();
                 if (!(version_compare(phpversion(), '5', '>=') && is_object($val1))) {
                     $temp = $val1;
-                    $val1 = uniqid('test');
+                    $val1 = 'test' . bin2hex(random_bytes(7));
                 }
                 if ($val1 !== $val2) {
                     $is_identical = false;

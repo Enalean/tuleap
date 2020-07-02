@@ -1820,34 +1820,12 @@ function wikihash($x)
     trigger_error("Can't hash $x", E_USER_ERROR);
 }
 
-
-/**
- * Seed the random number generator.
- *
- * better_srand() ensures the randomizer is seeded only once.
- *
- * How random do you want it? See:
- * http://www.php.net/manual/en/function.srand.php
- * http://www.php.net/manual/en/function.mt-srand.php
- */
-function better_srand($seed = '')
-{
-    static $wascalled = false;
-    if (!$wascalled) {
-        $seed = $seed === '' ? (double) microtime() * 1000000 : $seed;
-        mt_srand($seed);
-        $wascalled = true;
-        //trigger_error("new random seed", E_USER_NOTICE); //debugging
-    }
-}
-
 function rand_ascii($length = 1)
 {
-    better_srand();
     $s = "";
     for ($i = 1; $i <= $length; $i++) {
         // return only typeable 7 bit ascii, avoid quotes
-        $s .= chr(mt_rand(40, 126));
+        $s .= chr(random_int(40, 126));
     }
     return $s;
 }

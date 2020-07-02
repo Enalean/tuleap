@@ -125,7 +125,7 @@ function pick_a_record_at_random($result, $numrows, $col_list)
     // If there is an item  available pick one at random
     // and display Sample values.
     if ($result && $numrows > 0) {
-        $pickone = ($numrows <= 1 ? 0 : rand(0, $numrows - 1));
+        $pickone = ($numrows <= 1 ? 0 : random_int(0, $numrows - 1));
     }
 
     // Build the array with the record picked at random
@@ -283,29 +283,6 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name)
       // all text fields converted from HTML to ASCII
         $record[$name] = prepare_textarea($record[$name]);
     }
-}
-
-function project_export_makesalt($type = CRYPT_SALT_LENGTH)
-{
-    switch ($type) {
-        case 12:
-            $saltlen = 8;
-            $saltprefix = '$1$';
-            $saltsuffix = '$';
-            break;
-        case 2:
-        default:
-           // by default, fall back on Standard DES (should work everywhere)
-            $saltlen = 2;
-            $saltprefix = '';
-            $saltsuffix = '';
-            break;
-    }
-    $salt = '';
-    while (strlen($salt) < $saltlen) {
-        $salt .= chr(rand(64, 126));
-    }
-    return $saltprefix . $salt . $saltsuffix;
 }
 
     /**

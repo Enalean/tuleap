@@ -481,9 +481,6 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function createGroupEntry(ProjectCreationData $data)
     {
-        srand((double) microtime() * 1000000);
-        $random_num = rand(0, 1000000);
-
         if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
             $http_domain = $GLOBALS['sys_default_domain'];
         } else {
@@ -510,7 +507,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             'cvs_box'             => "'cvs1'",
             'short_description'   => "'" . db_es($data->getShortDescription()) . "'",
             'register_time'       => time(),
-            'rand_hash'           => "'" . md5($random_num) . "'",
+            'rand_hash'           => "'" . db_es(bin2hex(random_bytes(16))) . "'",
             'built_from_template' => db_ei($data->getBuiltFromTemplateProject()->getProject()->getID()),
             'type'                => db_ei($type)
         );

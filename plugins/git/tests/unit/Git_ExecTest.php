@@ -39,8 +39,8 @@ class Git_ExecTest extends TestCase
     {
         parent::setUp();
 
-        $this->symlink_repo = $this->getTmpDir() . '/tuleap-git-exec-test_' . rand(0, 99999999);
-        $this->fixture_dir = $this->getTmpDir() . '/tuleap-git-exec-test_' . rand(0, 99999999);
+        $this->symlink_repo = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
+        $this->fixture_dir = $this->getTmpDir() . '/tuleap-git-exec-test_' . random_int(0, 99999999);
         mkdir($this->fixture_dir);
         symlink($this->fixture_dir, $this->symlink_repo);
         system("cd $this->fixture_dir && git init 2>&1 >/dev/null");

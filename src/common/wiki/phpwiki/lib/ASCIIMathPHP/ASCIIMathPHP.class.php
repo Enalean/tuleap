@@ -47,7 +47,7 @@ class XMLNode
 
     public function __construct($id = null)
     {
-        $this->_id = isset($id) ? $id : md5(uniqid(rand(), 1));
+        $this->_id = isset($id) ? $id : bin2hex(random_bytes(16));
         $this->_name = '';
         $this->_content = '';
         $this->_mt_elem_flg = false;
