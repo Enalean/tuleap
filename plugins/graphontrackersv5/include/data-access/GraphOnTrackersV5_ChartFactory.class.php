@@ -21,7 +21,7 @@
 
 class GraphOnTrackersV5_ChartFactory
 {
-    private const CHART_REMOVED = 'removed';
+    public const CHART_REMOVED = 'removed';
 
     protected $charts;
     protected $chart_factories;
