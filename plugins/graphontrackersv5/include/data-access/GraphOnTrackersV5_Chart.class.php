@@ -475,7 +475,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         );
     }
 
-    private function getSiblingsForRankSelectbox()
+    private function getSiblingsForRankSelectbox(): array
     {
         $siblings = array();
         $session  = new Tracker_Report_Session($this->renderer->report->id);
@@ -484,6 +484,9 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
         $charts = $session->get('charts');
         uasort($charts, array(GraphOnTrackersV5_ChartFactory::instance(), 'sortArrayByRank'));
         foreach ($charts as $sibling) {
+            if ($sibling === GraphOnTrackersV5_ChartFactory::CHART_REMOVED) {
+                continue;
+            }
             $siblings[] = array(
                 'id'   => $sibling['id'],
                 'name' => $sibling['title'],
