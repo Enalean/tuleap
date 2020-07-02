@@ -38,9 +38,8 @@ date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 // Defines all of the settings first (hosts, databases, etc.)
 $local_inc = ForgeConfig::loadLocalInc();
-$GLOBALS['db_config_file'] = ForgeConfig::loadDatabaseInc();
+ForgeConfig::loadDatabaseInc();
 require($local_inc);
-require($GLOBALS['db_config_file']);
 ForgeConfig::loadFromDatabase();
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 

@@ -1727,15 +1727,15 @@ class ArtifactType
         }
 
       //it gets a bit more complicated if we have more fields than SQL wants to treat in one single query
-        if (count($fields) > $GLOBALS['sys_server_join']) {
+        if (count($fields) > ((int) ForgeConfig::get('sys_server_join'))) {
             $multiple_queries = true;
-            $chunked_fields = array_chunk($fields, $GLOBALS['sys_server_join'] - 3, true);
+            $chunked_fields = array_chunk($fields, ((int) ForgeConfig::get('sys_server_join')) - 3, true);
             $this->cutExportQuery($chunked_fields, $select, $from, $where, $all_queries, $constraint);
         } else {
             $multiple_queries = false;
             $this->getExportQueryElements($fields, $select, $from, $where, $count_user_fields);
 
-            if ($count_user_fields > $GLOBALS['sys_server_join'] - count($fields)) {
+            if ($count_user_fields > ((int) ForgeConfig::get('sys_server_join')) - count($fields)) {
                   $multiple_queries = true;
                   $chunked_fields = array_chunk($fields, count($fields) / 2, true);
                   $this->cutExportQuery($chunked_fields, $select, $from, $where, $count_user_fields, $all_queries, $constraint);
@@ -1750,7 +1750,7 @@ class ArtifactType
     {
         foreach ($chunks as $chunk) {
             $this->getExportQueryElements($chunk, $select, $from, $where, $count_user_fields);
-            if ($count_user_fields > $GLOBALS['sys_server_join'] - count($chunk)) {
+            if ($count_user_fields > ((int) ForgeConfig::get('sys_server_join')) - count($chunk)) {
                   //for each user field we join another user table
                   $chunked_fields = array_chunk($chunk, count($chunk) / 2, true);
                   $this->cutExportQuery($chunked_fields, $select, $from, $where, $count_user_fields, $all_queries, $constraint);
