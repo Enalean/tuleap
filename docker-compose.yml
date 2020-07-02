@@ -12,12 +12,15 @@ services:
     - realtime
 
   web:
-    image: enalean/tuleap-aio-dev:c6-php73-nginx
+    image: enalean/tuleap-aio-dev:c7-php73-nginx
     volumes:
       - .:/usr/share/tuleap:cached
       - ../tuleap-plugins:/usr/share/tuleap-plugins:cached
       - tuleap-data:/data
       - realtime-cert:/etc/pki/ca-trust/source/anchors
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - .env:/root/.tuleap_env:ro
+    tmpfs: /run
     env_file:
     - .env
     depends_on:
