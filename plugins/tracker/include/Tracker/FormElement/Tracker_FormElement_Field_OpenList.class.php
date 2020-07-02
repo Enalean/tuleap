@@ -1006,6 +1006,10 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
 
     public function getSelectDefaultValues($default_values)
     {
+        if (! $this->getBind() instanceof Tracker_FormElement_Field_List_Bind_Users) {
+            return parent::getSelectDefaultValues($default_values);
+        }
+
         $hp   = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<p>';
