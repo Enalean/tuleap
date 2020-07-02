@@ -215,7 +215,7 @@ class GitRepositoryFactory
     /**
      * @todo should be private
      *
-     * @return \GitRepositoryWithPermissions
+     * @return \GitRepositoryWithPermissions[]
      */
     public function getGerritRepositoriesWithPermissionsForUGroupAndProject(Project $project, ProjectUGroup $ugroup, PFUser $user)
     {

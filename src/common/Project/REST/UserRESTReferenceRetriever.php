@@ -74,6 +74,7 @@ class UserRESTReferenceRetriever
     private function checkOnlyOneValueIsSet(UserRESTReferenceRepresentation $representation)
     {
         $number_of_non_null_values = 0;
+        /** @psalm-suppress RawObjectIteration */
         foreach ($representation as $key => $value) {
             if ($value !== null) {
                 $number_of_non_null_values++;

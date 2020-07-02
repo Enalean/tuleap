@@ -368,6 +368,7 @@ class UserGroupResource extends AuthenticatedResource
     {
         $first_key = null;
         foreach ($representations as $representation) {
+            /** @psalm-suppress RawObjectIteration */
             foreach ($representation as $key => $value) {
                 if ($value === null) {
                     continue;

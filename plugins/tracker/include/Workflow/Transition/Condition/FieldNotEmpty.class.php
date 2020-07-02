@@ -26,7 +26,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /** @var string */
     public $identifier = 'notempty';
 
-    /** @var Tracker_FormElement_Field */
+    /** @var Tracker_FormElement_Field[] */
     private $fields = array();
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */

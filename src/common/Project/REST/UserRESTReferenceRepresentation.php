@@ -45,6 +45,7 @@ class UserRESTReferenceRepresentation
     public static function buildFromArray(array $data)
     {
         $representation = new self();
+        /** @psalm-suppress RawObjectIteration */
         foreach ($representation as $key => $value) {
             if (isset($data[$key])) {
                 $representation->$key = $data[$key];
