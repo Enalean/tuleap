@@ -2089,11 +2089,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 $head[] = $title;
                 foreach ($this->getNaturePresenterFactory()->getAllUsedNaturesByProject($this->report->getTracker()->getProject()) as $nature) {
                     if (! $nature) {
-                        $shortname = dgettext('tuleap-tracker', 'No type');
-                    } else {
-                        $shortname = $nature->shortname;
+                        $nature = dgettext('tuleap-tracker', 'No type');
                     }
-                    $head[] = $title . " (" . $shortname . ")";
+                    $head[] = $title . " (" . $nature . ")";
                 }
             } else {
                 $head[] = $title;

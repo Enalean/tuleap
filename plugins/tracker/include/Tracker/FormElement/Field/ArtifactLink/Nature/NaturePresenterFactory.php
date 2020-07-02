@@ -142,8 +142,8 @@ class NaturePresenterFactory
         return $natures;
     }
 
-    /** @return NaturePresenter[] */
-    public function getAllUsedNaturesByProject(Project $project)
+    /** @return string[] */
+    public function getAllUsedNaturesByProject(Project $project): array
     {
         $natures = array();
 
