@@ -349,12 +349,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     abstract public function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
 
-    /**
-     * Get the "from" statement to retrieve field values with their decorator if they exist
-     * @return string
-     * @see getQueryFrom
-     */
-    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list')
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list'): string
     {
         return $this->getQueryFrom($changesetvalue_table);
     }
