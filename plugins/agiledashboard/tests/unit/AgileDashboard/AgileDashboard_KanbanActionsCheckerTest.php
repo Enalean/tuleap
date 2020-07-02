@@ -55,6 +55,11 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
      */
     private $tracker;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|Tracker_Semantic_Status
+     */
+    private $semantic_status;
+
     protected function setUp(): void
     {
         $this->field_string = \Mockery::spy(\Tracker_FormElement_Field_String::class)->shouldReceive('getId')->andReturns(201)->getMock();
@@ -72,14 +77,17 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $this->user           = \Mockery::spy(\PFUser::class);
         $this->tracker        = Mockery::spy(Tracker::class);
         $this->tracker->shouldReceive('getId')->andReturn(888);
-        $this->semantic_title = \Mockery::spy(\Tracker_Semantic_Title::class);
+        $this->semantic_title  = \Mockery::spy(\Tracker_Semantic_Title::class);
+        $this->semantic_status = \Mockery::spy(\Tracker_Semantic_Status::class);
 
         Tracker_Semantic_Title::setInstance($this->semantic_title, $this->tracker);
+        Tracker_Semantic_Status::setInstance($this->semantic_status, $this->tracker);
     }
 
     protected function tearDown(): void
     {
         Tracker_Semantic_Title::clearInstances();
+        Tracker_Semantic_Status::clearInstances();
         parent::tearDown();
     }
 
@@ -96,6 +104,9 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
+        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
+        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
 
@@ -116,6 +127,9 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(null);
+        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
+        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_SemanticTitleNotDefinedException::class);
 
@@ -136,6 +150,9 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
+        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
+        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
 
@@ -156,6 +173,32 @@ final class AgileDashboard_KanbanActionsCheckerTest extends \PHPUnit\Framework\T
         $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
         $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
         $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
+        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
+        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnTrue()->getMock();
+        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
+
+        $this->expectException(\Kanban_UserCantAddInPlaceException::class);
+
+        $checker      = new AgileDashboard_KanbanActionsChecker($tracker_factory, $agiledasboard_permission_manager, $form_element_factory);
+        $add_in_place = $checker->checkUserCanAddInPlace($this->user, $kanban);
+    }
+
+    public function testItRaisesAnExceptionIfTheUserCannotSubmitStatusField(): void
+    {
+        $this->field_string->shouldReceive('isRequired')->andReturns(true);
+        $this->field_text->shouldReceive('isRequired')->andReturns(false);
+        $this->field_int->shouldReceive('isRequired')->andReturns(false);
+        $this->field_list->shouldReceive('isRequired')->andReturns(false);
+
+        $this->tracker->shouldReceive('userCanSubmitArtifact')->with($this->user)->andReturns(true);
+        $tracker_factory                  = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackerById')->with(101)->andReturns($this->tracker)->getMock();
+        $form_element_factory             = \Mockery::spy(\Tracker_FormElementFactory::class)->shouldReceive('getUsedFields')->andReturns($this->used_fields)->getMock();
+        $kanban                           = \Mockery::spy(\AgileDashboard_Kanban::class)->shouldReceive('getTrackerId')->andReturns(101)->getMock();
+        $agiledasboard_permission_manager = \Mockery::spy(\AgileDashboard_PermissionsManager::class)->shouldReceive('userCanAdministrate')->andReturns(true)->getMock();
+        $this->semantic_title->shouldReceive('getFieldId')->andReturns(201);
+        $this->semantic_status->shouldReceive('getFieldId')->andReturns(202);
+        $status_field = Mockery::mock(Tracker_FormElement_Field::class)->shouldReceive('userCanSubmit')->andReturnFalse()->getMock();
+        $this->semantic_status->shouldReceive('getField')->andReturns($status_field);
 
         $this->expectException(\Kanban_UserCantAddInPlaceException::class);
 
