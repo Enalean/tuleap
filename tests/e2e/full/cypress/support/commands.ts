@@ -35,27 +35,6 @@ export interface Chainable<Subject> {
     putFromTuleapApi(url: string, payload: unknown): void;
 }
 
-declare interface Window {
-    fetch: unknown;
-}
-
-// This forces our code to polyfill "fetch" on top of XHR and allows cypress to catch those requests.
-// See https://github.com/cypress-io/cypress/issues/95
-Cypress.Commands.overwrite(
-    "visit",
-    (originalFn: (...args: unknown[]) => void, url: string, options = {}): void => {
-        const opts = Object.assign({}, options, {
-            onBeforeLoad: (window: Window, ...args: unknown[]) => {
-                window.fetch = null;
-                if (options.onBeforeLoad) {
-                    return options.onBeforeLoad(window, ...args);
-                }
-            },
-        });
-        return originalFn(url, opts);
-    }
-);
-
 Cypress.Commands.add("ProjectAdministratorLogin", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("ProjectAdministrator");
