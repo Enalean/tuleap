@@ -23,19 +23,26 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-
-class AttachmentCollectionBuilder
+class AttachmentCollection
 {
-    public function buildCollectionOfAttachment(IssueAPIRepresentation $issue_api_representation): AttachmentCollection
-    {
-        $attachments = [];
-        if ($issue_api_representation->getFieldByKey('attachment') !== null) {
-            foreach ($issue_api_representation->getFieldByKey('attachment') as $attachment_api_value) {
-                $attachments[] = Attachment::buildFromIssueAPIResponse($attachment_api_value);
-            }
-        }
+    /**
+     * @var Attachment[]
+     */
+    private $attachments;
 
-        return new AttachmentCollection($attachments);
+    /**
+     * @param Attachment[] $attachments
+     */
+    public function __construct(array $attachments)
+    {
+        $this->attachments = $attachments;
+    }
+
+    /**
+     * @return Attachment[]
+     */
+    public function getAttachments(): array
+    {
+        return $this->attachments;
     }
 }

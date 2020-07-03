@@ -30,6 +30,7 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -76,15 +77,17 @@ class InitialSnapshotBuilderTest extends TestCase
         $current_snapshot         = $this->buildCurrentSnapshot($user);
         $changelog_entires        = $this->buildChangelogEntries();
         $field_mapping_collection = $this->buildFieldMappingCollection();
-        $attachment_collection    = [
-            new Attachment(
-                10007,
-                "file01.png",
-                "image/png",
-                "URL",
-                30
-            )
-        ];
+        $attachment_collection    = new AttachmentCollection(
+            [
+                new Attachment(
+                    10007,
+                    "file01.png",
+                    "image/png",
+                    "URL",
+                    30
+                )
+            ]
+        );
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,

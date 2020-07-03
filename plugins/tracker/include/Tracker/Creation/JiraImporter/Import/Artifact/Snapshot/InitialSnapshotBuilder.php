@@ -27,7 +27,7 @@ use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
@@ -59,7 +59,6 @@ class InitialSnapshotBuilder
 
     /**
      * @param ChangelogEntryValueRepresentation[] $changelog_entries
-     * @param Attachment[] $attachment_collection
      *
      * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
      */
@@ -69,7 +68,7 @@ class InitialSnapshotBuilder
         array $changelog_entries,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
-        array $attachment_collection,
+        AttachmentCollection $attachment_collection,
         string $jira_base_url
     ): Snapshot {
         $already_seen_fields_keys = [];
@@ -225,13 +224,10 @@ class InitialSnapshotBuilder
         );
     }
 
-    /**
-     * @param Attachment[] $attachment_collection
-     */
     private function addAttachments(
         array &$field_snapshots,
         FieldMappingCollection $jira_field_mapping_collection,
-        array $attachment_collection
+        AttachmentCollection $attachment_collection
     ): void {
         $jira_attachment_field_mapping = $jira_field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME);
         if ($jira_attachment_field_mapping === null) {
@@ -240,7 +236,7 @@ class InitialSnapshotBuilder
         }
 
         $attachment_ids = [];
-        foreach ($attachment_collection as $attachment) {
+        foreach ($attachment_collection->getAttachments() as $attachment) {
             $attachment_ids[] = $attachment->getId();
         }
 
