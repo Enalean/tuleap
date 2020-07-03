@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
+use LogicException;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact;
 use Tracker_Artifact_Changeset;
@@ -31,7 +32,7 @@ use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
-class BindDecoratorRetrieverTest extends TestCase
+final class BindDecoratorRetrieverTest extends TestCase
 {
     /** @var BindDecoratorRetriever */
     private $decorator_retriever;
@@ -59,7 +60,7 @@ class BindDecoratorRetrieverTest extends TestCase
         $this->bind_static         = $this->createMock(Tracker_FormElement_Field_List_Bind_Static::class);
     }
 
-    public function testItReturnsTheDecoratorForTheFirstValue()
+    public function testItReturnsTheDecoratorForTheFirstValue(): void
     {
         $values     = [['id' => 538]];
         $decorators = [538 => $this->decorator];
@@ -75,7 +76,7 @@ class BindDecoratorRetrieverTest extends TestCase
         $this->assertEquals($this->decorator, $result);
     }
 
-    public function testItThrowsWhenNoDecorator()
+    public function testItThrowsWhenNoDecorator(): void
     {
         $values = [['id' => 4884]];
 
@@ -89,18 +90,48 @@ class BindDecoratorRetrieverTest extends TestCase
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
     }
 
-    public function testItThrowsWhenNoValue()
+    public function testItReturnNoneColorWhenSet(): void
     {
-        $this->artifact->method('getLastChangeset')->willReturn($this->changeset);
-        $this->list_field->method('getBind')->willReturn($this->bind_static);
-        $this->bind_static->expects($this->once())->method('getChangesetValues')->with(747)->willReturn([]);
+        $values     = [['id' => 100]];
+        $decorators = [100 => $this->decorator];
+
+        $this->artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->changeset);
+        $this->list_field->expects($this->once())->method('getDecorators')->willReturn($decorators);
+        $this->list_field->expects($this->once())->method('getBind')->willReturn($this->bind_static);
+        $this->bind_static->expects($this->once())->method('getChangesetValues')->willReturn($values);
+        $this->decorator->tlp_color_name = 'plum_crazy';
+
+        $result = $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
+
+        $this->assertEquals($this->decorator, $result);
+    }
+
+    public function testItThrowsWhenNoneColorIsNotSet(): void
+    {
+        $decorators = [538 => $this->decorator];
+
+        $this->artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->changeset);
+        $this->list_field->expects($this->once())->method('getDecorators')->willReturn($decorators);
+        $this->list_field->expects($this->once())->method('getBind')->willReturn($this->bind_static);
+        $this->decorator->tlp_color_name = 'plum_crazy';
 
         $this->expectException(NoChangesetValueException::class);
 
         $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
     }
 
-    public function testItThrowsWhenNoChangeset()
+    public function testItThrowsWhenBindIsNotFound(): void
+    {
+        $this->artifact->expects($this->once())->method('getLastChangeset')->willReturn($this->changeset);
+        $this->list_field->expects($this->once())->method('getDecorators')->willReturn([]);
+        $this->list_field->expects($this->once())->method('getBind')->willReturn(null);
+
+        $this->expectException(LogicException::class);
+
+        $this->decorator_retriever->getDecoratorForFirstValue($this->list_field, $this->artifact);
+    }
+
+    public function testItThrowsWhenNoChangeset(): void
     {
         $this->expectException(NoChangesetException::class);
 
