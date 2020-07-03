@@ -36,6 +36,7 @@ class Tracker_FormElementFactory
     public const FIELD_DATE_TYPE             = 'date';
     public const FIELD_LAST_UPDATE_DATE_TYPE = 'lud';
     public const FIELD_SUBMITTED_ON_TYPE     = 'subon';
+    public const FIELD_SUBMITTED_BY_TYPE     = 'subby';
     public const FIELD_ARTIFACT_ID_TYPE      = 'aid';
     public const FIELD_SELECT_BOX_TYPE       = 'sb';
     public const FIELD_RADIO_BUTTON_TYPE     = 'rb';

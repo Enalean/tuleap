@@ -29,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
 use XML_SimpleXMLCDATAFactory;
 
@@ -363,7 +364,7 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->getId(),
                 $jira_field->getLabel(),
                 $jira_field->getId(),
-                5,
+                AlwaysThereFieldsExporter::JIRA_PRIORITY_RANK,
                 $jira_field->isRequired(),
                 [],
                 $bound_values,

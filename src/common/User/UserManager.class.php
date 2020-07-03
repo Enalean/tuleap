@@ -330,7 +330,10 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->getUserCollectionByEmails([$email])->getUserByEmail($email);
     }
 
-    public function getAllUsersByEmail($email)
+    /**
+     * @return PFUser[]
+     */
+    public function getAllUsersByEmail($email): array
     {
         $users = array();
         foreach ($this->getDao()->searchByEmail($email) as $user) {
