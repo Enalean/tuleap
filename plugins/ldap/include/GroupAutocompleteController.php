@@ -63,7 +63,7 @@ class GroupAutocompleteController implements DispatchableWithRequest
             if ($lri !== false) {
                 while ($lri->valid()) {
                     $lr = $lri->current();
-                    $common_name = $lr->getCommonName();
+                    $common_name = $lr->getGroupCommonName();
                     $display_name = $lr->getGroupDisplayName();
 
                     $group_list[] = array(
