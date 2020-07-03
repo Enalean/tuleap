@@ -48,13 +48,13 @@ function plugin_forumml_show_search_results($p, \Tuleap\DB\Compat\Legacy2018\Leg
     echo "<table width='100%'>
 			<tr>
 				<th class=forumml>" .
-                    $GLOBALS['Language']->getText('plugin_forumml', 'thread') . "
+                    dgettext('tuleap-forumml', 'Thread') . "
 				</th>
 				<th class=forumml>" .
-                    $GLOBALS['Language']->getText('plugin_forumml', 'submitted_on') . "
+                    dgettext('tuleap-forumml', 'Submitted on') . "
 				</th>
 				<th class=forumml>" .
-                    $GLOBALS['Language']->getText('plugin_forumml', 'author') . "
+                    dgettext('tuleap-forumml', 'Author') . "
 				</th>
 			</tr>";
 
@@ -168,21 +168,21 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
 
     // all threads to be displayed
     $colspan = "";
-    $item = $GLOBALS['Language']->getText('plugin_forumml', 'thread');
+    $item = dgettext('tuleap-forumml', 'Thread');
 
     if (isset($offset) && $offset != 0) {
-        $begin = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_first.png' title='" . $GLOBALS['Language']->getText('plugin_forumml', 'begin') . "'/></a>";
+        $begin = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_first.png' title='" . dgettext('tuleap-forumml', 'First messages') . "'/></a>";
         $previous = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "&offset=" . ($offset - $chunks) . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_previous.png'
-                  title='" . $GLOBALS['Language']->getText('plugin_forumml', 'previous', $chunks) . "'/></a>";
+                  title='" . sprintf(dgettext('tuleap-forumml', 'Previous %1$s messages'), $chunks) . "'/></a>";
     } else {
         $begin = "<img src='" . $p->getThemePath() . "/images/ic/resultset_first_disabled.png'/>";
         $previous = "<img src='" . $p->getThemePath() . "/images/ic/resultset_previous_disabled.png'
-                              title='" . $GLOBALS['Language']->getText('plugin_forumml', 'previous', $chunks) . "'/>";
+                              title='" . sprintf(dgettext('tuleap-forumml', 'Previous %1$s messages'), $chunks) . "'/>";
     }
 
     if (($offset + $chunks ) < $nbThreads) {
-        $next = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "&offset=" . ($offset + $chunks) . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_next.png' title='" . $GLOBALS['Language']->getText('plugin_forumml', 'next', $chunks) . "'/></a>";
-        $finish = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "&offset=" . ($chunks * (int) (($nbThreads - 1) / $chunks)) . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_last.png' title='" . $GLOBALS['Language']->getText('plugin_forumml', 'end') . "'/></a>";
+        $next = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "&offset=" . ($offset + $chunks) . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_next.png' title='" . sprintf(dgettext('tuleap-forumml', 'Next %1$s messages'), $chunks) . "'/></a>";
+        $finish = "<a href=\"/plugins/forumml/message.php?group_id=" . $request->get('group_id') . "&list=" . $list_id . "&offset=" . ($chunks * (int) (($nbThreads - 1) / $chunks)) . "\"><img src='" . $p->getThemePath() . "/images/ic/resultset_last.png' title='" . dgettext('tuleap-forumml', 'Last messages') . "'/></a>";
     } else {
         $next = "<img src='" . $p->getThemePath() . "/images/ic/resultset_next_disabled.png' title='" . $chunks . "'/>";
         $finish = "<img src='" . $p->getThemePath() . "/images/ic/resultset_last_disabled.png'/>";
@@ -198,7 +198,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
         $previous
         . "</td>
 					<td align='center' width='55%'>" .
-        $GLOBALS['Language']->getText('plugin_forumml', 'threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
+        dgettext('tuleap-forumml', 'Threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
 					</td>
 					<td align='right' width='10%'>
 						$next
@@ -212,8 +212,8 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
         echo "<table class='border' width='100%' border='0'>
             <tr>
                 <th class='forumml' " . $colspan . " width='60%'>" . $item . "</th>
-                <th class='forumml' width='15%'>" . $GLOBALS['Language']->getText('plugin_forumml', 'submitted_on') . "</th>
-                <th class='forumml' width='25%'>" . $GLOBALS['Language']->getText('plugin_forumml', 'author') . "</th>
+                <th class='forumml' width='15%'>" . dgettext('tuleap-forumml', 'Submitted on') . "</th>
+                <th class='forumml' width='25%'>" . dgettext('tuleap-forumml', 'Author') . "</th>
             </tr>";
 
         $hp = ForumML_HTMLPurifier::instance();
@@ -265,7 +265,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
             $previous
             . "</td>
 						<td align='center' width='55%'>" .
-            $GLOBALS['Language']->getText('plugin_forumml', 'threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
+            dgettext('tuleap-forumml', 'Threads') . " " . ($start + 1) . " - " . ($end + 1) . " <b>(" . $nbThreads . ")</b>
 						</td>
 						<td align='right' width='10%'>
 							$next
@@ -497,9 +497,9 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     echo '</a>';
 
     echo ' <span class="plugin_forumml_message_header_from">' .  $from_info  . '</span>';
-    echo ' <span class="plugin_forumml_message_header_date">' . $GLOBALS['Language']->getText('plugin_forumml', 'show_message_date', array($msg['date'])) . '</span>';
+    echo ' <span class="plugin_forumml_message_header_date">' . sprintf(dgettext('tuleap-forumml', 'on %1$s'), $msg['date']) . '</span>';
 
-    echo '&nbsp;<a href="#" id="plugin_forumml_toogle_msg_' . $msg['id_message'] . '" class="plugin_forumml_toggle_font">' . $GLOBALS['Language']->getText('plugin_forumml', 'toggle_font') . '</a>';
+    echo '&nbsp;<a href="#" id="plugin_forumml_toogle_msg_' . $msg['id_message'] . '" class="plugin_forumml_toggle_font">' . dgettext('tuleap-forumml', 'Toggle font familly (typewriter/normal)') . '</a>';
 
     // get CC
     $cc = trim($msg['cc']);
@@ -518,7 +518,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             }
             $ccs = implode(', ', $ccs);
         }
-        print '<div class="plugin_forumml_message_header_cc">' . $GLOBALS['Language']->getText('plugin_forumml', 'show_message_cc') . ' ' . $ccs . '</div>';
+        print '<div class="plugin_forumml_message_header_cc">' . dgettext('tuleap-forumml', 'Cc:') . ' ' . $ccs . '</div>';
     }
 
     // Message content
@@ -652,7 +652,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
 
         print "<a href='$link'>
                             <img src='" . $p->getThemePath() . "/images/ic/comment_add.png'/>
-                            " . $GLOBALS['Language']->getText('plugin_forumml', 'reply') . "
+                            " . dgettext('tuleap-forumml', 'Reply') . "
                         </a>";
     }
 
@@ -680,8 +680,8 @@ function plugin_forumml_reply($hp, $subject, $in_reply_to, $id_parent, $body, $a
             <input type='hidden' name='subject' value='" . $subject . "'/>
             <input type='hidden' name='list' value='" . $request->get('list') . "'/>
             <input type='hidden' name='group_id' value='" . $request->get('group_id') . "'/>";
-    echo   '<a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'add_cc') . ']</a>
-                - <a href="javascript:;" onclick="addHeader(\'\',\'\',2);">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'attach_file') . ']</a>
+    echo   '<a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . dgettext('tuleap-forumml', 'Add cc') . ']</a>
+                - <a href="javascript:;" onclick="addHeader(\'\',\'\',2);">[' . dgettext('tuleap-forumml', 'Attach file') . ']</a>
                 <input type="hidden" value="0" id="header_val" />
                 <div id="mail_header"></div>';
     echo "<p><textarea name='message' rows='15' cols='100'>";
@@ -699,7 +699,7 @@ function plugin_forumml_reply($hp, $subject, $in_reply_to, $id_parent, $body, $a
     echo        "</textarea></p>
                                 <p>
                 <input type='submit' name='send_reply' value='" . $GLOBALS['Language']->getText('global', 'btn_submit') . "'/>
-                                <input type='reset' value='" . $GLOBALS['Language']->getText('plugin_forumml', 'erase') . "'/>
+                                <input type='reset' value='" . dgettext('tuleap-forumml', 'Erase') . "'/>
                 </p>
         </form>
         </div>";
@@ -775,7 +775,7 @@ function plugin_forumml_process_mail($reply = false)
      // Checks sanity of CC List
         $err = '';
         if (!util_validateCCList($cc_array, $err)) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml', 'invalid_mail', $err));
+            $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-forumml', 'Submit failed. Invalid e-mail address in CC List.<br>\'%1$s\''), $err));
             $continue = false;
         } else {
         // add list of cc users to mail mime
@@ -797,9 +797,9 @@ function plugin_forumml_process_mail($reply = false)
         $mail->setBodyText($message);
 
         if ($mail->send()) {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_forumml', 'mail_succeed'));
+            $GLOBALS['Response']->addFeedback('info', dgettext('tuleap-forumml', 'Mail Sent successfully.'));
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_forumml', 'mail_fail'));
+            $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-forumml', 'Sending Mail failed.'));
             $continue = false;
         }
     }
