@@ -66,7 +66,6 @@ class TrackerReportRendererTableTest extends TestCase
     {
         parent::setUp();
         $this->tracker_report_renderer_table  = \Mockery::mock(Tracker_Report_Renderer_Table::class)->makePartial();
-        $GLOBALS['sys_server_join'] = 20;
 
 
         $this->matchings_ids = [
@@ -114,11 +113,6 @@ class TrackerReportRendererTableTest extends TestCase
         $this->tracker_report_renderer_table->shouldReceive('sortHasUsedField')->andReturn(true);
 
         $this->xml = new SimpleXMLElement('<field/>');
-    }
-
-    public function tearDown(): void
-    {
-        unset($GLOBALS['sys_server_join']);
     }
 
     public function testOrderOnArtifactIdDescendingWhenSortIsDefined(): void

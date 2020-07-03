@@ -53,10 +53,9 @@ $locar_inc_finder = new Config_LocalIncFinder();
 $local_inc = $locar_inc_finder->getLocalIncPath();
 
 require_once $local_inc;
-require_once $GLOBALS['db_config_file'];
 
 ForgeConfig::loadFromFile($local_inc);
-ForgeConfig::loadFromFile($GLOBALS['db_config_file']);
+ForgeConfig::loadDatabaseInc();
 
 require_once __DIR__ . '/../include/mediawikiPlugin.php';
 

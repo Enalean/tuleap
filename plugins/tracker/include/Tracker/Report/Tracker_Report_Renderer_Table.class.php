@@ -1610,7 +1610,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
 
         //build an array of queries (due to mysql max join limit
         $queries = array();
-        $sys_server_join = intval($GLOBALS['sys_server_join']) - 3;
+        $sys_server_join = ((int) ForgeConfig::get('sys_server_join')) - 3;
         if ($sys_server_join <= 0) { //make sure that the admin is not dumb
             $sys_server_join = 20; //default mysql 60 / 3 (max of 3 joins per field)
         }
