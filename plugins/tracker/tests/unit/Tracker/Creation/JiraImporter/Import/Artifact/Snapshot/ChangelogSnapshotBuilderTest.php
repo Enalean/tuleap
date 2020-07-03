@@ -28,6 +28,8 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -51,17 +53,36 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $changelog_entry               = $this->buildChangelogEntry();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
         $current_snapshot              = $this->buildCurrentSnapshot($user);
+        $attachment_collection         = new AttachmentCollection(
+            [
+                new Attachment(
+                    10007,
+                    "file01.png",
+                    "image/png",
+                    "URL",
+                    30
+                ),
+                new Attachment(
+                    10008,
+                    "file02.gif",
+                    "image/gif",
+                    "URL2",
+                    3056
+                )
+            ]
+        );
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $user,
             $current_snapshot,
             $changelog_entry,
+            $attachment_collection,
             $jira_field_mapping_collection
         );
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(4, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(5, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -89,6 +110,11 @@ class ChangelogSnapshotBuilderTest extends TestCase
         );
 
         $this->assertNull($snapshot->getFieldInSnapshot('textfield')->getRenderedValue());
+
+        $this->assertSame(
+            [10008],
+            $snapshot->getFieldInSnapshot('attachment')->getValue()
+        );
     }
 
     private function buildCurrentSnapshot(PFUser $user): Snapshot
@@ -116,6 +142,20 @@ class ChangelogSnapshotBuilderTest extends TestCase
                     ),
                     "*text area v2*",
                     "<p>text area v2</p>"
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "attachment",
+                        "Fattachment",
+                        "Attachments",
+                        "file"
+                    ),
+                    [
+                        [
+                            'id' => "10007"
+                        ]
+                    ],
+                    null
                 )
             ],
             null
@@ -163,6 +203,13 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "fromString" => "abc",
                         "to"         => null,
                         "toString"   => "*def*"
+                    ],
+                    5 => [
+                        "fieldId"    => "attachment",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "10008",
+                        "toString"   => "file02.gif"
                     ]
                 ]
             ]
@@ -209,7 +256,15 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "textfield",
                 "Ftextfield",
                 "Text Field",
-                "com.atlassian.jira.plugin.system.customfieldtypes:textarea"
+                "text"
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "attachment",
+                "Fattachment",
+                "Attachments",
+                "file"
             )
         );
 

@@ -45,4 +45,14 @@ class AttachmentCollection
     {
         return $this->attachments;
     }
+
+    public function getAttachmentIds(): array
+    {
+        $ids = [];
+        foreach ($this->attachments as $attachment) {
+            $ids[] = $attachment->getId();
+        }
+
+        return $ids;
+    }
 }

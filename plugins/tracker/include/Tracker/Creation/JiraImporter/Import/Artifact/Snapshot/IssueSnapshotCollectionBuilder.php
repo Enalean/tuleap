@@ -118,6 +118,7 @@ class IssueSnapshotCollectionBuilder
                 $forge_user,
                 $current_snapshot,
                 $changelog_entry,
+                $attachment_collection,
                 $jira_field_mapping_collection
             );
 
