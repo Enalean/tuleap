@@ -20,6 +20,7 @@
 import moment from "moment";
 import { sprintf } from "sprintf-js";
 import { max } from "d3-array";
+import { curveLinear } from "d3-shape";
 import { select } from "d3-selection";
 import { gettext_provider } from "./gettext-provider.js";
 import { buildGraphScales } from "charts-builders/line-chart-scales-factory.js";
@@ -126,7 +127,8 @@ function createBurndownChart({ chart_container, chart_props, chart_legends, burn
                 y_scale,
             },
             displayable_data,
-            line_name
+            line_name,
+            curveLinear
         );
     }
 

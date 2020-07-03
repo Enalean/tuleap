@@ -25,7 +25,7 @@ $remaining-effort-color : #57b258;
     fill: $remaining-effort-color;
 
     &.highlighted {
-        stroke-width: 4px;
+        stroke-width: 2px;
         stroke: lighten($remaining-effort-color, 20%);
     }
 }

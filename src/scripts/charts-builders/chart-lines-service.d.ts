@@ -19,6 +19,7 @@
 
 import { PointsWithDate, XYScale } from "./type";
 import { Selection } from "d3-selection";
+import { CurveFactory } from "d3-shape";
 import { PointsWithDateForGenericBurnup } from "../../../plugins/agiledashboard/scripts/burnup-chart/src/type";
 
 export function drawIdealLine(
@@ -31,5 +32,6 @@ export function drawCurve(
     container: Selection<SVGSVGElement, unknown, null, undefined>,
     { x_scale, y_scale }: XYScale,
     dataset: PointsWithDate[] | PointsWithDateForGenericBurnup[],
-    line_name: string
+    line_name: string,
+    interpolation: CurveFactory
 ): void;

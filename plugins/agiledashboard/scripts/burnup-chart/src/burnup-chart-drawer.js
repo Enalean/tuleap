@@ -20,6 +20,7 @@ import moment from "moment";
 import { sprintf } from "sprintf-js";
 import { max } from "d3-array";
 import { select } from "d3-selection";
+import { curveLinear } from "d3-shape";
 import { gettext_provider } from "./gettext-provider.js";
 import { buildGraphScales } from "charts-builders/line-chart-scales-factory.js";
 import { buildChartLayout } from "charts-builders/chart-layout-builder.js";
@@ -142,7 +143,8 @@ function createBurnupChart({
                 y_scale,
             },
             displayable_data,
-            line_name
+            line_name,
+            curveLinear
         );
     }
 
