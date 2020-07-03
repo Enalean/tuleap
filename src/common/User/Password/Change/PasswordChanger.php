@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\User\Password\Change;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBTransactionExecutor;
+use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\Password\Reset\Revoker as ResetTokenRevoker;
 use Tuleap\User\SessionManager;
 
@@ -38,29 +43,43 @@ class PasswordChanger
      * @var SessionManager
      */
     private $session_manager;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $event_dispatcher;
+    /**
+     * @var DBTransactionExecutor
+     */
+    private $db_transaction_executor;
 
     public function __construct(
         \UserManager $user_manager,
         SessionManager $session_manager,
-        ResetTokenRevoker $token_revoker
+        ResetTokenRevoker $token_revoker,
+        EventDispatcherInterface $event_dispatcher,
+        DBTransactionExecutor $db_transaction_executor
     ) {
-        $this->user_manager    = $user_manager;
-        $this->session_manager = $session_manager;
-        $this->token_revoker   = $token_revoker;
+        $this->user_manager            = $user_manager;
+        $this->session_manager         = $session_manager;
+        $this->token_revoker           = $token_revoker;
+        $this->event_dispatcher        = $event_dispatcher;
+        $this->db_transaction_executor = $db_transaction_executor;
     }
 
     /**
-     * @throws PasswordChangeException
      * @throws \Tuleap\User\Password\Reset\TokenDataAccessException
      * @throws \Tuleap\User\SessionDataAccessException
      */
-    public function changePassword(\PFUser $user, ConcealedString $new_password)
+    public function changePassword(\PFUser $user, ConcealedString $new_password): void
     {
-        $this->token_revoker->revokeTokens($user);
-        $this->session_manager->destroyAllSessionsButTheCurrentOne($user);
-        $user->setPassword($new_password);
-        if (! $this->user_manager->updateDb($user)) {
-            throw new PasswordChangeException('Could not update password of the user in DB');
-        }
+        $this->db_transaction_executor->execute(
+            function () use ($user, $new_password): void {
+                $this->token_revoker->revokeTokens($user);
+                $this->session_manager->destroyAllSessionsButTheCurrentOne($user);
+                $this->event_dispatcher->dispatch(new PasswordUserPostUpdateEvent($user));
+                $user->setPassword($new_password);
+                $this->user_manager->updateDb($user);
+            }
+        );
     }
 }

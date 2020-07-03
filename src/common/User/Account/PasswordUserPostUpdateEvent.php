@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,10 +16,37 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-namespace Tuleap\User\Password\Change;
+declare(strict_types=1);
 
-class PasswordChangeException extends \Exception
+namespace Tuleap\User\Account;
+
+use PFUser;
+use Tuleap\Event\Dispatchable;
+
+final class PasswordUserPostUpdateEvent implements Dispatchable
 {
+    public const NAME = 'passwordUserPostUpdateEvent';
+
+    /**
+     * @var PFUser
+     *
+     * @psalm-readonly
+     */
+    public $user;
+
+    public function __construct(PFUser $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @psalm-mutation-free
+     */
+    public function getUser(): PFUser
+    {
+        return $this->user;
+    }
 }

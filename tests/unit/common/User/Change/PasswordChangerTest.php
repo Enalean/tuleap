@@ -22,7 +22,10 @@ namespace Tuleap\User\Password\Change;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Test\DB\DBTransactionExecutorPassthrough;
+use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\Password\Reset\Revoker;
 use Tuleap\User\SessionManager;
 
@@ -43,40 +46,42 @@ class PasswordChangerTest extends TestCase
      */
     private $revoker;
     /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|EventDispatcherInterface
+     */
+    private $event_dispatcher;
+    /**
      * @var \Mockery\MockInterface
      */
     private $user;
 
     protected function setUp(): void
     {
-        $this->user_manager    = \Mockery::mock(\UserManager::class);
-        $this->session_manager = \Mockery::mock(SessionManager::class);
-        $this->revoker         = \Mockery::mock(Revoker::class);
-        $this->user            = \Mockery::mock(\PFUser::class);
+        $this->user_manager     = \Mockery::mock(\UserManager::class);
+        $this->session_manager  = \Mockery::mock(SessionManager::class);
+        $this->revoker          = \Mockery::mock(Revoker::class);
+        $this->event_dispatcher = \Mockery::mock(EventDispatcherInterface::class);
+        $this->user             = \Mockery::mock(\PFUser::class);
     }
 
-    public function testPasswordChangeInvalidateSessionsAndExistingResetTokens()
+    public function testPasswordChangeInvalidateSessionsAndExistingResetTokens(): void
     {
-        $password_changer = new PasswordChanger($this->user_manager, $this->session_manager, $this->revoker);
+        $password_changer = new PasswordChanger(
+            $this->user_manager,
+            $this->session_manager,
+            $this->revoker,
+            $this->event_dispatcher,
+            new DBTransactionExecutorPassthrough()
+        );
 
         $this->user->shouldReceive('setPassword')->once();
         $this->session_manager->shouldReceive('destroyAllSessionsButTheCurrentOne')->once();
         $this->revoker->shouldReceive('revokeTokens')->once();
+        $this->event_dispatcher->shouldReceive('dispatch')->once()->withArgs(
+            function (PasswordUserPostUpdateEvent $event): bool {
+                return $event->getUser() === $this->user;
+            }
+        );
         $this->user_manager->shouldReceive('updateDb')->once()->andReturns(true);
-
-        $password_changer->changePassword($this->user, new ConcealedString('new_password'));
-    }
-
-    public function testSessionsAndResetTokensAreInvalidatedBeforeUpdatingPassword()
-    {
-        $password_changer = new PasswordChanger($this->user_manager, $this->session_manager, $this->revoker);
-
-        $this->user->shouldReceive('setPassword')->once();
-        $this->session_manager->shouldReceive('destroyAllSessionsButTheCurrentOne')->once();
-        $this->revoker->shouldReceive('revokeTokens')->once();
-        $this->user_manager->shouldReceive('updateDb')->once()->andReturns(false);
-
-        $this->expectException(PasswordChangeException::class);
 
         $password_changer->changePassword($this->user, new ConcealedString('new_password'));
     }
