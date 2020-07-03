@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,7 +21,12 @@
 
 namespace Tuleap\Request;
 
-class NotFoundException extends \Exception
-{
+use Throwable;
 
+final class NotFoundException extends \Exception
+{
+    public function __construct(string $message = '', ?Throwable $previous = null)
+    {
+        parent::__construct($message, 404, $previous);
+    }
 }
