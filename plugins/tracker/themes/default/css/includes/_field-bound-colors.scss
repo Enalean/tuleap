@@ -24,11 +24,11 @@
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {
-    &.select-option-colored-#{$color-name} {
+    .select-option-colored-#{$color-name} {
         border-left: 16px solid map-get($colors, 'primary');
     }
 
-    &.colorpicker-preview-#{$color-name} {
+    .colorpicker-preview-#{$color-name} {
         display: inline-block;
         width: 16px;
         height: 16px;

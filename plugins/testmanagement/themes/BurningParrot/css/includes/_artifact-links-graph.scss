@@ -1,4 +1,4 @@
-@import "../../src/themes/common/css/utils/colors";
+@import '../../src/themes/common/css/utils/colors';
 
 .artifact-links-graph-modal {
     height: 70vh;
@@ -12,15 +12,15 @@
 }
 
 .link {
-    fill: $tlp-ui-dimmed;
-    stroke: $tlp-ui-dimmed;
     stroke-width: 1.5px;
+    stroke: $tlp-ui-dimmed;
+    fill: $tlp-ui-dimmed;
 }
 
 circle {
     transition: stroke-width linear .05s;
-    cursor: pointer;
     stroke-width: 2px;
+    cursor: pointer;
 
     &:hover {
         stroke-width: 5px;
@@ -40,9 +40,9 @@ text {
 }
 
 .loader-node {
+    visibility: hidden;
     position: absolute;
     left: 50%;
-    visibility: hidden;
 }
 
 #artifact-links-graph-utils {
@@ -58,9 +58,9 @@ text {
     opacity: .8;
 
     .ref-name {
+        fill: #ffffff;
         font-weight: bold;
         text-shadow: none;
-        fill: #ffffff;
     }
 
     &:hover {
@@ -73,7 +73,7 @@ text {
 }
 
 @each $color-name, $colors in $tlp-swatch-color-map {
-    &.#{$color-name} {
+    .#{$color-name} {
         fill: darken(map-get($colors, 'primary'), 20%);
     }
 }
