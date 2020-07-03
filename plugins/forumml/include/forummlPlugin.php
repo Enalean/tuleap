@@ -35,6 +35,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function __construct($id)
     {
         parent::__construct($id);
+        bindtextdomain('tuleap-forumml', __DIR__ . '/../site-content');
 
         $this->addHook('browse_archives', 'forumml_browse_archives');
         $this->addHook('cssfile', 'cssFile');
@@ -102,7 +103,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
         if ($this->isAllowed($group_id)) {
-            $params['html'] = '<A href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $params['group_list_id'] . '"> ' . $GLOBALS['Language']->getText('plugin_forumml', 'archives') . '</A>';
+            $params['html'] = '<A href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $params['group_list_id'] . '"> ' . dgettext('tuleap-forumml', 'Archives') . '</A>';
         }
     }
 
@@ -151,7 +152,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
             $params['project_presenters'][] = new Search_SearchTypePresenter(
                 self::SEARCH_TYPE,
-                $GLOBALS['Language']->getText('plugin_forumml', 'search_list'),
+                dgettext('tuleap-forumml', 'Mailing list'),
                 $lists
             );
         }

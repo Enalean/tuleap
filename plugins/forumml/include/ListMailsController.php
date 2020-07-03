@@ -111,7 +111,7 @@ class ListMailsController implements DispatchableWithRequest
         if (! $request->valid($vList)) {
             exit_error(
                 $GLOBALS["Language"]->getText('global', 'error'),
-                $GLOBALS["Language"]->getText('plugin_forumml', 'specify_list')
+                dgettext('tuleap-forumml', 'You must specify the mailing-list id.')
             );
             exit();
         } else {
@@ -129,7 +129,7 @@ class ListMailsController implements DispatchableWithRequest
             if (! mail_is_list_active($list_id)) {
                 exit_error(
                     $GLOBALS["Language"]->getText('global', 'error'),
-                    $GLOBALS["Language"]->getText('plugin_forumml', 'wrong_list')
+                    dgettext('tuleap-forumml', 'The mailing-list does not exist or is inactive.')
                 );
             }
         }
@@ -151,11 +151,7 @@ class ListMailsController implements DispatchableWithRequest
             if ($ret) {
                 $layout->addFeedback(
                     'warning',
-                    $GLOBALS['Language']->getText(
-                        'plugin_forumml',
-                        'delay_redirection',
-                        [$this->plugin->getThemePath() . "/images/ic/spinner-greenie.gif", $group_id, $list_id, $topic]
-                    ),
+                    dgettext('tuleap-forumml', 'There can be some delay before to see the message in the archives. If you don\'t see your mail, please refresh the page in a few moment.'),
                     CODENDI_PURIFIER_DISABLED
                 );
             }
@@ -165,7 +161,7 @@ class ListMailsController implements DispatchableWithRequest
         if ($request->valid($vRep)) {
             $layout->addFeedback(
                 'warning',
-                $GLOBALS['Language']->getText('plugin_forumml', 'warn_post_without_confirm')
+                dgettext('tuleap-forumml', 'Check carefully your post before submitting. The message is sent without confirmation.')
             );
         }
 
@@ -189,7 +185,7 @@ class ListMailsController implements DispatchableWithRequest
         }
 
         $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">' . $list_name . '</a>';
-        $title     = $GLOBALS['Language']->getText('plugin_forumml', 'title_root', [$list_link]);
+        $title     = sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\''), $list_link);
         if ($topic) {
             $fmlMessageMgr = new ForumML_MessageManager();
             $value         = $fmlMessageMgr->getHeaderValue($topic, FORUMML_SUBJECT);
@@ -197,7 +193,7 @@ class ListMailsController implements DispatchableWithRequest
                 $title = $value;
             }
         } else {
-            $title .= ' ' . $GLOBALS['Language']->getText('plugin_forumml', 'list_arch');
+            $title .= ' ' . dgettext('tuleap-forumml', 'Archives');
         }
         echo '<h2>' . $title . '</h2>';
 
@@ -212,10 +208,10 @@ class ListMailsController implements DispatchableWithRequest
 
             echo "<td align='left'>";
             if ($topic) {
-                echo '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . $GLOBALS['Language']->getText('plugin_forumml', 'back_to_list') . ']</a>';
+                echo '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . dgettext('tuleap-forumml', 'Back to the list') . ']</a>';
             } else {
                 echo "		<a href='/plugins/forumml/index.php?group_id=" . $group_id . "&list=" . $list_id . "'>
-					[" . $GLOBALS['Language']->getText('plugin_forumml', 'post_thread') . "]
+					[" . dgettext('tuleap-forumml', 'Post a new Thread') . "]
 				</a>";
             }
             echo "</td>";
@@ -251,7 +247,7 @@ class ListMailsController implements DispatchableWithRequest
                     plugin_forumml_show_all_threads($this->plugin, $list_id, $list_name, $offset);
                 }
             } else {
-                echo "<H2>" . $GLOBALS["Language"]->getText('plugin_forumml', 'empty_archives') . "</H2>";
+                echo "<H2>" . dgettext('tuleap-forumml', 'Empty Archives') . "</H2>";
             }
         } else {
             // search archives
@@ -273,7 +269,7 @@ class ListMailsController implements DispatchableWithRequest
             if ($result !== false) {
                 $number_of_result = $result->rowCount();
             }
-            echo "<H3>" . $GLOBALS['Language']->getText('plugin_forumml', 'search_result', $purified_search) . " (" . $hp->purify($number_of_result) . " " . $GLOBALS["Language"]->getText('plugin_forumml', 'found') . ")</H3>";
+            echo "<H3>" . sprintf(dgettext('tuleap-forumml', 'Search results for \'%1$s\''), $purified_search) . " (" . $hp->purify($number_of_result) . " " . dgettext('tuleap-forumml', 'thread(s) found') . ")</H3>";
             if ($number_of_result > 0) {
                 plugin_forumml_show_search_results($this->plugin, $result, $group_id, $list_id);
             }

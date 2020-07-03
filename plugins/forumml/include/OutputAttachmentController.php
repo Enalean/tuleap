@@ -72,7 +72,7 @@ class OutputAttachmentController implements DispatchableWithRequest
         if (! $request->valid($vList)) {
             exit_error(
                 $GLOBALS["Language"]->getText('global', 'error'),
-                $GLOBALS["Language"]->getText('plugin_forumml', 'specify_list')
+                dgettext('tuleap-forumml', 'You must specify the mailing-list id.')
             );
         } else {
             $list_id = $request->get('list');
@@ -85,7 +85,7 @@ class OutputAttachmentController implements DispatchableWithRequest
             if (! mail_is_list_active($list_id)) {
                 exit_error(
                     $GLOBALS["Language"]->getText('global', 'error'),
-                    $GLOBALS["Language"]->getText('plugin_forumml', 'wrong_list')
+                    dgettext('tuleap-forumml', 'The mailing-list does not exist or is inactive.')
                 );
             }
         }
@@ -117,9 +117,9 @@ class OutputAttachmentController implements DispatchableWithRequest
                 (new SapiStreamEmitter())->emit($response);
                 exit();
             }
-            $layout->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml', 'attchment_not_found'));
+            $layout->addFeedback('error', dgettext('tuleap-forumml', 'Attachment not found'));
         } else {
-            $layout->addFeedback('error', $GLOBALS["Language"]->getText('plugin_forumml', 'missing_param'));
+            $layout->addFeedback('error', dgettext('tuleap-forumml', 'Missing \'date\' and/or \'filename\' parameters.'));
         }
         $layout->redirect(
             '/plugins/forumml/message.php?group_id=' . $groupId . '&list=' . $list_id . '&topic=' . $topic

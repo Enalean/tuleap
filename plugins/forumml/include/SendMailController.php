@@ -69,7 +69,7 @@ class SendMailController implements DispatchableWithRequest
 
         // Checks 'list' parameter
         if (! $request->valid(new Valid_UInt('list'))) {
-            $layout->addFeedback(\Feedback::ERROR, $GLOBALS["Language"]->getText('plugin_forumml', 'specify_list'));
+            $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-forumml', 'You must specify the mailing-list id.'));
             $layout->redirect('/mail/?group_id=' . $group_id);
         } else {
             $list_id = $request->get('list');
@@ -81,7 +81,7 @@ class SendMailController implements DispatchableWithRequest
                 $layout->redirect('/mail/?group_id=' . $group_id);
             }
             if (! mail_is_list_active($list_id)) {
-                $layout->addFeedback(\Feedback::ERROR, $GLOBALS["Language"]->getText('plugin_forumml', 'wrong_list'));
+                $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-forumml', 'The mailing-list does not exist or is inactive.'));
                 $layout->redirect('/mail/?group_id=' . $group_id);
             }
         }
@@ -92,14 +92,14 @@ class SendMailController implements DispatchableWithRequest
             $vSub = new Valid_String('subject');
             $vSub->required();
             if (! $request->valid($vSub)) {
-                $layout->addFeedback(\Feedback::ERROR, $GLOBALS['Language']->getText('plugin_forumml', 'type_subject'));
+                $layout->addFeedback(\Feedback::ERROR, dgettext('tuleap-forumml', 'Submit failed. You must specify the mail subject.'));
             } else {
                 // process the mail
                 $return = plugin_forumml_process_mail();
                 if ($return) {
                     $layout->addFeedback(
                         \Feedback::WARN,
-                        $GLOBALS['Language']->getText('plugin_forumml', 'delay_redirection')
+                        dgettext('tuleap-forumml', 'There can be some delay before to see the message in the archives. If you don\'t see your mail, please refresh the page in a few moment.')
                     );
                 }
             }
@@ -109,7 +109,7 @@ class SendMailController implements DispatchableWithRequest
             if ($ret) {
                 $layout->addFeedback(
                     \Feedback::WARN,
-                    $GLOBALS['Language']->getText('plugin_forumml', 'delay_redirection')
+                    dgettext('tuleap-forumml', 'There can be some delay before to see the message in the archives. If you don\'t see your mail, please refresh the page in a few moment.')
                 );
             }
             $layout->redirect(
@@ -119,7 +119,7 @@ class SendMailController implements DispatchableWithRequest
         } else {
             $layout->addFeedback(
                 \Feedback::WARN,
-                $GLOBALS['Language']->getText('plugin_forumml', 'warn_post_without_confirm')
+                dgettext('tuleap-forumml', 'Check carefully your post before submitting. The message is sent without confirmation.')
             );
         }
         $layout->redirect($this->plugin->getPluginPath() . '/message.php?group_id=' . $group_id . '&list=' . $list_id);

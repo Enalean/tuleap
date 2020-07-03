@@ -70,7 +70,7 @@ class WriteMailController implements DispatchableWithRequest
         if (! $request->valid(new Valid_UInt('list'))) {
             exit_error(
                 $GLOBALS["Language"]->getText('global', 'error'),
-                $GLOBALS["Language"]->getText('plugin_forumml', 'specify_list')
+                dgettext('tuleap-forumml', 'You must specify the mailing-list id.')
             );
         } else {
             $list_id = $request->get('list');
@@ -83,7 +83,7 @@ class WriteMailController implements DispatchableWithRequest
             if (! mail_is_list_active($list_id)) {
                 exit_error(
                     $GLOBALS["Language"]->getText('global', 'error'),
-                    $GLOBALS["Language"]->getText('plugin_forumml', 'wrong_list')
+                    dgettext('tuleap-forumml', 'The mailing-list does not exist or is inactive.')
                 );
             }
         }
@@ -95,9 +95,9 @@ class WriteMailController implements DispatchableWithRequest
         mail_header($params);
 
         $list_link = '<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">' . mail_get_listname_from_list_id($list_id) . '</a>';
-        echo '<H2><b>' . $GLOBALS['Language']->getText('plugin_forumml', 'list_new_thread', [$list_link]) . '</b></H2>
-	<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'browse_arch') . ']</a><br><br>
-	<H3><b>' . $GLOBALS['Language']->getText('plugin_forumml', 'new_thread') . '</b></H3>';
+        echo '<H2><b>' . sprintf(dgettext('tuleap-forumml', 'Mailing-List \'%1$s\' - New Thread'), $list_link) . '</b></H2>
+	<a href="/plugins/forumml/message.php?group_id=' . $group_id . '&list=' . $list_id . '">[' . dgettext('tuleap-forumml', 'Browse Archives') . ']</a><br><br>
+	<H3><b>' . dgettext('tuleap-forumml', 'Submit a new Thread:') . '</b></H3>';
 
         $assets = new \Tuleap\Layout\IncludeAssets(__DIR__ . '/../../../src/www/assets/forumml', '/assets/forumml');
         // New thread form
@@ -105,24 +105,24 @@ class WriteMailController implements DispatchableWithRequest
         echo "<form name='form' method='post' enctype='multipart/form-data'>
 	<table>
     <tr>
-		<td valign='top' align='left'><b> " . $GLOBALS['Language']->getText('plugin_forumml', 'subject') . ":&nbsp;</b></td>
+		<td valign='top' align='left'><b> " . dgettext('tuleap-forumml', 'Subject') . ":&nbsp;</b></td>
 		<td align='left'><input type=text name='subject' size='80'></td>
 	</tr></table>";
         echo '<table>
     <tr>
 		<td align="left">
-			<p><a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'add_cc') . ']</a>
-			 - <a href="javascript:;" onclick="addHeader(\'\',\'\',2);">[' . $GLOBALS["Language"]->getText('plugin_forumml', 'attach_file') . ']</a></p>
+			<p><a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . dgettext('tuleap-forumml', 'Add cc') . ']</a>
+			 - <a href="javascript:;" onclick="addHeader(\'\',\'\',2);">[' . dgettext('tuleap-forumml', 'Attach file') . ']</a></p>
 			<input type="hidden" value="0" id="header_val" />
 			<div id="mail_header"></div></td></tr></table>';
         echo "<table><tr>
-			<td valign='top' align='left'><b>" . $GLOBALS['Language']->getText('plugin_forumml', 'message') . "&nbsp;</b></td>
+			<td valign='top' align='left'><b>" . dgettext('tuleap-forumml', 'Message:') . "&nbsp;</b></td>
 			<td align='left'><textarea rows='20' cols='100' name='message'></textarea></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td><input type='submit' name='post' value='" . $GLOBALS['Language']->getText('global', 'btn_submit') . "'>
-				<input type='reset' value='" . $GLOBALS['Language']->getText('plugin_forumml', 'erase') . "'></td>
+				<input type='reset' value='" . dgettext('tuleap-forumml', 'Erase') . "'></td>
 		</tr>
 	</table></form>";
 
