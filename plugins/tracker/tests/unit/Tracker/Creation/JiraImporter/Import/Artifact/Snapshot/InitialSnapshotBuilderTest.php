@@ -29,6 +29,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -75,6 +76,15 @@ class InitialSnapshotBuilderTest extends TestCase
         $current_snapshot         = $this->buildCurrentSnapshot($user);
         $changelog_entires        = $this->buildChangelogEntries();
         $field_mapping_collection = $this->buildFieldMappingCollection();
+        $attachment_collection    = [
+            new Attachment(
+                10007,
+                "file01.png",
+                "image/png",
+                "URL",
+                30
+            )
+        ];
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
@@ -82,6 +92,7 @@ class InitialSnapshotBuilderTest extends TestCase
             $changelog_entires,
             $field_mapping_collection,
             $jira_issue_api,
+            $attachment_collection,
             $jira_base_url
         );
 
@@ -96,6 +107,11 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
         $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
+
+        $this->assertSame(
+            [10007],
+            $initial_snapshot->getFieldInSnapshot('attachment')->getValue()
+        );
     }
 
     private function buildFieldMappingCollection(): FieldMappingCollection
@@ -131,6 +147,14 @@ class InitialSnapshotBuilderTest extends TestCase
                 "Fjira_issue_url",
                 "Link to original issue",
                 "string"
+            ),
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "attachment",
+                "Fattachment",
+                "Attachments",
+                "file"
             ),
         );
 
@@ -213,6 +237,21 @@ class InitialSnapshotBuilderTest extends TestCase
                     "created" => "2020-03-25T14:14:10.823+0100",
                     "items" => [
                         0 => [
+                            "fieldId"    => "attachment",
+                            "from"       => null,
+                            "fromString" => null,
+                            "to"         => "10007",
+                            "toString"   => "file.png"
+                        ]
+                    ]
+                ]
+            ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "105",
+                    "created" => "2020-03-25T14:15:10.823+0100",
+                    "items" => [
+                        0 => [
                             "fieldId"    => "description",
                             "from"       => null,
                             "fromString" => "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
@@ -263,6 +302,18 @@ class InitialSnapshotBuilderTest extends TestCase
                         "text"
                     ),
                     "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "attachment",
+                        "Fattachment",
+                        "Attachments",
+                        "file"
+                    ),
+                    [
+                        "id" => "10007"
+                    ],
                     null
                 ),
             ],

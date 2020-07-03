@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -70,12 +71,18 @@ class FieldChangeXMLExporter
      */
     private $status_values_transformer;
 
+    /**
+     * @var FieldChangeFileBuilder
+     */
+    private $field_change_file_builder;
+
     public function __construct(
         FieldChangeDateBuilder $field_change_date_builder,
         FieldChangeStringBuilder $field_change_string_builder,
         FieldChangeTextBuilder $field_change_text_builder,
         FieldChangeFloatBuilder $field_change_float_builder,
         FieldChangeListBuilder $field_change_list_builder,
+        FieldChangeFileBuilder $field_change_file_builder,
         StatusValuesTransformer $status_values_transformer
     ) {
         $this->field_change_date_builder   = $field_change_date_builder;
@@ -83,6 +90,7 @@ class FieldChangeXMLExporter
         $this->field_change_text_builder   = $field_change_text_builder;
         $this->field_change_float_builder  = $field_change_float_builder;
         $this->field_change_list_builder   = $field_change_list_builder;
+        $this->field_change_file_builder   = $field_change_file_builder;
         $this->status_values_transformer   = $status_values_transformer;
     }
 
@@ -178,6 +186,16 @@ class FieldChangeXMLExporter
                 Tracker_FormElement_Field_List_Bind_Static::TYPE,
                 $value_ids
             );
+        } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FILE_TYPE) {
+            assert(is_array($value));
+
+            if (count($value) > 0) {
+                $this->field_change_file_builder->build(
+                    $changeset_node,
+                    $mapping->getFieldName(),
+                    $value
+                );
+            }
         }
     }
 }

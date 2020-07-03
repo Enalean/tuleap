@@ -31,6 +31,9 @@ use SimpleXMLElement;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\ArtifactsXMLExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollectionBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
@@ -46,6 +49,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Values\StatusValuesTransformer;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeDateBuilder;
+use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFileBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
@@ -79,13 +83,19 @@ class ArtifactsXMLExporterTest extends TestCase
      */
     private $logger;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|AttachmentDownloader
+     */
+    private $attachment_downloader;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->wrapper      = Mockery::mock(ClientWrapper::class);
-        $this->user_manager = Mockery::mock(UserManager::class);
-        $this->logger       = Mockery::mock(LoggerInterface::class);
+        $this->wrapper               = Mockery::mock(ClientWrapper::class);
+        $this->attachment_downloader = Mockery::mock(AttachmentDownloader::class);
+        $this->user_manager          = Mockery::mock(UserManager::class);
+        $this->logger                = Mockery::mock(LoggerInterface::class);
 
         $this->exporter = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -109,6 +119,7 @@ class ArtifactsXMLExporterTest extends TestCase
                         new XML_SimpleXMLCDATAFactory(),
                         UserXMLExporter::build()
                     ),
+                    new FieldChangeFileBuilder(),
                     new StatusValuesTransformer()
                 ),
                 new IssueSnapshotCollectionBuilder(
@@ -136,6 +147,11 @@ class ArtifactsXMLExporterTest extends TestCase
                     new CommentXMLValueEnhancer()
                 ),
                 $this->logger
+            ),
+            new AttachmentCollectionBuilder(),
+            new AttachmentXMLExporter(
+                $this->attachment_downloader,
+                new XML_SimpleXMLCDATAFactory()
             ),
             $this->logger
         );

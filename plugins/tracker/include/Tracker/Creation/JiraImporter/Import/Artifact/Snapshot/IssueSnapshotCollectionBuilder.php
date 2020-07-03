@@ -25,6 +25,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
@@ -69,20 +70,24 @@ class IssueSnapshotCollectionBuilder
         CommentValuesBuilder $comment_values_builder,
         LoggerInterface $logger
     ) {
-        $this->initial_snapshot_builder   = $initial_snapshot_builder;
-        $this->changelog_entries_builder  = $changelog_entries_builder;
-        $this->changelog_snapshot_builder = $changelog_snapshot_builder;
-        $this->current_snapshot_builder   = $current_snapshot_builder;
-        $this->comment_values_builder     = $comment_values_builder;
-        $this->logger                     = $logger;
+        $this->initial_snapshot_builder    = $initial_snapshot_builder;
+        $this->changelog_entries_builder   = $changelog_entries_builder;
+        $this->changelog_snapshot_builder  = $changelog_snapshot_builder;
+        $this->current_snapshot_builder    = $current_snapshot_builder;
+        $this->comment_values_builder      = $comment_values_builder;
+        $this->logger                      = $logger;
     }
 
     /**
+     *
+     * @param Attachment[] $attachment_collection
+     *
      * @return Snapshot[]
      */
     public function buildCollectionOfSnapshotsForIssue(
         PFUser $forge_user,
         IssueAPIRepresentation $issue_api_representation,
+        array $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
         string $jira_base_url
     ): array {
@@ -105,6 +110,7 @@ class IssueSnapshotCollectionBuilder
             $changelog_entries,
             $jira_field_mapping_collection,
             $issue_api_representation,
+            $attachment_collection,
             $jira_base_url
         );
 

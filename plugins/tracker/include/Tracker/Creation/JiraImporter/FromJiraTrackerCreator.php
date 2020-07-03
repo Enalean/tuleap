@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use BackendLogger;
+use ForgeConfig;
 use Project;
 use Psr\Log\LoggerInterface;
 use Tracker;
@@ -34,6 +35,7 @@ use TrackerFromXmlImportCannotBeCreatedException;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
@@ -155,7 +157,7 @@ class FromJiraTrackerCreator
                 $project,
                 $xml,
                 new MappingsRegistry(),
-                \ForgeConfig::get('tmp_dir'),
+                ForgeConfig::get('tmp_dir') . '/' . AttachmentDownloader::JIRA_TEMP_FOLDER . '/',
                 $user
             );
         } catch (
