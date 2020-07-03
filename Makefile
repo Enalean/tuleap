@@ -349,7 +349,7 @@ deploy-mailhog-conf:
 	@if ! grep -q -F -e '^relayhost = mailhog:1025' /etc/postfix/main.cf; then \
 	    sed -i -e 's/^\(transport_maps.*\)$$/#\1/' /etc/postfix/main.cf && \
 	    echo 'relayhost = mailhog:1025' >> /etc/postfix/main.cf; \
-	    service postfix restart; \
+	    systemctl restart postfix; \
 	 fi
 
 stop-distlp:
