@@ -502,14 +502,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $prefix_name = "criteria[$this->id][values]";
         $name        = $prefix_name . '[]';
 
-        if ($criteria->is_advanced) {
-            $multiple = ' multiple="multiple" ';
-            $size     = ' size="' . min(7, count($this->getBind()->getAllValues()) + 2) . '" ';
+        $tracker_form_element_field_list_bind = $this->getBind();
+        if (! $tracker_form_element_field_list_bind) {
+            throw new LogicException(sprintf('List field with id %d should have a bind but no bind could be found.', $this->getId()));
         }
 
-        $html .= '<input type="hidden" name="' . $prefix_name . '" />';
-        $html .= '<select id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $this->id . '"
-                          name="' . $name . '" ' .
+        if ($criteria->is_advanced) {
+            $multiple = ' multiple="multiple" ';
+            $size     = ' size="' . min(7, count($tracker_form_element_field_list_bind->getAllValues()) + 2) . '" ';
+        }
+
+        $html .= '<input type="hidden" name="' . $hp->purify($prefix_name) . '" />';
+        $html .= '<select id="tracker_report_criteria_' . ($criteria->is_advanced ? 'adv_' : '') . $hp->purify($this->id) . '"
+                          name="' . $hp->purify($name) . '" ' .
                           $size .
                           $multiple . '>';
         //Any value
@@ -517,20 +522,46 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
         $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
-        $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'none') . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
+        $styles = $tracker_form_element_field_list_bind->getSelectOptionStyles(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+
+        $html .= $this->buildOptionHTML(
+            Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID,
+            $selected,
+            $styles,
+            $GLOBALS['Language']->getText('global', 'none')
+        );
+
         //Field values
-        foreach ($this->getBind()->getAllValues() as $id => $value) {
+        foreach ($tracker_form_element_field_list_bind->getAllValues() as $id => $value) {
             $selected = in_array($id, $criteria_value) ? 'selected="selected"' : '';
 
-            $styles = $this->getBind()->getSelectOptionStyles($id);
+            $styles = $tracker_form_element_field_list_bind->getSelectOptionStyles($id);
 
-            $html .= '<option value="' . $id . '"  title="' . $this->getBind()->formatCriteriaValue($id) . '" ' . $selected . ' style="' . $styles['inline-styles'] . '" class="' . $styles['classes'] . '">';
-            $html .= $this->getBind()->formatCriteriaValue($id);
-            $html .= '</option>';
+            $html .= $this->buildOptionHTML(
+                $id,
+                $selected,
+                $styles,
+                $tracker_form_element_field_list_bind->formatCriteriaValue($id)
+            );
         }
         $html .= '</select>';
 
         return $html;
+    }
+
+    private function buildOptionHTML(
+        int $id,
+        string $selected,
+        array $styles,
+        string $label
+    ): string {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        return '<option value="' . $hp->purify($id) . '"
+                        title="' . $label . '"
+                        ' . $hp->purify($selected) . '
+                        style="' . $hp->purify($styles['inline-styles']) . '"
+                        class="' . $hp->purify($styles['classes']) . '">' . $label . '</option>';
     }
 
     /**
