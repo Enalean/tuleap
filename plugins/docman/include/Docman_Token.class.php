@@ -56,7 +56,7 @@ class Docman_Token
                     )
                 );
                 if ($is_valid) {
-                    $this->tok = md5(uniqid(rand(), true));
+                    $this->tok = bin2hex(random_bytes(16));
                     $dao       = $this->_getDao();
                     $dao->create($user_id, $this->tok, $referer);
                 }

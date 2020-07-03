@@ -1494,7 +1494,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getProjectCreator()
     {
-        $tmp_dir = ForgeConfig::get('tmp_dir') . '/gerrit_' . uniqid();
+        $tmp_dir = ForgeConfig::get('tmp_dir') . '/gerrit_' . bin2hex(random_bytes(7));
         return new Git_Driver_Gerrit_ProjectCreator(
             $tmp_dir,
             $this->getGerritDriverFactory(),

@@ -110,7 +110,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
         $this->fixtures = dirname(__FILE__) . '/_fixtures';
         do {
-            $this->tmpdir   = ForgeConfig::get('tmp_dir') . '/' . md5(uniqid(rand(), true));
+            $this->tmpdir   = ForgeConfig::get('tmp_dir') . '/' . bin2hex(random_bytes(16));
         } while (is_dir($this->tmpdir));
         $zip_archive = new ZipArchive();
         $zip_archive->open("$this->fixtures/firefox.zip");

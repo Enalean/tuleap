@@ -43,8 +43,8 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testgetUploadSubDirectory()
     {
-        $package_id = rand(1, 1000);
-        $release_id = rand(1, 1000);
+        $package_id = random_int(1, 1000);
+        $release_id = random_int(1, 1000);
 
         $release = new FRSRelease();
         $release->setPackageID($package_id);

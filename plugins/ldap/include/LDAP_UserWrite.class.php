@@ -213,7 +213,7 @@ class LDAP_UserWrite
 
     private function getEncryptedPassword($password)
     {
-        return '{CRYPT}' . crypt($password, '$6$rounds=50000$' . bin2hex(openssl_random_pseudo_bytes(25) . '$'));
+        return '{CRYPT}' . crypt($password, '$6$rounds=50000$' . bin2hex(random_bytes(25) . '$'));
     }
 
     private function rename(PFUser $old_user, PFUser $new_user)

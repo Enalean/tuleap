@@ -54,7 +54,7 @@ class b201406041516_add_email_gateway_salt extends ForgeUpgrade_Bucket
 
     private function initSalt()
     {
-        $salt = hash("sha256", uniqid(rand(), true));
+        $salt = bin2hex(random_bytes(32));
 
         $sql = "
             INSERT INTO email_gateway_salt (salt)

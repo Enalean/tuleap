@@ -24,7 +24,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
          */
 
         if ($request->existAndNonEmpty('add_list')) {
-            $list_password = substr(md5($GLOBALS['session_hash'] . time() . rand(0, 40000)), 0, 16);
+            $list_password = sodium_bin2base64(random_bytes(12), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
             $list_name = $request->getValidated('list_name', 'string', '');
             if (!$list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'provide_correct_list_name'));

@@ -31,8 +31,7 @@ class Fortune
                 }
             }
 
-            srand((double) microtime() * 1000000);
-            $index = rand(0, $amount);
+            $index = random_int(0, $amount);
             $i = 0;
 
             while ($quotes[$i] < $index) {
@@ -94,7 +93,7 @@ class Fortune
     {
         $number = $this->getNumberOfQuotes($file);
 
-        $index = rand(0, $number - 1);
+        $index = random_int(0, $number - 1);
 
         return $this->getExactQuote($file, $index);
     }
