@@ -28,6 +28,7 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
@@ -130,7 +131,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
 
         $this->jira_field_mapping_collection = new FieldMappingCollection();
         $this->jira_base_url                 = 'URL';
-        $this->attachment_collection         = [];
+        $this->attachment_collection         = new AttachmentCollection([]);
     }
 
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void

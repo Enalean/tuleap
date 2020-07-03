@@ -42,22 +42,24 @@ class AttachmentXMLExporterTest extends TestCase
             new XML_SimpleXMLCDATAFactory()
         );
 
-        $attachment_collection = [
-            new Attachment(
-                10007,
-                "file01.png",
-                "image/png",
-                "URL1",
-                30
-            ),
-            new Attachment(
-                10008,
-                "file02.gif",
-                "image/gif",
-                "URL2",
-                1234
-            )
-        ];
+        $attachment_collection = new AttachmentCollection(
+            [
+                new Attachment(
+                    10007,
+                    "file01.png",
+                    "image/png",
+                    "URL1",
+                    30
+                ),
+                new Attachment(
+                    10008,
+                    "file02.gif",
+                    "image/gif",
+                    "URL2",
+                    1234
+                )
+            ]
+        );
 
         $artifact_node = new SimpleXMLElement('<artifacts/>');
 

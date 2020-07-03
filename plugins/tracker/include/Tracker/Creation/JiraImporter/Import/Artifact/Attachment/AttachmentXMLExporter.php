@@ -46,14 +46,11 @@ class AttachmentXMLExporter
         $this->attachment_downloader = $attachment_downloader;
     }
 
-    /**
-     * @param Attachment[] $attachment_collection
-     */
     public function exportCollectionOfAttachmentInXML(
-        array $attachment_collection,
+        AttachmentCollection $attachment_collection,
         SimpleXMLElement $artifact_node
     ): void {
-        foreach ($attachment_collection as $attachment) {
+        foreach ($attachment_collection->getAttachments() as $attachment) {
             $downloaded_file_name = $this->attachment_downloader->downloadAttachment($attachment);
 
             $file_node = $artifact_node->addChild('file');

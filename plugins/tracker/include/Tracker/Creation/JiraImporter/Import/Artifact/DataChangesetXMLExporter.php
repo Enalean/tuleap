@@ -26,7 +26,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
@@ -73,15 +73,12 @@ class DataChangesetXMLExporter
         $this->logger                            = $logger;
     }
 
-    /**
-     * @param Attachment[] $attachment_collection
-     */
     public function exportIssueDataInChangesetXML(
         PFUser $user,
         SimpleXMLElement $artifact_node,
         FieldMappingCollection $jira_field_mapping_collection,
         IssueAPIRepresentation $issue_api_representation,
-        array $attachment_collection,
+        AttachmentCollection $attachment_collection,
         string $jira_base_url
     ): void {
         $this->logger->debug("Start exporting data in changeset XML...");
