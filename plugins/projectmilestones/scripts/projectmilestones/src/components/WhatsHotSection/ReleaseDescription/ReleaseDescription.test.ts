@@ -80,10 +80,10 @@ describe("ReleaseDescription", () => {
                         identifier: "taskboard",
                     },
                     {
-                        icon_name: "fa-external-link",
-                        identifier: "testmgmt",
-                        title: "Test Campaigns",
-                        uri: "plugin/testmanagement",
+                        icon_name: "fa-check",
+                        identifier: "testplan",
+                        title: "Tests",
+                        uri: "/testplan/project/6",
                     },
                 ],
                 cardwall: {
@@ -140,12 +140,12 @@ describe("ReleaseDescription", () => {
         expect(wrapper.findComponent(ChartDisplayer).exists()).toBe(true);
     });
 
-    it("When plugin testmanagement is activated, Then TestManagementDisplayer is rendered", async () => {
+    it("When plugin testplan is activated, Then TestManagementDisplayer is rendered", async () => {
         const wrapper = await getPersonalWidgetInstance(store_options);
         expect(wrapper.findComponent(TestManagementDisplayer).exists()).toBe(true);
     });
 
-    it("When plugin testmanagement is disabled, Then TestManagementDisplayer is not rendered", async () => {
+    it("When plugin testplan is disabled, Then TestManagementDisplayer is not rendered", async () => {
         release_data = {
             id: 2,
             planning: {

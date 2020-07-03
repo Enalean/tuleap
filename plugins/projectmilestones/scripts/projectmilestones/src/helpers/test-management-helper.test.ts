@@ -18,27 +18,27 @@
  */
 
 import { MilestoneData } from "../type";
-import { is_testmanagement_activated } from "./test-management-helper";
+import { is_testplan_activated } from "./test-management-helper";
 
 describe("TestManagementHelper", () => {
-    it("When there is a pane TTM, Then true is returned", () => {
+    it("When there is a TestPlan pane, Then true is returned", () => {
         const release_data: MilestoneData = {
             resources: {
                 additional_panes: [
                     {
-                        uri: "plugins/testmanagement",
-                        title: "Test Management",
-                        identifier: "testmgmt",
-                        icon_name: "fa-external",
+                        uri: "plugins/testplan",
+                        title: "Tests",
+                        identifier: "testplan",
+                        icon_name: "fa-check",
                     },
                 ],
             },
         } as MilestoneData;
 
-        expect(is_testmanagement_activated(release_data)).toBe(true);
+        expect(is_testplan_activated(release_data)).toBe(true);
     });
 
-    it("When TTM pane is not included, Then false is returned", () => {
+    it("When TestPlan pane is not included, Then false is returned", () => {
         const release_data: MilestoneData = {
             resources: {
                 additional_panes: [
@@ -52,6 +52,6 @@ describe("TestManagementHelper", () => {
             },
         } as MilestoneData;
 
-        expect(is_testmanagement_activated(release_data)).toBe(false);
+        expect(is_testplan_activated(release_data)).toBe(false);
     });
 });

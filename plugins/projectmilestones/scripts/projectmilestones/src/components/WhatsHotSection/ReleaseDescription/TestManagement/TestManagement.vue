@@ -30,7 +30,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../../type";
-import { is_testmanagement_activated } from "../../../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import { DataPieChart } from "../../../../../../../../../src/scripts/charts-builders/type";
 import { createPieChart } from "../../../../chart_builder/pie_chart_drawer/pie-chart-drawer";
 
@@ -92,9 +92,7 @@ export default class TestManagement extends Vue {
     }
 
     get is_testmanagement_available(): boolean {
-        return (
-            is_testmanagement_activated(this.release_data) && this.release_data.campaign !== null
-        );
+        return is_testplan_activated(this.release_data) && this.release_data.campaign !== null;
     }
 }
 </script>

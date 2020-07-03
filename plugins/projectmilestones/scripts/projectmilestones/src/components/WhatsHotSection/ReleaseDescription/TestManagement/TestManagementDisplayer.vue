@@ -45,7 +45,7 @@ import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData, TestManagementCampaign } from "../../../../type";
 import { Action, State } from "vuex-class";
 import { FetchWrapperError } from "tlp";
-import { is_testmanagement_activated } from "../../../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../../../helpers/test-management-helper";
 import TestManagement from "./TestManagement.vue";
 
 @Component({
@@ -93,7 +93,7 @@ export default class TestManagementDisplayer extends Vue {
     }
 
     get is_testmanagement_available(): boolean {
-        return is_testmanagement_activated(this.release_data);
+        return is_testplan_activated(this.release_data);
     }
 
     get are_some_tests_to_display(): boolean {

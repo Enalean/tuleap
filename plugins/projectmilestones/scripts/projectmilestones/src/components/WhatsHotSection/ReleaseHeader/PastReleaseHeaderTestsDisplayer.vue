@@ -18,7 +18,7 @@
   -->
 
 <template>
-    <div v-if="is_testmanagement_activated" class="past-release closed-release-header-badge">
+    <div v-if="is_testplan_activated" class="past-release closed-release-header-badge">
         <i class="release-remaining-icon fa fa-check"></i>
         <span class="release-remaining-value" data-test="number-tests">
             {{ number_tests }}
@@ -37,7 +37,7 @@
 import Vue from "vue";
 import { Component, Prop } from "vue-property-decorator";
 import { MilestoneData } from "../../../type";
-import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../../helpers/test-management-helper";
 
 @Component
 export default class PastReleaseHeaderTestsDisplayer extends Vue {
@@ -57,8 +57,8 @@ export default class PastReleaseHeaderTestsDisplayer extends Vue {
         );
     }
 
-    get is_testmanagement_activated(): boolean {
-        return is_testmanagement_activated(this.release_data);
+    get is_testplan_activated(): boolean {
+        return is_testplan_activated(this.release_data);
     }
 }
 </script>

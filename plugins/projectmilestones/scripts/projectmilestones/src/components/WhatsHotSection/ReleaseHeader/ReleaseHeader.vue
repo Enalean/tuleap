@@ -40,7 +40,7 @@
         </div>
         <div v-else class="closed-release-header-badges">
             <past-release-header-tests-displayer
-                v-if="is_testmanagement_activated"
+                v-if="is_testplan_activated"
                 v-bind:release_data="release_data"
             />
             <past-release-header-initial-points v-bind:release_data="release_data" />
@@ -57,7 +57,7 @@ import { MilestoneData } from "../../../type";
 import { Component, Prop } from "vue-property-decorator";
 import PastReleaseHeaderInitialPoints from "./PastReleaseHeaderInitialPoints.vue";
 import PastReleaseHeaderTestsDisplayer from "./PastReleaseHeaderTestsDisplayer.vue";
-import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../../helpers/test-management-helper";
 
 @Component({
     components: {
@@ -81,10 +81,8 @@ export default class ReleaseHeader extends Vue {
         return this.release_data.start_date !== null;
     }
 
-    get is_testmanagement_activated(): boolean {
-        return (
-            is_testmanagement_activated(this.release_data) && this.release_data.campaign !== null
-        );
+    get is_testplan_activated(): boolean {
+        return is_testplan_activated(this.release_data) && this.release_data.campaign !== null;
     }
 }
 </script>

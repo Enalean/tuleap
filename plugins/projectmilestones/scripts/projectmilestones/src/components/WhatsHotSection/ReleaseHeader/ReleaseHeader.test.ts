@@ -145,13 +145,13 @@ describe("ReleaseHeader", () => {
             expect(wrapper.findComponent(PastReleaseHeaderInitialPoints).exists()).toBe(true);
         });
 
-        it("When the release is past and TTM is enabled, Then PastReleaseHeaderTestsDisplayer component are displayed", async () => {
+        it("When the release is past and TestPlan is enabled, Then PastReleaseHeaderTestsDisplayer component are displayed", async () => {
             release_data.resources.additional_panes = [
                 {
-                    icon_name: "fa-external",
-                    identifier: "testmgmt",
-                    title: "Test Management",
-                    uri: "plugin/testmanagement",
+                    icon_name: "fa-check",
+                    identifier: "testplan",
+                    title: "Tests",
+                    uri: "testplan/project/2",
                 },
             ];
 
