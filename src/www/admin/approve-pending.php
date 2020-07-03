@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Project\Admin\DescriptionFields\ProjectDescriptionFieldBuilder;
+use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\User\Admin\PendingProjectBuilder;
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Admin\ProjectPendingPresenter;
@@ -65,7 +66,12 @@ if ($action == 'activate') {
     $group_id = $request->get('group_id');
     $project  = $project_manager->getProject($group_id);
     (new ProjectHistoryDao())->groupAddHistory('deleted', 'x', $project->getID());
-    $project_manager->updateStatus($project, Project::STATUS_DELETED);
+
+    try {
+        $project_manager->updateStatus($project, Project::STATUS_DELETED);
+    } catch (DeletedProjectStatusChangeException $exception) {
+        // Do nothing
+    }
 
     $event_manager->processEvent('project_is_deleted', array('group_id' => $group_id));
     $GLOBALS['Response']->redirect('/admin/approve-pending.php');

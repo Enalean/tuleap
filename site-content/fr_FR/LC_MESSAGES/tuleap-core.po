@@ -78,6 +78,9 @@ msgstr "(mois/jour/année)"
 msgid "-- None --"
 msgstr "-- Aucun --"
 
+msgid "A deleted project can not be restored."
+msgstr "Un projet détruit ne peut être restoré."
+
 msgid ""
 "A non available service cannot be enabled. To enable this service, switch it "
 "to available before."

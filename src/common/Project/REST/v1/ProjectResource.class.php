@@ -49,6 +49,7 @@ use Tuleap\Project\Banner\BannerDao;
 use Tuleap\Project\Banner\BannerPermissionsChecker;
 use Tuleap\Project\Banner\BannerRemover;
 use Tuleap\Project\Banner\BannerRetriever;
+use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\DescriptionFieldsDao;
 use Tuleap\Project\DescriptionFieldsFactory;
 use Tuleap\Project\Event\GetProjectWithTrackerAdministrationPermission;
@@ -648,10 +649,14 @@ class ProjectResource extends AuthenticatedResource
 
         $project = $this->getProjectForRestProjectManager($id);
 
-        $this->project_manager->updateStatus(
-            $project,
-            ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($patch_resource->status)
-        );
+        try {
+            $this->project_manager->updateStatus(
+                $project,
+                ProjectStatusMapper::getProjectStatusFlagFromStatusLabel($patch_resource->status)
+            );
+        } catch (DeletedProjectStatusChangeException $exception) {
+            throw new RestException(403, 'A deleted project cannot be reactivated.');
+        }
 
         $this->sendAllowHeadersForProject();
     }

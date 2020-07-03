@@ -103,13 +103,8 @@ class ProjectEditController
         $project_type = $request->getValidated('group_type', 'string', $project->getType());
 
         if ($this->hasStatusChanged($project, $form_status) || $this->hasTypeChanged($project, $project_type)) {
-            if ($this->hasStatusChanged($project, $form_status) && $form_status === Project::STATUS_PENDING) {
-                $GLOBALS['Response']->addFeedback(
-                    Feedback::ERROR,
-                    _('Switching the project status back to "pending" is not possible.')
-                );
-
-                $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . urlencode($project_id));
+            if (! $this->checkIfStatusCanBeChanged($project, $form_status)) {
+                return;
             }
 
             $this->dao->updateProjectStatusAndType($form_status, $project_type, $project_id);
@@ -243,5 +238,32 @@ class ProjectEditController
         }
 
         return $project->getStatus();
+    }
+
+    private function checkIfStatusCanBeChanged(Project $project, string $form_status): bool
+    {
+        if ($this->hasStatusChanged($project, $form_status)) {
+            if ($form_status === Project::STATUS_PENDING) {
+                $feedback_message = _('Switching the project status back to "pending" is not possible.');
+                $this->sendErrorFeedbackAndRedirect($project->getID(), $feedback_message);
+                return false;
+            }
+            if ($project->getStatus() === Project::STATUS_DELETED) {
+                $feedback_message = _('A deleted project can not be restored.');
+                $this->sendErrorFeedbackAndRedirect($project->getID(), $feedback_message);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private function sendErrorFeedbackAndRedirect(int $project_id, string $message): void
+    {
+        $GLOBALS['Response']->addFeedback(
+            Feedback::ERROR,
+            $message
+        );
+
+        $GLOBALS['Response']->redirect('/admin/groupedit.php?group_id=' . urlencode((string) $project_id));
     }
 }
