@@ -116,7 +116,7 @@ class KanbanPresenter
         $this->language                          = $language;
         $this->project_id                        = $project_id;
         $this->user_id                           = $user->getId();
-        $this->view_mode                         = $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
+        $this->view_mode                         = (string) $user->getPreference('agiledashboard_kanban_item_view_mode_' . $kanban->getId());
         $this->nodejs_server                     = ForgeConfig::get('nodejs_server');
         $this->kanban_url                        = AGILEDASHBOARD_BASE_URL . '/?' . http_build_query(
             array(

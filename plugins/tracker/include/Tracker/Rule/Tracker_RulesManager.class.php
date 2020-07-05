@@ -66,6 +66,10 @@ class Tracker_RulesManager
      * @var TrackerFactory
      */
     private $tracker_factory;
+    /**
+     * @var array
+     */
+    private $rules_by_tracker_id = [];
 
     public function __construct(
         Tracker $tracker,

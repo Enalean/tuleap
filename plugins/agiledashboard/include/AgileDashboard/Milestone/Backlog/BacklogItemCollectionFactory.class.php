@@ -80,6 +80,10 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
      * @var Tracker_Artifact_PriorityDao
      */
     private $artifact_priority_dao;
+    /**
+     * @var array
+     */
+    private $cache_read_initial_effort = [];
 
     public function __construct(
         AgileDashboard_BacklogItemDao $dao,

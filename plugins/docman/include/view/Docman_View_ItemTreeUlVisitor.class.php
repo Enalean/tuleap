@@ -42,6 +42,10 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
      * @var Docman_View_GetActionOnIconVisitor
      */
     private $get_action_on_icon;
+    /**
+     * @var array
+     */
+    private $params;
 
     public function __construct($view, $params = null)
     {
@@ -53,7 +57,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         $this->stripFirstNode      = true;
         $this->firstNodeStripped   = false;
         $this->hp                  = Codendi_HTMLPurifier::instance();
-        $this->params              = $params;
+        $this->params              = $params ?? [];
         if (!isset($this->params['default_url'])) {
             $this->params['default_url'] = null;
         }

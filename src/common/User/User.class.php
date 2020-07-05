@@ -1273,7 +1273,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      * getPreference
      *
      * @param string $preference_name
-     * @return string preference value or false if not set
+     * @return false|string preference value or false if not set
      */
     public function getPreference($preference_name)
     {

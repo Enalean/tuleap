@@ -39,7 +39,7 @@ class CSVRepresentation
     public function build(array $values, \PFUser $user)
     {
         $this->values    = $values;
-        $this->separator = $user->getPreference('user_csv_separator');
+        $this->separator = (string) $user->getPreference('user_csv_separator');
     }
 
     public function __toString()

@@ -26,6 +26,11 @@ require_once 'LDAP_ProjectDao.class.php';
 class LDAP_ProjectManager
 {
     /**
+     * @var array
+     */
+    private $cacheSVNLDAP = [];
+
+    /**
      * Return true if project uses LDAP for SVN authentication
      *
      * @param int $groupId

@@ -571,8 +571,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function _getUserCSVDateFormat()
     {
         $user = UserManager::instance()->getCurrentUser();
-        $date_csv_export_pref = $user->getPreference('user_csv_dateformat');
-        return $date_csv_export_pref;
+        return (string) $user->getPreference('user_csv_dateformat');
     }
 
     protected function formatDateForCSV($date)

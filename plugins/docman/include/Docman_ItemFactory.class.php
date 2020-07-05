@@ -1095,7 +1095,7 @@ class Docman_ItemFactory
                             $itemList[$item->getId()] = $item;
                             $orphans[$item->getId()] = $item->getId();
                         } else {
-                            $itemList[$item->getId()] = false;
+                            $itemList[$item->getId()] = null;
                         }
                         $dar->next();
                     }
@@ -1273,7 +1273,7 @@ class Docman_ItemFactory
      * @param PFUser    $user
      * @param int $groupId
      *
-     * @return int or false.
+     * @return int|false
      */
     public function getCutPreference($user, $groupId = null)
     {

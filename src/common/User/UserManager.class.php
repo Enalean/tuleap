@@ -181,9 +181,10 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $this->_userid_bynames[$user_name] = null;
             }
         }
-        $user = null;
-        if ($this->_userid_bynames[$user_name] !== null) {
-            $user = $this->_users[$this->_userid_bynames[$user_name]];
+        $user    = null;
+        $user_id = $this->_userid_bynames[$user_name];
+        if ($user_id !== null) {
+            $user = $this->_users[$user_id];
         }
         return $user;
     }
@@ -224,9 +225,10 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                 $this->_userid_byldapid[$ldapId] = null;
             }
         }
-        $user = null;
-        if ($this->_userid_byldapid[$ldapId] !== null) {
-            $user = $this->_users[$this->_userid_byldapid[$ldapId]];
+        $user    = null;
+        $user_id = $this->_userid_byldapid[$ldapId];
+        if ($user_id !== null) {
+            $user = $this->_users[$user_id];
         }
         return $user;
     }

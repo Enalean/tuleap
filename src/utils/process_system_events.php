@@ -37,4 +37,4 @@ if (! $process->isSuccessful()) {
     fwrite(STDERR, sprintf("ERROR, command %s exited with %d. Stderr:\n%s\nStdout:\n%s\n", $process->getCommandLine(), (int) $process->getExitCode(), $process->getErrorOutput(), $process->getOutput()));
 }
 
-exit($process->getExitCode());
+exit($process->getExitCode() ?? 1);

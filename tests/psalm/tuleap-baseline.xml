@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.11.5@3c60609c218d4d4b3b257728b8089094e5c6c6c2">
+<files psalm-version="3.12.2@7c7ebd068f8acaba211d4a2c707c4ba90874fa26">
   <file src="plugins/admindelegation/include/AdminDelegationBuilder.php">
     <MissingReturnType occurrences="4">
       <code>buildUsers</code>
@@ -400,13 +400,12 @@
       <code>$has_children</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType occurrences="22">
+    <MissingReturnType occurrences="20">
       <code>setParent</code>
       <code>setInitialEffort</code>
       <code>getInitialEffort</code>
       <code>setStatus</code>
       <code>id</code>
-      <code>title</code>
       <code>type</code>
       <code>url</code>
       <code>points</code>
@@ -415,7 +414,6 @@
       <code>parent_id</code>
       <code>getStatus</code>
       <code>getUrlWithRedirect</code>
-      <code>color</code>
       <code>setHasChildren</code>
       <code>hasChildren</code>
       <code>xRef</code>
@@ -442,10 +440,9 @@
     <MissingParamType occurrences="1">
       <code>$plugin_path</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>getOverviewUrl</code>
       <code>getArtifactUrl</code>
-      <code>addDefaultSection</code>
       <code>addSiblingsSection</code>
     </MissingReturnType>
   </file>
@@ -1234,19 +1231,16 @@
       <code>$has_children</code>
       <code>$value</code>
     </MissingParamType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="16">
       <code>setParent</code>
       <code>setInitialEffort</code>
       <code>getInitialEffort</code>
       <code>setStatus</code>
       <code>id</code>
-      <code>title</code>
       <code>type</code>
-      <code>short_type</code>
       <code>points</code>
       <code>parent_title</code>
       <code>getStatus</code>
-      <code>color</code>
       <code>setHasChildren</code>
       <code>hasChildren</code>
       <code>xRef</code>
@@ -1340,17 +1334,9 @@
       <code>initInconsistentItems</code>
       <code>reorderOpenClosedAndInconsistentCollection</code>
     </MissingReturnType>
-    <UndefinedInterfaceMethod occurrences="2">
-      <code>rewind</code>
-      <code>current</code>
-    </UndefinedInterfaceMethod>
     <UndefinedMethod occurrences="1">
       <code>getComputedValue</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;cache_read_initial_effort</code>
-      <code>$this-&gt;cache_read_initial_effort</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Backlog/BacklogItemPresenterBuilder.class.php">
     <MissingParamType occurrences="2">
@@ -1732,16 +1718,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/Milestone/Pane/Planning/PlanningV2Presenter.class.php">
-    <InvalidPropertyAssignmentValue occurrences="3">
-      <code>json_encode($milestone_representation)</code>
-      <code>json_encode($paginated_backlog_items_representations)</code>
-      <code>json_encode($paginated_milestones_representations)</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="1">
       <code>$milestone_id</code>
-      <code>$milestone_representation</code>
-      <code>$paginated_backlog_items_representations</code>
-      <code>$paginated_milestones_representations</code>
     </MissingParamType>
     <MissingReturnType occurrences="1">
       <code>getLanguageAbbreviation</code>
@@ -1964,11 +1942,8 @@
       <code>JsonCast::toFloat($backlog_item-&gt;getRemainingEffort())</code>
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedInterfaceMethod occurrences="4">
-      <code>title</code>
+    <UndefinedInterfaceMethod occurrences="1">
       <code>type</code>
-      <code>short_type</code>
-      <code>color</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemRepresentationFactory.class.php">
@@ -1980,18 +1955,13 @@
     </PossiblyNullArgument>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/BacklogItemResource.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>new ArtifactLinkUpdater($priority_manager)</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType occurrences="6">
+    <MissingParamType occurrences="4">
       <code>$id</code>
-      <code>$limit</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="17">
+    <MissingReturnType occurrences="15">
       <code>options</code>
       <code>getBacklogItem</code>
       <code>updateArtifactTitleSemantic</code>
@@ -2002,18 +1972,12 @@
       <code>getChildrenArtifactIds</code>
       <code>optionsChildren</code>
       <code>getSlicedArtifactsBuilder</code>
-      <code>checkContentLimit</code>
-      <code>limitValueIsAcceptable</code>
       <code>sendAllowHeader</code>
       <code>sendAllowHeaderForChildren</code>
       <code>sendPaginationHeaders</code>
       <code>getCurrentUser</code>
       <code>getBacklogItemRepresentationFactory</code>
     </MissingReturnType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>BacklogItemsUpdater</code>
-      <code>$this-&gt;artifactlink_updater</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/CardRepresentation.class.php">
     <InvalidPropertyAssignmentValue occurrences="1">
@@ -2052,26 +2016,13 @@
       <code>$sub_milestone_id</code>
     </MissingParamType>
   </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/FilterValidBacklogItems.class.php">
-    <MissingReturnType occurrences="1">
-      <code>filter</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/FilterValidContent.class.php">
     <MissingPropertyType occurrences="1">
       <code>$indexed_backlog_trackers</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="1">
-      <code>filter</code>
-    </MissingReturnType>
     <PossiblyNullReference occurrences="1">
       <code>getTrackerId</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/FilterValidSubmilestones.class.php">
-    <MissingReturnType occurrences="1">
-      <code>filter</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/IValidateElementsToAdd.php">
     <MissingReturnType occurrences="1">
@@ -2417,20 +2368,16 @@
     <InvalidReturnType occurrences="1">
       <code>\Tuleap\Tracker\REST\Artifact\BurndownRepresentation</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="7">
       <code>$user</code>
       <code>$artifact_id</code>
       <code>$id</code>
-      <code>$milestone</code>
-      <code>$backlog</code>
-      <code>$limit</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
       <code>$milestone</code>
     </MissingParamType>
-    <MissingReturnType occurrences="32">
+    <MissingReturnType occurrences="29">
       <code>options</code>
       <code>putSubmilestones</code>
       <code>patchSubmilestones</code>
@@ -2451,9 +2398,6 @@
       <code>getCardwall</code>
       <code>getMilestoneById</code>
       <code>getCurrentUser</code>
-      <code>getMilestoneContentItems</code>
-      <code>checkContentLimit</code>
-      <code>limitValueIsAcceptable</code>
       <code>sendAllowHeaderForContent</code>
       <code>sendPaginationHeaders</code>
       <code>sendAllowHeaderForBacklog</code>
@@ -2602,9 +2546,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/PlanningResource.class.php">
-    <MissingParamType occurrences="7">
+    <MissingParamType occurrences="6">
       <code>$id</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$limit</code>
@@ -2614,10 +2557,9 @@
     <MissingPropertyType occurrences="1">
       <code>$milestone_factory</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>options</code>
       <code>optionsForMilestones</code>
-      <code>limitValueIsAcceptable</code>
       <code>getCurrentUser</code>
       <code>getMilestonesByPlanning</code>
       <code>sendPaginationHeaders</code>
@@ -2626,19 +2568,17 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/ProjectBacklogResource.class.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="7">
       <code>$limit</code>
       <code>$offset</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="9">
+    <MissingReturnType occurrences="8">
       <code>get</code>
-      <code>limitValueIsAcceptable</code>
       <code>options</code>
       <code>put</code>
       <code>patch</code>
@@ -2652,7 +2592,7 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/ProjectMilestonesResource.class.php">
-    <MissingParamType occurrences="12">
+    <MissingParamType occurrences="11">
       <code>$project</code>
       <code>$representation_type</code>
       <code>$query</code>
@@ -2660,34 +2600,30 @@
       <code>$offset</code>
       <code>$order</code>
       <code>$limit</code>
-      <code>$limit</code>
       <code>$offset</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>get</code>
-      <code>limitValueIsAcceptable</code>
       <code>options</code>
       <code>sendPaginationHeaders</code>
       <code>sendAllowHeaders</code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/ProjectPlanningsResource.class.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="7">
       <code>$limit</code>
       <code>$offset</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>get</code>
-      <code>limitValueIsAcceptable</code>
       <code>options</code>
       <code>sendPaginationHeaders</code>
       <code>sendAllowHeaders</code>
@@ -2713,11 +2649,6 @@
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/SubMilestoneDoesNotExistException.class.php">
     <MissingParamType occurrences="1">
       <code>$milestone_id</code>
-    </MissingParamType>
-  </file>
-  <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/SubmilestoneListedTwiceException.class.php">
-    <MissingParamType occurrences="1">
-      <code>$artifact_id</code>
     </MissingParamType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v1/SwimlineRepresentation.class.php">
@@ -2755,12 +2686,9 @@
     <UndefinedClass occurrences="1">
       <code>BacklogItemParentReference</code>
     </UndefinedClass>
-    <UndefinedInterfaceMethod occurrences="5">
-      <code>title</code>
+    <UndefinedInterfaceMethod occurrences="2">
       <code>status</code>
       <code>type</code>
-      <code>short_type</code>
-      <code>color</code>
     </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v2/BacklogItemRepresentationFactory.class.php">
@@ -2784,20 +2712,18 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboard/REST/v2/ProjectBacklogResource.class.php">
-    <MissingParamType occurrences="8">
+    <MissingParamType occurrences="7">
       <code>$limit</code>
       <code>$offset</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>get</code>
       <code>hasUserPriorityChangePermission</code>
-      <code>limitValueIsAcceptable</code>
       <code>options</code>
       <code>getBacklogItems</code>
       <code>sendPaginationHeaders</code>
@@ -3218,17 +3144,10 @@
     </UndefinedConstant>
   </file>
   <file src="plugins/agiledashboard/include/AgileDashboardRouterBuilder.php">
-    <MissingParamType occurrences="2">
-      <code>$request</code>
-      <code>$milestone_factory</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="3">
       <code>getArtifactFactory</code>
       <code>getStatusCounter</code>
-      <code>getMilestoneRepresentationBuilder</code>
-      <code>getBacklogFactory</code>
       <code>getMonoMileStoneChecker</code>
-      <code>getMonoMilestoneItemsFinder</code>
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Dao.class.php">
@@ -3488,21 +3407,12 @@
     <UndefinedMethod occurrences="1">
       <code>removeSubMilestones</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;cache_all_milestone</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/agiledashboard/include/Planning/MilestonePaneFactory.class.php">
-    <MissingReturnType occurrences="10">
-      <code>buildListOfPaneInfo</code>
-      <code>buildActivePane</code>
+    <MissingReturnType occurrences="4">
       <code>getDetailsPaneInfo</code>
       <code>getDetailsPane</code>
       <code>buildDefaultPane</code>
-      <code>getMilestoneRepresentation</code>
-      <code>getPaginatedBacklogItemsRepresentationsForMilestone</code>
-      <code>getPaginatedSubMilestonesRepresentations</code>
-      <code>buildAdditionnalPanes</code>
       <code>getDetailsPresenterBuilder</code>
     </MissingReturnType>
   </file>
@@ -3659,15 +3569,13 @@
       <code>$planning_id</code>
       <code>$planning_id</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="9">
+    <MissingPropertyType occurrences="7">
       <code>$planning_parameters-&gt;name</code>
       <code>$planning_parameters-&gt;backlog_title</code>
       <code>$planning_parameters-&gt;plan_title</code>
-      <code>$planning_parameters-&gt;planning_tracker_id</code>
       <code>$planning_parameters-&gt;name</code>
       <code>$planning_parameters-&gt;backlog_title</code>
       <code>$planning_parameters-&gt;plan_title</code>
-      <code>$planning_parameters-&gt;planning_tracker_id</code>
       <code>$planning_parameters-&gt;backlog_tracker_ids</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="18">
@@ -3786,12 +3694,11 @@
       <code>$array</code>
       <code>$key</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="6">
+    <MissingPropertyType occurrences="5">
       <code>$name</code>
       <code>$backlog_title</code>
       <code>$plan_title</code>
       <code>$backlog_tracker_ids</code>
-      <code>$planning_tracker_id</code>
       <code>$priority_change_permission</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="2">
@@ -3833,12 +3740,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningRequestValidator.class.php">
-    <MissingPropertyType occurrences="5">
+    <MissingPropertyType occurrences="2">
       <code>$planning_parameters-&gt;name</code>
       <code>$planning_parameters-&gt;backlog_tracker_ids</code>
-      <code>$planning_parameters-&gt;planning_tracker_id</code>
-      <code>$planning_parameters-&gt;planning_tracker_id</code>
-      <code>$planning_parameters-&gt;planning_tracker_id</code>
     </MissingPropertyType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/PlanningUpdater.php">
@@ -4039,12 +3943,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/agiledashboard/include/Planning/VirtualTopMilestonePaneFactory.class.php">
-    <InvalidArgument occurrences="1">
-      <code>self::PRELOAD_PAGINATION_LIMIT</code>
-    </InvalidArgument>
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>array()</code>
-    </InvalidPropertyAssignmentValue>
     <InvalidReturnStatement occurrences="3">
       <code>self::TOP_MILESTONE_DUMMY_ARTIFACT_ID</code>
       <code>$this-&gt;list_of_pane_info[$milestone_artifact_id]</code>
@@ -4055,23 +3953,15 @@
       <code>AgileDashboard_PaneInfo[]</code>
       <code>\AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo</code>
     </InvalidReturnType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="1">
       <code>buildListOfPaneInfo</code>
-      <code>getPaginatedBacklogItemsRepresentationsForTopMilestone</code>
-      <code>getPaginatedTopMilestonesRepresentations</code>
     </MissingReturnType>
-    <TooFewArguments occurrences="1">
-      <code>getPaginatedTopMilestonesRepresentations</code>
-    </TooFewArguments>
     <UndefinedDocblockClass occurrences="2">
       <code>AgileDashboard_PaneInfo[]</code>
       <code>\AgileDashboard_Milestone_Pane_Planning_PlanningPaneInfo</code>
     </UndefinedDocblockClass>
-    <UndefinedMethod occurrences="4">
-      <code>$this-&gt;active_pane</code>
-      <code>$this-&gt;active_pane</code>
+    <UndefinedMethod occurrences="1">
       <code>$this-&gt;list_of_pane_info[$milestone_artifact_id]</code>
-      <code>$this-&gt;active_pane</code>
     </UndefinedMethod>
   </file>
   <file src="plugins/agiledashboard/include/Planning/XML/XMLExporter.php">
@@ -4091,7 +3981,7 @@
     <InvalidNullableReturnType occurrences="1">
       <code>\Tuleap\AgileDashboard\JavascriptDependenciesProvider</code>
     </InvalidNullableReturnType>
-    <MissingParamType occurrences="38">
+    <MissingParamType occurrences="36">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
@@ -4107,11 +3997,9 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
       <code>$requested_planning</code>
       <code>$requested_planning</code>
       <code>$requested_planning</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
       <code>$parameters</code>
@@ -4131,12 +4019,7 @@
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="3">
-      <code>$redirect-&gt;mode</code>
-      <code>$redirect-&gt;query_parameters</code>
-      <code>$redirect-&gt;query_parameters</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="92">
+    <MissingReturnType occurrences="89">
       <code>getHooksAndCallbacks</code>
       <code>tracker_formelement_get_classnames</code>
       <code>service_classnames</code>
@@ -4152,7 +4035,6 @@
       <code>tracker_event_general_settings</code>
       <code>tracker_event_project_creation_trackers_required</code>
       <code>tracker_event_trackers_duplicated</code>
-      <code>tracker_event_redirect_after_artifact_creation_or_update</code>
       <code>tracker_usage</code>
       <code>widgetInstance</code>
       <code>getUserWidgetList</code>
@@ -4161,8 +4043,6 @@
       <code>redirectOrAppend</code>
       <code>redirectToPlanning</code>
       <code>redirectToTopPlanning</code>
-      <code>tracker_event_build_artifact_form_action</code>
-      <code>setQueryParametersFromRequest</code>
       <code>cssfile</code>
       <code>javascript_file</code>
       <code>burning_parrot_get_stylesheets</code>
@@ -4888,9 +4768,8 @@
       <code>getColor</code>
       <code>isLegacyColor</code>
     </InvalidMethodCall>
-    <InvalidPropertyAssignmentValue occurrences="2">
+    <InvalidPropertyAssignmentValue occurrences="1">
       <code>$accent_color</code>
-      <code>$user-&gt;getPreference(PFUser::ACCESSIBILITY_MODE)</code>
     </InvalidPropertyAssignmentValue>
     <MissingParamType occurrences="1">
       <code>$swimline_id</code>
@@ -5885,9 +5764,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/cardwall/include/Semantic/SemanticCardPresenter.php">
-    <InvalidPropertyAssignmentValue occurrences="1">
-      <code>$user-&gt;getPreference(PFUser::ACCESSIBILITY_MODE)</code>
-    </InvalidPropertyAssignmentValue>
     <MissingParamType occurrences="1">
       <code>$form_url</code>
     </MissingParamType>
@@ -6018,7 +5894,7 @@
     <ArgumentTypeCoercion occurrences="1">
       <code>$event_retriever-&gt;getField()</code>
     </ArgumentTypeCoercion>
-    <MissingParamType occurrences="25">
+    <MissingParamType occurrences="23">
       <code>$id</code>
       <code>$params</code>
       <code>$group_id</code>
@@ -6036,8 +5912,6 @@
       <code>$milestone</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$cardwall</code>
       <code>$params</code>
       <code>$version</code>
@@ -6045,10 +5919,7 @@
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="1">
-      <code>$redirect-&gt;query_parameters</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="41">
+    <MissingReturnType occurrences="39">
       <code>getConfigFactory</code>
       <code>getHooksAndCallbacks</code>
       <code>tracker_event_export_full_xml</code>
@@ -6075,10 +5946,8 @@
       <code>agiledashboard_event_index_page</code>
       <code>getCardwallPane</code>
       <code>agiledashboard_event_milestone_selector_redirect</code>
-      <code>tracker_event_redirect_after_artifact_creation_or_update</code>
       <code>redirectToAgileDashboard</code>
       <code>redirectToRenderer</code>
-      <code>tracker_event_build_artifact_form_action</code>
       <code>appendCardwallParameter</code>
       <code>agiledashboard_export_xml</code>
       <code>import_xml_project_tracker_done</code>
@@ -8633,15 +8502,11 @@
       <code>getCurrentUser</code>
       <code>getItemFactory</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="3">
-      <code>$this-&gt;itemMapping</code>
+    <UndefinedThisPropertyAssignment occurrences="2">
       <code>$this-&gt;dao</code>
       <code>$this-&gt;dao</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;itemMapping</code>
-      <code>$this-&gt;itemMapping</code>
-      <code>$this-&gt;itemMapping</code>
+    <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;dao</code>
     </UndefinedThisPropertyFetch>
   </file>
@@ -11478,9 +11343,6 @@
     </MissingReturnType>
   </file>
   <file src="plugins/docman/include/Docman_Token.class.php">
-    <InvalidScalarArgument occurrences="1">
-      <code>rand()</code>
-    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$token</code>
     </MissingParamType>
@@ -14086,12 +13948,10 @@
       <code>visitDocument</code>
       <code>_displayItem</code>
     </MissingReturnType>
-    <UndefinedThisPropertyAssignment occurrences="2">
+    <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;view</code>
-      <code>$this-&gt;params</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="4">
-      <code>$this-&gt;params</code>
+    <UndefinedThisPropertyFetch occurrences="3">
       <code>$this-&gt;view</code>
       <code>$this-&gt;view</code>
       <code>$this-&gt;view</code>
@@ -15139,23 +14999,19 @@
     </MissingReturnType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ProjectResource.php">
-    <MissingParamType occurrences="7">
+    <MissingParamType occurrences="5">
       <code>$limit</code>
       <code>$offset</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
-      <code>$limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="7">
+    <MissingReturnType occurrences="5">
       <code>optionsFRSPackages</code>
       <code>getPackages</code>
       <code>optionsService</code>
       <code>sendAllowHeadersForFRSPackages</code>
-      <code>checkLimitValueIsAcceptable</code>
       <code>sendPaginationHeaders</code>
-      <code>limitValueIsAcceptable</code>
     </MissingReturnType>
   </file>
   <file src="plugins/frs/include/FRS/REST/v1/ReleasePATCHRepresentation.php">
@@ -15333,11 +15189,6 @@
       <code>artifactPartialUpdate</code>
       <code>moveArtifactActionAllowedByPluginRetriever</code>
     </MissingReturnType>
-  </file>
-  <file src="plugins/git/bin/restore-tar-repository.php">
-    <NullArgument occurrences="1">
-      <code>$exit_code</code>
-    </NullArgument>
   </file>
   <file src="plugins/git/include/AccessRightsPresenterOptionsBuilder.php">
     <MissingParamType occurrences="3">
@@ -19866,11 +19717,10 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/GitPHP/git/Tree.php">
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>SetCommit</code>
       <code>ReadContents</code>
       <code>ReadContentsRaw</code>
-      <code>ReferenceContents</code>
       <code>DereferenceContents</code>
     </MissingReturnType>
     <PossiblyFalseOperand occurrences="3">
@@ -20194,7 +20044,6 @@
       <code>$date</code>
     </MissingParamType>
     <MissingPropertyType occurrences="30">
-      <code>$this-&gt;notifiedMails</code>
       <code>$mirror-&gt;url</code>
       <code>$id</code>
       <code>$parentId</code>
@@ -20224,6 +20073,7 @@
       <code>$last_push_date</code>
       <code>$is_mirrored</code>
       <code>$backendType</code>
+      <code>$this-&gt;notifiedMails</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="65">
       <code>load</code>
@@ -21117,20 +20967,6 @@
       <code>build</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/git/include/REST/v1/ProjectResource.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$this-&gt;query_parameter_parser-&gt;getInt($query, 'owner_id')</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>string</code>
-    </InvalidReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$owner_id</code>
-    </InvalidScalarArgument>
-  </file>
   <file src="plugins/git/include/REST/v1/RepositoryRepresentationBuilder.class.php">
     <InvalidReturnStatement occurrences="1">
       <code>(new DateTime($repository-&gt;getCreationDate()))-&gt;getTimestamp()</code>
@@ -21151,7 +20987,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/REST/v1/RepositoryResource.class.php">
-    <MissingParamType occurrences="13">
+    <MissingParamType occurrences="12">
       <code>$project_id</code>
       <code>$name</code>
       <code>$repository_id</code>
@@ -21163,10 +20999,9 @@
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
-      <code>$limit</code>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="19">
+    <MissingReturnType occurrences="18">
       <code>optionsId</code>
       <code>optionsPullRequests</code>
       <code>post</code>
@@ -21185,7 +21020,6 @@
       <code>checkPullRequestEndpointsAvailable</code>
       <code>sendAllowHeaders</code>
       <code>sendPaginationHeaders</code>
-      <code>checkLimit</code>
     </MissingReturnType>
   </file>
   <file src="plugins/git/include/SystemEvents/ParseGitolite3Logs.php">
@@ -21464,7 +21298,7 @@
     </MissingPropertyType>
   </file>
   <file src="plugins/git/include/gitPlugin.php">
-    <MissingParamType occurrences="43">
+    <MissingParamType occurrences="40">
       <code>$id</code>
       <code>$params</code>
       <code>$params</code>
@@ -21503,9 +21337,6 @@
       <code>$params</code>
       <code>$params</code>
       <code>$params</code>
-      <code>$version</code>
-      <code>$params</code>
-      <code>$params</code>
       <code>$params</code>
       <code>$params</code>
     </MissingParamType>
@@ -21513,7 +21344,7 @@
       <code>$FREQUENCIES_GIT_READ</code>
       <code>$_cached_permission_user_allowed_to_change</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="135">
+    <MissingReturnType occurrences="132">
       <code>getHooksAndCallbacks</code>
       <code>serviceClassnames</code>
       <code>site_admin_option_hook</code>
@@ -21618,9 +21449,6 @@
       <code>fill_project_history_sub_events</code>
       <code>post_system_events_actions</code>
       <code>pluginIsConcerned</code>
-      <code>getRESTRepositoryRepresentationBuilder</code>
-      <code>rest_project_get_git</code>
-      <code>rest_project_options_git</code>
       <code>rest_project_resources</code>
       <code>rest_resources</code>
       <code>showArchivedRepositories</code>
@@ -22060,9 +21888,6 @@
     </MissingParamType>
   </file>
   <file src="plugins/gitlfs/include/StreamFilter/StreamFilter.php">
-    <InvalidArgument occurrences="1">
-      <code>$filter</code>
-    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$resource_to_filter</code>
     </MissingParamType>
@@ -22477,7 +22302,7 @@
       <code>$engine</code>
       <code>$mustache_renderer</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="47">
+    <MissingReturnType occurrences="46">
       <code>registerInSession</code>
       <code>loadFromSession</code>
       <code>loadFromDb</code>
@@ -22510,7 +22335,6 @@
       <code>getRow</code>
       <code>stroke</code>
       <code>getTracker</code>
-      <code>getSiblingsForRankSelectbox</code>
       <code>exportToXml</code>
       <code>delete</code>
       <code>duplicate</code>
@@ -23166,32 +22990,26 @@
     <MissingClosureReturnType occurrences="1">
       <code>function ($value) {</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="4">
       <code>$engine</code>
       <code>$observed_field</code>
       <code>$type</code>
       <code>$type</code>
-      <code>$engine</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="8">
+    <MissingPropertyType occurrences="5">
       <code>$timeFiller</code>
-      <code>$startDate</code>
       <code>$stopDate</code>
-      <code>$scale</code>
-      <code>$nbSteps</code>
       <code>$labels</code>
       <code>$observed_field_id</code>
       <code>$observed_field</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="6">
       <code>buildProperties</code>
       <code>getCumulativeFlowData</code>
       <code>getColumns</code>
       <code>isColumnEmpty</code>
       <code>isValidObservedField</code>
       <code>isValidType</code>
-      <code>getColumnColor</code>
-      <code>generateEmptyValues</code>
     </MissingReturnType>
     <UndefinedPropertyAssignment occurrences="1">
       <code>$engine-&gt;legend</code>
@@ -24210,17 +24028,13 @@
     </MissingReturnType>
   </file>
   <file src="plugins/label/include/Label/REST/v1/ProjectResource.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="2">
       <code>$query</code>
-      <code>$limit</code>
-      <code>$limit</code>
       <code>$id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="2">
       <code>optionsLabeledItems</code>
       <code>sendAllowHeadersForLabeledItems</code>
-      <code>checkLimitValueIsAcceptable</code>
-      <code>limitValueIsAcceptable</code>
     </MissingReturnType>
   </file>
   <file src="plugins/label/include/Label/Widget/Dao.php">
@@ -24703,11 +24517,6 @@
     <PossiblyNullReference occurrences="1">
       <code>isAdmin</code>
     </PossiblyNullReference>
-  </file>
-  <file src="plugins/ldap/include/LDAP_ProjectManager.class.php">
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;cacheSVNLDAP</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/ldap/include/LDAP_SearchPeople.class.php">
     <MissingParamType occurrences="2">
@@ -25997,13 +25806,6 @@
     <PossiblyNullReference occurrences="1">
       <code>getID</code>
     </PossiblyNullReference>
-    <UndefinedThisPropertyAssignment occurrences="1">
-      <code>$this-&gt;text</code>
-    </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;text</code>
-      <code>$this-&gt;text</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/mediawiki/www/setpath.php">
     <MissingClosureParamType occurrences="1">
@@ -28573,7 +28375,7 @@
     <InvalidPropertyAssignmentValue occurrences="3">
       <code>new CommentFactory($comment_dao, $reference_manager, $event_dispatcher)</code>
     </InvalidPropertyAssignmentValue>
-    <MissingParamType occurrences="11">
+    <MissingParamType occurrences="10">
       <code>$id</code>
       <code>$id</code>
       <code>$status</code>
@@ -28581,12 +28383,11 @@
       <code>$body</code>
       <code>$id</code>
       <code>$id</code>
-      <code>$limit</code>
       <code>$id</code>
       <code>$repository_id</code>
       <code>$uri</code>
     </MissingParamType>
-    <MissingReturnType occurrences="21">
+    <MissingReturnType occurrences="20">
       <code>options</code>
       <code>optionsCommits</code>
       <code>optionsLabels</code>
@@ -28597,7 +28398,6 @@
       <code>optionsTimeline</code>
       <code>optionsComments</code>
       <code>postComments</code>
-      <code>checkLimit</code>
       <code>updateGitReferenceIfNeeded</code>
       <code>getRepository</code>
       <code>checkUserCanReadRepository</code>
@@ -33755,16 +33555,14 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactFilesResource.class.php">
-    <MissingParamType occurrences="5">
+    <MissingParamType occurrences="4">
       <code>$id</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>optionsId</code>
-      <code>checkLimitValue</code>
       <code>sendAllowHeadersForArtifactFilesId</code>
       <code>sendPaginationHeaders</code>
     </MissingReturnType>
@@ -33783,48 +33581,6 @@
       <code>$nature</code>
       <code>$nature</code>
     </PossiblyNullArgument>
-  </file>
-  <file src="plugins/tracker/include/REST/v1/ArtifactLinkUpdater.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>''</code>
-      <code>''</code>
-    </InvalidScalarArgument>
-    <InvalidThrow occurrences="2">
-      <code>throw new ItemListedTwiceException($linked_artifact_id);</code>
-      <code>throw new ItemListedTwiceException($linked_artifact_id);</code>
-    </InvalidThrow>
-    <MissingParamType occurrences="7">
-      <code>$type</code>
-      <code>$type</code>
-      <code>$type</code>
-      <code>$context_id</code>
-      <code>$project_id</code>
-      <code>$type</code>
-      <code>$type</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="14">
-      <code>update</code>
-      <code>getFieldsDataForNewChangeset</code>
-      <code>getAllArtifactsToBeRemoved</code>
-      <code>getAllLinkedArtifactsThatShouldBeRemoved</code>
-      <code>getElementsToLink</code>
-      <code>updateArtifactLinks</code>
-      <code>unlinkAndLinkElements</code>
-      <code>getElementsAlreadyLinkedToArtifact</code>
-      <code>setOrderWithoutHistoryChangeLogging</code>
-      <code>setOrderWithHistoryChangeLogging</code>
-      <code>formatFieldDatas</code>
-      <code>augmentFieldDatasRegardingArtifactLinkTypeUsage</code>
-      <code>formatLinkedElementForNewChangeset</code>
-      <code>formatElementsToBeUnlinkedForNewChangeset</code>
-    </MissingReturnType>
-    <PossiblyNullReference occurrences="1">
-      <code>isProjectAllowedToUseNature</code>
-    </PossiblyNullReference>
-    <UndefinedClass occurrences="2">
-      <code>ItemListedTwiceException</code>
-      <code>ItemListedTwiceException</code>
-    </UndefinedClass>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactMatchingReportCollection.php">
     <MissingParamType occurrences="2">
@@ -33848,7 +33604,7 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ArtifactTemporaryFilesResource.class.php">
-    <MissingParamType occurrences="13">
+    <MissingParamType occurrences="12">
       <code>$id</code>
       <code>$offset</code>
       <code>$limit</code>
@@ -33859,11 +33615,10 @@
       <code>$size</code>
       <code>$id</code>
       <code>$id</code>
-      <code>$limit</code>
       <code>$status_code</code>
       <code>$message</code>
     </MissingParamType>
-    <MissingReturnType occurrences="13">
+    <MissingReturnType occurrences="12">
       <code>getTemporaryFileContent</code>
       <code>getTemporaryFileSize</code>
       <code>options</code>
@@ -33876,7 +33631,6 @@
       <code>sendPaginationHeaders</code>
       <code>removeTemporaryFile</code>
       <code>checkFileIsTemporary</code>
-      <code>checkLimitValue</code>
     </MissingReturnType>
     <UndefinedClass occurrences="1">
       <code>Tracker_FormElement_InvalidFieldException</code>
@@ -33954,11 +33708,6 @@
       <code>checkExternalCriteria</code>
     </MissingReturnType>
   </file>
-  <file src="plugins/tracker/include/REST/v1/IFilterValidElementsToUnkink.php">
-    <MissingReturnType occurrences="1">
-      <code>filter</code>
-    </MissingReturnType>
-  </file>
   <file src="plugins/tracker/include/REST/v1/MilestonesBurndownResource.class.php">
     <MissingReturnType occurrences="3">
       <code>options</code>
@@ -33975,9 +33724,8 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/ProjectTrackersResource.class.php">
-    <MissingParamType occurrences="10">
+    <MissingParamType occurrences="9">
       <code>$query</code>
-      <code>$limit</code>
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
@@ -33987,9 +33735,8 @@
       <code>$json_query</code>
       <code>$filter_on_tracker_administration_permission</code>
     </MissingParamType>
-    <MissingReturnType occurrences="4">
+    <MissingReturnType occurrences="3">
       <code>optionsTrackers</code>
-      <code>limitValueIsAcceptable</code>
       <code>sendPaginationHeaders</code>
       <code>sendAllowHeaders</code>
     </MissingReturnType>
@@ -34011,16 +33758,14 @@
     <MissingClosureReturnType occurrences="1">
       <code>function (?Tracker_Artifact $artifact) use (</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$artifacts</code>
       <code>$with_all_field_values</code>
       <code>$id</code>
-      <code>$limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="3">
+    <MissingReturnType occurrences="2">
       <code>optionsId</code>
       <code>optionsArtifacts</code>
-      <code>checkLimitValue</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/REST/v1/TrackerFieldRepresentations/PermissionsOnArtifacts.class.php">
@@ -34078,7 +33823,7 @@
     <MissingClosureReturnType occurrences="1">
       <code>function (?Tracker_Artifact $artifact) use (</code>
     </MissingClosureReturnType>
-    <MissingParamType occurrences="16">
+    <MissingParamType occurrences="15">
       <code>$id</code>
       <code>$query</code>
       <code>$offset</code>
@@ -34094,9 +33839,8 @@
       <code>$id</code>
       <code>$field_id</code>
       <code>$is_used</code>
-      <code>$limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="15">
+    <MissingReturnType occurrences="14">
       <code>options</code>
       <code>optionsId</code>
       <code>optionsReports</code>
@@ -34110,7 +33854,6 @@
       <code>deleteTransitionsRules</code>
       <code>getParentTracker</code>
       <code>sendAllowHeaderForTracker</code>
-      <code>checkLimitValue</code>
       <code>getJsonDecoder</code>
     </MissingReturnType>
     <UndefinedDocblockClass occurrences="2">
@@ -35430,13 +35173,6 @@
       <code>$recently_visited_rows</code>
     </PossiblyFalseIterator>
   </file>
-  <file src="plugins/tracker/include/Tracker/Artifact/Redirect.class.php">
-    <MissingPropertyType occurrences="3">
-      <code>$mode</code>
-      <code>$base_url</code>
-      <code>$query_parameters</code>
-    </MissingPropertyType>
-  </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Renderer/ArtifactRenderer.class.php">
     <MissingParamType occurrences="1">
       <code>$html</code>
@@ -35520,8 +35256,7 @@
     <MissingParamType occurrences="1">
       <code>$number</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$this-&gt;redirect-&gt;query_parameters</code>
+    <MissingPropertyType occurrences="1">
       <code>$retriever</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="10">
@@ -35696,8 +35431,7 @@
     <MoreSpecificReturnType occurrences="1">
       <code>MustacheRenderer</code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="4">
-      <code>null</code>
+    <NullableReturnStatement occurrences="3">
       <code>$previous</code>
       <code>$this-&gt;getHierarchyFactory()-&gt;getParentArtifact($user, $this)</code>
       <code>$this-&gt;getFormElementFactory()-&gt;getABurndownField($user, $this-&gt;getTracker())</code>
@@ -36268,12 +36002,11 @@
     <MissingPropertyType occurrences="1">
       <code>$MAX_LENGTH_FOR_DIFF</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="5">
+    <MissingReturnType occurrences="4">
       <code>getFormat</code>
       <code>getFullRESTRepresentation</code>
       <code>getFormatedDiff</code>
       <code>getContentAsText</code>
-      <code>isInHTMLFormat</code>
     </MissingReturnType>
     <PossiblyNullReference occurrences="2">
       <code>getProject</code>
@@ -36301,10 +36034,7 @@
       <code>$bodyFormat</code>
       <code>$parent_id</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="8">
-      <code>purifyBody</code>
-      <code>purifyHTMLBody</code>
-      <code>fetchFormattedMailComment</code>
+    <MissingReturnType occurrences="5">
       <code>fetchFormattedMailUserInfo</code>
       <code>getSubmittedBy</code>
       <code>getSubmittedOn</code>
@@ -36317,9 +36047,6 @@
     <PossiblyFalseArgument occurrences="1">
       <code>date('c', $this-&gt;submitted_on)</code>
     </PossiblyFalseArgument>
-    <PossiblyNullReference occurrences="1">
-      <code>fetchHtmlAvatar</code>
-    </PossiblyNullReference>
   </file>
   <file src="plugins/tracker/include/Tracker/Artifact/Tracker_Artifact_Changeset_Null.class.php">
     <FalsableReturnStatement occurrences="1">
@@ -36746,9 +36473,6 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <InvalidScalarArgument occurrences="1">
-      <code>$artifact_ids</code>
-    </InvalidScalarArgument>
     <MissingClosureReturnType occurrences="1">
       <code>function () use ($tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {</code>
     </MissingClosureReturnType>
@@ -37300,9 +37024,6 @@
     <PossiblyNullPropertyAssignmentValue occurrences="1">
       <code>null</code>
     </PossiblyNullPropertyAssignmentValue>
-    <UndefinedDocblockClass occurrences="1">
-      <code>date</code>
-    </UndefinedDocblockClass>
     <UndefinedMethod occurrences="1">
       <code>getLastValue</code>
     </UndefinedMethod>
@@ -37384,12 +37105,6 @@
       <code>DataAccessResult</code>
       <code>DataAccessResult</code>
     </InvalidFalsableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>$reminderId</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>bool</code>
-    </InvalidReturnType>
     <MissingParamType occurrences="2">
       <code>$trackerId</code>
       <code>$checkReminders</code>
@@ -37556,17 +37271,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/BurndownCalculator.php">
-    <MissingParamType occurrences="5">
-      <code>$timestamp</code>
-      <code>$stop_on_manual_value</code>
-      <code>$target_field_name</code>
-      <code>$computed_field_id</code>
+    <MissingParamType occurrences="1">
       <code>$timestamp</code>
     </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>fetchChildrenAndManualValuesOfArtifacts</code>
-      <code>getChildrenForBurndownWithComputedValuesAtGivenDate</code>
-    </MissingReturnType>
     <NullOperand occurrences="1">
       <code>$manual_sum</code>
     </NullOperand>
@@ -37649,15 +37356,9 @@
     </NullableReturnStatement>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/ComputedFieldCalculator.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="1">
       <code>$timestamp</code>
-      <code>$stop_on_manual_value</code>
-      <code>$target_field_name</code>
-      <code>$computed_field_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>fetchChildrenAndManualValuesOfArtifacts</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/Container/FieldsExtractor.php">
     <MissingReturnType occurrences="1">
@@ -38384,15 +38085,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/IProvideArtifactChildrenForComputedCalculation.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="1">
       <code>$timestamp</code>
-      <code>$stop_on_manual_value</code>
-      <code>$target_field_name</code>
-      <code>$computed_field_id</code>
     </MissingParamType>
-    <MissingReturnType occurrences="1">
-      <code>fetchChildrenAndManualValuesOfArtifacts</code>
-    </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/FormElement/PermissionsOnArtifactUGroupRetriever.php">
     <MissingParamType occurrences="1">
@@ -38529,11 +38224,10 @@
     <InvalidFalsableReturnType occurrences="1">
       <code>string</code>
     </InvalidFalsableReturnType>
-    <InvalidNullableReturnType occurrences="4">
+    <InvalidNullableReturnType occurrences="3">
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_Field</code>
       <code>Tracker_FormElement_IComputeValues</code>
-      <code>Tracker_FormElement_Field_ArtifactLink</code>
     </InvalidNullableReturnType>
     <InvalidReturnStatement occurrences="1"/>
     <InvalidReturnType occurrences="1">
@@ -38673,8 +38367,10 @@
     <MoreSpecificReturnType occurrences="1">
       <code>Tracker_FormElement</code>
     </MoreSpecificReturnType>
-    <NullableReturnStatement occurrences="4">
-      <code>null</code>
+    <NullableReturnStatement occurrences="6">
+      <code>$this-&gt;formElements[$form_element_id]</code>
+      <code>$this-&gt;formElements_by_name[$tracker_id][$name]</code>
+      <code>$this-&gt;used_formElements[$id]</code>
       <code>null</code>
       <code>null</code>
       <code>null</code>
@@ -39394,8 +39090,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getValue</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="2">
-      <code>Date</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>date</code>
     </UndefinedDocblockClass>
     <UndefinedMethod occurrences="2">
@@ -39578,12 +39273,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $artifact-&gt;getLastChangeset()-&gt;getSubmittedOn())</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>date</code>
-    </InvalidReturnType>
     <MissingParamType occurrences="1">
       <code>$submitted_values</code>
     </MissingParamType>
@@ -39614,8 +39303,7 @@
     <PossiblyNullReference occurrences="1">
       <code>getSubmittedOn</code>
     </PossiblyNullReference>
-    <UndefinedDocblockClass occurrences="2">
-      <code>date</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>date</code>
     </UndefinedDocblockClass>
   </file>
@@ -40620,12 +40308,6 @@
     <InvalidNullableReturnType occurrences="1">
       <code>int</code>
     </InvalidNullableReturnType>
-    <InvalidReturnStatement occurrences="1">
-      <code>date(Tracker_FormElement_DateFormatter::DATE_FORMAT, $artifact-&gt;getSubmittedOn())</code>
-    </InvalidReturnStatement>
-    <InvalidReturnType occurrences="1">
-      <code>date</code>
-    </InvalidReturnType>
     <MissingPropertyType occurrences="2">
       <code>$criteria-&gt;is_advanced</code>
       <code>$default_properties</code>
@@ -40640,8 +40322,7 @@
     <NullableReturnStatement occurrences="1">
       <code>null</code>
     </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="2">
-      <code>date</code>
+    <UndefinedDocblockClass occurrences="1">
       <code>date</code>
     </UndefinedDocblockClass>
   </file>
@@ -46197,6 +45878,9 @@
       <code>saveRenderer</code>
       <code>getTypes</code>
     </MissingReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;renderers[$row['id']]</code>
+    </NullableReturnStatement>
     <PossiblyNullReference occurrences="1">
       <code>duplicate</code>
     </PossiblyNullReference>
@@ -47255,9 +46939,6 @@
       <code>getVisibleValuesPlusNoneIfAny</code>
       <code>getVisibleValuesPlusNoneIfAny</code>
     </UndefinedMethod>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;rules_by_tracker_id</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Tracker/Rule/dao/Tracker_RuleDao.class.php">
     <FalsableReturnStatement occurrences="3">
@@ -47618,10 +47299,9 @@
       <code>false</code>
       <code>false</code>
     </FalsableReturnStatement>
-    <InvalidNullableReturnType occurrences="4">
+    <InvalidNullableReturnType occurrences="3">
       <code>Tracker_FormElement_Field_Text</code>
       <code>Tracker_FormElement_Field_Text</code>
-      <code>Tracker_FormElement_Field_List</code>
       <code>Tracker_FormElement_Field_List</code>
     </InvalidNullableReturnType>
     <InvalidParamDefault occurrences="3">
@@ -47784,8 +47464,7 @@
       <code>null</code>
       <code>null</code>
     </NullArgument>
-    <NullableReturnStatement occurrences="4">
-      <code>null</code>
+    <NullableReturnStatement occurrences="3">
       <code>null</code>
       <code>null</code>
       <code>null</code>
@@ -47885,10 +47564,9 @@
     <InvalidParamDefault occurrences="1">
       <code>PFUser</code>
     </InvalidParamDefault>
-    <MissingParamType occurrences="19">
+    <MissingParamType occurrences="18">
       <code>$project_id</code>
       <code>$project_id</code>
-      <code>$requested_create_mode</code>
       <code>$requested_create_mode</code>
       <code>$requested_template_id</code>
       <code>$requested_template_id</code>
@@ -47919,7 +47597,7 @@
       <code>$tracker-&gt;description</code>
       <code>$tracker-&gt;description</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="29">
+    <MissingReturnType occurrences="28">
       <code>checkUserCanAccessTracker</code>
       <code>processSubElement</code>
       <code>redirectToTrackerHomepage</code>
@@ -47929,7 +47607,6 @@
       <code>displayFooter</code>
       <code>doCreateTracker</code>
       <code>displayCreateTracker</code>
-      <code>displayCreateTrackerFromTemplate</code>
       <code>getTrackersV3ForProject</code>
       <code>displayCreateTrackerFromTV3</code>
       <code>getSelectBoxForTV3</code>
@@ -48093,27 +47770,6 @@
       <code>getTracker_FormElementFactory</code>
       <code>getArtifactFactory</code>
       <code>getArtifactReportFactory</code>
-    </MissingReturnType>
-  </file>
-  <file src="plugins/tracker/include/Tracker/UgroupPermissionsConsistencyChecker.class.php">
-    <InvalidReturnType occurrences="1">
-      <code>Tracker_UgroupPermissionsConsistencyMessage</code>
-    </InvalidReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>Tracker_UgroupPermissionsConsistencyMessage</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="plugins/tracker/include/Tracker/UgroupPermissionsConsistencyMessenger.class.php">
-    <MissingParamType occurrences="3">
-      <code>$ugroup_names</code>
-      <code>$missing_ugroup_names</code>
-      <code>$ugroup_names</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>ugroupsAreTheSame</code>
-      <code>ugroupsMissing</code>
-      <code>allIsWell</code>
-      <code>formatUGroupNames</code>
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/include/Tracker/Webhook/Actions/AdminWebhooks.php">
@@ -49203,9 +48859,6 @@
     <UndefinedPropertyAssignment occurrences="1">
       <code>$tracker-&gt;rules</code>
     </UndefinedPropertyAssignment>
-    <UndefinedPropertyFetch occurrences="1">
-      <code>$tracker-&gt;semantics</code>
-    </UndefinedPropertyFetch>
   </file>
   <file src="plugins/tracker/include/Workflow/Action.class.php">
     <MissingReturnType occurrences="3">
@@ -50261,9 +49914,6 @@
       <code>UserManager::instance()-&gt;getUserById(Tracker_Workflow_WorkflowUser::ID)</code>
       <code>$workflow</code>
     </PossiblyNullArgument>
-    <PossiblyNullArrayOffset occurrences="1">
-      <code>$this-&gt;cache_workflowfield</code>
-    </PossiblyNullArrayOffset>
     <PossiblyNullReference occurrences="1">
       <code>getId</code>
     </PossiblyNullReference>
@@ -54158,11 +53808,6 @@
       <code>addLocation</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Http/Response/BinaryFileResponseBuilder.php">
-    <MissingParamType occurrences="1">
-      <code>$resource</code>
-    </MissingParamType>
-  </file>
   <file src="src/common/Http/Response/JSONResponseBuilder.php">
     <MissingParamType occurrences="1">
       <code>$data</code>
@@ -56024,11 +55669,6 @@
       <code>setCustomDescription</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Project/DescriptionFieldsDao.php">
-    <MissingReturnType occurrences="1">
-      <code>searchAll</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Project/Event/GetProjectWithTrackerAdministrationPermission.php">
     <MissingParamType occurrences="2">
       <code>$limit</code>
@@ -56054,8 +55694,8 @@
       <code>$this-&gt;members_data_array</code>
     </InvalidReturnStatement>
     <MissingParamType occurrences="7">
-      <code>$param</code>
       <code>$groupname</code>
+      <code>$param</code>
       <code>$tolower</code>
       <code>$field</code>
       <code>$value</code>
@@ -56465,7 +56105,7 @@
       <code>$cache_active_services</code>
       <code>$services</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="47">
+    <MissingReturnType occurrences="46">
       <code>cacheServiceClassnames</code>
       <code>cacheServices</code>
       <code>getMinimalRank</code>
@@ -56509,15 +56149,10 @@
       <code>isSuperPublic</code>
       <code>getProjectsCreatedFrom</code>
       <code>getProjectsDescFieldsValue</code>
-      <code>displayProjectsDescFieldsValue</code>
       <code>getUGroupManager</code>
       <code>projectsMustBeApprovedByAdmin</code>
       <code>isSuspended</code>
     </MissingReturnType>
-    <PossiblyUndefinedVariable occurrences="2">
-      <code>$displayfieldname</code>
-      <code>$displayfieldvalue</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/Project/ProjectCreationData.class.php">
     <MissingParamType occurrences="7">
@@ -56577,10 +56212,6 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Project/ProjectCreator.class.php">
-    <InvalidScalarArgument occurrences="2">
-      <code>(double) microtime() * 1000000</code>
-      <code>$random_num</code>
-    </InvalidScalarArgument>
     <MissingParamType occurrences="25">
       <code>$send_notifications</code>
       <code>$force_activation</code>
@@ -56925,15 +56556,6 @@
       <code>isProjectMember</code>
     </MissingReturnType>
   </file>
-  <file src="src/common/Project/REST/UserGroupRepresentation.class.php">
-    <MissingParamType occurrences="1">
-      <code>$identifier</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>getProjectAndUserGroupFromRESTId</code>
-      <code>checkRESTIdIsAppropriate</code>
-    </MissingReturnType>
-  </file>
   <file src="src/common/Project/REST/UserGroupRetriever.php">
     <MissingParamType occurrences="1">
       <code>$id</code>
@@ -56962,14 +56584,13 @@
     <InvalidReturnType occurrences="1">
       <code>Tuleap\Project\PaginatedProjects</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="15">
+    <MissingParamType occurrences="13">
       <code>$limit</code>
       <code>$offset</code>
       <code>$offset</code>
       <code>$limit</code>
       <code>$id</code>
       <code>$project_id</code>
-      <code>$limit</code>
       <code>$project_id</code>
       <code>$project_id</code>
       <code>$query</code>
@@ -56977,19 +56598,16 @@
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
-      <code>$limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="26">
+    <MissingReturnType occurrences="22">
       <code>sendProjectRepresentations</code>
       <code>options</code>
       <code>optionsId</code>
       <code>optionsHeartbeats</code>
       <code>optionsLabels</code>
       <code>patchProject</code>
-      <code>limitValueIsAcceptable</code>
       <code>optionsUserGroups</code>
       <code>getUserGroupsRepresentations</code>
-      <code>optionsGit</code>
       <code>optionsSvn</code>
       <code>getRepositoryNameFromQuery</code>
       <code>optionsWiki</code>
@@ -57002,9 +56620,7 @@
       <code>sendAllowHeadersForUserGroups</code>
       <code>sendAllowHeadersForWiki</code>
       <code>sendAllowHeadersForHeartBeat</code>
-      <code>sendAllowHeadersForGit</code>
       <code>sendPaginationHeaders</code>
-      <code>checkLimitValueIsAcceptable</code>
       <code>isUserDelegatedRestProjectManager</code>
     </MissingReturnType>
     <PossiblyInvalidArgument occurrences="1">
@@ -57225,30 +56841,6 @@
     <UndefinedMethod occurrences="1">
       <code>getId</code>
     </UndefinedMethod>
-  </file>
-  <file src="src/common/Project/UGroupLiteralizer.class.php">
-    <InvalidNullableReturnType occurrences="1">
-      <code>string</code>
-    </InvalidNullableReturnType>
-    <MissingParamType occurrences="5">
-      <code>$ugroup_id</code>
-      <code>$project_name</code>
-      <code>$object_id</code>
-      <code>$permission_type</code>
-      <code>$ugroup_ids</code>
-    </MissingParamType>
-    <MissingPropertyType occurrences="2">
-      <code>$user_status</code>
-      <code>$ugroups_templates</code>
-    </MissingPropertyType>
-    <MissingReturnType occurrences="3">
-      <code>ugroupIdToStringWithoutArobase</code>
-      <code>getUgroupIds</code>
-      <code>ugroupIdsToString</code>
-    </MissingReturnType>
-    <NullableReturnStatement occurrences="1">
-      <code>$ugroup</code>
-    </NullableReturnStatement>
   </file>
   <file src="src/common/Project/UGroupManager.class.php">
     <InvalidArgument occurrences="1">
@@ -57807,11 +57399,6 @@
       <code>$message</code>
     </MissingParamType>
   </file>
-  <file src="src/common/REST/Exceptions/LimitOutOfBoundsException.class.php">
-    <MissingParamType occurrences="1">
-      <code>$max_limit</code>
-    </MissingParamType>
-  </file>
   <file src="src/common/REST/Exceptions/NoAuthenticationHeadersException.class.php">
     <MissingParamType occurrences="1">
       <code>$header_name</code>
@@ -57821,11 +57408,10 @@
     <MissingParamType occurrences="1">
       <code>$url</code>
     </MissingParamType>
-    <MissingReturnType occurrences="8">
+    <MissingReturnType occurrences="7">
       <code>assertAccess</code>
       <code>isTokenBasedAuthentication</code>
       <code>canReachApiWithoutHTTPS</code>
-      <code>isInDebugMode</code>
       <code>isRequestFromSelf</code>
       <code>getQueryHost</code>
       <code>getRefererHost</code>
@@ -59149,24 +58735,10 @@
       <code>$description</code>
     </MissingPropertyType>
   </file>
-  <file src="src/common/User/Password/Reset/DataAccessObject.php">
-    <MissingParamType occurrences="5">
-      <code>$user_id</code>
-      <code>$verifier</code>
-      <code>$current_time</code>
-      <code>$id</code>
-      <code>$user_id</code>
-    </MissingParamType>
-  </file>
   <file src="src/common/User/Password/Reset/ResetTokenSerializer.php">
     <ImplicitToStringCast occurrences="1">
       <code>$identifier</code>
     </ImplicitToStringCast>
-  </file>
-  <file src="src/common/User/Password/Reset/Revoker.php">
-    <MissingReturnType occurrences="1">
-      <code>revokeTokens</code>
-    </MissingReturnType>
   </file>
   <file src="src/common/User/Password/Reset/Verifier.php">
     <InvalidNullableReturnType occurrences="1">
@@ -60263,13 +59835,13 @@
   <file src="src/common/Widget/Widget.class.php">
     <MissingParamType occurrences="17">
       <code>$id</code>
-      <code>$owner_id</code>
-      <code>$owner_type</code>
       <code>$widget_id</code>
       <code>$widget_id</code>
       <code>$owner_id</code>
       <code>$owner_type</code>
       <code>$id</code>
+      <code>$owner_id</code>
+      <code>$owner_type</code>
       <code>$id</code>
       <code>$owner_id</code>
       <code>$owner_type</code>
@@ -60640,32 +60212,20 @@
     </MissingReturnType>
   </file>
   <file src="src/common/Widget/Widget_Static.class.php">
-    <InvalidPropertyAssignmentValue occurrences="2">
-      <code>$rss</code>
-      <code>""</code>
-    </InvalidPropertyAssignmentValue>
-    <MissingParamType occurrences="4">
-      <code>$a</code>
-      <code>$b</code>
+    <MissingParamType occurrences="2">
       <code>$icon</code>
       <code>$additional_class</code>
     </MissingParamType>
-    <MissingReturnType occurrences="11">
+    <MissingReturnType occurrences="8">
       <code>display</code>
       <code>setTitle</code>
       <code>getTitle</code>
       <code>setContent</code>
       <code>getContent</code>
-      <code>setRssUrl</code>
-      <code>getRssUrl</code>
-      <code>hasRss</code>
       <code>setIcon</code>
       <code>setAdditionalClass</code>
       <code>getAdditionalClass</code>
     </MissingReturnType>
-    <UndefinedDocblockClass occurrences="1">
-      <code>unknown_type</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/common/account/Account_RegisterField.class.php">
     <MissingParamType occurrences="2">
@@ -61423,9 +60983,6 @@
       <code>setfacl</code>
       <code>exec</code>
     </MissingReturnType>
-    <NullArgument occurrences="1">
-      <code>$returnValue</code>
-    </NullArgument>
     <PossiblyUndefinedVariable occurrences="1">
       <code>$current_string</code>
     </PossiblyUndefinedVariable>
@@ -61732,10 +61289,10 @@
       <code>getChartBackgroundColor</code>
     </TooManyArguments>
     <UndefinedConstant occurrences="13">
-      <code>FF_USERFONT</code>
       <code>FS_NORMAL</code>
       <code>FS_BOLD</code>
       <code>FS_NORMAL</code>
+      <code>FF_USERFONT</code>
       <code>FS_NORMAL</code>
       <code>FS_BOLD</code>
       <code>FS_NORMAL</code>
@@ -62226,41 +61783,6 @@
       <code>deleteCrossReference</code>
       <code>deleteFullCrossReference</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/dao/DBDatabasesDao.class.php">
-    <MissingParamType occurrences="1">
-      <code>$name</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>searchAll</code>
-      <code>setDefaultCharsetUTF8</code>
-    </MissingReturnType>
-  </file>
-  <file src="src/common/dao/DBTablesDao.class.php">
-    <FalsableReturnStatement occurrences="2">
-      <code>$this-&gt;retrieve($sql)</code>
-      <code>$this-&gt;retrieve($sql)</code>
-    </FalsableReturnStatement>
-    <InvalidFalsableReturnType occurrences="2">
-      <code>object</code>
-      <code>object</code>
-    </InvalidFalsableReturnType>
-    <MissingParamType occurrences="5">
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$name</code>
-      <code>$filename</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="4">
-      <code>analyzeTable</code>
-      <code>checkTable</code>
-      <code>convertToUTF8</code>
-      <code>updateFromFile</code>
-    </MissingReturnType>
-    <PossiblyFalseIterator occurrences="1">
-      <code>$this-&gt;retrieve($sql)</code>
-    </PossiblyFalseIterator>
   </file>
   <file src="src/common/dao/FRSFileDao.class.php">
     <FalsableReturnStatement occurrences="3">
@@ -62759,12 +62281,11 @@
       <code>$restrict</code>
       <code>$pluginId</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>updateAvailableByPluginId</code>
       <code>removeById</code>
       <code>restrictProjectPluginUse</code>
       <code>searchProjectPluginRestrictionStatus</code>
-      <code>searchAvailableAndPriorities</code>
       <code>getAvailablePluginsWithoutOrder</code>
     </MissingReturnType>
   </file>
@@ -64196,17 +63717,13 @@
       <code>$seps</code>
       <code>$seps</code>
     </PossiblyUndefinedVariable>
-    <UndefinedThisPropertyAssignment occurrences="17">
+    <UndefinedThisPropertyAssignment occurrences="13">
       <code>$this-&gt;yind</code>
       <code>$this-&gt;xind</code>
       <code>$this-&gt;yind</code>
       <code>$this-&gt;xind</code>
       <code>$this-&gt;lcs</code>
-      <code>$this-&gt;in_seq</code>
-      <code>$this-&gt;in_seq</code>
-      <code>$this-&gt;in_seq</code>
       <code>$this-&gt;_html</code>
-      <code>$this-&gt;_lines</code>
       <code>$this-&gt;_line</code>
       <code>$this-&gt;_group</code>
       <code>$this-&gt;_tag</code>
@@ -64215,18 +63732,9 @@
       <code>$this-&gt;_tag</code>
       <code>$this-&gt;_line</code>
     </UndefinedThisPropertyAssignment>
-    <UndefinedThisPropertyFetch occurrences="27">
-      <code>$this-&gt;seq</code>
-      <code>$this-&gt;in_seq</code>
+    <UndefinedThisPropertyFetch occurrences="16">
       <code>$this-&gt;lcs</code>
-      <code>$this-&gt;seq</code>
       <code>$this-&gt;lcs</code>
-      <code>$this-&gt;seq</code>
-      <code>$this-&gt;seq</code>
-      <code>$this-&gt;in_seq</code>
-      <code>$this-&gt;seq</code>
-      <code>$this-&gt;in_seq</code>
-      <code>$this-&gt;seq</code>
       <code>$this-&gt;yind</code>
       <code>$this-&gt;xind</code>
       <code>$this-&gt;_html</code>
@@ -64238,11 +63746,9 @@
       <code>$this-&gt;_line</code>
       <code>$this-&gt;_tag</code>
       <code>$this-&gt;_line</code>
-      <code>$this-&gt;_lines</code>
       <code>$this-&gt;_tag</code>
       <code>$this-&gt;_group</code>
       <code>$this-&gt;_group</code>
-      <code>$this-&gt;_lines</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/include/Codendi_HTMLPurifier.class.php">
@@ -64426,9 +63932,6 @@
       <code>isOriginalProtocolSecure</code>
       <code>getScheme</code>
     </MissingReturnType>
-    <UndefinedThisPropertyFetch occurrences="1">
-      <code>$this-&gt;_validated_input</code>
-    </UndefinedThisPropertyFetch>
   </file>
   <file src="src/common/include/JSONHeader.php">
     <MissingParamType occurrences="1">
@@ -64772,9 +64275,6 @@
       <code>bool</code>
       <code>void</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="1">
-      <code>$uri</code>
-    </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$urlChunks</code>
     </MissingPropertyType>
@@ -64959,27 +64459,15 @@
     </MissingReturnType>
   </file>
   <file src="src/common/layout/BaseLayout.php">
-    <MissingClosureParamType occurrences="2">
-      <code>$a</code>
-      <code>$b</code>
-    </MissingClosureParamType>
-    <MissingParamType occurrences="14">
+    <MissingParamType occurrences="6">
       <code>$root</code>
       <code>$src</code>
       <code>$feedback</code>
-      <code>$url</code>
-      <code>$paths</code>
-      <code>$trace</code>
-      <code>$leaf</code>
-      <code>$backtraces</code>
-      <code>$paths</code>
-      <code>$red</code>
-      <code>$padding</code>
       <code>$breadcrumbs</code>
       <code>$params</code>
       <code>$project</code>
     </MissingParamType>
-    <MissingReturnType occurrences="21">
+    <MissingReturnType occurrences="18">
       <code>header</code>
       <code>footer</code>
       <code>displayStaticWidget</code>
@@ -64993,22 +64481,12 @@
       <code>includeFooterJavascriptFile</code>
       <code>includeFooterJavascriptSnippet</code>
       <code>feedback</code>
-      <code>debugBacktraceRec</code>
-      <code>debugBacktraces</code>
-      <code>debugDisplayPaths</code>
       <code>addBreadcrumbs</code>
       <code>setRenderedThroughservice</code>
       <code>getProjectSidebar</code>
       <code>getProjectPrivacy</code>
       <code>getFooterSiteJs</code>
     </MissingReturnType>
-    <PossiblyFalseArgument occurrences="2">
-      <code>strpos($p, ' ')</code>
-      <code>strpos($p, ' ')</code>
-    </PossiblyFalseArgument>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$xdebug_time_index</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/layout/BreadCrumbDropdown/BreadCrumb.php">
     <MissingReturnType occurrences="1">
@@ -65202,7 +64680,7 @@
       <code>void</code>
       <code>void</code>
     </InvalidReturnType>
-    <MissingParamType occurrences="39">
+    <MissingParamType occurrences="37">
       <code>$url</code>
       <code>$html_options</code>
       <code>$id</code>
@@ -65239,18 +64717,15 @@
       <code>$params</code>
       <code>$params</code>
       <code>$feedback</code>
-      <code>$link</code>
-      <code>$title</code>
       <code>$index</code>
     </MissingParamType>
-    <MissingPropertyType occurrences="5">
-      <code>$this-&gt;bgpri</code>
-      <code>$widget-&gt;id</code>
+    <MissingPropertyType occurrences="4">
       <code>$javascript</code>
       <code>$version</code>
       <code>$icons</code>
+      <code>$this-&gt;bgpri</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="39">
+    <MissingReturnType occurrences="33">
       <code>iframe</code>
       <code>selectRank</code>
       <code>selectRank_optgroup</code>
@@ -65282,12 +64757,6 @@
       <code>feedback</code>
       <code>overlay_footer</code>
       <code>footer</code>
-      <code>menu_entry</code>
-      <code>getSearchEntries</code>
-      <code>forceSelectedOption</code>
-      <code>getSelectedOption</code>
-      <code>getSearchBox</code>
-      <code>searchBox</code>
       <code>appendJsonEncodedVariable</code>
       <code>getVersion</code>
     </MissingReturnType>
@@ -66483,7 +65952,7 @@
     </MissingReturnType>
   </file>
   <file src="src/common/plugin/PluginManager.class.php">
-    <MissingParamType occurrences="33">
+    <MissingParamType occurrences="31">
       <code>$plugin</code>
       <code>$plugin</code>
       <code>$plugin</code>
@@ -66493,8 +65962,6 @@
       <code>$name</code>
       <code>$file</code>
       <code>$content</code>
-      <code>$name</code>
-      <code>$file</code>
       <code>$name</code>
       <code>$name</code>
       <code>$name</code>
@@ -66522,7 +65989,7 @@
       <code>$pluginHookPriorityManager</code>
       <code>$plugins_name</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="32">
+    <MissingReturnType occurrences="31">
       <code>setInstance</code>
       <code>clearInstance</code>
       <code>getAvailablePlugins</code>
@@ -66539,7 +66006,6 @@
       <code>configureForgeUpgrade</code>
       <code>uninstallForgeUpgrade</code>
       <code>_createEtc</code>
-      <code>_executeSqlStatements</code>
       <code>getNotYetInstalledPlugins</code>
       <code>isNameValid</code>
       <code>getPluginByName</code>
@@ -68177,16 +67643,14 @@
     </MissingReturnType>
   </file>
   <file src="src/common/system_event/REST/v1/SystemEventResource.php">
-    <MissingParamType occurrences="4">
+    <MissingParamType occurrences="3">
       <code>$limit</code>
       <code>$offset</code>
       <code>$size</code>
-      <code>$limit</code>
     </MissingParamType>
-    <MissingReturnType occurrences="6">
+    <MissingReturnType occurrences="5">
       <code>sendPaginationHeaders</code>
       <code>sendAllowHeadersForProject</code>
-      <code>limitValueIsAcceptable</code>
       <code>options</code>
       <code>checkUserIsAllowedToSeeSystemEvents</code>
       <code>isUserIsAllowedToSeeSystemEventThroughTheApi</code>
@@ -70206,14 +69670,12 @@
       <code>id</code>
     </InvalidReturnType>
     <MissingParamType occurrences="59">
-      <code>$string</code>
-      <code>$report_id</code>
+      <code>$field1</code>
+      <code>$field2</code>
+      <code>$field1</code>
+      <code>$field2</code>
       <code>$report_id</code>
       <code>$atid</code>
-      <code>$field1</code>
-      <code>$field2</code>
-      <code>$field1</code>
-      <code>$field2</code>
       <code>$user_id</code>
       <code>$name</code>
       <code>$description</code>
@@ -70232,6 +69694,7 @@
       <code>$col_width</code>
       <code>$field_name</code>
       <code>$field_name</code>
+      <code>$report_id</code>
       <code>$group_artifact_id</code>
       <code>$user_id</code>
       <code>$prefs</code>
@@ -70265,6 +69728,7 @@
       <code>$where</code>
       <code>$order_by</code>
       <code>$query</code>
+      <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="7">
       <code>$report_id</code>
@@ -70675,14 +70139,13 @@
       <code>count($chunk) / 2</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="85">
-      <code>$string</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
       <code>$Group</code>
       <code>$artifact_type_id</code>
       <code>$arr</code>
       <code>$atid</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
       <code>$stop_notification</code>
       <code>$id</code>
       <code>$value</code>
@@ -70760,6 +70223,7 @@
       <code>$from_atid</code>
       <code>$from_atid</code>
       <code>$from_aid</code>
+      <code>$string</code>
     </MissingParamType>
     <MissingReturnType occurrences="21">
       <code>setStopNotification</code>
@@ -73360,6 +72824,9 @@
     </MissingReturnType>
   </file>
   <file src="src/www/include/database.php">
+    <DeprecatedFunction occurrences="1">
+      <code>'db_ei'</code>
+    </DeprecatedFunction>
     <MissingParamType occurrences="20">
       <code>$sql</code>
       <code>$print</code>
@@ -73961,6 +73428,23 @@
     <PossiblyFalsePropertyAssignmentValue occurrences="1">
       <code>false</code>
     </PossiblyFalsePropertyAssignmentValue>
+    <PossiblyInvalidArrayOffset occurrences="10">
+      <code>$this-&gt;messages[$name . 'Response'][$pName]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$kv[2]]</code>
+      <code>$this-&gt;message[$kv[1]]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+      <code>$this-&gt;message[$child_pos]</code>
+    </PossiblyInvalidArrayOffset>
+    <PossiblyInvalidCast occurrences="3">
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+    </PossiblyInvalidCast>
     <PossiblyInvalidOperand occurrences="1">
       <code>$content_length</code>
     </PossiblyInvalidOperand>
@@ -74771,7 +74255,7 @@
     </MissingReturnType>
   </file>
   <file src="src/www/project/export/project_export_utils.php">
-    <MissingParamType occurrences="26">
+    <MissingParamType occurrences="25">
       <code>$string</code>
       <code>$csv_separator</code>
       <code>$col_list</code>
@@ -74795,14 +74279,13 @@
       <code>$field</code>
       <code>$group_artifact_id</code>
       <code>$name</code>
-      <code>$type</code>
       <code>$group_id</code>
       <code>$record</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$field-&gt;DATATYPE_TEXT</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="11">
+    <MissingReturnType occurrences="10">
       <code>tocsv</code>
       <code>build_csv_header</code>
       <code>build_csv_record</code>
@@ -74812,7 +74295,6 @@
       <code>prepare_artifact_record</code>
       <code>prepare_artifact_history_record</code>
       <code>prepare_historic_value</code>
-      <code>project_export_makesalt</code>
       <code>prepare_access_logs_record</code>
     </MissingReturnType>
     <PossiblyUndefinedVariable occurrences="2">
@@ -74831,20 +74313,6 @@
       <code>0</code>
       <code>-1</code>
     </InvalidScalarArgument>
-  </file>
-  <file src="src/www/project/showdetails.php">
-    <MissingParamType occurrences="3">
-      <code>$ref</code>
-      <code>$row_num</code>
-      <code>$groupId</code>
-    </MissingParamType>
-    <MissingReturnType occurrences="2">
-      <code>getReferenceRow</code>
-      <code>getReferencesTable</code>
-    </MissingReturnType>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$title_arr</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/www/project/stats/source_code_access_utils.php">
     <InvalidOperand occurrences="2">
@@ -75971,7 +75439,7 @@
     <MissingPropertyType occurrences="1">
       <code>$show_sidebar</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="26">
+    <MissingReturnType occurrences="24">
       <code>render</code>
       <code>getTemplateDir</code>
       <code>getVariants</code>
@@ -75986,7 +75454,6 @@
       <code>navbar</code>
       <code>getCurrentProjectNavbarInfo</code>
       <code>showFlamingParrotBurningParrotUnificationTour</code>
-      <code>getProjectIdFromParams</code>
       <code>getPresentersForProjects</code>
       <code>getExtraTabs</code>
       <code>displayNewAccount</code>
@@ -75995,7 +75462,6 @@
       <code>getProjectLink</code>
       <code>footer</code>
       <code>endOfPage</code>
-      <code>isInDebugMode</code>
       <code>getUserActions</code>
       <code>includeJavascriptPolyfills</code>
     </MissingReturnType>

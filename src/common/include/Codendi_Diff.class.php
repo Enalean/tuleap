@@ -147,6 +147,14 @@ class Codendi_DiffEngine
      * @var array
      */
     private $ychanged;
+    /**
+     * @var array
+     */
+    private $seq;
+    /**
+     * @var array
+     */
+    private $in_seq;
 
     public function diff($from_lines, $to_lines)
     {
@@ -1187,6 +1195,11 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
 
 class Codendi_HWLDF_WordAccumulator
 {
+    /**
+     * @var array
+     */
+    private $_lines;
+
     public function __construct()
     {
         $this->_lines = array();

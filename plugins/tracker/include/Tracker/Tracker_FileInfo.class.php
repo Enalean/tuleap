@@ -154,7 +154,10 @@ class Tracker_FileInfo
         $s = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
         $e = 0;
         if ($this->getFilesize()) {
-            $e = floor(log($this->getFilesize()) / log(1024));
+            $e = (int) floor(log($this->getFilesize()) / log(1024));
+            if ($e > 5) {
+                $e = 5;
+            }
         }
         return sprintf('%.0f ' . $s[$e], ($this->getFilesize() / pow(1024, floor($e))));
     }

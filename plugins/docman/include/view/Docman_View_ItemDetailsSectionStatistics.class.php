@@ -114,7 +114,10 @@ class Docman_View_ItemDetailsSectionStatistics extends Docman_View_ItemDetailsSe
         $s = array('', 'k', 'M', 'G', 'T', 'P');
 
         if ($bytes > 0) {
-            $e = floor(log($bytes) / log(1024));
+            $e = (int) floor(log($bytes) / log(1024));
+            if ($e > 5) {
+                $e = 5;
+            }
             $displayedSize = round($bytes / pow(1024, floor($e)), 2);
         } else {
             $e = 0;

@@ -260,11 +260,9 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
     /**
      * Get the Workflow object for the tracker $tracker_id
      *
-     * @param int $tracker_id the Id of the tracker
-     *
      * @return Workflow|null
      */
-    public function getWorkflowByTrackerId(?int $tracker_id)
+    public function getWorkflowByTrackerId(int $tracker_id)
     {
         if (!isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
