@@ -84,7 +84,7 @@ class RedisPersistentQueue implements PersistentQueue
                 $this->waitForEvents($this->redis, $processing_queue, $callback);
             } catch (RedisException $e) {
                 // we get that due to default_socket_timeout
-                if (strtolower($e->getMessage()) === 'read error on connection') {
+                if (stripos($e->getMessage(), 'read error on connection') === 0) {
                     $this->redis = null;
                     $reconnect = true;
                 } else {
