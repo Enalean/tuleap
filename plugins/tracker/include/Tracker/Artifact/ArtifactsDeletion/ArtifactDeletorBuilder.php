@@ -40,7 +40,8 @@ class ArtifactDeletorBuilder
             new PendingArtifactRemovalDao(),
             $logger,
             \UserManager::instance(),
-            new QueueFactory($logger)
+            new QueueFactory($logger),
+            new ArchiveAndDeleteArtifactTaskBuilder()
         );
 
         return new ArtifactDeletor(
