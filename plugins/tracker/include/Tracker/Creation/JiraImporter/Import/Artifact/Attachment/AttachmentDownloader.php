@@ -61,13 +61,13 @@ class AttachmentDownloader
 
         $response = $this->client->sendRequest($request);
 
-        if (! is_dir($this->getTmpFolderURL())) {
-            mkdir($this->getTmpFolderURL());
+        if (! is_dir(self::getTmpFolderURL())) {
+            mkdir(self::getTmpFolderURL());
         }
 
         $random_name = bin2hex(random_bytes(32));
         file_put_contents(
-            $this->getTmpFolderURL() . $random_name,
+            self::getTmpFolderURL() . $random_name,
             $response->getBody()->getContents()
         );
 
@@ -87,7 +87,7 @@ class AttachmentDownloader
         return new self($client, $request_factory);
     }
 
-    private function getTmpFolderURL(): string
+    public static function getTmpFolderURL(): string
     {
         return ForgeConfig::get('tmp_dir') . '/' . self::JIRA_TEMP_FOLDER . '/';
     }
