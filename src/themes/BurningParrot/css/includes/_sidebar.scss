@@ -103,6 +103,6 @@
     text-decoration: none;
 }
 
-@import 'includes/sidebar-project';
-@import 'includes/sidebar-siteadmin';
-@import 'includes/sidebar-collapsed';
+@import './sidebar-project';
+@import './sidebar-siteadmin';
+@import './sidebar-collapsed';

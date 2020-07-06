@@ -375,7 +375,7 @@ $tlp-form-element-select-small-background-size: 6px;
 
             .select2-selection__choice { //stylelint-disable-line selector-class-pattern
                 @extend %tlp-badge;
-                @extend .tlp-badge-primary.tlp-badge-outline; //stylelint-disable scss/at-extend-no-missing-placeholder
+                @extend .tlp-badge-primary, .tlp-badge-outline; //stylelint-disable scss/at-extend-no-missing-placeholder
 
                 flex: 0 0 auto;
                 margin: 5px 5px 0 0;
