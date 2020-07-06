@@ -115,6 +115,8 @@ class Backend
                 throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . get_class($backend) . '"');
             }
 
+            assert($backend instanceof Backend);
+
             //SetUp if needed
             if (is_array($setup)) {
                 if (method_exists($backend, 'setUp')) {

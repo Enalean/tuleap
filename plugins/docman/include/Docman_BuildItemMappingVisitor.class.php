@@ -64,6 +64,10 @@
 class Docman_BuildItemMappingVisitor
 {
     public $groupId;
+    /**
+     * @var array
+     */
+    private $itemMapping;
 
     public function __construct($groupId)
     {

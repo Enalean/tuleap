@@ -65,7 +65,7 @@ class TrackerExportToXmlTest extends TestCase
     protected function setUp(): void
     {
         $this->tracker = Mockery::mock(Tracker::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $this->tracker->shouldReceive('getId')->andReturn(110);
+        $this->tracker->id = 110;
         $this->tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
         $this->tracker->shouldReceive('getUserManager')->andReturn(Mockery::mock(UserManager::class));
         $this->tracker->shouldReceive('getProject')->andReturn(Mockery::mock(Project::class));

@@ -181,44 +181,6 @@ class Tree extends FilesystemObject
     }
 
     /**
-     * ReferenceContents
-     *
-     * Turns the contents objects into reference pointers
-     *
-     * @access private
-     */
-    private function ReferenceContents() // @codingStandardsIgnoreLine
-    {
-        if ($this->contentsReferenced) {
-            return;
-        }
-
-        if (!(isset($this->contents) && (count($this->contents) > 0))) {
-            return;
-        }
-
-        for ($i = 0; $i < count($this->contents); ++$i) {
-            $obj = $this->contents[$i];
-            $data = array();
-
-            $data['hash'] = $obj->GetHash();
-            $data['mode'] = $obj->GetMode();
-            $data['path'] = $obj->GetPath();
-
-            if ($obj instanceof Tree) {
-                $data['type'] = 'tree';
-            } elseif ($obj instanceof Blob) {
-                $data['type'] = 'blob';
-                $data['size'] = $obj->GetSize();
-            }
-
-            $this->contents[$i] = $data;
-        }
-
-        $this->contentsReferenced = true;
-    }
-
-    /**
      * DereferenceContents
      *
      * Turns the contents pointers back into objects
@@ -235,8 +197,7 @@ class Tree extends FilesystemObject
             return;
         }
 
-        for ($i = 0; $i < count($this->contents); ++$i) {
-            $data = $this->contents[$i];
+        foreach ($this->contents as $i => $data) {
             $obj = null;
 
             if (!isset($data['hash']) || empty($data['hash'])) {

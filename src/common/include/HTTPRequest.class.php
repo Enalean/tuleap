@@ -128,7 +128,6 @@ class HTTPRequest extends Codendi_Request
     public function validFile(&$validator)
     {
         if (is_a($validator, 'Valid_File')) {
-            $this->_validated_input[$validator->getKey()] = true;
             return $validator->validate($_FILES, $validator->getKey());
         } else {
             return false;

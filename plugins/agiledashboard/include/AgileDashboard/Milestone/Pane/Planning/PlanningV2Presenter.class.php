@@ -65,7 +65,7 @@ class AgileDashboard_Milestone_Pane_Planning_PlanningV2Presenter
         $this->lang                                    = $this->getLanguageAbbreviation($current_user);
         $this->project_id                              = $project->getId();
         $this->milestone_id                            = $milestone_id;
-        $this->view_mode                               = $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
+        $this->view_mode                               = (string) $current_user->getPreference('agiledashboard_planning_item_view_mode_' . $this->project_id);
         $this->user_accessibility_mode                 = json_encode((bool) $current_user->getPreference(PFUser::ACCESSIBILITY_MODE));
         $this->is_in_explicit_top_backlog              = $is_in_explicit_top_backlog;
         $this->allowed_additional_panes_to_display     = json_encode($allowed_additional_panes_to_display);

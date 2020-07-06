@@ -155,6 +155,10 @@ class Tracker implements Tracker_Dispatchable_Interface
     public $reports = array();
     public $workflow;
     public $webhooks = [];
+    /**
+     * @var array
+     */
+    public $semantics = [];
 
     private $is_project_allowed_to_use_nature;
 

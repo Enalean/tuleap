@@ -77,6 +77,10 @@ class Planning_MilestoneFactory
      * @var MilestoneBurndownFieldChecker
      */
     private $burndown_field_checker;
+    /**
+     * @var array
+     */
+    private $cache_all_milestone = [];
 
     /**
      * Instanciates a new milestone factory.

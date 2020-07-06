@@ -303,7 +303,7 @@ final class HTTPRequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore 
     public function testValidFileOk()
     {
         $v = \Mockery::mock(\Valid_File::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $v->shouldReceive('getKey')->times(2)->andReturns('file1');
+        $v->shouldReceive('getKey')->times(1)->andReturns('file1');
         $v->shouldReceive('validate')->with(array('file1' => array('name' => 'Test file 1')), 'file1')->once();
         $r = new HTTPRequest();
         $r->validFile($v);

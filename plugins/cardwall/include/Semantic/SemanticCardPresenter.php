@@ -81,6 +81,6 @@ class SemanticCardPresenter
             ]
         );
 
-        $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->user_has_accessibility_mode = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
     }
 }

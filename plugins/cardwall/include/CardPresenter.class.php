@@ -80,7 +80,7 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter
         $this->allowed_children            = $allowed_children;
         $this->swimline_id                 = $swimline_id;
         $this->background_color            = $background_color;
-        $this->user_has_accessibility_mode = $user->getPreference(PFUser::ACCESSIBILITY_MODE);
+        $this->user_has_accessibility_mode = (bool) $user->getPreference(PFUser::ACCESSIBILITY_MODE);
     }
 
     /**
