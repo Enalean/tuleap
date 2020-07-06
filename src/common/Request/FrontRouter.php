@@ -119,14 +119,19 @@ class FrontRouter
             assert(is_int($http_response_code));
             $this->request_instrumentation->increment($http_response_code);
         } catch (NotFoundException $exception) {
-            $this->request_instrumentation->increment(404);
-            $this->error_rendering->rendersError(
-                $this->getBurningParrotTheme($request),
-                $request,
-                404,
-                _('Not found'),
-                $exception->getMessage()
-            );
+            if ($this->shouldRedirectAnonymousUser($request)) {
+                header('Location: /account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
+                exit;
+            } else {
+                $this->request_instrumentation->increment(404);
+                $this->error_rendering->rendersError(
+                    $this->getBurningParrotTheme($request),
+                    $request,
+                    404,
+                    _('Not found'),
+                    $exception->getMessage()
+                );
+            }
         } catch (ForbiddenException $exception) {
             $this->request_instrumentation->increment(403);
             $this->error_rendering->rendersError(
@@ -250,5 +255,19 @@ class FrontRouter
     {
         $plugin = $this->plugin_manager->getPluginByName($plugin);
         return $plugin->$handler();
+    }
+
+    private function shouldRedirectAnonymousUser(HTTPRequest $request): bool
+    {
+        if ($request->isAjax()) {
+            return false;
+        }
+
+        $user = $request->getCurrentUser();
+        if (! $user->isAnonymous()) {
+            return false;
+        }
+
+        return HeaderAcceptReader::doesClientPreferHTMLResponse($request);
     }
 }
