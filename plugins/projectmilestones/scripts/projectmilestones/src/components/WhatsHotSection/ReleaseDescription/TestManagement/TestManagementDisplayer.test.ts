@@ -60,10 +60,10 @@ describe("TestManagementDisplayer", () => {
             resources: {
                 additional_panes: [
                     {
-                        icon_name: "fa-external-link",
-                        identifier: "testmgmt",
-                        title: "Test Campaigns",
-                        uri: "/plugin/testmanagement",
+                        icon_name: "fa-check",
+                        identifier: "testplan",
+                        title: "Tests",
+                        uri: "testplan/project/2",
                     },
                 ],
             },

@@ -19,9 +19,9 @@
 
 import { MilestoneData } from "../type";
 
-export function is_testmanagement_activated(release_data: MilestoneData): boolean {
+export function is_testplan_activated(release_data: MilestoneData): boolean {
     return (
-        release_data.resources.additional_panes.find((pane) => pane.identifier === "testmgmt") !==
+        release_data.resources.additional_panes.find((pane) => pane.identifier === "testplan") !==
         undefined
     );
 }

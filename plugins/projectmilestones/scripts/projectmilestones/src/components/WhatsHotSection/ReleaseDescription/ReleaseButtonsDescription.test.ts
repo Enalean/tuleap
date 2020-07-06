@@ -72,10 +72,10 @@ describe("ReleaseButtonsDescription", () => {
                         identifier: "taskboard",
                     },
                     {
-                        icon_name: "fa-external-link",
-                        title: "Test Campaigns",
-                        uri: "/plugin/testmanagement/project/6",
-                        identifier: "testmgmt",
+                        icon_name: "fa-check",
+                        title: "Tests",
+                        uri: "/testplan/project/6",
+                        identifier: "testplan",
                     },
                 ],
                 cardwall: {
@@ -91,16 +91,14 @@ describe("ReleaseButtonsDescription", () => {
         store_options.state.user_can_view_sub_milestones_planning = true;
     });
 
-    it("Given user display widget, Then a good link to testmanagement is renderer", async () => {
+    it("Given user display widget, Then a good link to TestPlan is renderer", async () => {
         store_options.state.project_id = project_id;
 
         const wrapper = await getPersonalWidgetInstance(store_options);
-        const ttm_element = wrapper.get("[data-test=pane-link-testmgmt]");
-        expect(ttm_element.attributes("href")).toEqual("/plugin/testmanagement/project/6");
-        expect(ttm_element.attributes("data-tlp-tooltip")).toEqual("Test Campaigns");
-        expect(wrapper.get("[data-test=pane-icon-testmgmt]").classes()).toContain(
-            "fa-external-link"
-        );
+        const ttm_element = wrapper.get("[data-test=pane-link-testplan]");
+        expect(ttm_element.attributes("href")).toEqual("/testplan/project/6");
+        expect(ttm_element.attributes("data-tlp-tooltip")).toEqual("Tests");
+        expect(wrapper.get("[data-test=pane-icon-testplan]").classes()).toContain("fa-check");
     });
 
     it("Given user display widget, Then a good link to taskboard is renderer", async () => {

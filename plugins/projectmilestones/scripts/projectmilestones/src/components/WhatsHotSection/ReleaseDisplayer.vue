@@ -58,7 +58,7 @@ import { MilestoneData, TestManagementCampaign } from "../../type";
 import { Component, Prop } from "vue-property-decorator";
 import { Action } from "vuex-class";
 import { FetchWrapperError } from "tlp";
-import { is_testmanagement_activated } from "../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../helpers/test-management-helper";
 
 @Component({
     components: {
@@ -96,7 +96,7 @@ export default class ReleaseDisplayer extends Vue {
         try {
             this.release_data_enhanced = await this.getEnhancedMilestones(this.release_data);
             this.is_open = this.isOpen;
-            if (this.isPastRelease && this.is_testmanagement_activated) {
+            if (this.isPastRelease && this.is_testplan_activated) {
                 this.release_data_enhanced.campaign = await this.getTestManagementCampaigns(
                     this.release_data_enhanced
                 );
@@ -127,8 +127,8 @@ export default class ReleaseDisplayer extends Vue {
         }
     }
 
-    get is_testmanagement_activated(): boolean {
-        return is_testmanagement_activated(this.release_data);
+    get is_testplan_activated(): boolean {
+        return is_testplan_activated(this.release_data);
     }
 }
 </script>

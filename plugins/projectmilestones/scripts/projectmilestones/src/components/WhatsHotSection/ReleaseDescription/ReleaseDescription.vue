@@ -52,7 +52,7 @@ import { MilestoneData } from "../../../type";
 import ReleaseDescriptionBadgesTracker from "./ReleaseDescriptionBadgesTracker.vue";
 import ChartDisplayer from "./Chart/ChartDisplayer.vue";
 import TestManagementDisplayer from "./TestManagement/TestManagementDisplayer.vue";
-import { is_testmanagement_activated } from "../../../helpers/test-management-helper";
+import { is_testplan_activated } from "../../../helpers/test-management-helper";
 
 @Component({
     components: {
@@ -66,7 +66,7 @@ export default class ReleaseDescription extends Vue {
     readonly release_data!: MilestoneData;
 
     get is_testmanagement_available(): boolean {
-        return is_testmanagement_activated(this.release_data);
+        return is_testplan_activated(this.release_data);
     }
 
     get display_badges_tracker(): boolean {

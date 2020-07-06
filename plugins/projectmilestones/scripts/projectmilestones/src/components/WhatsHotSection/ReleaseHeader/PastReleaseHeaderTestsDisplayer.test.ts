@@ -61,18 +61,18 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
     });
 
     describe("Display number of test", () => {
-        it("When TTM is disabled, Then the number is not displayed", async () => {
+        it("When testplan is disabled, Then the number is not displayed", async () => {
             const wrapper = await getPersonalWidgetInstance(store_options);
             expect(wrapper.find("[data-test=number-tests]").exists()).toBe(false);
         });
 
-        it("When TTM is enabled but there are no test, Then 0 is displayed", async () => {
+        it("When testplan is enabled but there are no test, Then 0 is displayed", async () => {
             release_data.resources.additional_panes = [
                 {
-                    icon_name: "fa-external",
-                    identifier: "testmgmt",
-                    title: "Test Management",
-                    uri: "plugin/testmanagement",
+                    icon_name: "fa-check",
+                    identifier: "testplan",
+                    title: "Tests",
+                    uri: "testplan/project/2",
                 },
             ];
 
@@ -80,13 +80,13 @@ describe("PastReleaseHeaderTestsDisplayer", () => {
             expect(wrapper.find("[data-test=number-tests]").text()).toBe("0");
         });
 
-        it("When TTM is enabled but there are some tests, Then the number is displayed", async () => {
+        it("When testplan is enabled but there are some tests, Then the number is displayed", async () => {
             release_data.resources.additional_panes = [
                 {
-                    icon_name: "fa-external",
-                    identifier: "testmgmt",
-                    title: "Test Management",
-                    uri: "plugin/testmanagement",
+                    icon_name: "fa-check",
+                    identifier: "testplan",
+                    title: "Tests",
+                    uri: "testplan/project/2",
                 },
             ];
 
