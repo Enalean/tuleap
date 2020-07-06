@@ -37,25 +37,43 @@ class JiraAuthorRetriever
      */
     private $user_manager;
 
+    /**
+     * @var JiraUserOnTuleapCache
+     */
+    private $user_cache;
+
     public function __construct(
         LoggerInterface $logger,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        JiraUserOnTuleapCache $user_cache
     ) {
         $this->logger       = $logger;
         $this->user_manager = $user_manager;
+        $this->user_cache   = $user_cache;
     }
 
     public function getArtifactSubmitter(IssueAPIRepresentation $issue, PFUser $forge_user): PFUser
     {
-        $creator = $issue->getFieldByKey('creator');
+        $creator    = $issue->getFieldByKey('creator');
+        $account_id = $creator['accountId'];
 
         if ($creator === null) {
             return $forge_user;
         }
 
         $display_name = $creator['displayName'];
+
+        if ($this->user_cache->isUserCached($account_id)) {
+            $this->logger->debug("User $display_name is already in cache, skipping...");
+
+            return $this->user_cache->getUserFromCacheByJiraAccountId(
+                $account_id
+            );
+        }
+
         if (! isset($creator['emailAddress'])) {
             $this->logger->debug("Jira user $display_name does not share his/her email address, skipping...");
+            $this->user_cache->cacheUser($forge_user, $account_id);
 
             return $forge_user;
         }
@@ -66,12 +84,14 @@ class JiraAuthorRetriever
         if (count($matching_users) !== 1) {
             $this->logger->debug("Unable to identify an unique user on Tuleap side for Jira user $display_name");
 
+            $this->user_cache->cacheUser($forge_user, $account_id);
             return $forge_user;
         }
 
         $tuleap_user           = $matching_users[0];
         $tuleap_user_real_name = $tuleap_user->getRealName();
 
+        $this->user_cache->cacheUser($tuleap_user, $account_id);
         $this->logger->debug("Jira user $display_name has been identified as Tuleap user $tuleap_user_real_name");
 
         return $tuleap_user;
