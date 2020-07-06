@@ -445,11 +445,11 @@ class GitRepositoryManager
      */
     public function purgeArchivedRepositories(\Psr\Log\LoggerInterface $logger)
     {
-        if (!isset($GLOBALS['sys_file_deletion_delay'])) {
+        if (! ForgeConfig::exists('sys_file_deletion_delay')) {
             $logger->warning("Purge of archived Gitolite repositories is disabled: sys_file_deletion_delay is missing in local.inc file");
             return;
         }
-        $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
+        $retention_period      = ForgeConfig::getInt('sys_file_deletion_delay');
         $archived_repositories = $this->repository_factory->getArchivedRepositoriesToPurge($retention_period);
         foreach ($archived_repositories as $repository) {
             try {
@@ -479,7 +479,7 @@ class GitRepositoryManager
     public function getRepositoriesForRestoreByProjectId($project_id)
     {
         $archived_repositories = array();
-        $retention_period      = intval($GLOBALS['sys_file_deletion_delay']);
+        $retention_period      = ForgeConfig::getInt('sys_file_deletion_delay');
         $deleted_repositories  = $this->repository_factory->getDeletedRepositoriesByProjectId($project_id, $retention_period);
         foreach ($deleted_repositories as $repository) {
             $archive = realpath($this->backup_directory . '/' . $repository->getBackupPath() . ".tar.gz");

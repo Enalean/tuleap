@@ -107,7 +107,7 @@ class LDAP_SyncMail
     protected function prepareMail($recipients, $unixProjectName, $subject, $body)
     {
         $mail = new Codendi_Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         if (empty($recipients)) {
             throw new InvalidArgumentException('Cannot send notification without any valid receiver, Perhaps the project <' . $unixProjectName . '> (unix name) has no administrators.');
         }

@@ -9,7 +9,7 @@ $pm = ProjectManager::instance();
 echo '
 
 <P>Les listes de diffusion sont nommées selon le modèle suivant&nbsp;: <em>'.ForgeConfig::get('sys_lists_prefix').'nom_projet-nom_liste'.ForgeConfig::get('sys_lists_suffix').'@'. $sys_lists_domain .'</em>
-<P> Dans le but d\'harmoniser les pratiques en matière de création de liste de distribution sur '.$GLOBALS['sys_name'].' nous vous recommandons de créer les listes de distribution suivantes pour votre projet&nbsp;:<BR>
+<P> Dans le but d\'harmoniser les pratiques en matière de création de liste de distribution sur '.\ForgeConfig::get('sys_name').' nous vous recommandons de créer les listes de distribution suivantes pour votre projet&nbsp;:<BR>
 <ul>
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-interet</b>&nbsp;: pour les discussions générales entre utilisateurs.
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-devel</b>&nbsp;: pour les discussions entre développeurs.

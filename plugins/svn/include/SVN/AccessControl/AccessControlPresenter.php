@@ -20,6 +20,7 @@
 
 namespace Tuleap\SVN\AccessControl;
 
+use ForgeConfig;
 use Tuleap\SVN\Repository\Repository;
 use Tuleap\SVN\Admin\SectionsPresenter;
 use Tuleap\SVN\Admin\BaseAdminPresenter;
@@ -75,7 +76,7 @@ class AccessControlPresenter extends BaseAdminPresenter
         $this->access_control_active    = true;
 
         $this->edit_access_file_title   = dgettext('tuleap-svn', 'Edit access control file');
-        $this->default_text             = sprintf(dgettext('tuleap-svn', 'The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other %1$s users. You can tune or even redefine the access permissions below to suit your needs.'), $GLOBALS['sys_name']);
+        $this->default_text             = sprintf(dgettext('tuleap-svn', 'The default policy is to allow read-write access to all project members on the entire repository and read-only access to all other %1$s users. You can tune or even redefine the access permissions below to suit your needs.'), ForgeConfig::get('sys_name'));
         $this->permissions_warning      = dgettext('tuleap-svn', 'It is recommended to always define permissions on a user group. Applying permissions to a manually defined group or to a specific user could cause security issues.');
         $this->button_new_version_label = dgettext('tuleap-svn', 'Save a new version');
         $this->select_version           = dgettext('tuleap-svn', 'Select a version');

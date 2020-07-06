@@ -30,8 +30,6 @@ use PHPUnit\Framework\TestCase;
 use ProjectUGroup;
 use Tuleap\Git\Permissions\FineGrainedPermission;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -110,8 +108,6 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
     {
         parent::setUp();
 
-        $globals = array_merge([], $GLOBALS);
-
         $this->retriever = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedRetriever::class);
         $this->factory   = Mockery::spy(\Tuleap\Git\Permissions\FineGrainedPermissionFactory::class);
         $this->regexp_retriever = Mockery::spy(\Tuleap\Git\Permissions\RegexpFineGrainedRetriever::class);
@@ -176,8 +172,6 @@ class ConfigPermissionsSerializerFineGrainedPermissionsTest extends TestCase
         );
 
         PermissionsManager::setInstance($this->permissions_manager);
-
-        $GLOBALS = $globals;
     }
 
     public function tearDown(): void

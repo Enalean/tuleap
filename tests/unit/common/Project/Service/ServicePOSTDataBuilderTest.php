@@ -62,12 +62,7 @@ final class ServicePOSTDataBuilderTest extends TestCase
             $link_data_builder
         );
 
-        $GLOBALS['sys_default_domain'] = 'whatever';
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_default_domain']);
+        \ForgeConfig::set('sys_default_domain', 'whatever');
     }
 
     public function testBuildFromServiceThrowsWhenTemplateProjectAndNoShortname(): void

@@ -37,9 +37,8 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 date_default_timezone_set(TimezoneRetriever::getServerTimezone());
 
 // Defines all of the settings first (hosts, databases, etc.)
-$local_inc = ForgeConfig::loadLocalInc();
+ForgeConfig::loadLocalInc();
 ForgeConfig::loadDatabaseInc();
-require($local_inc);
 ForgeConfig::loadFromDatabase();
 ForgeConfig::loadFromFile(ForgeConfig::get('redis_config_file'));
 
@@ -161,10 +160,10 @@ $request = HTTPRequest::instance();
 $request->setTrustedProxies(array_map('trim', explode(',', ForgeConfig::get('sys_trusted_proxies'))));
 
 //Language
-if (!$GLOBALS['sys_lang']) {
-    $GLOBALS['sys_lang'] = "en_US";
+if (! ForgeConfig::get('sys_lang')) {
+    ForgeConfig::set('sys_lang', 'en_US');
 }
-$Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+$Language = new BaseLanguage(ForgeConfig::get('sys_supported_languages'), ForgeConfig::get('sys_lang'));
 
 $user_manager = UserManager::instance();
 $current_user = $user_manager->getCurrentUser();

@@ -58,12 +58,12 @@ function news_header($params)
     /*
         Show horizontal links
     */
-    if ($group_id && ($group_id != $GLOBALS['sys_news_group'])) {
+    if ($group_id && ($group_id != ForgeConfig::get('sys_news_group'))) {
         site_project_header($params);
     } else {
         $HTML->header($params);
         echo '
-			<H2>' . $GLOBALS['sys_name'] . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
+			<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
     }
     if (!isset($params['pv']) || !$params['pv']) {
         echo '<P><B>';
@@ -269,7 +269,7 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
     */
 
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
-    $new_id = forum_create_forum($GLOBALS['sys_news_group'], $summary, 1, 0, '', $need_feedback = false);
+    $new_id = forum_create_forum(ForgeConfig::get('sys_news_group'), $summary, 1, 0, '', $need_feedback = false);
     $sql = "INSERT INTO news_bytes (group_id,submitted_by,is_approved,date,forum_id,summary,details)
           VALUES (" . db_ei($group_id) . ", '" . $db_escaped_user_id . "', " . db_ei($promote_news) . ", '" . time() . "',
                  '$new_id', '" . db_es($summary) . "', '" . db_es($details) . "')";
@@ -308,7 +308,7 @@ function news_check_permission($forum_id, $group_id)
 
     //cast  input
 
-    if ($group_id == $GLOBALS['sys_news_group']) {
+    if ($group_id == ForgeConfig::get('sys_news_group')) {
         //search for the real group_id of the news
         $sql = "SELECT g.access FROM news_bytes AS n INNER JOIN groups AS g USING(group_id) WHERE n.forum_id = " . db_ei($forum_id);
         $res = db_query($sql);
@@ -388,17 +388,17 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $user = UserManager::instance()->getCurrentUser();
 
     $mail = new Codendi_Mail();
-    $mail->setFrom($GLOBALS['sys_noreply']);
-    $mail->setTo($GLOBALS['sys_email_admin'], true); // Don't invalidate admin email!
-    $mail->setSubject($Language->getText('news_utils', 'news_request', array($GLOBALS['sys_name'])));
+    $mail->setFrom(ForgeConfig::get('sys_noreply'));
+    $mail->setTo(ForgeConfig::get('sys_email_admin'), true); // Don't invalidate admin email!
+    $mail->setSubject($Language->getText('news_utils', 'news_request', array(ForgeConfig::get('sys_name'))));
     $body = '';
-    $body .= $Language->getText('news_utils', 'news_request_mail_intro', array($GLOBALS['sys_name'])) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils', 'news_request_mail_project', array($group->getPublicName(), $group->getUnixName())) . $GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', array($user->getName())) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils', 'news_request_mail_summary', array($summary)) . $GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils', 'news_request_mail_details', array($details)) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-    $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . $GLOBALS['sys_lf'];
-    $body .= HTTPRequest::instance()->getServerUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . $GLOBALS['sys_lf'];
+    $body .= $Language->getText('news_utils', 'news_request_mail_intro', array(ForgeConfig::get('sys_name'))) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_project', array($group->getPublicName(), $group->getUnixName())) . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', array($user->getName())) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_summary', array($summary)) . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_details', array($details)) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . ForgeConfig::get('sys_lf');
+    $body .= HTTPRequest::instance()->getServerUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . ForgeConfig::get('sys_lf');
     $mail->setBodyText($body);
 
     $is_sent = $mail->send();

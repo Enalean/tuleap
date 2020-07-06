@@ -165,8 +165,8 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
     {
         $mail =  new Codendi_Mail();
 
-        $subject = $GLOBALS['sys_name'] . ' Error in ' . $file->getFileLocation();
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $subject = ForgeConfig::get('sys_name') . ' Error in ' . $file->getFileLocation();
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setBcc($user->getEmail());
         $mail->setSubject($subject);
         $mail->setBodyText($body);

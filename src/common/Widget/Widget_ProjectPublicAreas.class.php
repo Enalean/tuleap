@@ -208,8 +208,8 @@ class Widget_ProjectPublicAreas extends Widget
         if ($project->isActive()) {
             $html .= '<p>';
 
-            list($host) = explode(':', $GLOBALS['sys_default_domain']);
-            if ($GLOBALS['sys_disable_subdomains']) {
+            list($host) = explode(':', ForgeConfig::get('sys_default_domain'));
+            if (ForgeConfig::get('sys_disable_subdomains')) {
                 $ftp_subdomain = "";
             } else {
                 $ftp_subdomain = $project->getUnixName() . ".";

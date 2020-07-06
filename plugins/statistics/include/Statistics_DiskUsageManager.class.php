@@ -557,12 +557,12 @@ class Statistics_DiskUsageManager
             $this->collectSVNDiskUsage($project, $collect_date, $time_to_collect);
             $this->collectCVSDiskUsage($project, $collect_date, $time_to_collect);
 
-            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, $GLOBALS['ftp_frs_dir_prefix'] . "/" . $row['unix_group_name'], $time_to_collect);
-            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, $GLOBALS['ftp_anon_dir_prefix'] . "/" . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FRS, ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], self::FTP, ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
             if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
                 $this->storeForGroup($collect_date, $row['group_id'], self::GRP_HOME, ForgeConfig::get('grpdir_prefix') . "/" . $row['unix_group_name'], $time_to_collect);
             }
-            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, $GLOBALS['sys_wiki_attachment_data_dir'] . "/" . $row['group_id'], $time_to_collect);
+            $this->storeForGroup($collect_date, $row['group_id'], Service::WIKI, ForgeConfig::get('sys_wiki_attachment_data_dir') . "/" . $row['group_id'], $time_to_collect);
             // Fake plugin for webdav/subversion
             $this->storeForGroup($collect_date, $row['group_id'], self::PLUGIN_WEBDAV, '/var/lib/codendi/webdav' . "/" . $row['unix_group_name'], $time_to_collect);
 

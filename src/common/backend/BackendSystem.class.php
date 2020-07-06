@@ -166,8 +166,8 @@ class BackendSystem extends Backend
         if (!is_dir($homedir)) {
             if (mkdir($homedir, 0751)) {
                 // copy the contents of the $codendi_shell_skel dir into homedir
-                if (is_dir($GLOBALS['codendi_shell_skel'])) {
-                    system("cd " . $GLOBALS['codendi_shell_skel'] . "; tar cf - . | (cd  $homedir ; tar xf - )");
+                if (is_dir(ForgeConfig::get('codendi_shell_skel'))) {
+                    system("cd " . ForgeConfig::get('codendi_shell_skel') . "; tar cf - . | (cd  $homedir ; tar xf - )");
                 }
                 touch($homedir);
                 $this->setUserHomeOwnership($user);
@@ -609,7 +609,7 @@ class BackendSystem extends Backend
             return true;
         }
         $dir = ForgeConfig::get('grpdir_prefix') . "/" . $name;
-        $frs = $GLOBALS['ftp_frs_dir_prefix'] . "/" . $name;
+        $frs = ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $name;
         $ftp = ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $name;
 
         if ($this->fileExists($dir)) {
@@ -689,8 +689,8 @@ class BackendSystem extends Backend
      */
     public function renameFileReleasedDirectory($project, $newName)
     {
-        if (is_dir($GLOBALS['ftp_frs_dir_prefix'] . '/' . $project->getUnixName(false))) {
-            return rename($GLOBALS['ftp_frs_dir_prefix'] . '/' . $project->getUnixName(false), $GLOBALS['ftp_frs_dir_prefix'] . '/' . $newName);
+        if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $project->getUnixName(false))) {
+            return rename(ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $project->getUnixName(false), ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $newName);
         } else {
             return true;
         }

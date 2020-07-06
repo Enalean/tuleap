@@ -243,7 +243,7 @@ class FRSFileFactory
 
     private function moveFileToPath(FRSFile $file, $old_path, $project_name)
     {
-        $project_path = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $project_name . '/';
+        $project_path = ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $project_name . '/';
         $file_id      = $file->getFileID();
 
         $manager = $this->_getSystemEventManager();
@@ -361,10 +361,6 @@ class FRSFileFactory
         $uploaded_file_names = array();
         //iterate and show the files in the upload directory
 
-        /// This won't work for files > 2GB
-        //$dirhandle = @ opendir($GLOBALS['ftp_incoming_dir']);
-        //while ($file = @ readdir($dirhandle)) {
-
         // Workaround for files bigger than 2Gb:
         $src_dir  = $this->getSrcDir($project);
         $filelist = shell_exec("/usr/bin/find " . $src_dir . " -maxdepth 1 -type f -printf \"%f\\n\"");
@@ -395,8 +391,6 @@ class FRSFileFactory
 
     /**
      * Force the upload directory creation, and move the file $file_name in the good directory
-     *
-     * @global $GLOBALS['codendi_bin_prefix']
      *
      * @return bool True if file is moved to it's final location (false otherwise)
      */
@@ -439,7 +433,7 @@ class FRSFileFactory
 
     public function getSrcDir(Project $project)
     {
-        $src_dir = $GLOBALS['ftp_incoming_dir'];
+        $src_dir = ForgeConfig::get('ftp_incoming_dir');
         $params  = array(
             'project' => $project,
             'src_dir' => &$src_dir
@@ -682,7 +676,7 @@ class FRSFileFactory
         $releasePath = dirname($file->getFileLocation());
         $relDirName  = basename($releasePath);
         $prjDirName  = basename(dirname($releasePath));
-        $stagingPath = $GLOBALS['ftp_frs_dir_prefix'] . '/DELETED/' . $prjDirName . '/' . $relDirName;
+        $stagingPath = ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/' . $prjDirName . '/' . $relDirName;
         return $stagingPath . '/' . $fileName . '.' . $file->getFileId();
     }
 
@@ -776,7 +770,7 @@ class FRSFileFactory
     public function cleanStaging($backend)
     {
         // All projects
-        $prjIter = new DirectoryIterator($GLOBALS['ftp_frs_dir_prefix'] . '/DELETED');
+        $prjIter = new DirectoryIterator(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED');
         foreach ($prjIter as $prj) {
             if (strpos($prj->getFilename(), '.') !== 0) {
                 // Releases
@@ -940,7 +934,7 @@ class FRSFileFactory
             if (file_exists($stagingPath)) {
                 if (!is_dir(dirname($file->getFileLocation()))) {
                     mkdir(dirname($file->getFileLocation()), 0755, true);
-                    $backend->chgrp(dirname($file->getFileLocation()), $GLOBALS['sys_http_user']);
+                    $backend->chgrp(dirname($file->getFileLocation()), ForgeConfig::get('sys_http_user'));
                 }
                 if (rename($stagingPath, $file->getFileLocation())) {
                     if ($dao->restoreFile($file->getFileID())) {

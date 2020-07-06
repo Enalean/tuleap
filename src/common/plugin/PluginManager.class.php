@@ -163,8 +163,8 @@ class PluginManager
     public function getPostInstall($name)
     {
         $path_to_file = '/' . $name . '/POSTINSTALL.txt';
-        return file_exists($GLOBALS['sys_pluginsroot'] . $path_to_file) ?
-            file_get_contents($GLOBALS['sys_pluginsroot'] . $path_to_file) :
+        return file_exists(ForgeConfig::get('sys_pluginsroot') . $path_to_file) ?
+            file_get_contents(ForgeConfig::get('sys_pluginsroot') . $path_to_file) :
             false;
     }
 
@@ -223,9 +223,9 @@ class PluginManager
     protected function configureForgeUpgrade($name)
     {
         try {
-            $plugin_path = $GLOBALS['sys_pluginsroot'] . $name;
+            $plugin_path = ForgeConfig::get('sys_pluginsroot') . $name;
             $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->addPath($GLOBALS['sys_pluginsroot'] . $name);
+            $this->forgeupgrade_config->addPath(ForgeConfig::get('sys_pluginsroot') . $name);
             $this->forgeupgrade_config->recordOnlyPath($plugin_path);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
@@ -243,7 +243,7 @@ class PluginManager
     {
         try {
             $this->forgeupgrade_config->loadDefaults();
-            $this->forgeupgrade_config->removePath($GLOBALS['sys_pluginsroot'] . $name);
+            $this->forgeupgrade_config->removePath(ForgeConfig::get('sys_pluginsroot') . $name);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('warning', "ForgeUpgrade configuration update failed: " . $e->getMessage());
         }
@@ -251,24 +251,24 @@ class PluginManager
 
     public function _createEtc($name)
     {
-        if (!is_dir($GLOBALS['sys_custompluginsroot'] . '/' . $name)) {
-            mkdir($GLOBALS['sys_custompluginsroot'] . '/' . $name, 0700);
+        if (!is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name)) {
+            mkdir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name, 0700);
         }
-        if (is_dir($GLOBALS['sys_pluginsroot'] . '/' . $name . '/etc')) {
-            if (!is_dir($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc')) {
-                mkdir($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc', 0700);
+        if (is_dir(ForgeConfig::get('sys_pluginsroot') . '/' . $name . '/etc')) {
+            if (!is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc')) {
+                mkdir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc', 0700);
             }
-            $etcs = glob($GLOBALS['sys_pluginsroot'] . '/' . $name . '/etc/*');
+            $etcs = glob(ForgeConfig::get('sys_pluginsroot') . '/' . $name . '/etc/*');
             foreach ($etcs as $etc) {
                 if (is_dir($etc)) {
-                    $this->copyDirectory($etc, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($etc));
+                    $this->copyDirectory($etc, ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc/' . basename($etc));
                 } else {
-                    copy($etc, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($etc));
+                    copy($etc, ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc/' . basename($etc));
                 }
             }
-            $incdists = glob($GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/*.dist');
+            $incdists = glob(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc/*.dist');
             foreach ($incdists as $incdist) {
-                rename($incdist, $GLOBALS['sys_custompluginsroot'] . '/' . $name . '/etc/' . basename($incdist, '.dist'));
+                rename($incdist, ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc/' . basename($incdist, '.dist'));
             }
         }
     }

@@ -51,6 +51,7 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
     use \Tuleap\GlobalLanguageMock;
+    use \Tuleap\ForgeConfigSandbox;
 
     /**
      * @var \Tuleap\FRS\UploadedLinksDao
@@ -112,14 +113,8 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
         );
 
         EventManager::setInstance(Mockery::spy(EventManager::class));
-        if (isset($GLOBALS['ftp_incoming_dir'])) {
-            $this->old_ftp_incoming_dir = $GLOBALS['ftp_incoming_dir'];
-        }
-        if (isset($GLOBALS['old_ftp_frs_dir_prefix'])) {
-            $this->old_ftp_frs_dir_prefix = $GLOBALS['ftp_frs_dir_prefix'];
-        }
-        $GLOBALS['ftp_incoming_dir'] = $this->getTmpDir();
-        $GLOBALS['ftp_frs_dir_prefix'] = $this->getTmpDir();
+        ForgeConfig::set('ftp_incoming_dir', $this->getTmpDir());
+        ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir());
     }
 
     protected function tearDown(): void
@@ -130,16 +125,6 @@ class FRSXMLImporterTest extends \PHPUnit\Framework\TestCase
         PermissionsManager::clearInstance();
         UserManager::clearInstance();
         EventManager::clearInstance();
-        if (isset($this->old_ftp_incoming_dir)) {
-            $GLOBALS['ftp_incoming_dir'] = $this->old_ftp_incoming_dir;
-        } else {
-            unset($GLOBALS['ftp_incoming_dir']);
-        }
-        if (isset($this->old_ftp_frs_dir_prefix)) {
-            $GLOBALS['ftp_frs_dir_prefix'] = $this->old_ftp_frs_dir_prefix;
-        } else {
-            unset($GLOBALS['ftp_frs_dir_prefix']);
-        }
         parent::tearDown();
     }
 
@@ -349,7 +334,7 @@ XML;
             'type_id'       => 667,
             'processor_id'  => 69,
             'release_time'  => strtotime('2015-12-03T16:46:00'),
-            'file_location' => $GLOBALS['ftp_frs_dir_prefix'] . "/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
+            'file_location' => ForgeConfig::get('ftp_frs_dir_prefix') . "/test_project/p1337_r8665/lefichier_" . $_SERVER['REQUEST_TIME'],
             'file_size'     => 14,
             'post_date'     => strtotime('2015-12-03T16:46:42'),
             'status'        => "A",

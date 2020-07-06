@@ -38,7 +38,7 @@ class ServiceLinkDataBuilder
                 // When it is done here, the service bar will not appear updated on the current page
                 $link = str_replace('$projectname', $project->getUnixName(), $link);
             }
-            $link                 = str_replace('$sys_default_domain', $GLOBALS['sys_default_domain'], $link);
+            $link                 = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
             $sys_default_protocol = 'http';
             if (ForgeConfig::get('sys_https_host')) {
                 $sys_default_protocol = 'https';

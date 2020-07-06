@@ -116,7 +116,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
         }
         ?>
             <!-- FUSIONFORGE Stylesheet BEGIN -->
-        <?php if (! $GLOBALS['sys_use_mwframe']) {
+        <?php if (! ForgeConfig::get('sys_use_mwframe')) {
             $GLOBALS['HTML']->displayStylesheetElements();
         } ?>
             <!-- FUSIONFORGE Stylesheet END -->
@@ -130,7 +130,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
  class="mediawiki <?php $this->text('dir') ?> <?php $this->text('pageclass') ?> <?php $this->text('skinnameclass') ?>">
         <!-- FUSIONFORGE BodyHeader BEGIN -->
            <?php
-            if (! $GLOBALS['sys_use_mwframe']) {
+            if (! ForgeConfig::get('sys_use_mwframe')) {
                  $project = group_get_object_by_name($GLOBALS['fusionforgeproject']);
                 if ($project) {
                     $GLOBALS['group_id'] = $project->getID();
@@ -299,7 +299,7 @@ echo htmlspecialchars($item['class']) ?>"
 -->
         <?php endif; ?>
         <!-- FUSIONFORGE Footer BEGIN -->
-        <?php	if (!$GLOBALS['sys_use_mwframe']) {
+        <?php	if (!ForgeConfig::get('sys_use_mwframe')) {
             $GLOBALS['HTML']->footer($params);
         } else { ?>
 </body></html>

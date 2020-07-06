@@ -147,8 +147,6 @@ final class GitoliteDriverTest extends GitoliteTestCase
         \ForgeConfig::set('codendi_cache_dir', $this->backup_codendi_cache_dir);
 
         parent::tearDown();
-
-        unset($GLOBALS['sys_data_dir']);
     }
 
     public function testGitoliteConfUpdate(): void

@@ -739,7 +739,7 @@ function plugin_forumml_process_mail($reply = false)
     $mail = new Codendi_Mail();
 
     // Build mail headers
-    $to = mail_get_listname_from_list_id($request->get('list')) . "@" . $GLOBALS['sys_lists_host'];
+    $to = mail_get_listname_from_list_id($request->get('list')) . "@" . ForgeConfig::get('sys_lists_host');
     $mail->setTo($to);
 
     $current_user = UserManager::instance()->getCurrentUser();

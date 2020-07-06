@@ -10,9 +10,9 @@
 $username=strtolower(user_getname());
 echo '
 You can upload files either by
-<ul><li>using Anonymous FTP access (login "ftp") to <B>'. $GLOBALS['sys_default_domain'] .'</B> 
+<ul><li>using Anonymous FTP access (login "ftp") to <B>'. \ForgeConfig::get('sys_default_domain') .'</B>
 			in the <B>/incoming</B> directory, then hit "<b>'. $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') .'</b>" or reload the page.
-<li>or by using scp: "scp your_file '.$username.'@'. $GLOBALS['sys_default_domain'] .':'.$GLOBALS['ftp_incoming_dir'].'/", then hit "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" or reload the page
+<li>or by using scp: "scp your_file '.$username.'@'. \ForgeConfig::get('sys_default_domain') .':'.\ForgeConfig::get('ftp_incoming_dir').'/", then hit "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" or reload the page
 </ul>
 ';
 ?>

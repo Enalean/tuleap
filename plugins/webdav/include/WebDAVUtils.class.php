@@ -221,7 +221,7 @@ class WebDAVUtils
 
     public function getIncomingFileSize($name)
     {
-        return PHP_BigFile::getSize($GLOBALS['ftp_incoming_dir'] . '/' . $name);
+        return PHP_BigFile::getSize(ForgeConfig::get('ftp_incoming_dir') . '/' . $name);
     }
 
     public function getIncomingFileMd5Sum($file)

@@ -588,7 +588,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                         );
                         $GLOBALS['Response']->addFeedback(
                             'info',
-                            sprintf(dgettext('tuleap-tracker', 'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next 10 days.'), $GLOBALS['sys_email_admin']),
+                            sprintf(dgettext('tuleap-tracker', 'In case you have inadvertently deleted this tracker and want it to be restored, please contact the <a href="mailto:%1$s">Site Administrator</a> within the next 10 days.'), ForgeConfig::get('sys_email_admin')),
                             CODENDI_PURIFIER_FULL
                         );
                         $reference_manager =  ReferenceManager::instance();
@@ -1616,7 +1616,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         echo '<input type="file" name="csv_filename" size="50">';
         echo '<br>';
         echo '<span class="smaller"><em>';
-        echo sprintf(dgettext('tuleap-tracker', '(The maximum upload file size is %1$s Mb. The file must be encoded in UTF-8)'), formatByteToMb($GLOBALS['sys_max_size_upload']));
+        echo sprintf(dgettext('tuleap-tracker', '(The maximum upload file size is %1$s Mb. The file must be encoded in UTF-8)'), formatByteToMb(ForgeConfig::getInt('sys_max_size_upload')));
         echo '</em></span>';
         echo '<br>';
         echo dgettext('tuleap-tracker', 'Send notifications:');

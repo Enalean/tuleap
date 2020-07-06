@@ -2453,7 +2453,7 @@ class Artifact
           //withoutpermissions_concerned_addresses contains emails for which there is no permissions check
 
           //Prepare e-mail
-            list($host,) = explode(':', $GLOBALS['sys_default_domain']);
+            list($host,) = explode(':', ForgeConfig::get('sys_default_domain'));
 
           //treat anonymous users
             $text_mail = $this->createMailForUsers(array($GLOBALS['UGROUP_ANONYMOUS']), $changes, $group_id, $group_artifact_id, $ok, $subject);
@@ -2547,7 +2547,7 @@ class Artifact
         $mail->addAdditionalHeader("X-Codendi-Project", $this->ArtifactType->getGroup()->getUnixName());
         $mail->addAdditionalHeader("X-Codendi-Artifact", $this->ArtifactType->getItemName());
         $mail->addAdditionalHeader("X-Codendi-Artifact-ID", $this->getID());
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo(join(',', $to));
         $mail->setSubject($subject);
         $mail->send();
@@ -2787,9 +2787,9 @@ class Artifact
         // Generate the message preamble with all required
         // artifact fields - Changes first if there are some.
         if ($changes) {
-            $body = $GLOBALS['sys_lf'] . "=============   " . strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) . " #" . $this->getID() .
-            ": " . $Language->getText('tracker_include_artifact', 'latest_modif') . "   =============" . $GLOBALS['sys_lf'] . $artifact_href . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] .
-            $this->formatChanges($changes, $field_perm, $visible_change) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . "";
+            $body = ForgeConfig::get('sys_lf') . "=============   " . strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) . " #" . $this->getID() .
+            ": " . $Language->getText('tracker_include_artifact', 'latest_modif') . "   =============" . ForgeConfig::get('sys_lf') . $artifact_href . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') .
+            $this->formatChanges($changes, $field_perm, $visible_change) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . "";
 
             if (!$visible_change) {
                 return;
@@ -2802,7 +2802,7 @@ class Artifact
 
         // We write the name of the project
         $pm = ProjectManager::instance();
-        $full_snapshot .= sprintf($fmt_left . $GLOBALS['sys_lf'] . "", $Language->getText('tracker_include_artifact', 'project') . ' ' . $pm->getProject($group_id)->getPublicName());
+        $full_snapshot .= sprintf($fmt_left . ForgeConfig::get('sys_lf') . "", $Language->getText('tracker_include_artifact', 'project') . ' ' . $pm->getProject($group_id)->getPublicName());
 
         // Write all the fields, grouped by fieldsetset and ordered by rank.
         $left = 1;
@@ -2840,40 +2840,40 @@ class Artifact
                     $item = sprintf(($left ? $fmt_left : $fmt_right), $display);
                     if (strlen($item) > $fmt_len) {
                         if (! $left) {
-                            $fieldset_snapshot .= "" . $GLOBALS['sys_lf'] . "";
+                            $fieldset_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
                         }
                         $fieldset_snapshot .= sprintf($fmt_right, $display);
-                        $fieldset_snapshot .= "" . $GLOBALS['sys_lf'] . "";
+                        $fieldset_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
                         $left = 1;
                     } else {
                         $fieldset_snapshot .= $item;
                         $left = ! $left;
                         if ($left) {
-                            $fieldset_snapshot .= "" . $GLOBALS['sys_lf'] . "";
+                            $fieldset_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
                         }
                     }
                 }
             } // while
 
             if ($visible_fieldset) {
-                $full_snapshot .= "" . $GLOBALS['sys_lf'] . "";
-                $full_snapshot .= ($left ? "" : "" . $GLOBALS['sys_lf'] . "");
+                $full_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
+                $full_snapshot .= ($left ? "" : "" . ForgeConfig::get('sys_lf') . "");
                 $full_snapshot .= '--- ' . SimpleSanitizer::unsanitize($fieldset->getLabel()) . ' ---';
-                $full_snapshot .= "" . $GLOBALS['sys_lf'] . "";
+                $full_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
                 $full_snapshot .= $fieldset_snapshot;
             }
         }
 
         if ($visible_snapshot) {
-            $full_snapshot .= "" . $GLOBALS['sys_lf'] . "";
+            $full_snapshot .= "" . ForgeConfig::get('sys_lf') . "";
         }
 
         $body .= "=============   " . strtoupper(SimpleSanitizer::unsanitize($this->ArtifactType->getName())) . " #" . $this->getID() .
-        ": " . $Language->getText('tracker_include_artifact', 'full_snapshot') . "   =============" . $GLOBALS['sys_lf'] .
-        ($changes ? '' : $artifact_href) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $full_snapshot;
+        ": " . $Language->getText('tracker_include_artifact', 'full_snapshot') . "   =============" . ForgeConfig::get('sys_lf') .
+        ($changes ? '' : $artifact_href) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $full_snapshot;
 
         if (! $left) {
-            $body .= "" . $GLOBALS['sys_lf'] . "";
+            $body .= "" . ForgeConfig::get('sys_lf') . "";
         }
 
         // Now display other special fields
@@ -2882,30 +2882,30 @@ class Artifact
         $body .= $this->showFollowUpComments($group_id, 0, self::OUTPUT_MAIL_TEXT);
 
         // Then output the CC list
-        $body .= "" . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showCCList($group_id, $group_artifact_id, true);
+        $body .= "" . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $this->showCCList($group_id, $group_artifact_id, true);
 
         // Then output the dependencies
-        $body .= "" . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showDependencies($group_id, $group_artifact_id, true);
+        $body .= "" . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $this->showDependencies($group_id, $group_artifact_id, true);
 
         // Then output the history of attached files from newest to oldest
-        $body .= "" . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $this->showAttachedFiles($group_id, $group_artifact_id, true);
+        $body .= "" . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $this->showAttachedFiles($group_id, $group_artifact_id, true);
 
         // Extract references from the message
         $referenceManager = ReferenceManager::instance();
         $ref_array = $referenceManager->extractReferencesGrouped($body, $group_id);
         if (count($ref_array) > 0) {
-            $body .= $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact', 'references') . $GLOBALS['sys_lf'];
+            $body .= ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $Language->getText('tracker_include_artifact', 'references') . ForgeConfig::get('sys_lf');
         }
         foreach ($ref_array as $description => $match_array) {
-            $body .= $GLOBALS['sys_lf'] . $description . ":" . $GLOBALS['sys_lf'];
+            $body .= ForgeConfig::get('sys_lf') . $description . ":" . ForgeConfig::get('sys_lf');
             foreach ($match_array as $match => $ref_instance) {
-                $body .= ' ' . $ref_instance->getMatch() . ': ' . $ref_instance->getFullGotoLink() . $GLOBALS['sys_lf'];
+                $body .= ' ' . $ref_instance->getMatch() . ': ' . $ref_instance->getFullGotoLink() . ForgeConfig::get('sys_lf');
             }
         }
 
         // Finally output the message trailer
-        $body .= "" . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . $Language->getText('tracker_include_artifact', 'follow_link');
-        $body .= "" . $GLOBALS['sys_lf'] . $artifact_href;
+        $body .= "" . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . $Language->getText('tracker_include_artifact', 'follow_link');
+        $body .= "" . ForgeConfig::get('sys_lf') . $artifact_href;
 
         if ($ok) {
             $mail = new Codendi_Mail();
@@ -2959,7 +2959,7 @@ class Artifact
         $out_com = '';
         $out_att = '';
         reset($changes);
-        $fmt = "%20s | %-25s | %s" . $GLOBALS['sys_lf'];
+        $fmt = "%20s | %-25s | %s" . ForgeConfig::get('sys_lf');
 
         if (
             $this->hasFieldPermission($field_perm, 'assigned_to') ||
@@ -2968,7 +2968,7 @@ class Artifact
         ) {
             $user = UserManager::instance()->getCurrentUser();
             if ($user->isLoggedIn()) {
-                   $out_hdr = $Language->getText('tracker_include_artifact', 'changes_by') . ' ' . $user->getRealName() . ' <' . $user->getEmail() . ">" . $GLOBALS['sys_lf'] . "";
+                   $out_hdr = $Language->getText('tracker_include_artifact', 'changes_by') . ' ' . $user->getRealName() . ' <' . $user->getEmail() . ">" . ForgeConfig::get('sys_lf') . "";
                    $out_hdr .= $Language->getText('tracker_import_utils', 'date') . ': ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), time()) . ' (' . user_get_timezone() . ')';
             } else {
                    $out_hdr = $Language->getText('tracker_include_artifact', 'changes_by') . ' ' . $Language->getText('tracker_include_artifact', 'anon_user') . '        ' . $Language->getText('tracker_import_utils', 'date') . ': ' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), time());
@@ -2977,10 +2977,10 @@ class Artifact
         //Process special cases first: follow-up comment
         if (array_key_exists('comment', $changes) && $changes['comment']) {
             $visible_change = true;
-            $out_com = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . "---------------   " . $Language->getText('tracker_include_artifact', 'add_flup_comment') . "   ----------------" . $GLOBALS['sys_lf'] . "";
+            $out_com = ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . "---------------   " . $Language->getText('tracker_include_artifact', 'add_flup_comment') . "   ----------------" . ForgeConfig::get('sys_lf') . "";
 
             if (isset($changes['comment']['type']) && $changes['comment']['type'] != $Language->getText('global', 'none') && $changes['comment']['type'] != '') {
-                 $out_com .= "[" . $changes['comment']['type'] . "]" . $GLOBALS['sys_lf'];
+                 $out_com .= "[" . $changes['comment']['type'] . "]" . ForgeConfig::get('sys_lf');
             }
             $out_com .= $this->formatFollowUp(null, $changes['comment']['format'], $changes['comment']['add'], self::OUTPUT_MAIL_TEXT);
             unset($changes['comment']);
@@ -2989,13 +2989,13 @@ class Artifact
            //Process special cases first: file attachment
         if (array_key_exists('attach', $changes) && $changes['attach']) {
             $visible_change = true;
-            $out_att = "" . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . "---------------    " . $Language->getText('tracker_include_artifact', 'add_attachment') . "     -----------------" . $GLOBALS['sys_lf'] . "";
+            $out_att = "" . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . "---------------    " . $Language->getText('tracker_include_artifact', 'add_attachment') . "     -----------------" . ForgeConfig::get('sys_lf') . "";
             $out_att .= sprintf(
-                $Language->getText('tracker_include_artifact', 'file_name') . " %-30s " . $Language->getText('tracker_include_artifact', 'size') . ":%d KB" . $GLOBALS['sys_lf'] . "",
+                $Language->getText('tracker_include_artifact', 'file_name') . " %-30s " . $Language->getText('tracker_include_artifact', 'size') . ":%d KB" . ForgeConfig::get('sys_lf') . "",
                 $changes['attach']['name'],
                 intval($changes['attach']['size'] / 1024)
             );
-            $out_att .= $changes['attach']['description'] . $GLOBALS['sys_lf'] . $changes['attach']['href'];
+            $out_att .= $changes['attach']['description'] . ForgeConfig::get('sys_lf') . $changes['attach']['href'];
             unset($changes['attach']);
         }
 
@@ -3023,8 +3023,8 @@ class Artifact
         } // while
 
         if ($out) {
-            $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . sprintf($fmt, $Language->getText('tracker_include_artifact', 'what') . '    ', $Language->getText('tracker_include_artifact', 'removed'), $Language->getText('tracker_include_artifact', 'added')) .
-                "------------------------------------------------------------------" . $GLOBALS['sys_lf'] . $out;
+            $out = ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . sprintf($fmt, $Language->getText('tracker_include_artifact', 'what') . '    ', $Language->getText('tracker_include_artifact', 'removed'), $Language->getText('tracker_include_artifact', 'added')) .
+                "------------------------------------------------------------------" . ForgeConfig::get('sys_lf') . $out;
         }
 
         return($out_hdr . $out . $out_com . $out_att);
@@ -3050,7 +3050,7 @@ class Artifact
         $out_com = '';
         $out_ch  = '';
         reset($changes);
-        $fmt = "%20s | %-25s | %s" . $GLOBALS['sys_lf'];
+        $fmt = "%20s | %-25s | %s" . ForgeConfig::get('sys_lf');
 
         $hp = $this->getHTMLPurifier();
 
@@ -3213,7 +3213,7 @@ class Artifact
         // No followup comment -> return now
         if ($rows <= 0) {
             if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
-                $out = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . " " . $Language->getText('tracker_import_utils', 'no_followups') . $GLOBALS['sys_lf'];
+                $out = ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . " " . $Language->getText('tracker_import_utils', 'no_followups') . ForgeConfig::get('sys_lf');
             } else {
                 $out = '<H4>' . $Language->getText('tracker_import_utils', 'no_followups') . '</H4>';
             }
@@ -3224,7 +3224,7 @@ class Artifact
 
         // Header first
         if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
-            $out .= $Language->getText('tracker_include_artifact', 'follow_ups') . $GLOBALS['sys_lf'] . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'follow_ups')));
+            $out .= $Language->getText('tracker_include_artifact', 'follow_ups') . ForgeConfig::get('sys_lf') . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'follow_ups')));
         } else {
             if ($rows > 0) {
                 $out .= '<div style="text-align:right">';
@@ -3269,15 +3269,15 @@ class Artifact
             }
 
             if ($output == self::OUTPUT_EXPORT || $output == self::OUTPUT_MAIL_TEXT) {
-                $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . "------------------------------------------------------------------" . $GLOBALS['sys_lf'] .
-                    $Language->getText('tracker_import_utils', 'date') . ": %-30s" . $Language->getText('global', 'by') . ": %s" . $GLOBALS['sys_lf'] . "%s";
+                $fmt = ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . "------------------------------------------------------------------" . ForgeConfig::get('sys_lf') .
+                    $Language->getText('tracker_import_utils', 'date') . ": %-30s" . $Language->getText('global', 'by') . ": %s" . ForgeConfig::get('sys_lf') . "%s";
                 //The mail body
                 $comment_txt = $this->formatFollowUp($group_id, $isHtml, $value, $output);
                 $out .= sprintf(
                     $fmt,
                     format_date(util_get_user_preferences_export_datefmt(), db_result($orig_date, 0, 'date')),
                     (db_result($orig_subm, 0, 'mod_by') == 100 ? db_result($orig_subm, 0, 'email') : user_getname(db_result($orig_subm, 0, 'mod_by'))),
-                    ($comment_type != '' ? $comment_type . $GLOBALS['sys_lf'] : '') . $comment_txt
+                    ($comment_type != '' ? $comment_type . ForgeConfig::get('sys_lf') : '') . $comment_txt
                 );
             } else {
                 $style = '';
@@ -3402,7 +3402,7 @@ class Artifact
         }
 
         // final touch...
-        $out .= (($output != self::OUTPUT_BROWSER) ? $GLOBALS['sys_lf'] : "");
+        $out .= (($output != self::OUTPUT_BROWSER) ? ForgeConfig::get('sys_lf') : "");
 
         return($out);
     }
@@ -3429,7 +3429,7 @@ class Artifact
         // Nobody in the CC list -> return now
         if ($rows <= 0) {
             if ($ascii) {
-                $out = $Language->getText('tracker_include_artifact', 'cc_empty') . $GLOBALS['sys_lf'];
+                $out = $Language->getText('tracker_include_artifact', 'cc_empty') . ForgeConfig::get('sys_lf');
             } else {
                 $out = '<H4>' . $Language->getText('tracker_include_artifact', 'cc_empty') . '</H4>';
             }
@@ -3439,10 +3439,10 @@ class Artifact
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out .= $Language->getText('tracker_include_artifact', 'cc_list') . $GLOBALS['sys_lf'] . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'cc_list'))) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-                    $fmt = "%-35s | %s" . $GLOBALS['sys_lf'];
+            $out .= $Language->getText('tracker_include_artifact', 'cc_list') . ForgeConfig::get('sys_lf') . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'cc_list'))) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+                    $fmt = "%-35s | %s" . ForgeConfig::get('sys_lf');
                     $out .= sprintf($fmt, $Language->getText('tracker_include_artifact', 'cc_address'), $Language->getText('tracker_include_artifact', 'fill_cc_list_cmt'));
-                    $out .= "------------------------------------------------------------------" . $GLOBALS['sys_lf'];
+                    $out .= "------------------------------------------------------------------" . ForgeConfig::get('sys_lf');
         } else {
                     $title_arr = array();
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'cc_address');
@@ -3509,7 +3509,7 @@ class Artifact
         }
 
         // final touch...
-        $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
+        $out .= ($ascii ? ForgeConfig::get('sys_lf') : "</TABLE>");
 
         return($out);
     }
@@ -3535,7 +3535,7 @@ class Artifact
         // Nobody in the dependencies list -> return now
         if ($rows <= 0) {
             if ($ascii) {
-                $out = $Language->getText('tracker_include_artifact', 'dep_list_empty') . $GLOBALS['sys_lf'];
+                $out = $Language->getText('tracker_include_artifact', 'dep_list_empty') . ForgeConfig::get('sys_lf');
             } else {
                 $out = '<H4>' . $Language->getText('tracker_include_artifact', 'dep_list_empty') . '</H4>';
             }
@@ -3545,15 +3545,15 @@ class Artifact
         // Header first an determine what the print out format is
         // based on output type (Ascii, HTML)
         if ($ascii) {
-            $out .= $Language->getText('tracker_include_artifact', 'dep_list') . $GLOBALS['sys_lf'] . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'];
-                    $fmt = "%-15s | %s (%s)" . $GLOBALS['sys_lf'];
+            $out .= $Language->getText('tracker_include_artifact', 'dep_list') . ForgeConfig::get('sys_lf') . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'dep_list'))) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+                    $fmt = "%-15s | %s (%s)" . ForgeConfig::get('sys_lf');
                     $out .= sprintf(
                         $fmt,
                         $Language->getText('tracker_include_artifact', 'artifact'),
                         $Language->getText('tracker_include_artifact', 'summary'),
                         $Language->getText('global', 'status')
                     );
-                    $out .= "------------------------------------------------------------------" . $GLOBALS['sys_lf'];
+                    $out .= "------------------------------------------------------------------" . ForgeConfig::get('sys_lf');
         } else {
                     $title_arr = array();
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'artifact');
@@ -3606,7 +3606,7 @@ class Artifact
         }
 
         // final touch...
-        $out .= ($ascii ? $GLOBALS['sys_lf'] : "</TABLE>");
+        $out .= ($ascii ? ForgeConfig::get('sys_lf') : "</TABLE>");
 
         return($out);
     }
@@ -3631,7 +3631,7 @@ class Artifact
         // No file attached -> return now
         if ($rows <= 0) {
             if ($ascii) {
-                $out = $Language->getText('tracker_include_artifact', 'no_file_attached') . $GLOBALS['sys_lf'];
+                $out = $Language->getText('tracker_include_artifact', 'no_file_attached') . ForgeConfig::get('sys_lf');
             } else {
                 $out = '<H4>' . $Language->getText('tracker_include_artifact', 'no_file_attached') . '</H4>';
             }
@@ -3640,7 +3640,7 @@ class Artifact
 
         // Header first
         if ($ascii) {
-            $out = $Language->getText('tracker_include_artifact', 'file_attachment') . $GLOBALS['sys_lf'] . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'file_attachment')));
+            $out = $Language->getText('tracker_include_artifact', 'file_attachment') . ForgeConfig::get('sys_lf') . str_repeat("*", strlen($Language->getText('tracker_include_artifact', 'file_attachment')));
         } else {
             $title_arr = array();
             $title_arr[] = $Language->getText('tracker_include_artifact', 'name');
@@ -3657,10 +3657,10 @@ class Artifact
 
         // Determine what the print out format is based on output type (Ascii, HTML)
         if ($ascii) {
-                    $fmt = $GLOBALS['sys_lf'] . $GLOBALS['sys_lf'] . "------------------------------------------------------------------" . $GLOBALS['sys_lf'] .
-                        $Language->getText('tracker_import_utils', 'date') . ": %s  " . $Language->getText('tracker_include_artifact', 'name') . ": %s  " . $Language->getText('tracker_include_artifact', 'size') . ": %dKB   " . $Language->getText('global', 'by') . ": %s" . $GLOBALS['sys_lf'] . "%s" . $GLOBALS['sys_lf'] . "%s";
+                    $fmt = ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf') . "------------------------------------------------------------------" . ForgeConfig::get('sys_lf') .
+                        $Language->getText('tracker_import_utils', 'date') . ": %s  " . $Language->getText('tracker_include_artifact', 'name') . ": %s  " . $Language->getText('tracker_include_artifact', 'size') . ": %dKB   " . $Language->getText('global', 'by') . ": %s" . ForgeConfig::get('sys_lf') . "%s" . ForgeConfig::get('sys_lf') . "%s";
         } else {
-                    $fmt = "" . $GLOBALS['sys_lf'] . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
+                    $fmt = "" . ForgeConfig::get('sys_lf') . '<TR class="%s"><td>%s</td><td>%s</td><td align="center">%s</td><td align="center">%s</td><td align="center">%s</td>';
             if ($pv == 0) {
                 $fmt .= '<td align="center">%s</td>';
             }
@@ -3713,7 +3713,7 @@ class Artifact
         } // for
 
         // final touch...
-        $out .= ($ascii ? "" . $GLOBALS['sys_lf'] . "" : "</TABLE>");
+        $out .= ($ascii ? "" . ForgeConfig::get('sys_lf') . "" : "</TABLE>");
 
         return($out);
     }

@@ -72,8 +72,6 @@ class UGroupManagerTest extends TestCase
      */
     public function instantiateMocks()
     {
-        $globals = array_merge([], $GLOBALS);
-
         $this->user_group_dao = Mockery::mock(UGroupDao::class);
         $this->event_manager = Mockery::mock(EventManager::class);
         $this->user_group_user_dao = Mockery::mock(UGroupUserDao::class);
@@ -100,8 +98,6 @@ class UGroupManagerTest extends TestCase
 
         $this->user_group_manager->shouldReceive('getDao')
             ->andReturn($this->user_group_dao);
-
-        $GLOBALS = $globals;
     }
 
     public function testGetAvailableUgroupsReturnsAnonymousGroupWhenPlatformAccessIsAnonymousAndProjectIsPublic()

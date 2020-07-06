@@ -71,7 +71,6 @@ class CollectionTest extends TestCase
         $col = new Collection();
         $col->add($key3);
         $this->assertTrue($col->contains($key3_val));
-        unset($GLOBALS['debug']);
     }
     public function testReference()
     {

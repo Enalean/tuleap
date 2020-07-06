@@ -818,7 +818,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     protected function _getPasswordLifetime() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        return $GLOBALS['sys_password_lifetime'];
+        return ForgeConfig::get('sys_password_lifetime');
     }
 
     /**

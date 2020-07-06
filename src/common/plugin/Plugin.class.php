@@ -205,12 +205,12 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginEtcRoot()
     {
-        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() . '/etc';
+        return ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName() . '/etc';
     }
 
     public function getEtcTemplatesPath()
     {
-        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() . '/templates';
+        return ForgeConfig::get('sys_custompluginsroot') . '/' . $this->getName() . '/templates';
     }
 
     public function _getPluginPath()
@@ -230,13 +230,13 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function getPluginPath()
     {
         $pm = $this->_getPluginManager();
-        if (isset($GLOBALS['sys_pluginspath'])) {
-            $path = $GLOBALS['sys_pluginspath'];
+        if (ForgeConfig::get('sys_pluginspath')) {
+            $path = ForgeConfig::get('sys_pluginspath');
         } else {
             $path = "";
         }
         if ($pm->pluginIsCustom($this)) {
-            $path = $GLOBALS['sys_custompluginspath'];
+            $path = ForgeConfig::get('sys_custompluginspath');
         }
         return $path . '/' . $this->getName();
     }
@@ -250,18 +250,18 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getThemePath()
     {
-        if (!isset($GLOBALS['sys_user_theme'])) {
+        if (ForgeConfig::get('sys_user_theme') === false) {
             return null;
         }
 
         $pluginName = $this->getName();
 
-        $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
-        $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
+        $paths  = array(ForgeConfig::get('sys_custompluginspath'), ForgeConfig::get('sys_pluginspath'));
+        $roots  = array(ForgeConfig::get('sys_custompluginsroot'), ForgeConfig::get('sys_pluginsroot'));
         $dir    = '/' . $pluginName . '/www/themes/';
-        $dirs   = array($dir . $GLOBALS['sys_user_theme'], $dir . 'default');
+        $dirs   = array($dir . ForgeConfig::get('sys_user_theme'), $dir . 'default');
         $dir    = '/' . $pluginName . '/themes/';
-        $themes = array($dir . $GLOBALS['sys_user_theme'], $dir . 'default');
+        $themes = array($dir . ForgeConfig::get('sys_user_theme'), $dir . 'default');
         foreach ($dirs as $kd => $dir) {
             foreach ($roots as $kr => $root) {
                 if (is_dir($root . $dir) && $paths[$kr] . $themes[$kd]) {
@@ -284,9 +284,9 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         if (!$this->filesystem_path) {
             $pm = $this->_getPluginManager();
             if ($pm->pluginIsCustom($this)) {
-                $path = $GLOBALS['sys_custompluginsroot'];
+                $path = ForgeConfig::get('sys_custompluginsroot');
             } else {
-                $path = $GLOBALS['sys_pluginsroot'];
+                $path = ForgeConfig::get('sys_pluginsroot');
             }
             if ($path[strlen($path) - 1] != '/') {
                 $path .= '/';

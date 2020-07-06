@@ -22,17 +22,16 @@
 class URLTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
     {
-        $GLOBALS['sys_news_group'] = 46;
+        ForgeConfig::set('sys_news_group', 46);
     }
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['sys_news_group']);
-        unset($_REQUEST['forum_id']);
-        unset($_REQUEST['artifact_id']);
+        unset($_REQUEST['forum_id'], $_REQUEST['artifact_id']);
     }
 
     public function testProjectsSvnExist()
@@ -195,7 +194,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
         $_REQUEST['forum_id'] = 1;
         $url->shouldReceive('getForumDao')->andReturns($dao);
-        $this->assertNotEquals($GLOBALS['sys_news_group'], $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
+        $this->assertNotEquals(ForgeConfig::get('sys_news_group'), $url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'));
     }
 
     public function testNewsBytesExist()
@@ -204,7 +203,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
 
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => $GLOBALS['sys_news_group']))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(array('group_id' => ForgeConfig::get('sys_news_group')))->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
         $_REQUEST['forum_id'] = 1;
@@ -212,11 +211,11 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
         $dao2 = \Mockery::spy(\NewsBytesDao::class);
         $exists2 = \Mockery::spy(\DataAccessResult::class);
-        $exists2->shouldReceive('getRow')->andReturns(array('group_id' => $GLOBALS['sys_news_group']))->ordered();
+        $exists2->shouldReceive('getRow')->andReturns(array('group_id' => ForgeConfig::get('sys_news_group')))->ordered();
         $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao2->shouldReceive('searchByForumId')->andReturns($exists2)->ordered();
         $url->shouldReceive('getNewsBytesDao')->andReturns($dao2);
-        $this->assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), $GLOBALS['sys_news_group']);
+        $this->assertEquals($url->getGroupIdFromURL('/forum/forum.php?forum_id=exist'), ForgeConfig::get('sys_news_group'));
     }
 
     public function testArtifactDontExist()

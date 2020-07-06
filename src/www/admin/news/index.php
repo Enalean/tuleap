@@ -35,7 +35,7 @@ require_once __DIR__ . '/../../project/admin/ugroup_utils.php';
 
 $request = HTTPRequest::instance();
 
-if (user_ismember($GLOBALS['sys_news_group'], 'A')) {
+if (user_ismember(ForgeConfig::get('sys_news_group'), 'A')) {
     $admin_news_renderer = new AdminPageRenderer();
     $csrf_token          = new CSRFSynchronizerToken('/admin/news');
     $admin_news_dao      = new AdminNewsDao();

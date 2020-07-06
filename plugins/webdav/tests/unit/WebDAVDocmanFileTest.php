@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV;
 
-use BaseLanguage;
 use Docman_EmbeddedFile;
 use Docman_File;
 use Docman_ItemFactory;
@@ -37,9 +36,8 @@ use Sabre_DAV_Exception_FileNotFound;
 use Sabre_DAV_Exception_Forbidden;
 use Sabre_DAV_Exception_MethodNotAllowed;
 use Sabre_DAV_Exception_RequestedRangeNotSatisfiable;
+use Tuleap\GlobalLanguageMock;
 use Tuleap\WebDAV\Docman\DocumentDownloader;
-
-require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVDocmanFile
@@ -47,6 +45,7 @@ require_once __DIR__ . '/bootstrap.php';
 class WebDAVDocmanFileTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use GlobalLanguageMock;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|DocumentDownloader
@@ -68,18 +67,9 @@ class WebDAVDocmanFileTest extends TestCase
      */
     private $docman_item_factory;
 
-    /**
-     * @var array
-     */
-    private $globals;
-
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->globals = $GLOBALS;
-        $GLOBALS = [];
-        $GLOBALS['Language'] = Mockery::spy(BaseLanguage::class);
 
         $this->document_download = Mockery::mock(DocumentDownloader::class);
         $this->user              = Mockery::mock(PFUser::class);
@@ -98,8 +88,6 @@ class WebDAVDocmanFileTest extends TestCase
     {
         EventManager::clearInstance();
         Docman_ItemFactory::clearInstance(102);
-
-        $GLOBALS = $this->globals;
 
         parent::tearDown();
     }

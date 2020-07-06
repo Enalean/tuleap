@@ -1127,8 +1127,8 @@ if (defined('NUSOAP')) {
                 fclose($fh);
 
                 // move the file in the incoming dir
-                if (! rename($tmpname, $GLOBALS['ftp_incoming_dir'] . '/' . basename($filename))) {
-                    return new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . $GLOBALS['ftp_incoming_dir'], 'addFile');
+                if (! rename($tmpname, ForgeConfig::get('ftp_incoming_dir') . '/' . basename($filename))) {
+                    return new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . ForgeConfig::get('ftp_incoming_dir'), 'addFile');
                 }
 
                 // call addUploadedFile function

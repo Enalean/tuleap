@@ -1919,7 +1919,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getGitoliteAdminPath()
     {
-        return $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        return ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
     }
 
     private function getUGroupManager()

@@ -213,7 +213,6 @@ class FRSFile
     /**
      * Returns the location of the file on the server
      *
-     * @global $GLOBALS['ftp_frs_dir_prefix']
      * @return string the location of this file on the server
      */
     public function getFileLocation()
@@ -222,7 +221,7 @@ class FRSFile
             $group = $this->getGroup();
             $group_unix_name = $group->getUnixName(false);
             $basename = $this->getFilePath();
-            $this->file_location = $GLOBALS['ftp_frs_dir_prefix'] . '/' . $group_unix_name . '/' . $basename;
+            $this->file_location = ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $group_unix_name . '/' . $basename;
         }
         return $this->file_location;
     }

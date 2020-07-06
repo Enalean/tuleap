@@ -5,31 +5,31 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 // 
 //
-$title = "Bienvenue sur ".$GLOBALS['sys_name']." !";
+$title = "Bienvenue sur ".\ForgeConfig::get('sys_name')." !";
 
 $section_one = "Vous êtes maintenant un utilisateur enregistré avec le nom d'utilisateur : ";
 
-$section_two = "En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".$GLOBALS['sys_name']
+$section_two = "En tant que tel, vous pouvez participer pleinement à toutes les activités du site Web ".\ForgeConfig::get('sys_name')
               .". Vous pouvez utiliser les forums, souscrire à des listes de distributions, naviguer dans la liste des projets hébergés ou même démarrer votre "
               ."propre projet.";
 
 
-$section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".$GLOBALS['sys_name']
+$section_three = "** REMARQUES IMPORTANTES **\n\nBien que votre compte Web soit disponible dès maintenant, ".\ForgeConfig::get('sys_name')
                   ." prendra quelques temps pour créer votre compte shell. Certaines fonctionnalités comme l'accès aux répertoires CVS et SVN en dépendent. "
                   ." Votre compte shell sera activé dans moins de deux heures."
                   ."\n\n\nEntre temps nous vous recommandons vivement de parcourir le site,lire la documentation du site"
                   ." et de peaufiner la configuration de votre compte utilisateur "
                   ."(définir vos préférences, etc...)\n\n\nProfitez pleinement du site, envoyez vos suggestions sur "
                   ." les améliorations que nous pourrions apporter et n'oubliez pas de parler de "
-                  .$GLOBALS['sys_name']." autour de vous.";
+                  .\ForgeConfig::get('sys_name')." autour de vous.";
 
 $section_after_login = "\nLe mot de passe a du vous être communiqué par l'un de vos administrateurs de site. Pensez à le changer après votre première connexion sur le site. Si jamais le mot de passe ne vous a pas été communiqué, vous pouvez utiliser la procédure de récupération en cas de mot de passe perdu pour en générer un nouveau.";
 
 $thanks = "Merci !";
 
-$signature = "- L'équipe ".$GLOBALS['sys_name'];
+$signature = "- L'équipe ".\ForgeConfig::get('sys_name');
 
-$help = "Pour toute demande d'aide contactez : ".$GLOBALS['sys_email_admin'];
+$help = "Pour toute demande d'aide contactez : ".\ForgeConfig::get('sys_email_admin');
 
 $message = $title . "\n\n" .  $section_one . $login . '.' . $section_after_login . "\n\n" . $section_two . "\n\n"
             .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

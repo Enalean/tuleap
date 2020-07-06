@@ -28,17 +28,12 @@ use PHPUnit\Framework\TestCase;
 class LayoutTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['sys_user_theme'] = 'Stuff';
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_user_theme']);
-        parent::tearDown();
+        ForgeConfig::set('sys_user_theme', 'stuff');
     }
 
     public function testAddStyleSheet(): void

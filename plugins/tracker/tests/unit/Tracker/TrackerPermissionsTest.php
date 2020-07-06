@@ -365,7 +365,6 @@ class TrackerPermissionsTest extends TestCase
         UserManager::setInstance($this->user_manager);
 
         $GLOBALS['Response']        = Mockery::mock(BaseLayout::class);
-        $GLOBALS['sys_email_admin'] = '';
 
         $GLOBALS['UGROUPS'] = [
             "UGROUP_NONE"               => 100,
@@ -385,7 +384,6 @@ class TrackerPermissionsTest extends TestCase
         WorkflowFactory::clearInstance();
         UserManager::clearInstance();
         unset($GLOBALS['Response']);
-        unset($GLOBALS['sys_email_admin']);
         parent::tearDown();
     }
 

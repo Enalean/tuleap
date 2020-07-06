@@ -343,7 +343,7 @@ class Docman_Controller extends Controler
                 $this->request->get('metadata')
             );
             if ($i['item_type'] == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
-                $tmp_path = tempnam($GLOBALS['tmp_dir'], 'embedded_file');
+                $tmp_path = tempnam(ForgeConfig::get('tmp_dir'), 'embedded_file');
                 $f = fopen($tmp_path, 'w');
                 fwrite($f, $this->request->get('content'));
                 fclose($f);

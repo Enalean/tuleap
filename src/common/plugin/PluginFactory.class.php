@@ -215,7 +215,7 @@ class PluginFactory // phpcs:ignore
 
     public function getAllPossiblePluginsDir()
     {
-        return array_merge($this->getOfficialPluginPaths(), array($GLOBALS['sys_custompluginsroot']));
+        return array_merge($this->getOfficialPluginPaths(), array(ForgeConfig::get('sys_custompluginsroot')));
     }
 
     private function tryPluginPaths(array $potential_paths, $file_name)

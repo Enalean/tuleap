@@ -42,7 +42,7 @@ class ServiceCreator
         $pm   = ProjectManager::instance();
         if ($template['system']) {
             $link = str_replace('$projectname', $pm->getProject($group_id)->getUnixName(), $link);
-            $link = str_replace('$sys_default_domain', $GLOBALS['sys_default_domain'], $link);
+            $link = str_replace('$sys_default_domain', \ForgeConfig::get('sys_default_domain'), $link);
             $link = str_replace('$group_id', $group_id, $link);
             $sys_default_protocol = 'http';
             if (\ForgeConfig::get('sys_https_host')) {

@@ -120,7 +120,7 @@ class Git_GitoliteDriver
         $this->git_dao = $git_dao;
         $this->logger                   = $logger;
         $this->git_system_event_manager = $git_system_event_manager;
-        $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        $adminPath = ForgeConfig::get('sys_data_dir') . '/gitolite/admin';
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
         $this->repository_factory = $repository_factory ? $repository_factory : new GitRepositoryFactory(

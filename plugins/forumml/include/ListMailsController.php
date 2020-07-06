@@ -138,7 +138,7 @@ class ListMailsController implements DispatchableWithRequest
         $list_name = mail_get_listname_from_list_id($list_id);
         if (! mail_is_list_public($list_id)) {
             $members = [];
-            exec("{$GLOBALS['mailman_bin_dir']}/list_members " . $list_name, $members);
+            exec(\ForgeConfig::get('mailman_bin_dir') . "/list_members " . $list_name, $members);
             if (! in_array($user->getEmail(), $members)) {
                 exit_permission_denied();
             }

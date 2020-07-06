@@ -42,7 +42,7 @@ if ($request->valid(new Valid_UInt('id'))) {
 
 $pm = ProjectManager::instance();
 // admin pages can be reached by news admin (N2) or project admin (A)
-if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2'))) {
+if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismember($group_id, 'A') || user_ismember($group_id, 'N2'))) {
     /*
         Per-project admin pages.
         Shows their own news items so they can edit/update.
@@ -155,7 +155,7 @@ if ($group_id && $group_id != $GLOBALS['sys_news_group'] && (user_ismember($grou
 		<INPUT TYPE="TEXT" NAME="summary" VALUE="' . $purifier->purify(db_result($result, 0, 'summary')) . '"><BR>
 		<B>' . $Language->getText('news_admin_index', 'details') . ':</B><BR>
 		<TEXTAREA NAME="details" ROWS="8" COLS="50" WRAP="SOFT">' . $purifier->purify(db_result($result, 0, 'details')) . '</TEXTAREA><P>
-		<B>' . $purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', $GLOBALS['sys_name'])) . '</B><BR>
+		<B>' . $purifier->purify($Language->getText('news_admin_index', 'if_edit_delete', ForgeConfig::get('sys_name'))) . '</B><BR>
 		<INPUT TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
 		</FORM>';
     } else {

@@ -28,18 +28,25 @@ use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SVN_Apache_Auth_Factory;
+use Tuleap\ForgeConfigSandbox;
 
 class LDAPBackendSVNTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
+
+    /**
+     * @var array
+     */
+    private $globals;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->globals = $GLOBALS;
         $GLOBALS = [];
-        $GLOBALS['svn_prefix'] = '/svnroot';
-        $GLOBALS['sys_name']   = 'Platform';
+        \ForgeConfig::set('svn_prefix', '/svnroot');
+        \ForgeConfig::set('sys_name', 'Platform');
     }
 
     protected function tearDown(): void

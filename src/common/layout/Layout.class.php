@@ -358,7 +358,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
             }
         }
         $hp = Codendi_HTMLPurifier::instance();
-        $title = ($params['title'] ? $params['title'] . ' - ' : '') . $GLOBALS['sys_name'];
+        $title = ($params['title'] ? $params['title'] . ' - ' : '') . ForgeConfig::get('sys_name');
         echo '<!DOCTYPE html>' . "\n";
         echo '<html lang="' . $GLOBALS['Language']->getText('conf', 'language_code') . '">
                 <head>
@@ -484,7 +484,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function getStylesheetTheme($css)
     {
-        return '/themes/' . $GLOBALS['sys_user_theme'] . '/css/' . $css;
+        return '/themes/' . ForgeConfig::get('sys_user_theme') . '/css/' . $css;
     }
 
     private function getAssets(): IncludeAssets
@@ -549,11 +549,11 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
         //Basic feeds
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name'] . ' - ' . $GLOBALS['Language']->getText('include_layout', 'latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify(ForgeConfig::get('sys_name') . ' - ' . $GLOBALS['Language']->getText('include_layout', 'latest_news_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfnews.php'
         );
         echo $this->getRssFeed(
-            $hp->purify($GLOBALS['sys_name'] . ' - ' . $GLOBALS['Language']->getText('include_layout', 'newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
+            $hp->purify(ForgeConfig::get('sys_name') . ' - ' . $GLOBALS['Language']->getText('include_layout', 'newest_projects_rss'), CODENDI_PURIFIER_CONVERT_HTML),
             '/export/rss_sfprojects.php'
         );
     }
@@ -925,7 +925,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
     protected function getVersion()
     {
         if ($this->version === null) {
-            $this->version = trim(file_get_contents($GLOBALS['codendi_dir'] . '/VERSION'));
+            $this->version = trim(file_get_contents(ForgeConfig::get('codendi_dir') . '/VERSION'));
         }
         return $this->version;
     }

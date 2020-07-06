@@ -490,7 +490,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function createFileIntoIncoming($name, $data)
     {
-        $path = $GLOBALS['ftp_incoming_dir'] . '/' . $name;
+        $path = ForgeConfig::get('ftp_incoming_dir') . '/' . $name;
         if (file_exists($path)) {
             if (!$this->unlinkFile($path)) {
                 throw new Sabre_DAV_Exception($GLOBALS['Language']->getText('plugin_webdav_upload', 'delete_file_fail'));

@@ -253,7 +253,7 @@ class FileModuleMonitorFactory
         $subject = $GLOBALS['Language']->getText(
             'file_filemodule_monitor',
             'mail_subject',
-            array($GLOBALS['sys_name'],
+            array(ForgeConfig::get('sys_name'),
             $package->getName())
         );
 

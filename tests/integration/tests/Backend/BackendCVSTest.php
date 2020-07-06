@@ -38,6 +38,11 @@ final class BackendCVSTest extends TestCase
 
     private $initial_sys_project_backup_path;
     private $initial_codendi_log;
+    private $initial_cvs_prefix;
+    private $initial_cvslock_prefix;
+    private $initial_tmp_dir;
+    private $initial_cvs_cmd;
+    private $initial_cvs_root_allow_file;
 
     protected function setUp(): void
     {
@@ -45,17 +50,21 @@ final class BackendCVSTest extends TestCase
         mkdir($this->getTmpDir() . '/cvsroot');
         mkdir($this->getTmpDir() . '/tmp');
         copy(__DIR__ . '/_fixtures/cvsroot/loginfo.cvsnt', $this->getTmpDir() . '/cvsroot/loginfo.cvsnt');
-        $GLOBALS['cvs_prefix']                 = $this->getTmpDir() . '/cvsroot';
-        $GLOBALS['cvslock_prefix']             = $this->getTmpDir() . '/var/lock/cvs';
-        $GLOBALS['tmp_dir']                    = $this->getTmpDir() . '/tmp';
-        $GLOBALS['cvs_cmd']                    = "/usr/bin/cvs";
-        $GLOBALS['cvs_root_allow_file']        = $this->getTmpDir() . '/cvs_root_allow';
-        $GLOBALS['codendi_bin_prefix']         = ForgeConfig::get('codendi_bin_prefix');
+        $this->initial_cvs_prefix              = ForgeConfig::get('cvs_prefix');
+        ForgeConfig::set('cvs_prefix', $this->getTmpDir() . '/cvsroot');
+        $this->initial_cvslock_prefix          = ForgeConfig::get('cvslock_prefix');
+        ForgeConfig::set('cvslock_prefix', $this->getTmpDir() . '/var/lock/cvs');
+        $this->initial_tmp_dir                 = ForgeConfig::get('tmp_dir');
+        ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tmp');
+        $this->initial_cvs_cmd                 = ForgeConfig::get('cvs_cmd');
+        ForgeConfig::set('cvs_cmd', "/usr/bin/cvs");
+        $this->initial_cvs_root_allow_file     = ForgeConfig::get('cvs_root_allow_file');
+        ForgeConfig::set('cvs_root_allow_file', $this->getTmpDir() . '/cvs_root_allow');
         $this->initial_sys_project_backup_path = ForgeConfig::get('sys_project_backup_path');
         ForgeConfig::set('sys_project_backup_path', $this->getTmpDir() . '/tmp');
         $this->initial_codendi_log = ForgeConfig::get('codendi_log');
         ForgeConfig::set('codendi_log', $this->getTmpDir());
-        mkdir($GLOBALS['cvs_prefix'] . '/' . 'toto');
+        mkdir(ForgeConfig::get('cvs_prefix') . '/' . 'toto');
     }
 
 
@@ -64,14 +73,11 @@ final class BackendCVSTest extends TestCase
         Backend::clearInstances();
         ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
         ForgeConfig::set('codendi_log', $this->initial_codendi_log);
-        unset(
-            $GLOBALS['cvs_prefix'],
-            $GLOBALS['cvslock_prefix'],
-            $GLOBALS['tmp_dir'],
-            $GLOBALS['cvs_cmd'],
-            $GLOBALS['cvs_root_allow_file'],
-            $GLOBALS['codendi_bin_prefix']
-        );
+        ForgeConfig::set('cvs_prefix', $this->initial_cvs_prefix);
+        ForgeConfig::set('cvslock_prefix', $this->initial_cvslock_prefix);
+        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
+        ForgeConfig::set('cvs_cmd', $this->initial_cvs_cmd);
+        ForgeConfig::set('cvs_root_allow_file', $this->initial_cvs_root_allow_file);
     }
 
     public function testConstructor(): void
@@ -92,7 +98,7 @@ final class BackendCVSTest extends TestCase
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
 
-        $projdir = $GLOBALS['cvs_prefix'] . "/TestProj";
+        $projdir = ForgeConfig::get('cvs_prefix') . "/TestProj";
 
         // Setup test data
         mkdir($projdir);
@@ -134,22 +140,22 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('chown');
         $backend->shouldReceive('chgrp');
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . $GLOBALS['cvs_prefix'] . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
 
         $this->assertTrue($backend->createProjectCVS(142));
-        $this->assertDirectoryExists($GLOBALS['cvs_prefix'] . '/TestProj', 'CVS dir should be created');
-        $this->assertDirectoryExists($GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT', 'CVSROOT dir should be created');
-        $this->assertFileExists($GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT/loginfo', 'loginfo file should be created');
+        $this->assertDirectoryExists(ForgeConfig::get('cvs_prefix') . '/TestProj', 'CVS dir should be created');
+        $this->assertDirectoryExists(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT', 'CVSROOT dir should be created');
+        $this->assertFileExists(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/loginfo', 'loginfo file should be created');
 
-        $commitinfo_file = file($GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT/commitinfo');
+        $commitinfo_file = file(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/commitinfo');
         $this->assertContains($backend->block_marker_start, $commitinfo_file, 'commitinfo file should contain block');
 
-        $commitinfov_file = file($GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT/commitinfo,v');
+        $commitinfov_file = file(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/commitinfo,v');
         $this->assertContains($backend->block_marker_start, $commitinfov_file, 'commitinfo file should be under version control and contain block');
 
-        $this->assertDirectoryExists($GLOBALS['cvslock_prefix'] . '/TestProj', 'CVS lock dir should be created');
+        $this->assertDirectoryExists(ForgeConfig::get('cvslock_prefix') . '/TestProj', 'CVS lock dir should be created');
 
-        $writers_file = file($GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT/writers');
+        $writers_file = file(ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/writers');
         $this->assertContains("user1\n", $writers_file, 'writers file should contain user1');
         $this->assertContains("user2\n", $writers_file, 'writers file should contain user2');
         $this->assertContains("user3\n", $writers_file, 'writers file should contain user3');
@@ -168,8 +174,8 @@ final class BackendCVSTest extends TestCase
         $this->assertTrue($backend->CVSRootListUpdate());
 
         // Now test CVSRootListUpdate
-        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file']), "cvs_root_allow file should be created");
-        $cvs_config_array1 = file($GLOBALS['cvs_root_allow_file']);
+        $this->assertTrue(is_file(ForgeConfig::get('cvs_root_allow_file')), "cvs_root_allow file should be created");
+        $cvs_config_array1 = file(ForgeConfig::get('cvs_root_allow_file'));
 
         $this->assertContains("/cvsroot/gpig\n", $cvs_config_array1, "Project gpig should be listed in root file");
         $this->assertContains("/cvsroot/TestProj\n", $cvs_config_array1, "Project TestProj should be listed in root file");
@@ -178,9 +184,9 @@ final class BackendCVSTest extends TestCase
         $backend->setCVSRootListNeedUpdate();
         $this->assertTrue($backend->getCVSRootListNeedUpdate(), "Need to update the repo list");
         $this->assertTrue($backend->CVSRootListUpdate());
-        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'] . ".new"), "cvs_root_allow.new file should be created");
-        $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'] . ".old"), "cvs_root_allow.old file should not be created (same files)");
-        $cvs_config_array2 = file($GLOBALS['cvs_root_allow_file'] . ".new");
+        $this->assertTrue(is_file(ForgeConfig::get('cvs_root_allow_file') . ".new"), "cvs_root_allow.new file should be created");
+        $this->assertFalse(is_file(ForgeConfig::get('cvs_root_allow_file') . ".old"), "cvs_root_allow.old file should not be created (same files)");
+        $cvs_config_array2 = file(ForgeConfig::get('cvs_root_allow_file') . ".new");
         $this->assertContains("/cvsroot/gpig\n", $cvs_config_array2, "Project gpig should be listed in root.new file");
         $this->assertContains("/cvsroot/TestProj\n", $cvs_config_array2, "Project TestProj should be listed in root.new file");
 
@@ -192,20 +198,20 @@ final class BackendCVSTest extends TestCase
         $backend2->setCVSRootListNeedUpdate();
         $this->assertTrue($backend2->getCVSRootListNeedUpdate(), "Need to update the repo list");
         $this->assertTrue($backend2->CVSRootListUpdate());
-        $this->assertFalse(is_file($GLOBALS['cvs_root_allow_file'] . ".new"), "cvs_root_allow.new file should not be created (moved because different files)");
-        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'] . ".old"), "cvs_root_allow.old file should be created (different files)");
+        $this->assertFalse(is_file(ForgeConfig::get('cvs_root_allow_file') . ".new"), "cvs_root_allow.new file should not be created (moved because different files)");
+        $this->assertTrue(is_file(ForgeConfig::get('cvs_root_allow_file') . ".old"), "cvs_root_allow.old file should be created (different files)");
         // Again
         $backend2->setCVSRootListNeedUpdate();
         $this->assertTrue($backend2->getCVSRootListNeedUpdate(), "Need to update the repo list");
         $this->assertTrue($backend2->CVSRootListUpdate());
-        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'] . ".new"), "cvs_root_allow.new file should be created (same files)");
-        $this->assertTrue(is_file($GLOBALS['cvs_root_allow_file'] . ".old"), "cvs_root_allow.old file should be there");
+        $this->assertTrue(is_file(ForgeConfig::get('cvs_root_allow_file') . ".new"), "cvs_root_allow.new file should be created (same files)");
+        $this->assertTrue(is_file(ForgeConfig::get('cvs_root_allow_file') . ".old"), "cvs_root_allow.old file should be there");
     }
 
     public function testSetCVSPrivacyPrivate(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $backend->shouldReceive('chmod')->with($GLOBALS['cvs_prefix'] . '/' . 'toto', 02770)->once()->andReturns(true);
+        $backend->shouldReceive('chmod')->with(ForgeConfig::get('cvs_prefix') . '/' . 'toto', 02770)->once()->andReturns(true);
 
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('toto');
@@ -216,7 +222,7 @@ final class BackendCVSTest extends TestCase
     public function testsetCVSPrivacyPublic(): void
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $backend->shouldReceive('chmod')->with($GLOBALS['cvs_prefix'] . '/' . 'toto', 02775)->once()->andReturns(true);
+        $backend->shouldReceive('chmod')->with(ForgeConfig::get('cvs_prefix') . '/' . 'toto', 02775)->once()->andReturns(true);
 
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturns('toto');
@@ -252,20 +258,20 @@ final class BackendCVSTest extends TestCase
 
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . $GLOBALS['cvs_prefix'] . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
 
         $backend->createProjectCVS(142);
 
         $this->assertTrue($backend->renameCVSRepository($project, "foobar"));
 
         // Test repo location
-        $repoPath = $GLOBALS['cvs_prefix'] . "/foobar";
+        $repoPath = ForgeConfig::get('cvs_prefix') . "/foobar";
         $this->assertDirectoryExists($repoPath, "CVS dir should be renamed");
 
         // Test Lock dir
-        $this->assertDirectoryExists($GLOBALS['cvslock_prefix'] . "/foobar", 'CVS lock dir should be renamed');
+        $this->assertDirectoryExists(ForgeConfig::get('cvslock_prefix') . "/foobar", 'CVS lock dir should be renamed');
         $file = file_get_contents($repoPath . "/CVSROOT/config");
-        $this->assertSame(preg_match('#^LockDir=' . $GLOBALS['cvslock_prefix'] . "/foobar$#m", $file), 1, "CVS lock dir should be renamed");
+        $this->assertSame(preg_match('#^LockDir=' . ForgeConfig::get('cvslock_prefix') . "/foobar$#m", $file), 1, "CVS lock dir should be renamed");
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurence of old project name in CVSROOT/config');
 
         // Test loginfo file
@@ -289,20 +295,20 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('chown');
         $backend->shouldReceive('chgrp');
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . $GLOBALS['cvs_prefix'] . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
 
         $backend->createProjectCVS(142);
 
         $this->assertTrue($backend->renameCVSRepository($project, "foobar"));
 
         // Test repo location
-        $repoPath = $GLOBALS['cvs_prefix'] . "/foobar";
+        $repoPath = ForgeConfig::get('cvs_prefix') . "/foobar";
         $this->assertDirectoryExists($repoPath, "CVS dir should be renamed");
 
         // Test Lock dir
-        $this->assertDirectoryExists($GLOBALS['cvslock_prefix'] . "/foobar", "CVS lock dir should be renamed");
+        $this->assertDirectoryExists(ForgeConfig::get('cvslock_prefix') . "/foobar", "CVS lock dir should be renamed");
         $file = file_get_contents($repoPath . "/CVSROOT/config");
-        $this->assertSame(preg_match('#^LockDir=' . $GLOBALS['cvslock_prefix'] . "/foobar$#m", $file), 1, "CVS lock dir should be renamed");
+        $this->assertSame(preg_match('#^LockDir=' . ForgeConfig::get('cvslock_prefix') . "/foobar$#m", $file), 1, "CVS lock dir should be renamed");
         $this->assertStringNotContainsString('TestProj', $file, 'There should no longer be any occurence of old project name in CVSROOT/config');
 
         // Test loginfo file
@@ -323,18 +329,18 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
 
         // Simulate loginfo generated for CVSNT
-        $cvsdir = $GLOBALS['cvs_prefix'] . '/foobar';
+        $cvsdir = ForgeConfig::get('cvs_prefix') . '/foobar';
         mkdir($cvsdir);
         mkdir($cvsdir . '/CVSROOT');
         $file = file_get_contents(dirname(__FILE__) . '/_fixtures/cvsroot/loginfo.cvsnt');
         $file = str_replace('%unix_group_name%', 'TestProj', $file);
-        $file = str_replace('%cvs_dir%', $GLOBALS['cvs_prefix'] . '/TestProj', $file);
+        $file = str_replace('%cvs_dir%', ForgeConfig::get('cvs_prefix') . '/TestProj', $file);
         $file = str_replace('%codendi_bin_prefix%', ForgeConfig::get('codendi_bin_prefix'), $file);
         file_put_contents($cvsdir . '/CVSROOT/loginfo', $file);
 
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('useCVSNT')->andReturns(true);
-        $loginfo_path = $GLOBALS['cvs_prefix'] . '/foobar/CVSROOT/loginfo';
+        $loginfo_path = ForgeConfig::get('cvs_prefix') . '/foobar/CVSROOT/loginfo';
         $backend->shouldReceive('system')->with('co -q -l ' . $loginfo_path, 0)->once();
         $backend->shouldReceive('system')->with(
             sprintf('/usr/bin/rcs -q -l %s; ci -q -m"Codendi modification" %s; co -q %s', $loginfo_path, $loginfo_path, $loginfo_path),
@@ -352,7 +358,7 @@ final class BackendCVSTest extends TestCase
 
     public function testIsNameAvailable(): void
     {
-        $cvsdir = $GLOBALS['cvs_prefix'] . '/foobar';
+        $cvsdir = ForgeConfig::get('cvs_prefix') . '/foobar';
         mkdir($cvsdir);
 
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -403,7 +409,7 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('getCVSWatchMode')->andReturns(false);
 
-        $backend->shouldReceive('log')->with('No such file: ' . $GLOBALS['cvs_prefix'] . '/TestProj/CVSROOT/notify', 'error')->once();
+        $backend->shouldReceive('log')->with('No such file: ' . ForgeConfig::get('cvs_prefix') . '/TestProj/CVSROOT/notify', 'error')->once();
 
         $this->assertFalse($backend->updateCVSWatchMode(1));
     }
@@ -420,9 +426,9 @@ final class BackendCVSTest extends TestCase
         $backend->shouldReceive('getCVSWatchMode')->andReturns(false);
 
         // Simulate notify generated using command
-        $cvsdir = $GLOBALS['cvs_prefix'] . '/TestProj';
+        $cvsdir = ForgeConfig::get('cvs_prefix') . '/TestProj';
         mkdir($cvsdir);
-        system($GLOBALS['cvs_cmd'] . " -d $cvsdir init");
+        system(ForgeConfig::get('cvs_cmd') . " -d $cvsdir init");
         $this->assertTrue($backend->updateCVSWatchMode(1));
     }
 
@@ -434,12 +440,12 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('isCVSPrivate')->andReturns(false);
 
         // Simulate loginfo generated for CVSNT
-        $cvsdir = $GLOBALS['cvs_prefix'] . '/TestProj';
+        $cvsdir = ForgeConfig::get('cvs_prefix') . '/TestProj';
         mkdir($cvsdir);
         mkdir($cvsdir . '/CVSROOT');
         $file = file_get_contents(__DIR__ . '/_fixtures/cvsroot/loginfo.cvsnt');
         $file = str_replace('%unix_group_name%', 'TestProj', $file);
-        $file = str_replace('%cvs_dir%', $GLOBALS['cvs_prefix'] . '/TestProj', $file);
+        $file = str_replace('%cvs_dir%', ForgeConfig::get('cvs_prefix') . '/TestProj', $file);
         $file = str_replace('%codendi_bin_prefix%', ForgeConfig::get('codendi_bin_prefix'), $file);
         file_put_contents($cvsdir . '/CVSROOT/loginfo', $file);
 
@@ -462,7 +468,7 @@ final class BackendCVSTest extends TestCase
 
     public function testCheckCVSModeNeedOwnerUpdate(): void
     {
-        $cvsdir = $GLOBALS['cvs_prefix'] . '/TestProj';
+        $cvsdir = ForgeConfig::get('cvs_prefix') . '/TestProj';
         mkdir($cvsdir . '/CVSROOT', 0700, true);
         chmod($cvsdir . '/CVSROOT', 04700);
 
@@ -474,7 +480,7 @@ final class BackendCVSTest extends TestCase
 
         $backend = $this->GivenACVSRepositoryWithWrongOwnership($project, $cvsdir);
         $backend->shouldReceive('log')->with('Restoring ownership on CVS dir: ' . $cvsdir, 'info')->once();
-        $backend->shouldReceive('system')->with('chown -R :TestProj ' . $GLOBALS['cvs_prefix'] . '/TestProj')->once();
+        $backend->shouldReceive('system')->with('chown -R :TestProj ' . ForgeConfig::get('cvs_prefix') . '/TestProj')->once();
 
         $this->assertTrue($backend->checkCVSMode($project));
     }

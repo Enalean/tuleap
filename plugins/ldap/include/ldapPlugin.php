@@ -414,7 +414,7 @@ class LdapPlugin extends Plugin
                 $GLOBALS['feedback'] .= ' ' . $GLOBALS['Language']->getText(
                     'plugin_ldap',
                     'login_pls_use_ldap',
-                    array($GLOBALS['sys_name'])
+                    array(ForgeConfig::get('sys_name'))
                 );
             } else {
                 $params['allow_codendi_login'] = true;
@@ -1156,7 +1156,7 @@ class LdapPlugin extends Plugin
 
     private function getEtcDir()
     {
-        return $GLOBALS['sys_custompluginsroot'] . 'ldap/etc/';
+        return ForgeConfig::get('sys_custompluginsroot') . 'ldap/etc/';
     }
 
     private function getConfigFilePath()

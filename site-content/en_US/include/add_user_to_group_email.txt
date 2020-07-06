@@ -8,10 +8,10 @@
 //
 
 
-$message = "You are now a member of project $group_name on the ".$GLOBALS['sys_name']." web site.\n"
+$message = "You are now a member of project $group_name on the ".\ForgeConfig::get('sys_name')." web site.\n"
 . "You may visit the project main page here: \n\n"
 . "<". $base_url ."/projects/$unix_group_name/>\n\n"
 . "Enjoy.\n\n"
-. " -- The ".$GLOBALS['sys_name']." Team\n";
+. " -- The ".\ForgeConfig::get('sys_name')." Team\n";
 
 ?>

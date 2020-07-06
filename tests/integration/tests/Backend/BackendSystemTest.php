@@ -43,20 +43,28 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
     private $initial_grpdir_prefix;
     private $initial_ftp_anon_dir_prefix;
     private $initial_ftp_frs_dir_prefix;
+    private $initial_codendi_shell_skel;
+    private $initial_tmp_dir;
+    private $initial_sys_file_deletion_delay;
+    private $initial_codendi_log;
+    private $initial_sys_incdir;
 
     protected function setUp(): void
     {
-        $GLOBALS['codendi_shell_skel']        = __DIR__ . '/_fixtures/etc/skel_codendi';
-        $GLOBALS['tmp_dir']                   = $this->getTmpDir() . '/var/tmp';
-        $GLOBALS['ftp_frs_dir_prefix']        = $this->getTmpDir() . '/var/lib/codendi/ftp/codendi';
-        $GLOBALS['sys_file_deletion_delay']   = 5;
-        $GLOBALS['codendi_log']               = $GLOBALS['tmp_dir'];
-        ForgeConfig::set('sys_incdir', $GLOBALS['tmp_dir']);
-
+        $this->initial_codendi_shell_skel     = ForgeConfig::get('codendi_shell_skel');
+        ForgeConfig::set('codendi_shell_skel', __DIR__ . '/_fixtures/etc/skel_codendi');
+        $this->initial_tmp_dir                = $this->getTmpDir() . '/var/tmp';
+        ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/var/tmp');
+        $this->initial_sys_file_deletion_delay = ForgeConfig::get('sys_file_deletion_delay');
+        ForgeConfig::set('sys_file_deletion_delay', 5);
+        $this->initial_codendi_log = ForgeConfig::get('codendi_log');
+        ForgeConfig::set('codendi_log', ForgeConfig::get('tmp_dir'));
+        $this->initial_sys_incdir = ForgeConfig::get('sys_incdir');
+        ForgeConfig::set('sys_incdir', ForgeConfig::get('tmp_dir'));
         $this->initial_sys_project_backup_path = ForgeConfig::get('sys_project_backup_path');
-        ForgeConfig::set('sys_project_backup_path', $GLOBALS['tmp_dir']);
+        ForgeConfig::set('sys_project_backup_path', ForgeConfig::get('tmp_dir'));
         $this->initial_sys_custom_incdir = ForgeConfig::get('sys_custom_incdir');
-        ForgeConfig::set('sys_custom_incdir', $GLOBALS['tmp_dir']);
+        ForgeConfig::set('sys_custom_incdir', ForgeConfig::get('tmp_dir'));
         $this->initial_homedir_prefix = ForgeConfig::get('homedir_prefix');
         ForgeConfig::set('homedir_prefix', $this->getTmpDir() . '/home/users');
         $this->initial_grpdir_prefix = ForgeConfig::get('grpdir_prefix');
@@ -64,12 +72,12 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
         $this->initial_ftp_anon_dir_prefix = ForgeConfig::get('ftp_anon_dir_prefix');
         ForgeConfig::set('ftp_anon_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/pub');
         $this->initial_ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
-        ForgeConfig::set('ftp_frs_dir_prefix', $GLOBALS['ftp_frs_dir_prefix']);
+        ForgeConfig::set('ftp_frs_dir_prefix', $this->getTmpDir() . '/var/lib/codendi/ftp/codendi');
 
         mkdir(ForgeConfig::get('homedir_prefix'), 0770, true);
         mkdir(ForgeConfig::get('grpdir_prefix'), 0770, true);
-        mkdir($GLOBALS['tmp_dir'], 0770, true);
-        mkdir($GLOBALS['ftp_frs_dir_prefix'], 0770, true);
+        mkdir(ForgeConfig::get('tmp_dir'), 0770, true);
+        mkdir(ForgeConfig::get('ftp_frs_dir_prefix'), 0770, true);
         mkdir(ForgeConfig::get('ftp_anon_dir_prefix'), 0770, true);
     }
 
@@ -77,13 +85,17 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
         Backend::clearInstances();
-        unset($GLOBALS['codendi_shell_skel'], $GLOBALS['tmp_dir'], $GLOBALS['ftp_frs_dir_prefix'], $GLOBALS['sys_file_deletion_delay'], $GLOBALS['codendi_log']);
         ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
         ForgeConfig::set('sys_custom_incdir', $this->initial_sys_custom_incdir);
         ForgeConfig::set('homedir_prefix', $this->initial_homedir_prefix);
         ForgeConfig::set('grpdir_prefix', $this->initial_grpdir_prefix);
         ForgeConfig::set('ftp_anon_dir_prefix', $this->initial_ftp_anon_dir_prefix);
         ForgeConfig::set('ftp_frs_dir_prefix', $this->initial_ftp_frs_dir_prefix);
+        ForgeConfig::set('codendi_shell_skel', $this->initial_codendi_shell_skel);
+        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
+        ForgeConfig::set('sys_file_deletion_delay', $this->initial_sys_file_deletion_delay);
+        ForgeConfig::set('codendi_log', $this->initial_codendi_log);
+        ForgeConfig::set('sys_incdir', $this->initial_sys_incdir);
     }
 
     public function testConstructor(): void
@@ -124,7 +136,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
         $projdir = ForgeConfig::get('grpdir_prefix') . "/TestPrj";
         $ftpdir = ForgeConfig::get('ftp_anon_dir_prefix') . "/TestPrj";
-        $frsdir = $GLOBALS['ftp_frs_dir_prefix'] . "/TestPrj";
+        $frsdir = ForgeConfig::get('ftp_frs_dir_prefix') . "/TestPrj";
 
         $this->assertTrue($backend->createProjectHome(142));
         $this->assertDirectoryExists($projdir, "Project Home should be created");
@@ -315,7 +327,7 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
     public function testIsProjectNameAvailableWithExistingFileInFRS(): void
     {
-        touch($GLOBALS['ftp_frs_dir_prefix'] . "/testproject");
+        touch(ForgeConfig::get('ftp_frs_dir_prefix') . "/testproject");
         $backend = \Mockery::mock(\BackendSystem::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->assertFalse($backend->isProjectNameAvailable('testproject'), 'A file with the same name exists in var/lib/codendi/ftp/codendi');
     }

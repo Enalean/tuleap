@@ -71,7 +71,7 @@ class BackendAliases extends Backend
      */
     public function update()
     {
-        $alias_file = $GLOBALS['alias_file'];
+        $alias_file = ForgeConfig::get('alias_file');
         $alias_file_new = $alias_file . ".new";
         $alias_file_old = $alias_file . ".old";
 
@@ -118,8 +118,8 @@ class BackendAliases extends Backend
         fwrite($fp, "codex-admin:             " . self::ADMIN_ALIAS . "\n");// deprecated user name
         fwrite($fp, "sourceforge:             " . self::ADMIN_ALIAS . "\n");// deprecated user name
         fwrite($fp, $this->getHTTPUser() . ":               " . self::ADMIN_ALIAS . "\n");
-        fwrite($fp, "noreply:                 \"|" . $GLOBALS['codendi_bin_prefix'] . "/gotohell\"\n");
-        fwrite($fp, "undisclosed-recipients:  \"|" . $GLOBALS['codendi_bin_prefix'] . "/gotohell\"\n"); // for phpWiki notifications...
+        fwrite($fp, "noreply:                 \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n");
+        fwrite($fp, "undisclosed-recipients:  \"|" . ForgeConfig::get('codendi_bin_prefix') . "/gotohell\"\n"); // for phpWiki notifications...
         fwrite($fp, "webmaster:               " . self::ADMIN_ALIAS . "\n");
         return fwrite($fp, "\n\n");
     }
@@ -134,7 +134,7 @@ class BackendAliases extends Backend
     protected function writeListAliases($fp)
     {
         // Determine the name of the mailman wrapper
-        $mm_wrapper = $GLOBALS['mailman_wrapper'];
+        $mm_wrapper = ForgeConfig::get('mailman_wrapper');
 
         fwrite($fp, "### Begin Mailing List Aliases ###\n\n");
         $dar = $this->getMailingListDao()->searchAllActiveML();

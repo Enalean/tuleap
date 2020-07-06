@@ -46,7 +46,7 @@ set_include_path("$tuleap_src:$tuleap_src_include");
 $mwscript_abs_path = $IP . "/maintenance/$mwscript";
 array_unshift($argv, $mwscript_abs_path, '--conf', '/usr/share/tuleap/plugins/mediawiki/www/LocalSettings.php');
 require_once(__DIR__ . '/../include/constants.php');
-$GLOBALS['sys_pluginsroot'] = '/usr/share/tuleap/plugins';
+ForgeConfig::set('sys_pluginsroot', '/usr/share/tuleap/plugins');
 
 
 require_once $mwscript_abs_path;

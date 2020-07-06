@@ -229,7 +229,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getUnixGID()
     {
-        return $this->data_array['group_id'] + $GLOBALS['unix_gid_add'];
+        return $this->data_array['group_id'] + ForgeConfig::get('unix_gid_add');
     }
 
     /**

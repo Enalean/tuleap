@@ -22,12 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
-
 use Tuleap\ProFTPd\Admin\PermissionsManager;
 
 class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
 {
+    use \Tuleap\ForgeConfigSandbox;
+
     /** @var SystemEvent_PROFTPD_DIRECTORY_CREATE */
     private $event;
     /** @var String */
@@ -97,13 +97,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
              }));
 
         $this->event->injectDependencies($this->acl_updater, $this->permissions_manager, $this->project_manager, $this->ftp_directory);
-        $GLOBALS['sys_http_user'] = 'httpuser';
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        unset($GLOBALS['sys_http_user']);
+        ForgeConfig::set('sys_http_user', 'httpuser');
     }
 
     public function testItSetsACLWithWritersAndReaders()

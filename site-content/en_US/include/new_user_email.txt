@@ -7,9 +7,9 @@
 //
 // 
 //
-$title = "Welcome to ".$GLOBALS['sys_name']."!";
+$title = "Welcome to ".\ForgeConfig::get('sys_name')."!";
 
-$section_one = "Thank you for registering on the ".$GLOBALS['sys_name']." web site. \nYour login is: ";
+$section_one = "Thank you for registering on the ".\ForgeConfig::get('sys_name')." web site. \nYour login is: ";
 
 $section_two = "To get started, we need to confirm your email address, so please click this link to finish creating your account: ";
 
@@ -19,9 +19,9 @@ $redirect_button = "Confirm your email address";
 
 $thanks = "Thanks!";
 
-$signature = "- The team at ".$GLOBALS['sys_name'];
+$signature = "- The team at ".\ForgeConfig::get('sys_name');
 
-$help = "For any help contact: ".$GLOBALS['sys_email_admin'];
+$help = "For any help contact: ".\ForgeConfig::get('sys_email_admin');
 
 
 $message = $title. "\n\n" .$section_one . $login . $section_after_login. "\n\n"

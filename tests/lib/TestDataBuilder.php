@@ -109,7 +109,6 @@ class TestDataBuilder // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $this->user_manager    = UserManager::instance();
 
         $GLOBALS['Language'] = new BaseLanguage('en_US', 'en_US');
-        $GLOBALS['sys_lf'] = '\n';
     }
 
     protected function activatePlugin($name)

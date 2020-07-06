@@ -50,12 +50,12 @@ function html_image($src, $args, $display = 1)
     ) {
      /* Check to see if we've already fetched the image data */
         if ($img_size) {
-            if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src)) {
-                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src);
+            if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
+                $img_size[$src] = @getimagesize(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src);
             }
         } else {
-            if (is_file($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src)) {
-                $img_size[$src] = @getimagesize($GLOBALS['sys_urlroot'] . util_get_dir_image_theme() . $src);
+            if (is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
+                $img_size[$src] = @getimagesize(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src);
             }
         }
         $return .= ' width="' . $img_size[$src][0] . '" height="' . $img_size[$src][1] . '"';

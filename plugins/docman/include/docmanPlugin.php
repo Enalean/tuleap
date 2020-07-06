@@ -862,7 +862,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if ($nbVersions > 0) {
             foreach ($versions as $row) {
                 $historyUrl = $this->getPluginPath() . '/index.php?group_id=' . $groupId . '&id=' . $row['item_id'] . '&action=details&section=history';
-                $purgeDate = strtotime('+' . $GLOBALS['sys_file_deletion_delay'] . ' day', $row['date']);
+                $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
                 $html .= '<tr>' .
                 '<td class="tlp-table-cell-numeric"><a href="' . $historyUrl . '">' . $row['item_id'] . '</a></td>' .
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
@@ -944,7 +944,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         if ($nbItems > 0) {
             foreach ($res as $row) {
-                $purgeDate = strtotime('+' . $GLOBALS['sys_file_deletion_delay'] . ' day', $row['date']);
+                $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $row['date']);
                 $html .= '<tr>' .
                 '<td class="tlp-table-cell-numeric">' . $row['id'] . '</td>' .
                 '<td>' . $itemFactory->getItemTypeAsText($row['item_type']) . '</td>' .

@@ -7,9 +7,9 @@
 $username=strtolower(user_getname());
 echo '
 Vous pouvez télécharger les fichiers
-<ul><li> soit en utilisant l\'accès FTP anonyme (login "ftp") vers <B>'. $GLOBALS['sys_default_domain'] .'</B> 
+<ul><li> soit en utilisant l\'accès FTP anonyme (login "ftp") vers <B>'. \ForgeConfig::get('sys_default_domain') .'</B>
 			dans le répertoire <B>/incoming</B>, puis en appuyant sur "<b>'. $GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list') .'</b>" ou en rechargeant la page
-<li>ou en utilisant scp&nbsp;: "scp votre_fichier '.$username.'@'. $GLOBALS['sys_default_domain'] .':'.$GLOBALS['ftp_incoming_dir'].'/", puis en appuyant sur "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" ou en rechargeant la page
+<li>ou en utilisant scp&nbsp;: "scp votre_fichier '.$username.'@'. \ForgeConfig::get('sys_default_domain') .':'.\ForgeConfig::get('ftp_incoming_dir').'/", puis en appuyant sur "<b>'.$GLOBALS['Language']->getText('file_admin_editreleases','refresh_file_list').'</b>" ou en rechargeant la page
 </ul>
 ';
 ?>

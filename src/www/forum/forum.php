@@ -25,7 +25,7 @@ function forum_show_a_nested_message($result, $row = 0)
     global $Language;
     $g_id =  db_result($result, $row, 'group_id');
 
-    if ($g_id == $GLOBALS['sys_news_group']) {
+    if ($g_id == ForgeConfig::get('sys_news_group')) {
         $f_id =  db_result($result, $row, 'group_forum_id');
         $gr = db_query("SELECT group_id FROM news_bytes WHERE forum_id=" . db_ei($f_id));
         $g_id = db_result($gr, 0, 'group_id');
@@ -268,7 +268,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     $forum_name = db_result($result, 0, 'forum_name');
 
     $is_a_news = false;
-    if ($group_id == $GLOBALS['sys_news_group']) {    // test here because forum_header will change the value of $group_id
+    if ($group_id == ForgeConfig::get('sys_news_group')) {    // test here because forum_header will change the value of $group_id
         $is_a_news = true;
     }
 

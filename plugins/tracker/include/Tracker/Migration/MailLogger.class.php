@@ -64,7 +64,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
         $mail->getLookAndFeelTemplate()->set('breadcrumbs', $breadcrumbs);
         $mail->addAdditionalHeader("X-Codendi-Project", $project->getUnixName());
 
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setTo($user->getEmail());
         $mail->setSubject('Output of your migration TV3 -> TV5');
 

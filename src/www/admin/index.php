@@ -83,7 +83,7 @@ db_query("SELECT COUNT(DISTINCT(p.user_id)) AS count
 $row = db_fetch_array();
 $mode_lab = $row['count'];
 
-if ($GLOBALS['sys_user_approval'] == 1) {
+if (ForgeConfig::get('sys_user_approval') == 1) {
     $pending_users = $realpending_users;
 } else {
     $pending_users = $realpending_users + $validated_users;
@@ -208,7 +208,7 @@ $project_stats->setContent('
     </section>
 ');
 
-if ($GLOBALS['sys_user_approval'] == 1) {
+if (ForgeConfig::get('sys_user_approval') == 1) {
     $pending_action = '<p class="siteadmin-homepage-no-validation">' . $Language->getText('admin_main', 'review_pending_users_empty') . '</p>';
     $pending_class  = '';
 
@@ -278,7 +278,7 @@ echo site_admin_warnings($nb_users_by_status);
 echo '<div id="siteadmin-homepage-container">';
 echo '<div class="siteadmin-homepage-column">';
 
-$display_user_approval_block    = $GLOBALS['sys_user_approval'] == 1 && $pending_users > 0;
+$display_user_approval_block    = ForgeConfig::get('sys_user_approval') == 1 && $pending_users > 0;
 $display_project_approval_block = ForgeConfig::get(\ProjectManager::CONFIG_PROJECT_APPROVAL) == 1 &&
     $project_pending_count > 0;
 

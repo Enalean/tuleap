@@ -255,8 +255,8 @@ class WikiCloner
     public function cloneWikiAttachementTable()
     {
         //Create attachement directory
-        if (is_dir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id)) { // Otherwise, directory is created with perms '000'
-            mkdir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id, fileperms($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id));
+        if (is_dir(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id)) { // Otherwise, directory is created with perms '000'
+            mkdir(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id, fileperms(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id));
         }
 
         $ids = array();
@@ -266,7 +266,7 @@ class WikiCloner
             $name = $row['name'];
             $ids[$id] = $this->insertNewAttachment($name);
      // Create a directory for attachment file revisions.
-            $dir_mode = $this->getFileMode($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id . '/' . $name);
+            $dir_mode = $this->getFileMode(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $name);
             $this->createAttachmentDir($name, $dir_mode);
             if ($this->attachmentHasAPermission($id)) {
                      $permission = $this->getAttachmentPermission($id);
@@ -361,7 +361,7 @@ class WikiCloner
    */
     public function createAttachmentDir($name, $mode)
     {
-        mkdir($GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id . '/' . $name, $mode);
+        mkdir(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id . '/' . $name, $mode);
     }
 
  /**
@@ -415,8 +415,8 @@ class WikiCloner
          $result = db_query(sprintf("SELECT name from wiki_attachment where id=%d", $id));
         if (db_numrows($result) > 0) {
             $attacment_name = db_result($result, 0, 'name');
-            $src = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
-            $dst = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->group_id . '/' . $attacment_name . '/' . $revision_num;
+            $src = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id . '/' . $attacment_name . '/' . $revision_num;
+            $dst = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id . '/' . $attacment_name . '/' . $revision_num;
             copy($src, $dst);
             $file_mode = $this->getFileMode($src);
             chmod($dst, $file_mode);

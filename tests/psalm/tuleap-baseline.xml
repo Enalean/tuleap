@@ -4154,10 +4154,13 @@
     <MissingReturnType occurrences="1">
       <code>usage</code>
     </MissingReturnType>
-    <PossiblyUndefinedVariable occurrences="2">
+    <PossiblyUndefinedGlobalVariable occurrences="5">
       <code>$username</code>
       <code>$project_id</code>
-    </PossiblyUndefinedVariable>
+      <code>$username</code>
+      <code>$project_id</code>
+      <code>$project_id</code>
+    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="plugins/artifactsfolders/include/Converter/AncestorFolderChecker.php">
     <MissingReturnType occurrences="1">
@@ -6203,6 +6206,15 @@
       <code>getDailyActivityNotificationEmails</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/crosstracker/bin/migrate_old_crosstracker_widgets.php">
+    <PossiblyFalseArgument occurrences="2">
+      <code>$tables</code>
+      <code>$tables</code>
+    </PossiblyFalseArgument>
+    <PossiblyFalseReference occurrences="1">
+      <code>getRow</code>
+    </PossiblyFalseReference>
+  </file>
   <file src="plugins/crosstracker/include/CrossTracker/CrossTrackerArtifactReportDao.php">
     <MissingParamType occurrences="2">
       <code>$limit</code>
@@ -7441,6 +7453,10 @@
       <code>shell_exec('stty -echo')</code>
       <code>shell_exec('stty echo')</code>
     </ForbiddenCode>
+    <InvalidArgument occurrences="2">
+      <code>$console</code>
+      <code>$console</code>
+    </InvalidArgument>
     <MissingParamType occurrences="1">
       <code>$console</code>
     </MissingParamType>
@@ -12826,6 +12842,9 @@
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$soapFunctions</code>
+    </PossiblyUndefinedGlobalVariable>
     <PossiblyUndefinedVariable occurrences="7">
       <code>$permParams</code>
       <code>$extraParams</code>
@@ -24193,6 +24212,11 @@
       <code>db_error($res)</code>
     </TooManyArguments>
   </file>
+  <file src="plugins/ldap/bin/ldap_feed_user.php">
+    <InvalidArgument occurrences="1">
+      <code>$argv[2]</code>
+    </InvalidArgument>
+  </file>
   <file src="plugins/ldap/bin/ldap_sync.php">
     <InvalidScalarArgument occurrences="2">
       <code>0</code>
@@ -24904,10 +24928,20 @@
       <code>process</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/mediawiki/bin/identify_lost_databases.php">
+    <PossiblyFalseIterator occurrences="1">
+      <code>$projects</code>
+    </PossiblyFalseIterator>
+  </file>
   <file src="plugins/mediawiki/bin/migrate_to_123.php">
     <MissingFile occurrences="1">
       <code>include('/usr/share/mediawiki-tuleap-123/maintenance/update.php')</code>
     </MissingFile>
+  </file>
+  <file src="plugins/mediawiki/bin/mw-drop-wikis.php">
+    <UndefinedFunction occurrences="1">
+      <code>forge_get_config('projects_path', 'mediawiki')</code>
+    </UndefinedFunction>
   </file>
   <file src="plugins/mediawiki/bin/mw-maintenance-wrapper.php">
     <MissingReturnType occurrences="1">
@@ -24922,6 +24956,13 @@
     <MissingReturnType occurrences="1">
       <code>mysymlink</code>
     </MissingReturnType>
+    <UndefinedFunction occurrences="5">
+      <code>forge_get_config('master_path', 'mediawiki')</code>
+      <code>forge_get_config('projects_path', 'mediawiki')</code>
+      <code>forge_get_config('src_path', 'mediawiki')</code>
+      <code>forge_get_config('source_path')</code>
+      <code>forge_get_config('source_path')</code>
+    </UndefinedFunction>
   </file>
   <file src="plugins/mediawiki/fusionforge/compat/forge_get_config.php">
     <MissingParamType occurrences="2">
@@ -29057,6 +29098,20 @@
       <code>registerExtraReferences</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/statistics/bin/collectDiskUsage.php">
+    <UndefinedClass occurrences="5">
+      <code>SVNRetriever</code>
+      <code>SVNCollector</code>
+      <code>FullHistoryDao</code>
+      <code>CVSRetriever</code>
+      <code>CVSCollector</code>
+    </UndefinedClass>
+  </file>
+  <file src="plugins/statistics/bin/purgeDiskUsageData.php">
+    <UndefinedClass occurrences="1">
+      <code>Statistics_PHPVersionException</code>
+    </UndefinedClass>
+  </file>
   <file src="plugins/statistics/include/AdminHeaderPresenter.php">
     <MissingParamType occurrences="2">
       <code>$title</code>
@@ -30363,14 +30418,33 @@
     </MissingReturnType>
   </file>
   <file src="plugins/svn/bin/migrate_to_plugin.php">
+    <ArgumentTypeCoercion occurrences="4">
+      <code>$backend_svn</code>
+      <code>$backend_svn</code>
+      <code>$backend_svn</code>
+      <code>Backend::instance(Backend::SYSTEM)</code>
+    </ArgumentTypeCoercion>
     <MissingReturnType occurrences="1">
       <code>usage</code>
     </MissingReturnType>
   </file>
+  <file src="plugins/svn/bin/pre-revprop-change.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>Backend::instance(Backend::SVN)</code>
+    </ArgumentTypeCoercion>
+  </file>
   <file src="plugins/svn/bin/svn_post_commit.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>Backend::instance(Backend::SVN)</code>
+    </ArgumentTypeCoercion>
     <InvalidOperand occurrences="1">
       <code>$revision</code>
     </InvalidOperand>
+  </file>
+  <file src="plugins/svn/bin/svn_pre_commit.php">
+    <ArgumentTypeCoercion occurrences="1">
+      <code>Backend::instance(Backend::SVN)</code>
+    </ArgumentTypeCoercion>
   </file>
   <file src="plugins/svn/include/Events/SystemEvent_SVN_CREATE_REPOSITORY.class.php">
     <MissingReturnType occurrences="3">
@@ -32914,6 +32988,9 @@
     </MissingReturnType>
   </file>
   <file src="plugins/tracker/bin/create_tracker_structure_from_tv3.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$tv3_tracker_id</code>
+    </InvalidScalarArgument>
     <PossiblyFalseOperand occurrences="1">
       <code>$sys_user</code>
     </PossiblyFalseOperand>
@@ -32921,19 +32998,39 @@
       <code>is_object($tv3)</code>
     </TypeDoesNotContainType>
   </file>
+  <file src="plugins/tracker/bin/import_artifacts_xml.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$argv[2]</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="plugins/tracker/bin/remove_multiple_artifacts.php">
     <ForbiddenCode occurrences="2">
       <code>shell_exec('stty -echo')</code>
       <code>shell_exec('stty echo')</code>
     </ForbiddenCode>
+    <InvalidScalarArgument occurrences="2">
+      <code>$tracker_id</code>
+      <code>$current_artifact_id</code>
+    </InvalidScalarArgument>
     <PossiblyFalseOperand occurrences="1">
       <code>$sys_user</code>
     </PossiblyFalseOperand>
+    <PossiblyNullArgument occurrences="1">
+      <code>$password</code>
+    </PossiblyNullArgument>
     <StringIncrement occurrences="3">
       <code>$current_artifact_id</code>
       <code>$current_artifact_id</code>
       <code>$current_artifact_id</code>
     </StringIncrement>
+  </file>
+  <file src="plugins/tracker/bin/store_stripped_body_of_comments.php">
+    <PossiblyFalseArgument occurrences="1">
+      <code>$results</code>
+    </PossiblyFalseArgument>
+    <PossiblyFalseIterator occurrences="1">
+      <code>$dao-&gt;retrieve($sql)</code>
+    </PossiblyFalseIterator>
   </file>
   <file src="plugins/tracker/include/PermissionsPerGroup/ProjectAdminPermissionPerGroupPresenterBuilder.php">
     <MissingParamType occurrences="1">
@@ -59262,7 +59359,7 @@
       <code>$_currentuser</code>
       <code>$_instance</code>
     </MissingPropertyType>
-    <MissingReturnType occurrences="26">
+    <MissingReturnType occurrences="25">
       <code>setInstance</code>
       <code>clearInstance</code>
       <code>setDao</code>
@@ -59274,7 +59371,6 @@
       <code>countUsersByStatus</code>
       <code>_getUserInstanceFromRow</code>
       <code>getUserInstanceFromRow</code>
-      <code>getAllUsersByEmail</code>
       <code>setCurrentUser</code>
       <code>logout</code>
       <code>destroySession</code>
@@ -61017,7 +61113,7 @@
   </file>
   <file src="src/common/backend/BackendCVS.class.php">
     <ForbiddenCode occurrences="1">
-      <code>shell_exec("/usr/bin/find " . $GLOBALS['cvs_hook_tmp_dir'] . ' -name "*.files.*" -amin +120;')</code>
+      <code>shell_exec("/usr/bin/find " . ForgeConfig::get('cvs_hook_tmp_dir') . ' -name "*.files.*" -amin +120;')</code>
     </ForbiddenCode>
     <InvalidArgument occurrences="17">
       <code>$filename</code>
@@ -64720,10 +64816,10 @@
       <code>$index</code>
     </MissingParamType>
     <MissingPropertyType occurrences="4">
+      <code>$this-&gt;bgpri</code>
       <code>$javascript</code>
       <code>$version</code>
       <code>$icons</code>
-      <code>$this-&gt;bgpri</code>
     </MissingPropertyType>
     <MissingReturnType occurrences="33">
       <code>iframe</code>
@@ -65072,11 +65168,6 @@
       <code>increment</code>
       <code>incrementFailure</code>
     </MissingReturnType>
-  </file>
-  <file src="src/common/mail/MailManager.class.php">
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$user</code>
-    </PossiblyUndefinedVariable>
   </file>
   <file src="src/common/mail/MailNotificationBuilder.php">
     <MissingParamType occurrences="10">
@@ -66957,16 +67048,11 @@
     </MissingReturnType>
   </file>
   <file src="src/common/svn/SVN_AccessFile_DAO.class.php">
-    <MissingParamType occurrences="12">
-      <code>$group_id</code>
-      <code>$content</code>
+    <MissingParamType occurrences="7">
       <code>$group_id</code>
       <code>$version_id</code>
       <code>$group_id</code>
       <code>$content</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
-      <code>$version_id</code>
       <code>$group_id</code>
       <code>$group_id</code>
       <code>$version_id</code>
@@ -68914,15 +69000,15 @@
       <code>id</code>
     </InvalidReturnType>
     <MissingParamType occurrences="9">
+      <code>$string</code>
+      <code>$id</code>
       <code>$ArtifactType</code>
       <code>$data</code>
       <code>$title</code>
       <code>$body</code>
-      <code>$id</code>
       <code>$artifact_canned_id</code>
       <code>$title</code>
       <code>$body</code>
-      <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="1">
       <code>$atid</code>
@@ -69670,12 +69756,14 @@
       <code>id</code>
     </InvalidReturnType>
     <MissingParamType occurrences="59">
-      <code>$field1</code>
-      <code>$field2</code>
-      <code>$field1</code>
-      <code>$field2</code>
+      <code>$string</code>
+      <code>$report_id</code>
       <code>$report_id</code>
       <code>$atid</code>
+      <code>$field1</code>
+      <code>$field2</code>
+      <code>$field1</code>
+      <code>$field2</code>
       <code>$user_id</code>
       <code>$name</code>
       <code>$description</code>
@@ -69694,7 +69782,6 @@
       <code>$col_width</code>
       <code>$field_name</code>
       <code>$field_name</code>
-      <code>$report_id</code>
       <code>$group_artifact_id</code>
       <code>$user_id</code>
       <code>$prefs</code>
@@ -69728,7 +69815,6 @@
       <code>$where</code>
       <code>$order_by</code>
       <code>$query</code>
-      <code>$string</code>
     </MissingParamType>
     <MissingPropertyType occurrences="7">
       <code>$report_id</code>
@@ -70139,13 +70225,14 @@
       <code>count($chunk) / 2</code>
     </InvalidScalarArgument>
     <MissingParamType occurrences="85">
+      <code>$string</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
+      <code>$artifact_type_id</code>
       <code>$Group</code>
       <code>$artifact_type_id</code>
       <code>$arr</code>
       <code>$atid</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
-      <code>$artifact_type_id</code>
       <code>$stop_notification</code>
       <code>$id</code>
       <code>$value</code>
@@ -70223,7 +70310,6 @@
       <code>$from_atid</code>
       <code>$from_atid</code>
       <code>$from_aid</code>
-      <code>$string</code>
     </MissingParamType>
     <MissingReturnType occurrences="21">
       <code>setStopNotification</code>
@@ -72211,6 +72297,11 @@
       <code>getUserFormat</code>
     </MissingReturnType>
   </file>
+  <file src="src/utils/check_user_mapping_for_project_import.php">
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$archive_path</code>
+    </PossiblyInvalidArgument>
+  </file>
   <file src="src/utils/collect_xml_data.php">
     <MissingParamType occurrences="7">
       <code>$archive_path</code>
@@ -72242,11 +72333,39 @@
     <MissingReturnType occurrences="1">
       <code>cvs_loginfo_format_data</code>
     </MissingReturnType>
+    <UndefinedMethod occurrences="2">
+      <code>_RcsCheckout</code>
+      <code>_RcsCommit</code>
+    </UndefinedMethod>
   </file>
   <file src="src/utils/export_project_xml.php">
     <MissingPropertyType occurrences="1">
       <code>$archive_path</code>
     </MissingPropertyType>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$project_id</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="src/utils/generate_user_mapping_for_project_import.php">
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$archive_path</code>
+    </PossiblyInvalidArgument>
+  </file>
+  <file src="src/utils/import_project_xml.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$import_project_xml_command-&gt;getName()</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/utils/launch_system_check.php">
+    <PossiblyNullArgument occurrences="2">
+      <code>$launch_system_check_command-&gt;getName()</code>
+      <code>$launch_system_check_command-&gt;getName()</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/utils/svn/force_refresh_svnaccessfile.php">
+    <UndefinedMethod occurrences="1">
+      <code>updateProjectSVNAccessFile</code>
+    </UndefinedMethod>
   </file>
   <file src="src/utils/tv3_to_test.php">
     <MissingParamType occurrences="28">
@@ -72316,6 +72435,37 @@
       <code>$artifact_field_value_list</code>
     </PossiblyUndefinedVariable>
   </file>
+  <file src="src/www/account/deleted.php">
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/account/lostlogin.php">
+    <PossiblyUndefinedGlobalVariable occurrences="6">
+      <code>$user</code>
+      <code>$user</code>
+      <code>$user</code>
+      <code>$user</code>
+      <code>$user</code>
+      <code>$user</code>
+    </PossiblyUndefinedGlobalVariable>
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/account/lostpw-confirm.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$identifier</code>
+    </ImplicitToStringCast>
+  </file>
+  <file src="src/www/account/lostpw.php">
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
   <file src="src/www/account/register.php">
     <InvalidScalarArgument occurrences="3">
       <code>$date_list[1]</code>
@@ -72331,6 +72481,19 @@
       <code>register_valid</code>
       <code>getFieldError</code>
     </MissingReturnType>
+    <UndefinedGlobalVariable occurrences="5">
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/account/suspended.php">
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/admin/admin_utils.php">
     <MissingParamType occurrences="2">
@@ -72343,7 +72506,24 @@
       <code>site_admin_warnings</code>
     </MissingReturnType>
   </file>
+  <file src="src/www/admin/approve_pending_users.php">
+    <InvalidScalarArgument occurrences="3">
+      <code>$date_list[1]</code>
+      <code>$date_list[2]</code>
+      <code>$date_list[0]</code>
+    </InvalidScalarArgument>
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$res</code>
+      <code>$msg</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="src/www/admin/grouplist.php">
+    <InvalidArgument occurrences="1">
+      <code>$status_values</code>
+    </InvalidArgument>
+  </file>
   <file src="src/www/admin/index.php">
+    <InvalidArgument occurrences="1"/>
     <InvalidGlobal occurrences="1">
       <code>global $feedback;</code>
     </InvalidGlobal>
@@ -72353,6 +72533,18 @@
     <MissingReturnType occurrences="1">
       <code>stats_getactiveusers</code>
     </MissingReturnType>
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$wUser</code>
+      <code>$wProject</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="src/www/admin/projecthistory.php">
+    <UndefinedGlobalVariable occurrences="4">
+      <code>$group_id</code>
+      <code>$subEvents</code>
+      <code>$subEvents</code>
+      <code>$group_id</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/admin/show_pending_documents.php">
     <MissingParamType occurrences="12">
@@ -72378,6 +72570,9 @@
     <PossiblyNullReference occurrences="1">
       <code>getFileName</code>
     </PossiblyNullReference>
+    <TooManyArguments occurrences="1">
+      <code>getProject</code>
+    </TooManyArguments>
   </file>
   <file src="src/www/admin/system_events/adminPresenter.class.php">
     <MissingParamType occurrences="3">
@@ -72422,9 +72617,22 @@
     </UndefinedThisPropertyAssignment>
   </file>
   <file src="src/www/admin/usergroup.php">
-    <MissingPropertyType occurrences="1">
-      <code>$password_strategy-&gt;validators</code>
-    </MissingPropertyType>
+    <InvalidScalarArgument occurrences="3">
+      <code>$date_list[1]</code>
+      <code>$date_list[2]</code>
+      <code>$date_list[0]</code>
+    </InvalidScalarArgument>
+    <NullReference occurrences="1">
+      <code>getId</code>
+    </NullReference>
+    <PossiblyNullReference occurrences="1">
+      <code>getId</code>
+    </PossiblyNullReference>
+  </file>
+  <file src="src/www/admin/userlist.php">
+    <PossiblyFalseReference occurrences="1">
+      <code>getRow</code>
+    </PossiblyFalseReference>
   </file>
   <file src="src/www/cvs/commit_utils.php">
     <InvalidOperand occurrences="1">
@@ -72569,6 +72777,40 @@
       <code>$desc_id</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/file/admin/editproc.php">
+    <PossiblyNullReference occurrences="1">
+      <code>displayFRSHeader</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$proc_id</code>
+      <code>$proc_id</code>
+    </PossiblyUndefinedGlobalVariable>
+    <UndefinedMethod occurrences="1">
+      <code>displayFRSHeader</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/www/file/admin/frsajax.php">
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$action</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="src/www/file/admin/manageprocessors.php">
+    <PossiblyNullReference occurrences="1">
+      <code>displayFRSHeader</code>
+    </PossiblyNullReference>
+    <UndefinedMethod occurrences="1">
+      <code>displayFRSHeader</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/www/file/confirm_download.php">
+    <PossiblyUndefinedGlobalVariable occurrences="5">
+      <code>$file_id</code>
+      <code>$group_id</code>
+      <code>$file_id</code>
+      <code>$file_id</code>
+      <code>$file_id</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
   <file src="src/www/file/file_utils.php">
     <ForbiddenCode occurrences="1">
       <code>`stat -c%s $filename`</code>
@@ -72664,6 +72906,45 @@
     <UndefinedClass occurrences="1">
       <code>COM</code>
     </UndefinedClass>
+  </file>
+  <file src="src/www/file/filemodule_monitor.php">
+    <PossiblyNullArgument occurrences="1">
+      <code>$package</code>
+    </PossiblyNullArgument>
+    <UndefinedFunction occurrences="2">
+      <code>file_utils_footer(array())</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/www/file/showfiles.php">
+    <PossiblyNullReference occurrences="2">
+      <code>displayFRSHeader</code>
+      <code>getRealName</code>
+    </PossiblyNullReference>
+    <PossiblyUndefinedGlobalVariable occurrences="4">
+      <code>$row3</code>
+      <code>$proj_stats</code>
+      <code>$file_type</code>
+      <code>$processor</code>
+    </PossiblyUndefinedGlobalVariable>
+    <UndefinedMethod occurrences="1">
+      <code>displayFRSHeader</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/www/file/shownotes.php">
+    <PossiblyNullReference occurrences="1">
+      <code>getGroupID</code>
+    </PossiblyNullReference>
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/forum/admin/index.php">
+    <UndefinedGlobalVariable occurrences="3">
+      <code>$msg_id</code>
+      <code>$msg_id</code>
+      <code>$msg_id</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/forum/forum.php">
     <MissingParamType occurrences="4">
@@ -72773,6 +73054,21 @@
     <UndefinedDocblockClass occurrences="1">
       <code>forum_id</code>
     </UndefinedDocblockClass>
+  </file>
+  <file src="src/www/forum/monitor_thread.php">
+    <PossiblyUndefinedGlobalVariable occurrences="4">
+      <code>$mthread</code>
+      <code>$uid</code>
+      <code>$forum_id</code>
+      <code>$user_id</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="src/www/help/index.php">
+    <UndefinedGlobalVariable occurrences="3">
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/include/account.php">
     <MissingParamType occurrences="19">
@@ -73543,6 +73839,13 @@
       <code>$opData</code>
     </UndefinedVariable>
   </file>
+  <file src="src/www/include/pre.php">
+    <InvalidScalarArgument occurrences="3">
+      <code>0</code>
+      <code>-1</code>
+      <code>$_REQUEST</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="src/www/include/proj_email.php">
     <MissingParamType occurrences="9">
       <code>$to</code>
@@ -73790,6 +74093,15 @@
       <code>$browse_column</code>
     </PossiblyUndefinedVariable>
   </file>
+  <file src="src/www/mail/admin/index.php">
+    <ParseError occurrences="1">
+      <code>;</code>
+    </ParseError>
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$group_id</code>
+      <code>$group_id</code>
+    </UndefinedGlobalVariable>
+  </file>
   <file src="src/www/mail/index.php">
     <MissingParamType occurrences="4">
       <code>$group_id</code>
@@ -73800,6 +74112,9 @@
     <MissingReturnType occurrences="1">
       <code>display_ml_details</code>
     </MissingReturnType>
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$iframe_url</code>
+    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/mail/mail_utils.php">
     <MissingParamType occurrences="6">
@@ -73818,6 +74133,30 @@
       <code>mail_is_list_active</code>
       <code>mail_get_listname_from_list_id</code>
     </MissingReturnType>
+  </file>
+  <file src="src/www/my/bookmark_add.php">
+    <UndefinedGlobalVariable occurrences="3">
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/my/bookmark_delete.php">
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/my/bookmark_edit.php">
+    <PossiblyUndefinedGlobalVariable occurrences="3">
+      <code>$bookmark_id</code>
+      <code>$bookmark_id</code>
+      <code>$bookmark_id</code>
+    </PossiblyUndefinedGlobalVariable>
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/my/my_utils.php">
     <MissingParamType occurrences="17">
@@ -73847,6 +74186,23 @@
       <code>my_check_bookmark_URL</code>
       <code>my_has_URL_invalid_content</code>
     </MissingReturnType>
+  </file>
+  <file src="src/www/my/redirect.php">
+    <UndefinedGlobalVariable occurrences="3">
+      <code>$HTML</code>
+      <code>$HTML</code>
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/my/stop_monitor.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/news/admin/index.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$UGROUP_ANONYMOUS</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/news/news_utils.php">
     <InvalidArgument occurrences="2">
@@ -73913,10 +74269,40 @@
       <code>news_fetch_ugroups</code>
     </MissingReturnType>
   </file>
+  <file src="src/www/news/submit.php">
+    <PossiblyUndefinedGlobalVariable occurrences="4">
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
+  <file src="src/www/project/admin/editgenericmember.php">
+    <PossiblyNullReference occurrences="3">
+      <code>setPassword</code>
+      <code>setEmail</code>
+      <code>getUserName</code>
+    </PossiblyNullReference>
+  </file>
   <file src="src/www/project/admin/history.php">
     <InvalidArgument occurrences="1">
       <code>show_grouphistory($group_id, $offset, $limit, $event, $subEvents, $value, $startDate, $endDate, $by)</code>
     </InvalidArgument>
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$subEvents</code>
+      <code>$subEvents</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/project/admin/labels.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>$project-&gt;getID()</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/www/project/admin/permission_request.php">
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$newUgroups</code>
+      <code>$addedUgroups</code>
+    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/project/admin/permissions.php">
     <InvalidParamDefault occurrences="1">
@@ -74096,6 +74482,11 @@
       <code>$event</code>
     </PossiblyNullArgument>
   </file>
+  <file src="src/www/project/admin/ugroup.php">
+    <InvalidArgument occurrences="1">
+      <code>$ugroup_id</code>
+    </InvalidArgument>
+  </file>
   <file src="src/www/project/admin/ugroup_utils.php">
     <InvalidReturnStatement occurrences="1">
       <code>true</code>
@@ -74178,6 +74569,11 @@
       <code>ugroup_id</code>
     </UndefinedDocblockClass>
   </file>
+  <file src="src/www/project/admin/userperms.php">
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$row_dev</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
   <file src="src/www/project/export/access_logs_export.php">
     <MissingParamType occurrences="21">
       <code>$project</code>
@@ -74247,6 +74643,9 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/project/export/index.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>3600</code>
+    </InvalidScalarArgument>
     <MissingParamType occurrences="1">
       <code>$key</code>
     </MissingParamType>
@@ -74303,16 +74702,44 @@
     </PossiblyUndefinedVariable>
   </file>
   <file src="src/www/project/export/user_groups_export.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>3600</code>
+    </InvalidScalarArgument>
     <MissingPropertyType occurrences="2">
       <code>$user_status_presenter-&gt;status_label</code>
       <code>$user_status_presenter-&gt;status_label</code>
     </MissingPropertyType>
+    <PossiblyNullReference occurrences="2">
+      <code>getRealname</code>
+      <code>getStatus</code>
+    </PossiblyNullReference>
+    <UndefinedFunction occurrences="4">
+      <code>get_csv_separator()</code>
+      <code>build_csv_header($col_list, $lbl_list)</code>
+      <code>build_csv_record($col_list, $r)</code>
+      <code>display_exported_fields($col_list, $lbl_list, $dsc_list, $record)</code>
+    </UndefinedFunction>
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$project</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/project/memberlist.php">
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$group_id</code>
+      <code>$group_id</code>
+    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/project/register.php">
     <InvalidScalarArgument occurrences="2">
       <code>0</code>
       <code>-1</code>
     </InvalidScalarArgument>
+  </file>
+  <file src="src/www/project/stats/source_code_access.php">
+    <UndefinedGlobalVariable occurrences="2">
+      <code>$group_id</code>
+      <code>$group_id</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/project/stats/source_code_access_utils.php">
     <InvalidOperand occurrences="2">
@@ -74434,6 +74861,14 @@
       <code>$server</code>
       <code>$server</code>
     </UndefinedGlobalVariable>
+    <UndefinedMethod occurrences="6">
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>addFunction</code>
+    </UndefinedMethod>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
@@ -74450,6 +74885,9 @@
     <MissingReturnType occurrences="1">
       <code>logout</code>
     </MissingReturnType>
+    <TypeDoesNotContainType occurrences="1">
+      <code>isset($uri)</code>
+    </TypeDoesNotContainType>
     <UndefinedGlobalVariable occurrences="7">
       <code>$server</code>
       <code>$server</code>
@@ -74459,6 +74897,14 @@
       <code>$server</code>
       <code>$server</code>
     </UndefinedGlobalVariable>
+    <UndefinedMethod occurrences="6">
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>addFunction</code>
+    </UndefinedMethod>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
@@ -74510,6 +74956,11 @@
       <code>$server</code>
       <code>$server</code>
     </UndefinedGlobalVariable>
+    <UndefinedMethod occurrences="3">
+      <code>register</code>
+      <code>register</code>
+      <code>addFunction</code>
+    </UndefinedMethod>
   </file>
   <file src="src/www/soap/frs/frs.php">
     <InvalidNullableReturnType occurrences="2">
@@ -74579,7 +75030,7 @@
       <code>new SoapFault(INVALID_PACKAGE_FAULT, 'Invalid Package', 'addFile')</code>
       <code>new SoapFault(INVALID_RELEASE_FAULT, 'Invalid Release', 'addFile')</code>
       <code>new SoapFault(INVALID_FILE_FAULT, 'Could not create temporary file in directory /tmp', 'addFile')</code>
-      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . $GLOBALS['ftp_incoming_dir'], 'addFile')</code>
+      <code>new SoapFault(INVALID_FILE_FAULT, 'Impossible to move the file in the incoming dir: ' . ForgeConfig::get('ftp_incoming_dir'), 'addFile')</code>
       <code>new SoapFault(INVALID_FILE_FAULT, 'User is not allowed to add a file', 'addFile')</code>
       <code>new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session', 'addFile')</code>
       <code>$e</code>
@@ -74648,6 +75099,9 @@
       <code>null</code>
       <code>null</code>
     </NullableReturnStatement>
+    <TypeDoesNotContainType occurrences="1">
+      <code>isset($uri)</code>
+    </TypeDoesNotContainType>
     <UndefinedConstant occurrences="17">
       <code>INVALID_SESSION_FAULT</code>
       <code>INVALID_SESSION_FAULT</code>
@@ -74671,9 +75125,60 @@
       <code>the</code>
       <code>the</code>
     </UndefinedDocblockClass>
+    <UndefinedGlobalVariable occurrences="24">
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+    </UndefinedGlobalVariable>
+    <UndefinedMethod occurrences="18">
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>addFunction</code>
+    </UndefinedMethod>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
+  </file>
+  <file src="src/www/soap/index.php">
+    <PossiblyUndefinedGlobalVariable occurrences="1">
+      <code>$server</code>
+    </PossiblyUndefinedGlobalVariable>
   </file>
   <file src="src/www/soap/tracker/tracker.php">
     <InvalidArgument occurrences="6">
@@ -74994,7 +75499,7 @@
     <TooManyArguments occurrences="1">
       <code>updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id, $status_id, $close_date, $summary, $details, $severity, $extrafields_with_id, $artifact_id_dependent, $canned_response)</code>
     </TooManyArguments>
-    <TypeDoesNotContainType occurrences="80">
+    <TypeDoesNotContainType occurrences="81">
       <code>is_object($atf)</code>
       <code>is_object($ath)</code>
       <code>is_object($report_fact)</code>
@@ -75075,6 +75580,7 @@
       <code>is_object($at)</code>
       <code>is_object($art_field_fact)</code>
       <code>is_object($a)</code>
+      <code>isset($uri)</code>
     </TypeDoesNotContainType>
     <UndefinedConstant occurrences="2">
       <code>PERMISSION_DENIED_FAULT</code>
@@ -75086,6 +75592,117 @@
       <code>the</code>
       <code>the</code>
     </UndefinedDocblockClass>
+    <UndefinedGlobalVariable occurrences="77">
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+      <code>$server</code>
+    </UndefinedGlobalVariable>
+    <UndefinedMethod occurrences="30">
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>register</code>
+      <code>addFunction</code>
+    </UndefinedMethod>
     <UndefinedPropertyFetch occurrences="1">
       <code>$server-&gt;wsdl</code>
     </UndefinedPropertyFetch>
@@ -75095,6 +75712,11 @@
       <code>$artifact_id_dependent</code>
       <code>$canned_response</code>
     </UndefinedVariable>
+  </file>
+  <file src="src/www/softwaremap/trove_list.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/admin/access_control.php">
     <UndefinedGlobalVariable occurrences="1">
@@ -75112,7 +75734,10 @@
     <UndefinedFunction occurrences="3">
       <code>svn_footer(array())</code>
     </UndefinedFunction>
-    <UndefinedGlobalVariable occurrences="16">
+    <UndefinedGlobalVariable occurrences="19">
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
@@ -75153,37 +75778,44 @@
       <code>$group_id</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/svn/admin/index.php">
+    <PossiblyUndefinedGlobalVariable occurrences="3">
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+    </PossiblyUndefinedGlobalVariable>
+  </file>
   <file src="src/www/svn/admin/notification.php">
     <UndefinedFunction occurrences="2">
       <code>svn_footer(array())</code>
     </UndefinedFunction>
     <UndefinedGlobalVariable occurrences="40">
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
       <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$group_id</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
       <code>$Language</code>
       <code>$Language</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
-      <code>$group_id</code>
       <code>$request</code>
       <code>$request</code>
       <code>$request</code>
-      <code>$group_id</code>
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
-      <code>$group_id</code>
-      <code>$group_id</code>
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
@@ -75300,30 +75932,19 @@
     </MissingReturnType>
   </file>
   <file src="src/www/svn/svn_intro.php">
-    <PossiblyUndefinedGlobalVariable occurrences="1">
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$group_id</code>
       <code>$group_id</code>
     </PossiblyUndefinedGlobalVariable>
-    <PossiblyUndefinedVariable occurrences="1">
-      <code>$group_id</code>
-    </PossiblyUndefinedVariable>
-    <UndefinedFunction occurrences="3">
-      <code>svn_header($request-&gt;getProject(), array ('title' =&gt; $Language-&gt;getText('svn_intro', 'info')))</code>
-      <code>svn_utils_format_svn_history($group_id)</code>
-      <code>svn_footer(array())</code>
-    </UndefinedFunction>
-    <UndefinedGlobalVariable occurrences="12">
-      <code>$request</code>
-      <code>$request</code>
-      <code>$request</code>
-      <code>$Language</code>
-      <code>$request</code>
-      <code>$request</code>
+    <UndefinedGlobalVariable occurrences="8">
       <code>$HTML</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
-      <code>$Language</code>
       <code>$HTML</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$request</code>
+      <code>$Language</code>
+      <code>$request</code>
+      <code>$request</code>
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/svn/svn_utils.php">
@@ -75466,6 +76087,16 @@
       <code>includeJavascriptPolyfills</code>
     </MissingReturnType>
   </file>
+  <file src="src/www/tos/privacy.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/tos/tos.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$HTML</code>
+    </UndefinedGlobalVariable>
+  </file>
   <file src="src/www/tracker/add.php">
     <UndefinedGlobalVariable occurrences="11">
       <code>$ath</code>
@@ -75482,6 +76113,9 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/tracker/admin/admin_trackers.php">
+    <InvalidArgument occurrences="1">
+      <code>$ath-&gt;displayAdminTrackers()</code>
+    </InvalidArgument>
     <UndefinedGlobalVariable occurrences="5">
       <code>$group_id</code>
       <code>$ath</code>
@@ -75586,16 +76220,39 @@
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/tracker/admin/index.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>1800</code>
+    </InvalidScalarArgument>
     <MissingPropertyType occurrences="3">
       <code>$arh-&gt;scope</code>
       <code>$arh-&gt;scope</code>
       <code>$arh-&gt;scope</code>
     </MissingPropertyType>
-    <TypeDoesNotContainType occurrences="3">
+    <PossiblyNullArrayAccess occurrences="5">
+      <code>$value_array['value_id']</code>
+      <code>$value_array['value']</code>
+      <code>$value_array['order_id']</code>
+      <code>$value_array['status']</code>
+      <code>$value_array['description']</code>
+    </PossiblyNullArrayAccess>
+    <PossiblyUndefinedGlobalVariable occurrences="2">
+      <code>$agnf</code>
+      <code>$agnf</code>
+    </PossiblyUndefinedGlobalVariable>
+    <TooManyArguments occurrences="1">
+      <code>getText</code>
+    </TooManyArguments>
+    <TypeDoesNotContainType occurrences="4">
       <code>is_object($ath)</code>
       <code>is_object($ath)</code>
       <code>is_object($ach)</code>
+      <code>$arh</code>
     </TypeDoesNotContainType>
+  </file>
+  <file src="src/www/tracker/admin/restore.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>1800</code>
+    </InvalidScalarArgument>
   </file>
   <file src="src/www/tracker/admin/tracker_permissions.php">
     <TooManyArguments occurrences="1">
@@ -75643,9 +76300,6 @@
       <code>$art_report_html</code>
       <code>$art_report_html</code>
     </AssignmentToVoid>
-    <InvalidOperand occurrences="1">
-      <code>$value_id</code>
-    </InvalidOperand>
     <NullReference occurrences="1">
       <code>addSortCriteria</code>
     </NullReference>
@@ -75721,6 +76375,11 @@
       <code>$Language</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/tracker/download.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>1800</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="src/www/tracker/edit_comment.php">
     <UndefinedGlobalVariable occurrences="15">
       <code>$ath</code>
@@ -75745,10 +76404,10 @@
       <code>$result</code>
       <code>$rows</code>
       <code>$all_results</code>
-      <code>$ath</code>
-      <code>$ath</code>
       <code>$params</code>
       <code>$result</code>
+      <code>$ath</code>
+      <code>$ath</code>
     </PossiblyUndefinedGlobalVariable>
     <UndefinedGlobalVariable occurrences="13">
       <code>$ath</code>
@@ -75764,6 +76423,11 @@
       <code>$Language</code>
       <code>$Language</code>
       <code>$Language</code>
+    </UndefinedGlobalVariable>
+  </file>
+  <file src="src/www/tracker/get_comment.php">
+    <UndefinedGlobalVariable occurrences="1">
+      <code>$ah</code>
     </UndefinedGlobalVariable>
   </file>
   <file src="src/www/tracker/gotoid.php">
@@ -75814,8 +76478,35 @@
       <code>$Language</code>
     </UndefinedGlobalVariable>
   </file>
+  <file src="src/www/tracker/import_admin.php">
+    <InvalidScalarArgument occurrences="1">
+      <code>1800</code>
+    </InvalidScalarArgument>
+  </file>
   <file src="src/www/tracker/index.php">
-    <TypeDoesNotContainType occurrences="21">
+    <AssignmentToVoid occurrences="5">
+      <code>$art_report_html</code>
+      <code>$report</code>
+      <code>$report</code>
+      <code>$report</code>
+      <code>$report</code>
+    </AssignmentToVoid>
+    <InaccessibleMethod occurrences="1">
+      <code>_getFieldLabelAndValueForUser</code>
+    </InaccessibleMethod>
+    <InvalidScalarArgument occurrences="2">
+      <code>1800</code>
+      <code>1</code>
+    </InvalidScalarArgument>
+    <NullReference occurrences="1">
+      <code>getQueryElements</code>
+    </NullReference>
+    <PossiblyUndefinedGlobalVariable occurrences="3">
+      <code>$data</code>
+      <code>$data</code>
+      <code>$params</code>
+    </PossiblyUndefinedGlobalVariable>
+    <TypeDoesNotContainType occurrences="19">
       <code>is_object($ath)</code>
       <code>is_object($ah)</code>
       <code>is_object($ah)</code>
@@ -75825,8 +76516,6 @@
       <code>is_object($afh)</code>
       <code>is_object($ah)</code>
       <code>is_object($ah)</code>
-      <code>is_object($ah)</code>
-      <code>is_object($afh)</code>
       <code>is_object($ah)</code>
       <code>is_object($afh)</code>
       <code>is_object($ah)</code>

@@ -25,17 +25,7 @@ use PHPUnit\Framework\TestCase;
 final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 {
     use MockeryPHPUnitIntegration;
-
-    protected function tearDown(): void
-    {
-        unset(
-            $GLOBALS['sys_pluginspath'],
-            $GLOBALS['sys_custompluginsroot'],
-            $GLOBALS['sys_user_theme'],
-            $GLOBALS['sys_custompluginspath'],
-            $GLOBALS['sys_pluginsroot']
-        );
-    }
+    use \Tuleap\ForgeConfigSandbox;
 
     public function testId(): void
     {
@@ -125,19 +115,19 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
 
-        $GLOBALS['sys_custompluginsroot'] = $root . '/test/custom/';
+        ForgeConfig::set('sys_custompluginsroot', $root . '/test/custom/');
         $shortname = 'shortname';
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns($shortname);
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
 
-        $this->assertEquals($GLOBALS['sys_custompluginsroot'] . '/' . $shortname . '/etc', $p->getPluginEtcRoot());
+        $this->assertEquals(ForgeConfig::get('sys_custompluginsroot') . '/' . $shortname . '/etc', $p->getPluginEtcRoot());
     }
 
     public function testGetPluginPath(): void
     {
-        $GLOBALS['sys_pluginspath']       = '/plugins';
+        ForgeConfig::set('sys_pluginspath', '/plugins');
         $shortname = 'shortname';
         $pm = \Mockery::spy(\PluginManager::class);
 
@@ -146,18 +136,18 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $p = \Mockery::mock(\Plugin::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
 
-        $this->assertEquals($GLOBALS['sys_pluginspath'] . '/' . $shortname, $p->getPluginPath());
+        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname, $p->getPluginPath());
     }
 
     public function testGetThemePath(): void
     {
         $tmp_dir = \org\bovigo\vfs\vfsStream::setup()->url();
-        $GLOBALS['sys_user_theme']        = 'current_theme';
-        $GLOBALS['sys_pluginspath']       = '/plugins';
-        $GLOBALS['sys_custompluginspath'] = '/customplugins';
-        $GLOBALS['sys_pluginsroot']       = $tmp_dir . '/test/plugins/';
-        $GLOBALS['sys_custompluginsroot'] = $tmp_dir . '/test/custom/';
-        mkdir(dirname($GLOBALS['sys_pluginsroot']));
+        ForgeConfig::set('sys_user_theme', 'current_theme');
+        ForgeConfig::set('sys_pluginspath', '/plugins');
+        ForgeConfig::set('sys_custompluginspath', '/customplugins');
+        ForgeConfig::set('sys_pluginsroot', $tmp_dir . '/test/plugins/');
+        ForgeConfig::set('sys_custompluginsroot', $tmp_dir . '/test/custom/');
+        mkdir(dirname(ForgeConfig::get('sys_pluginsroot')));
 
         $shortname     = 'shortname';
         $pm = \Mockery::spy(\PluginManager::class);
@@ -167,89 +157,89 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
         $p->shouldReceive('_getPluginManager')->andReturns($pm);
 
         //Plugin is official
-        mkdir($GLOBALS['sys_custompluginsroot']);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        $this->assertEquals($GLOBALS['sys_custompluginspath'] . '/' . $shortname . '/themes/' . $GLOBALS['sys_user_theme'], $p->getThemePath());
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_custompluginsroot']);
+        mkdir(ForgeConfig::get('sys_custompluginsroot'));
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_custompluginsroot'));
         clearstatcache();
-        mkdir($GLOBALS['sys_pluginsroot']);
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        $this->assertEquals($GLOBALS['sys_pluginspath'] . '/' . $shortname . '/themes/' . $GLOBALS['sys_user_theme'], $p->getThemePath());
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_pluginsroot']);
+        mkdir(ForgeConfig::get('sys_pluginsroot'));
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_pluginsroot'));
         clearstatcache();
-        mkdir($GLOBALS['sys_custompluginsroot']);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/default');
-        $this->assertEquals($GLOBALS['sys_custompluginspath'] . '/' . $shortname . '/themes/default', $p->getThemePath());
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/default');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_custompluginsroot']);
+        mkdir(ForgeConfig::get('sys_custompluginsroot'));
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
+        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_custompluginsroot'));
         clearstatcache();
-        mkdir($GLOBALS['sys_pluginsroot']);
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/default');
-        $this->assertEquals($GLOBALS['sys_pluginspath'] . '/' . $shortname . '/themes/default', $p->getThemePath());
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/default');
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_pluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_pluginsroot']);
+        mkdir(ForgeConfig::get('sys_pluginsroot'));
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/default');
+        $this->assertEquals(ForgeConfig::get('sys_pluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/default');
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_pluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_pluginsroot'));
 
         //Now plugin is custom
-        mkdir($GLOBALS['sys_custompluginsroot']);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        $this->assertEquals($GLOBALS['sys_custompluginspath'] . '/' . $shortname . '/themes/' . $GLOBALS['sys_user_theme'], $p->getThemePath());
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/' . $GLOBALS['sys_user_theme']);
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_custompluginsroot']);
+        mkdir(ForgeConfig::get('sys_custompluginsroot'));
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/' . ForgeConfig::get('sys_user_theme'), $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/' . ForgeConfig::get('sys_user_theme'));
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_custompluginsroot'));
         clearstatcache();
-        mkdir($GLOBALS['sys_custompluginsroot']);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        mkdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/default');
-        $this->assertEquals($GLOBALS['sys_custompluginspath'] . '/' . $shortname . '/themes/default', $p->getThemePath());
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/default');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/themes/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname . '/www/');
-        rmdir($GLOBALS['sys_custompluginsroot'] . $shortname);
-        rmdir($GLOBALS['sys_custompluginsroot']);
+        mkdir(ForgeConfig::get('sys_custompluginsroot'));
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        mkdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
+        $this->assertEquals(ForgeConfig::get('sys_custompluginspath') . '/' . $shortname . '/themes/default', $p->getThemePath());
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/default');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/themes/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname . '/www/');
+        rmdir(ForgeConfig::get('sys_custompluginsroot') . $shortname);
+        rmdir(ForgeConfig::get('sys_custompluginsroot'));
 
-        rmdir(dirname($GLOBALS['sys_custompluginsroot']));
+        rmdir(dirname(ForgeConfig::get('sys_custompluginsroot')));
     }
 
     public function testGetThemePathShouldReturnNullIfNoUserTheme(): void
     {
         $tmp_dir = \org\bovigo\vfs\vfsStream::setup()->url();
-        $GLOBALS['sys_pluginspath']       = '/plugins';
-        $GLOBALS['sys_custompluginspath'] = '/customplugins';
-        $GLOBALS['sys_pluginsroot']       = $tmp_dir . '/test/plugins/';
-        $GLOBALS['sys_custompluginsroot'] = $tmp_dir . '/test/custom/';
+        ForgeConfig::set('sys_pluginspath', '/plugins');
+        ForgeConfig::set('sys_custompluginspath', '/customplugins');
+        ForgeConfig::set('sys_pluginsroot', $tmp_dir . '/test/plugins/');
+        ForgeConfig::set('sys_custompluginsroot', $tmp_dir . '/test/custom/');
 
         $shortname     = 'shortname';
         $pm = \Mockery::spy(\PluginManager::class);
@@ -263,7 +253,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testGetFilesystemPath(): void
     {
-        $GLOBALS['sys_pluginsroot']       = '/my/application';
+        ForgeConfig::set('sys_pluginsroot', '/my/application');
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
@@ -277,7 +267,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testGetFilesystemPathCustom(): void
     {
-        $GLOBALS['sys_custompluginsroot']       = '/my/custom/application';
+        ForgeConfig::set('sys_custompluginsroot', '/my/custom/application');
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');
@@ -291,7 +281,7 @@ final class PluginTest extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclar
 
     public function testGetFilesystemPathWithSlashAtTheEnd(): void
     {
-        $GLOBALS['sys_pluginsroot']       = '/my/application/';
+        ForgeConfig::set('sys_pluginsroot', '/my/application');
 
         $pm = \Mockery::spy(\PluginManager::class);
         $pm->shouldReceive('getNameForPlugin')->andReturns('zataz');

@@ -25,6 +25,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 final class PluginManagerTest extends \PHPUnit\Framework\TestCase
 {
     use MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ServiceManager
@@ -40,7 +41,6 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
     protected function tearDown(): void
     {
         ServiceManager::clearInstance();
-        unset($GLOBALS['sys_pluginsroot'], $GLOBALS['sys_custompluginsroot']);
     }
 
     public function testGetAllPlugins(): void
@@ -135,8 +135,8 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
     public function testInstallPlugin(): void
     {
         $root = \org\bovigo\vfs\vfsStream::setup()->url();
-        $GLOBALS['sys_pluginsroot']       = $root . '/test/custom/';
-        $GLOBALS['sys_custompluginsroot'] = $root . '/test/custom/';
+        ForgeConfig::set('sys_pluginsroot', $root . '/test/custom/');
+        ForgeConfig::set('sys_custompluginsroot', $root . '/test/custom/');
 
         mkdir($root . '/test');
         mkdir($root . '/test/custom');
@@ -153,8 +153,8 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         ));
 
         $forgeupgrade_config = \Mockery::spy(\ForgeUpgradeConfig::class);
-        $forgeupgrade_config->shouldReceive('addPath')->with($GLOBALS['sys_pluginsroot'] . 'New_Plugin')->once();
-        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with($GLOBALS['sys_pluginsroot'] . 'New_Plugin')->once();
+        $forgeupgrade_config->shouldReceive('addPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin')->once();
+        $forgeupgrade_config->shouldReceive('recordOnlyPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin')->once();
 
         //The plugins manager
         $pm = new PluginManager(

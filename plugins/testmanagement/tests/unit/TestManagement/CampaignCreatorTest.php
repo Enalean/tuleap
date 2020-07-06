@@ -77,8 +77,6 @@ class CampaignCreatorTest extends TestCase
     {
         parent::setUp();
 
-        $globals = array_merge([], $GLOBALS);
-
         $this->project          = Mockery::spy(\Project::class);
         $this->campaign_tracker = Mockery::spy(\Tracker::class);
         $this->user             = Mockery::spy(\PFUser::class);
@@ -100,8 +98,6 @@ class CampaignCreatorTest extends TestCase
             $this->artifact_creator,
             $this->execution_creator
         );
-
-        $GLOBALS = $globals;
     }
 
     private function stubCampaignTracker()

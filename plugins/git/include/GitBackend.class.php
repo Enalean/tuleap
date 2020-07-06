@@ -178,7 +178,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function deployPostReceive($path)
     {
         $this->getDriver()->activateHook('post-receive', $path);
-        $hook = '. ' . $GLOBALS['sys_pluginsroot'] . 'git/hooks/post-receive 2>/dev/null';
+        $hook = '. ' . ForgeConfig::get('sys_pluginsroot') . 'git/hooks/post-receive 2>/dev/null';
         $this->addBlock($path . '/hooks/post-receive', $hook);
     }
 

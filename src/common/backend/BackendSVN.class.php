@@ -194,7 +194,7 @@ class BackendSVN extends Backend
                 $this->log("Can't create project SVN dir: $system_path", Backend::LOG_ERROR);
                 return false;
             }
-            system($GLOBALS['svnadmin_cmd'] . " create " . escapeshellarg($system_path) . " --fs-type fsfs");
+            system(ForgeConfig::get('svnadmin_cmd') . " create " . escapeshellarg($system_path) . " --fs-type fsfs");
 
             $this->setUserAndGroup($project, $system_path);
             system("chmod g+rw " . escapeshellarg($system_path));
@@ -370,7 +370,7 @@ class BackendSVN extends Backend
         if ($update_hook) {
             $command  = 'REPOS="$1"' . "\n";
             $command .= 'TXN="$2"' . "\n";
-            $command .= $GLOBALS['codendi_dir'] . '/src/utils/php-launcher.sh ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
+            $command .= ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' . $hook_commit_path . '/' . $pre_commit_file . ' "$REPOS" "$TXN" || exit 1';
             $this->addBlock($filename, $command);
             $this->chown($filename, $this->getHTTPUser());
             $this->chgrp($filename, $this->getSvnFilesUnixGroupName($project));
@@ -896,7 +896,7 @@ class BackendSVN extends Backend
      */
     public function isNameAvailable($name)
     {
-        $path = $GLOBALS['svn_prefix'] . "/" . $name;
+        $path = ForgeConfig::get('svn_prefix') . "/" . $name;
         return (!$this->fileExists($path));
     }
 
@@ -909,7 +909,7 @@ class BackendSVN extends Backend
      */
     public function renameSVNRepository(Project $project, $newName)
     {
-        return rename($project->getSVNRootPath(), $GLOBALS['svn_prefix'] . '/' . $newName);
+        return rename($project->getSVNRootPath(), ForgeConfig::get('svn_prefix') . '/' . $newName);
     }
 
     private function enableCommitMessageUpdate($project_svnroot, $hooks_path)

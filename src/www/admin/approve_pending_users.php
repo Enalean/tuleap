@@ -72,7 +72,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
         $shell = "";
         if ($status == 'restricted') {
             $newstatus = 'R';
-            $shell = ",shell='" . $GLOBALS['codendi_bin_prefix'] . "/cvssh-restricted'";
+            $shell = ",shell='" . ForgeConfig::get('codendi_bin_prefix') . "/cvssh-restricted'";
         } else {
             $newstatus = 'A';
         }
@@ -98,7 +98,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             if (!send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
                  $GLOBALS['Response']->addFeedback(
                      Feedback::ERROR,
-                     $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                     $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
                  );
             }
                usleep(250000);
@@ -137,7 +137,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
             if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
                     );
             }
             usleep(250000);
@@ -214,7 +214,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
 if ($page == ADMIN_APPROVE_PENDING_PAGE_PENDING) {
     $res = db_query("SELECT * FROM user WHERE status='P'");
     $msg = $Language->getText('admin_approve_pending_users', 'no_pending_validated');
-    if ($GLOBALS['sys_user_approval'] == 0) {
+    if (ForgeConfig::get('sys_user_approval') == 0) {
         $res = db_query("SELECT * FROM user WHERE status='P' OR status='V' OR status='W'");
         $msg = $Language->getText('admin_approve_pending_users', 'no_pending');
     }

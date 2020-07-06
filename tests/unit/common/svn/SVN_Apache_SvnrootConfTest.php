@@ -31,23 +31,12 @@ class SVN_Apache_SvnrootConfTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['sys_name']   = 'Platform';
-        $GLOBALS['sys_dbhost'] = 'db_server';
-        $GLOBALS['sys_dbname'] = 'db';
-        $GLOBALS['svn_prefix'] = '/bla';
-        $GLOBALS['sys_dbauth_user']   = 'dbauth_user';
-        $GLOBALS['sys_dbauth_passwd'] = 'dbauth_passwd';
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_name']);
-        unset($GLOBALS['sys_dbname']);
-        unset($GLOBALS['sys_dbhost']);
-        unset($GLOBALS['svn_prefix']);
-        unset($GLOBALS['sys_dbauth_user']);
-        unset($GLOBALS['sys_dbauth_passwd']);
-        parent::tearDown();
+        ForgeConfig::set('sys_name', 'Platform');
+        ForgeConfig::set('sys_dbhost', 'db_server');
+        ForgeConfig::set('sys_dbname', 'db');
+        ForgeConfig::set('svn_prefix', '/bla');
+        ForgeConfig::set('sys_dbauth_user', 'dbauth_user');
+        ForgeConfig::set('sys_dbauth_passwd', 'dbauth_passwd');
     }
 
     private function givenSvnrootForTwoGroups(): SVN_Apache_SvnrootConf

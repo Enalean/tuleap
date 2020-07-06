@@ -23,22 +23,21 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 {
     use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
     use \Tuleap\TemporaryTestDirectory;
+    use \Tuleap\ForgeConfigSandbox;
 
     protected $cache_dir;
 
     protected function setUp(): void
     {
         parent::setUp();
-        ForgeConfig::store();
 
         $this->cache_dir = $this->getTmpDir();
 
         ForgeConfig::set('sys_pluginsroot', __DIR__ . '/_fixtures/tuleap/plugins');
         ForgeConfig::set('sys_extra_plugin_path', '');
-        $GLOBALS['sys_incdir']            = __DIR__ . '/_fixtures/tuleap/site-content';
-        $GLOBALS['sys_pluginsroot']       = ForgeConfig::get('sys_pluginsroot');
-        $GLOBALS['sys_custom_incdir']     = __DIR__ . '/_fixtures/etc/site-content';
-        $GLOBALS['sys_custompluginsroot'] = __DIR__ . '/_fixtures/etc/plugins';
+        ForgeConfig::set('sys_incdir', __DIR__ . '/_fixtures/tuleap/site-content');
+        ForgeConfig::set('sys_custom_incdir', __DIR__ . '/_fixtures/etc/site-content');
+        ForgeConfig::set('sys_custompluginsroot', __DIR__ . '/_fixtures/etc/plugins');
 
         ForgeConfig::set('codendi_cache_dir', $this->cache_dir);
         if (! is_dir($this->cache_dir . '/lang')) {
@@ -48,13 +47,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['sys_incdir']);
-        unset($GLOBALS['sys_pluginsroot']);
-        unset($GLOBALS['sys_custom_incdir']);
-        unset($GLOBALS['sys_custompluginsroot']);
-
         UserManager::clearInstance();
-        ForgeConfig::restore();
         parent::tearDown();
     }
 
@@ -129,7 +122,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
         $result = [];
-        $l->parseLanguageFile($GLOBALS['sys_incdir'] . '/en_US/only-comments.tab', $result);
+        $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/only-comments.tab', $result);
         $this->assertEquals(
             [
             ],
@@ -138,7 +131,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         );
 
         $result = [];
-        $l->parseLanguageFile($GLOBALS['sys_incdir'] . '/en_US/empty-lines.tab', $result);
+        $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/empty-lines.tab', $result);
         $this->assertEquals(
             [
             ],
@@ -149,7 +142,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $result = [
             'file' => ['key1' => 'old-value']
         ];
-        $l->parseLanguageFile($GLOBALS['sys_incdir'] . '/en_US/file.tab', $result);
+        $l->parseLanguageFile(ForgeConfig::get('sys_incdir') . '/en_US/file.tab', $result);
         $this->assertEquals(
             [
                 'file' => [
@@ -167,7 +160,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $l = new BaseLanguage('en_US,fr_FR', 'en_US');
 
         $result = [];
-        $l->loadAllTabFiles($GLOBALS['sys_incdir'] . '/en_US/', $result);
+        $l->loadAllTabFiles(ForgeConfig::get('sys_incdir') . '/en_US/', $result);
         $this->assertEquals(
             [
                 'file'   => [
@@ -187,23 +180,23 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $result = [];
 
         $l1 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l1->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_incdir'] . '/en_US', Mockery::any())->once();
+        $l1->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', Mockery::any())->once();
         $l1->loadCoreSiteContent('en_US', $result);
 
         $l2 = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l2->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_custom_incdir'] . '/en_US', Mockery::any())->once();
+        $l2->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', Mockery::any())->once();
         $l2->loadCustomSiteContent('en_US', $result);
 
         $l3 = Mockery::mock(BaseLanguage::class)->makePartial();
         $l3->shouldReceive('loadAllTabFiles')->with(
-            $GLOBALS['sys_pluginsroot'] . '/toto/site-content/en_US',
+            ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US',
             Mockery::any()
         )->once();
         $l3->loadPluginsSiteContent('en_US', $result);
 
         $l4 = Mockery::mock(BaseLanguage::class)->makePartial();
         $l4->shouldReceive('loadAllTabFiles')->with(
-            $GLOBALS['sys_custompluginsroot'] . '/toto/site-content/en_US',
+            ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US',
             Mockery::any()
         )->once();
         $l4->loadPluginsCustomSiteContent('en_US', $result);
@@ -214,10 +207,10 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $result = [];
 
         $l = Mockery::mock(BaseLanguage::class)->makePartial();
-        $l->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_incdir'] . '/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_custom_incdir'] . '/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_pluginsroot'] . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
-        $l->shouldReceive('loadAllTabFiles')->with($GLOBALS['sys_custompluginsroot'] . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
+        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_incdir') . '/en_US', Mockery::any())->once()->ordered();
+        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custom_incdir') . '/en_US', Mockery::any())->once()->ordered();
+        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_pluginsroot') . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
+        $l->shouldReceive('loadAllTabFiles')->with(ForgeConfig::get('sys_custompluginsroot') . '/toto/site-content/en_US', Mockery::any())->once()->ordered();
 
         $l->loadAllLanguageFiles('en_US', $result);
     }

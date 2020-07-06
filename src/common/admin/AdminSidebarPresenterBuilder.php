@@ -85,7 +85,7 @@ class AdminSidebarPresenterBuilder
 
     private function usersNeedApproval()
     {
-        return $GLOBALS['sys_user_approval'] == 1;
+        return \ForgeConfig::get('sys_user_approval') == 1;
     }
 
     private function pendingUsersCount()
