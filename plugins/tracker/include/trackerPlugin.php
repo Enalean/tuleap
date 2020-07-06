@@ -94,6 +94,7 @@ use Tuleap\Tracker\Creation\JiraImporter\AsyncJiraScheduler;
 use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCleaner;
 use Tuleap\Tracker\Creation\JiraImporter\JiraErrorImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
@@ -1684,6 +1685,9 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             )
         );
         $pending_jira_cleaner->deleteDanglingPendingJiraImports($current_time);
+
+        $jira_attachment_cleaner = new AttachmentCleaner();
+        $jira_attachment_cleaner->deleteDownloadedAttachmentOlderThanOneDay($current_time);
     }
 
     /**
