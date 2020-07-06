@@ -26,16 +26,14 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class ChangelogSnapshotBuilder
 {
-    private const EXCLUDED_FIELDS_FOR_HISTORY = [
-        Tracker_FormElementFactory::FIELD_FILE_TYPE
-    ];
-
     /**
      * @var CreationStateListValueFormatter
      */
@@ -57,6 +55,7 @@ class ChangelogSnapshotBuilder
         PFUser $forge_user,
         Snapshot $current_snapshot,
         ChangelogEntryValueRepresentation $changelog_entry,
+        AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
         $this->logger->debug("Start build snapshot from changelog...");
@@ -70,13 +69,28 @@ class ChangelogSnapshotBuilder
                 continue;
             }
 
-            if (in_array($field_mapping->getType(), self::EXCLUDED_FIELDS_FOR_HISTORY)) {
-                $this->logger->debug("  |_ Field " . $field_mapping->getFieldName() . "not taken into account into history.");
-                continue;
-            }
-
             $changed_field_to        = $item_representation->getTo();
             $changed_field_to_string = $item_representation->getToString();
+
+            if (
+                $field_mapping->getType() === Tracker_FormElementFactory::FIELD_FILE_TYPE &&
+                $field_mapping->getJiraFieldId() === AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME &&
+                $changed_field_to !== null
+            ) {
+                $added_attachment_id = (int) $changed_field_to;
+                $attachment_ids      = $attachment_collection->getAttachmentIds();
+
+                if (in_array($added_attachment_id, $attachment_ids)) {
+                    $fields_snapshot[] = new FieldSnapshot(
+                        $field_mapping,
+                        [$added_attachment_id],
+                        null
+                    );
+                }
+
+                $this->logger->debug("  |_ Generate file value for " . $field_id);
+                continue;
+            }
 
             if ($changed_field_to !== null) {
                 $fields_snapshot[] = new FieldSnapshot(

@@ -85,6 +85,13 @@ class InitialSnapshotBuilderTest extends TestCase
                     "image/png",
                     "URL",
                     30
+                ),
+                new Attachment(
+                    10008,
+                    "file02.gif",
+                    "image/gif",
+                    "URL2",
+                    3056
                 )
             ]
         );
@@ -112,7 +119,7 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
 
         $this->assertSame(
-            [10007],
+            [10008],
             $initial_snapshot->getFieldInSnapshot('attachment')->getValue()
         );
     }

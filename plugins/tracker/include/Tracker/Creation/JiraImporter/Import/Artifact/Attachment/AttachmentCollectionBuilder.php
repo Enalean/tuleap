@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 
 class AttachmentCollectionBuilder
@@ -30,8 +31,8 @@ class AttachmentCollectionBuilder
     public function buildCollectionOfAttachment(IssueAPIRepresentation $issue_api_representation): AttachmentCollection
     {
         $attachments = [];
-        if ($issue_api_representation->getFieldByKey('attachment') !== null) {
-            foreach ($issue_api_representation->getFieldByKey('attachment') as $attachment_api_value) {
+        if ($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME) !== null) {
+            foreach ($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_ATTACHMENT_NAME) as $attachment_api_value) {
                 $attachments[] = Attachment::buildFromIssueAPIResponse($attachment_api_value);
             }
         }
