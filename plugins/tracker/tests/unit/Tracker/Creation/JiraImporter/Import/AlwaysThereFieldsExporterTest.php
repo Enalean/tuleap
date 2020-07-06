@@ -115,7 +115,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "artifact_id",
                 "Artifact id",
                 "artifact_id",
-                6,
+                AlwaysThereFieldsExporter::JIRA_ARTIFACT_ID_RANK,
                 false,
                 [],
                 [],
@@ -132,7 +132,24 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "jira_issue_url",
                 "Link to original issue",
                 "jira_issue_url",
-                7,
+                AlwaysThereFieldsExporter::JIRA_LINK_RANK,
+                false,
+                [],
+                [],
+                $this->field_mapping_collection
+            ]
+        )->once();
+
+        $this->field_xml_exporter->shouldReceive('exportField')->withArgs(
+            [
+                Mockery::on(function (SimpleXMLElement $fieldset_xml) {
+                    return isset($fieldset_xml->formElements);
+                }),
+                Tracker_FormElementFactory::FIELD_SUBMITTED_BY_TYPE,
+                "creator",
+                "Created by",
+                "creator",
+                AlwaysThereFieldsExporter::JIRA_DESCRIPTION_RANK,
                 false,
                 [],
                 [],
@@ -149,7 +166,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "created",
                 "Creation date",
                 "created",
-                2,
+                AlwaysThereFieldsExporter::JIRA_CREATED_RANK,
                 false,
                 [],
                 [],
@@ -166,7 +183,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "updated",
                 "Last update date",
                 "updated",
-                3,
+                AlwaysThereFieldsExporter::JIRA_UPDATED_ON_RANK,
                 false,
                 [],
                 [],
@@ -183,7 +200,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "resolutiondate",
                 "Resolved",
                 "resolutiondate",
-                4,
+                AlwaysThereFieldsExporter::JIRA_RESOLUTION_DATE_RANK,
                 false,
                 [
                     'display_time' => '1'
@@ -202,7 +219,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "status",
                 "Status",
                 "status",
-                1,
+                AlwaysThereFieldsExporter::JIRA_ATTACHMENT_RANK,
                 false,
                 [],
                 Mockery::on(function (array $statuses) {
@@ -223,7 +240,7 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 "attachment",
                 "Attachments",
                 "attachment",
-                1,
+                AlwaysThereFieldsExporter::JIRA_ATTACHMENT_RANK,
                 false,
                 [],
                 [],

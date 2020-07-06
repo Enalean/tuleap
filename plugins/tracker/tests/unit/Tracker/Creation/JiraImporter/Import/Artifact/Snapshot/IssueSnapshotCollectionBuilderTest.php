@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -101,6 +102,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
      */
     private $attachment_collection;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraAuthorRetriever
+     */
+    private $jira_author_retriever;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -111,6 +117,7 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->changelog_snapshot_builder = Mockery::mock(ChangelogSnapshotBuilder::class);
         $this->comment_values_builder     = Mockery::mock(CommentValuesBuilder::class);
         $this->logger                     = Mockery::mock(LoggerInterface::class);
+        $this->jira_author_retriever      = Mockery::mock(JiraAuthorRetriever::class);
 
         $this->builder = new IssueSnapshotCollectionBuilder(
             $this->changelog_entries_builder,
@@ -118,7 +125,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
             $this->initial_snapshot_builder,
             $this->changelog_snapshot_builder,
             $this->comment_values_builder,
-            $this->logger
+            $this->logger,
+            $this->jira_author_retriever
         );
 
         $this->user           = Mockery::mock(PFUser::class);
@@ -137,6 +145,9 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
     {
         $this->logger->shouldReceive('debug');
+        $this->jira_author_retriever->shouldReceive('getArtifactSubmitter')->andReturn(
+            $this->user
+        );
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -190,6 +201,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
         $this->logger->shouldReceive('debug');
+        $this->jira_author_retriever->shouldReceive('getArtifactSubmitter')->andReturn(
+            $this->user
+        );
+
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
             ->andReturn(

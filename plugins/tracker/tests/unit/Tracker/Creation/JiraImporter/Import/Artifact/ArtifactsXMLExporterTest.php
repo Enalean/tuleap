@@ -39,6 +39,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationState
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -140,7 +141,8 @@ class ArtifactsXMLExporterTest extends TestCase
                         $this->wrapper,
                         $this->logger
                     ),
-                    $this->logger
+                    $this->logger,
+                    new JiraAuthorRetriever($this->logger, $this->user_manager)
                 ),
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
@@ -211,7 +213,10 @@ class ArtifactsXMLExporterTest extends TestCase
                                         'id' => '10004'
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
-                                'updated' => '2020-04-25T14:10:10.823+0100'
+                                'updated' => '2020-04-25T14:10:10.823+0100',
+                                'creator' => [
+                                    'displayName' => 'Mysterio'
+                                ]
                             ],
                             'renderedFields' => []
                         ],
@@ -226,7 +231,10 @@ class ArtifactsXMLExporterTest extends TestCase
                                         'id' => '10004'
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
-                                'updated' => '2020-04-26T14:10:10.823+0100'
+                                'updated' => '2020-04-26T14:10:10.823+0100',
+                                'creator' => [
+                                    'displayName' => 'Mysterio'
+                                ]
                             ],
                             'renderedFields' => []
                         ]
@@ -314,13 +322,25 @@ class ArtifactsXMLExporterTest extends TestCase
                                         'id' => '10004'
                                     ],
                                 'created' => '2020-03-25T14:10:10.823+0100',
-                                'updated' => '2020-04-25T14:10:10.823+0100'
+                                'updated' => '2020-04-25T14:10:10.823+0100',
+                                'creator' => [
+                                    'displayName' => 'John Doe',
+                                    'emailAddress' => 'johndoe@example.com'
+                                ]
                             ],
                             'renderedFields' => []
                         ]
                     ]
                 ]
             );
+
+        $john_doe = Mockery::mock(\PFUser::class);
+        $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
+        $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
+
+        $this->user_manager->shouldReceive('getAllUsersByEmail')
+            ->with('johndoe@example.com')
+            ->andReturn([$john_doe]);
 
         $this->wrapper
             ->shouldReceive('getUrl')
@@ -342,7 +362,10 @@ class ArtifactsXMLExporterTest extends TestCase
                                         'id' => '10004'
                                     ],
                                 'created' => '2020-03-26T14:10:10.823+0100',
-                                'updated' => '2020-04-26T14:10:10.823+0100'
+                                'updated' => '2020-04-26T14:10:10.823+0100',
+                                'creator' => [
+                                    'displayName' => 'Mysterio'
+                                ]
                             ],
                             'renderedFields' => []
                         ]

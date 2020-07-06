@@ -35,6 +35,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationState
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -223,6 +224,8 @@ class JiraXmlExporter
             $report_table_exporter
         );
 
+        $jira_author_retriever = new JiraAuthorRetriever($logger, \UserManager::instance());
+
         return new self(
             $logger,
             $error_collector,
@@ -274,7 +277,8 @@ class JiraXmlExporter
                             $wrapper,
                             $logger
                         ),
-                        $logger
+                        $logger,
+                        $jira_author_retriever
                     ),
                     new CommentXMLExporter(
                         new XML_SimpleXMLCDATAFactory(),
