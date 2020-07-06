@@ -23,6 +23,7 @@ use Tuleap\FRS\FRSPermissionCreator;
 use Tuleap\FRS\FRSPermissionDao;
 use Tuleap\Http\HttpClientFactory;
 use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Project\DeletedProjectStatusChangeException;
 use Tuleap\Project\ProjectAccessChecker;
 use Tuleap\Project\RestrictedUserCanAccessProjectVerifier;
 use Tuleap\Project\UGroups\SynchronizedProjectMembershipDao;
@@ -463,6 +464,10 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
 
     public function updateStatus(Project $project, $status)
     {
+        if ($project->getStatus() === Project::STATUS_DELETED) {
+            throw new DeletedProjectStatusChangeException();
+        }
+
         if (! $this->_getDao()->updateStatus($project->getId(), $status)) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('admin_approve_pending', 'error_update'));
         }

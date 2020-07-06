@@ -1167,7 +1167,7 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_2_NAME,
-            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_pbi_id, null, $patch_resource)
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -1180,7 +1180,7 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::ADMIN_USER_NAME,
-            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_pbi_id, null, $patch_resource)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -1194,10 +1194,24 @@ class ProjectTest extends ProjectBase
 
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_DELEGATED_REST_PROJECT_MANAGER_NAME,
-            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
+            $this->client->patch('projects/' . $this->project_pbi_id, null, $patch_resource)
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
+    }
+
+    public function testPATCHWithAdminWhenProjectIsDeleted()
+    {
+        $patch_resource = json_encode([
+            'status' => 'active'
+        ]);
+
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::ADMIN_USER_NAME,
+            $this->client->patch('projects/' . $this->project_deleted_id, null, $patch_resource)
+        );
+
+        $this->assertEquals($response->getStatusCode(), 403);
     }
 
     public function getSuspendedProjectTrackersWithRegularUser()

@@ -36,6 +36,7 @@ use ProjectManager;
 use TestHelper;
 use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\GlobalResponseMock;
 use UserManager;
 
 final class ProjectManagerTest extends TestCase
@@ -43,18 +44,25 @@ final class ProjectManagerTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
     use GlobalLanguageMock;
+    use GlobalResponseMock;
 
     /** @var UserManager */
     private $user_manager;
 
     /** @var ProjectManager */
     private $project_manager_test_version;
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|ProjectDao
+     */
+    private $project_dao;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->user_manager = \Mockery::spy(UserManager::class);
+
+        $this->project_dao = Mockery::mock(ProjectDao::class);
 
         $this->project_manager_test_version = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->project_manager_test_version->shouldReceive('_getUserManager')->andReturns($this->user_manager);
@@ -64,22 +72,22 @@ final class ProjectManagerTest extends TestCase
     {
         ProjectManager::clearInstance();
         unset($GLOBALS['Language']);
+        unset($GLOBALS['Response']);
     }
 
     public function testOnlyProjectsTheUserCanAccessAreReturnedForTheRESTAPI(): void
     {
         $project_access_checker = Mockery::mock(ProjectAccessChecker::class);
-        $project_dao            = Mockery::mock(ProjectDao::class);
         $project_manager        = ProjectManager::testInstance(
             $project_access_checker,
             Mockery::mock(ProjectHistoryDao::class),
-            $project_dao
+            $this->project_dao
         );
 
-        $project_dao->shouldReceive('getMyAndPublicProjectsForREST')->andReturn(
+        $this->project_dao->shouldReceive('getMyAndPublicProjectsForREST')->andReturn(
             TestHelper::argListToDar([['group_id' => 102], ['group_id' => 103]])
         );
-        $project_dao->shouldReceive('foundRows')->andReturn(2);
+        $this->project_dao->shouldReceive('foundRows')->andReturn(2);
 
         $project_access_checker->shouldReceive('checkUserCanAccessProject')
             ->with(
@@ -162,9 +170,8 @@ final class ProjectManagerTest extends TestCase
         $pm->shouldReceive('createProjectInstance')->andReturns($p1);
         $pm->getProject(1);
 
-        $dao = \Mockery::spy(\ProjectDao::class);
-        $dao->shouldReceive('renameProject')->with($p1, 'TestProj')->andReturns(true);
-        $pm->shouldReceive('_getDao')->andReturns($dao);
+        $this->project_dao->shouldReceive('renameProject')->with($p1, 'TestProj')->andReturns(true);
+        $pm->shouldReceive('_getDao')->andReturns($this->project_dao);
 
         $this->assertTrue($pm->renameProject($p1, 'TestProj'));
         $this->assertFalse($pm->isCached($p1->getId()));
@@ -309,9 +316,8 @@ final class ProjectManagerTest extends TestCase
             'isRestricted' => true
         ]);
 
-        $dao = \Mockery::spy(\ProjectDao::class);
-        $dao->shouldReceive('searchActiveProjectsForUser')->with(69)->andReturns(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));
-        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($dao);
+        $this->project_dao->shouldReceive('searchActiveProjectsForUser')->with(69)->andReturns(\TestHelper::arrayToDar(['group_id' => 101, 'access' => Project::ACCESS_PRIVATE_WO_RESTRICTED], ['group_id' => 102, 'access' => Project::ACCESS_PRIVATE], ['group_id' => 103, 'access' => Project::ACCESS_PUBLIC], ['group_id' => 104, 'access' => Project::ACCESS_PUBLIC_UNRESTRICTED]));
+        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
 
         $this->project_manager_test_version->shouldReceive('createProjectInstance')->times(3);
         $this->project_manager_test_version->shouldReceive('createProjectInstance')->with(['group_id' => 102, 'access' => Project::ACCESS_PRIVATE])->ordered();
@@ -321,5 +327,48 @@ final class ProjectManagerTest extends TestCase
         $projects = $this->project_manager_test_version->getActiveProjectsForUser($user);
 
         $this->assertCount(3, $projects);
+    }
+
+    public function testUpdateStatus(): void
+    {
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getStatus')->andReturn('S');
+        $project->shouldReceive('getID')->andReturn(111);
+
+        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->shouldReceive("updateStatus")->andReturn(true)->once();
+
+        $this->project_manager_test_version->updateStatus($project, 'A');
+
+        $this->project_manager_test_version->shouldReceive('removeProjectFromCache')->with($project);
+    }
+
+    public function testUpdateStatusReturnFeedbackWhenUpdateDidntWork(): void
+    {
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getStatus')->andReturn('S');
+        $project->shouldReceive('getID')->andReturn(111);
+
+        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->shouldReceive("updateStatus")->andReturn(false)->once();
+
+        $GLOBALS['Response']->shouldReceive("addFeedback");
+
+        $this->project_manager_test_version->updateStatus($project, 'A');
+
+        $this->project_manager_test_version->shouldReceive('removeProjectFromCache')->never();
+    }
+
+    public function testUpdateStatusTrowExceptionWhenProjectIsDeleted(): void
+    {
+        $project = \Mockery::mock(\Project::class);
+        $project->shouldReceive('getStatus')->andReturn('D');
+        $project->shouldReceive('getID')->andReturn(111);
+
+        $this->project_manager_test_version->shouldReceive('_getDao')->andReturns($this->project_dao);
+        $this->project_dao->shouldReceive("updateStatus")->never();
+
+        $this->expectException(DeletedProjectStatusChangeException::class);
+        $this->project_manager_test_version->updateStatus($project, 'A');
     }
 }
