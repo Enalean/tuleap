@@ -99,7 +99,7 @@ class IssueSnapshotCollectionBuilder
         $this->logger->debug("Start build collection of snapshot ...");
 
         $jira_issue_key   = $issue_api_representation->getKey();
-        $artifact_creator = $this->jira_author_retriever->getArtifactSubmitter($issue_api_representation, $forge_user);
+        $artifact_creator = $this->jira_author_retriever->retrieveArtifactSubmitter($issue_api_representation, $forge_user);
 
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
@@ -138,8 +138,10 @@ class IssueSnapshotCollectionBuilder
 
         $comments_collection = $this->comment_values_builder->buildCommentCollectionForIssue($jira_issue_key);
         foreach ($comments_collection as $comment) {
+            $commenter = $comment->getUpdateAuthor();
+
             $comment_snapshot = new Snapshot(
-                $forge_user,
+                $this->jira_author_retriever->retrieveJiraAuthor($commenter, $forge_user),
                 $comment->getDate(),
                 [],
                 $comment

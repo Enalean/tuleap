@@ -169,6 +169,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $user = Mockery::mock(TrackerImporterUser::class);
         $user->shouldReceive('getUserName')->andReturn('forge__user01');
+        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
@@ -280,6 +281,7 @@ class ArtifactsXMLExporterTest extends TestCase
     {
         $user = Mockery::mock(TrackerImporterUser::class);
         $user->shouldReceive('getUserName')->andReturn('forge__user01');
+        $user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
         $this->user_manager->shouldReceive('getUserById')->with(91)->andReturn($user);
 
@@ -341,6 +343,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $john_doe = Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
         $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
+        $john_doe->shouldReceive('getId')->andReturn('105');
 
         $this->user_manager->shouldReceive('getAllUsersByEmail')
             ->with('johndoe@example.com')

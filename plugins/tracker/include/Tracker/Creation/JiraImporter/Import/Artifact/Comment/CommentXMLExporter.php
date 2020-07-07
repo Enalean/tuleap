@@ -78,7 +78,7 @@ class CommentXMLExporter
         $this->simplexml_cdata_factory->insertWithAttributes(
             $comment_node,
             'body',
-            $this->comment_xml_value_enhancer->getEnhancedValueWithCommentWriterInformation($comment_snapshot),
+            $this->comment_xml_value_enhancer->getEnhancedValueWithCommentWriterInformation($comment_snapshot, $snapshot->getUser()),
             ['format' => Tracker_Artifact_Changeset_Comment::HTML_COMMENT]
         );
     }

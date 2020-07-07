@@ -25,22 +25,59 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class CommentXMLValueEnhancerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        \Mockery::close();
+    }
+
     public function testItAddsTheNameOfTheJiraUserWhoAddTheCommentInTheContent(): void
     {
-        $enhancer = new CommentXMLValueEnhancer();
+        $enhancer  = new CommentXMLValueEnhancer();
+        $commenter = \Mockery::mock(\PFUser::class);
+        $commenter->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
 
         $comment = new Comment(
-            "userO1",
+            new JiraUser([
+                'displayName' => 'userO1',
+                'accountId' => 'e12ds5123sw'
+            ]),
             new DateTimeImmutable(),
             "<p>Comment 01</p>"
         );
 
         $this->assertSame(
             "userO1 said: <br/><br/><p>Comment 01</p>",
-            $enhancer->getEnhancedValueWithCommentWriterInformation($comment)
+            $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
+        );
+    }
+
+    public function testItReturnsOnlyTheCommentValueWhenAuthorHasBeenIdentifiedOnTuleapSide(): void
+    {
+        $enhancer  = new CommentXMLValueEnhancer();
+        $commenter = \Mockery::mock(\PFUser::class);
+        $commenter->shouldReceive('getId')->andReturn(105);
+
+        $update_author = new JiraUser(
+            [
+                'displayName'  => 'userO1',
+                'accountId'    => 'e12ds5123sw',
+                'emailAddress' => 'user01@example.com'
+            ]
+        );
+
+        $comment = new Comment(
+            $update_author,
+            new DateTimeImmutable(),
+            "<p>Comment 01</p>"
+        );
+
+        $this->assertSame(
+            "<p>Comment 01</p>",
+            $enhancer->getEnhancedValueWithCommentWriterInformation($comment, $commenter)
         );
     }
 }

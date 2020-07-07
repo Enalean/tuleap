@@ -23,10 +23,16 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
 
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
+
 class CommentXMLValueEnhancer
 {
-    public function getEnhancedValueWithCommentWriterInformation(Comment $comment): string
+    public function getEnhancedValueWithCommentWriterInformation(Comment $comment, \PFUser $snapshot_owner): string
     {
-        return $comment->getDisplayName() . " said: " . "<br/><br/>" . $comment->getRenderedValue();
+        if ((int) $snapshot_owner->getId() !== (int) TrackerImporterUser::ID) {
+            return $comment->getRenderedValue();
+        }
+
+        return $comment->getUpdateAuthor()->getDisplayName() . " said: " . "<br/><br/>" . $comment->getRenderedValue();
     }
 }
