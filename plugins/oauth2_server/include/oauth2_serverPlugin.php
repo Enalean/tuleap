@@ -94,6 +94,7 @@ use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ProjectRetriever;
 use Tuleap\REST\Specification\Swagger\SwaggerJsonSecurityDefinitionsCollection;
 use Tuleap\User\Account\AccountTabPresenterCollection;
+use Tuleap\User\Account\PasswordUserPostUpdateEvent;
 use Tuleap\User\OAuth2\AccessToken\PrefixOAuth2AccessToken;
 use Tuleap\User\OAuth2\AccessToken\VerifyOAuth2AccessTokenEvent;
 use Tuleap\User\OAuth2\BearerTokenHeaderParser;
@@ -124,6 +125,7 @@ final class oauth2_serverPlugin extends Plugin
         $this->addHook(VerifyOAuth2AccessTokenEvent::NAME);
         $this->addHook(OAuth2ScopeBuilderCollector::NAME);
         $this->addHook(SwaggerJsonSecurityDefinitionsCollection::NAME);
+        $this->addHook(PasswordUserPostUpdateEvent::NAME);
         $this->addHook('codendi_daily_start', 'dailyCleanup');
         $this->addHook('project_is_deleted', 'projectIsDeleted');
 
@@ -707,6 +709,11 @@ final class oauth2_serverPlugin extends Plugin
                 new LocaleSwitcher()
             )
         );
+    }
+
+    public function passwordUserPostUpdateEvent(PasswordUserPostUpdateEvent $password_user_post_update_event): void
+    {
+        (new OAuth2AuthorizationCodeDAO())->deleteAuthorizationCodeByUser($password_user_post_update_event->getUser());
     }
 
     private function getLogger(): LoggerInterface

@@ -20,7 +20,11 @@
  */
 
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
+use Tuleap\User\Password\Change\PasswordChanger;
 use Tuleap\User\Password\Reset\ExpiredTokenException;
+use Tuleap\User\SessionManager;
 
 require_once __DIR__ . '/../include/pre.php';
 
@@ -65,13 +69,14 @@ if (
     && $request->existAndNonEmpty('form_pw')
     && !strcmp($request->get('form_pw'), $request->get('form_pw2'))
 ) {
-    $new_password = new ConcealedString((string) $request->get('form_pw'));
-    $user->setPassword($new_password);
-
-    $reset_token_revoker = new \Tuleap\User\Password\Reset\Revoker($reset_token_dao);
-    $reset_token_revoker->revokeTokens($user);
-
-    $user_manager->updateDb($user);
+    $password_changer = new PasswordChanger(
+        $user_manager,
+        new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
+        new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\LostPasswordDAO()),
+        EventManager::instance(),
+        new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
+    );
+    $password_changer->changePassword($user, new ConcealedString((string) $request->get('form_pw')));
 
     session_redirect("/");
 }

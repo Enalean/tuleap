@@ -22,6 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Password\Configuration\PasswordConfigurationDAO;
 use Tuleap\Password\Configuration\PasswordConfigurationRetriever;
@@ -267,14 +269,12 @@ if ($request->isPost()) {
         $password_changer = new PasswordChanger(
             $user_manager,
             new SessionManager($user_manager, new SessionDao(), new RandomNumberGenerator()),
-            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\LostPasswordDAO())
+            new \Tuleap\User\Password\Reset\Revoker(new \Tuleap\User\Password\Reset\LostPasswordDAO()),
+            EventManager::instance(),
+            new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
         );
-        try {
-            $password_changer->changePassword($user, new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')));
-            $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
-        } catch (Exception $ex) {
-            $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_user_changepw', 'error_update'));
-        }
+        $password_changer->changePassword($user, new \Tuleap\Cryptography\ConcealedString($request->get('form_pw')));
+        $GLOBALS['Response']->addFeedback(Feedback::INFO, $Language->getText('admin_user_changepw', 'msg_changed'));
 
         $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $user->getId());
     }

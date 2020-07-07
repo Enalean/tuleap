@@ -33,6 +33,8 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use RandomNumberGenerator;
 use SessionDao;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\DB\DBFactory;
+use Tuleap\DB\DBTransactionExecutorWithConnection;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Password\PasswordSanityChecker;
 use Tuleap\Request\DispatchableWithRequest;
@@ -103,7 +105,9 @@ final class UpdatePasswordController implements DispatchableWithRequest
             new PasswordChanger(
                 UserManager::instance(),
                 new SessionManager(UserManager::instance(), new SessionDao(), new RandomNumberGenerator()),
-                new Revoker(new LostPasswordDAO())
+                new Revoker(new LostPasswordDAO()),
+                EventManager::instance(),
+                new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection())
             ),
             PasswordSanityChecker::build(),
         );

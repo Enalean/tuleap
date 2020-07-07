@@ -379,7 +379,6 @@ admin_search	grp_name	Nom du projet
 admin_user_changepw	error_userid	Pas d'ID utilisateur
 admin_user_changepw	error_nopasswd	Vous devez fournir un mot de passe.
 admin_user_changepw	error_passwd	Les mots de passe ne sont pas identiques.
-admin_user_changepw	error_update	Le mot de passe n'a pu être mis à jour.
 admin_user_changepw	title_changed	Mot de passe modifié avec succès
 admin_user_changepw	header_changed	Confirmation du changement de mot de passe
 admin_user_changepw	msg_changed	Le mot de passe utilisateur a été modifié.
