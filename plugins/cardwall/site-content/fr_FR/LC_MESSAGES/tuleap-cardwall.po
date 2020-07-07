@@ -154,7 +154,7 @@ msgstr ""
 "aucune de leur valeurs liées à l'ancienne palette de couleur peuvent être "
 "utilisés."
 
-msgid "No field is chosen to determine backgorund color"
+msgid "No field is chosen to determine the background color"
 msgstr "Aucun champ n'a été choisi pour définir la couleur de fond des cartes."
 
 msgid "No matching for this column"
