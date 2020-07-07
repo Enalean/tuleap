@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,32 +22,42 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use Tracker_Artifact;
 use Tracker_FormElement_Field_List;
+use Tracker_FormElement_Field_List_BindDecorator;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetException;
 use Tuleap\Tracker\Artifact\Exception\NoChangesetValueException;
 
 class BindDecoratorRetriever
 {
     /**
-     * @return \Tracker_FormElement_Field_List_BindDecorator
      * @throws NoBindDecoratorException
      * @throws NoChangesetException
      * @throws NoChangesetValueException
      */
-    public function getDecoratorForFirstValue(Tracker_FormElement_Field_List $field, Tracker_Artifact $artifact)
+    public function getDecoratorForFirstValue(Tracker_FormElement_Field_List $field, Tracker_Artifact $artifact): Tracker_FormElement_Field_List_BindDecorator
     {
         $changeset = $artifact->getLastChangeset();
         if (! $changeset) {
             throw new NoChangesetException();
         }
 
-        $values = $field->getBind()->getChangesetValues($changeset->getId());
+        $decorators = $field->getDecorators();
+
+        $list_bind = $field->getBind();
+
+        if (! $list_bind) {
+            throw new \LogicException("Field "  . $field->getId() . " has no associate bind");
+        }
+
+        $values                               = $list_bind->getChangesetValues($changeset->getId());
         if (! $values) {
-            throw new NoChangesetValueException();
+            if (! isset($decorators[Tracker_FormElement_Field_List::NONE_VALUE])) {
+                throw new NoChangesetValueException();
+            }
+            return $decorators[Tracker_FormElement_Field_List::NONE_VALUE];
         }
 
         $first_value_id = $this->getFirstBindValueId($values);
 
-        $decorators = $field->getDecorators();
         if (! isset($decorators[$first_value_id])) {
             throw new NoBindDecoratorException();
         }
