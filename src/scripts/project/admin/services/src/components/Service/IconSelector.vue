@@ -89,7 +89,7 @@ export default {
             this.$emit("input", this.selector.val());
         },
         formatItem(item) {
-            if (item.id === "") {
+            if (item.id === "" || typeof item.id === "undefined") {
                 return item.text;
             }
 
