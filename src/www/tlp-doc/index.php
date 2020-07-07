@@ -61,8 +61,8 @@ function discoverSection(string $basepath): array
 
 $sections = discoverSection('resources');
 $current_section = key($sections);
-if (isset($_GET['section']) && isset($sections[$_GET['section']])) {
-    $current_section = $_GET['section'];
+if (isset($_GET['section'], $sections[$_GET['section']])) {
+    $current_section = key(array_intersect_key($sections, [$_GET['section'] => true]));
 }
 $sections[$current_section]['selected'] = true;
 
