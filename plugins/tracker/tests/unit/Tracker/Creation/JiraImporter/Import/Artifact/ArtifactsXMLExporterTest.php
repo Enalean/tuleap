@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -142,7 +143,7 @@ class ArtifactsXMLExporterTest extends TestCase
                         $this->logger
                     ),
                     $this->logger,
-                    new JiraAuthorRetriever($this->logger, $this->user_manager)
+                    new JiraAuthorRetriever($this->logger, $this->user_manager, new JiraUserOnTuleapCache())
                 ),
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
@@ -215,7 +216,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                 'created' => '2020-03-25T14:10:10.823+0100',
                                 'updated' => '2020-04-25T14:10:10.823+0100',
                                 'creator' => [
-                                    'displayName' => 'Mysterio'
+                                    'displayName' => 'Mysterio',
+                                    'accountId' => 'e8d453qs8f47d538s'
                                 ]
                             ],
                             'renderedFields' => []
@@ -233,7 +235,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100',
                                 'creator' => [
-                                    'displayName' => 'Mysterio'
+                                    'displayName' => 'Mysterio',
+                                    'accountId' => 'e8d453qs8f47d538s'
                                 ]
                             ],
                             'renderedFields' => []
@@ -325,7 +328,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                 'updated' => '2020-04-25T14:10:10.823+0100',
                                 'creator' => [
                                     'displayName' => 'John Doe',
-                                    'emailAddress' => 'johndoe@example.com'
+                                    'emailAddress' => 'johndoe@example.com',
+                                    'accountId' => 'e8d4s2c53z'
                                 ]
                             ],
                             'renderedFields' => []
@@ -364,7 +368,8 @@ class ArtifactsXMLExporterTest extends TestCase
                                 'created' => '2020-03-26T14:10:10.823+0100',
                                 'updated' => '2020-04-26T14:10:10.823+0100',
                                 'creator' => [
-                                    'displayName' => 'Mysterio'
+                                    'displayName' => 'Mysterio',
+                                    'accountId' => 'e8d4s2c53z'
                                 ]
                             ],
                             'renderedFields' => []

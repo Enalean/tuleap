@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 
 final class JiraAuthorRetrieverTest extends TestCase
 {
@@ -49,13 +50,20 @@ final class JiraAuthorRetrieverTest extends TestCase
      */
     private $forge_user;
 
+    /**
+     * @var JiraUserOnTuleapCache
+     */
+    private $user_cache;
+
     protected function setUp(): void
     {
         $this->user_manager = \Mockery::mock(\UserManager::class);
         $this->logger       = \Mockery::mock(LoggerInterface::class);
+        $this->user_cache   = \Mockery::mock(JiraUserOnTuleapCache::class);
         $this->retriever    = new JiraAuthorRetriever(
             $this->logger,
-            $this->user_manager
+            $this->user_manager,
+            $this->user_cache
         );
 
         $this->logger->shouldReceive('debug');
@@ -75,6 +83,9 @@ final class JiraAuthorRetrieverTest extends TestCase
         $tuleap_user->shouldReceive('getRealName')->andReturn("John Doe");
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
 
+        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
+        $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, '5e8dss456a2d45f3');
+
         $submitter = $this->retriever->getArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'  => '10042',
@@ -82,6 +93,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                 'renderedFields' => [],
                 'fields' => [
                     'creator' => [
+                        'accountId' => '5e8dss456a2d45f3',
                         'displayName' => 'John Doe',
                         'emailAddress' => 'johndoe@example.com'
                     ]
@@ -105,6 +117,9 @@ final class JiraAuthorRetrieverTest extends TestCase
                 \Mockery::mock(\PFUser::class)
             ]);
 
+        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+
         $submitter = $this->retriever->getArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
@@ -112,6 +127,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                 'renderedFields' => [],
                 'fields' => [
                     'creator' => [
+                        'accountId' => '5e8dss456a2d45f3',
                         'displayName' => 'John Doe',
                         'emailAddress' => 'johndoe@example.com'
                     ]
@@ -131,6 +147,9 @@ final class JiraAuthorRetrieverTest extends TestCase
             ->with('johndoe@example.com')
             ->andReturn([]);
 
+        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+
         $submitter = $this->retriever->getArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
@@ -138,6 +157,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                 'renderedFields' => [],
                 'fields' => [
                     'creator' => [
+                        'accountId' => '5e8dss456a2d45f3',
                         'displayName' => 'John Doe',
                         'emailAddress' => 'johndoe@example.com'
                     ]
@@ -151,6 +171,9 @@ final class JiraAuthorRetrieverTest extends TestCase
 
     public function testItReturnsForgeUserUserDoesNotShareHisEmailAddress(): void
     {
+        $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+
         $submitter = $this->retriever->getArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
@@ -158,10 +181,39 @@ final class JiraAuthorRetrieverTest extends TestCase
                 'renderedFields' => [],
                 'fields' => [
                     'creator' => [
+                        'accountId' => '5e8dss456a2d45f3',
                         'displayName' => 'John Doe',
                     ]
                 ],
             ]),
+            $this->forge_user
+        );
+
+        $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
+    }
+
+    public function testItDoesNotCallUserManagerWhenUserExistsInCache(): void
+    {
+        $this->user_cache->shouldReceive('isUserCached')->andReturn(true);
+        $this->user_cache->shouldReceive('getUserFromCacheByJiraAccountId')
+            ->with('5e8dss456a2d45f3')
+            ->andReturn($this->forge_user);
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->never();
+
+        $submitter = $this->retriever->getArtifactSubmitter(
+            IssueAPIRepresentation::buildFromAPIResponse(
+                [
+                    'id'             => '10042',
+                    'key'            => 'key01',
+                    'renderedFields' => [],
+                    'fields'         => [
+                        'creator' => [
+                            'accountId'   => '5e8dss456a2d45f3',
+                            'displayName' => 'John Doe'
+                        ]
+                    ],
+                ]
+            ),
             $this->forge_user
         );
 
