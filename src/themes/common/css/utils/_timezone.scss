@@ -1,4 +1,4 @@
-#s2id_timezone {
+#s2id_timezone { /* stylelint-disable-line selector-id-pattern */
     width: 270px;
     height: 40px;
 
@@ -12,11 +12,12 @@
             }
         }
     }
+
     &.select2-dropdown-open .select2-choice div b {
         background-position-y: 5px;
     }
 }
 
-body:not(.register-page) #s2id_timezone {
+body:not(.register-page) #s2id_timezone { /* stylelint-disable-line selector-id-pattern */
     margin-bottom: 10px;
 }

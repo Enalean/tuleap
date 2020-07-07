@@ -1,6 +1,8 @@
-#tracker_toolbar_generic, #tracker_toolbar_specific {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+/* stylelint-disable selector-id-pattern, selector-class-pattern */
+#tracker_toolbar_generic,
+#tracker_toolbar_specific {
+    margin-top: .5em;
+    margin-bottom: .5em;
     font-weight: bold;
 }
 
@@ -21,16 +23,17 @@
 }
 
 /* Disable boostrap fixed size of input area (enforced by tracker config) */
-#artifact_section_details input, textarea {
+#artifact_section_details input,
+textarea {
     width: auto;
 }
 
 .followup_comment {
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
     margin-top: 0;
     margin-bottom: 0;
+    border-top: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
 }
 
 .followup_comment_title {
@@ -38,19 +41,19 @@
 }
 
 .followup_comment_title_user {
+    color: #999999;
     font-size: 1.1em;
     font-weight: bold;
-    color: #999;
 }
 
 .followup_comment_title_edited_user {
+    color: #999999;
     font-weight: bold;
-    color: #999;
 }
 
 .followup_comment_title_date {
-    font-size: 0.95em;
-    color: #666;
+    color: #666666;
+    font-size: .95em;
 }
 
 .followup_comment_title_toolbar {
@@ -58,38 +61,39 @@
 }
 
 .followup_comment_content {
-    padding: 0.5em 1em 0.5em 3em;
     margin-bottom: 1em;
-    border-bottom: 1px solid #ccc;
+    padding: .5em 1em .5em 3em;
+    border-bottom: 1px solid #cccccc;
 }
 
 .followup_comment_content blockquote {
-    background-color: ivory;
-    border-left: 2px solid green;
-    padding-left: 0.5em;
     margin: 0;
+    padding-left: .5em;
+    border-left: 2px solid #008000;
+    background-color: #fffff0;
 }
 
 .followup_comment_content blockquote blockquote {
-    border-left: 2px solid red;
+    border-left: 2px solid #ff0000;
 }
 
 .followup_comment_content blockquote blockquote blockquote {
-    border-left: 2px solid blue;
+    border-left: 2px solid #0000ff;
 }
 
 .followup_comment_content pre {
     max-width: 1024px;
-    background: none repeat scroll 0 0 ivory;
-    overflow: auto;
-    border: 1px solid #D2D2D2;
-    padding: 0.5em;
     margin: 0;
+    padding: .5em;
+    overflow: auto;
+    border: 1px solid #d2d2d2;
+    background: none repeat scroll 0 0 #fffff0;
 }
 
 #tv3-mail-reminders {
-    div.tv3-mail-reminder {
+    div.tv3-mail-reminder { /* stylelint-disable-line selector-no-qualifying-type */
         margin: 0;
         padding-bottom: 10px;
     }
 }
+/* stylelint-enable */

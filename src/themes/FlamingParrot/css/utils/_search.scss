@@ -1,7 +1,7 @@
 .search-bar {
-    background: #F5F5F5;
-    border-bottom: 1px solid #DDDDDD;
-    border-top: 1px solid #DDDDDD;
+    border-top: 1px solid #dddddd;
+    border-bottom: 1px solid #dddddd;
+    background: #f5f5f5;
 
     form .input-append {
         input {
@@ -9,12 +9,12 @@
         }
 
         button {
+            transition: background .1s linear;
             background: $main;
-            color: #FFFFFF;
-            transition: background 0.1s linear;
+            color: #ffffff;
 
             &:hover {
-                transition: background 0.1s linear;
+                transition: background .1s linear;
                 background: lighten($main, 3%);
             }
         }
@@ -24,18 +24,18 @@
 .additional-search-tabs {
     li {
         > a {
-            color: #777;
+            color: #777777;
 
             &:hover {
-                color: $main;
                 box-shadow: inset 0 -2px 0 $main;
+                color: $main;
             }
         }
 
         &.active {
-            > a {
-                color: $main;
+            > a { /* stylelint-disable-line selector-no-qualifying-type */
                 box-shadow: inset 0 -2px 0 $main;
+                color: $main;
             }
         }
     }
@@ -51,12 +51,15 @@
         .search-pane-body {
             ul {
                 li {
-                    a, span {
+                    /* stylelint-disable selector-max-compound-selectors, max-nesting-depth, selector-no-qualifying-type */
+                    a,
+                    span {
                         &.active {
-                            text-decoration: none;
                             color: $main;
+                            text-decoration: none;
                         }
                     }
+                    /* stylelint-enable */
                 }
             }
         }

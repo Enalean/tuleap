@@ -1,19 +1,21 @@
 $accordion-width: 200px;
 
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 body.search-page .content {
-    padding: 0px;
+    padding: 0;
 }
 
 body.search-page {
-    .navbar-search, .header_searchbox {
+    .navbar-search,
+    .header_searchbox {
         display: none;
     }
 }
 
 .search-bar {
     padding: 20px;
+    border-bottom: 1px solid #dddddd;
     text-align: center;
-    border-bottom: 1px solid #DDDDDD;
 
     form {
         margin: 0;
@@ -22,13 +24,13 @@ body.search-page {
             margin: 0;
 
             input {
-                font-size: 18px;
                 padding: 10px;
+                font-size: 18px;
             }
 
             .btn {
-                font-size: 18px;
                 padding: 10px 30px;
+                font-size: 18px;
             }
         }
     }
@@ -39,91 +41,93 @@ body.search-page {
     margin: 0;
 
     li {
-        float: left;
-        width: 50%;
-        list-style-type: none;
-        text-align: center;
         box-sizing: border-box;
+        width: 50%;
+        float: left;
+        list-style-type: none;
         font-size: 1.2em;
-        letter-spacing: 0.1em;
+        letter-spacing: .1em;
+        text-align: center;
 
         > a {
             display: block;
             padding: 15px 0;
-            transition: all 0.1s linear;
-            border-left: 1px solid #DDDDDD;
-            box-shadow: inset 0 -1px 0 #DDDDDD;
-            color: #777;
-            background: #FFFFFF;
+            transition: all .1s linear;
+            border-left: 1px solid #dddddd;
+            background: #ffffff;
+            box-shadow: inset 0 -1px 0 #dddddd;
+            color: #777777;
 
             &:hover {
-                color: #444;
+                transition: all .1s linear;
+                box-shadow: inset 0 -2px 0 #444444;
+                color: #444444;
                 text-decoration: none;
-                transition: all 0.1s linear;
-                box-shadow: inset 0 -2px 0 #444;
             }
         }
 
         &:first-child {
             > a {
-                border-left: none;
+                border-left: 0;
             }
         }
 
         &.active {
             > a {
-                color: #444;
+                transition: all .1s linear;
+                box-shadow: inset 0 -2px 0 #444444;
+                color: #444444;
                 text-decoration: none;
-                transition: all 0.1s linear;
-                box-shadow: inset 0 -2px 0 #444;
             }
         }
     }
 }
 
 .search-panes {
-    float: left;
-    margin: 0 30px 50px 0;
     width: 250px;
     max-width: 250px;
     height: 100%;
+    margin: 0 30px 50px 0;
     padding: 15px;
+    float: left;
 
     .search-pane {
+        margin: 0 0 20px;
         border: 1px solid #e9e9e9;
-        background-color: #FFFFFF;
         border-radius: 3px;
-        margin: 0 0 20px 0;
+        background-color: #ffffff;
 
         .search-pane-header {
             padding: 8px 12px 10px;
-            border-bottom: 2px solid #444;
-            color: #444;
+            border-bottom: 2px solid #444444;
+            color: #444444;
         }
 
         .search-pane-body {
             padding: 10px;
 
             > .search-pane-body-no-types {
-                color: #888;
-                text-align: center;
                 padding: 8px;
-                font-size: 0.8em;
+                color: #888888;
+                font-size: .8em;
+                text-align: center;
             }
 
+            /* stylelint-disable max-nesting-depth, selector-max-compound-selectors */
             ul {
                 margin: 0;
                 padding: 0;
 
                 li {
-                    list-style-type: none;
                     padding: 0 0 10px;
+                    list-style-type: none;
 
                     &:last-child {
                         padding: 0;
                     }
 
-                    a, span {
+                    a,
+                    span {
                         color: #0088cc;
 
                         &.active {
@@ -132,8 +136,8 @@ body.search-page {
                         }
 
                         &:hover {
-                            text-decoration: none;
                             color: #005580;
+                            text-decoration: none;
                             cursor: pointer;
                         }
                     }
@@ -148,14 +152,14 @@ body.search-page {
 
                     .select2-container {
                         display: inline-block;
+                        box-sizing: border-box;
                         width: 100%;
                         max-width: 100%;
-                        box-sizing: border-box;
 
                         > ul {
                             margin: 0;
                             padding: 0;
-                            border: 1px solid #DADADA;
+                            border: 1px solid #dadada;
                             border-radius: 3px;
 
                             > li {
@@ -169,20 +173,20 @@ body.search-page {
 
                         &.select2-container-active {
                             ul {
+                                border: 1px solid #aaaaaa;
                                 box-shadow: none;
-                                border: 1px solid #AAA;
                             }
                         }
                     }
 
                     .sub-facets {
-                        font-size: 0.85em;
                         color: #838383;
+                        font-size: .85em;
                         font-style: italic;
 
                         &:hover {
-                            text-decoration: none;
                             color: #aaaaaa;
+                            text-decoration: none;
                             cursor: pointer;
                         }
                     }
@@ -192,7 +196,7 @@ body.search-page {
 
                         li {
                             padding: 0;
-                            font-size: 0.85em;
+                            font-size: .85em;
 
                             .checkbox {
                                 font-size: 1em;
@@ -200,6 +204,7 @@ body.search-page {
                         }
                     }
                 }
+
             }
 
             &.full-text-search {
@@ -215,27 +220,28 @@ body.search-page {
                     }
                 }
             }
+            /* stylelint-enable max-nesting-depth, selector-max-compound-selectors */
         }
     }
 }
 
 body > .select2-drop {
-    border: 1px solid #ccc;
+    border: 1px solid #cccccc;
 
     > ul.select2-results {
         max-height: 500px;
 
         li {
-            font-size: 0.95em;
+            font-size: .95em;
         }
     }
 }
 
 #search-results {
-    float: left;
-    padding: 15px 0;
     min-width: 32px;
     min-height: 32px;
+    padding: 15px 0;
+    float: left;
 
     &.loading {
         background: url('#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif') no-repeat center center;
@@ -246,15 +252,15 @@ body > .select2-drop {
     }
 
     p.results-count {
-        margin: 0 0 20px 0;
-        color: #aaa;
-        font-size: 0.9em;
+        margin: 0 0 20px;
+        color: #aaaaaa;
+        font-size: .9em;
         font-style: italic;
     }
 
     p.no-result {
-        font-size: 1.2em;
         padding: 10px 0 0;
+        font-size: 1.2em;
 
         span {
             font-weight: bold;
@@ -262,30 +268,30 @@ body > .select2-drop {
     }
 
     ul {
-        list-style: none;
         margin: 0;
+        list-style: none;
 
         li.result {
-            margin: 0 0 20px 0;
-            padding: 0 0 0 20px;
             position: relative;
             max-width: 750px;
+            margin: 0 0 20px;
+            padding: 0 0 0 20px;
 
-            &.wiki:before {
+            &.wiki::before {
                 content: $services-wiki;
-                font-family: 'tuleap-services', 'FontAwesome';
-                left: 0;
+                position: absolute;
                 top: 6px;
                 right: 2px;
-                position: absolute;
+                left: 0;
+                font-family: 'tuleap-services', 'FontAwesome';
             }
 
-            &:before {
+            &::before {
                 content: '\f105'; // fa-angle-right
-                font-family: 'FontAwesome';
-                left: 0;
-                top: 6px;
                 position: absolute;
+                top: 6px;
+                left: 0;
+                font-family: 'FontAwesome';
             }
 
             .title {
@@ -299,14 +305,14 @@ body > .select2-drop {
             }
 
             .subtitle {
-                color: #888;
+                color: #888888;
                 font-style: italic;
             }
 
             .description {
                 margin: 0 0 5px;
-                color: #444;
-                font-size: 0.9em;
+                color: #444444;
+                font-size: .9em;
             }
         }
 
@@ -323,22 +329,22 @@ body > .select2-drop {
         }
 
         li.user {
-            margin: 0 0 30px 0;
+            margin: 0 0 30px;
 
             .avatar {
-                float: left;
                 position: relative;
                 top: 1px;
-                margin: 0 10px 0 0;
                 width: 50px;
                 height: 50px;
+                margin: 0 10px 0 0;
+                float: left;
                 border-radius: 50%;
             }
 
             .realname {
+                min-width: 500px;
                 font-size: 1.6em;
                 line-height: 1.4em;
-                min-width: 500px;
 
                 &:hover {
                     text-decoration: none;
@@ -353,8 +359,8 @@ body > .select2-drop {
             .username {
                 min-width: 500px;
                 margin: 0 0 5px;
-                color: #444;
-                font-size: 0.9em;
+                color: #444444;
+                font-size: .9em;
 
                 &.only {
                     position: relative;
@@ -364,3 +370,4 @@ body > .select2-drop {
         }
     }
 }
+/* stylelint-enable */

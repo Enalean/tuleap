@@ -34,7 +34,7 @@ $expert-query-area-height: 75px;
     flex: 1 1 auto;
     margin: 0 $tlp-small-spacing 0 0;
 
-    //scss-lint:disable SelectorFormat
+    /* stylelint-disable selector-class-pattern */
 
     > .CodeMirror {
         height: $expert-query-area-height;
@@ -51,9 +51,10 @@ $expert-query-area-height: 75px;
         pre {
             padding: 0 6px;
 
-            &.CodeMirror-placeholder {
+            &.CodeMirror-placeholder { /* stylelint-disable-line selector-no-qualifying-type */
                 color: #999999;
             }
         }
     }
+    /* stylelint-enable */
 }

@@ -13,7 +13,8 @@
         > #allowed-projects-list-actions {
             margin: 0 0 10px;
 
-            > div, > button {
+            > div,
+            > button {
                 display: inline-block;
                 margin: 0;
             }
@@ -27,7 +28,7 @@
                     border-radius: 0 4px 4px 0;
                 }
 
-                #search_indicator {
+                #search_indicator { /* stylelint-disable-line selector-id-pattern */
                     visibility: hidden;
                     position: absolute;
                 }
@@ -57,11 +58,11 @@
             }
 
             #empty-project-list {
-                text-align: center;
                 padding: 40px;
-                color: #BBB;
+                color: #bbbbbb;
+                font-size: .9em;
                 font-style: italic;
-                font-size: 0.9em;
+                text-align: center;
             }
         }
     }

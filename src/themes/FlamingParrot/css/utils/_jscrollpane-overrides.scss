@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// scss-lint:disable SelectorFormat
+/* stylelint-disable selector-class-pattern */
 .jspVerticalBar {
     width: 9px;
     background: transparent;
@@ -37,3 +37,4 @@
     border-radius: 0;
     background: darken($white, 10%);
 }
+/* stylelint-enable */

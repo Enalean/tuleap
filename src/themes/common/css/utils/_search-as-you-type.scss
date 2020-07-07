@@ -1,24 +1,26 @@
-.searchAsYouType {
-    background: #FFF;
+.searchAsYouType { /* stylelint-disable-line selector-class-pattern */
+    border: 1px solid #cccccc;
+    border: 1px solid rgba(0, 0, 0, .2); /* stylelint-disable-line declaration-block-no-duplicate-properties */
     border-radius: 3px;
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 
     ul {
         margin: 0;
         padding: 5px 0;
         list-style: none;
 
+        /* stylelint-disable selector-no-qualifying-type */
         li {
-            font-size: 0.9em;
             padding: 5px 10px;
+            font-size: .9em;
             cursor: pointer;
 
             &.selected {
-                background: #0081C2;
-                color: #FFF;
+                background: #0081c2;
+                color: #ffffff;
             }
         }
+        /* stylelint-enable */
     }
 }

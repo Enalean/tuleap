@@ -1,18 +1,18 @@
 .toolbar {
-    list-style-type: none;
     margin: 1em 0;
     padding: 0;
+    padding-bottom: .5em;
+    list-style-type: none;
+    border-bottom: 1px solid #999999;
     font-weight: bold;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid #999;
 }
 
 .toolbar li {
-    margin: 0;
     display: inline;
+    margin: 0;
 }
 
 .toolbar-sep {
-    padding-left: 8px;
     padding-right: 8px;
+    padding-left: 8px;
 }

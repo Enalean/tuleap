@@ -1,12 +1,12 @@
 .alert-disconnect {
     display: flex;
-    max-width: 300px;
+    position: absolute;
+    z-index: 100;
     top: 0;
     right: 0;
-    position: absolute;
     box-sizing: border-box;
+    max-width: 300px;
     transition: all;
-    z-index: 100;
 
     > i {
         margin: 10px;

@@ -1,23 +1,27 @@
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
 table.ServiceMenu {
     width: 100%;
 
-    margin-top: 0px;
-    margin-bottom: 0px;
-    padding-top: 0px;
-    padding-bottom: 0px;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
 ul.ServiceMenu {
-    margin-top: 0px;
+    margin-top: 0;
+    padding: 0;
     list-style-type: none;
-    padding: 0px;
 }
 
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
 ul.ServiceMenu li {
     display: inline;
     font-weight: bold;
 }
 
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
 ul.ServiceMenu li.current {
     font-weight: bold;
 }
@@ -33,8 +37,8 @@ ul.ServiceMenu li.current {
 
 .service-wiki .wiki-dl-table {
     border-collapse: separate;
-    border-style: outset;
     border-width: thin;
+    border-style: outset;
 }
 
 .service-wiki h1 {
@@ -54,10 +58,11 @@ ul.ServiceMenu li.current {
 }
 
 .service-wiki td {
-    vertical-align: top;
     text-align: left;
+    vertical-align: top;
 }
 
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type */
 .service-wiki .ServiceMenu td:nth-child(2) {
     text-align: right;
 }
@@ -78,31 +83,33 @@ ul.ServiceMenu li.current {
     font-weight: bold;
 }
 
+/* stylelint-disable-next-line selector-class-pattern, selector-no-qualifying-type, selector-id-pattern */
 .service-docman #plugin_docman_report_form_global input.text_field {
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .service-docman .docman-create-news-option {
     display: inline;
-    padding-left: 0.5em;
+    padding-left: .5em;
 }
 
 .service-admin table select {
     width: auto;
 }
 
+/* stylelint-disable-next-line selector-id-pattern */
 .service-wiki #UserPreferencesPlugin td input {
     display: block;
 }
 
-label[for="edit[lock]"],
-label[for="edit[minor_edit]"],
-label[for="useOldMarkup"] {
+label[for='edit[lock]'],
+label[for='edit[minor_edit]'],
+label[for='useOldMarkup'] {
     display: inline;
 }
 
-input[type=checkbox][id="edit[locked]"],
-input[type=checkbox][id="edit[minor_edit]"],
-input[type=checkbox][id="useOldMarkup"] {
+input[type=checkbox][id='edit[locked]'],
+input[type=checkbox][id='edit[minor_edit]'],
+input[type=checkbox][id='useOldMarkup'] {
     margin: 0 0 0 4px;
 }

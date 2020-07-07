@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) STMicroelectronics, 2007. All Rights Reserved.
  * Originally written by Mohamed CHAARI, 2007
  *
@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+/* stylelint-disable selector-class-pattern, selector-no-qualifying-type */
 
 /* {{{ ForumML */
 th.forumml {
@@ -100,40 +100,42 @@ font.headerlabelalt {
 }
 
 .plugin_forumml_message_content_std blockquote,
- .plugin_forumml_message_content_pre blockquote {
+.plugin_forumml_message_content_pre blockquote {
     margin-left: .5em;
     padding-left: 1em;
-    border-left: 1px solid blue;
+    border-left: 1px solid #0000ff;
 }
 
 .plugin_forumml_message_content_std blockquote blockquote {
-    border-color: red;
+    border-color: #ff0000;
 }
 
 .plugin_forumml_message_content_std blockquote blockquote blockquote {
-    border-color: green;
+    border-color: #008000;
 }
 
 .plugin_forumml_message_content_std blockquote blockquote blockquote blockquote {
-    border-color: darkorange;
+    border-color: #ff8c00;
 }
 
+/* stylelint-disable-next-line selector-max-compound-selectors */
 .plugin_forumml_message_content_std blockquote blockquote blockquote blockquote blockquote {
     border-color: #8a2be2;
 }
 
 .plugin_forumml_message_content_pre blockquote blockquote {
-    border-color: red;
+    border-color: #ff0000;
 }
 
 .plugin_forumml_message_content_pre blockquote blockquote blockquote {
-    border-color: green;
+    border-color: #008000;
 }
 
 .plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote {
-    border-color: darkorange;
+    border-color: #ff8c00;
 }
 
+/* stylelint-disable-next-line selector-max-compound-selectors */
 .plugin_forumml_message_content_pre blockquote blockquote blockquote blockquote blockquote {
     border-color: #8a2be2;
 }

@@ -1,481 +1,513 @@
+/**
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* stylelint-disable selector-id-pattern, selector-no-qualifying-type, selector-class-pattern */
+
 .help {
-  width: auto;
-  background: url(../images/help.png) no-repeat;
-  background-position: 5px center;
-  border: 1px solid #DDDDDD;
-  padding: 0.5em;
-  padding-left: 40px;
-  margin: 0.5em;
+    width: auto;
+    margin: .5em;
+    padding: .5em;
+    padding-left: 40px;
+    border: 1px solid #dddddd;
+    background: url('../images/help.png') no-repeat;
+    background-position: 5px center;
 }
 
 .repository {
-  width: auto;
+    width: auto;
 }
 
 textarea.text {
-  height: 50px;
-  width: 400px;
+    width: 400px;
+    height: 50px;
 }
 
 .plugin_git_mail_prefix {
-  width: 15em;
+    width: 15em;
 }
 
 .plugin_git_permissions_select {
-  width: 256px;
-  margin-right: 20px;
+    width: 256px;
+    margin-right: 20px;
 }
 
 #git_repositories_list {
-  min-width: 960px;
-  width: auto;
+    width: auto;
+    min-width: 960px;
 }
 
 tr.boxitemalt > td {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 #fork_repositories {
-  border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 #fork_repositories td {
-  padding-left: 1em;
-  border-left: 1px solid #ccc;
-  padding-right: 1em;
-  border-right: 1px solid #ccc;
+    padding-right: 1em;
+    padding-left: 1em;
+    border-right: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
 }
 
 #fork_repositories td.first {
-  padding-left: 0em;
-  border-left: none;
+    padding-left: 0;
+    border-left: 0;
 }
 
 #fork_repositories td.last {
-  padding-right: 0em;
-  border-right: none;
+    padding-right: 0;
+    border-right: 0;
 }
 
 .git_repomanagement label {
-  display: block;
-  margin-bottom: 5px;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .git_repomanagement_gerrit_more_description {
-  display: inline-block;
-  min-height: 20px;
-  padding: 15px;
-  margin-bottom: 1em;
-  background-color: #f5f5f5;
-  border: 1px solid #e3e3e3;
-  border-radius: 4px;
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+    display: inline-block;
+    min-height: 20px;
+    margin-bottom: 1em;
+    padding: 15px;
+    border: 1px solid #e3e3e3;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
 }
 
 .gerrit_url.alert.alert-info {
-  display: inline-block;
-  margin-bottom: 1em;
+    display: inline-block;
+    margin-bottom: 1em;
 }
 
 .gerrit_url.alert.alert-info a {
-  font-weight: bold;
-  white-space: nowrap;
+    font-weight: bold;
+    white-space: nowrap;
 }
 
 .wait_creation.alert.alert-info {
-  display: inline-block;
-  margin-bottom: 1em;
+    display: inline-block;
+    margin-bottom: 1em;
 }
 
 legend.gerrit_disconnect {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 fieldset.gerrit_disconnect {
-  width: 680px;
-  border-color: lightgrey;
+    width: 680px;
+    border-color: #d3d3d3;
 }
 
 .git_admin_config_template_action {
-  width: 80px;
+    width: 80px;
 }
 
 #editor_textarea {
-  width: 100%;
-  height: 450px;
-  padding-left: 0px;
-  padding-right: 0px;
-  border-left: 0px;
-  border-right: 0px;
-  resize: none;
+    width: 100%;
+    height: 450px;
+    padding-right: 0;
+    padding-left: 0;
+    border-right: 0;
+    border-left: 0;
+    resize: none;
 }
 
 #description_commit {
-  resize: none;
+    resize: none;
 }
 
 #cancel {
-  margin-right: 5px;
+    margin-right: 5px;
 }
 
 #commit_form {
-  padding-left: 5px;
+    padding-left: 5px;
 }
 
 #mirrors-list {
-  margin: 0 0 30px 25px;
+    margin: 0 0 30px 25px;
 
-  > li {
-    > span {
-      font-style: italic;
-      color: #888;
-      font-size: 0.9em;
+    > li {
+        > span {
+            color: #888888;
+            font-size: .9em;
+            font-style: italic;
+        }
     }
-  }
 }
 
 .git_admin_mirror_owner_link {
-  padding-top: 5px;
+    padding-top: 5px;
 }
 
 .reserved-hostname-help {
-  font-size: 0.8em;
+    font-size: .8em;
 }
 
 .git_admin_mirror_big_span {
-  word-break: break-all;
+    word-break: break-all;
 }
 
 .git_admin_mirror_table {
-  max-width: 960px;
+    max-width: 960px;
 
-  > thead > tr > th {
-    white-space: nowrap;
-  }
+    > thead > tr > th {
+        white-space: nowrap;
+    }
 }
 
 .git_admin_mirror_url {
-  white-space: nowrap
+    white-space: nowrap;
 }
 
 .git_admin_mirror_details {
-  max-width: 800px;
+    max-width: 800px;
 
-  & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
-    width: 20px;
-  }
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+        width: 20px;
+    }
 }
+/* stylelint-enable */
 
+/* stylelint-disable selector-no-qualifying-type */
 .mirrors-list {
-  max-width: 800px;
+    max-width: 800px;
 
-  & > thead > tr > th,
-  & > tbody > tr > td {
-    min-width: 100px;
-    vertical-align: middle;
-  }
+    > thead > tr > th,
+    > tbody > tr > td {
+        min-width: 100px;
+        vertical-align: middle;
+    }
 
-  & > thead > tr > th:first-child,
-  & > tbody > tr > td:first-child {
-    min-width: 20px;
-    max-width: 20px;
-    text-align: center;
-  }
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+        min-width: 20px;
+        max-width: 20px;
+        text-align: center;
+    }
 
-  & > tbody > tr > td.name {
-    width: 100%;
-    white-space: nowrap;
-  }
+    > tbody > tr > td.name {
+        width: 100%;
+        white-space: nowrap;
+    }
 
-  & > thead > tr > th.used,
-  & > tbody > tr > td.used {
-    white-space: nowrap;
-    text-align: center;
-  }
+    > thead > tr > th.used,
+    > tbody > tr > td.used {
+        text-align: center;
+        white-space: nowrap;
+    }
 }
 
 .mass-mirrors-list {
-  width: 600px;
+    width: 600px;
 
-  > thead > tr > th {
-    padding: 0 40px;
+    > thead > tr > th {
+        padding: 0 40px;
 
-    &:first-child {
-      width: 100%;
+        &:first-child {
+            width: 100%;
+        }
     }
-  }
 
-  > thead > tr > th,
-  > tbody > tr > td:first-child {
-    white-space: nowrap;
-    position: relative;
-    height: 45px;
-    min-width: 70px;
-    padding-right: 30px;
-  }
-
-  > tbody > tr > td:first-child {
-    box-sizing: border-box;
-  }
-
-  > thead > tr > th,
-  > tbody > tr > td {
-    vertical-align: middle;
-    text-align: center;
-
-    &:first-child {
-      width: 100%;
-      text-align: left;
+    > thead > tr > th,
+    > tbody > tr > td:first-child {
+        position: relative;
+        min-width: 70px;
+        height: 45px;
+        padding-right: 30px;
+        white-space: nowrap;
     }
-  }
 
-  > tbody > tr {
+    > tbody > tr > td:first-child {
+        box-sizing: border-box;
+    }
+
+    > thead > tr > th,
+    > tbody > tr > td {
+        text-align: center;
+        vertical-align: middle;
+
+        &:first-child {
+            width: 100%;
+            text-align: left;
+        }
+    }
+
+    > tbody > tr {
+        .check-all-panel {
+            opacity: 0;
+        }
+
+        &:hover {
+            .check-all-panel {
+                opacity: 1;
+            }
+        }
+
+        > td {
+            transition: background linear .08s;
+
+            > div {
+                display: block;
+                margin: 5px 0 0;
+                transition: opacity linear .08s;
+                opacity: 0;
+            }
+
+            &.has-changed {
+                transition: background linear .08s;
+
+                > div {
+                    transition: opacity linear .08s;
+                    opacity: 1;
+                }
+
+                &.was-used {
+                    background: rgba(218, 83, 83, .2);
+
+                    > div { /* stylelint-disable-line max-nesting-depth */
+                        background: rgb(218, 83, 83);
+                    }
+                }
+
+                &.was-unused {
+                    background: rgba(88, 179, 89, .2);
+
+                    > div { /* stylelint-disable-line max-nesting-depth */
+                        background: rgb(88, 179, 89);
+                    }
+                }
+            }
+        }
+    }
+
     .check-all-panel {
-      opacity: 0;
-    }
+        display: inline-block;
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        width: 20px;
 
-    &:hover {
-      .check-all-panel {
-        opacity: 1;
-      }
-    }
+        > .check-all,
+        > .uncheck-all {
+            display: block;
+            color: #777777;
+            white-space: nowrap;
 
-    > td {
-      transition: background linear 0.08s;
-
-      > div {
-        display: block;
-        opacity: 0;
-        margin: 5px 0 0 0;
-        transition: opacity linear 0.08s;
-      }
-
-      &.has-changed {
-        transition: background linear 0.08s;
-
-        > div {
-          opacity: 1;
-          transition: opacity linear 0.08s;
+            &:hover,
+            &:active {
+                color: #222222;
+                text-decoration: none;
+            }
         }
 
-        &.was-used {
-          background: rgba(218, 83, 83, 0.2);
-
-          > div {
-            background: rgb(218, 83, 83);
-          }
+        > .uncheck-all {
+            margin: 0 2px 0 0;
         }
-
-        &.was-unused {
-          background: rgba(88, 179, 89, 0.2);
-
-          > div {
-            background: rgb(88, 179, 89);
-          }
-        }
-      }
     }
-  }
-
-  .check-all-panel {
-    display: inline-block;
-    width: 20px;
-    position: absolute;
-    top: 3px;
-    right: 3px;
-
-    > .check-all,
-    > .uncheck-all {
-      white-space: nowrap;
-      display: block;
-      color: #777;
-
-      &:hover, &:active {
-        color: #222;
-        text-decoration: none;
-      }
-    }
-
-    > .uncheck-all {
-      margin: 0 2px 0 0;
-    }
-  }
 }
+/* stylelint-enable */
 
 .mass-mirrors-list-update-bar {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  width: 100%;
-  padding: 20px 0;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.95);
-  border-top: 1px solid #E0E0E0;
-  box-sizing: border-box;
+    position: fixed;
+    z-index: 999;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px 0;
+    border-top: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, .95);
+    text-align: center;
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 body.sidebar-expanded .mass-mirrors-list-update-bar {
-  padding-left: 200px;
+    padding-left: 200px;
 }
 
 .git-admin-tabs {
-  margin: 10px 0;
+    margin: 10px 0;
 }
 
 .git-admin-tab-content {
-  overflow: inherit;
+    overflow: inherit;
 
-  h3 {
-    margin: 0 0 10px;
-  }
+    h3 {
+        margin: 0 0 10px;
+    }
 
-  h4 {
-    font-size: 1.1em;
-    margin: 30px 0 10px
-  }
+    h4 {
+        margin: 30px 0 10px;
+        font-size: 1.1em;
+    }
 }
 
 .git-admin-mass-update-table {
-  max-width: 800px;
+    max-width: 800px;
 
-  & > thead > tr > th:first-child, & > tbody > tr > td:first-child {
-    width: 20px;
-    text-align: center;
-  }
+    > thead > tr > th:first-child,
+    > tbody > tr > td:first-child {
+        width: 20px;
+        text-align: center;
+    }
 }
 
 .update-n-repositories > span {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .form-tree {
-  margin: 30px 0 0;
+    margin: 30px 0 0;
 }
 
-h1, h2, h3 {
-  .fa-question-circle {
-    color: #AAA;
-    font-size: 0.8em;
+h1,
+h2,
+h3 {
+    .fa-question-circle {
+        color: #aaaaaa;
+        font-size: .8em;
 
-    &:hover {
-      text-decoration: none;
-      color: #888;
+        &:hover {
+            color: #888888;
+            text-decoration: none;
+        }
     }
-  }
 }
 
 #admin-general-settings {
-  ul > li > a.disabled-link {
-    pointer-events: none;
-    cursor: default;
-    color: #AAA;
-  }
+    ul > li > a.disabled-link { /* stylelint-disable-line selector-no-qualifying-type */
+        color: #aaaaaa;
+        cursor: default;
+        pointer-events: none;
+    }
 }
 
 #git-notification-mail-list {
-  max-width: 960px;
-  margin-bottom: 15px;
+    max-width: 960px;
+    margin-bottom: 15px;
 }
 
 .git-notification-mail-list-people {
-  width: 100%;
+    width: 100%;
 }
 
 #admin-git-default-access-rights {
-  > table {
-    margin-bottom: 10px;
-  }
+    > table {
+        margin-bottom: 10px;
+    }
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .git_webhook {
-  > .hooks-desc {
-    max-width: 920px;
-    margin: 10px 0 20px;
-  }
-
-  .create-webhook-btn {
-    margin: 0 0 10px;
-  }
-
-  > .only-one-webhook {
-    display: inline-block;
-    cursor: not-allowed;
-    margin-right: 4px;
-
-    > .btn[disabled] {
-      pointer-events: none;
-    }
-  }
-
-  > .popover {
-    h3 {
-      border: 0;
-      background: #da5353;
-      color: #ffffff;
+    > .hooks-desc {
+        max-width: 920px;
+        margin: 10px 0 20px;
     }
 
-    form {
-      margin: 0;
-
-      .remove-webhook-confirm-actions {
-        text-align: right;
-      }
+    .create-webhook-btn {
+        margin: 0 0 10px;
     }
 
-    p {
-      font-size: 13px;
+    > .only-one-webhook {
+        display: inline-block;
+        margin-right: 4px;
+        cursor: not-allowed;
+
+        > .btn[disabled] {
+            pointer-events: none;
+        }
     }
-  }
+
+    > .popover {
+        h3 {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-webhook-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
 }
 
 #modal-add-jenkins-server,
 #modal-create-jenkins,
 #modal-create-webhook {
-  .fa-asterisk {
-    position: absolute;
-    margin: 0 0 0 3px;
-    color: #da5353;
-    font-size: 10px;
-    vertical-align: text-top;
-  }
+    .fa-asterisk {
+        position: absolute;
+        margin: 0 0 0 3px;
+        color: #da5353;
+        font-size: 10px;
+        vertical-align: text-top;
+    }
 }
 
+/* stylelint-disable selector-no-qualifying-type */
 .hooks-list {
-  max-width: 960px;
+    max-width: 960px;
 
-  > thead > tr > th,
-  > tbody > tr > td {
-    vertical-align: middle;
-    white-space: nowrap;
+    > thead > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+        white-space: nowrap;
 
-    &:first-child {
-      width: 100%;
-      max-width: 430px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    &.last-push {
-      max-width: 200px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    &.action-buttons {
-      > a {
-        margin: 0 5px;
-
-        &:hover,
-        &:focus {
-          text-decoration: none;
-          opacity: .8;
+        &:first-child {
+            width: 100%;
+            max-width: 430px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-      }
+
+        &.last-push {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &.action-buttons {
+            > a {
+                margin: 0 5px;
+
+                &:hover,
+                &:focus {
+                    opacity: .8;
+                    text-decoration: none;
+                }
+            }
+        }
     }
-  }
 }
 
 .hooks-jobs-list {
@@ -484,11 +516,11 @@ h1, h2, h3 {
     }
 
     > tr > td:last-child {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        max-width: 383px;
         width: 100%;
+        max-width: 383px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .hooks-jobs-triggered-jobs-list,
@@ -505,190 +537,193 @@ h1, h2, h3 {
 }
 
 .hook-logs-modal {
-  width: 1000px;
-  margin: 0;
-  transform: translateX(-50%);
-
-  > .modal-header {
-    > .close {
-      margin-left: 10px;
-    }
-
-    > h3 {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-}
-
-table.hook-logs > tbody > tr {
-  > td.hook-log-repository {
-    vertical-align: top;
-  }
-
-  > td.hook-log-date {
-    width: 10px;
-    vertical-align: top;
-    white-space: nowrap;
-  }
-
-  > td > .hook-log-triggered-jobs > h4,
-  > td > .hook-log-branch-source-status > h4 {
+    width: 1000px;
     margin: 0;
-    font-size: 12px;
-  }
+    transform: translateX(-50%);
 
-  > td > .hook-log-branch-source-status {
-    margin: 10px 0 0;
-  }
+    > .modal-header {
+        > .close {
+            margin-left: 10px;
+        }
+
+        > h3 {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
 }
+
+/* stylelint-disable selector-max-compound-selectors */
+table.hook-logs > tbody > tr {
+    > td.hook-log-repository {
+        vertical-align: top;
+    }
+
+    > td.hook-log-date {
+        width: 10px;
+        vertical-align: top;
+        white-space: nowrap;
+    }
+
+    > td > .hook-log-triggered-jobs > h4,
+    > td > .hook-log-branch-source-status > h4 {
+        margin: 0;
+        font-size: 12px;
+    }
+
+    > td > .hook-log-branch-source-status {
+        margin: 10px 0 0;
+    }
+}
+/* stylelint-enable */
 
 .create-hook-url {
-  width: calc(100% - 20px);
+    width: calc(100% - 20px);
 }
 
 .remove-hook-popover {
-  display: none;
+    display: none;
 }
 
 .git-per-tags-branches-permissions {
-  .alert {
-    display: inline-block;
-    margin: 20px 0;
-  }
-
-  .regexp_incoherence_label {
-    padding: 0 0 0 55px;
-  }
-
-  h4 {
-    color: #888888;
-    font-size: 14px;
-    letter-spacing: .5px;
-    text-transform: uppercase;
-  }
-
-  .permission-pattern {
-    width: 50%;
-  }
-
-  .permission-delete {
-    min-width: 80px;
-  }
-
-  > .popover {
-    .popover-title {
-      border: 0;
-      background: #da5353;
-      color: #ffffff;
+    .alert {
+        display: inline-block;
+        margin: 20px 0;
     }
 
-    form {
-      margin: 0;
-
-      .remove-fine-grained-permission-confirm-actions {
-        text-align: right;
-      }
+    /* stylelint-disable-next-line selector-class-pattern */
+    .regexp_incoherence_label {
+        padding: 0 0 0 55px;
     }
 
-    p {
-      font-size: 13px;
+    h4 {
+        color: #888888;
+        font-size: 14px;
+        letter-spacing: .5px;
+        text-transform: uppercase;
     }
-  }
+
+    .permission-pattern {
+        width: 50%;
+    }
+
+    .permission-delete {
+        min-width: 80px;
+    }
+
+    > .popover {
+        .popover-title {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
+
+        form {
+            margin: 0;
+
+            .remove-fine-grained-permission-confirm-actions {
+                text-align: right;
+            }
+        }
+
+        p {
+            font-size: 13px;
+        }
+    }
 }
 
 .git-permission-table {
-  min-width: 800px;
-  max-width: 1200px;
+    min-width: 800px;
+    max-width: 1200px;
 
-  .git-permission-table-selector {
-    width: 250px;
-  }
+    .git-permission-table-selector {
+        width: 250px;
+    }
 
-  select, input {
-    width: 100%;
-    margin: 0;
-  }
+    select,
+    input {
+        width: 100%;
+        margin: 0;
+    }
 
-  input {
-    height: 30px;
-    box-sizing: border-box;
-  }
+    input {
+        box-sizing: border-box;
+        height: 30px;
+    }
 }
 
 .git-default-permission-table {
-  width: auto;
+    width: auto;
 }
 
 .add-fine-grained-permission {
-  margin: 0 0 40px;
+    margin: 0 0 40px;
 }
 
 #add-fine-grained-permission-template {
-  display: none;
+    display: none;
 }
 
 .remove-fine-grained-permission {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .remove-fine-grained-permission-popover {
-  display: none;
+    display: none;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .regexp_permission_activated_hidden {
-  display: none;
+    display: none;
 }
 
 .use-regexp-label-arrow {
-  margin: 0 0 0 20px;
+    margin: 0 0 0 20px;
 }
 
 .use-regexp-label {
-  display: inline-block !important;
+    display: inline-block !important;
 }
 
+/* stylelint-disable-next-line selector-class-pattern */
 .regexp_permission_label {
-  margin: 0;
+    margin: 0;
 }
 
 .fine-grained-permissions {
-  margin: 0 0 60px;
+    margin: 0 0 60px;
 }
 
 .modal-regexp-delete {
-  display: none;
+    display: none;
 }
 
 .modal {
-  .remove-regexp-permission-popover {
-    .popover-title {
-      border: 0;
-      background: #da5353;
-      color: #ffffff;
+    .remove-regexp-permission-popover {
+        .popover-title {
+            border: 0;
+            background: #da5353;
+            color: #ffffff;
+        }
     }
-  }
-}
-
-.git-notification-mail-list-people {
-  width: 100%;
 }
 
 .avatar.git-notification-mail-list-user-avatar {
-  display: inline-block;
-  position: relative;
-  top: -2px;
-  width: 22px;
-  height: 22px; margin: 0 2px 0 0;
-  vertical-align: middle;
+    display: inline-block;
+    position: relative;
+    top: -2px;
+    width: 22px;
+    height: 22px;
+    margin: 0 2px 0 0;
+    vertical-align: middle;
 }
 
 .git-notification-mail-list-group-icon {
-  color: #666;
-  margin: 0 5px 0 4px;
+    margin: 0 5px 0 4px;
+    color: #666666;
 }
 
 .git-notification-mail-list-submit {
-  margin: 15px 0 0;
+    margin: 15px 0 0;
 }

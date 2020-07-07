@@ -2,37 +2,38 @@
     .axis {
         path,
         line {
+            stroke: #000000;
             fill: none;
-            stroke: #000;
         }
     }
 
     .line {
         fill: none;
 
-        &.abscissas, &.ordinates {
-            stroke: #CECECE;
+        &.abscissas,
+        &.ordinates {
             stroke-width: 1px;
+            stroke: #cecece;
             shape-rendering: crispEdges;
         }
 
         &.ideal {
-            stroke: #CECECE;
-            stroke-dasharray: 5, 5;
             stroke-width: 1px;
+            stroke-dasharray: 5, 5;
+            stroke: #cecece;
         }
 
         &.actual {
-            stroke: #000;
             stroke-width: 4px;
+            stroke: #000000;
         }
     }
 
     .circle {
         &.actual {
-            stroke: #000;
             stroke-width: 3px;
-            fill: white;
+            stroke: #000000;
+            fill: #ffffff;
         }
     }
 }

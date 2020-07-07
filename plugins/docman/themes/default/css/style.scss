@@ -1,5 +1,7 @@
+/* stylelint-disable selector-id-pattern, selector-no-qualifying-type, selector-class-pattern */
+
 h3,
- h4 {
+h4 {
     border-bottom: 1px solid #999999;
 }
 
@@ -8,15 +10,15 @@ h3 {
 }
 
 .dir,
- .subdir {
+.subdir {
     margin: 0;
     padding: 0;
     border: 0;
 }
 
 .dir img,
- .dir p,
- .dir form {
+.dir p,
+.dir form {
     display: inline;
     margin: 0;
     padding: 0;
@@ -33,7 +35,7 @@ h3 {
 
 .newDocument {
     padding: .5em;
-    border: 1px solid black;
+    border: 1px solid #000000;
     background-color: #cccccc;
 }
 
@@ -53,7 +55,7 @@ h3 {
 }
 
 .dir input {
-    border: 1px solid black;
+    border: 1px solid #000000;
 }
 
 .docman_help {
@@ -85,9 +87,6 @@ li.docman_item {
     background: transparent url('../../../www/themes/default/images/line.gif') left top repeat-y;
 }
 
-li.docman_item_last {
-}
-
 .docman_properties_navlist {
     margin: 0;
     padding: 3px 0;
@@ -105,7 +104,7 @@ li.docman_item_last {
     margin-left: 3px;
     padding: 3px .5em;
     border: 1px solid #bcbcad;
-    border-bottom: none;
+    border-bottom: 0;
     background: #e8e8e0;
     text-decoration: none;
 }
@@ -116,15 +115,15 @@ li.docman_item_last {
 }
 
 .docman_properties_navlist li a.docman_properties_navlist_current {
-    border-bottom: 1px solid white;
-    background: white;
+    border-bottom: 1px solid #ffffff;
+    background: #ffffff;
 }
 
 .docman_properties_content {
     padding: 10px 20px;
     border: 1px solid #bcbcad;
-    border-top: none;
-    background: white;
+    border-top: 0;
+    background: #ffffff;
 }
 
 .docman_properties_content dl dt {
@@ -134,7 +133,7 @@ li.docman_item_last {
 
 .docman_confirm_delete {
     padding: 4px 10px;
-    border: medium solid red;
+    border: medium solid #ff0000;
     background: #ffffcc;
 
 }
@@ -173,7 +172,7 @@ a.docman_item_show_options {
 }
 
 a.docman_item_show_options:hover {
-    color: red;
+    color: #ff0000;
 }
 
 form {
@@ -181,7 +180,7 @@ form {
 }
 
 a img {
-    border: none;
+    border: 0;
 }
 
 .feedback_error h3,
@@ -244,7 +243,7 @@ a img {
 
 .plugin_docman_fielderror input,
 .plugin_docman_fielderror select {
-    border: medium solid red;
+    border: medium solid #ff0000;
 }
 
 /* .plugin_docman_fielderror  {
@@ -414,8 +413,8 @@ a img {
  * Metadata import
  */
 .docman_md_missing,
- .docman_md_equivalent,
- .docman_md_conflict {
+.docman_md_equivalent,
+.docman_md_conflict {
     /* This color is orange light */
     background-color: rgb(253, 185, 111);
     text-align: center;
@@ -431,7 +430,7 @@ a img {
 
 /* Table */
 .docman_approval_readonly {
-    color: grey;
+    color: #808080;
     font-style: italic;
     vertical-align: top;
 }
@@ -518,3 +517,4 @@ a img {
 .docman-footer-external-link-icon {
     margin: 0 5px 0 0;
 }
+/* stylelint-enable */

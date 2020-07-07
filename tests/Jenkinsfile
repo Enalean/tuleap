@@ -169,6 +169,16 @@ pipeline {
                             steps { script { actions.runDeptrac('tests/deptrac/core_on_plugins.yml', 'core_on_plugins') } }
                             post { failure { junit 'results/deptrac/*.xml' } }
                         }
+                        stage('SCSS coding standards') {
+                            agent {
+                                docker {
+                                    image 'node:13.3-alpine'
+                                    reuseNode true
+                                    args '--network none'
+                                }
+                            }
+                            steps { script { actions.runStylelint() } }
+                        }
                     }
                 }
             }

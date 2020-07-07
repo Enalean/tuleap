@@ -165,9 +165,9 @@
     flex: 0 0 auto;
     flex-direction: column;
     align-items: center;
-    margin-top: auto;
     justify-content: flex-end;
     width: 100%;
+    margin-top: auto;
     padding: 20px 0 10px;
     cursor: pointer;
 
@@ -184,8 +184,10 @@
         padding: 20px 0;
     }
 
-    > .sidebar-about-logo, .sidebar-about-logo-without-product-name {
+    > .sidebar-about-logo,
+    .sidebar-about-logo-without-product-name {
         height: 25px;
+
         > .tuleap-logo {
             transition: fill 100ms;
             fill: $main-color-tuleap-orange;

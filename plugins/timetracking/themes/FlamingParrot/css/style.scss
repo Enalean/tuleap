@@ -77,6 +77,8 @@
 body.tracker-administration {
     @import '../../src/themes/FlamingParrot/css/utils/variables-orange';
 
+    background: $main-background;
+
     &.FlamingParrot_Blue {
         @import '../../src/themes/FlamingParrot/css/utils/variables-blue';
     }
@@ -96,8 +98,6 @@ body.tracker-administration {
     &.FlamingParrot_Red {
         @import '../../src/themes/FlamingParrot/css/utils/variables-red';
     }
-
-    background: $main-background;
 
     .main {
         #feedback > ul {

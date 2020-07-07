@@ -1,35 +1,35 @@
-$border: 1px solid #E9E9E9;
+$border: 1px solid #e9e9e9;
 $border-radius: 3px;
 
 .widget {
-    border: none;
+    border: 0;
 
     form {
         margin: 0;
     }
 
-    .widget_titlebar {
-        background: #FFF;
+    .widget_titlebar { /* stylelint-disable-line selector-class-pattern */
         padding: 8px 12px 10px;
-        border-top-left-radius: $border-radius;
-        border-top-right-radius: $border-radius;
         border-top: $border;
-        border-left: $border;
         border-right: $border;
         border-bottom: 1px solid $main;
+        border-left: $border;
+        border-top-left-radius: $border-radius;
+        border-top-right-radius: $border-radius;
+        background: #ffffff;
         color: $main;
         font-family: 'SourceSansPro', 'Helvetica Neue', Arial;
         font-weight: 400;
     }
 
-    .widget_content {
-        font-size: 0.9em;
+    .widget_content { /* stylelint-disable-line selector-class-pattern */
         padding: 12px;
         border-top: 1px solid $main;
-        border-bottom-left-radius: $border-radius;
-        border-bottom-right-radius: $border-radius;
+        border-right: $border;
         border-bottom: $border;
         border-left: $border;
-        border-right: $border;
+        border-bottom-right-radius: $border-radius;
+        border-bottom-left-radius: $border-radius;
+        font-size: .9em;
     }
 }

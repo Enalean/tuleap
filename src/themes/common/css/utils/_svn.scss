@@ -1,42 +1,44 @@
-.svn_commit_details {
-    border: 1px solid gray;
+.svn_commit_details { /* stylelint-disable-line selector-class-pattern */
     padding: 1em;
+    border: 1px solid #808080;
 }
 
-.svn_commit_details .avatar {
+.svn_commit_details .avatar { /* stylelint-disable-line selector-class-pattern */
     float: left;
 }
 
-.svn_commit_message {
+.svn_commit_message { /* stylelint-disable-line selector-class-pattern */
     padding-left: 64px; /* maybe too much if there is no avatar */
 }
 
-.svn_commit_author {
+.svn_commit_author { /* stylelint-disable-line selector-class-pattern */
     font-weight: bold;
 }
 
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 textarea.not_resizable {
+    resize: none;
+
     &[readonly] {
         cursor: inherit;
     }
-
-    resize: none;
 }
+/* stylelint-enable */
 
-#access_file_container {
+#access_file_container { /* stylelint-disable-line selector-id-pattern */
     display: inline-block;
 }
 
-#current_access_file_container {
+#current_access_file_container { /* stylelint-disable-line selector-id-pattern */
     display: inline-block;
     margin-right: 10px;
 }
 
-#old_access_file_form {
+#old_access_file_form { /* stylelint-disable-line selector-id-pattern */
     visibility: hidden;
 }
 
-#old_access_file_container {
+#old_access_file_container { /* stylelint-disable-line selector-id-pattern */
     display: inline-block;
 
     > h3 > select {
@@ -44,9 +46,9 @@ textarea.not_resizable {
         top: 3.5px;
     }
 
-    .empty_version {
+    .empty_version { /* stylelint-disable-line selector-class-pattern */
+        color: #bbbbbb;
         font-style: italic;
-        color: #BBBBBB;
         text-align: center;
     }
 }
@@ -55,8 +57,8 @@ textarea.not_resizable {
     max-width: 1200px;
 
     label {
+        color: #555555;
         font-weight: 600;
-        color: #555;
     }
 
     .empty-state {
@@ -64,9 +66,10 @@ textarea.not_resizable {
     }
 }
 
-#immutable-tags-path, #immutable-tags-whitelist {
-    width: 100%;
+#immutable-tags-path,
+#immutable-tags-whitelist {
     box-sizing: border-box;
+    width: 100%;
 }
 
 .immutable-tags-comment {
@@ -75,11 +78,11 @@ textarea.not_resizable {
 
 .immutable-tags-examples > h4,
 .immutable-tags-structure > h4 {
-    color: #555;
-    line-height: 20px;
+    margin-bottom: 5px;
+    color: #555555;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 5px;
+    line-height: 20px;
 }
 
 .immutable-tags-examples {
@@ -88,6 +91,7 @@ textarea.not_resizable {
         > :not(.empty-state) {
             display: inherit;
         }
+
         > .empty-state {
             display: none;
         }
@@ -99,6 +103,7 @@ textarea.not_resizable {
             > :not(.empty-state) {
                 display: none;
             }
+
             > .empty-state {
                 display: inherit;
             }
@@ -109,34 +114,34 @@ textarea.not_resizable {
 #immutable-tags-tree {
     height: 300px;
     overflow-y: auto;
-    font-family: "Courier";
-    font-size: 12px;
     box-shadow: none;
+    font-family: 'Courier';
+    font-size: 12px;
     line-height: 20px;
 
     .label {
-        cursor: pointer;
-        font-weight: normal;
-        font-size: 12px;
-        padding-right: 18px;
-        transition: opacity linear 0.07s;
         position: relative;
+        padding-right: 18px;
+        transition: opacity linear .07s;
+        font-size: 12px;
+        font-weight: normal;
+        cursor: pointer;
 
-        &:after {
+        &::after {
             content: '\f0a4'; // fa-hand-o-right
+            position: absolute;
+            top: 2px;
+            right: -17px;
+            transition: opacity linear .07s;
+            opacity: 0;
+            color: #222222;
             font-family: FontAwesome;
             font-size: 13px;
-            position: absolute;
-            right: -17px;
-            top: 2px;
-            color: #222;
-            opacity: 0;
-            transition: opacity linear 0.07s;
         }
 
-        &.active:after,
-        &:hover:after {
-            opacity: 0.8;
+        &.active::after,
+        &:hover::after {
+            opacity: .8;
         }
     }
 
@@ -145,14 +150,13 @@ textarea.not_resizable {
     }
 
     > #loading {
-        color: #666;
+        color: #666666;
     }
 }
 
 .parent-of-immutable,
 .parent-of-whitelist {
     > .children > .tag {
-
         &:not(.parent-of-whitelist):not(.parent-of-immutable) {
             display: none;
 
@@ -160,6 +164,7 @@ textarea.not_resizable {
             &.whitelist {
                 display: block;
 
+                /* stylelint-disable selector-no-qualifying-type, max-nesting-depth, selector-max-compound-selectors */
                 > .children > div {
                     display: none;
 
@@ -177,46 +182,45 @@ textarea.not_resizable {
                         display: block;
                     }
                 }
+                /* stylelint-enable */
             }
         }
     }
 }
 
 .tag {
-
     > .label {
-
         &:not(.active) {
             background: transparent;
-            text-shadow: none;
             color: #333333;
+            text-shadow: none;
 
-            &.label-success:before {
+            &.label-success::before {
                 content: '\f058'; // fa-check-circle
                 color: #468847;
                 font-size: 16px;
             }
 
-            &.label-important:before {
+            &.label-important::before {
                 content: '\f057'; // fa-times-circle
+                right: 2px;
                 color: #b94a48;
                 font-size: 16px;
-                right: 2px;
             }
         }
     }
 
-    > .label-important:before,
-    > .label-success:before {
+    > .label-important::before,
+    > .label-success::before {
         content: '\f00c'; // fa-check
+        position: absolute;
+        top: 1px;
+        right: 2px;
         font-family: FontAwesome;
         font-size: 13px;
-        position: absolute;
-        right: 2px;
-        top: 1px;
     }
 
-    > .label-important:before {
+    > .label-important::before {
         content: '\f00d'; // fa-remove
         right: 4px;
     }
@@ -225,7 +229,7 @@ textarea.not_resizable {
 #immutable-tags-console {
     height: 300px;
     overflow-y: auto;
-    background: #222;
+    background: #222222;
     box-shadow: none;
 
     &.whitelist-not-in-immutable {
@@ -234,23 +238,25 @@ textarea.not_resizable {
         }
     }
 
+    /* stylelint-disable selector-no-qualifying-type */
     div {
-        font-family: "Courier New";
+        color: #cccccc;
+        font-family: 'Courier New';
         font-size: 12px;
-        color: #CCC;
 
         &.text-success {
-            color: #58B359;
+            color: #58b359;
         }
 
         &.text-danger {
-            color: #DA5353;
+            color: #da5353;
         }
     }
+    /* stylelint-enable */
 }
 
-.exceeds_max_number_of_folders {
-    opacity: 0.2;
+.exceeds_max_number_of_folders { /* stylelint-disable-line selector-class-pattern */
+    opacity: .2;
 }
 
 .svn-intro-warning {
@@ -262,13 +268,14 @@ textarea.not_resizable {
 }
 
 .svn-intro-command {
+
+    margin-bottom: 15px;
+
     > pre {
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     > .help-block {
-        font-size: 0.9em;
+        font-size: .9em;
     }
-
-    margin-bottom: 15px;
 }

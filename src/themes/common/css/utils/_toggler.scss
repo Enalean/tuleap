@@ -1,27 +1,31 @@
+/* stylelint-disable selector-no-qualifying-type */
 h3.toggler,
 h3.toggler-noajax,
 h3.toggler-hide,
 h3.toggler-hide-noajax {
-    padding-bottom: 1em;
     margin-bottom: 0;
+    padding-bottom: 1em;
 }
+/* stylelint-enable */
 
-.toggler-noajax, .toggler-hide-noajax,
-.toggler, .toggler-hide {
-    background-position: left center;
-    background-repeat: no-repeat;
+.toggler-noajax,
+.toggler-hide-noajax,
+.toggler,
+.toggler-hide {
     padding-left: 16px;
+    background-repeat: no-repeat;
+    background-position: left center;
     cursor: pointer;
 }
 
 .toggler,
 .toggler-noajax {
-    background-image: url("#{$tuleap-common-theme-basepath}images/ic/toggle_minus.png");
+    background-image: url('#{$tuleap-common-theme-basepath}images/ic/toggle_minus.png');
 }
 
 .toggler-hide,
 .toggler-hide-noajax {
-    background-image: url("#{$tuleap-common-theme-basepath}images/ic/toggle_plus.png");
+    background-image: url('#{$tuleap-common-theme-basepath}images/ic/toggle_plus.png');
 
     ~ * {
         display: none;

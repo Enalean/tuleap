@@ -5,8 +5,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
-    opacity: 0.5;
+    opacity: .5;
+    background-color: #000000;
     filter: alpha(opacity=50);
 }
 
@@ -21,52 +21,49 @@
     height: $loading-size;
     margin-top: -($loading-size / 2);
     margin-left: -($loading-size / 2);
-    background: #303030 url('#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif') no-repeat center center;
     border-radius: 50%;
+    background: #303030 url('#{$tuleap-common-theme-basepath}images/tuleap-modal-spinner.gif') no-repeat center center;
 }
 
 .tuleap-modal {
     $modal-radius: 5px;
     $modal-padding: 15px;
-    $modal-border: 1px solid #666;
+    $modal-border: 1px solid #666666;
     $modal-height: 400px;
     $modal-width: 430px;
     $grip-width: 30px;
     $grip-background-color: #303030;
-    $grip-color: #DDDDDD;
+    $grip-color: #dddddd;
     $side-content-width: 250px;
-    $title-background-color: #FFFFFF;
+    $title-background-color: #ffffff;
     $title-color: #222222;
-    $content-background-color: #FFFFFF;
-    $side-content-background-color: #F8F8F8;
-    $side-content-background-color: #FFFFFF;
-    $action-background-color: #F5F5F5;
-    $side-action-background-color: #F5F5F5;
-
-    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
-    font-style: normal;
+    $content-background-color: #ffffff;
+    $side-content-background-color: #f8f8f8;
+    $side-content-background-color: #ffffff;
+    $action-background-color: #f5f5f5;
+    $side-action-background-color: #f5f5f5;
     display: none;
     position: fixed;
     z-index: 2001;
     top: 150px;
     left: 50%;
+    height: $modal-height;
     margin: 0 0 0 #{-($modal-width + 2 * $grip-width) / 2};
     padding: 0;
-    height: $modal-height;
-    box-shadow: 0 2px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 40px rgba(0, 0, 0, .3);
+
+    font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
+    font-style: normal;
 
     .tuleap-modal-side-panel {
-        float: left;
         height: $modal-height;
-        *height: $modal-height + 6 * $modal-padding;
-        *width: $grip-width;
+        float: left;
 
         .tuleap-modal-side-panel-content {
             display: none;
-            *display: block;
-            float: left;
             width: $side-content-width;
             height: 100%;
+            float: left;
             background: $content-background-color;
 
             .followups-title,
@@ -77,138 +74,131 @@
         }
 
         .tuleap-modal-side-panel-grip {
-            *display: none;
-            float: right;
-            background: $grip-background-color;
-            height: 100%;
-            width: $grip-width;
             position: relative;
-            cursor: pointer;
+            width: $grip-width;
+            height: 100%;
+            float: right;
             border-top-right-radius: $modal-radius;
             border-bottom-right-radius: $modal-radius;
-            font-size: 0.80em;
-            line-height: 1.2em;
-            font-weight: bold;
+            background: $grip-background-color;
             color: darken($grip-background-color, 50%);
+            font-size: .8em;
+            font-weight: bold;
+            line-height: 1.2em;
             text-shadow: 0 1px 0 lighten($grip-background-color, 10%);
             text-transform: uppercase;
+            cursor: pointer;
 
             span {
+                display: block;
+                position: absolute;
+                top: -$grip-width / 2;
+                bottom: 0;
+                left: $grip-width / 4;
+                height: $grip-width / 2;
+                transform: rotate(90deg);
+                transform-origin: bottom left;
                 background-color: $grip-background-color;
                 color: $grip-color;
-                letter-spacing: 0.1em;
                 font-weight: normal;
+                letter-spacing: .1em;
                 line-height: 1.5em;
-                display: block;
                 text-align: center;
-                bottom: 0;
-                height: $grip-width / 2;
-                position: absolute;
-                left: $grip-width / 4;
-                top: -$grip-width / 2;
-                -webkit-transform: rotate(90deg);
-                -webkit-transform-origin: bottom left;
-                -moz-transform: rotate(90deg);
-                -moz-transform-origin: bottom left;
-                -ms-transform: rotate(90deg);
-                -ms-transform-origin: bottom left;
-                -o-transform: rotate(90deg);
-                -o-transform-origin: bottom left;
             }
         }
 
         &:first-child {
             .tuleap-modal-side-panel-grip {
                 float: left;
+                border-top-left-radius: $modal-radius;
                 border-top-right-radius: 0;
                 border-bottom-right-radius: 0;
-                border-top-left-radius: $modal-radius;
                 border-bottom-left-radius: $modal-radius;
 
                 span {
                     top: auto;
                     left: $grip-width / 2 + $grip-width / 4;
-                    -webkit-transform: rotate(-90deg);
-                    -webkit-transform-origin: bottom left;
-                    -moz-transform: rotate(-90deg);
-                    -moz-transform-origin: bottom left;
-                    -ms-transform: rotate(-90deg);
-                    -ms-transform-origin: bottom left;
-                    -o-transform: rotate(-90deg);
-                    -o-transform-origin: bottom left;
-                    *left: $grip-width / 4;
-                    *width: $modal-height;
+                    transform: rotate((-90deg));
+                    transform-origin: bottom left;
                 }
             }
         }
     }
 
     .tuleap-modal-main-panel {
-        float: left;
         width: $modal-width;
+        float: left;
     }
 
-    .tuleap-modal-title, .tuleap-modal-side-panel-content-title {
+    .tuleap-modal-title,
+    .tuleap-modal-side-panel-content-title {
+        padding: 7px $modal-padding;
+        border-bottom: 1px solid darken($title-background-color, 10%);
         background-color: $title-background-color;
         color: $title-color;
-        border-bottom: 1px solid darken($title-background-color, 10%);
-        padding: 7px $modal-padding;
 
         h3 {
-            padding: 0 5px 0 0;
             margin: 0;
+            padding: 0 5px 0 0;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
 
         i {
-            float: right;
-            font-size: 1.3em;
-            color: #CCC;
             margin-top: 11px;
+            float: right;
+            color: #cccccc;
+            font-size: 1.3em;
             cursor: pointer;
 
             &:hover {
-                color: #888;
+                color: #888888;
             }
         }
     }
+
     .tuleap-modal-title {
         border-top-left-radius: $modal-radius;
         border-top-right-radius: $modal-radius;
     }
+
     &.tuleap-modal-pimped .tuleap-modal-title {
         border-radius: 0;
     }
 
-    .tuleap-modal-content, .tuleap-modal-side-panel-content-content {
-        background: $content-background-color;
-        padding: 0;
+    .tuleap-modal-content,
+    .tuleap-modal-side-panel-content-content {
         height: $modal-height;
+        padding: 0;
         overflow-y: auto;
+        background: $content-background-color;
     }
+
     .tuleap-modal-side-panel-content-content {
         background: $side-content-background-color;
     }
 
-    .tuleap-modal-actions, .tuleap-modal-side-panel-content-actions {
-        -moz-box-sizing: border-box;
+    .tuleap-modal-actions,
+    .tuleap-modal-side-panel-content-actions {
         box-sizing: border-box;
-        background-color: $action-background-color;
-        border-top: 1px solid lighten($action-background-color, 10%);
-        box-shadow: 0 -1px 0 darken($action-background-color, 10%);
-        padding: $modal-padding;
-        text-align: right;
         min-height: 61px;
+        padding: $modal-padding;
+        border-top: 1px solid lighten($action-background-color, 10%);
+        background-color: $action-background-color;
+        box-shadow: 0 -1px 0 darken($action-background-color, 10%);
+        text-align: right;
     }
+
     .tuleap-modal-side-panel-content-actions {
         background-color: $side-action-background-color;
     }
+
     .tuleap-modal-actions {
-        border-bottom-left-radius: $modal-radius;
         border-bottom-right-radius: $modal-radius;
+        border-bottom-left-radius: $modal-radius;
     }
+
     &.tuleap-modal-pimped .tuleap-modal-actions {
         border-radius: 0;
     }
