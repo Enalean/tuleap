@@ -270,7 +270,7 @@ class Git_AdminMirrorController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
         $url      = $request->get('new_mirror_url');
         $hostname = $request->get('new_mirror_hostname');
         $ssh_key  = $request->get('new_mirror_key');
-        $password = $request->get('new_mirror_pwd');
+        $password = new \Tuleap\Cryptography\ConcealedString($request->get('new_mirror_pwd'));
         $name     = $request->get('new_mirror_name');
 
         $this->csrf->check();
