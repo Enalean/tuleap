@@ -117,16 +117,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
      */
     public function fetchRawValueFromChangeset($changeset)
     {
-        $value = '';
-        if ($v = $changeset->getValue($this->field)) {
-            if (isset($v['value_id'])) {
-                $v = array($v);
-            }
-            foreach ($v as $val) {
-                $value .= $this->values[$val['value_id']]['value'];
-            }
-        }
-        return $value;
+        return '';
     }
 
    /**

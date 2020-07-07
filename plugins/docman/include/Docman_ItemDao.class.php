@@ -391,7 +391,7 @@ class Docman_ItemDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function createFromRow($row)
+    public function createFromRow(array $row)
     {
         if (isset($row['create_date']) && $row['create_date'] != '') {
             $updateParent = false;
@@ -519,7 +519,7 @@ class Docman_ItemDao extends DataAccessObject
         return $inserted;
     }
 
-    public function updateFromRow($row)
+    public function updateFromRow(array $row)
     {
         $updated = false;
         $id = false;

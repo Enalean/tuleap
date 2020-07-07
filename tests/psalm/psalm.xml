@@ -48,7 +48,5 @@
         <RedundantConditionGivenDocblockType errorLevel="info" />
 
         <UnresolvableInclude errorLevel="info" />
-
-        <RawObjectIteration errorLevel="info" />
     </issueHandlers>
 </psalm>

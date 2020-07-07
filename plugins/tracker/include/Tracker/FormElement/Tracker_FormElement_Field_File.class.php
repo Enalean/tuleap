@@ -930,9 +930,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      * @param int                        $value_id    The id of the value
      * @param bool $has_changed If the changeset value has changed from the rpevious one
      *
-     * @return Tracker_Artifact_ChangesetValue or null if not found
      */
-    public function getChangesetValue($changeset, $value_id, $has_changed)
+    public function getChangesetValue($changeset, $value_id, $has_changed): Tracker_Artifact_ChangesetValue_File
     {
         $file_info_factory = $this->getTrackerFileInfoFactory();
 
