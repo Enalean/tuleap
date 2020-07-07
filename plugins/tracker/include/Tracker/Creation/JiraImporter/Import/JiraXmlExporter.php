@@ -288,7 +288,7 @@ class JiraXmlExporter
                 ),
                 new AttachmentCollectionBuilder(),
                 new AttachmentXMLExporter(
-                    AttachmentDownloader::build($jira_credentials),
+                    AttachmentDownloader::build($jira_credentials, $logger),
                     new XML_SimpleXMLCDATAFactory()
                 ),
                 $logger

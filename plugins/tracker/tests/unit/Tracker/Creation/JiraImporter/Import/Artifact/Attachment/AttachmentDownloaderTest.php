@@ -32,6 +32,7 @@ use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Log\LoggerInterface;
 use Tuleap\ForgeConfigSandbox;
 
 class AttachmentDownloaderTest extends TestCase
@@ -46,10 +47,14 @@ class AttachmentDownloaderTest extends TestCase
 
         $client  = Mockery::mock(ClientInterface::class);
         $factory = Mockery::mock(RequestFactoryInterface::class);
+        $logger = Mockery::mock(LoggerInterface::class);
+
+        $logger->shouldReceive("debug");
 
         $downloader = new AttachmentDownloader(
             $client,
-            $factory
+            $factory,
+            $logger
         );
 
         $factory->shouldReceive('createRequest')->once();

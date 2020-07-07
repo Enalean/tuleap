@@ -204,6 +204,7 @@ class ArtifactsXMLExporter
                 $issue_api_representation
             );
 
+            $this->logger->debug("  |_ Exporting data for issue");
             $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
                 $forge_user,
                 $artifact_node,
@@ -214,6 +215,7 @@ class ArtifactsXMLExporter
             );
 
             //Export file info in XML
+            $this->logger->debug("  |_ Exporting attachements for issue");
             $this->attachment_xml_exporter->exportCollectionOfAttachmentInXML(
                 $attachment_collection,
                 $artifact_node
