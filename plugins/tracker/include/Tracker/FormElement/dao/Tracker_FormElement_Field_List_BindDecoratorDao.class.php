@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -30,7 +30,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
     {
         $field_id  = $this->da->escapeInt($field_id);
         $sql = "SELECT *
-                FROM $this->table_name
+                FROM tracker_field_list_bind_decorator
                 WHERE field_id = $field_id ";
         return $this->retrieve($sql);
     }
@@ -40,9 +40,9 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         $from_field_id = $this->da->escapeInt($from_field_id);
         $to_field_id   = $this->da->escapeInt($to_field_id);
         $sql
-                       = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+            = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
                 SELECT $to_field_id, value_id, red, green, blue, tlp_color_name
-                FROM $this->table_name
+                FROM tracker_field_list_bind_decorator
                 WHERE field_id = $from_field_id";
         $this->update($sql);
 
@@ -50,7 +50,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
             $from = $this->da->escapeInt($from);
             $to   = $this->da->escapeInt($to);
             $sql
-                  = "UPDATE $this->table_name
+                  = "UPDATE tracker_field_list_bind_decorator
                     SET value_id = $to
                     WHERE field_id = $to_field_id
                       AND value_id = $from";
@@ -58,44 +58,71 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         }
     }
 
-    public function save($field_id, $value_id, $red, $green, $blue)
+    public function saveNoneLegacyColor(int $field_id, int $none_id, int $red, int $green, int $blue): bool
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $value_id  = $this->da->escapeInt($value_id);
-        $red       = $this->da->escapeInt($red);
-        $green     = $this->da->escapeInt($green);
-        $blue      = $this->da->escapeInt($blue);
+        $field_id = $this->da->escapeInt($field_id);
+        $none_id  = $this->da->escapeInt($none_id);
+        $red      = $this->da->escapeInt($red);
+        $green    = $this->da->escapeInt($green);
+        $blue     = $this->da->escapeInt($blue);
 
-        $sql = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+        $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue)
+                VALUES ($field_id, $none_id, $red, $green, $blue)";
+
+        return $this->update($sql);
+    }
+
+    public function save(int $value_id, int $red, int $green, int $blue): bool
+    {
+        $value_id = $this->da->escapeInt($value_id);
+        $red      = $this->da->escapeInt($red);
+        $green    = $this->da->escapeInt($green);
+        $blue     = $this->da->escapeInt($blue);
+
+        $sql = "INSERT INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
+            SELECT field_id, id, $red, $green, $blue, null
+            FROM tracker_field_list_bind_static_value
+            WHERE original_value_id = $value_id OR id = $value_id";
+
+        return $this->update($sql);
+    }
+
+    public function updateColor($value_id, $red, $green, $blue)
+    {
+        $value_id = $this->da->escapeInt($value_id);
+        $red      = $this->da->escapeInt($red);
+        $green    = $this->da->escapeInt($green);
+        $blue     = $this->da->escapeInt($blue);
+
+        $sql = "REPLACE INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
             SELECT field_id, id, $red, $green, $blue, null
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
         return $this->update($sql);
     }
 
-    public function updateColor($field_id, $value_id, $red, $green, $blue)
-    {
-        $field_id  = $this->da->escapeInt($field_id);
-        $value_id  = $this->da->escapeInt($value_id);
-        $red       = $this->da->escapeInt($red);
-        $green     = $this->da->escapeInt($green);
-        $blue      = $this->da->escapeInt($blue);
-
-        $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
-            SELECT field_id, id, $red, $green, $blue, null
-            FROM tracker_field_list_bind_static_value
-            WHERE original_value_id = $value_id OR id = $value_id";
-        return $this->update($sql);
-    }
-
-    public function saveTlpColor($value_id, $tlp_color)
+    public function saveTlpColor(int $value_id, string $tlp_color): bool
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
+        $value_id  = $this->da->escapeInt($value_id);
 
-        $sql = "INSERT INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+        $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue, tlp_color_name)
             SELECT field_id, id, null, null, null, $tlp_color
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
+
+        return $this->update($sql);
+    }
+
+    public function saveNoneTlpColor(int $field_id, int $value_id, string $tlp_color): bool
+    {
+        $tlp_color = $this->da->quoteSmart($tlp_color);
+        $value_id  = $this->da->escapeInt($value_id);
+        $field_id  = $this->da->escapeInt($field_id);
+
+        $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue, tlp_color_name)
+            VALUES ($field_id, $value_id, null, null, null, $tlp_color)";
+
         return $this->update($sql);
     }
 
@@ -103,18 +130,19 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
 
-        $sql = "REPLACE INTO $this->table_name (field_id, value_id, red, green, blue, tlp_color_name)
+        $sql = "REPLACE INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
             SELECT field_id, id, null, null, null, $tlp_color
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
+
         return $this->update($sql);
     }
 
     public function delete($field_id, $value_id)
     {
-        $field_id  = $this->da->escapeInt($field_id);
-        $value_id  = $this->da->escapeInt($value_id);
-        $sql = "DELETE FROM $this->table_name 
+        $field_id = $this->da->escapeInt($field_id);
+        $value_id = $this->da->escapeInt($value_id);
+        $sql      = "DELETE FROM tracker_field_list_bind_decorator
                 WHERE field_id = $field_id
                   AND value_id = $value_id;";
         return $this->update($sql);

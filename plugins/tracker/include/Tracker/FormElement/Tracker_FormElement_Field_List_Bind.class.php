@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
 
@@ -450,7 +451,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
                 if ($hexacolor) {
-                    Tracker_FormElement_Field_List_BindDecorator::update($this->field->getId(), $value_id, $hexacolor);
+                    Tracker_FormElement_Field_List_BindDecorator::update($value_id, $hexacolor);
                 } else {
                     Tracker_FormElement_Field_List_BindDecorator::delete($this->field->getId(), $value_id);
                 }
@@ -616,6 +617,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         }
 
         if (is_array($this->decorators) && ! empty($this->decorators)) {
+            $saver = $this->getBoundDecoratorSaver();
             $values = $this->getBindValues();
             foreach ($this->decorators as $decorator) {
                 if (! $decorator->isUsingOldPalette()) {
@@ -624,13 +626,20 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                     $color = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
                 }
 
-                Tracker_FormElement_Field_List_BindDecorator::save(
-                    $this->field->getId(),
-                    $values[$decorator->value_id]->getId(),
-                    $color
-                );
+                if (isset($values[$decorator->value_id])) {
+                    $value_id = $values[$decorator->value_id]->getId();
+                } else {
+                    $value_id = $decorator->value_id;
+                }
+
+                $saver->save($this->field, $value_id, $color);
             }
         }
+    }
+
+    private function getBoundDecoratorSaver(): BoundDecoratorSaver
+    {
+        return new BoundDecoratorSaver(new Tracker_FormElement_Field_List_BindDecoratorDao());
     }
 
     /**

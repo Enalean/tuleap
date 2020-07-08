@@ -227,9 +227,9 @@ class Tracker_FormElement_Field_List_BindFactory
      * @return Tracker_FormElement_Field_List_Bind Object
      */
     public function getInstanceFromXML(
-        $xml,
-        $field,
-        &$xmlMapping,
+        SimpleXMLElement $xml,
+        Tracker_FormElement_Field $field,
+        array &$xmlMapping,
         User\XML\Import\IFindUserFromXMLReference $user_finder
     ) {
         $row = array('type' => (string) $xml['type'],
@@ -239,7 +239,11 @@ class Tracker_FormElement_Field_List_BindFactory
         if (isset($xml->decorators)) {
             $row['decorators'] = array();
             foreach ($xml->decorators->decorator as $deco) {
-                $ID = (string) $deco['REF'];
+                if (isset($deco['REF'])) {
+                    $ID = (string) $deco['REF'];
+                } else {
+                    $ID = Tracker_FormElement_Field_List::NONE_VALUE;
+                }
                 $row['decorators'][$ID] = $this->getDecoratorInstance(
                     $field,
                     $ID,
