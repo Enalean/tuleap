@@ -1,43 +1,43 @@
 #register-form {
     position: relative;
+    box-sizing: border-box;
     width: 380px;
-    padding: 30px;
     margin: 70px auto;
+    padding: 30px;
+    border: 1px solid #ededed;
     border-radius: 4px;
     background: #ffffff;
-    border: 1px solid #ededed;
-    box-sizing: border-box;
 
-    &:after {
-        content: "";
+    &::after {
+        content: '';
         position: absolute;
+        z-index: -1;
         top: 30px;
         right: 20px;
         bottom: 10px;
         left: 20px;
-        z-index: -1;
         border-radius: 10px;
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0 40px rgba(0, 0, 0, .5);
     }
 
     .popover {
-        font-size: 0.9em;
+        font-size: .9em;
     }
 
     h2 {
         margin: 10px 0 50px;
         font-family: SourceSansPro, Helvetica, Arial, sans-serif;
-        text-align: center;
         font-size: 40px;
         font-weight: 100;
         line-height: normal;
+        text-align: center;
     }
 
     form {
         margin: 0;
 
         .placeholder {
-            color: #AAA;
+            color: #aaaaaa;
         }
 
         .fields {
@@ -45,38 +45,41 @@
         }
 
         label {
-            margin: 0 0 15px 0;
+            margin: 0 0 15px;
 
             .label-help {
-                font-size: 0.8em;
-                color: #AAA;
                 display: block;
+                margin-top: 5px;
+                color: #aaaaaa;
+                font-size: .8em;
                 font-style: italic;
                 line-height: 1.4em;
-                margin-top: 5px;
             }
         }
 
-        textarea, input[type="text"], input[type="email"], input[type="password"] {
+        textarea,
+        input[type='text'],
+        input[type='email'],
+        input[type='password'] {
+            box-sizing: border-box;
+            width: 100%;
             height: 40px;
             margin: 0 auto 10px;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .input-prepend {
             width: 100%;
 
-            input[type="text"] {
-                width: 90%;
+            input[type='text'] {
                 box-sizing: border-box;
+                width: 90%;
             }
 
             .add-on {
+                box-sizing: border-box;
                 width: 10%;
                 height: 40px;
                 padding: 9px 10px;
-                box-sizing: border-box;
             }
         }
 
@@ -88,21 +91,21 @@
             padding: 8px 5px;
         }
 
-        input[type="submit"] {
+        input[type='submit'] {
             display: block;
+            box-sizing: border-box;
             width: 100%;
             margin: 40px 0 10px;
             padding: 15px 5px;
             font-size: 20px;
-            box-sizing: border-box;
             line-height: normal;
         }
 
         .mandatory {
             margin: 0;
-            color: #E69494;
-            text-align: center;
+            color: #e69494;
             font-size: 12px;
+            text-align: center;
         }
     }
 }

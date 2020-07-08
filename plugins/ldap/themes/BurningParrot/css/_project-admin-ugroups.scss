@@ -44,8 +44,7 @@
     content: '\f014'; // fa-trash-o
 }
 
-// scss-lint:disable QualifyingElement
-ul.project-admin-ugroup-ldap-binding-modal-preview-list {
+ul.project-admin-ugroup-ldap-binding-modal-preview-list { /* stylelint-disable-line selector-no-qualifying-type */
     margin: $tlp-small-spacing 0 0;
     padding: 0;
     list-style: none;

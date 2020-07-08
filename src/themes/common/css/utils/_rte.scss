@@ -1,18 +1,18 @@
-.rte_toggle {
+.rte_toggle { /* stylelint-disable-line selector-class-pattern */
     padding-left: 20px;
-    background-repeat: no-repeat;
-    background-image: url("#{$tuleap-common-theme-basepath}images/ic/rte.png");
     float: left;
+    background-image: url('#{$tuleap-common-theme-basepath}images/ic/rte.png');
+    background-repeat: no-repeat;
 }
 
-.rte_clear {
+.rte_clear { /* stylelint-disable-line selector-class-pattern */
     clear: both;
 }
 
-#mail_message {
+#mail_message { /* stylelint-disable-line selector-id-pattern */
     width: auto;
 }
 
-#mail_message_label {
-    margin-bottom: 0.5em;
+#mail_message_label { /* stylelint-disable-line selector-id-pattern */
+    margin-bottom: .5em;
 }

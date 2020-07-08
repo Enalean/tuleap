@@ -80,6 +80,12 @@ def runESLint() {
     }
 }
 
+def runStylelint() {
+    dir ('sources') {
+        sh 'npm run stylelint **/*.scss'
+    }
+}
+
 def runPsalm(String configPath, String filesToAnalyze, String root='.') {
     dir ('sources') {
         if (filesToAnalyze == '' || filesToAnalyze == '.') {

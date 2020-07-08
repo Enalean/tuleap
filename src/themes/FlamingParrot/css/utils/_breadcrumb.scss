@@ -163,8 +163,8 @@ $switch-menu-item-hover-color: $main;
     padding: 0;
     transform: translateY(-10px);
     transition: opacity $step-transition-duration,
-    transform $step-transition-duration,
-    box-shadow $step-transition-duration;
+        transform $step-transition-duration,
+        box-shadow $step-transition-duration;
     border: 1px solid $switch-menu-border;
     border-top: 0;
     border-radius: 0 0 3px 3px;

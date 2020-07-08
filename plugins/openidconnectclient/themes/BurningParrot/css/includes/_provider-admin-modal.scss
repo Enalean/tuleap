@@ -1,5 +1,24 @@
+/**
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 %color-list {
-    // scss-lint:disable SelectorFormat
+    /* stylelint-disable selector-class-pattern */
     &.inca_silver {
         border-color: $tlp-swatch-inca-silver;
         background: $tlp-swatch-inca-silver;
@@ -159,6 +178,7 @@
             background: darken($tlp-swatch-flamingo-pink, 5%);
         }
     }
+    /* stylelint-enable */
 }
 
 %color-area {
@@ -191,12 +211,10 @@
 }
 
 .provider-icon-results {
-    // scss-lint:disable SelectorFormat
-
-    .select2-results__option {
+    .select2-results__option { /* stylelint-disable-line selector-class-pattern */
         text-align: center;
 
-        &[aria-selected="true"] {
+        &[aria-selected='true'] {
             padding: 6px 12px;
 
             &::before {
@@ -215,9 +233,9 @@
 .provider-icon-results,
 .provider-admin-modal-provider-button {
     .fa-circle-blank::before {
+        content: '\f10c'; // fa-circle-o
         font-family: FontAwesome;
         font-style: normal;
-        content: '\f10c'; // fa-circle-o
     }
 }
 
@@ -228,14 +246,13 @@
 }
 
 .provider-color-results {
-    // scss-lint:disable SelectorFormat
     height: 250px;
 
-    .select2-results__option {
+    .select2-results__option { /* stylelint-disable-line selector-class-pattern */
         padding: 3px 12px;
     }
 
-    .select2-results__option[aria-selected="true"] {
+    .select2-results__option[aria-selected='true'] { /* stylelint-disable-line selector-class-pattern */
         padding: 3px 12px 3px 32px;
     }
 

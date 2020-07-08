@@ -1,16 +1,38 @@
+/**
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ff-mw-wrapper {
     position: relative;
     margin-top: 15px;
 }
 
+/* stylelint-disable-next-line selector-no-qualifying-type */
 #mw-content-text a.new {
-    color: #BA0000;
+    color: #ba0000;
 }
 
-.portlet a, #mw-content-text a {
-    color: #002BB8;
+.portlet a,
+#mw-content-text a {
+    color: #002bb8;
 }
 
+/* stylelint-disable selector-class-pattern */
 /** {{{ Admin mapping */
 .admin_group_mediawiki {
     h2 {
@@ -27,7 +49,8 @@
     clear: both;
 }
 
-.forge_mw_mapping_available, .forge_mw_mapping_selected {
+.forge_mw_mapping_available,
+.forge_mw_mapping_selected {
     float: left;
 
     select {
@@ -36,17 +59,18 @@
 }
 
 .forge_mw_btn {
+    margin: 60px 20px 0;
     float: left;
     font-weight: bold;
-    margin: 60px 20px 0;
 }
 
 .mediawiki-options {
+
+    margin-bottom: 10px;
+
     > label > input {
         vertical-align: middle;
     }
-
-    margin-bottom: 10px;
 }
 
 .admin_group_mediawiki_submit {
@@ -54,10 +78,11 @@
 }
 
 .forge_mw_access_write_control {
-    float: left;
     margin-left: 20px;
+    float: left;
 }
 
 .forge_mw_access_read_control {
     float: left;
 }
+/* stylelint-enable */

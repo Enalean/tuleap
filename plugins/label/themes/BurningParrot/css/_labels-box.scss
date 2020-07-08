@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// scss-lint:disable all
+/* stylelint-disable selector-class-pattern, max-nesting-depth, selector-max-compound-selectors */
 .select2-container {
     > .selection {
         > .select2-selection,
@@ -56,12 +56,13 @@
         }
     }
 }
+/* stylelint-enable */
 
 .select-item-label-bullet {
     margin: 0 5px 0 0;
 }
 
-// scss-lint:disable all
+/* stylelint-disable selector-class-pattern */
 .item-labels-box-select2-results > .select2-results {
     > .select2-results__options > .select2-results__option {
         @each $color-name, $colors in $tlp-swatch-color-map {
@@ -82,3 +83,4 @@
         }
     }
 }
+/* stylelint-enable */

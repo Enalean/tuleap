@@ -63,7 +63,7 @@ $history-dropdown-item-text-color: #333333;
     justify-content: center;
     width: 250px;
     height: 200px;
-    background: url("#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif") no-repeat center center;
+    background: url('#{$tuleap-common-theme-basepath}images/tuleap-spinner.gif') no-repeat center center;
 
     &.shown {
         display: block;
@@ -126,8 +126,8 @@ $history-dropdown-item-text-color: #333333;
 
 .history-item-description {
     display: flex;
-    align-items: center;
     flex-grow: 1;
+    align-items: center;
     margin: 10px $history-dropdown-spacing 10px 0;
 }
 
@@ -169,16 +169,16 @@ $history-dropdown-item-text-color: #333333;
 }
 
 .history-item-project {
-    margin: 0 10px 0 0;
     max-width: 150px;
+    margin: 0 10px 0 0;
+    overflow: hidden;
     color: $history-dropdown-ui-dimmed;
+    font-size: 12px;
+    line-height: 16px;
     text-align: right;
     text-decoration: none;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 12px;
-    line-height: 16px;
-    overflow: hidden;
 }
 
 .history-item-project-icon {

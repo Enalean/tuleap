@@ -29,10 +29,11 @@
             font-weight: normal;
         }
 
-        li > a:hover, li > a:focus {
+        li > a:hover,
+        li > a:focus {
+            background: none;
             color: $dark-grey;
             font-weight: normal;
-            background: none;
         }
     }
 

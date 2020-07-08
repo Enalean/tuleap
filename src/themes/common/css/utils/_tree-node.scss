@@ -21,15 +21,11 @@
 .tree-node,
 .tree-pipe,
 .tree-last { /* stylelint-disable order/properties-order */
+    display: inline-block;
     width: 16px;
     height: 100%;
-    display: inline-block;
     background-image: url('#{$tuleap-common-theme-basepath}images/TreeNodeSprites.png');
     background-repeat: repeat-y;
-
-    /*Dirty IE Hack*/
-    zoom: 1;
-    *display: inline; // stylelint-disable-line declaration-block-no-duplicate-properties
 }
 /* stylelint-enable */
 

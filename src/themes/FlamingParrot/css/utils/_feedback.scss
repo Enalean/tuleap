@@ -1,4 +1,4 @@
-// scss-lint:disable SelectorFormat
+/* stylelint-disable selector-class-pattern */
 .feedback_error,
 .feedback_warning,
 .feedback_info,
@@ -35,3 +35,4 @@
 .feedback_debug {
     display: none;
 }
+/* stylelint-enable */

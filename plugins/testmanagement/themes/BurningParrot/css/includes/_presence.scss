@@ -6,35 +6,35 @@
     display: flex;
     align-items: flex-end;
     height: 400px;
-    overflow: hidden;
-    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
     margin: 0 0 $tlp-medium-spacing;
+    padding: $tlp-medium-spacing $tlp-medium-spacing 0;
+    overflow: hidden;
     border-bottom: 1px solid $tlp-ui-border-light;
 }
 
 .step {
-    width: 33%;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 33%;
 
     &.first {
-        height: 100%;
         z-index: 2;
+        height: 100%;
 
         > .tester {
-            color: #F3B13A;
+            color: #f3b13a;
         }
 
         > .stand {
-            border-top: 3px solid #F3B13A;
+            border-top: 3px solid #f3b13a;
 
             > .tlp-badge-primary {
                 margin: 10px 0 0;
+                border-color: #f3b13a;
+                background: #f3b13a;
                 font-size: 14px;
                 letter-spacing: .5px;
-                background: #F3B13A;
-                border-color: #F3B13A;
             }
         }
     }
@@ -43,18 +43,18 @@
         height: 80%;
 
         > .tester {
-            color: #AFAFAF;
+            color: #afafaf;
         }
 
         > .stand {
-            border-top: 3px solid #AFAFAF;
+            border-top: 3px solid #afafaf;
 
             > .tlp-badge-primary {
                 margin: 10px 0 0;
+                border-color: #afafaf;
+                background: #afafaf;
                 font-size: 14px;
                 letter-spacing: .5px;
-                background: #AFAFAF;
-                border-color: #AFAFAF;
             }
         }
     }
@@ -63,27 +63,27 @@
         height: 70%;
 
         > .tester {
-            color: #EC8440;
+            color: #ec8440;
         }
 
         > .stand {
-            border-top: 3px solid #EC8440;
+            border-top: 3px solid #ec8440;
 
             > .tlp-badge-primary {
                 margin: 10px 0 0;
+                border-color: #ec8440;
+                background: #ec8440;
                 font-size: 14px;
                 letter-spacing: .5px;
-                background: #EC8440;
-                border-color: #EC8440;
             }
         }
     }
 
     .tester {
         display: flex;
+        flex: 0 0 auto;
         flex-direction: column;
         align-items: center;
-        flex: 0 0 auto;
         margin: 0 0 $tlp-medium-spacing;
 
         > .tlp-avatar-large {
@@ -101,13 +101,13 @@
 
 .stand {
     display: flex;
+    flex: 1 1 auto;
     flex-direction: column;
     align-items: center;
-    flex: 1 1 auto;
     width: 100%;
     padding: $tlp-medium-spacing;
-    background: #fff;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.07);
+    background: #ffffff;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .07);
 }
 
 .star {
@@ -115,10 +115,10 @@
 }
 
 .score-list {
+    width: 100%;
     margin: 0;
     padding: $tlp-medium-spacing;
     list-style-type: none;
-    width: 100%;
 }
 
 .score-list-item {
@@ -132,16 +132,16 @@
     }
 
     .position {
-        margin: 0 $tlp-medium-spacing 0 0;
-        font-size: 14px;
-        color: $tlp-theme-color;
         width: 30px;
+        margin: 0 $tlp-medium-spacing 0 0;
+        color: $tlp-theme-color;
+        font-size: 14px;
         text-align: right;
     }
 
     .tester {
-        flex: 1 1 auto;
         display: flex;
+        flex: 1 1 auto;
         align-items: center;
 
         > .tlp-avatar {

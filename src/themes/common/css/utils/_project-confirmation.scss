@@ -1,54 +1,49 @@
-$url_base: "#{$tuleap-common-theme-basepath}images/project-registration-feedback-background.png";
+$url-base: '#{$tuleap-common-theme-basepath}images/project-registration-feedback-background.png';
 
 #project-confirmation-header {
-    background-position: center top;
-    background-image: url($url_base);
     height: 336px;
+    background-image: url($url-base);
+    background-position: center top;
 
     h2 {
         margin: 0;
         padding: 345px 0 50px;
-        font-size: 38px;
         font-family: SourceSansPro;
+        font-size: 38px;
         font-weight: 300;
         text-align: center;
     }
 }
 
 #project-confirmation-content {
-    text-align: center;
-    padding: 80px 0 0 0;
-    font-size: 1.5em;
+    padding: 80px 0 0;
     font-family: SourceSansPro;
+    font-size: 1.5em;
     font-weight: 300;
     line-height: 1.5em;
+    text-align: center;
 
     i {
+        display: inline-block;
         position: relative;
         top: -8px;
         left: 8px;
-        display: inline-block;
         transform: rotate(20deg);
-        -webkit-transform: rotate(20deg);
-        -moz-transform: rotate(20deg);
-        -o-transform: rotate(20deg);
-        -ms-transform: rotate(20deg);
-        -sand-transform: rotate(20deg);
     }
 }
 
 #project-confirmation-thanks {
-    text-align: center;
     padding: 70px 0 30px;
-    font-size: 23px;
     font-family: kalamregular;
+    font-size: 23px;
     font-weight: 300;
+    text-align: center;
 }
 
 #project-confirmation-redirect {
-    text-align: center;
     padding: 50px 0 100px;
-    font-size: 1.5em;
     font-family: SourceSansPro;
+    font-size: 1.5em;
     font-weight: 300;
+    text-align: center;
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,7 +29,7 @@ blockquote p {
     font-size: 1em;
 }
 
-input[type="file"] {
+input[type='file'] {
     margin-top: -13px;
 }
 
@@ -117,29 +117,29 @@ input[type="file"] {
 }
 
 
-.popover[class*="tour"] {
+.popover[class*='tour'] {
     min-width: 370px;
     max-width: 370px;
     padding: 0;
     border: 0;
     background: $main;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .4);
     color: $white;
     font-size: .85em;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .4);
 
-    &.top .arrow:after {
+    &.top .arrow::after {
         border-top-color: $main;
     }
 
-    &.right .arrow:after {
+    &.right .arrow::after {
         border-right-color: $main;
     }
 
-    &.bottom .arrow:after {
+    &.bottom .arrow::after {
         border-bottom-color: $dark-main;
     }
 
-    &.left .arrow:after {
+    &.left .arrow::after {
         border-left-color: $main;
     }
 
@@ -150,14 +150,14 @@ input[type="file"] {
         font-size: 1.1em;
     }
 
-    .popover-navigation [data-role=prev], .popover-navigation [data-role=next] {
+    .popover-navigation [data-role=prev],
+    .popover-navigation [data-role=next] {
         margin-right: 5px;
         float: left;
     }
 }
 
 legend {
-    -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
 
@@ -173,12 +173,6 @@ legend {
     }
 }
 
-.modal {
-    form {
-        margin: 0;
-    }
-}
-
 .dropdown-submenu.pull-left.glued > .dropdown-menu {
     left: 0;
     margin: 0;
@@ -190,33 +184,34 @@ legend {
     padding: 0 20px;
     border-bottom: 0;
     background-color: $white;
+    box-shadow: inset 0 1px 0 #e3e5ed, inset 0 -1px 0 #e3e5ed;
     font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: inset 0 1px 0 #e3e5ed, inset 0 -1px 0 #e3e5ed;
 
     label {
         letter-spacing: normal;
         text-transform: none;
     }
 
-    & > li {
+    > li {
         border-top: 1px solid transparent;
         border-right: 0;
         border-bottom: 1px solid transparent;
         border-left: 0;
     }
 
-    & > li:hover, li:focus {
+    > li:hover,
+    li:focus {
         border-top: 1px solid transparent;
         border-right: 0;
         border-left: 0;
         box-shadow: inset 0 -2px 0 $navbar-color;
     }
 
-    & > li > a {
+    > li > a {
         margin-right: 0;
         padding: 10px 30px;
         border-top: 1px;
@@ -227,7 +222,8 @@ legend {
         color: #747474;
     }
 
-    & > li > a:hover, a:focus {
+    > li > a:hover,
+    a:focus {
         padding: 10px 30px;
         border-top: 1px;
         border-right: 0;
@@ -241,6 +237,7 @@ legend {
         }
     }
 
+    /* stylelint-disable selector-no-qualifying-type */
     li.active {
         > a {
             border-bottom: 2px solid $navbar-color;
@@ -252,8 +249,9 @@ legend {
             }
         }
     }
+    /* stylelint-enable */
 
-    a.active {
+    a.active { /* stylelint-disable-line selector-no-qualifying-type */
         border-bottom-color: $navbar-color;
     }
 
@@ -268,19 +266,22 @@ legend {
         border-radius: 0;
     }
 
-    & > li > .dropdown-toggle > .caret {
+    > li > .dropdown-toggle > .caret {
         border-top-color: #747474;
         border-bottom-color: #747474;
     }
 
 }
 
-.tabs-left > .nav-tabs .active > a, .tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
 .tabs-left > .nav-tabs .active > a:focus {
     border-color: transparent;
 }
 
-.nav li.dropdown.open .caret, .nav li.dropdown.open.active .caret,
+/* stylelint-disable selector-no-qualifying-type */
+.nav li.dropdown.open .caret,
+.nav li.dropdown.open.active .caret,
 .nav li.dropdown.open a:hover .caret {
     border-top-color: $navbar-color;
     border-bottom-color: $navbar-color;
@@ -325,6 +326,7 @@ legend {
         }
     }
 }
+/* stylelint-enable */
 
 .tabs-left > .nav-tabs {
     box-shadow: none;
@@ -335,11 +337,11 @@ legend {
  ************/
 
 @mixin btn($color) {
-    text-shadow: none;
-    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
     border-color: $color;
-    background: $color;
     outline: none;
+    background: $color;
+    font-family: 'SourceSansPro', Helvetica, Arial, sans-serif;
+    text-shadow: none;
 
     &:not(.btn-link) {
         box-shadow: 0 1px 1px rgba(0, 0, 0, .12);
@@ -380,10 +382,10 @@ legend {
 }
 
 @mixin btn-hover($color) {
-    box-shadow: none;
     transition: box-shadow 75ms ease-in-out,background 75ms ease-in-out,border-color 75ms ease-in-out;
     border-color: darken($color, 5%);
     background: darken($color, 5%);
+    box-shadow: none;
 }
 
 @mixin dropdown-menu($color) {
@@ -409,6 +411,7 @@ legend {
         @include dropdown-menu($main);
     }
 
+    /* stylelint-disable selector-no-qualifying-type */
     > .dropdown-menu > li {
         @include dropdown-menu($main);
 
@@ -423,6 +426,7 @@ legend {
             }
         }
     }
+    /* stylelint-enable */
 }
 
 .btn:not(.btn-link) {
@@ -492,11 +496,15 @@ legend {
  ************/
 
 .modal {
+    overflow: hidden;
     border: 1px solid transparent;
+    box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
     font-family: 'SourceSansPro', 'Helvetica Neue', Arial, sans-serif;
     font-size: 14px;
-    box-shadow: 0 10px 36px rgba(0, 0, 0, .2);
-    overflow: hidden;
+
+    form {
+        margin: 0;
+    }
 }
 
 .modal-header {
@@ -539,13 +547,13 @@ legend {
         top: 0;
         order: 3;
         margin-top: 0;
-        color: $white;
         opacity: 1;
+        color: $white;
         font-family: inherit;
-        font-style: normal;
-        text-shadow: none;
-        font-weight: 600;
         font-size: 24px;
+        font-style: normal;
+        font-weight: 600;
+        text-shadow: none;
     }
 }
 
@@ -569,7 +577,7 @@ legend {
 .tuleap-artifact-modal .column {
     background-color: transparent;
 
-    & h4 {
+    h4 {
         color: $white;
     }
 }
@@ -635,6 +643,7 @@ legend {
             background: transparentize($main, .93);
         }
 
+        /* stylelint-disable selector-no-qualifying-type */
         > tr > td {
             padding: 10px;
             border-bottom: 1px solid #e3e5ed;
@@ -660,6 +669,7 @@ legend {
                 vertical-align: middle;
             }
         }
+        /* stylelint-enable */
 
         > tr:first-child > td {
             border-top: 0;

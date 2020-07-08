@@ -1,34 +1,49 @@
 @media only screen and (max-width: 480px) {
-    body, table, td, p, a, li, blockquote {
-        -webkit-text-size-adjust: none !important
+    body,
+    table,
+    td,
+    p,
+    a,
+    li,
+    blockquote {
+        -webkit-text-size-adjust: none !important; /* stylelint-disable-line property-no-vendor-prefix */
     }
+
     body {
         width: 100% !important;
-        min-width: 100% !important
+        min-width: 100% !important;
     }
+
     td[id=bodyCell] {
-        padding: 10px !important
+        padding: 10px !important;
     }
-    table.kmMobileHide {
-        display: none !important
+
+    table.kmMobileHide { /* stylelint-disable-line selector-class-pattern, selector-no-qualifying-type */
+        display: none !important;
     }
+
     table[class=kmTextContentContainer] {
-        width: 100% !important
+        width: 100% !important;
     }
+
     table[class=kmBoxedTextContentContainer] {
-        width: 100% !important
+        width: 100% !important;
     }
+
     td[class=kmImageContent] {
+        padding-right: 0 !important;
         padding-left: 0 !important;
-        padding-right: 0 !important
     }
+
     img[class=kmImage] {
-        width: 100% !important
+        width: 100% !important;
     }
-    td.kmMobileStretch {
+
+    td.kmMobileStretch { /* stylelint-disable-line selector-class-pattern, selector-no-qualifying-type */
+        padding-right: 0 !important;
         padding-left: 0 !important;
-        padding-right: 0 !important
     }
+
     table[class=kmSplitContentLeftContentContainer],
     table[class=kmSplitContentRightContentContainer],
     table[class=kmColumnContainer],
@@ -36,73 +51,86 @@
     td[class=kmVerticalButtonCollectionContentOuter] table[class=kmButtonCollectionContent],
     table[class=kmVerticalButton],
     table[class=kmVerticalButtonContent] {
-        width: 100% !important
+        width: 100% !important;
     }
+
     td[class=kmButtonCollectionInner] {
-        padding-left: 9px !important;
-        padding-right: 9px !important;
         padding-top: 9px !important;
+        padding-right: 9px !important;
         padding-bottom: 0 !important;
-        background-color: transparent !important
+        padding-left: 9px !important;
+        background-color: transparent !important;
     }
+
     td[class=kmVerticalButtonIconContent],
     td[class=kmVerticalButtonTextContent],
     td[class=kmVerticalButtonContentOuter] {
-        padding-left: 0 !important;
         padding-right: 0 !important;
-        padding-bottom: 9px !important
+        padding-bottom: 9px !important;
+        padding-left: 0 !important;
     }
+
     table[class=kmSplitContentLeftContentContainer] td[class=kmTextContent],
     table[class=kmSplitContentRightContentContainer] td[class=kmTextContent],
     table[class=kmColumnContainer] td[class=kmTextContent],
     table[class=kmSplitContentLeftContentContainer] td[class=kmImageContent],
     table[class=kmSplitContentRightContentContainer] td[class=kmImageContent] {
-        padding-top: 9px !important
+        padding-top: 9px !important;
     }
-    td[class="rowContainer kmFloatLeft"],
-    td[class="rowContainer kmFloatLeft firstColumn"],
-    td[class="rowContainer kmFloatLeft lastColumn"] {
+
+    td[class='rowContainer kmFloatLeft'],
+    td[class='rowContainer kmFloatLeft firstColumn'],
+    td[class='rowContainer kmFloatLeft lastColumn'] {
+        width: 100% !important;
         float: left;
         clear: both;
-        width: 100% !important
     }
+
     table[id=templateContainer],
     table[class=templateRow] {
+        width: 100% !important;
         max-width: 600px !important;
-        width: 100% !important
     }
+
     h1 {
         font-size: 40px !important;
-        line-height: 130% !important
+        line-height: 130% !important;
     }
+
     h2 {
         font-size: 32px !important;
-        line-height: 130% !important
+        line-height: 130% !important;
     }
+
     h3 {
         font-size: 24px !important;
-        line-height: 130% !important
+        line-height: 130% !important;
     }
+
     h4 {
         font-size: 18px !important;
-        line-height: 130% !important
+        line-height: 130% !important;
     }
+
     td[class=kmTextContent] {
         font-size: 14px !important;
-        line-height: 130% !important
+        line-height: 130% !important;
     }
+
     td[class=kmTextBlockInner] td[class=kmTextContent] {
         padding-right: 18px !important;
-        padding-left: 18px !important
+        padding-left: 18px !important;
     }
-    table[class="kmTableBlock kmTableMobile"] td[class=kmTableBlockInner] {
+
+    table[class='kmTableBlock kmTableMobile'] td[class=kmTableBlockInner] {
+        padding-right: 9px !important;
         padding-left: 9px !important;
-        padding-right: 9px !important
     }
-    table[class="kmTableBlock kmTableMobile"] td[class=kmTableBlockInner] [class=kmTextContent] {
+
+    table[class='kmTableBlock kmTableMobile'] td[class=kmTableBlockInner] [class=kmTextContent] {
+        padding-right: 4px !important;
+        padding-left: 4px !important;
         font-size: 14px !important;
         line-height: 130% !important;
-        padding-left: 4px !important;
-        padding-right: 4px !important
     }
 }

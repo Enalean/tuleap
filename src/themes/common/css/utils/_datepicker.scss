@@ -1,22 +1,23 @@
+/* stylelint-disable selector-no-qualifying-type, selector-class-pattern */
 /* The wrapper div */
 div.datePicker {
     position: absolute;
-    min-width: 18em;
-    width: 18em;
     z-index: 9999;
-    text-align: center;
-
-    /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
-    font: 0.8em/0.8em Verdana, Sans-Serif;
+    width: 18em;
+    min-width: 18em;
 
     /* For Example: If using the YUI font CSS, uncomment the following line to get a 10px font-size within the datePicker */
     /* font:900 77%/77% Verdana; */
 
     background: transparent;
 
-    /* Mozilla & Webkit extensions to stop text-selection. Remove if you wish to validate the CSS */
-    -moz-user-select: none;
-    -khtml-user-select: none;
+    /* Change the font-size to suit your design's CSS. The following line is for the demo that has a 12px font-size defined on the body tag */
+    font: .8em/.8em Verdana, Sans-Serif;
+    text-align: center;
+
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* Styles for the static datePickers */
@@ -28,13 +29,13 @@ div.staticDP {
 
 /* The iframe hack to cover selectlists in Internet Explorer <= v6 */
 iframe.iehack {
+    display: none;
     position: absolute;
-    background: #fff;
     z-index: 9998;
+    margin: 0;
     padding: 0;
     border: 0;
-    display: none;
-    margin: 0;
+    background: #ffffff;
 }
 
 /* The "button" created beside each input for non-static datePickers */
@@ -43,19 +44,19 @@ a.date-picker-control:visited,
 a.date-picker-control:hover,
 a.date-picker-control:active,
 a.date-picker-control:focus {
-    position: relative;
     /* Moz & FF */
     display: -moz-inline-stack;
-    border: 0 none;
-    padding: 0;
-    margin: 0 0 0 4px;
-    background: transparent url("#{$tuleap-common-theme-basepath}images/ic/cal.png") no-repeat 50% 50%;
-    min-width: 16px;
-    line-height: 1;
-    cursor: pointer;
     visibility: visible;
+    position: relative;
+    min-width: 16px;
+    margin: 0 0 0 4px;
+    padding: 0;
+    border: 0 none;
+    background: transparent url('#{$tuleap-common-theme-basepath}images/ic/cal.png') no-repeat 50% 50%;
+    line-height: 1;
     text-decoration: none;
     vertical-align: middle;
+    cursor: pointer;
 }
 
 /* Feed IE6 the following rule, IE7 should handle the min-width declared above */
@@ -78,23 +79,23 @@ a.date-picker-control span {
 /* The next & previous buttons */
 div.datePicker th span {
     display: inline;
-    padding: 0;
     margin: 0;
-    color: #000;
-    text-align: center;
-    line-height: 1.2em;
+    padding: 0;
     border-width: 0;
-    font-family: georgia, times new roman, palatino, times, bookman, serif;
     background: transparent;
+    color: #000000;
+    font-family: georgia, times new roman, palatino, times, bookman, serif;
     font-weight: bold;
+    line-height: 1.2em;
+    text-align: center;
     cursor: pointer;
 }
 
 div.datePicker th span.month-display,
 div.datePicker th span.year-display {
-    text-transform: uppercase;
-    letter-spacing: 1px;
     font: normal 1em Verdana, Sans-Serif;
+    letter-spacing: 1px;
+    text-transform: uppercase;
     cursor: default;
 }
 
@@ -105,90 +106,89 @@ div.datePicker th span.next-but {
 }
 
 div.datePicker th span.today-but {
-    text-align: center;
-    margin: 0 auto;
-    font: normal 0.8em Verdana, Sans-Serif;
     width: 100%;
-    text-decoration: none;
+    margin: 0 auto;
+    font: normal .8em Verdana, Sans-Serif;
     line-height: 1em;
+    text-align: center;
+    text-decoration: none;
     text-transform: uppercase;
-    cursor: pointer !important
+    cursor: pointer !important;
 }
 
 div.datePicker thead th span.fd-disabled {
-    color: #aaa;
+    color: #aaaaaa;
     cursor: default !important;
 }
 
 /* The mon, tue, wed etc day buttons */
 div.datePicker th span.fd-day-header {
-    text-align: center;
+    width: 2em;
+    height: 1.2em;
     margin: 0 auto;
     font: 900 1em Verdana, Sans-Serif;
-    height: 1.2em;
-    width: 2em;
+    line-height: 1em;
+    text-align: center;
     text-decoration: none;
     text-transform: lowercase;
-    line-height: 1em;
 }
 
 /* The table */
 div.datePicker table {
     position: relative;
+    width: 100%;
     margin: 0;
     padding: 0;
-    border: 1px solid #ccc;
-    background: #fff;
-    text-align: center;
-    width: 100%;
-    border-spacing: 2px;
     table-layout: fixed;
+    border-spacing: 2px;
     border-collapse: separate;
+    border: 1px solid #cccccc;
+    background: #ffffff;
+    text-align: center;
 }
 
 /* Common TD & TH styling */
 div.datePicker table td {
-    border: 1px solid #ccc;
-    padding: 0;
-    text-align: center;
-    vertical-align: middle;
-    /* Opera requires a line-height bigger than 1em in order to redraw properly */
-    line-height: 1.2em;
-    cursor: pointer;
-    background: #fff;
     width: 2em;
     height: 2em !important;
-    height: 2em;
+    padding: 0;
+    border: 1px solid #cccccc;
     outline: none;
+    background: #ffffff;
+    /* Opera requires a line-height bigger than 1em in order to redraw properly */
+    line-height: 1.2em;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
 }
 
 div.datePicker table th {
-    border: 0 none;
     padding: 0;
-    line-height: 1.2em;
+    border: 0 none;
+    color: #222222;
     font-weight: bold;
-    color: #222;
+    line-height: 1.2em;
     text-align: center;
     vertical-align: middle;
 }
 
 div.datePicker table td.date-picker-unused {
-    background: #fff url("#{$tuleap-common-theme-basepath}images/backstripes.gif");
-    border-color: #dcdcdc;
     padding: 0;
+    border-color: #dcdcdc;
+    background: #ffffff url('#{$tuleap-common-theme-basepath}images/backstripes.gif');
     cursor: default !important;
 }
 
 div.datePicker table thead th.date-picker-title {
     width: auto;
     height: auto;
-    padding: 0.4em 0;
+    padding: .4em 0;
 }
 
 /* The "mon tue wed etc" day header button styles */
 div.datePicker table th.date-picker-day-header {
-    text-transform: lowercase;
     width: 2em;
+    text-transform: lowercase;
 }
 
 div.datePicker table th.date-picker-day-header span {
@@ -197,14 +197,14 @@ div.datePicker table th.date-picker-day-header span {
 
 /* The "todays date" style */
 div.datePicker table td.date-picker-today {
-    background: #ffffA3;
+    background: #ffffa3;
     color: rgb(100, 100, 100) !important;
 }
 
 /* The "selected date" style */
 div.datePicker table td.date-picker-selected-date {
-    color: #333 !important;
-    border-color: #333 !important;
+    border-color: #333333 !important;
+    color: #333333 !important;
 }
 
 /* the "highlight days" style */
@@ -214,25 +214,25 @@ td.date-picker-highlight {
 
 /* The date "out of range" style */
 div.datePicker table td.out-of-range {
-    color: #ccc !important;
-    font-style: oblique;
     background: #fcfcfc !important;
+    color: #cccccc !important;
+    font-style: oblique;
     cursor: default !important;
 }
 
 /* The "disabled days" style */
 div.datePicker table td.day-disabled {
-    color: #aaa !important;
     background: transparent !important;
+    color: #aaaaaa !important;
     cursor: default !important;
 }
 
 /* The "active cursor" style */
 div.datePicker table tbody td.date-picker-hover {
-    background: #fff;
-    cursor: pointer;
     border-color: rgb(100, 130, 170);
+    background: #ffffff;
     color: rgb(100, 130, 170);
+    cursor: pointer;
 }
 
 /*
@@ -246,3 +246,4 @@ div.datePicker table th,
 div.datePicker table td {
     font-size: 100%;
 }
+/* stylelint-enable */

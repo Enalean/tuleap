@@ -1,13 +1,15 @@
-.project_privacy_private, .project_privacy_public {
+/* stylelint-disable-next-line selector-class-pattern */
+.project_privacy_private,
+.project_privacy_public { /* stylelint-disable-line selector-class-pattern */
     padding-left: 24px;
     background-repeat: no-repeat;
     background-position: 2px 1px;
 }
 
-.project_privacy_private {
-    background-image: url("#{$tuleap-common-theme-basepath}images/ic/lock.png");
+.project_privacy_private { /* stylelint-disable-line selector-class-pattern */
+    background-image: url('#{$tuleap-common-theme-basepath}images/ic/lock.png');
 }
 
-.project_privacy_public {
-    background-image: url("#{$tuleap-common-theme-basepath}images/ic/lock-unlock.png");
+.project_privacy_public { /* stylelint-disable-line selector-class-pattern */
+    background-image: url('#{$tuleap-common-theme-basepath}images/ic/lock-unlock.png');
 }
