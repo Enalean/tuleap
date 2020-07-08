@@ -30,6 +30,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
 class ChangelogSnapshotBuilder
@@ -43,12 +44,19 @@ class ChangelogSnapshotBuilder
      */
     private $logger;
 
+    /**
+     * @var JiraAuthorRetriever
+     */
+    private $jira_author_retriever;
+
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        JiraAuthorRetriever $jira_author_retriever
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
         $this->logger                              = $logger;
+        $this->jira_author_retriever               = $jira_author_retriever;
     }
 
     public function buildSnapshotFromChangelogEntry(
@@ -127,7 +135,7 @@ class ChangelogSnapshotBuilder
         }
 
         return new Snapshot(
-            $forge_user,
+            $this->jira_author_retriever->retrieveJiraAuthor($changelog_entry->getChangelogOwner(), $forge_user),
             $changelog_entry->getCreated(),
             $fields_snapshot,
             null

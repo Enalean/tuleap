@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog;
 
 use DateTimeImmutable;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 
 /**
  * @psalm-immutable
@@ -45,11 +46,21 @@ class ChangelogEntryValueRepresentation
      */
     private $created;
 
-    public function __construct(int $id, DateTimeImmutable $created, array $item_representations)
-    {
+    /**
+     * @var JiraUser
+     */
+    private $changelog_owner;
+
+    public function __construct(
+        int $id,
+        DateTimeImmutable $created,
+        JiraUser $changelog_owner,
+        array $item_representations
+    ) {
         $this->id                   = $id;
         $this->item_representations = $item_representations;
         $this->created              = $created;
+        $this->changelog_owner      = $changelog_owner;
     }
 
     /**
@@ -73,7 +84,8 @@ class ChangelogEntryValueRepresentation
         return new self(
             (int) $changelog_response['id'],
             new DateTimeImmutable($changelog_response['created']),
-            array_filter($items)
+            new JiraUser($changelog_response['author']),
+            array_filter($items),
         );
     }
 
@@ -90,5 +102,10 @@ class ChangelogEntryValueRepresentation
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
+    }
+
+    public function getChangelogOwner(): JiraUser
+    {
+        return $this->changelog_owner;
     }
 }

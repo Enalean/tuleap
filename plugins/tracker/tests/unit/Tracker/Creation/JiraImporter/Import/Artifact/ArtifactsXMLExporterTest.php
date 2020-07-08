@@ -99,7 +99,12 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->user_manager          = Mockery::mock(UserManager::class);
         $this->logger                = Mockery::mock(LoggerInterface::class);
 
-        $this->exporter = new ArtifactsXMLExporter(
+        $jira_author_retriever = new JiraAuthorRetriever(
+            $this->logger,
+            $this->user_manager,
+            new JiraUserOnTuleapCache()
+        );
+        $this->exporter        = new ArtifactsXMLExporter(
             $this->wrapper,
             $this->user_manager,
             new DataChangesetXMLExporter(
@@ -136,14 +141,15 @@ class ArtifactsXMLExporterTest extends TestCase
                     ),
                     new ChangelogSnapshotBuilder(
                         new CreationStateListValueFormatter(),
-                        $this->logger
+                        $this->logger,
+                        $jira_author_retriever
                     ),
                     new CommentValuesBuilder(
                         $this->wrapper,
                         $this->logger
                     ),
                     $this->logger,
-                    new JiraAuthorRetriever($this->logger, $this->user_manager, new JiraUserOnTuleapCache())
+                    $jira_author_retriever
                 ),
                 new CommentXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
