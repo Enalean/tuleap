@@ -30,6 +30,10 @@ class AttachmentCleaner
 {
     public function deleteDownloadedAttachmentOlderThanOneDay(DateTimeImmutable $current_time): void
     {
+        if (! is_dir(AttachmentDownloader::getTmpFolderURL())) {
+            return;
+        }
+
         $directory           = new DirectoryIterator(AttachmentDownloader::getTmpFolderURL());
         $yesterday_timestamp = $current_time->getTimestamp() - (24 * 3600);
         foreach ($directory as $file) {
