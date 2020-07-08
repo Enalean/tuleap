@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 final class JiraAuthorRetrieverTest extends TestCase
 {
@@ -86,7 +87,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, '5e8dss456a2d45f3');
 
-        $submitter = $this->retriever->getArtifactSubmitter(
+        $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'  => '10042',
                 'key' => 'key01',
@@ -120,7 +121,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
 
-        $submitter = $this->retriever->getArtifactSubmitter(
+        $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
                 'key' => 'key01',
@@ -150,7 +151,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
 
-        $submitter = $this->retriever->getArtifactSubmitter(
+        $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
                 'key' => 'key01',
@@ -174,7 +175,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
         $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
 
-        $submitter = $this->retriever->getArtifactSubmitter(
+        $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
                 'id'     => '10042',
                 'key' => 'key01',
@@ -198,9 +199,11 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_cache->shouldReceive('getUserFromCacheByJiraAccountId')
             ->with('5e8dss456a2d45f3')
             ->andReturn($this->forge_user);
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->never();
 
-        $submitter = $this->retriever->getArtifactSubmitter(
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->never();
+        $this->forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+
+        $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse(
                 [
                     'id'             => '10042',

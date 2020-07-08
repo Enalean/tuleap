@@ -41,24 +41,24 @@ class Comment
     private $rendered_value;
 
     /**
-     * @var string
+     * @var JiraUser
      */
-    private $display_name;
+    private $update_author;
 
     public function __construct(
-        string $display_name,
+        JiraUser $update_author,
         DateTimeImmutable $date,
         string $rendered_value
     ) {
+        $this->update_author  = $update_author;
         $this->date           = $date;
         $this->rendered_value = $rendered_value;
-        $this->display_name   = $display_name;
     }
 
     public static function buildFromAPIResponse(array $comment_response): self
     {
         if (
-            ! isset($comment_response['updateAuthor']['displayName']) ||
+            ! isset($comment_response['updateAuthor']) ||
             ! isset($comment_response['updated']) ||
             ! isset($comment_response['renderedBody'])
         ) {
@@ -66,7 +66,7 @@ class Comment
         }
 
         return new self(
-            (string) $comment_response['updateAuthor']['displayName'],
+            new JiraUser($comment_response['updateAuthor']),
             new DateTimeImmutable($comment_response['updated']),
             (string) $comment_response['renderedBody']
         );
@@ -82,8 +82,8 @@ class Comment
         return $this->rendered_value;
     }
 
-    public function getDisplayName(): string
+    public function getUpdateAuthor(): JiraUser
     {
-        return $this->display_name;
+        return $this->update_author;
     }
 }

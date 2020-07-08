@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 
 class JiraAuthorRetriever
 {
@@ -52,16 +53,24 @@ class JiraAuthorRetriever
         $this->user_cache   = $user_cache;
     }
 
-    public function getArtifactSubmitter(IssueAPIRepresentation $issue, PFUser $forge_user): PFUser
+    public function retrieveArtifactSubmitter(IssueAPIRepresentation $issue, PFUser $forge_user): PFUser
     {
-        $creator    = $issue->getFieldByKey('creator');
-        $account_id = $creator['accountId'];
+        $creator = $issue->getFieldByKey('creator');
 
         if ($creator === null) {
             return $forge_user;
         }
 
-        $display_name = $creator['displayName'];
+        return $this->retrieveUser(
+            new JiraUser($creator),
+            $forge_user
+        );
+    }
+
+    private function retrieveUser(JiraUser $jira_user, PFUser $forge_user): PFUser
+    {
+        $account_id   = $jira_user->getJiraAccountId();
+        $display_name = $jira_user->getDisplayName();
 
         if ($this->user_cache->isUserCached($account_id)) {
             $this->logger->debug("User $display_name is already in cache, skipping...");
@@ -71,15 +80,14 @@ class JiraAuthorRetriever
             );
         }
 
-        if (! isset($creator['emailAddress'])) {
+        if ($jira_user->getEmailAddress() === '') {
             $this->logger->debug("Jira user $display_name does not share his/her email address, skipping...");
             $this->user_cache->cacheUser($forge_user, $account_id);
 
             return $forge_user;
         }
 
-        $email_address  = $creator['emailAddress'];
-        $matching_users = $this->user_manager->getAllUsersByEmail($email_address);
+        $matching_users = $this->user_manager->getAllUsersByEmail($jira_user->getEmailAddress());
 
         if (count($matching_users) !== 1) {
             $this->logger->debug("Unable to identify an unique user on Tuleap side for Jira user $display_name");
@@ -95,5 +103,10 @@ class JiraAuthorRetriever
         $this->logger->debug("Jira user $display_name has been identified as Tuleap user $tuleap_user_real_name");
 
         return $tuleap_user;
+    }
+
+    public function retrieveJiraAuthor(JiraUser $update_author, PFUser $forge_user): PFUser
+    {
+        return $this->retrieveUser($update_author, $forge_user);
     }
 }

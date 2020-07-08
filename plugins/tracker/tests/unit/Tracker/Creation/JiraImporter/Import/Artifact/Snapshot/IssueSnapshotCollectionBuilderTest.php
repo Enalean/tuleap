@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\Comment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -145,9 +146,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItBuildsACollectionOfSnapshotsForIssueOrderedByTimestamp(): void
     {
         $this->logger->shouldReceive('debug');
-        $this->jira_author_retriever->shouldReceive('getArtifactSubmitter')->andReturn(
+        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
             $this->user
         );
+        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -201,9 +203,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     public function testItSkipsInCollectionSnapshotsWithoutChangedFileds(): void
     {
         $this->logger->shouldReceive('debug');
-        $this->jira_author_retriever->shouldReceive('getArtifactSubmitter')->andReturn(
+        $this->jira_author_retriever->shouldReceive('retrieveArtifactSubmitter')->andReturn(
             $this->user
         );
+        $this->jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($this->user);
 
         $this->changelog_entries_builder->shouldReceive('buildEntriesCollectionForIssue')
             ->with('key01')
@@ -386,7 +389,10 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
     private function buildCommentSnapshot(): Comment
     {
         return new Comment(
-            "user01",
+            new JiraUser([
+                'displayName' => 'userO1',
+                'accountId' => 'e12ds5123sw'
+            ]),
             new DateTimeImmutable("2020-03-25T14:12:10.823+0100"),
             "Comment 01"
         );

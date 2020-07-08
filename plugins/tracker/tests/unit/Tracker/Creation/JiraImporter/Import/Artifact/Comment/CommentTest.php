@@ -36,7 +36,8 @@ class CommentTest extends TestCase
                 "created" => "2020-04-21T11:36:46.601+0200",
                 "updated" => "2020-04-21T11:36:46.601+0200",
                 "updateAuthor" => [
-                    "displayName" => 'user01'
+                    'displayName' => 'user01',
+                    'accountId'   => 'e8ds123qsd'
                 ]
             ]
         );
