@@ -72,6 +72,7 @@ Manage dependencies for Tuleap mailman integration
 Summary: CVS component for Tuleap
 Group: Development/Tools
 Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph, perl-CGI
+Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: cvs-tuleap
 Requires: libnss-mysql, nss, nscd
@@ -89,6 +90,7 @@ Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, mod_dav_svn
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: python, MySQL-python
 Requires: mod_perl, perl-Digest-SHA, perl-DBI, perl-DBD-MySQL, perl(Crypt::Eksblowfish::Bcrypt), perl(Redis)
+Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: tuleap-theme-flamingparrot
 Requires: sha1collisiondetector
 %description core-subversion
