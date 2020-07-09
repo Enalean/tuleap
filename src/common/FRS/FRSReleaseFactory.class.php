@@ -309,8 +309,6 @@ class FRSReleaseFactory
      */
     public function delete_release($group_id, $release_id)
     {
-        global $ftp_incoming_dir;
-
         $release = $this->getFRSReleaseFromDb($release_id, $group_id);
 
         if (!$release) {
@@ -534,7 +532,7 @@ class FRSReleaseFactory
         $subject = ' ' . $GLOBALS['Language']->getText(
             'file_admin_editreleases',
             'file_rel_notice_subject',
-            array($GLOBALS['sys_name'], $release->getProject()->getPublicName(), $package->getName())
+            array(ForgeConfig::get('sys_name'), $release->getProject()->getPublicName(), $package->getName())
         );
 
         $body_text    = $this->getEmailBody($release, $package);

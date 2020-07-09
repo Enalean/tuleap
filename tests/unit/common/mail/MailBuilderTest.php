@@ -24,6 +24,7 @@ declare(strict_types=1);
 final class MailBuilderTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     /** @var MailBuilder */
     private $builder;
@@ -79,14 +80,13 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         );
         $this->mail_filter->shouldReceive('filter')->andReturns($this->notification->getEmails());
 
-        $GLOBALS['sys_default_domain'] = '';
-        $GLOBALS['HTML']               = \Mockery::spy(\Layout::class);
+        ForgeConfig::set('sys_default_domain', '');
+        $GLOBALS['HTML'] = \Mockery::spy(\Layout::class);
     }
 
     protected function tearDown(): void
     {
         UserManager::clearInstance();
-        unset($GLOBALS['sys_default_domain']);
         unset($GLOBALS['HTML']);
 
         parent::tearDown();

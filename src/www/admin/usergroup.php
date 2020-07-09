@@ -168,7 +168,7 @@ if ($request->isPost()) {
                                 && ($user->getShell() != "/bin/false")
                                 && ($user->getShell() != "/sbin/nologin")
                             ) {
-                                $user->setShell($GLOBALS['codendi_bin_prefix'] . '/cvssh-restricted');
+                                $user->setShell(ForgeConfig::get('codendi_bin_prefix') . '/cvssh-restricted');
                             }
                             $accountActivationEvent = 'project_admin_activate_user';
                         }
@@ -214,7 +214,7 @@ if ($request->isPost()) {
                 }
             }
 
-            if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            if (ForgeConfig::get('sys_auth_type') == 'ldap') {
                 $vLdapId = new Valid_String('ldap_id');
                 $vLdapId->required();
                 if ($request->existAndNonEmpty('ldap_id') && $request->valid($vLdapId)) {

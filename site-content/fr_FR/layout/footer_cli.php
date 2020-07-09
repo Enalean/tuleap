@@ -19,4 +19,4 @@
  */
 ?>
 <h3 class="footer-section-title">API</h3>
-<p class="footer-paragraph"><?php echo $GLOBALS['sys_name']?> fournit une <a href="/help/api.php">API&nbsp;REST</a>.</p>
+<p class="footer-paragraph"><?php echo \ForgeConfig::get('sys_name') ?> fournit une <a href="/help/api.php">API&nbsp;REST</a>.</p>

@@ -109,7 +109,7 @@ class URL
                 $group_id = $group_id['group_id'];
 
                 // News
-                if ($group_id == $GLOBALS['sys_news_group']) {
+                if ($group_id == ForgeConfig::get('sys_news_group')) {
                     $group_id = $this->getGroupIdForNewsFromForumId($_REQUEST['forum_id']);
                 }
             }
@@ -122,7 +122,7 @@ class URL
                 $forum_id = $row['group_forum_id'];
 
                 // News
-                if ($group_id == $GLOBALS['sys_news_group']) {
+                if ($group_id == ForgeConfig::get('sys_news_group')) {
                     // Otherwise, get group_id of corresponding news
                     $group_id = $this->getGroupIdForNewsFromForumId($forum_id);
                 }

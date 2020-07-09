@@ -5,15 +5,15 @@
 //
 
 
-//$message = "You are now a member of project $group_name on the ".$GLOBALS['sys_name']." web site.\n"
+//$message = "You are now a member of project $group_name on the ".\ForgeConfig::get('sys_name')." web site.\n"
 //. "You may visit the project main page here: \n\n"
 //. "<". $base_url ."/projects/$unix_group_name/>\n\n"
 //. "Enjoy.\n\n"
-//. " -- The ".$GLOBALS['sys_name']." Team\n";
+//. " -- The ".\ForgeConfig::get('sys_name')." Team\n";
 
-$message = "Vous êtes maintenant un membre du projet $group_name sur le site web ".$GLOBALS['sys_name'].".\n"
+$message = "Vous êtes maintenant un membre du projet $group_name sur le site web ".\ForgeConfig::get('sys_name').".\n"
 . "Vous pouvez visiter la page principale du projet ici : \n\n"
 . "<". $base_url ."/projects/$unix_group_name/>\n\n"
-. " -- L'équipe ".$GLOBALS['sys_name']."\n";
+. " -- L'équipe ".\ForgeConfig::get('sys_name')."\n";
 
 ?>

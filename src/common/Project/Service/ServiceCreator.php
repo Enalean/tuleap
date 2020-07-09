@@ -86,7 +86,7 @@ class ServiceCreator
         if (ForgeConfig::get('sys_https_host')) {
             $sys_default_protocol = 'https';
         }
-        $link = str_replace('$sys_default_domain', $GLOBALS['sys_default_domain'], $link);
+        $link = str_replace('$sys_default_domain', ForgeConfig::get('sys_default_domain'), $link);
         $link = str_replace('$sys_default_protocol', $sys_default_protocol, $link);
 
         return $link;

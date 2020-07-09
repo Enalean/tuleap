@@ -197,7 +197,7 @@ class WikiAttachment /* implements UGroupPermission */
     public function setGid($id = 0)
     {
         $this->gid      = (int) $id;
-        $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
+        $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
     }
 
     /**

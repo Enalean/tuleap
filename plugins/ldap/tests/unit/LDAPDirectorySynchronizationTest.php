@@ -33,37 +33,21 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Tuleap\ForgeConfigSandbox;
+use Tuleap\GlobalLanguageMock;
 use UserManager;
-
-require_once __DIR__ . '/bootstrap.php';
 
 class LDAPDirectorySynchronizationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
-
-    /**
-     * @var array
-     */
-    private $globals;
+    use GlobalLanguageMock;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->globals = $GLOBALS;
-        $GLOBALS = [];
-
-        $GLOBALS['Language'] = \Mockery::spy(\BaseLanguage::class);
-        $GLOBALS['Language']->shouldReceive('getContent')->andReturns(dirname(__FILE__) . '/empty.txt');
         ForgeConfig::set('codendi_log', '/tmp');
         ForgeConfig::set('sys_logger_level', 'debug');
-    }
-
-    protected function tearDown(): void
-    {
-        $GLOBALS = $this->globals;
-        parent::tearDown();
     }
 
     public function testNoDBUpdateIfLdapSearchFalse(): void

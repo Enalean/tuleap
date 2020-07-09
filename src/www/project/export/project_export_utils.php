@@ -275,7 +275,7 @@ function prepare_historic_value(&$record, $field, $group_artifact_id, $name)
         // later in the process
             $record[$name] = '0';
         } else {
-            $record[$name] = format_date($GLOBALS['datetime_fmt'], $record[$name]);
+            $record[$name] = format_date(ForgeConfig::get('datetime_fmt'), $record[$name]);
         }
     } elseif ($field->isFloat()) {
         $record[$name] = number_format($record[$name], 2);

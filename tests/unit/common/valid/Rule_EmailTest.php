@@ -27,16 +27,11 @@ use PHPUnit\Framework\TestCase;
 //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 class Rule_EmailTest extends TestCase
 {
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_disable_subdomains']);
-        parent::tearDown();
-    }
+    use \Tuleap\ForgeConfigSandbox;
 
     public function testWithoutSubDomains()
     {
-        $GLOBALS['sys_disable_subdomains'] = 1;
+        ForgeConfig::set('sys_disable_subdomains', 1);
         $r = new Rule_Email();
         $this->assertTrue($r->isValid('user@codendi'));
         $this->assertTrue($r->isValid('user@codendi.domain.com'));
@@ -44,7 +39,7 @@ class Rule_EmailTest extends TestCase
 
     public function testWithSubDomains()
     {
-        $GLOBALS['sys_disable_subdomains'] = 0;
+        ForgeConfig::set('sys_disable_subdomains', 0);
         $r = new Rule_Email();
         $this->assertFalse($r->isValid('user@codendi'));
         $this->assertTrue($r->isValid('user@codendi.domain.com'));
@@ -52,7 +47,7 @@ class Rule_EmailTest extends TestCase
 
     public function testSpecialCharsWoSD()
     {
-        $GLOBALS['sys_disable_subdomains'] = 1;
+        ForgeConfig::set('sys_disable_subdomains', 1);
         $r = new Rule_Email();
         $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
         $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));
@@ -64,7 +59,7 @@ class Rule_EmailTest extends TestCase
 
     public function testSpecialCharsWithSD()
     {
-        $GLOBALS['sys_disable_subdomains'] = 0;
+        ForgeConfig::set('sys_disable_subdomains', 0);
         $r = new Rule_Email();
         $this->assertFalse($r->isValid("user@codendi.domain.com\n"));
         $this->assertFalse($r->isValid("\nuser@codendi.domain.com"));

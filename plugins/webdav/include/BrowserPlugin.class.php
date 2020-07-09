@@ -45,7 +45,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         echo '<form name="deleteform" method="post" action="">
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
-        <td><button type="submit" style="background:white; border:0;" value="delete"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/trash.png"></button>';
+        <td><button type="submit" style="background:white; border:0;" value="delete"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/trash.png"></button>';
         echo '</td></form>';
     }
 
@@ -62,7 +62,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         <input type="hidden" name="action" value="rename" />
         <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
         <td><input type="text" name="name" />
-        <button type="submit" style="background:white; border:0;" value="rename"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/edit.png"></button></td>
+        <button type="submit" style="background:white; border:0;" value="rename"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/edit.png"></button></td>
         </form>';
     }
 
@@ -88,7 +88,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         }
         echo '</select>
         <input type="hidden" name="node" value="' . $this->purifier->purify($file['href']) . '" />
-        <button type="submit" style="background:white; border:0;" value="move"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/admin.png"></button></td>
+        <button type="submit" style="background:white; border:0;" value="move"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/admin.png"></button></td>
         </form>';
     }
 
@@ -102,7 +102,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         echo '<form method="post" action="">
         <input type="hidden" name="action" value="mkcol" />
         ' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "name")) . ' : <input type="text" name="name" />
-        <button type="submit" style="background:white; border:0;" value="create"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/add.png"></button>
+        <button type="submit" style="background:white; border:0;" value="create"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/add.png"></button>
         </form>';
     }
 
@@ -372,7 +372,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                 <input type="hidden" name="action" value="put" />
                 ' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "name")) . ' (' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "optional")) . ') : <input type="text" name="name" /><br />
                 ' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "file")) . ' : <input type="file" name="file" />
-                <button type="submit" style="background:white; border:0;" value="upload"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/tick.png"></button>
+                <button type="submit" style="background:white; border:0;" value="upload"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/tick.png"></button>
                 </form>';
             }
             if ($class == 'WebDAVDocmanFolder') {
@@ -384,7 +384,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                     <input type="hidden" name="action" value="put" />
                     ' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "name")) . ' (' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "optional")) . ') : <input type="text" name="name" /><br />
                     ' . $this->purifier->purify($GLOBALS["Language"]->getText("plugin_webdav_html", "file")) . ' : <input type="file" name="file" />
-                    <button type="submit" style="background:white; border:0;" value="upload"><img src="https://' . $GLOBALS['sys_https_host'] . '/themes/Dawn/images/ic/tick.png"></button>
+                    <button type="submit" style="background:white; border:0;" value="upload"><img src="https://' . ForgeConfig::get('sys_https_host') . '/themes/Dawn/images/ic/tick.png"></button>
                     </form>';
                 }
             }

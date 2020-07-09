@@ -81,7 +81,7 @@ class PROFTPD_DIRECTORY_CREATE extends \SystemEvent
 
     private function setfacl($path)
     {
-        $this->acl_updater->recursivelyApplyACL($path, $GLOBALS['sys_http_user'], '', '');
+        $this->acl_updater->recursivelyApplyACL($path, \ForgeConfig::get('sys_http_user'), '', '');
     }
 
     public function verbalizeParameters($with_link)

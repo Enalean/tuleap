@@ -26,12 +26,12 @@ namespace Tuleap\Webdav;
 use ForgeConfig;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-
-require_once __DIR__ . '/bootstrap.php';
+use Tuleap\ForgeConfigSandbox;
 
 class WebdavURLVerificationTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \HTTPRequest|\Mockery\LegacyMockInterface|\Mockery\MockInterface
@@ -47,23 +47,15 @@ class WebdavURLVerificationTest extends TestCase
     {
         parent::setUp();
 
-        ForgeConfig::store();
         $this->request = \Mockery::spy(\HTTPRequest::class);
         $this->webdavURLVerification = \Mockery::mock(\Webdav_URLVerification::class)->makePartial()->shouldAllowMockingProtectedMethods();
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_default_domain']);
-        ForgeConfig::restore();
-        parent::tearDown();
     }
 
     public function testAssertValidUrlHTTPAndHTTPSHostNotAvailable(): void
     {
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
 
-        $GLOBALS['sys_default_domain'] = 'example.com';
+        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
 
         $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('webdav.tuleap.test');
@@ -79,7 +71,7 @@ class WebdavURLVerificationTest extends TestCase
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
         $this->request->shouldReceive('isSecure')->andReturns(true);
 
-        $GLOBALS['sys_default_domain'] = 'example.com';
+        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
 
         $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('webdav.tuleap.test');
@@ -94,7 +86,7 @@ class WebdavURLVerificationTest extends TestCase
     {
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
 
-        $GLOBALS['sys_default_domain'] = 'example.com';
+        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
 
         $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('webdav.tuleap.test');
@@ -110,7 +102,7 @@ class WebdavURLVerificationTest extends TestCase
         $server = array('HTTP_HOST' => 'webdav.tuleap.test');
         $this->request->shouldReceive('isSecure')->andReturns(true);
 
-        $GLOBALS['sys_default_domain'] = 'example.com';
+        ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
 
         $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('webdav.tuleap.test');
@@ -135,11 +127,11 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlButWebdavHostIsDefaultDomain(): void
     {
-        $server = array('HTTP_HOST' => 'a.codendi.org');
+        $server = array('HTTP_HOST' => 'a.example.com');
 
-        $GLOBALS['sys_default_domain'] = 'a.codendi.org';
+        ForgeConfig::set('sys_default_domain', 'a.example.com');
 
-        $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('a.codendi.org');
+        $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('a.example.com');
 
         $this->webdavURLVerification->shouldReceive('forbiddenError')->never(); // parent call
         $this->webdavURLVerification->shouldReceive('isException')->once()->andReturns(true);
@@ -149,12 +141,12 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlButWebdavHostIsHttpsHost(): void
     {
-        $server = array('HTTP_HOST' => 'b.codendi.org');
+        $server = array('HTTP_HOST' => 'b.example.com');
 
-        $GLOBALS['sys_default_domain'] = 'example.com';
-        ForgeConfig::set('sys_https_host', 'b.codendi.org');
+        ForgeConfig::set('sys_default_domain', 'example.com');
+        ForgeConfig::set('sys_https_host', 'b.example.com');
 
-        $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('b.codendi.org');
+        $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('b.example.com');
 
         $this->webdavURLVerification->shouldReceive('forbiddenError')->never(); // parent call
         $this->webdavURLVerification->shouldReceive('isException')->once()->andReturns(true);

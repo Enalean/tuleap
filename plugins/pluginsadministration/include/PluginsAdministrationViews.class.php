@@ -296,8 +296,8 @@ class PluginsAdministrationViews extends Views
             }
 
             // ForgeUpgrade configuration warning
-            if (isset($noFUConfig) && count($noFUConfig) && isset($GLOBALS['forgeupgrade_file'])) {
-                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>' . $GLOBALS['forgeupgrade_file'] . '.</code><br/>';
+            if (isset($noFUConfig) && count($noFUConfig) && ForgeConfig::exists('forgeupgrade_file')) {
+                $txt = 'Some plugins are not referenced in ForgeUpgrade configuration, please add the following in <code>' . ForgeConfig::get('forgeupgrade_file') . '.</code><br/>';
                 foreach ($noFUConfig as $plugInfo) {
                     $txt .= '<code>path[]="' . $plugInfo['plugin']->getFilesystemPath() . '"</code><br/>';
                 }

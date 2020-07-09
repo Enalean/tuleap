@@ -151,7 +151,7 @@ class HeaderPresenterBuilder
 
     private function getPageTitle()
     {
-        $page_title = $GLOBALS['sys_name'];
+        $page_title = \ForgeConfig::get('sys_name');
 
         if (! empty($this->title)) {
             $page_title = $this->title . ' - ' . $page_title;

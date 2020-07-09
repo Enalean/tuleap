@@ -84,7 +84,6 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $globals = array_merge([], $GLOBALS);
 
         $this->admin_dao = \Mockery::spy(
             \Tuleap\Timetracking\Admin\AdminDao::class
@@ -114,8 +113,6 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
                 'getColor' => TrackerColor::default()
             ]
         );
-
-        $GLOBALS = $globals;
     }
 
     public function testGetTrackersMinimalRepresentationWithTimetracking()

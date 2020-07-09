@@ -83,7 +83,7 @@ class ThemeManager //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         $theme_basedir_root = __DIR__ . '/../../www/themes/';
         if ($this->themeExists($theme_basedir_root, $name)) {
-            $GLOBALS['sys_user_theme'] = $name;
+            ForgeConfig::set('sys_user_theme', $name);
             $path = $this->getThemeClassPath($theme_basedir_root, $name);
 
             return $this->instantiateTheme($current_user, $name, $path, '/themes/' . $name);

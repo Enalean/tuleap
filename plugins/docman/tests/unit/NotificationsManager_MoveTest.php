@@ -32,6 +32,7 @@ use Tuleap\Templating\TemplateCache;
 class NotificationsManager_MoveTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use \Tuleap\ForgeConfigSandbox;
 
     /**
      * @var Tuleap\Mail\MailFilter
@@ -40,18 +41,9 @@ class NotificationsManager_MoveTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
-        $GLOBALS['sys_noreply'] = 'norelpy@codendi.org';
-        ForgeConfig::store();
+        ForgeConfig::set('sys_noreply', 'norelpy@example.com');
         ForgeConfig::set('codendi_dir', '/tuleap');
         $this->mail_filter = \Mockery::spy(\Tuleap\Mail\MailFilter::class);
-    }
-
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['sys_noreply']);
-        ForgeConfig::restore();
-        parent::tearDown();
     }
 
     public function testNotifications(): void

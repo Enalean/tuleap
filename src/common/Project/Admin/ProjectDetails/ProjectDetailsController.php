@@ -153,7 +153,7 @@ class ProjectDetailsController
         $purified_project_children         = $this->buildProjectChildren($current_user, $project);
 
         $project_trove_categories  = array();
-        $are_trove_categories_used = ($GLOBALS['sys_use_trove'] != 0);
+        $are_trove_categories_used = (ForgeConfig::get('sys_use_trove') != 0);
         if ($are_trove_categories_used) {
             $project_trove_categories = $this->buildProjectTroveCategories($project);
         }

@@ -83,12 +83,12 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $row_email = db_fetch_array($res_email);
 
                     // mail password to admin
-                    $message = $Language->getText('mail_admin_index', 'list_create_explain', array($GLOBALS['sys_name'], $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password));
+                    $message = $Language->getText('mail_admin_index', 'list_create_explain', array(ForgeConfig::get('sys_name'), $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password));
 
-                    $hdrs = "From: " . $GLOBALS['sys_email_admin'] . $GLOBALS['sys_lf'];
-                    $hdrs .= 'Content-type: text/plain; charset=utf-8' . $GLOBALS['sys_lf'];
+                    $hdrs = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
+                    $hdrs .= 'Content-type: text/plain; charset=utf-8' . ForgeConfig::get('sys_lf');
 
-                    mail($row_email['email'], $GLOBALS['sys_name'] . " " . $Language->getText('mail_admin_index', 'new_mail_list'), $message, $hdrs);
+                    mail($row_email['email'], ForgeConfig::get('sys_name') . " " . $Language->getText('mail_admin_index', 'new_mail_list'), $message, $hdrs);
 
                     $feedback .= " " . $Language->getText('mail_admin_index', 'mail_sent_to', $row_email['email']) . " ";
                 }
@@ -182,7 +182,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             echo '
             <H2>' . $Language->getText('mail_admin_index', 'update_mail_list') . '</H2>
             <P>
-            ' . $Language->getText('mail_admin_index', 'admin_lists_here', $GLOBALS['sys_name']) . '<P>';
+            ' . $Language->getText('mail_admin_index', 'admin_lists_here', ForgeConfig::get('sys_name') . '<P>';
 
             $title_arr = array();
             $title_arr[] = $Language->getText('mail_admin_index', 'list');

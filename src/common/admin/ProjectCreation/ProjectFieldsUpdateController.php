@@ -112,7 +112,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
                     $result = db_query($sql);
 
                     if (!$result) {
-                        list($host, $port) = explode(':', $GLOBALS['sys_default_domain']);
+                        list($host, $port) = explode(':', \ForgeConfig::get('sys_default_domain'));
                         $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'ins_desc_field_fail', array($host, db_error())));
                     } else {
                         $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'add_success'));

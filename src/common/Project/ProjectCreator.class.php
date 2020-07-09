@@ -481,10 +481,10 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     protected function createGroupEntry(ProjectCreationData $data)
     {
-        if (isset($GLOBALS['sys_disable_subdomains']) && $GLOBALS['sys_disable_subdomains']) {
-            $http_domain = $GLOBALS['sys_default_domain'];
+        if (ForgeConfig::get('sys_disable_subdomains')) {
+            $http_domain = ForgeConfig::get('sys_default_domain');
         } else {
-            $http_domain = $data->getUnixName() . '.' . $GLOBALS['sys_default_domain'];
+            $http_domain = $data->getUnixName() . '.' . ForgeConfig::get('sys_default_domain');
         }
 
         $access = $data->getAccess();
@@ -515,7 +515,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $result = db_query($sql);
 
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array($GLOBALS['sys_email_admin'],db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
             return false;
         } else {
             $group_id = db_insertid($result);
@@ -544,7 +544,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     {
         $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this->project_manager->getProject($group_id)->getUnixName() . "')");
         if (!$result) {
-            [$host, $port] = explode(':', $GLOBALS['sys_default_domain']);
+            [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
         }
     }
@@ -569,7 +569,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             . "2," // svn_flags
             . "2)"); // news_flags
         if (!$result) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', array($GLOBALS['sys_email_admin'],db_error())));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
         }
 
         // clear the user data to take into account this new group.

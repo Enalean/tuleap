@@ -67,7 +67,7 @@ class WikiAttachmentRevision
     {
         if (is_numeric($gid)) {
             $this->gid = (int) $gid;
-            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
+            $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
         }
     }
 
@@ -92,10 +92,10 @@ class WikiAttachmentRevision
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',
                     'err_multi_id',
-                    array($GLOBALS['sys_email_admin'],
+                    array(ForgeConfig::get('sys_email_admin'),
                                                               $this->attachmentId,
                                                               $this->revision,
-                    $GLOBALS['sys_fullname'])
+                          ForgeConfig::get('sys_fullname'))
                 ),
                 E_USER_ERROR
             );
@@ -231,7 +231,7 @@ class WikiAttachmentRevision
     {
         if (is_numeric($gid)) {
             $this->gid = (int) $gid;
-            $this->basedir = $GLOBALS['sys_wiki_attachment_data_dir'] . '/' . $this->gid;
+            $this->basedir = ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->gid;
         }
     }
 

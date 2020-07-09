@@ -39,7 +39,7 @@ if (!$file_id || !$group_id) {
     exit_missing_param();
 }
 
-if (!$GLOBALS['sys_frs_license_mandatory']) {
+if (!ForgeConfig::get('sys_frs_license_mandatory')) {
     // Display license popup
     // This is useful when using a 'file #123' reference, that points to this script
     $res = $frspf->getFRSPackageByFileIdFromDb($file_id);

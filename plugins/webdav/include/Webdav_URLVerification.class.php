@@ -69,7 +69,7 @@ class Webdav_URLVerification extends URLVerification
     {
         if (
             strcmp($server['HTTP_HOST'], $this->getWebDAVHost()) == 0
-            && strcmp($this->getWebDAVHost(), $GLOBALS['sys_default_domain']) != 0
+            && strcmp($this->getWebDAVHost(), ForgeConfig::get('sys_default_domain')) != 0
             && strcmp($this->getWebDAVHost(), ForgeConfig::get('sys_https_host')) != 0
         ) {
             if (! $request->isSecure() && ForgeConfig::get('sys_https_host')) {

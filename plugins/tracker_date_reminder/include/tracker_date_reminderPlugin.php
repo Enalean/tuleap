@@ -74,7 +74,7 @@ class tracker_date_reminderPlugin extends Plugin
         include_once 'TrackerDateReminder_Logger_Prefix.class.php';
 
         if ($this->isLoggingEnabled()) {
-            $logfile = $GLOBALS['codendi_log'] . "/tracker_date_reminder.log";
+            $logfile = ForgeConfig::get('codendi_log') . "/tracker_date_reminder.log";
         } else {
             $logfile = false;
         }

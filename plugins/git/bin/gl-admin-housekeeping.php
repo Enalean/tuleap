@@ -25,7 +25,7 @@ use Symfony\Component\Lock\Store\SemaphoreStore;
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 require_once __DIR__ . '/../include/gitPlugin.php';
 
-$gitolite_var_path       = $GLOBALS['sys_data_dir'] . '/gitolite';
+$gitolite_var_path       = ForgeConfig::get('sys_data_dir') . '/gitolite';
 $remote_admin_repository = 'gitolite@gl-adm:gitolite-admin';
 
 $git_plugin = PluginManager::instance()->getPluginByName('git');

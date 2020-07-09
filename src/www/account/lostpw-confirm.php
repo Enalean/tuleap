@@ -53,18 +53,18 @@ if ($reset_token !== null) {
     $message = stripcslashes($Language->getText(
         'account_lostpw-confirm',
         'mail_body',
-        array($GLOBALS['sys_name'],
+        array(ForgeConfig::get('sys_name'),
               $request->getServerUrl() . '/account/lostlogin.php?confirm_hash=' . urlencode($identifier))
     ));
 
     $mail = new Codendi_Mail();
     $mail->setTo($user->getEmail(), true);
-    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array($GLOBALS['sys_name'])));
+    $mail->setSubject($Language->getText('account_lostpw-confirm', 'mail_subject', array(ForgeConfig::get('sys_name'))));
     $mail->setBodyText($message);
-    $mail->setFrom($GLOBALS['sys_noreply']);
+    $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail_is_sent = $mail->send();
     if (!$mail_is_sent) {
-        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])), CODENDI_PURIFIER_FULL);
+        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))), CODENDI_PURIFIER_FULL);
     }
 }
 

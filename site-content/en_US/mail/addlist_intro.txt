@@ -12,7 +12,7 @@ $pm = ProjectManager::instance();
 echo '
 
 <P>Lists are named in this manner: <em>'.ForgeConfig::get('sys_lists_prefix').'projectname-listname'.ForgeConfig::get('sys_lists_suffix').'@'. $sys_lists_domain .'</em>
-<P> In order to harmonize mailing lists names on '.$GLOBALS['sys_name'].' we advise you to create (at least) the following mailing lists for your project:<BR>
+<P> In order to harmonize mailing lists names on '.\ForgeConfig::get('sys_name').' we advise you to create (at least) the following mailing lists for your project:<BR>
 <ul>
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-interest</b>: for general purpose discussion especially at user level.
 <li><b>'.$pm->getProject($group_id)->getUnixName().'-devel</b>: for development questions and debates.

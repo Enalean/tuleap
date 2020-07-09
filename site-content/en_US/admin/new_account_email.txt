@@ -7,30 +7,30 @@
 //
 //
 
-$body = "You are now a registered user on ".$GLOBALS['sys_name']
-.". As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
+$body = "You are now a registered user on ".\ForgeConfig::get('sys_name')
+.". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get('sys_name')." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
 ."project.\n\n\n We highly recommend that you browse through the site, read "
 ."the Site Documentation (<". $base_url ."/help/>) and finalize the setup of your User Profile (<". $base_url ."/account/>) "
 ."(Define your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
-.$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you. \n\n\n-- The ".$GLOBALS['sys_name']." Team";
+.\ForgeConfig::get('sys_name')." and speak of ".\ForgeConfig::get('sys_name')." around you. \n\n\n-- The ".\ForgeConfig::get('sys_name')." Team";
 
 
-$title = "Account creation on ".$GLOBALS['sys_name']." !";
+$title = "Account creation on ".\ForgeConfig::get('sys_name')." !";
 
-$section_one = "You are now a registered user on ".$GLOBALS['sys_name'].". As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
+$section_one = "You are now a registered user on ".\ForgeConfig::get('sys_name').". As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get('sys_name')." Web Site. "
 ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own project.";
 
 $section_two = "We highly recommend that you browse through the site, read the Site Documentation (<". $base_url ."/help/>) "
 ."and finalize the setup of your User Profile (<". $base_url ."/account/>) (Define your preferences, etc.)";
 
-$section_three = "Enjoy the site, provide us with feedback on ways that we can improve" .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you.";
+$section_three = "Enjoy the site, provide us with feedback on ways that we can improve" .\ForgeConfig::get('sys_name')." and speak of ".\ForgeConfig::get('sys_name')." around you.";
 
 $thanks = "Thanks!";
 
-$signature = "- The team at ".$GLOBALS['sys_name'];
+$signature = "- The team at ".\ForgeConfig::get('sys_name');
 
-$help = "For any help contact: ".$GLOBALS['sys_email_admin'];
+$help = "For any help contact: ".\ForgeConfig::get('sys_email_admin');
 
 $message = $title . "\n\n" .  $section_one ."\n\n" . $section_two . "\n\n"
             .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

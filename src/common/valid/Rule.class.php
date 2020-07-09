@@ -319,8 +319,8 @@ class Rule_Email extends Rule
     {
         $valid_chars = '-!#$%&\'*+0-9=?A-Z^_`a-z{|}~\.';
         if (
-            array_key_exists('sys_disable_subdomains', $GLOBALS)
-            && $GLOBALS['sys_disable_subdomains']
+            ForgeConfig::exists('sys_disable_subdomains')
+            && ForgeConfig::get('sys_disable_subdomains')
         ) {
             $valid_domain = '[' . $valid_chars . ']+';
         } else {

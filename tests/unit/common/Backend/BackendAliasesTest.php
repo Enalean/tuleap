@@ -42,10 +42,10 @@ final class BackendAliasesTest extends TestCase
 
     protected function setUp(): void
     {
-        $GLOBALS['alias_file']         = vfsStream::setup()->url() . '/aliases.codendi';
-        $this->alias_file              = $GLOBALS['alias_file'];
-        $GLOBALS['codendi_bin_prefix'] = '/bin/';
-        $GLOBALS['mailman_wrapper']    = 'mailman_wrapper';
+        \ForgeConfig::set('alias_file', vfsStream::setup()->url() . '/aliases.codendi');
+        $this->alias_file              = \ForgeConfig::get('alias_file');
+        \ForgeConfig::set('codendi_bin_prefix', '/bin/');
+        \ForgeConfig::set('mailman_wrapper', 'mailman_wrapper');
 
         $listdao = \Mockery::spy(\MailingListDao::class);
         $listdao->shouldReceive('searchAllActiveML')->andReturns(
@@ -78,7 +78,6 @@ final class BackendAliasesTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['alias_file'], $GLOBALS['codendi_bin_prefix'], $GLOBALS['mailman_wrapper']);
         Backend::clearInstances();
         EventManager::clearInstance();
     }

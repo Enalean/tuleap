@@ -50,7 +50,7 @@ function forum_header($params)
         Show icon bar unless it's a news forum
 
     */
-    if ($group_id == $GLOBALS['sys_news_group']) {
+    if ($group_id == ForgeConfig::get('sys_news_group')) {
      //this is a news item, not a regular forum
         if ($forum_id) {
          /*
@@ -61,7 +61,7 @@ function forum_header($params)
 
          //backwards shim for all "generic news" that used to be submitted
          //as of may, "generic news" is not permitted - only project-specific news
-            if (db_result($result, 0, 'group_id') != $GLOBALS['sys_news_group']) {
+            if (db_result($result, 0, 'group_id') != ForgeConfig::get('sys_news_group')) {
                 $params['group'] = db_result($result, 0, 'group_id');
                 $params['toptab'] = 'news';
                 $group_id = db_result($result, 0, 'group_id');
@@ -69,7 +69,7 @@ function forum_header($params)
             } else {
                 $HTML->header($params);
                 echo '
-					<H2>' . $GLOBALS['sys_name'] . ' <A HREF="/news/">' . $Language->getText('forum_forum_utils', 'news') . '</A></H2><P>';
+					<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('forum_forum_utils', 'news') . '</A></H2><P>';
             }
 
             echo '<TABLE><TR><TD VALIGN="TOP">';
@@ -164,7 +164,7 @@ function forum_footer($params)
     */
 
     //backwards compatibility for "general news" which is no longer permitted to be submitted
-    if ($group_id == $GLOBALS['sys_news_group']) {
+    if ($group_id == ForgeConfig::get('sys_news_group')) {
         $HTML->footer($params);
     } else {
         site_project_footer($params);
@@ -694,7 +694,7 @@ function handle_monitoring($forum_id, $thread_id, $msg_id)
 
         if ($result && db_numrows($result) > 0) {
             $mail = new Codendi_Mail();
-            $mail->setFrom($GLOBALS['sys_noreply']);
+            $mail->setFrom(ForgeConfig::get('sys_noreply'));
             $mail->setSubject("[" . db_result($result, 0, 'unix_group_name') . " - " . util_unconvert_htmlspecialchars(db_result($result, 0, 'forum_name')) . " - " . db_result($result, 0, 'user_name') . "] " . util_unconvert_htmlspecialchars(db_result($result, 0, 'subject')));
             foreach ($to_list as $to) {
                 $mail->setBcc($to);
@@ -713,7 +713,7 @@ function handle_monitoring($forum_id, $thread_id, $msg_id)
             if ($mail->send()) {
                 $feedback .= ' - ' . $Language->getText('forum_forum_utils', 'mail_sent');
             } else {//ERROR
-                $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']));
+                $feedback .= ' - ' . $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')));
             }
 
             if (forum_is_monitored($forum_id) || forum_thread_is_monitored($thread_id)) {

@@ -117,7 +117,7 @@ class BaseLanguage
      */
     public function loadCoreSiteContent($lang, &$text_array)
     {
-        $this->loadAllTabFiles($GLOBALS['sys_incdir'] . '/' . $lang, $text_array);
+        $this->loadAllTabFiles(ForgeConfig::get('sys_incdir') . '/' . $lang, $text_array);
     }
 
     /**
@@ -125,7 +125,7 @@ class BaseLanguage
      */
     public function loadCustomSiteContent($lang, &$text_array)
     {
-        $this->loadAllTabFiles($GLOBALS['sys_custom_incdir'] . '/' . $lang, $text_array);
+        $this->loadAllTabFiles(ForgeConfig::get('sys_custom_incdir') . '/' . $lang, $text_array);
     }
 
     /**
@@ -149,7 +149,7 @@ class BaseLanguage
      */
     public function loadPluginsCustomSiteContent($lang, &$text_array)
     {
-        $this->_loadPluginsSiteContent($GLOBALS['sys_custompluginsroot'], $lang, $text_array);
+        $this->_loadPluginsSiteContent(ForgeConfig::get('sys_custompluginsroot'), $lang, $text_array);
     }
 
     /**
@@ -348,9 +348,9 @@ class BaseLanguage
 
         if (is_null($plugin_name)) {
             // Test first the custom directory
-            $custom_fn = $GLOBALS['sys_custom_incdir'] . "/" . $lang_code . "/" . $file . $ext;
+            $custom_fn = ForgeConfig::get('sys_custom_incdir') . "/" . $lang_code . "/" . $file . $ext;
         } else {
-            $custom_fn = $GLOBALS['sys_custompluginsroot'] . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
+            $custom_fn = ForgeConfig::get('sys_custompluginsroot') . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
         }
         if (file_exists($custom_fn)) {
             // The custom file exists.
@@ -359,9 +359,9 @@ class BaseLanguage
             // Use the default file
             // Check first if exist
             if (is_null($plugin_name)) {
-                $fn = $GLOBALS['sys_incdir'] . "/" . $lang_code . "/" . $file . $ext;
+                $fn = ForgeConfig::get('sys_incdir') . "/" . $lang_code . "/" . $file . $ext;
             } else {
-                $fn = $GLOBALS['sys_pluginsroot'] . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
+                $fn = ForgeConfig::get('sys_pluginsroot') . '/' . $plugin_name . '/site-content/' . $lang_code . '/' . $file . $ext;
             }
             if (file_exists($fn)) {
                 // The custom file exists.
@@ -369,7 +369,7 @@ class BaseLanguage
             } else {
                 if ($lang_code == self::DEFAULT_LANG) {
                     // return empty content to avoid include error
-                    return $GLOBALS['sys_incdir'] . "/" . $lang_code . "/others/empty.txt";
+                    return ForgeConfig::get('sys_incdir') . "/" . $lang_code . "/others/empty.txt";
                 } else {
                     // else try to find the file in the en_US directory
                     return $this->getContent($file, "en_US", $plugin_name, $ext);

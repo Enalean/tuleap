@@ -675,7 +675,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
         $project_for_parth = $this->getMediawikiManager()->instanceUsesProjectID($project) ?
             $row['group_id'] : $row['unix_group_name'];
 
-        $path = $GLOBALS['sys_data_dir'] . '/mediawiki/projects/' . $project_for_parth;
+        $path = ForgeConfig::get('sys_data_dir') . '/mediawiki/projects/' . $project_for_parth;
 
         $size = $params['DiskUsageManager']->getDirSize($path);
 

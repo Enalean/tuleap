@@ -764,7 +764,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getRealUnixUID()
     {
-        $unix_id = $this->unix_uid + $GLOBALS['unix_uid_add'];
+        $unix_id = $this->unix_uid + ForgeConfig::get('unix_uid_add');
         return $unix_id;
     }
 

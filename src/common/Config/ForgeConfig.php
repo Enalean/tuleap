@@ -46,22 +46,20 @@ class ForgeConfig
         self::$conf_stack[0] = array_merge(self::$conf_stack[0], $value_provider->getVariables());
     }
 
-    public static function loadLocalInc(): string
+    public static function loadLocalInc(): void
     {
         self::loadFromFile(__DIR__ . '/../../etc/local.inc.dist');
         $local_inc_file_path = (new Config_LocalIncFinder())->getLocalIncPath();
         self::loadFromFile($local_inc_file_path);
-        return $local_inc_file_path;
     }
 
-    public static function loadDatabaseInc(): string
+    public static function loadDatabaseInc(): void
     {
         $database_config_file = self::get('db_config_file');
         if (! is_file($database_config_file)) {
             throw new RuntimeException('Database configuration file cannot be read, did you loadLocalInc first ?');
         }
         self::loadFromFile($database_config_file);
-        return $database_config_file;
     }
 
     public static function loadFromFile($file)

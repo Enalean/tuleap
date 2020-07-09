@@ -53,7 +53,7 @@ class Account_RegisterPresenter
         $this->timezone_selector      = new Account_TimezoneSelectorPresenter(
             $this->prefill_values->form_timezone->value
         );
-        $this->should_display_purpose = $GLOBALS['sys_user_approval'] == 1;
+        $this->should_display_purpose = ForgeConfig::get('sys_user_approval') == 1;
         $this->extra_plugin_field     = $extra_plugin_field;
 
         $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());

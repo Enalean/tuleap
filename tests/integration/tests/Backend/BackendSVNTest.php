@@ -46,6 +46,10 @@ final class BackendSVNTest extends TestCase
     private $initial_svn_root_file;
     private $initial_http_user;
     private $initial_codendi_bin_prefix;
+    private $initial_svn_prefix;
+    private $initial_tmp_dir;
+    private $initial_sys_name;
+    private $initial_svnadmin_cmd;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|ProjectManager
      */
@@ -59,11 +63,14 @@ final class BackendSVNTest extends TestCase
         $this->bin_dir      = __DIR__ . '/_fixtures';
         $this->fake_revprop = $this->bin_dir . '/post-revprop-change.php';
 
-        $GLOBALS['svn_prefix']   = $this->tmp_dir . '/svnroot';
-        $GLOBALS['tmp_dir']      = $this->tmp_dir . '/tmp';
-        $GLOBALS['codendi_dir']  = '/usr/share/tuleap';
-        $GLOBALS['sys_name']     = 'Tuleap test';
-        $GLOBALS['svnadmin_cmd'] = '/usr/bin/svnadmin --config-dir ' . __DIR__ . '/_fixtures/.subversion';
+        $this->initial_svn_prefix = ForgeConfig::get('svn_prefix');
+        ForgeConfig::set('svn_prefix', $this->tmp_dir . '/svnroot');
+        $this->initial_tmp_dir = ForgeConfig::get('tmp_dir');
+        ForgeConfig::set('tmp_dir', $this->tmp_dir . '/tmp');
+        $this->initial_sys_name = ForgeConfig::get('sys_name');
+        ForgeConfig::set('sys_name', 'Tuleap test');
+        $this->initial_svnadmin_cmd = ForgeConfig::get('svnadmin_cmd');
+        ForgeConfig::set('svnadmin_cmd', '/usr/bin/svnadmin --config-dir ' . __DIR__ . '/_fixtures/.subversion');
 
         $this->initial_sys_project_backup_path = ForgeConfig::get('sys_project_backup_path');
         ForgeConfig::set('sys_project_backup_path', $this->tmp_dir . '/backup');
@@ -71,8 +78,8 @@ final class BackendSVNTest extends TestCase
         ForgeConfig::set('svn_root_file', $this->getTmpDir() . '/codendi_svnroot.conf');
         $this->initial_http_user = ForgeConfig::get('sys_http_user');
         ForgeConfig::set('sys_http_user', 'codendiadm');
-        mkdir($GLOBALS['svn_prefix'] . '/toto/hooks', 0777, true);
-        mkdir($GLOBALS['tmp_dir'], 0777, true);
+        mkdir(ForgeConfig::get('svn_prefix') . '/toto/hooks', 0777, true);
+        mkdir(ForgeConfig::get('tmp_dir'), 0777, true);
         mkdir(ForgeConfig::get('sys_project_backup_path'), 0777, true);
         $this->initial_codendi_bin_prefix = ForgeConfig::get('codendi_bin_prefix');
         ForgeConfig::set('codendi_bin_prefix', $this->bin_dir);
@@ -88,11 +95,14 @@ final class BackendSVNTest extends TestCase
     {
         //clear the cache between each tests
         Backend::clearInstances();
-        unset($GLOBALS['svn_prefix'], $GLOBALS['tmp_dir'], $GLOBALS['svnadmin_cmd'], $GLOBALS['codendi_dir'], $GLOBALS['sys_name']);
         ForgeConfig::set('sys_project_backup_path', $this->initial_sys_project_backup_path);
         ForgeConfig::set('svn_root_file', $this->initial_svn_root_file);
         ForgeConfig::set('sys_http_user', $this->initial_http_user);
         ForgeConfig::set('codendi_bin_prefix', $this->initial_codendi_bin_prefix);
+        ForgeConfig::set('svn_prefix', $this->initial_svn_prefix);
+        ForgeConfig::set('tmp_dir', $this->initial_tmp_dir);
+        ForgeConfig::set('sys_name', $this->initial_sys_name);
+        ForgeConfig::set('svnadmin_cmd', $this->initial_svnadmin_cmd);
     }
 
     public function testConstructor(): void
@@ -105,14 +115,14 @@ final class BackendSVNTest extends TestCase
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/TestProj');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
 
         $this->backend->shouldReceive('getProjectManager')->andReturns($pm);
 
-        $projdir = $GLOBALS['svn_prefix'] . "/TestProj";
+        $projdir = ForgeConfig::get('svn_prefix') . "/TestProj";
 
         // Setup test data
         mkdir($projdir);
@@ -139,7 +149,7 @@ final class BackendSVNTest extends TestCase
         $user4->shouldReceive('getUserName')->andReturns('user4');
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/TestProj');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
         $proj_members = array("0" =>
                               array (
@@ -191,9 +201,9 @@ final class BackendSVNTest extends TestCase
         $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
 
         $this->assertEquals($this->backend->createProjectSVN(142), true);
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/TestProj"), "SVN dir should be created");
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/TestProj/hooks"), "hooks dir should be created");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/hooks/post-commit"), "post-commit file should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('svn_prefix') . "/TestProj"), "SVN dir should be created");
+        $this->assertTrue(is_dir(ForgeConfig::get('svn_prefix') . "/TestProj/hooks"), "hooks dir should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/hooks/post-commit"), "post-commit file should be created");
     }
 
     public function testUpdateSVNAccess(): void
@@ -210,7 +220,7 @@ final class BackendSVNTest extends TestCase
         $user5->shouldReceive('getUserName')->andReturns('user5');
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/TestProj');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
         $proj_members = array("0" =>
                               array (
@@ -283,14 +293,14 @@ final class BackendSVNTest extends TestCase
         $this->backend->shouldReceive('_getSVNAccessFile')->andReturns($access_file);
 
         $this->assertEquals($this->backend->createProjectSVN(142), true);
-        $this->assertDirectoryExists($GLOBALS['svn_prefix'] . "/TestProj", "SVN dir should be created");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile"), "SVN access file should be created");
+        $this->assertDirectoryExists(ForgeConfig::get('svn_prefix') . "/TestProj", "SVN dir should be created");
+        $this->assertTrue(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/.SVNAccessFile"), "SVN access file should be created");
 
         // Update without modification
-        $this->assertEquals($this->backend->updateSVNAccess(142, $GLOBALS['svn_prefix'] . '/TestProj'), true);
-        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile"), "SVN access file should exist");
-        $this->assertTrue(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile.new"), "SVN access file (.new) should be created");
-        $this->assertFalse(is_file($GLOBALS['svn_prefix'] . "/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
+        $this->assertEquals($this->backend->updateSVNAccess(142, ForgeConfig::get('svn_prefix') . '/TestProj'), true);
+        $this->assertTrue(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/.SVNAccessFile"), "SVN access file should exist");
+        $this->assertTrue(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/.SVNAccessFile.new"), "SVN access file (.new) should be created");
+        $this->assertFalse(is_file(ForgeConfig::get('svn_prefix') . "/TestProj/.SVNAccessFile.old"), "SVN access file (.old) should not be created");
     }
 
     public function testGenerateSVNApacheConf(): void
@@ -328,20 +338,20 @@ final class BackendSVNTest extends TestCase
 
     public function testSetSVNPrivacyPrivate(): void
     {
-        $this->backend->shouldReceive('chmod')->with($GLOBALS['svn_prefix'] . '/' . 'toto', 0770)->once()->andReturns(true);
+        $this->backend->shouldReceive('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0770)->once()->andReturns(true);
         $this->backend->shouldReceive('getProjectManager')->andReturns($this->project_manager);
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('toto');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/toto');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
         $this->assertTrue($this->backend->setSVNPrivacy($project, true));
     }
 
     public function testsetSVNPrivacyPublic(): void
     {
-        $this->backend->shouldReceive('chmod')->with($GLOBALS['svn_prefix'] . '/' . 'toto', 0775)->once()->andReturns(true);
+        $this->backend->shouldReceive('chmod')->with(ForgeConfig::get('svn_prefix') . '/' . 'toto', 0775)->once()->andReturns(true);
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('toto');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/toto');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
         $this->assertTrue($this->backend->setSVNPrivacy($project, false));
     }
 
@@ -353,7 +363,7 @@ final class BackendSVNTest extends TestCase
 
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns($path_that_doesnt_exist);
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/' . $path_that_doesnt_exist);
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/' . $path_that_doesnt_exist);
 
         $this->assertFalse($this->backend->setSVNPrivacy($project, true));
         $this->assertFalse($this->backend->setSVNPrivacy($project, false));
@@ -363,7 +373,7 @@ final class BackendSVNTest extends TestCase
     {
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixNameMixedCase')->andReturns('TestProj');
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/TestProj');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/TestProj');
         $project->shouldReceive('isSVNTracked')->andReturns(false);
 
         $project->shouldReceive('getMembersUserNames')->andReturns(array());
@@ -383,7 +393,7 @@ final class BackendSVNTest extends TestCase
 
         $this->assertEquals($this->backend->renameSVNRepository($project, "foobar"), true);
 
-        $this->assertTrue(is_dir($GLOBALS['svn_prefix'] . "/foobar"), "SVN dir should be renamed");
+        $this->assertTrue(is_dir(ForgeConfig::get('svn_prefix') . "/foobar"), "SVN dir should be renamed");
     }
 
     public function testUpdateSVNAccessForGivenMember(): void
@@ -421,18 +431,18 @@ final class BackendSVNTest extends TestCase
     public function testItThrowsAnExceptionIfFileForSymlinkAlreadyExists(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+        $path    = ForgeConfig::get('svn_prefix') . '/toto/hooks';
         touch($path . '/post-revprop-change');
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('toto')->getMock();
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/toto');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
         $backend->shouldReceive('log')->once();
 
         $this->expectException(\BackendSVNFileForSimlinkAlreadyExistsException::class);
         $backend->updateHooks(
             $project,
-            $GLOBALS['svn_prefix'] . '/toto',
+            ForgeConfig::get('svn_prefix') . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',
@@ -444,19 +454,19 @@ final class BackendSVNTest extends TestCase
     public function testDoesntThrowAnExceptionIfTheHookIsALinkToOurImplementation(): void
     {
         $backend = \Mockery::mock(\BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $path    = $GLOBALS['svn_prefix'] . '/toto/hooks';
+        $path    = ForgeConfig::get('svn_prefix') . '/toto/hooks';
 
         // Create link to fake post-revprop-change
         symlink($this->fake_revprop, $path . '/post-revprop-change');
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('toto')->getMock();
-        $project->shouldReceive('getSVNRootPath')->andReturns($GLOBALS['svn_prefix'] . '/toto');
+        $project->shouldReceive('getSVNRootPath')->andReturns(ForgeConfig::get('svn_prefix') . '/toto');
         $project->shouldReceive('isSVNTracked')->andReturns(true);
         $backend->shouldReceive('log')->never();
 
         $backend->updateHooks(
             $project,
-            $GLOBALS['svn_prefix'] . '/toto',
+            ForgeConfig::get('svn_prefix') . '/toto',
             true,
             ForgeConfig::get('codendi_bin_prefix'),
             'commit-email.pl',

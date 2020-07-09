@@ -46,7 +46,7 @@ class BackendMailingList extends Backend
     protected function updateListConfig($list)
     {
         // write configuration in temporary file
-        $config_file = $GLOBALS['tmp_dir'] . "/mailman_config_" . $list->getId() . ".in";
+        $config_file = ForgeConfig::get('tmp_dir') . "/mailman_config_" . $list->getId() . ".in";
 
         if ($fp = fopen($config_file, 'w')) {
             // Define encoding of this file for Python. See SR #764
@@ -72,7 +72,7 @@ class BackendMailingList extends Backend
 
             if (
                 system(
-                    $GLOBALS['mailman_bin_dir'] . '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
+                    ForgeConfig::get('mailman_bin_dir') . '/config_list -i ' . escapeshellarg($config_file) . ' ' . escapeshellarg($list->getListName())
                 ) !== false
             ) {
                 if (unlink($config_file)) {
@@ -99,11 +99,11 @@ class BackendMailingList extends Backend
             $list_admin = UserManager::instance()->getUserById($list->getListAdmin());
             $list_admin_email = $list_admin->getEmail();
 
-            $list_dir = $GLOBALS['mailman_list_dir'] . "/" . $list->getListName();
+            $list_dir = ForgeConfig::get('mailman_list_dir') . "/" . $list->getListName();
 
             if ((! is_dir($list_dir)) && ($list->getIsPublic() != 9)) {
                 // Create list
-                system($GLOBALS['mailman_bin_dir'] . '/newlist -q ' . escapeshellarg($list->getListName()) . ' ' .
+                system(ForgeConfig::get('mailman_bin_dir') . '/newlist -q ' . escapeshellarg($list->getListName()) . ' ' .
                     escapeshellarg($list_admin_email) . ' ' . escapeshellarg($list->getListPassword()) . ' >/dev/null');
 
                 // Then update configuraion
@@ -125,16 +125,16 @@ class BackendMailingList extends Backend
 
         if ($row = $dar->getRow()) {
             $list = new MailingList($row);
-            $list_dir = $GLOBALS['mailman_list_dir'] . "/" . $list->getListName();
+            $list_dir = ForgeConfig::get('mailman_list_dir') . "/" . $list->getListName();
             if ((is_dir($list_dir)) && ($list->getIsPublic() == 9)) {
                 // Archive first
-                $list_archive_dir = $GLOBALS['mailman_list_dir'] . "/../archives/private/" . $list->getListName(); // Does it work? TODO
+                $list_archive_dir = ForgeConfig::get('mailman_list_dir') . "/../archives/private/" . $list->getListName(); // Does it work? TODO
                 $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $list->getListName() . "-mailman.tgz";
                 system('tar cfz ' . escapeshellarg($backupfile) . ' ' . escapeshellarg($list_dir) . ' ' . escapeshellarg($list_archive_dir));
                 chmod($backupfile, 0600);
 
                 // Delete the mailing list if asked to and the mailing exists (archive deleted as well)
-                system($GLOBALS['mailman_bin_dir'] . '/rmlist -a ' . escapeshellarg($list->getListName()) . ' >/dev/null');
+                system(ForgeConfig::get('mailman_bin_dir') . '/rmlist -a ' . escapeshellarg($list->getListName()) . ' >/dev/null');
                 return $this->_getMailingListDao()->deleteListDefinitively($group_list_id);
             }
         }
@@ -148,7 +148,7 @@ class BackendMailingList extends Backend
     public function listExists($list)
     {
         // Is this the best test?
-        $list_dir = $GLOBALS['mailman_list_dir'] . "/" . $list->getListName();
+        $list_dir = ForgeConfig::get('mailman_list_dir') . "/" . $list->getListName();
         if (! is_dir($list_dir)) {
             return false;
         }

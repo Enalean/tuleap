@@ -49,7 +49,7 @@ class WikiPageWrapper
       // Set PhpWiki init values
         define('WIKI_NAME', $this->wikiname);
         define('GROUP_ID', $this->gid);
-        define('PLUGIN_CACHED_CACHE_DIR', $GLOBALS['codendi_cache_dir']);
+        define('PLUGIN_CACHED_CACHE_DIR', ForgeConfig::get('codendi_cache_dir'));
     }
 
   /**

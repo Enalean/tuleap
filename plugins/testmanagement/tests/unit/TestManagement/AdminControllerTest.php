@@ -20,13 +20,10 @@
 
 namespace Tuleap\TestManagement;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalResponseMock;
-use Tuleap\Layout\BaseLayout;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
 use Tuleap\TestManagement\Administration\TrackerChecker;
 use Tuleap\TestManagement\Administration\TrackerHasAtLeastOneFrozenFieldsPostActionException;
@@ -38,7 +35,6 @@ class AdminControllerTest extends TestCase
     use MockeryPHPUnitIntegration;
     use GlobalResponseMock;
 
-    private $globals;
     /** @var Project */
     private $project;
     /** @var AdminController */
@@ -65,9 +61,6 @@ class AdminControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->globals = $GLOBALS;
-        $GLOBALS       = [];
-        $GLOBALS['Response'] = Mockery::spy(BaseLayout::class);
 
         $this->config                    = Mockery::mock(Config::class);
         $this->step_field_usage_detector = Mockery::mock(StepFieldUsageDetector::class);
@@ -91,12 +84,6 @@ class AdminControllerTest extends TestCase
             $this->tracker_checker,
             new Valid_UInt()
         );
-    }
-
-    protected function tearDown(): void
-    {
-        $GLOBALS = $this->globals;
-        parent::tearDown();
     }
 
     private function setUpRequest()

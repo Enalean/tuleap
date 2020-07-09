@@ -519,7 +519,7 @@ class ArtifactDateReminderFactory
         $week = date("W", $this->getDateValue());
 
         $mail = new Codendi_Mail();
-        $mail->setFrom($GLOBALS['sys_noreply']);
+        $mail->setFrom(ForgeConfig::get('sys_noreply'));
         $mail->setSubject("[" . $this->getTrackerName() . "] " . sprintf(dgettext('tuleap-tracker_date_reminder', 'Reminder: \'%1$s\' %2$s for \'%3$s\''), $field->getLabel(), date("j F Y", $this->getDateValue()), $art->getSummary()));
 
         $body = "\n" . sprintf(dgettext('tuleap-tracker_date_reminder', 'Codex was asked to remind you today that the \'%1$s\' in the artifact below is %2$s (Week %3$s).'), $field->getLabel(), date("l j F Y", $this->getDateValue()), $week) .

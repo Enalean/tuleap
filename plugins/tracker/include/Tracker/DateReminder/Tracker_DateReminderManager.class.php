@@ -299,12 +299,12 @@ class Tracker_DateReminderManager
     protected function getBodyText(Tracker_DateReminder $reminder, Tracker_Artifact $artifact, $recipient, BaseLanguage $language)
     {
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $link     = ' <' . $protocol . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?aid=' . $artifact->getId() . '>';
+        $link     = ' <' . $protocol . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $artifact->getId() . '>';
 
         $output   = '+============== ' . '[' . $this->getTracker()->getItemName() . ' #' . $artifact->getId() . '] ' . $artifact->fetchMailTitle($recipient) . ' ==============+';
         $output   .= PHP_EOL;
 
-        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $GLOBALS['sys_name'], $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
+        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), ForgeConfig::get('sys_name'), $reminder->getField()->getLabel(), (string) $reminder->getFieldValue($artifact));
         $output   .= PHP_EOL;
         $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact here: %1$s'), $link);
         $output   .= PHP_EOL;
@@ -325,10 +325,10 @@ class Tracker_DateReminderManager
         $format   = Codendi_Mail_Interface::FORMAT_HTML;
         $hp       = Codendi_HTMLPurifier::instance();
         $protocol = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-        $link     = $protocol . '://' . $GLOBALS['sys_default_domain'] . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
+        $link     = $protocol . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?aid=' . $artifact->getId();
 
         $output   = '<h1>' . $hp->purify($artifact->fetchMailTitle($recipient, $format, false)) . '</h1>' . PHP_EOL;
-        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify($GLOBALS['sys_name']), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
+        $output   .= sprintf(dgettext('tuleap-tracker', '%1$s was asked to remind you today that the \'%2$s\' in the artifact below is %3$s.'), $hp->purify(ForgeConfig::get('sys_name')), $hp->purify($reminder->getField()->getLabel()), (string) $reminder->getFieldValue($artifact));
         $output   .= '<br>';
         $output   .= sprintf(dgettext('tuleap-tracker', 'You can access the artifact <a href="%1$s">here</a>.'), $link);
         $output   .= '<br>';

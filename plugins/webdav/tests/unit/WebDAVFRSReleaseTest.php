@@ -31,9 +31,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use Project;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\GlobalLanguageMock;
-
-require_once __DIR__ . '/bootstrap.php';
 
 /**
  * This is the unit test of WebDAVFRSRelease
@@ -42,17 +41,13 @@ class WebDAVFRSReleaseTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use GlobalLanguageMock;
+    use ForgeConfigSandbox;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures/incoming';
-    }
 
-    protected function tearDown(): void
-    {
-        unset($GLOBALS['ftp_incoming_dir']);
-        parent::tearDown();
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures/incoming');
     }
 
     /**
@@ -854,7 +849,7 @@ class WebDAVFRSReleaseTest extends TestCase
      */
     public function testCreateFileFailWithFileSizeLimitExceeded(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = \org\bovigo\vfs\vfsStream::setup()->url();
+        \ForgeConfig::set('ftp_incoming_dir', \org\bovigo\vfs\vfsStream::setup()->url());
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -879,7 +874,7 @@ class WebDAVFRSReleaseTest extends TestCase
      */
     public function testCreateFilesucceed(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = \org\bovigo\vfs\vfsStream::setup()->url();
+        \ForgeConfig::set('ftp_incoming_dir', \org\bovigo\vfs\vfsStream::setup()->url());
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -912,9 +907,9 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->createFile('release', $data);
     }
 
-    public function testcreateFileIntoIncomingUnlinkFail(): void
+    public function testCreateFileIntoIncomingUnlinkFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures');
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -927,9 +922,9 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->createFileIntoIncoming('test.txt', 'text');
     }
 
-    public function testcreateFileIntoIncomingCreateFail(): void
+    public function testCreateFileIntoIncomingCreateFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures');
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -942,9 +937,9 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    public function testcreateFileIntoIncomingCloseFail(): void
+    public function testCreateFileIntoIncomingCloseFail(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures');
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -958,9 +953,9 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    public function testcreateFileIntoIncomingSucceed(): void
+    public function testCreateFileIntoIncomingSucceed(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures');
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
@@ -972,9 +967,9 @@ class WebDAVFRSReleaseTest extends TestCase
         $webDAVFRSRelease->createFileIntoIncoming('toto.txt', 'text');
     }
 
-    public function testcreateFileIntoIncomingSucceedWithFileExist(): void
+    public function testCreateFileIntoIncomingSucceedWithFileExist(): void
     {
-        $GLOBALS['ftp_incoming_dir'] = dirname(__FILE__) . '/_fixtures';
+        \ForgeConfig::set('ftp_incoming_dir', __DIR__ . '/_fixtures');
 
         $webDAVFRSRelease = \Mockery::mock(\WebDAVFRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

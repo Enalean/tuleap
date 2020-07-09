@@ -80,7 +80,7 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
         $errors['timezone'] = $Language->getText('account_register', 'err_notz');
         return 0;
     }
-    if (!$request->existAndNonEmpty('form_register_purpose') && ($GLOBALS['sys_user_approval'] && $request->get('page') != "admin_creation")) {
+    if (!$request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::get('sys_user_approval') && $request->get('page') != "admin_creation")) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
         $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
         return 0;
@@ -307,7 +307,7 @@ if ($request->isPost() && $request->exist('Register')) {
             $admin_creation = true;
             if ($request->get('form_send_email')) {
                 //send an email to the user with th login and password
-                $from      = $GLOBALS['sys_noreply'];
+                $from      = ForgeConfig::get('sys_noreply');
                 $is_sent = send_admin_new_user_email(
                     $request->get('form_email'),
                     $request->get('form_loginname')
@@ -316,7 +316,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 if (! $is_sent) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
                     );
                 }
             }
@@ -324,12 +324,12 @@ if ($request->isPost() && $request->exist('Register')) {
         $thanks = $Language->getText('account_register', 'msg_thanks');
         $is_thanks = true;
 
-        if ($GLOBALS['sys_user_approval'] == 0 || $admin_creation) {
+        if (ForgeConfig::get('sys_user_approval') == 0 || $admin_creation) {
             if (!$admin_creation) {
                 if (!send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
                     );
                 }
                 $presenter = new MailPresenterFactory();
@@ -345,7 +345,7 @@ if ($request->isPost() && $request->exist('Register')) {
                     'msg_confirm_admin',
                     [
                         $hp->purify($request->get('form_realname')),
-                        $GLOBALS['sys_name'],
+                        ForgeConfig::get('sys_name'),
                         $hp->purify($request->get('form_loginname')),
                         $hp->purify($request->get('form_pw'))
                     ]
@@ -356,7 +356,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
                 $displayed_image    = false;
             } else {
-                $content            = $Language->getText('account_register', 'msg_confirm', array($GLOBALS['sys_name'], $user_name));
+                $content            = $Language->getText('account_register', 'msg_confirm', array(ForgeConfig::get('sys_name'), $user_name));
                 $redirect_url       = '/';
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             }
@@ -365,7 +365,7 @@ if ($request->isPost() && $request->exist('Register')) {
             // inform the user that approval is required
             $href_approval      = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
             $title              = $Language->getText('account_register', 'title_approval');
-            $content            = $Language->getText('account_register', 'msg_approval', array($GLOBALS['sys_name'], $user_name, $href_approval));
+            $content            = $Language->getText('account_register', 'msg_approval', array(ForgeConfig::get('sys_name'), $user_name, $href_approval));
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();

@@ -654,7 +654,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
                     </tbody>
                 </table>
                 <?php
-                echo '<span class="small" style="color:#666"><i>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_msg', formatByteToMb($GLOBALS['sys_max_size_upload']))) . '</i> </span>';
+                echo '<span class="small" style="color:#666"><i>' . $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'upload_file_msg', formatByteToMb(ForgeConfig::get('sys_max_size_upload')))) . '</i> </span>';
 
                 if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
                           echo '<div id=\'files_help\'><span class="smaller">';
@@ -1071,19 +1071,19 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
         $data_uploaded = false;
         if (isset($_FILES['uploaded_change_log']) && !$_FILES['uploaded_change_log']['error']) {
             $code = addslashes(fread(fopen($_FILES['uploaded_change_log']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_change_log']['tmp_name'])));
-            if ((strlen($code) > 0) && (strlen($code) < $GLOBALS['sys_max_size_upload'])) {
+            if ((strlen($code) > 0) && (strlen($code) < ForgeConfig::get('sys_max_size_upload'))) {
                 //size is fine
                 $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded');
                 $data_uploaded = true;
                 $release['change_log'] = $code;
             } else {
                 //too big or small
-                $warning[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'length_err', $GLOBALS['sys_max_size_upload']);
+                $warning[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'length_err', ForgeConfig::get('sys_max_size_upload'));
             }
         }
         if (isset($_FILES['uploaded_release_notes']) && !$_FILES['uploaded_release_notes']['error']) {
             $code = addslashes(fread(fopen($_FILES['uploaded_release_notes']['tmp_name'], 'r'), file_utils_get_size($_FILES['uploaded_release_notes']['tmp_name'])));
-            if ((strlen($code) > 0) && (strlen($code) < $GLOBALS['sys_max_size_upload'])) {
+            if ((strlen($code) > 0) && (strlen($code) < ForgeConfig::get('sys_max_size_upload'))) {
                 //size is fine
                 if (!$data_uploaded) {
                     $info[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'data_uploaded');
@@ -1091,7 +1091,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 $release['release_notes'] = $code;
             } else {
                 //too big or small
-                $warning[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'length_err', $GLOBALS['sys_max_size_upload']);
+                $warning[] = $GLOBALS['Language']->getText('file_admin_editreleases', 'length_err', ForgeConfig::get('sys_max_size_upload'));
             }
         }
 
@@ -1179,7 +1179,7 @@ function frs_process_release_form($is_update, $request, $group_id, $title, $url)
                 $count = $release_factory->emailNotification($rel);
                 if ($count === false) {
                     $error[] =  $GLOBALS['Language']->getText('global', 'mail_failed', array (
-                            $GLOBALS['sys_email_admin']
+                        ForgeConfig::get('sys_email_admin')
                         ));
                 } else {
                     if ($count > 0) {

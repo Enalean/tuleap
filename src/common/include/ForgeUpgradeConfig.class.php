@@ -64,8 +64,8 @@ class ForgeUpgradeConfig
      */
     public function loadDefaults()
     {
-        if (isset($GLOBALS['forgeupgrade_file']) && is_file($GLOBALS['forgeupgrade_file'])) {
-            $this->setFilePath($GLOBALS['forgeupgrade_file']);
+        if (ForgeConfig::exists('forgeupgrade_file') && is_file(ForgeConfig::get('forgeupgrade_file'))) {
+            $this->setFilePath(ForgeConfig::get('forgeupgrade_file'));
         } else {
             $localInc = getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/tuleap/conf/local.inc';
             throw new Exception('$forgeupgrade_file variable not defined in ' . $localInc);

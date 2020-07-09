@@ -22,10 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../../bootstrap.php';
-
 class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCase
 {
+    use \Tuleap\ForgeConfigSandbox;
+
     /** @var SystemEvent_PROFTPD_DIRECTORY_CREATE */
     private $event;
     /** @var String */
@@ -48,7 +48,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
         $this->ftp_directory = '/var/tmp';
         $this->path = $this->ftp_directory . "/" . $this->group_unix_name;
 
-        $GLOBALS['sys_http_user'] = 'someuser';
+        ForgeConfig::set('sys_http_user', 'someuser');
 
         $this->event->setParameters($this->group_unix_name);
         $this->event->injectDependencies($this->backend, $this->acl_updater, $this->ftp_directory);
@@ -57,7 +57,6 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
     public function tearDown(): void
     {
         rmdir($this->path);
-        unset($GLOBALS['sys_http_user']);
     }
 
     public function testItCreatesDirectory()
@@ -80,7 +79,7 @@ class SystemEvent_PROFTPD_DIRECTORY_CREATETest extends \PHPUnit\Framework\TestCa
 
     public function testItSetsACLOnDirectory()
     {
-        $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, $GLOBALS['sys_http_user'], '', '');
+        $this->acl_updater->expects($this->once())->method('recursivelyApplyACL')->with($this->path, ForgeConfig::get('sys_http_user'), '', '');
 
         $this->event->process();
     }

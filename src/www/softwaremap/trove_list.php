@@ -22,7 +22,7 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../include/trove.php';
 
-if ($GLOBALS['sys_use_trove'] == 0) {
+if (ForgeConfig::get('sys_use_trove') == 0) {
     exit_permission_denied();
 }
 

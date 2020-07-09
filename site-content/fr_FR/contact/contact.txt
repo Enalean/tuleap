@@ -8,7 +8,7 @@
         </div>
         <section class="tlp-pane-section">
             <p>Toutes les demandes doivent être envoyées par courrier électronique à
-                <a href="mailto:<?php print $GLOBALS['sys_email_contact']; ?>"><?php print $GLOBALS['sys_email_contact']; ?></a>.
+                <a href="mailto:<?php echo \ForgeConfig::get('sys_email_contact'); ?>"><?php echo \ForgeConfig::get('sys_email_contact'); ?></a>.
             </p>
         </section>
     </div>

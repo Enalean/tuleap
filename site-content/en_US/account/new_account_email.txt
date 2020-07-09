@@ -7,28 +7,28 @@
 //
 // 
 //
-$title = "Welcome to ".$GLOBALS['sys_name']."!";
+$title = "Welcome to ".\ForgeConfig::get('sys_name')."!";
 
 $section_one = "You are now a registered user with the login: ";
 
-$section_two = "As a registered user, you can now fully participate in the activities of the ".$GLOBALS['sys_name']." Web Site. "
+$section_two = "As a registered user, you can now fully participate in the activities of the ".\ForgeConfig::get('sys_name')." Web Site. "
                ."You may use forums, subscribe to mailing lists, browse through the list of hosted projects, or even start your own "
                ."project.";
 
-$section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".$GLOBALS['sys_name']
+$section_three = "** IMPORTANT REMARKS **\n\nWhile your Web account is available right now, it takes some time for ".\ForgeConfig::get('sys_name')
                    ." to create your Shell account. Some features like CVS and SVN access depend on it. Your Shell account will be activated in less than two"
                    ." hours from now. \n\n\nIn the meantime we highly recommend that you browse through the site, read "
                    ."the Site Documentation and finalize the setup of your User Profile "
                    ."(Define your preferences, etc.)\n\n\nEnjoy the site, provide us with feedback on ways that we can improve "
-                   .$GLOBALS['sys_name']." and speak of ".$GLOBALS['sys_name']." around you.";
+                   .\ForgeConfig::get('sys_name')." and speak of ".\ForgeConfig::get('sys_name')." around you.";
 
 $section_after_login = "\nThe password should have you been communicated by one of your site administrator. Please change it after your first connection to the web site. If the password has not been communicated to you, you can use the lost password procedure to generate a new password.";
 
 $thanks = "Thanks!";
 
-$signature = "- The team at ".$GLOBALS['sys_name'];
+$signature = "- The team at ".\ForgeConfig::get('sys_name');
 
-$help = "For any help contact: ".$GLOBALS['sys_email_admin'];
+$help = "For any help contact: ".\ForgeConfig::get('sys_email_admin');
 
 $message = $title . "\n\n" .  $section_one . $login  . '.' . $section_after_login . "\n\n" . $section_two . "\n\n"
             .$section_three. "\n\n".$thanks. "\n\n" .$signature. "\n\n" .$help;

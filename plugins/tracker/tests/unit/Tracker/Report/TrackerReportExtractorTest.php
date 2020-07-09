@@ -24,8 +24,6 @@ namespace Tuleap\Tracker\Report;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 class TrackerReportExtractorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -52,8 +50,6 @@ class TrackerReportExtractorTest extends TestCase
     {
         parent::setUp();
 
-        $globals = array_merge([], $GLOBALS);
-
         $this->tracker_factory = \Mockery::spy(\TrackerFactory::class);
 
         $this->extractor = new TrackerReportExtractor($this->tracker_factory);
@@ -62,8 +58,6 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_id_1 = 1;
         $this->tracker_1 = \Mockery::spy(\Tracker::class);
         $this->tracker_1->shouldReceive('getId')->andReturn($this->tracker_id_1);
-
-        $GLOBALS = $globals;
     }
 
     public function testItDoesNotExtractTrackerUserCanNotView()

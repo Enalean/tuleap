@@ -127,20 +127,23 @@ final class GitXmlImporterTest extends TestCase
 
     private $backup_tmp_dir;
     private $backup_access_config;
+    private $backup_sys_data_dir;
 
     protected function setUp(): void
     {
         $this->backup_tmp_dir       = ForgeConfig::get('tmp_dir');
         $this->backup_access_config = ForgeConfig::get(ForgeAccess::CONFIG);
+        $this->backup_sys_data_dir  = ForgeConfig::get('sys_data_dir');
 
         $this->old_cwd = getcwd();
         $this->system_command = new System_Command();
         parent::setUp();
 
-        $GLOBALS['sys_data_dir'] = $this->getTmpDir();
-        mkdir("${GLOBALS['sys_data_dir']}/gitolite/admin/", 0777, true);
-        mkdir("${GLOBALS['sys_data_dir']}/gitolite/repositories/test_project", 0777, true);
-        $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
+        $sys_data_dir = $this->getTmpDir();
+        ForgeConfig::set('sys_data_dir', $sys_data_dir);
+        mkdir("${sys_data_dir}/gitolite/admin/", 0777, true);
+        mkdir("${sys_data_dir}/gitolite/repositories/test_project", 0777, true);
+        $sys_data_dir_arg = escapeshellarg($sys_data_dir);
         $this->system_command->exec("chmod -R 0777 $sys_data_dir_arg/");
 
         ForgeConfig::set('tmp_dir', $this->getTmpDir());
@@ -259,11 +262,11 @@ final class GitXmlImporterTest extends TestCase
 
     protected function tearDown(): void
     {
-        $this->backup_tmp_dir       = ForgeConfig::set('tmp_dir', $this->backup_tmp_dir);
-        $this->backup_access_config = ForgeConfig::set(ForgeAccess::CONFIG, $this->backup_access_config);
+        ForgeConfig::set('tmp_dir', $this->backup_tmp_dir);
+        ForgeConfig::set(ForgeAccess::CONFIG, $this->backup_access_config);
+        ForgeConfig::set('sys_data_dir', $this->backup_sys_data_dir);
 
         parent::tearDown();
-        unset($GLOBALS['sys_data_dir']);
         ForgeConfig::restore();
         PermissionsManager::clearInstance();
         PluginManager::clearInstance();
@@ -292,7 +295,7 @@ XML;
 
         $this->assertEquals($this->last_saved_repository->getName(), 'empty');
 
-        $iterator = new DirectoryIterator($GLOBALS['sys_data_dir'] . '/gitolite/repositories/test_project');
+        $iterator = new DirectoryIterator(ForgeConfig::get('sys_data_dir') . '/gitolite/repositories/test_project');
         $empty_is_here = false;
         foreach ($iterator as $it) {
             if ($it->getFilename() == 'empty') {
@@ -320,7 +323,7 @@ XML;
             $this->getTmpDir()
         );
 
-        $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
+        $sys_data_dir_arg = escapeshellarg(ForgeConfig::get('sys_data_dir'));
         $nb_commit = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
         $this->assertEquals(1, intval($nb_commit));
     }
@@ -336,7 +339,7 @@ XML;
             </project>
 XML;
         $this->import(new SimpleXMLElement($xml));
-        $sys_data_dir_arg = escapeshellarg($GLOBALS['sys_data_dir']);
+        $sys_data_dir_arg = escapeshellarg(ForgeConfig::get('sys_data_dir'));
         $nb_commit_stable = shell_exec("cd $sys_data_dir_arg/gitolite/repositories/test_project/stable.git && git log --oneline| wc -l");
         $this->assertEquals(1, (int) $nb_commit_stable);
 

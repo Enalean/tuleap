@@ -568,10 +568,10 @@ function util_cleanup_emails($addresses)
 // login name
 function util_normalize_email($address)
 {
-    if (strpos(':', $GLOBALS['sys_default_domain']) === false) {
-        $host = $GLOBALS['sys_default_domain'];
+    if (strpos(':', ForgeConfig::get('sys_default_domain')) === false) {
+        $host = ForgeConfig::get('sys_default_domain');
     } else {
-        [$host, $port] = explode(':', $GLOBALS['sys_default_domain']);
+        [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
     }
     $address = util_cleanup_emails($address);
     if (validate_email($address)) {
@@ -710,7 +710,7 @@ function util_user_finder($ident, $strict = true)
 // set (done by theme.php in pre.php)
 function util_get_css_theme()
 {
-    return '/themes/' . $GLOBALS['sys_user_theme'] . '/css/style.css';
+    return '/themes/' . ForgeConfig::get('sys_user_theme') . '/css/style.css';
 }
 
 // This function get the image file for the theme.
@@ -722,7 +722,7 @@ function util_get_image_theme($fn, $the_theme = false, $absolute = false)
 {
     $path = util_get_dir_image_theme($the_theme);
     if ($absolute) {
-        $path = $GLOBALS['sys_urlroot'] . $path;
+        $path = ForgeConfig::get('sys_urlroot') . $path;
     }
     return $path . $fn;
 }
@@ -732,7 +732,7 @@ function util_get_image_theme($fn, $the_theme = false, $absolute = false)
 function util_get_dir_image_theme($the_theme = false)
 {
     if (! $the_theme) {
-        $the_theme = $GLOBALS['sys_user_theme'];
+        $the_theme = ForgeConfig::get('sys_user_theme');
     }
 
     return '/themes/' . $the_theme . '/images/';
@@ -801,9 +801,9 @@ function get_list_server_url()
 {
     $request = HTTPRequest::instance();
     if ($request->isSecure()) {
-        return "https://" . $GLOBALS['sys_lists_host'];
+        return "https://" . ForgeConfig::get('sys_lists_host');
     } else {
-        return "http://" . $GLOBALS['sys_lists_host'];
+        return "http://" . ForgeConfig::get('sys_lists_host');
     }
 }
 

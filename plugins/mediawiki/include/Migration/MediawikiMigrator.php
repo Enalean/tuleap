@@ -39,6 +39,6 @@ class Mediawiki_Migration_MediawikiMigrator
 
     private function getCommandToExecute(Project $project)
     {
-        return $GLOBALS['codendi_dir'] . self::PATH_TO_EXECUTION_SCRIPT . " " . escapeshellarg($project->getUnixName()) . " --conf " . $GLOBALS['codendi_dir'] . self::PATH_TO_LOCALSETTINGS . " --quick";
+        return ForgeConfig::get('codendi_dir') . self::PATH_TO_EXECUTION_SCRIPT . " " . escapeshellarg($project->getUnixName()) . " --conf " . ForgeConfig::get('codendi_dir') . self::PATH_TO_LOCALSETTINGS . " --quick";
     }
 }

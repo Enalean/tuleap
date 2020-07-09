@@ -54,7 +54,7 @@ class PROFTPD_UPDATE_ACL extends \SystemEvent
         $project     = $this->getProjectFromParameters();
         $this->acl_updater->recursivelyApplyACL(
             $this->getDirectoryPath($project),
-            $GLOBALS['sys_http_user'],
+            \ForgeConfig::get('sys_http_user'),
             $this->getWriters($project),
             $this->getReaders($project)
         );

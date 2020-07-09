@@ -11,15 +11,15 @@ if (user_isloggedin()) {
    $username=strtolower(user_getname());
 } else $username='username';
 print '<h2>CVS Access</h2>
-<P>By default, CVS read-only  access is granted to all '.$GLOBALS['sys_name'].' registered users. Anonymous users do not have access to the CVS tree. Users desiring read access to project 
-CVS trees should register on '.$GLOBALS['sys_name'].'. 
+<P>By default, CVS read-only  access is granted to all '.\ForgeConfig::get('sys_name').' registered users. Anonymous users do not have access to the CVS tree. Users desiring read access to project
+CVS trees should register on '.\ForgeConfig::get('sys_name').'.
 <P>Project members are granted read (checkout) and write (commit) access to the CVS tree. 
 <P>Below are the typical commands you would use to login into the CVS server and checkout the source code of this project. In the command below substitute <I>modulename</I> ';
 if (!user_isloggedin()){
    print 'and <I>username</I> with the proper values.';
 } else print ' with the proper value.'; 
 print ' Enter your site password when prompted.';
-if ($GLOBALS['sys_disable_subdomains']){
+if (\ForgeConfig::get('sys_disable_subdomains')){
   $cvs_domain=$row_grp['http_domain'];
 } else {
   $cvs_domain='cvs.'.$row_grp['http_domain'];

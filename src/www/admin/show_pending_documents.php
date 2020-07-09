@@ -139,7 +139,7 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
     <main role="main" class="tlp-framed">
     <?php
         $project = $pm->getProject($group_id, false, true);
-        echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array($GLOBALS['sys_file_deletion_delay'])) . '</div>';
+        echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array(ForgeConfig::get('sys_file_deletion_delay'))) . '</div>';
         echo '<div class="tlp-alert-info"><p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro') . '<br />';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system') . ' <a href="/admin/system_events/">system event</a> ';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system_end') . '</p>';
@@ -187,7 +187,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
                 <tbody>';
     if ($files->rowCount() > 0) {
         foreach ($files as $file) {
-            $purgeDate = strtotime('+' . $GLOBALS['sys_file_deletion_delay'] . ' day', $file['delete_date']);
+            $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $file['delete_date']);
             $html .= '<tr>';
             $html .= '<td>' . $purifier->purify($file['filename']) . '</td>';
             $url = '/file/showfiles.php?group_id=' . urlencode($group_id) . '#p_' . urlencode(
@@ -370,7 +370,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
 
     if ($attachments->rowCount() > 0) {
         foreach ($attachments as $wiki_attachment) {
-            $purgeDate = strtotime('+' . $GLOBALS['sys_file_deletion_delay'] . ' day', $wiki_attachment['delete_date']);
+            $purgeDate = strtotime('+' . ForgeConfig::get('sys_file_deletion_delay') . ' day', $wiki_attachment['delete_date']);
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
             $tabbed_content .= '<tr>';
             $tabbed_content .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';

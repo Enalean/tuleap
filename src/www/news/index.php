@@ -69,7 +69,7 @@ if ($pv != 2) {
 /*
     Put the result set (list of forums for this group) into a column with folders
 */
-if ($group_id && ($group_id != $GLOBALS['sys_news_group'])) {
+if ($group_id && ($group_id != ForgeConfig::get('sys_news_group'))) {
     $sql = "SELECT * FROM news_bytes WHERE group_id=" . db_ei($group_id) . " AND is_approved <> '4' ORDER BY date DESC";
 } else {
     $sql = "SELECT * FROM news_bytes WHERE is_approved='1' ORDER BY date DESC";

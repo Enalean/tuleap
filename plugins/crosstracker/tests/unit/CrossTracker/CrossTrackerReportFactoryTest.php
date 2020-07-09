@@ -23,8 +23,6 @@ namespace Tuleap\CrossTracker;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../bootstrap.php';
-
 class CrossTrackerReportFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -58,8 +56,6 @@ class CrossTrackerReportFactoryTest extends TestCase
     {
         parent::setUp();
 
-        $globals = array_merge([], $GLOBALS);
-
         $this->report_dao            = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReportDao::class);
         $this->tracker_factory       = \Mockery::spy(\TrackerFactory::class);
         $this->cross_tracker_factory = new CrossTrackerReportFactory($this->report_dao, $this->tracker_factory);
@@ -72,8 +68,6 @@ class CrossTrackerReportFactoryTest extends TestCase
 
         $this->tracker_2 = \Mockery::spy(\Tracker::class);
         $this->tracker_2->shouldReceive('getId')->andReturn(2);
-
-        $GLOBALS = $globals;
     }
 
     public function testItThrowsAnExceptionWhenReportIsNotFound()

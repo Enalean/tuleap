@@ -20,21 +20,18 @@
 
 namespace Tuleap\Tracker\FormElement;
 
-use BaseLanguage;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Project;
 use Tracker_ArtifactFactory;
 use Tracker_FormElement_Field_ArtifactLink;
-
-require_once __DIR__ . '/../../bootstrap.php';
+use Tuleap\GlobalResponseMock;
 
 class ArtifactLinkValidatorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    private $backup_globals;
+    use GlobalResponseMock;
 
     /**
      * @var \Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory
@@ -92,10 +89,6 @@ class ArtifactLinkValidatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->backup_globals = array_merge([], $GLOBALS);
-        $GLOBALS['Response']  = Mockery::spy(\Response::class);
-        $GLOBALS['Language']  = Mockery::spy(BaseLanguage::class);
-
         $this->artifact_factory         = \Mockery::spy(Tracker_ArtifactFactory::class);
         $this->nature_presenter_factory = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenterFactory::class);
 
@@ -126,13 +119,6 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->nature_is_child  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildPresenter::class);
         $this->nature_fixed_in  = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter::class);
         $this->nature_no_nature = \Mockery::spy(\Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NaturePresenter::class);
-    }
-
-    protected function tearDown(): void
-    {
-        $GLOBALS = $this->backup_globals;
-
-        parent::tearDown();
     }
 
     public function testItReturnsTrueWhenNoNewValuesAreSent()

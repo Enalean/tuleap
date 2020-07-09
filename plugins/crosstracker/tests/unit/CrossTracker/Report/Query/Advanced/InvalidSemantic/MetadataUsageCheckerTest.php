@@ -34,8 +34,6 @@ use Tuleap\CrossTracker\Report\Query\Advanced\QueryValidation\Metadata\Submitted
 use Tuleap\Tracker\Report\Query\Advanced\Grammar\Metadata;
 use Tuleap\Tracker\Report\Query\Advanced\InvalidSearchablesCollection;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
 class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -93,8 +91,6 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
 
     public function setUp(): void
     {
-        $initial_global_state = array_merge([], $GLOBALS);
-
         $this->invalid_searchable_collection = $this->createMock(InvalidSearchablesCollection::class);
 
         $this->tracker_101 = $this->createMock(Tracker::class);
@@ -122,8 +118,6 @@ class MetadataUsageCheckerTest extends \PHPUnit\Framework\TestCase
             $this->status_dao,
             $this->assigned_to
         );
-
-        $GLOBALS = $initial_global_state;
     }
 
     public function testItShouldRaiseAnErrorIfThereIsNoSubmittedOnFieldOnAtLeastOneTracker()
