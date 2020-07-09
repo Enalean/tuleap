@@ -186,6 +186,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => null,
                             "toString"   => "9"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -201,6 +206,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => null,
                             "toString"   => "11"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -216,6 +226,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => "10001",
                             "toString"   => "Done"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -238,6 +253,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => null,
                             "toString"   => "----\r\n"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -253,6 +273,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => "10007",
                             "toString"   => "file.png"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -268,6 +293,11 @@ class InitialSnapshotBuilderTest extends TestCase
                             "to"         => null,
                             "toString"   => "*dsdsdsds*\n\n*qdsdsqdsqdsq*\n\n\n\n*dsqdsdsq*"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),

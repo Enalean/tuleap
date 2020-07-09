@@ -413,6 +413,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                             "to" => null,
                             "toString" => "9"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             ),
@@ -428,6 +433,11 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                             "to" => null,
                             "toString" => "11"
                         ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
                     ]
                 ]
             )

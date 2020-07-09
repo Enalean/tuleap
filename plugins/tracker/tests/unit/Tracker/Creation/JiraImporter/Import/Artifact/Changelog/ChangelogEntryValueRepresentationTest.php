@@ -40,6 +40,11 @@ class ChangelogEntryValueRepresentationTest extends TestCase
                     "to"         => null,
                     "toString"   => "string02"
                 ]
+            ],
+            'author' => [
+                'accountId' => 'e8a7dbae5',
+                'displayName' => 'John Doe',
+                'emailAddress' => 'john.doe@example.com'
             ]
         ];
 
@@ -50,6 +55,7 @@ class ChangelogEntryValueRepresentationTest extends TestCase
         $this->assertSame(10057, $representation->getId());
         $this->assertSame(1585141810, $representation->getCreated()->getTimestamp());
         $this->assertCount(1, $representation->getItemRepresentations());
+        $this->assertEquals($representation->getChangelogOwner()->getDisplayName(), 'John Doe');
     }
 
     public function testItThrowsAnExcpetionIfAPIResponseIsNotWellFormed(): void
@@ -84,6 +90,11 @@ class ChangelogEntryValueRepresentationTest extends TestCase
                     "from"       => null,
                     "fromString" => "string01"
                 ]
+            ],
+            'author' => [
+                'accountId' => 'e8a7dbae5',
+                'displayName' => 'John Doe',
+                'emailAddress' => 'john.doe@example.com'
             ]
         ];
 

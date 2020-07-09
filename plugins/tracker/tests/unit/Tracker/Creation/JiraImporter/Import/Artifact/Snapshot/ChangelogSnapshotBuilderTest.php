@@ -32,6 +32,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -41,10 +42,12 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
     public function testItBuildsASnapshotFromChangelogEntry(): void
     {
-        $logger  = Mockery::mock(LoggerInterface::class);
-        $builder = new ChangelogSnapshotBuilder(
+        $logger                = Mockery::mock(LoggerInterface::class);
+        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
+        $builder               = new ChangelogSnapshotBuilder(
             new CreationStateListValueFormatter(),
-            $logger
+            $logger,
+            $jira_author_retriever
         );
 
         $logger->shouldReceive('debug');
@@ -71,6 +74,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 )
             ]
         );
+
+        $jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $user,
@@ -211,6 +216,11 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "to"         => "10008",
                         "toString"   => "file02.gif"
                     ]
+                ],
+                'author' => [
+                    'accountId' => 'e8a7dbae5',
+                    'displayName' => 'John Doe',
+                    'emailAddress' => 'john.doe@example.com'
                 ]
             ]
         );

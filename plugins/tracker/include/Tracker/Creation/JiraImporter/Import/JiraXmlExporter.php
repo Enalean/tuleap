@@ -276,7 +276,8 @@ class JiraXmlExporter
                         ),
                         new ChangelogSnapshotBuilder(
                             new CreationStateListValueFormatter(),
-                            $logger
+                            $logger,
+                            $jira_author_retriever
                         ),
                         new CommentValuesBuilder(
                             $wrapper,
