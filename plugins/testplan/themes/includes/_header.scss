@@ -29,11 +29,16 @@
 }
 
 .test-plan-app {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-areas: 'backlog-items campaigns';
+    grid-template-columns: 60% auto;
+    column-gap: $tlp-large-spacing;
 
-    @media screen and (max-width: 1100px) {
-        flex-direction: column;
-        justify-content: flex-start;
+    @media only screen and (max-width: 1100px) {
+        row-gap: $tlp-jumbo-spacing;
+        grid-template-areas:
+            'backlog-items'
+            'campaigns';
+        grid-template-columns: none;
     }
 }
