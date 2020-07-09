@@ -94,6 +94,7 @@ class Search_SearchTrackerV3
 
             echo "\n";
 
+            $purifier = Codendi_HTMLPurifier::instance();
             $rows = 0;
             foreach ($results as $arr) {
                 $rows++;
@@ -107,18 +108,18 @@ class Search_SearchTrackerV3
                 if ($curArtifact->userCanView()) {
                     print "\n<TR class=\"" . html_get_alt_row_color($art_displayed) . "\">";
                     if ($summary_field->userCanRead($group_id, $atid)) {
-                        print "<TD><A HREF=\"/tracker/?group_id=$group_id&func=detail&atid=$atid&aid="
-                                . $arr['artifact_id'] . "\"><IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> "
-                                . $arr['summary'] . "</A></TD>";
+                        print "<TD><A HREF=\"/tracker/?group_id=" . $purifier->purify(urlencode($group_id)) . "&func=detail&atid=" . $purifier->purify(urlencode($atid)) . "&aid="
+                                . $purifier->purify($arr['artifact_id']) . "\"><IMG SRC=\"" . util_get_image_theme('msg.png') . "\" BORDER=0 HEIGHT=12 WIDTH=10> "
+                                . $purifier->purify($arr['summary']) . "</A></TD>";
                     }
                     if ($submitted_field->userCanRead($group_id, $atid)) {
-                        print "<TD>" . $arr['user_name'] . "</TD>";
+                        print "<TD>" . $purifier->purify($arr['user_name']) . "</TD>";
                     }
                     if ($date_field->userCanRead($group_id, $atid)) {
                         print "<TD>" . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $arr['open_date']) . "</TD>";
                     }
                     if ($status_field->userCanRead($group_id, $atid)) {
-                        print "<TD>" . $status . "</TD>";
+                        print "<TD>" . $purifier->purify($status) . "</TD>";
                     }
                     print "</TR>";
                     $art_displayed++;

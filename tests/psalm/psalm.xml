@@ -23,6 +23,13 @@
         </ignoreFiles>
     </projectFiles>
 
+    <taintAnalysis>
+        <ignoreFiles>
+            <directory name="src/www/tracker/"/>
+            <directory name="src/common/tracker/"/>
+        </ignoreFiles>
+    </taintAnalysis>
+
     <stubs>
         <file name="tests/psalm/stubs/EventDispatcherInterface.phpstub"/>
     </stubs>
