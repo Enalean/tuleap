@@ -75,6 +75,8 @@ class GerritSetupCommand extends Command
         $this->pushReplicationGroup($input, $output, $message_factory, $gerrit_server, $plugin_client);
         $this->pushAdminPermissions($output, $message_factory, $gerrit_server, $plugin_client);
         $this->pairWithGerritServer($input, $output, $gerrit_server);
+
+        return 0;
     }
 
     private function firstLogin(
