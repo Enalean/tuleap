@@ -157,13 +157,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         );
     }
 
-    /**
-     * Display the transparent color and allow the user to edit it
-     * @param string $value_id The value to decorate Don't forget to html-purify.
-     * @param bool $is_used_in_semantics True if the field is used in a semantic
-     * @return string html
-     */
-    public static function noDecoratorEdit($field_id, $value_id, $is_used_in_semantics)
+    public static function noDecoratorEdit(int $field_id, int $value_id, bool $is_used_in_semantics): string
     {
         $html = '';
         $id   = 'decorator_' . $field_id . '_' . $value_id;
@@ -216,25 +210,13 @@ class Tracker_FormElement_Field_List_BindDecorator
         );
     }
 
-    public static function update($value_id, $color)
-    {
-        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
-
-        if (! self::isHexaColor($color)) {
-            return $dao->updateTlpColor($value_id, $color);
-        }
-
-        list($r, $g, $b) = ColorHelper::HexaToRGB($color);
-        $dao->updateColor($value_id, $r, $g, $b);
-    }
-
     /**
      * Delete a decorator
      */
     public static function delete($field_id, $value_id)
     {
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
-        $dao->delete($field_id, $value_id);
+        $dao->delete((int) $field_id, (int) $value_id);
     }
 
     /**

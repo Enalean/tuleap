@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorEditor;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BoundDecoratorSaver;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitable;
 use Tuleap\Tracker\REST\FieldValueRepresentation;
@@ -448,10 +449,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public function process($params, $no_redirect = false)
     {
+        $decorator_editor = new BoundDecoratorEditor(new Tracker_FormElement_Field_List_BindDecoratorDao());
+
         if (isset($params['decorator'])) {
             foreach ($params['decorator'] as $value_id => $hexacolor) {
                 if ($hexacolor) {
-                    Tracker_FormElement_Field_List_BindDecorator::update($value_id, $hexacolor);
+                    $decorator_editor->update($this->field, $value_id, $hexacolor, $params['required']);
                 } else {
                     Tracker_FormElement_Field_List_BindDecorator::delete($this->field->getId(), $value_id);
                 }

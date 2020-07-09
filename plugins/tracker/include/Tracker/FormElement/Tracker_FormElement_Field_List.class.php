@@ -1208,7 +1208,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     {
         $redirect = false;
         if ($request->exist('bind')) {
-            $redirect = $this->getBind()->process($request->get('bind'), $no_redirect = true);
+            $params = array_merge($request->get('bind'), $request->get('formElement_data'));
+            $redirect = $this->getBind()->process($params, $no_redirect = true);
         }
         parent::processUpdate($layout, $request, $current_user, $redirect);
     }
