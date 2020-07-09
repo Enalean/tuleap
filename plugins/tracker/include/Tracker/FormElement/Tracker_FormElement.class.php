@@ -1010,6 +1010,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *  Get the id
      *
      * @return int
+     *
+     * @psalm-mutation-free
      */
     public function getId()
     {
@@ -1044,6 +1046,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *  Get the label attribute value
      *
      * @return string
+     *
+     * @psalm-mutation-free
      */
     public function getLabel()
     {
@@ -1054,6 +1058,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *  Get the name attribute value (internal field name)
      *
      * @return string
+     *
+     * @psalm-mutation-free
      */
     public function getName()
     {
@@ -1429,5 +1435,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getTagNameForXMLExport(): string
     {
         return self::XML_TAG;
+    }
+
+    public function isCollapsed(): bool
+    {
+        return false;
     }
 }

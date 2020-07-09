@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,9 @@ namespace Tuleap\Tracker\REST;
 use Tracker_FormElement;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MinimalFieldRepresentation
 {
     /**
@@ -40,7 +43,7 @@ class MinimalFieldRepresentation
      */
     public $name;
 
-    public function build(Tracker_FormElement $field)
+    public function __construct(Tracker_FormElement $field)
     {
         $this->field_id = JsonCast::toInt($field->getId());
         $this->name     = $field->getName();

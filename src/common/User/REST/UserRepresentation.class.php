@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,26 +21,37 @@ namespace Tuleap\User\REST;
 
 use PFUser;
 
+/**
+ * @psalm-immutable
+ */
 class UserRepresentation extends MinimalUserRepresentation
 {
 
     /**
-     * @var String {@type string}
+     * @var string | null {@type string}
      */
     public $email;
 
     /**
-     * @var String {@type string}
+     * @var String | null {@type string}
      */
     public $status;
 
-
-    public function build(PFUser $user)
+    private function __construct(MinimalUserRepresentation $minimal_user_representation, ?string $email, ?string $status)
     {
-        parent::build($user);
+        foreach (get_object_vars($minimal_user_representation) as $name => $value) {
+            $this->$name = $value;
+        }
 
-        $this->email  = $user->getEmail();
-        $this->status = $user->getStatus();
-        return $this;
+        $this->email  = $email;
+        $this->status = $status;
+    }
+
+    /**
+     * @return UserRepresentation
+     */
+    public static function build(PFUser $user)
+    {
+        return new self(parent::build($user), $user->getEmail(), $user->getStatus());
     }
 }

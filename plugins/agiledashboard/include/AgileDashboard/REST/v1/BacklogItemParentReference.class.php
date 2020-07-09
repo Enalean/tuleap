@@ -52,7 +52,6 @@ class BacklogItemParentReference
         $this->label = $backlog_item->getTitle() ?? '';
         $this->uri   = ResourceReference::NO_ROUTE;
 
-        $this->tracker = new TrackerReference();
-        $this->tracker->build($backlog_item->getTracker());
+        $this->tracker = TrackerReference::build($backlog_item->getTracker());
     }
 }

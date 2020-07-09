@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,9 @@ namespace Tuleap\Tracker\REST;
 use Transition;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class WorkflowTransitionPOSTRepresentation
 {
     public const ROUTE = 'tracker_workflow_transitions';
@@ -37,9 +40,9 @@ class WorkflowTransitionPOSTRepresentation
      */
     public $uri;
 
-    public function build(Transition $transition)
+    public function __construct(Transition $transition)
     {
-        $this->id             = JsonCast::toInt($transition->getId());
-        $this->uri            = self::ROUTE . '/' . $transition->getId();
+        $this->id  = JsonCast::toInt($transition->getId());
+        $this->uri = self::ROUTE . '/' . $transition->getId();
     }
 }

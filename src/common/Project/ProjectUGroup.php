@@ -74,7 +74,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
         self::SVN_ADMIN,
     );
 
-    public static $normalized_names = array(
+    public const NORMALIZED_NAMES = array(
         self::NONE               => 'nobody',
         self::ANONYMOUS          => 'all_users',
         self::REGISTERED         => 'registered_users',
@@ -193,11 +193,13 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      * or the name of static user groups
      *
      * @return string
+     *
+     * @psalm-mutation-free
      */
     public function getNormalizedName()
     {
         if ($this->is_dynamic) {
-            return self::$normalized_names[$this->id];
+            return self::NORMALIZED_NAMES[$this->id];
         }
         return $this->name;
     }

@@ -260,6 +260,9 @@ class Tracker implements Tracker_Dispatchable_Interface
         $this->group_id = $project->getID();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getId(): int
     {
         return (int) $this->id;
@@ -281,6 +284,8 @@ class Tracker implements Tracker_Dispatchable_Interface
      * getName - get this Tracker name.
      *
      * @return string the tracker name
+     *
+     * @psalm-mutation-free
      */
     public function getName()
     {
@@ -3317,6 +3322,8 @@ class Tracker implements Tracker_Dispatchable_Interface
     }
 
     /**
+     * @psalm-mutation-free
+     *
      * @return string
      */
     public function getUri()

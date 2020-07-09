@@ -20,20 +20,36 @@
 
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class Tracker_REST_FormElement_FieldOpenListRepresentation extends Tracker_REST_FormElementRepresentation
 {
-
     /**
      * @var string
      */
     public $hint;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
+    private function __construct(Tracker_REST_FormElementRepresentation $representation, string $hint)
     {
-        parent::build($form_element, $type, $permissions, $permissions_for_groups);
-
-        if ($form_element instanceof Tracker_FormElement_Field_OpenList) {
-            $this->hint = $form_element->getProperty('hint');
+        foreach (get_object_vars($representation) as $name => $value) {
+            $this->$name = $value;
         }
+
+        $this->hint = $hint;
+    }
+
+    public static function build(
+        Tracker_FormElement $form_element,
+        string $type,
+        array $permissions,
+        ?PermissionsForGroupsRepresentation $permissions_for_groups
+    ): Tracker_REST_FormElementRepresentation {
+        $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups);
+        if (! $form_element instanceof Tracker_FormElement_Field_OpenList) {
+            return $representation;
+        }
+
+        return new self($representation, $form_element->getProperty('hint'));
     }
 }

@@ -104,8 +104,7 @@ class ReportsResource extends AuthenticatedResource
             $report->getTracker()->getProject()
         );
 
-        $rest_report = new ReportRepresentation();
-        $rest_report->build($report);
+        $rest_report = new ReportRepresentation($report);
 
         Header::allowOptionsGet();
 
@@ -206,8 +205,7 @@ class ReportsResource extends AuthenticatedResource
             }
 
             if ($with_all_field_values) {
-                $tracker_representation = new MinimalTrackerRepresentation();
-                $tracker_representation->build($artifact->getTracker());
+                $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
                 return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
             } else {

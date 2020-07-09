@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\FormElement;
 
+/**
+ * @psalm-immutable
+ */
 class PermissionsForGroupsRepresentation
 {
     /**
@@ -38,7 +41,7 @@ class PermissionsForGroupsRepresentation
      */
     public $can_update = [];
 
-    public function build(array $can_read, array $can_submit, array $can_update): void
+    public function __construct(array $can_read, array $can_submit, array $can_update)
     {
         $this->can_read   = $can_read;
         $this->can_submit = $can_submit;

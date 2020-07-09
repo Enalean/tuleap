@@ -44,6 +44,7 @@ class FormElementRepresentationsBuilderTest extends TestCase
         $field1->shouldReceive('getName')->andReturn('field_01');
         $field1->shouldReceive('getLabel')->andReturn('Field 01');
         $field1->shouldReceive('isRequired')->andReturnFalse();
+        $field1->shouldReceive('isCollapsed')->andReturnFalse();
         $field1->shouldReceive('getDefaultRESTValue')->andReturnNull();
         $field1->shouldReceive('getRESTAvailableValues')->andReturnNull();
         $field1->shouldReceive('userCanRead')->andReturnTrue();
@@ -57,6 +58,7 @@ class FormElementRepresentationsBuilderTest extends TestCase
         $field2->shouldReceive('getName')->andReturn('field_02');
         $field2->shouldReceive('getLabel')->andReturn('Field 02');
         $field2->shouldReceive('isRequired')->andReturnFalse();
+        $field2->shouldReceive('isCollapsed')->andReturnFalse();
         $field2->shouldReceive('getDefaultRESTValue')->andReturnNull();
         $field2->shouldReceive('getRESTAvailableValues')->andReturnNull();
         $field2->shouldReceive('userCanRead')->andReturnFalse();
@@ -70,6 +72,7 @@ class FormElementRepresentationsBuilderTest extends TestCase
         $field3->shouldReceive('getName')->andReturn('field_03');
         $field3->shouldReceive('getLabel')->andReturn('Field 03');
         $field3->shouldReceive('isRequired')->andReturnFalse();
+        $field3->shouldReceive('isCollapsed')->andReturnFalse();
         $field3->shouldReceive('getDefaultRESTValue')->andReturnNull();
         $field3->shouldReceive('getRESTAvailableValues')->andReturnNull();
         $field3->shouldReceive('userCanRead')->andReturnTrue();

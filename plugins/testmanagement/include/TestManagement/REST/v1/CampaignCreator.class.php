@@ -160,10 +160,7 @@ class CampaignCreator
             throw new RestException(400, 'The project does not contain a campaign tracker');
         }
 
-        $tracker_reference = new TrackerReference();
-        $tracker_reference->build($campaign_tracker);
-
-        return $tracker_reference;
+        return TrackerReference::build($campaign_tracker);
     }
 
     /**

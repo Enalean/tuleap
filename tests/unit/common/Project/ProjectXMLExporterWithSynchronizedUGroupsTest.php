@@ -95,7 +95,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
                 'getMembers' => [$user_1],
             ]
         );
@@ -103,7 +103,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $project_ugroup_project_members = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
                 'getMembers' => [$user_1],
             ]
         );
@@ -133,7 +133,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
                 'getMembers' => [$user_1],
             ]
         );
@@ -141,7 +141,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
         $project_ugroup_project_members = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
                 'getMembers' => [$user_1],
             ]
         );

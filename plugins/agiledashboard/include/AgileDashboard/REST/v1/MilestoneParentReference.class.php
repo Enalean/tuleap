@@ -45,7 +45,6 @@ class MilestoneParentReference
         $this->id  = JsonCast::toInt($milestone->getArtifactId());
         $this->uri = MilestoneRepresentation::ROUTE . '/' . $this->id;
 
-        $this->tracker = new TrackerReference();
-        $this->tracker->build($milestone->getArtifact()->getTracker());
+        $this->tracker = TrackerReference::build($milestone->getArtifact()->getTracker());
     }
 }

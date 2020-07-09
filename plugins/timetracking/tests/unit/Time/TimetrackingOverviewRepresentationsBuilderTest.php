@@ -110,6 +110,7 @@ class TimetrackingOverviewRepresentationsBuilderTest extends TestCase
         $this->tracker->shouldReceive(
             [
                 'getId'    => 16,
+                'getName'  => 'tracker name',
                 'getColor' => TrackerColor::default()
             ]
         );

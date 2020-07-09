@@ -71,7 +71,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
 
         $project_members_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members_ugroup);
@@ -93,7 +93,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
     public function testItReturnsAnEmptyRepresentationWhenThereAreNoPermissions(): void
     {
         $this->permissions_functions_wrapper->shouldReceive('getTrackerUGroupsPermissions')->with($this->tracker)->andReturn([]);
-        $this->assertEquals(new PermissionsRepresentation(), $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user));
+        $this->assertEquals(new PermissionsRepresentation([], [], [], [], []), $this->builder->getPermissionsRepresentation($this->tracker, $this->tracker_admin_user));
     }
 
     public function testItReturnsAGroupThatHaveAccess(): void
@@ -115,7 +115,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_assigned_to_group);
         $this->assertEmpty($representation->can_access_submitted_by_user);
         $this->assertCount(1, $representation->can_access);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveAdminAccess(): void
@@ -137,7 +137,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_assigned_to_group);
         $this->assertEmpty($representation->can_access_submitted_by_user);
         $this->assertCount(1, $representation->can_admin);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveSubmittedByThemAccess(): void
@@ -159,7 +159,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_assigned_to_group);
         $this->assertEmpty($representation->can_admin);
         $this->assertCount(1, $representation->can_access_submitted_by_user);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_user[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_user[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveSubmittedByGroup(): void
@@ -181,7 +181,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_assigned_to_group);
         $this->assertEmpty($representation->can_admin);
         $this->assertCount(1, $representation->can_access_submitted_by_group);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_group[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_submitted_by_group[0]->short_name);
     }
 
     public function testItReturnsAGroupThatHaveAssignedToGroup(): void
@@ -203,14 +203,14 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_submitted_by_group);
         $this->assertEmpty($representation->can_admin);
         $this->assertCount(1, $representation->can_access_assigned_to_group);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_assigned_to_group[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_access_assigned_to_group[0]->short_name);
     }
 
     public function testItReturnsAMixOfPermissions(): void
     {
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $developers_id = 501;
@@ -269,7 +269,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEmpty($representation->can_access_submitted_by_user);
 
         $this->assertCount(1, $representation->can_access);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS], $representation->can_access[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS], $representation->can_access[0]->short_name);
 
         $this->assertCount(1, $representation->can_access_assigned_to_group);
         $this->assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
@@ -278,7 +278,7 @@ final class PermissionsRepresentationBuilderTest extends TestCase
         $this->assertEquals('Developers', $representation->can_access_assigned_to_group[0]->short_name);
 
         $this->assertCount(2, $representation->can_admin);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_admin[0]->short_name);
         $this->assertEquals('TrackerAdmins', $representation->can_admin[1]->short_name);
     }
 }

@@ -141,8 +141,7 @@ class ItemRepresentationBuilder
         ?FolderPropertiesRepresentation $folder_properties = null
     ) {
         $owner                = $this->user_manager->getUserById($item->getOwnerId());
-        $owner_representation = new MinimalUserRepresentation();
-        $owner_representation->build($owner);
+        $owner_representation = MinimalUserRepresentation::build($owner);
 
         $is_expanded = false;
         if ($type === ItemRepresentation::TYPE_FOLDER) {
@@ -219,7 +218,7 @@ class ItemRepresentationBuilder
 
     private function getMinimalUserRepresentation(int $user_id): MinimalUserRepresentation
     {
-        return (new MinimalUserRepresentation())->build(
+        return MinimalUserRepresentation::build(
             $this->user_manager->getUserById($user_id)
         );
     }

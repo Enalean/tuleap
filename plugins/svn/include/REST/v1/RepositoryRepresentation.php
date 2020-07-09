@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,8 +29,7 @@ class RepositoryRepresentation extends SvnRepositoryRepresentationBase
 {
     public function build(Repository $repository)
     {
-        $project_representation = new MinimalProjectRepresentation();
-        $project_representation->buildMinimal($repository->getProject());
+        $project_representation = new MinimalProjectRepresentation($repository->getProject());
 
         $this->id      = JsonCast::toInt($repository->getId());
         $this->project = $project_representation;

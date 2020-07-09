@@ -111,7 +111,7 @@ class CardRepresentationBuilder
 
         return array_map(
             function (PFUser $user): MinimalUserRepresentation {
-                return (new MinimalUserRepresentation())->build($user);
+                return MinimalUserRepresentation::build($user);
             },
             $assignees
         );

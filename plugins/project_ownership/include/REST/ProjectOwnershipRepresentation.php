@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -32,8 +32,7 @@ class ProjectOwnershipRepresentation
     public function build(?\PFUser $project_owner = null)
     {
         if ($project_owner !== null) {
-            $user_representation = new MinimalUserRepresentation();
-            $user_representation->build($project_owner);
+            $user_representation = MinimalUserRepresentation::build($project_owner);
             $this->project_owner = $user_representation;
         }
     }

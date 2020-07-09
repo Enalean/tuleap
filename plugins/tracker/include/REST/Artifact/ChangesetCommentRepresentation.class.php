@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@ namespace Tuleap\Tracker\REST;
 
 use Tracker_Artifact_Changeset_Comment;
 
+/**
+ * @psalm-immutable
+ */
 class ChangesetCommentRepresentation
 {
 
@@ -39,10 +42,19 @@ class ChangesetCommentRepresentation
      */
     public $format;
 
-    public function build(Tracker_Artifact_Changeset_Comment $comment)
+    private function __construct(string $body, string $post_processed_body, string $format)
     {
-        $this->body                = $comment->body;
-        $this->post_processed_body = $comment->getPurifiedBodyForHTML();
-        $this->format              = $comment->bodyFormat;
+        $this->body                = $body;
+        $this->post_processed_body = $post_processed_body;
+        $this->format              = $format;
+    }
+
+    public static function build(Tracker_Artifact_Changeset_Comment $comment): self
+    {
+        return new self(
+            $comment->body,
+            $comment->getPurifiedBodyForHTML(),
+            $comment->bodyFormat
+        );
     }
 }

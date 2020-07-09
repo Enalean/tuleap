@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -53,8 +53,7 @@ class PushPayload implements Payload
             'email' => $user->getEmail(),
         );
 
-        $sender_representation = new MinimalUserRepresentation();
-        $sender_representation->build($user);
+        $sender_representation = MinimalUserRepresentation::build($user);
 
         return array(
             'ref'        => $refname,

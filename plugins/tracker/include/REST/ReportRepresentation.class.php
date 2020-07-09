@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,9 @@ use Tracker_Report;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ReportRepresentation
 {
 
@@ -49,7 +52,7 @@ class ReportRepresentation
      */
     public $resources;
 
-    public function build(Tracker_Report $report)
+    public function __construct(Tracker_Report $report)
     {
         $this->id        = JsonCast::toInt($report->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;

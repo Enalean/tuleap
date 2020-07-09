@@ -24,6 +24,9 @@ use ProjectUGroup;
 use Tuleap\User\UserGroup\NameTranslator;
 use Exception;
 
+/**
+ * @psalm-immutable
+ */
 class UserGroupRepresentation
 {
 
@@ -66,7 +69,7 @@ class UserGroupRepresentation
      */
     public $project;
 
-    public function build(Project $project, ProjectUGroup $ugroup): self
+    public function __construct(Project $project, ProjectUGroup $ugroup)
     {
         $this->id         = self::getRESTIdForProject((int) $project->getGroupId(), $ugroup->getId());
         $this->uri        = self::ROUTE . '/' . $this->id;
@@ -76,11 +79,8 @@ class UserGroupRepresentation
         $this->short_name = $ugroup->getNormalizedName();
 
         if (! $project->isError()) {
-            $this->project = new MinimalProjectRepresentation();
-            $this->project->buildMinimal($project);
+            $this->project = new MinimalProjectRepresentation($project);
         }
-
-        return $this;
     }
 
     public static function getRESTIdForProject(int $project_id, int $user_group_id): string
@@ -95,6 +95,9 @@ class UserGroupRepresentation
         return $project_id . '_' . $user_group_id;
     }
 
+    /**
+     * @psalm-pure
+     */
     public static function getProjectAndUserGroupFromRESTId(string $identifier): array
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {

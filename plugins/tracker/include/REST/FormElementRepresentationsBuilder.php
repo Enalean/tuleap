@@ -97,36 +97,28 @@ class FormElementRepresentationsBuilder
             }
 
             if ($form_element instanceof Tracker_FormElement_Field_File) {
-                $form_element_representation = new FieldFileRepresentation();
-
-                $form_element_representation->build(
+                $form_element_representation = FieldFileRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($form_element instanceof Tracker_FormElement_Field_Date) {
-                $form_element_representation = new Tracker_REST_FormElement_FieldDateRepresentation();
-
-                $form_element_representation->build(
+                $form_element_representation = Tracker_REST_FormElement_FieldDateRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($form_element instanceof Tracker_FormElement_Field_OpenList) {
-                $form_element_representation = new Tracker_REST_FormElement_FieldOpenListRepresentation();
-
-                $form_element_representation->build(
+                $form_element_representation = Tracker_REST_FormElement_FieldOpenListRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
                     $this->permissions_for_groups_builder->getPermissionsForGroups($form_element, $artifact, $user)
                 );
             } elseif ($artifact !== null && $form_element instanceof Tracker_FormElement_Container_Fieldset) {
-                $form_element_representation = new ContainerFieldsetInArtifactContextRepresentation();
-
-                $form_element_representation->buildInArtifactContext(
+                $form_element_representation = ContainerFieldsetInArtifactContextRepresentation::buildContainerFieldset(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),
@@ -134,9 +126,7 @@ class FormElementRepresentationsBuilder
                     $this->hidden_fieldset_checker->mustFieldsetBeHidden($form_element, $artifact)
                 );
             } else {
-                $form_element_representation = new Tracker_REST_FormElementRepresentation();
-
-                $form_element_representation->build(
+                $form_element_representation = Tracker_REST_FormElementRepresentation::build(
                     $form_element,
                     $this->form_element_factory->getType($form_element),
                     $this->getPermissionsForFormElement($form_element, $artifact, $user),

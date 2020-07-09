@@ -25,6 +25,9 @@ use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Tracker\PermissionsRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class CompleteTrackerRepresentation implements TrackerRepresentation
 {
 
@@ -106,14 +109,21 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
      */
     public $color_name;
 
-    public function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null, ?PermissionsRepresentation $permissions = null)
-    {
+    private function __construct(
+        Tracker $tracker,
+        \Project $tracker_project,
+        ?Tracker $tracker_parent,
+        array $tracker_fields,
+        array $structure,
+        array $semantics,
+        ?WorkflowRepresentation $workflow = null,
+        ?PermissionsRepresentation $permissions = null
+    ) {
         $this->id          = JsonCast::toInt($tracker->getId());
         $this->uri         = self::ROUTE . '/' . $this->id;
         $this->html_url    = $tracker->getUri();
 
-        $this->project     = new ProjectReference();
-        $this->project->build($tracker->getProject());
+        $this->project     = new ProjectReference($tracker_project);
 
         $this->label       = $tracker->getName();
         $this->description = $tracker->getDescription();
@@ -131,10 +141,22 @@ class CompleteTrackerRepresentation implements TrackerRepresentation
         $this->color_name  = $tracker->getColor()->getName();
         $this->permissions_for_groups = $permissions;
 
-        $tracker_parent = $tracker->getParent();
         if ($tracker_parent) {
-            $this->parent = new TrackerReference();
-            $this->parent->build($tracker_parent);
+            $this->parent = TrackerReference::build($tracker_parent);
         }
+    }
+
+    public static function build(Tracker $tracker, array $tracker_fields, array $structure, array $semantics, ?WorkflowRepresentation $workflow = null, ?PermissionsRepresentation $permissions = null): self
+    {
+        return new self(
+            $tracker,
+            $tracker->getProject(),
+            $tracker->getParent(),
+            $tracker_fields,
+            $structure,
+            $semantics,
+            $workflow,
+            $permissions,
+        );
     }
 }

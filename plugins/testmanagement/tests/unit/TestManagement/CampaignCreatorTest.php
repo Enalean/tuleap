@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,6 @@ use ProjectManager;
 use TrackerFactory;
 use Tracker_FormElementFactory;
 use Tracker_REST_Artifact_ArtifactCreator;
-
-require_once __DIR__ . '/../bootstrap.php';
 
 class CampaignCreatorTest extends TestCase
 {
@@ -79,6 +77,8 @@ class CampaignCreatorTest extends TestCase
 
         $this->project          = Mockery::spy(\Project::class);
         $this->campaign_tracker = Mockery::spy(\Tracker::class);
+        $this->campaign_tracker->shouldReceive('getName')->andReturn('Campaigns');
+        $this->campaign_tracker->shouldReceive('getProject')->andReturn($this->project);
         $this->user             = Mockery::spy(\PFUser::class);
 
         $this->project_manager     = Mockery::spy(\ProjectManager::class);

@@ -77,9 +77,7 @@ class ArtifactFilesResource
         $this->sendAllowHeadersForArtifactFilesId();
         $this->sendPaginationHeaders($limit, $offset, $size);
 
-        $file_data_representation = new FileDataRepresentation();
-
-        return $file_data_representation->build($file_info->getContent($offset, $limit));
+        return new FileDataRepresentation($file_info->getContent($offset, $limit));
     }
 
     /**

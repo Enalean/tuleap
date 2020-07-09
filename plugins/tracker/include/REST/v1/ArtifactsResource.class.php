@@ -326,8 +326,7 @@ class ArtifactsResource extends AuthenticatedResource
             $first_artifact->getTracker()->getProject()
         );
 
-        $tracker_representation = new MinimalTrackerRepresentation();
-        $tracker_representation->build($first_artifact->getTracker());
+        $tracker_representation = MinimalTrackerRepresentation::build($first_artifact->getTracker());
 
         foreach ($artifacts as $artifact) {
             if ($artifact->userCanView($user)) {
@@ -423,8 +422,7 @@ class ArtifactsResource extends AuthenticatedResource
                 $artifact
             );
         } else {
-            $tracker_representation = new MinimalTrackerRepresentation();
-            $tracker_representation->build($artifact->getTracker());
+            $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
         }
 
         if ($values_format === self::VALUES_DEFAULT || $values_format === self::VALUES_FORMAT_COLLECTION) {
@@ -463,8 +461,7 @@ class ArtifactsResource extends AuthenticatedResource
             $artifact->getTracker()->getProject()
         );
 
-        $artifact_link_representation = new ArtifactLinkRepresentation();
-        $artifact_link_representation->build($artifact);
+        $artifact_link_representation = ArtifactLinkRepresentation::build($artifact);
 
         $this->sendAllowHeadersForLinkNatures();
         return $artifact_link_representation;
@@ -533,8 +530,7 @@ class ArtifactsResource extends AuthenticatedResource
 
         $artifact_representations = [];
         foreach ($linked_artifacts->getArtifacts() as $linked_artifact) {
-            $tracker_representation = new MinimalTrackerRepresentation();
-            $tracker_representation->build($linked_artifact->getTracker());
+            $tracker_representation = MinimalTrackerRepresentation::build($linked_artifact->getTracker());
 
             $artifact_representations[] = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
                 $user,
@@ -1020,13 +1016,12 @@ class ArtifactsResource extends AuthenticatedResource
             }
 
             $move_action             = $this->getMoveAction($user);
-            $response_representation = new ArtifactPatchResponseRepresentation();
 
             if ($patch->move->dry_run) {
                 $feedback_collector = new FeedbackFieldCollector();
                 $feedback_collector->initAllTrackerFieldAsNotMigrated($source_tracker);
                 $move_action->checkMoveIsPossible($artifact, $target_tracker, $user, $feedback_collector);
-                $response_representation->build($feedback_collector);
+                $response_representation = ArtifactPatchResponseRepresentation::fromFeedbackFieldCollector($feedback_collector);
             } else {
                 $feedback_collector  = new NoFeedbackFieldCollector();
                 $remaining_deletions = $move_action->move($artifact, $target_tracker, $user, $feedback_collector);
@@ -1034,6 +1029,8 @@ class ArtifactsResource extends AuthenticatedResource
                 if ($patch->move->should_populate_feedback_on_success) {
                     $this->post_move_action->addFeedback($source_tracker, $target_tracker, $artifact, $user);
                 }
+
+                $response_representation = ArtifactPatchResponseRepresentation::withoutDryRun();
             }
 
             return $response_representation;

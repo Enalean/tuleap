@@ -117,15 +117,12 @@ class TrackerFieldsResource extends AuthenticatedResource
         $request['add'] = implode("\n", $patch->new_values);
         $field->getBind()->process($request, true);
 
-        $field_representation = new Tracker_REST_FormElementRepresentation();
-        $field_representation->build(
+        return Tracker_REST_FormElementRepresentation::build(
             $field,
             $form_element_factory->getType($field),
             [],
             null
         );
-
-        return $field_representation;
     }
 
     /**

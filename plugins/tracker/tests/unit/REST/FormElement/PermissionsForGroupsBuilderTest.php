@@ -112,7 +112,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
         );
 
         $representation = $this->builder->getPermissionsForGroups($form_element, null, $this->tracker_admin_user);
-        $this->assertEquals(new PermissionsForGroupsRepresentation(), $representation);
+        $this->assertEquals(new PermissionsForGroupsRepresentation([], [], []), $representation);
     }
 
     public function testItReturnsOneGroupThatCanRead(): void
@@ -122,7 +122,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
@@ -158,7 +158,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
@@ -194,7 +194,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
@@ -228,7 +228,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
@@ -265,7 +265,7 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::ANONYMOUS)->andReturn($anonymous_ugroup);
@@ -304,12 +304,12 @@ final class PermissionsForGroupsBuilderTest extends TestCase
 
         $anonymous_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::ANONYMOUS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::ANONYMOUS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::ANONYMOUS],
             'group_id' => 202,
         ]);
         $project_members_ugroup = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => 202,
         ]);
         $developers_id = 501;

@@ -1489,6 +1489,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Get the Id of this artifact
      *
      * @return int The Id of this artifact
+     *
+     * @psalm-mutation-free
      */
     public function getId()
     {

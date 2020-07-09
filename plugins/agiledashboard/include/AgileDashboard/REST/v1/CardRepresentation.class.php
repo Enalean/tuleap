@@ -96,18 +96,12 @@ class AgileDashboard_CardRepresentation
 
     private function getProjectReference(Project $project)
     {
-        $project_reference = new Tuleap\Project\REST\ProjectReference();
-        $project_reference->build($project);
-
-        return $project_reference;
+        return new Tuleap\Project\REST\ProjectReference($project);
     }
 
     private function getArtifactReference(Tracker_Artifact $artifact)
     {
-        $artifact_reference = new \Tuleap\Tracker\REST\Artifact\ArtifactReference();
-        $artifact_reference->build($artifact);
-
-        return $artifact_reference;
+        return \Tuleap\Tracker\REST\Artifact\ArtifactReference::build($artifact);
     }
 
       /**

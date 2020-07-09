@@ -45,8 +45,7 @@ class PackageRepresentation extends PackageMinimalRepresentation
     {
         $this->build($package);
 
-        $this->project = new ProjectReference();
-        $this->project->build($project);
+        $this->project = new ProjectReference($project);
 
         $this->permissions_for_groups = $permissions_for_groups;
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -87,9 +87,7 @@ class Tracker_REST_Artifact_ArtifactCreator
     private function returnReferenceOrError($artifact, $format)
     {
         if ($artifact) {
-            $reference = new Tuleap\Tracker\REST\Artifact\ArtifactReference();
-            $reference->build($artifact, $format);
-            return $reference;
+            return Tuleap\Tracker\REST\Artifact\ArtifactReference::build($artifact, $format);
         } else {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 throw new \Luracast\Restler\RestException(400, $GLOBALS['Response']->getRawFeedback());

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -59,8 +59,7 @@ class UploadedLinkRepresentation
         $this->name           = $link->getName();
         $this->release_time   = JsonCast::toDate($link->getReleaseTime());
 
-        $owner_representation = new UserRepresentation();
-        $owner_representation->build($link->getOwner());
+        $owner_representation = UserRepresentation::build($link->getOwner());
         $this->owner = $owner_representation;
     }
 }

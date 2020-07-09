@@ -99,7 +99,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
     {
         $project_members = new ProjectUGroup([
             'ugroup_id' => (string) ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
@@ -119,7 +119,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
         $this->assertCount(2, $representation->permissions_for_groups->can_read);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
         $this->assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
     }
 
@@ -146,7 +146,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
     {
         $project_members = new ProjectUGroup([
             'ugroup_id' => (string) ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
@@ -168,7 +168,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
 
         $representation = $this->builder->getServiceRepresentation($this->frs_admin_user, $this->project);
         $this->assertCount(1, $representation->permissions_for_groups->can_read);
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
 
         $this->assertCount(1, $representation->permissions_for_groups->can_admin);
         $this->assertEquals('Developers', $representation->permissions_for_groups->can_admin[0]->short_name);
@@ -187,7 +187,7 @@ final class ServiceRepresentationBuilderTest extends TestCase
     {
         $nobody = new ProjectUGroup([
             'ugroup_id' => (string) ProjectUGroup::NONE,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::NONE],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::NONE],
             'group_id' => (string) $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->project, ProjectUGroup::NONE)->andReturn($nobody);

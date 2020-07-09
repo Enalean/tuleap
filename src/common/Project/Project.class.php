@@ -416,6 +416,9 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         return $this->project_data_array['svn_accessfile'];
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getAccess()
     {
         return $this->data_array['access'];

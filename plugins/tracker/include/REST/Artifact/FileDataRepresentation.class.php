@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\REST\Artifact;
 
+/**
+ * @psalm-immutable
+ */
 class FileDataRepresentation
 {
 
@@ -28,10 +31,8 @@ class FileDataRepresentation
      */
     public $data;
 
-    public function build($data)
+    public function __construct($data)
     {
         $this->data = $data;
-
-        return $this;
     }
 }

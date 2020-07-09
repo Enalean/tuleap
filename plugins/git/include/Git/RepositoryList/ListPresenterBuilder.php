@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -84,10 +84,7 @@ class ListPresenterBuilder
                         return;
                     }
 
-                    $representation = new MinimalUserRepresentation();
-                    $representation->build($user);
-
-                    return $representation;
+                    return MinimalUserRepresentation::build($user);
                 },
                 $this->dao->getProjectRepositoriesOwners(
                     $project->getID()

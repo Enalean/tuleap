@@ -112,7 +112,7 @@ class UserResource extends AuthenticatedResource
      * @throws RestException 403
      * @throws RestException 404
      *
-     * @return UserRepresentation {@type UserRepresentation}
+     * @return MinimalUserRepresentation {@type MinimalUserRepresentation}
      */
     public function getId(string $id)
     {
@@ -121,8 +121,7 @@ class UserResource extends AuthenticatedResource
         $user_id = $this->getUserIDFromIDOrSelf($id);
 
         $user                = $this->getUserById($user_id);
-        $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
-        return $user_representation->build($user);
+        return ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
     }
 
     /**
@@ -228,8 +227,8 @@ class UserResource extends AuthenticatedResource
 
         $list_of_user_representation = array();
         foreach ($user_collection->getUsers() as $user) {
-            $user_representation = ($this->is_authenticated) ? new UserRepresentation() : new MinimalUserRepresentation();
-            $list_of_user_representation[] = $user_representation->build($user);
+            $user_representation = ($this->is_authenticated) ? UserRepresentation::build($user) : MinimalUserRepresentation::build($user);
+            $list_of_user_representation[] = $user_representation;
         }
 
         return $list_of_user_representation;

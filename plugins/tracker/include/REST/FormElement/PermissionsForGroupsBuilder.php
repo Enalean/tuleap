@@ -83,9 +83,7 @@ class PermissionsForGroupsBuilder
                 }
             }
         }
-        $representation = new PermissionsForGroupsRepresentation();
-        $representation->build($can_read, $can_submit, $can_update);
-        return $representation;
+        return new PermissionsForGroupsRepresentation($can_read, $can_submit, $can_update);
     }
 
     private function getPermissions(Tracker_FormElement $form_element): array

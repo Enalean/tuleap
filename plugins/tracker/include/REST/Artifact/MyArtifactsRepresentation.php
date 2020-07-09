@@ -27,6 +27,9 @@ use Tracker_Artifact;
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class MyArtifactsRepresentation
 {
     /**
@@ -42,7 +45,7 @@ class MyArtifactsRepresentation
      */
     public $html_url;
     /**
-     * @var string
+     * @var string | null
      */
     public $title;
     /**
@@ -54,14 +57,31 @@ class MyArtifactsRepresentation
      */
     public $tracker;
 
-    public function build(Tracker_Artifact $artifact, MinimalTrackerRepresentation $tracker_representation): self
+    private function __construct(
+        int $id,
+        string $uri,
+        string $html_url,
+        ?string $title,
+        string $xref,
+        MinimalTrackerRepresentation $tracker
+    ) {
+        $this->id       = $id;
+        $this->uri      = $uri;
+        $this->html_url = $html_url;
+        $this->title    = $title;
+        $this->xref     = $xref;
+        $this->tracker  = $tracker;
+    }
+
+    public static function build(Tracker_Artifact $artifact, MinimalTrackerRepresentation $tracker_representation): self
     {
-        $this->id       = JsonCast::toInt($artifact->getId());
-        $this->uri      = ArtifactRepresentation::ROUTE . '/' . $artifact->getId();
-        $this->html_url = $artifact->getUri();
-        $this->title    = $artifact->getTitle() ?? '';
-        $this->xref     = $artifact->getXRef();
-        $this->tracker  = $tracker_representation;
-        return $this;
+        return new self(
+            JsonCast::toInt($artifact->getId()),
+            ArtifactRepresentation::ROUTE . '/' . $artifact->getId(),
+            $artifact->getUri(),
+            $artifact->getTitle(),
+            $artifact->getXRef(),
+            $tracker_representation
+        );
     }
 }

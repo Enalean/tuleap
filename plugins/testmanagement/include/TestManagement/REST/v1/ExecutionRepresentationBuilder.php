@@ -306,8 +306,7 @@ class ExecutionRepresentationBuilder
 
         foreach ($art_links as $art_link) {
             if ($this->conformance_validator->isArtifactABug($art_link) && $art_link->userCanView($user)) {
-                $bug_tracker_representation = new MinimalTrackerRepresentation();
-                $bug_tracker_representation->build($art_link->getTracker());
+                $bug_tracker_representation = MinimalTrackerRepresentation::build($art_link->getTracker());
 
                 $bug_representation = new BugRepresentation();
                 $bug_representation->build($art_link, $bug_tracker_representation);
@@ -351,9 +350,10 @@ class ExecutionRepresentationBuilder
         }
 
         $submitted_by = $this->user_manager->getUserById($last_changeset->getSubmittedBy());
-        $user_representation = new UserRepresentation();
         if ($submitted_by) {
-            $user_representation->build($submitted_by);
+            $user_representation = UserRepresentation::build($submitted_by);
+        } else {
+            $user_representation = UserRepresentation::build($this->user_manager->getUserAnonymous());
         }
 
         $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);

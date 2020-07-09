@@ -44,8 +44,7 @@ final class ReviewersRepresentation
         $representations = [];
 
         foreach ($users as $user) {
-            $representation = new MinimalUserRepresentation();
-            $representation->build($user);
+            $representation = MinimalUserRepresentation::build($user);
             $representations[] = $representation;
         }
 

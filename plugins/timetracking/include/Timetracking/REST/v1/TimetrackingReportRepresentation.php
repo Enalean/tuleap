@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2019. All rights reserved.
+ * Copyright Enalean (c) 2019-Present. All rights reserved.
  *
- *  Tuleap and Enalean names and logos are registrated trademarks owned by
+ *  Tuleap and Enalean names and logos are registered trademarks owned by
  *  Enalean SAS. All other trademarks or names are properties of their respective
  *  owners.
  *
@@ -58,15 +58,13 @@ class TimetrackingReportRepresentation
     {
         $this->id = JsonCast::toInt($report->getId());
         foreach ($report->getTrackers() as $tracker) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($tracker);
+            $tracker_reference = TrackerReference::build($tracker);
 
             $this->trackers[] = $tracker_reference;
         }
 
         foreach ($report->getInvalidTrackers() as $invalid_tracker) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($invalid_tracker);
+            $tracker_reference = TrackerReference::build($invalid_tracker);
 
             $this->invalid_trackers[] = $tracker_reference;
         }

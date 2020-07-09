@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\Field\File\Upload;
 
+/**
+ * @psalm-mutation-free
+ */
 final class FileToUpload
 {
     /**

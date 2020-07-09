@@ -24,6 +24,9 @@ use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MinimalTrackerRepresentation implements TrackerRepresentation
 {
     /**
@@ -51,17 +54,24 @@ class MinimalTrackerRepresentation implements TrackerRepresentation
      */
     public $project;
 
-    public function build(Tracker $tracker): self
+    private function __construct(int $id, string $uri, string $label, string $color_name, ProjectReference $project)
     {
-        $this->id         = JsonCast::toInt($tracker->getId());
-        $this->uri        = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
-        $this->label      = $tracker->getName();
-        $this->color_name = $tracker->getColor()->getName();
+        $this->id         = $id;
+        $this->uri        = $uri;
+        $this->label      = $label;
+        $this->color_name = $color_name;
+        $this->project    = $project;
+    }
 
-        $project       = $tracker->getProject();
-        $this->project = new ProjectReference();
-        $this->project->build($project);
-
-        return $this;
+    public static function build(Tracker $tracker): self
+    {
+        $tracker_id = $tracker->getId();
+        return new self(
+            JsonCast::toInt($tracker_id),
+            CompleteTrackerRepresentation::ROUTE . '/' . $tracker_id,
+            $tracker->getName(),
+            $tracker->getColor()->getName(),
+            new ProjectReference($tracker->getProject())
+        );
     }
 }

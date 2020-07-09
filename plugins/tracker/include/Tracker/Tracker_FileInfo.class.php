@@ -58,8 +58,7 @@ class Tracker_FileInfo
 
     public function getRESTValue(): FileInfoRepresentation
     {
-        $file_info_representation = new FileInfoRepresentation();
-        $file_info_representation->build(
+        return new FileInfoRepresentation(
             $this->id,
             $this->submitted_by,
             $this->description,
@@ -69,13 +68,11 @@ class Tracker_FileInfo
             $this->field->getFileHTMLUrl($this),
             $this->field->getFileHTMLPreviewUrl($this)
         );
-        return $file_info_representation;
     }
 
     public function getFullRESTValue(): FileInfoRepresentation
     {
-        $file_info_representation = new FileInfoRepresentation();
-        $file_info_representation->build(
+        return new FileInfoRepresentation(
             $this->id,
             $this->submitted_by,
             $this->description,
@@ -85,7 +82,6 @@ class Tracker_FileInfo
             $this->field->getFileHTMLUrl($this),
             $this->field->getFileHTMLPreviewUrl($this)
         );
-        return $file_info_representation;
     }
 
     /**

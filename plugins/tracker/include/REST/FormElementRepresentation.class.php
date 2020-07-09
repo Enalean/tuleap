@@ -21,6 +21,9 @@
 use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class Tracker_REST_FormElementRepresentation //phpcs:ignore
 {
 
@@ -91,30 +94,38 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
      */
     public $default_value;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
-    {
+    /**
+     * @param mixed $values
+     * @param mixed $default_rest_value
+     */
+    private function __construct(
+        Tracker_FormElement $form_element,
+        string $type,
+        bool $is_collapsed,
+        $default_rest_value,
+        $values,
+        array $rest_binding_properties,
+        array $permissions,
+        ?PermissionsForGroupsRepresentation $permissions_for_groups
+    ) {
         $this->field_id = JsonCast::toInt($form_element->getId());
         $this->name     = $form_element->getName();
         $this->label    = $form_element->getLabel();
 
         if ($form_element instanceof Tracker_FormElement_Field) {
             $this->required  = JsonCast::toBoolean($form_element->isRequired());
-            $this->collapsed = false;
         } else {
             assert($form_element instanceof Tracker_FormElement_Container);
             $this->required  = false;
-            $this->collapsed = (bool) $form_element->isCollapsed();
         }
+        $this->collapsed = $is_collapsed;
 
-        $this->default_value = $form_element->getDefaultRESTValue();
+        $this->default_value = $default_rest_value;
         $this->type   = $type;
 
-        $this->values = null;
-        if ($form_element->getRESTAvailableValues()) {
-            $this->values = $form_element->getRESTAvailableValues();
-        }
+        $this->values = $values;
 
-        $bindings = $form_element->getRESTBindingProperties();
+        $bindings = $rest_binding_properties;
         $this->bindings = array(
             self::BIND_TYPE => $bindings[Tracker_FormElement_Field_List_Bind::REST_TYPE_KEY],
             self::BIND_LIST => array_map(
@@ -143,5 +154,19 @@ class Tracker_REST_FormElementRepresentation //phpcs:ignore
         );
 
         $this->permissions_for_groups = $permissions_for_groups;
+    }
+
+    public static function build(Tracker_FormElement $form_element, string $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups): Tracker_REST_FormElementRepresentation
+    {
+        return new self(
+            $form_element,
+            $type,
+            $form_element->isCollapsed(),
+            $form_element->getDefaultRESTValue(),
+            $form_element->getRESTAvailableValues(),
+            $form_element->getRESTBindingProperties(),
+            $permissions,
+            $permissions_for_groups,
+        );
     }
 }

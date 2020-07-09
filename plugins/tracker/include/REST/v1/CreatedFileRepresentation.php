@@ -22,6 +22,9 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Tuleap\Tracker\FormElement\Field\File\Upload\FileToUpload;
 
+/**
+ * @psalm-immutable
+ */
 final class CreatedFileRepresentation
 {
     /**
@@ -37,7 +40,7 @@ final class CreatedFileRepresentation
      */
     public $upload_href;
 
-    public function build(FileToUpload $file_to_upload, int $file_size): void
+    public function __construct(FileToUpload $file_to_upload, int $file_size)
     {
         $this->id            = $file_to_upload->getId();
         $this->download_href = $file_to_upload->getDownloadHref();
