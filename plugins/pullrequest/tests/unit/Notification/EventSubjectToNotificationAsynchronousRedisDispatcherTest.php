@@ -24,12 +24,14 @@ namespace Tuleap\PullRequest\Notification;
 
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
 
 final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use ForgeConfigSandbox;
 
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|QueueFactory
@@ -62,12 +64,37 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcherTest extends Te
             }
         };
 
+        \ForgeConfig::set('sys_nb_backend_workers', 1);
+
         $queue = \Mockery::mock(PersistentQueue::class);
         $this->queue_factory->shouldReceive('getPersistentQueue')->andReturn($queue);
         $queue->shouldReceive('pushSinglePersistentMessage')->once();
         $returned_event = $this->dispatcher->dispatch($event);
 
         $this->assertSame($event, $returned_event);
+    }
+
+    public function testDoesNotQueueWhenNoAsyncWorkerAreAvailable(): void
+    {
+        $event = new class implements EventSubjectToNotification
+        {
+            public static function fromWorkerEventPayload(array $payload): EventSubjectToNotification
+            {
+                return new self();
+            }
+
+            public function toWorkerEventPayload(): array
+            {
+                return [];
+            }
+        };
+
+        \ForgeConfig::set('sys_nb_backend_workers', 0);
+
+        $this->queue_factory->shouldNotReceive('getPersistentQueue');
+
+        $this->expectException(NoWorkerAvailableToProcessTheQueueException::class);
+        $this->dispatcher->dispatch($event);
     }
 
     public function testDoNothingWhenDispatchingSomethingThatIsNotAPREventSubjectToNotification(): void

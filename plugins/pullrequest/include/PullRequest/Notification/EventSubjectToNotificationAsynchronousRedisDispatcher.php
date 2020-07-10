@@ -50,6 +50,10 @@ final class EventSubjectToNotificationAsynchronousRedisDispatcher implements Eve
             return $event;
         }
 
+        if (\ForgeConfig::getInt('sys_nb_backend_workers') <= 0) {
+            throw new NoWorkerAvailableToProcessTheQueueException();
+        }
+
         $queue = $this->queue_factory->getPersistentQueue(Worker::EVENT_QUEUE_NAME, QueueFactory::REDIS);
         $queue->pushSinglePersistentMessage(
             self::TOPIC,
