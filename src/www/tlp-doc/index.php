@@ -220,7 +220,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
                 <?php endif; ?>
             </h2>
             <?php
-            displaySectionContent($documentation, $example, $demo, $id);
+            displaySectionContent($documentation, $example, $demo, (string) $id);
 
             if (isset($section['children']) && $section['children']) {
                 foreach ($section['children'] as $subsection_id => $section) {
@@ -252,7 +252,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
                             </h3>
                         <?php endif;
 
-                        displaySectionContent($documentation, $example, $demo, $id, $subsection_id);
+                        displaySectionContent($documentation, $example, $demo, (string) $id, $subsection_id);
                         ?>
                     </section>
                     <?php
