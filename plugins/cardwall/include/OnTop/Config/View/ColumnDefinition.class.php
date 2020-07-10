@@ -198,7 +198,7 @@ class Cardwall_OnTop_Config_View_ColumnDefinition
                 if (isset($mapping_values[$value->getId()]) && $mapping_values[$value->getId()]->getColumnId() == $column_id) {
                     $selected = 'selected="selected"';
                 }
-                $html .= '<option value="' . $value->getId() . '" ' . $selected . '>' . $value->getLabel() . '</option>';
+                $html .= '<option value="' . $this->purify($value->getId()) . '" ' . $selected . '>' . $this->purify($value->getLabel()) . '</option>';
             }
             $html .= '</select>';
         } else {
