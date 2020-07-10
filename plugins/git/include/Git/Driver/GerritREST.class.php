@@ -397,8 +397,8 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
     public function addSSHKeyToAccount(
         Git_RemoteServer_GerritServer $server,
         Git_Driver_Gerrit_User $user,
-        $ssh_key
-    ) {
+        string $ssh_key
+    ): void {
         $this->logger->info("Gerrit REST driver: Add ssh key for user " . $user->getSSHUserName());
         $response = $this->sendRequest(
             $server,
@@ -406,9 +406,10 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
                 'POST',
                 $this->getGerritURL($server, '/accounts/' . urlencode($user->getSSHUserName()) . '/sshkeys')
             )->withHeader(self::HEADER_CONTENT_TYPE, self::MIME_TEXT)
-            ->withBody($this->stream_factory->createStream($this->escapeSSHKey($ssh_key)))
+            ->withBody($this->stream_factory->createStream($ssh_key))
         );
-        if ($response->getStatusCode() !== 200) {
+        $response_status_code = $response->getStatusCode();
+        if ($response_status_code !== 200 && $response_status_code !== 201) {
             $this->throwGerritException("Gerrit REST driver: Cannot add ssh key", $response);
         }
         $this->logger->info("Gerrit REST driver: ssh key successfully added");
@@ -652,11 +653,6 @@ class Git_Driver_GerritREST implements Git_Driver_Gerrit
         }
 
         $this->logger->info("Gerrit REST driver: Successfully deleted ssh key ($gerrit_key_id)");
-    }
-
-    private function escapeSSHKey($ssh_key)
-    {
-        return str_replace('=', '\u003d', $ssh_key);
     }
 
     private function getKeyPartFromSSHKey($expected_ssh_key)

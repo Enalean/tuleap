@@ -137,7 +137,7 @@ final class GerritUnsupportedVersionDriver implements Git_Driver_Gerrit
         throw new UnsupportedGerritVersionException();
     }
 
-    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key)
+    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, string $ssh_key): void
     {
         throw new UnsupportedGerritVersionException();
     }

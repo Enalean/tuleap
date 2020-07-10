@@ -163,11 +163,10 @@ interface Git_Driver_Gerrit
 
     /**
      *
-     * @param string $ssh_key
      * @throws Git_Driver_Gerrit_Exception
      *
      */
-    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, $ssh_key);
+    public function addSSHKeyToAccount(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_User $user, string $ssh_key): void;
 
     /**
      *
