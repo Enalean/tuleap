@@ -553,9 +553,11 @@
         <element name="decorators">
           <zeroOrMore>
             <element name="decorator">
-              <attribute name="REF">
-                <data type="IDREF"/>
-              </attribute>
+              <optional>
+                <attribute name="REF">
+                  <data type="IDREF"/>
+                </attribute>
+              </optional>
               <choice>
                 <ref name="decorator_legacy_color"/>
                 <attribute name="tlp_color_name">

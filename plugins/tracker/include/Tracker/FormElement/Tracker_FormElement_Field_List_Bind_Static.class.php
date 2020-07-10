@@ -21,6 +21,7 @@
 
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
@@ -778,46 +779,25 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $value_dao->propagateCreation($field, $original_value_id);
     }
 
-    /**
-     * Transforms Bind into a SimpleXMLElement
-     */
     public function exportToXml(
         SimpleXMLElement $root,
         &$xmlMapping,
         $project_export_context,
         UserXMLExporter $user_xml_exporter
     ) {
-        $cdata_section_factory = new XML_SimpleXMLCDATAFactory();
-        $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
-        if ($this->getAllValues()) {
-            $child = $root->addChild('items');
-            foreach ($this->getAllValues() as $val) {
-                $grandchild = $child->addChild('item');
-                $ID = $val->getXMLId();
-                $grandchild->addAttribute('ID', $ID);
-                $xmlMapping['values'][$ID] = $val->getId();
-                $grandchild->addAttribute('label', $val->getLabel());
-                $grandchild->addAttribute('is_hidden', $val->isHidden());
-
-                if ($val->getDescription() != '') {
-                    $cdata_section_factory->insert($grandchild, 'description', $val->getDescription());
-                }
-            }
-            if ($this->decorators) {
-                $child = $root->addChild('decorators');
-                foreach ($this->decorators as $deco) {
-                    $deco->exportToXML($child, array_search($deco->value_id, $xmlMapping['values']));
-                }
-            }
-            if ($this->default_values) {
-                $default_child = $root->addChild('default_values');
-                foreach ($this->default_values as $id => $nop) {
-                    if ($ref = array_search($id, $xmlMapping['values'])) {
-                        $default_child->addChild('value')->addAttribute('REF', $ref);
-                    }
-                }
-            }
+        if (! $this->getAllValues()) {
+            return;
         }
+
+        $exporter = new BindStaticXmlExporter(new XML_SimpleXMLCDATAFactory());
+        $exporter->exportToXml(
+            $root,
+            $this->is_rank_alpha,
+            $this->getAllValues(),
+            $this->decorators,
+            $this->default_values,
+            $xmlMapping
+        );
     }
 
     /**

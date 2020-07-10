@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,42 +21,17 @@
 namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 
 use PHPUnit\Framework\TestCase;
-use SimpleXMLElement;
 use Tracker_FormElement_Field_List_BindDecorator;
 
-require_once __DIR__ . '/../../../../../bootstrap.php';
-
-class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @codingStandardsIgnoreLine
+final class Tracker_FormElementFieldList_BindDecoratorTest extends TestCase // @codingStandardsIgnoreLine
 {
-    public function testItExportOldPaletteColor()
-    {
-        $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 255, 255, 255, null);
-        $root      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $decorator->exportToXml($root, 'val');
-
-        $attr = $root->decorator->attributes();
-        $this->assertEquals((string) $attr->r, 255);
-        $this->assertEquals((string) $attr->g, 255);
-        $this->assertEquals((string) $attr->b, 255);
-    }
-
-    public function testitExportTlpColor()
-    {
-        $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, null, null, null, 'inca-silver');
-        $root      = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><project />');
-        $decorator->exportToXml($root, 'val');
-
-        $attr = $root->decorator->attributes();
-        $this->assertEquals((string) $attr->tlp_color_name, 'inca-silver');
-    }
-
-    public function testIsUsingOldPaletteWithLegacyColorComingFromXMLImport()
+    public function testIsUsingOldPaletteWithLegacyColorComingFromXMLImport(): void
     {
         $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 255, 255, 255, '');
         $this->assertTrue($decorator->isUsingOldPalette());
     }
 
-    public function testIsUsingOldPaletteWithNoColorComingFromXMLImport()
+    public function testIsUsingOldPaletteWithNoColorComingFromXMLImport(): void
     {
         $decorator = new Tracker_FormElement_Field_List_BindDecorator(101, 1, 0, 0, 0, 'inca-silver');
         $this->assertFalse($decorator->isUsingOldPalette());

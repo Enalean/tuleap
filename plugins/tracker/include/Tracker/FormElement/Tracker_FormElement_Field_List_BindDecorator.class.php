@@ -1,7 +1,7 @@
 <?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
- * Copyright (c) Enalean, 2011 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2011 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,7 @@
  */
 
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
+use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindDecoratorExporter;
 
 class Tracker_FormElement_Field_List_BindDecorator
 {
@@ -215,22 +216,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         );
     }
 
-    /**
-     * Save a decorator
-     */
-    public static function save($field_id, $value_id, $color)
-    {
-        $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
-
-        if (! self::isHexaColor($color)) {
-            return $dao->saveTlpColor($value_id, $color);
-        }
-
-        list($r, $g, $b) = ColorHelper::HexaToRGB($color);
-        $dao->save($field_id, $value_id, $r, $g, $b);
-    }
-
-    public static function update($field_id, $value_id, $color)
+    public static function update($value_id, $color)
     {
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
 
@@ -239,7 +225,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         }
 
         list($r, $g, $b) = ColorHelper::HexaToRGB($color);
-        $dao->updateColor($field_id, $value_id, $r, $g, $b);
+        $dao->updateColor($value_id, $r, $g, $b);
     }
 
     /**
@@ -252,23 +238,36 @@ class Tracker_FormElement_Field_List_BindDecorator
     }
 
     /**
-     * Transforms Bind into a SimpleXMLElement
-     *
-     * @param SimpleXMLElement $root the node to which the Bind is attached (passed by reference)
      * @param int $val the id indentifing the value in the XML (different form $this->value_id)
      */
-    public function exportToXML(SimpleXMLElement $root, $val)
+    public function exportToXML(SimpleXMLElement $root, $val): void
     {
-        $child = $root->addChild('decorator');
-        $child->addAttribute('REF', $val);
+        $this->getDecoratorExporter()->exportToXML(
+            $root,
+            $val,
+            $this->isUsingOldPalette(),
+            (string) $this->r,
+            (string) $this->g,
+            (string) $this->b,
+            $this->tlp_color_name
+        );
+    }
 
-        if ($this->isUsingOldPalette()) {
-            $child->addAttribute('r', $this->r);
-            $child->addAttribute('g', $this->g);
-            $child->addAttribute('b', $this->b);
-        } else {
-            $child->addAttribute('tlp_color_name', $this->tlp_color_name);
-        }
+    public function exportNoneToXML(SimpleXMLElement $root): void
+    {
+        $this->getDecoratorExporter()->exportNoneToXML(
+            $root,
+            $this->isUsingOldPalette(),
+            (string) $this->r,
+            (string) $this->g,
+            (string) $this->b,
+            $this->tlp_color_name
+        );
+    }
+
+    private function getDecoratorExporter(): BindDecoratorExporter
+    {
+        return new BindDecoratorExporter();
     }
 
     /**
@@ -293,7 +292,7 @@ class Tracker_FormElement_Field_List_BindDecorator
         return false;
     }
 
-    public function isUsingOldPalette()
+    public function isUsingOldPalette(): bool
     {
         return ! $this->isTlpColorNamedDefined() && $this->isLegacyColorDefined();
     }
