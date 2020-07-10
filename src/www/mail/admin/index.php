@@ -182,7 +182,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             echo '
             <H2>' . $Language->getText('mail_admin_index', 'update_mail_list') . '</H2>
             <P>
-            ' . $Language->getText('mail_admin_index', 'admin_lists_here', ForgeConfig::get('sys_name') . '<P>';
+            ' . $Language->getText('mail_admin_index', 'admin_lists_here', ForgeConfig::get('sys_name') . '<P>');
 
             $title_arr = array();
             $title_arr[] = $Language->getText('mail_admin_index', 'list');
