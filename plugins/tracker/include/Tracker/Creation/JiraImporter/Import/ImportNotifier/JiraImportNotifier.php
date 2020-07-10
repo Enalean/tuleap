@@ -20,12 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
 use MailEnhancer;
 use MailNotificationBuilder;
 use trackerPlugin;
 use Tuleap\InstanceBaseURLBuilder;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
 class JiraImportNotifier
 {

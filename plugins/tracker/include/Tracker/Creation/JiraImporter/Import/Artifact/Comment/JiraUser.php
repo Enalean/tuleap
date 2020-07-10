@@ -27,6 +27,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment;
  */
 class JiraUser
 {
+    public const NO_EMAIL_ADDRESS_SHARED = '';
+
     /**
      * @var string
      */
@@ -44,7 +46,7 @@ class JiraUser
     {
         $this->display_name    = $update_author['displayName'];
         $this->jira_account_id = $update_author['accountId'];
-        $this->email_address   = isset($update_author['emailAddress']) ? $update_author['emailAddress'] : '';
+        $this->email_address   = $update_author['emailAddress'] ?? self::NO_EMAIL_ADDRESS_SHARED;
     }
 
     public function getDisplayName(): string

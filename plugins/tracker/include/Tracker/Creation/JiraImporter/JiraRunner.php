@@ -32,6 +32,9 @@ use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Cryptography\Symmetric\SymmetricCrypto;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\Worker;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\TrackerCreationHasFailedException;
 use Tuleap\Tracker\TrackerIsInvalidException;
 use UserManager;
@@ -72,6 +75,11 @@ class JiraRunner
      */
     private $user_manager;
 
+    /**
+     * @var JiraUserOnTuleapCache
+     */
+    private $jira_user_on_tuleap_cache;
+
     public function __construct(
         LoggerInterface $logger,
         QueueFactory $queue_factory,
@@ -80,16 +88,18 @@ class JiraRunner
         PendingJiraImportDao $dao,
         JiraSuccessImportNotifier $success_notifier,
         JiraErrorImportNotifier $error_notifier,
-        UserManager $user_manager
+        UserManager $user_manager,
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ) {
-        $this->logger           = $logger;
-        $this->queue_factory    = $queue_factory;
-        $this->key_factory      = $key_factory;
-        $this->tracker_creator  = $tracker_creator;
-        $this->dao              = $dao;
-        $this->success_notifier = $success_notifier;
-        $this->error_notifier   = $error_notifier;
-        $this->user_manager     = $user_manager;
+        $this->logger                    = $logger;
+        $this->queue_factory             = $queue_factory;
+        $this->key_factory               = $key_factory;
+        $this->tracker_creator           = $tracker_creator;
+        $this->dao                       = $dao;
+        $this->success_notifier          = $success_notifier;
+        $this->error_notifier            = $error_notifier;
+        $this->user_manager              = $user_manager;
+        $this->jira_user_on_tuleap_cache = $jira_user_on_tuleap_cache;
     }
 
     public function canBeProcessedAsynchronously(): bool
@@ -164,7 +174,7 @@ class JiraRunner
                 $pending_import->getJiraIssueTypeName(),
                 $pending_import->getUser()
             );
-            $this->success_notifier->warnUserAboutSuccess($pending_import, $tracker);
+            $this->success_notifier->warnUserAboutSuccess($pending_import, $tracker, $this->jira_user_on_tuleap_cache);
         } catch (InvalidCiphertextException | CannotPerformIOOperationException | SodiumException $exception) {
             $message = $exception->getMessage();
             if ($message) {

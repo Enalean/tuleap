@@ -37,6 +37,9 @@ use Tuleap\ForgeConfigSandbox;
 use Tuleap\Queue\NoQueueSystemAvailableException;
 use Tuleap\Queue\PersistentQueue;
 use Tuleap\Queue\QueueFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use UserManager;
 use XML_ParseException;
 
@@ -86,16 +89,22 @@ class JiraRunnerTest extends TestCase
      */
     private $anonymous_user;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserOnTuleapCache
+     */
+    private $jira_user_on_tuleap_cache;
+
     protected function setUp(): void
     {
-        $this->logger           = Mockery::mock(LoggerInterface::class);
-        $this->queue_factory    = Mockery::mock(QueueFactory::class);
-        $this->dao              = Mockery::mock(PendingJiraImportDao::class);
-        $this->key_factory      = Mockery::mock(KeyFactory::class);
-        $this->creator          = Mockery::mock(FromJiraTrackerCreator::class);
-        $this->success_notifier = Mockery::mock(JiraSuccessImportNotifier::class);
-        $this->error_notifier   = Mockery::mock(JiraErrorImportNotifier::class);
-        $this->user_manager     = Mockery::mock(UserManager::class);
+        $this->logger                    = Mockery::mock(LoggerInterface::class);
+        $this->queue_factory             = Mockery::mock(QueueFactory::class);
+        $this->dao                       = Mockery::mock(PendingJiraImportDao::class);
+        $this->key_factory               = Mockery::mock(KeyFactory::class);
+        $this->creator                   = Mockery::mock(FromJiraTrackerCreator::class);
+        $this->success_notifier          = Mockery::mock(JiraSuccessImportNotifier::class);
+        $this->error_notifier            = Mockery::mock(JiraErrorImportNotifier::class);
+        $this->user_manager              = Mockery::mock(UserManager::class);
+        $this->jira_user_on_tuleap_cache = Mockery::mock(JiraUserOnTuleapCache::class);
 
         $this->anonymous_user = new PFUser(['user_id' => 0, 'language_id' => 'en_US']);
         $this->user_manager->shouldReceive(['getUserAnonymous' => $this->anonymous_user]);
@@ -109,6 +118,7 @@ class JiraRunnerTest extends TestCase
             $this->success_notifier,
             $this->error_notifier,
             $this->user_manager,
+            $this->jira_user_on_tuleap_cache
         );
     }
 
@@ -227,7 +237,7 @@ class JiraRunnerTest extends TestCase
 
         $this->success_notifier
             ->shouldReceive('warnUserAboutSuccess')
-            ->with($import, $tracker)
+            ->with($import, $tracker, $this->jira_user_on_tuleap_cache)
             ->once();
 
         $this->dao

@@ -96,11 +96,13 @@ use Tuleap\Tracker\Creation\JiraImporter\CancellationOfJiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapperBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\FromJiraTrackerCreator;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCleaner;
-use Tuleap\Tracker\Creation\JiraImporter\JiraErrorImportNotifier;
-use Tuleap\Tracker\Creation\JiraImporter\JiraImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraProjectListController;
 use Tuleap\Tracker\Creation\JiraImporter\JiraRunner;
-use Tuleap\Tracker\Creation\JiraImporter\JiraSuccessImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 use Tuleap\Tracker\Creation\JiraImporter\JiraTrackersListController;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImportCleaner;
@@ -1595,7 +1597,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function workerEvent(WorkerEvent $event)
     {
-        $user_manager = $this->getUserManager();
+        $user_manager              = $this->getUserManager();
+        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping());
 
         AsynchronousJiraRunner::addListener(
             $event,
@@ -1603,10 +1606,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             new KeyFactory(),
             new PendingJiraImportDao(),
             new PendingJiraImportBuilder(ProjectManager::instance(), $user_manager),
-            FromJiraTrackerCreator::build(),
+            FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
             $this->getJiraSuccessImportNotifier(),
             $this->getJiraErrorImportNotifier(),
-            $user_manager
+            $user_manager,
+            $jira_user_on_tuleap_cache
         );
 
         AsynchronousActionsRunner::addListener($event);
@@ -2260,15 +2264,18 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraRunner(\Psr\Log\LoggerInterface $logger): JiraRunner
     {
+        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping());
+
         return new JiraRunner(
             $logger,
             new QueueFactory($logger),
             new KeyFactory(),
-            FromJiraTrackerCreator::build(),
+            FromJiraTrackerCreator::build($jira_user_on_tuleap_cache),
             new PendingJiraImportDao(),
             $this->getJiraSuccessImportNotifier(),
             $this->getJiraErrorImportNotifier(),
-            $this->getUserManager()
+            $this->getUserManager(),
+            $jira_user_on_tuleap_cache
         );
     }
 }

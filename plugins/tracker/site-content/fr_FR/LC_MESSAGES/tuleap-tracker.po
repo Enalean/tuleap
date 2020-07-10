@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 
 msgid "\"Attachment\" type field cannot be modified during artifact copy."
 msgstr ""
@@ -1722,6 +1722,16 @@ msgstr "Id du projet Jira"
 msgid "Jira server"
 msgstr "Serveur Jira"
 
+msgid "Jira users identified on Tuleap:"
+msgstr "Utilisateurs Jira identifiés sur Tuleap :"
+
+msgid ""
+"Jira users who are sharing their email address, but not matching with any "
+"Tuleap user:"
+msgstr ""
+"Utilisateurs Jira qui partagent leurs adresses mail, mais qui ne "
+"correspondent à aucun utilisateur Tuleap :"
+
 #, php-format
 msgid "Job build launch succeeded (%1$s)"
 msgstr "Le build d'intégration continue a été lancé (%1$s)"
@@ -2120,11 +2130,19 @@ msgstr "Ou sélectionnez une dépendance existante"
 msgid "Or you can migrate a Tracker v3..."
 msgstr "Ou vous pouvez migrer un outil de suivi v3 …"
 
+msgid "Other Jira users:"
+msgstr "Autre utilisateurs Jira :"
+
 msgid "Other fields than title or description cannot be required"
 msgstr "Les champs autres que titre ou description ne peuvent pas être requis"
 
 msgid "Other groups"
 msgstr "Autre groupes"
+
+msgid "Other users Tuleap could not identify, replaced by Tracker Importer"
+msgstr ""
+"Autres utilisateurs que Tuleap n'a pas pu identifier, remplacés par Tracker "
+"importer"
 
 msgid "Others"
 msgstr "Autres"
@@ -3771,6 +3789,9 @@ msgstr ""
 msgid "Users having unsubscribed from the notifications"
 msgstr "Utilisateurs s'étant désabonné des notifications"
 
+msgid "Users mapping"
+msgstr "Mappage des utilisateurs"
+
 msgid "Values"
 msgstr "Valeurs"
 
@@ -4321,6 +4342,20 @@ msgstr "la nature ne peut être supprimée car elle est ou a déjà été utilis
 
 msgid "will be set to"
 msgstr "sera valué à"
+
+msgid ""
+"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} (<a href="
+"\"{{ tuleap_user_profile_url }}\">@{{ tuleap_user_username }}</a>)"
+msgstr ""
+"{{ jira_display_name }} identifié en tant que {{ tuleap_user_real_name }} "
+"(<a href=\"{{ tuleap_user_profile_url }}\">@{{ tuleap_user_username }}</a>)"
+
+msgid ""
+"{{ jira_display_name }} identified as {{ tuleap_user_real_name }} "
+"(@{{ tuleap_user_username }})"
+msgstr ""
+"{{ jira_display_name }} identifié en tant que {{ tuleap_user_real_name }} "
+"(@{{ tuleap_user_username }})"
 
 msgid "« Go back to semantic overview"
 msgstr "« Retour à l'administration de la sémantique"
