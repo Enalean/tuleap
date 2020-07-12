@@ -73,7 +73,11 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
             return '/';
         }
 
-        header('Location: ' . $url);
+        /**
+         * @psalm-taint-escape text
+         */
+        $header = 'Location: ' . $url;
+        header($header);
         exit();
     }
 

@@ -670,7 +670,7 @@ class FileDiff
                 }
             }
 
-            $this->diffData = DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName, (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
+            $this->diffData = DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName === null ? null : escapeshellarg($fromName), (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
             if (!empty($fromTmpFile)) {
                 $tmpdir->RemoveFile($fromTmpFile);

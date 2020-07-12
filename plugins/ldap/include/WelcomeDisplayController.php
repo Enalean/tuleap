@@ -89,12 +89,12 @@ class WelcomeDisplayController implements DispatchableWithRequest
         if ($pv === 2) {
             $layout->pv_header(array());
         } else {
-            $layout->header(array('title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName())),
+            $layout->header(array('title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($this->html_purifier->purify($lr->getCommonName()))),
                                 'registeration_process' => true));
         }
 
         print '<h2>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($lr->getCommonName()));
+        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($this->html_purifier->purify($lr->getCommonName())));
         print '</h2>';
 
         print '<h3>';
@@ -115,10 +115,10 @@ class WelcomeDisplayController implements DispatchableWithRequest
         }
 
         print '
-<form name="welcome" action="' . $this->base_url . '/welcome" method="post">
+<form name="welcome" action="' . $this->html_purifier->purify($this->base_url) . '/welcome" method="post">
 <input type="hidden" name="return_to" value="' . $this->html_purifier->purify($return_to, CODENDI_PURIFIER_CONVERT_HTML) . '">
 <input type="hidden" name="action" value="update_reg">
-<input type="hidden" name="pv" value="' . $pv . '">
+<input type="hidden" name="pv" value="' . $this->html_purifier->purify($pv) . '">
 
 <p>' . $star . ' ' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_tz') . ':';
 
@@ -141,15 +141,15 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '<table>
 <tr>
 <td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_ldap_login') . '</td>
-<td><strong>' . $ldap_name . '</strong></td>
+<td><strong>' . $this->html_purifier->purify($ldap_name) . '</strong></td>
 </tr>
 <tr>
 <td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_email') . '</td>
-<td><strong>' . $currentUser->getEmail() . '</strong></td>
+<td><strong>' . $this->html_purifier->purify($currentUser->getEmail()) . '</strong></td>
 </tr>
 <tr>
 <td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array(\ForgeConfig::get('sys_name'))) . '</td>
-<td>' . $currentUser->getUserName() . '<br>
+<td>' . $this->html_purifier->purify($currentUser->getUserName()) . '<br>
 ' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array(\ForgeConfig::get('sys_name'))) . '
 </td>
 </tr>
