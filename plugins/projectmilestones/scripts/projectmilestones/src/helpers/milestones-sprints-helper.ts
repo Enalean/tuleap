@@ -57,5 +57,7 @@ export function getSortedSprints(
         }
     });
 
+    open_sprints.sort((sprint_1, sprint_2) => sprint_2.id - sprint_1.id);
+
     return { open_sprints, closed_sprints };
 }

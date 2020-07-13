@@ -274,10 +274,27 @@ describe("Store actions", () => {
                 },
             } as MilestoneData;
 
-            const sprint_open = {
-                id: 10,
-                semantic_status: "open",
-            } as MilestoneData;
+            const sprint_open = [
+                {
+                    id: 10,
+                    semantic_status: "open",
+                },
+                {
+                    id: 12,
+                    semantic_status: "open",
+                },
+            ] as MilestoneData[];
+
+            const sprint_open_sorted = [
+                {
+                    id: 12,
+                    semantic_status: "open",
+                },
+                {
+                    id: 10,
+                    semantic_status: "open",
+                },
+            ] as MilestoneData[];
 
             const sprint_closed = {
                 id: 11,
@@ -290,7 +307,7 @@ describe("Store actions", () => {
                     {
                         id: 1,
                         label: "one",
-                        total_artifact: 4,
+                        total_artifact: 5,
                         color_name: "red_fiesta",
                     },
                     {
@@ -301,9 +318,9 @@ describe("Store actions", () => {
                     },
                 ],
                 initial_effort: 15,
-                total_sprint: 2,
+                total_sprint: 3,
                 total_closed_sprint: 1,
-                open_sprints: [sprint_open],
+                open_sprints: sprint_open_sorted,
             };
 
             const milestone_content = [
@@ -348,7 +365,7 @@ describe("Store actions", () => {
                 Promise.resolve(milestone_content)
             );
             jest.spyOn(rest_querier, "getAllSprints").mockReturnValue(
-                Promise.resolve([sprint_closed, sprint_open])
+                Promise.resolve([sprint_closed, ...sprint_open])
             );
             jest.spyOn(rest_querier, "getMilestonesContent").mockReturnValue(
                 Promise.resolve(item_in_sprint)
