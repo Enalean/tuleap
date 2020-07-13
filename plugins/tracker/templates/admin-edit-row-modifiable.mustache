@@ -1,0 +1,38 @@
+<li id="staticvalue_{{ id }}"
+    class="{{# is_hidden }}tracker_admin_static_value_hidden{{/ is_hidden }} tracker-admin-one-list-field">
+    <span class="tracker-admin-bindvalue_grip">
+        <img src="/themes/FlamingParrot/images/ic/grip.png"
+             alt="/themes/FlamingParrot/images/ic/grip.png"/>
+    </span>
+    <span class="tracker-admin-bindvalue_decorator">
+        {{# decorator }}
+            {{> colorpicker/colorpicker-mount-point }}
+        {{/ decorator }}
+    </span>
+    <span class="tracker-admin-bindvalue_actions">
+        <input type="hidden" name="bind[edit][{{ id }}][is_hidden]" value="1"/>
+        {{# value_can_be_hidden }}
+            <input type="checkbox" name="bind[edit][{{ id }}][is_hidden]" value="0"
+                   {{^ is_hidden }}checked="checked"{{/ is_hidden }}
+                   class="tracker_admin_static_value_hidden_chk"/>
+        {{/ value_can_be_hidden }}
+        <img src="/themes/FlamingParrot/images/ic/eye{{ image_hidden_prefix }}.png" alt="{{ image_hidden_alt }}"
+             title="{{ image_hidden_title }}"/>
+        {{# value_can_be_deleted }}
+            <a title="{{# dgettext }}tuleap-tracker | Delete the value{{/ dgettext }}" href="{{ delete_url }}">
+                <img src="/themes/FlamingParrot/images/ic/cross.png" alt="/themes/FlamingParrot/images/ic/cross.png"/>
+            </a>
+        {{/ value_can_be_deleted }}
+        {{^ value_can_be_deleted }}
+            <img src="/themes/FlamingParrot/images/ic/cross-disabled.png"
+                 alt="/themes/FlamingParrot/images/ic/cross-disabled.png"/>
+        {{/ value_can_be_deleted }}
+    </span>
+    <span class="tracker-admin-bindvalue_label">
+        <input type="text" name="bind[edit][{{ id }}][label]" required value="{{ label }}"/>
+        <textarea name="bind[edit][{{ id }}][description]" class="tracker-admin-bindvalue_description_field"
+                  placeholder="{{# dgettext }}tuleap-tracker | Enter description... {{/ dgettext }}"
+                  cols="50" rows="3">
+        </textarea>
+    </span>
+</li>

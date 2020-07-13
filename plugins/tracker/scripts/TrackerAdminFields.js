@@ -23,6 +23,7 @@
 import { createColorPicker } from "./colorpicker/index.js";
 
 document.observe("dom:loaded", function () {
+    initColorPicker();
     function initTextboxlistForDefaultValues() {
         if ($("tracker_artifact_textboxlist_default")) {
             var field_id = $("field_id").value;
@@ -38,6 +39,14 @@ document.observe("dom:loaded", function () {
                 }
             );
         }
+    }
+
+    function initColorPicker() {
+        $$(".tracker-admin-one-list-field").each(function (selected_element) {
+            selected_element.select(".vue-colorpicker-mount-point").each(function (element) {
+                createColorPicker(element);
+            });
+        });
     }
 
     function tracker_register_hide_value() {

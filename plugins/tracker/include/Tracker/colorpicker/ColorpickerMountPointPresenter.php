@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\Colorpicker;
 
+/**
+ * @psalm-immutable
+ */
 class ColorpickerMountPointPresenter
 {
     /**

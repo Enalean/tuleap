@@ -19,11 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
 use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
+use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
@@ -416,6 +418,26 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return new Tracker_FormElement_Field_List_OpenValueDao();
     }
 
+    private function getTemplateRenderer(): TemplateRenderer
+    {
+        return TemplateRendererFactory::build()->getRenderer(TRACKER_TEMPLATE_DIR);
+    }
+
+    private function getFormElementListAdminViewBuilder(): FormElementListValueAdminViewPresenterBuilder
+    {
+        return new FormElementListValueAdminViewPresenterBuilder($this->getValueDao());
+    }
+
+    private function getAdminEditRowModifiable(
+        Tracker_FormElement_Field_List_Bind_StaticValue $value,
+        ColorpickerMountPointPresenter $decorator
+    ): string {
+        return $this->getTemplateRenderer()->renderToString(
+            'admin-edit-row-modifiable',
+            $this->getFormElementListAdminViewBuilder()->buildPresenter($this->field, $value, $decorator)
+        );
+    }
+
     /**
      * @return Tracker_FormElement_Field_List_Bind_Static_ValueDao
      */
@@ -497,88 +519,26 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $html;
     }
 
-    private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $v): string
+    private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $value): string
     {
-        assert($v instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
-        $html = '';
-
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $is_hidden = $v->isHidden();
-
-        $purified_value_id = $hp->purify($v->getId());
-        $html   .= '<li id="staticvalue_' . $purified_value_id . '" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
-
-        $html .= '<span class="tracker-admin-bindvalue_grip">';
-        $html .= $GLOBALS['HTML']->getImage('ic/grip.png');
-        $html .= '</span>';
-
-        $html .= '<span class="tracker-admin-bindvalue_decorator">';
+        assert($value instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
 
         $event = new IsFieldUsedInASemanticEvent($this->field);
 
         EventManager::instance()->processEvent($event);
 
         $is_used_in_semantics = $event->isUsed();
-
-        if (isset($this->decorators[$v->getId()])) {
-            $html .= $this->decorators[$v->getId()]->decorateEdit($is_used_in_semantics);
+        if (isset($this->decorators[$value->getId()])) {
+            $decorator = $this->decorators[$value->getId()]->decorateEdit($is_used_in_semantics);
         } else {
-            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit((int) $this->field->id, $v->getId(), $is_used_in_semantics);
-        }
-        $html .= '</span>';
-
-        //{{{ Actions
-        $html .= '<span class="tracker-admin-bindvalue_actions">';
-
-        $img_params = array();
-        $icon_suffix = '';
-        if ($this->canValueBeHidden($v)) {
-            $checked = '';
-            if ($is_hidden) {
-                $icon_suffix = '-half';
-            } else {
-                $checked = 'checked="checked"';
-            }
-            $html .= '<input type="hidden" name="bind[edit][' . $purified_value_id . '][is_hidden]" value="1" />';
-            $html .= '<input type="checkbox" name="bind[edit][' . $purified_value_id . '][is_hidden]" value="0" ' . $checked . ' class="tracker_admin_static_value_hidden_chk" />';
-            $img_params['alt'] = 'show/hide value';
-            $img_params['title'] = dgettext('tuleap-tracker', 'Show/hide this value');
-        } else {
-            $icon_suffix = '--exclamation-hidden';
-            $img_params['alt'] = 'cannot hide';
-            $img_params['title'] = dgettext('tuleap-tracker', 'You can\'t hide this value since it is used in a semantic, in workflow or in field dependency');
-        }
-        $html .= $GLOBALS['HTML']->getImage('ic/eye' . $icon_suffix . '.png', $img_params);
-
-        $html .= ' ';
-
-        if ($this->canValueBeDeleted($v)) {
-            $html .= '<a title="Delete the value"
-                href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
-                        'tracker' => $this->field->getTracker()->id,
-                        'func' => 'admin-formElement-update',
-                        'formElement' => $this->field->getId(),
-                        'bind-update' => 1,
-                        'bind[delete]' => $v->getId(),
-                    )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png') . '</a>';
-        } else {
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('title' => "You can't delete"));
+            $decorator = Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit(
+                $this->field->id,
+                $value->getId(),
+                $is_used_in_semantics
+            );
         }
 
-        $html .= '</span>';
-        //}}}
-
-        $html .= '<span class="tracker-admin-bindvalue_label">';
-        $html .= '<input type="text" name="bind[edit][' . $purified_value_id . '][label]" required value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
-        $placeholder = dgettext('tuleap-tracker', 'Enter description...');
-        $html .= '<textarea name="bind[edit][' . $purified_value_id . '][description]" class="tracker-admin-bindvalue_description_field" placeholder="' . $placeholder . '" cols="50" rows="3">';
-        $html .= $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
-        $html .= '</textarea>';
-        $html .= '</span>';
-
-        $html .= '</li>';
-        return $html;
+        return $this->getAdminEditRowModifiable($value, $decorator);
     }
 
     private function fetchAdminEditFormNotModifiable()
@@ -606,11 +566,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $html;
     }
 
-    public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value): bool
-    {
-        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE && $this->getValueDao()->canValueBeHidden($this->field, $value->getId());
-    }
-
     /**
      * Say if a value can be hidden without checking the semantic status
      *
@@ -621,11 +576,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function canValueBeHiddenWithoutCheckingSemanticStatus(Tracker_FormElement_Field_List_Bind_StaticValue $value)
     {
         return $this->getValueDao()->canValueBeHiddenWithoutCheckingSemanticStatus($this->field, $value->getId());
-    }
-
-    public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value): bool
-    {
-        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE && $this->getValueDao()->canValueBeDeleted($this->field, $value->getId());
     }
 
     /**
