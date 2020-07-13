@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement\View\Admin\Field\ListFields;
 
-use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
 use Tracker_FormElement_Field_List_Bind_StaticValue_None;
 
@@ -33,20 +32,7 @@ class BindValuesAdder
      *
      * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
-    public function addNoneValue(Tracker_FormElement_Field $field, array $values): array
-    {
-        if ($field->isRequired()) {
-            return $values;
-        }
-
-        return $this->getAllValuesWithNone($values);
-    }
-
-
-    /**
-     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
-     */
-    private function getAllValuesWithNone(array $values): array
+    public function addNoneValue(array $values): array
     {
         $none_value = [new Tracker_FormElement_Field_List_Bind_StaticValue_None()];
         return array_merge($none_value, $values);

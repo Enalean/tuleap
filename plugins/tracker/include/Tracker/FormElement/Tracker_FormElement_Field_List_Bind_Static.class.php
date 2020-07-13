@@ -498,7 +498,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '<ul class="tracker-admin-bindvalue_list">';
 
         $retriever = new BindValuesAdder();
-        $possible_values = $retriever->addNoneValue($this->field, $this->getAllValues());
+        $possible_values = $retriever->addNoneValue($this->getAllValues());
 
         foreach ($possible_values as $v) {
             $html .= $this->fetchAdminEditRowModifiable($v);
