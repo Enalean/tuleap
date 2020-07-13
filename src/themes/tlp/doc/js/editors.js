@@ -22,6 +22,7 @@ import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
+import "../../src/js/custom-elements/relative-date";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -48,7 +49,10 @@ import { sanitize } from "dompurify";
         });
 
         function updatePreview() {
-            example.innerHTML = sanitize(editor.getValue());
+            example.innerHTML = sanitize(editor.getValue(), {
+                ADD_TAGS: ["tlp-relative-date"],
+                ADD_ATTR: ["date", "absolute-date", "placement", "preference", "locale"],
+            });
             var datepickers = example.querySelectorAll(".tlp-input-date");
             [].forEach.call(datepickers, function (datepicker) {
                 tlp.datePicker(datepicker);

@@ -25,7 +25,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getFollowUpClassnames($diff_to_previous);
 
-    abstract public function fetchFollowUp($diff_to_previous);
+    abstract public function fetchFollowUp($diff_to_previous, PFUser $current_user);
 
     abstract public function getHTMLAvatar();
 
@@ -74,8 +74,8 @@ abstract class Tracker_Artifact_Followup_Item
         return '<span class="tracker_artifact_followup_title_user">' . $this->getSubmitterUrl() . '</span>';
     }
 
-    public function getTimeAgo()
+    public function getTimeAgo(PFUser $current_user)
     {
-        return DateHelper::timeAgoInWords($this->getFollowUpDate(), false, true);
+        return DateHelper::relativeDate($this->getFollowUpDate(), $current_user);
     }
 }

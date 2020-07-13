@@ -67,7 +67,7 @@ class Tracker_Artifact_Changeset_Null extends Tracker_Artifact_Changeset
      *
      * @return string
      */
-    public function fetchFollowUp($diff_to_previous)
+    public function fetchFollowUp($diff_to_previous, PFUser $current_user)
     {
         return '';
     }

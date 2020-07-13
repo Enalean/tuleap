@@ -913,7 +913,7 @@ select.tracker-report-expert-allowed-fields {
     }
 }
 
-.tracker_artifact_followup_header span:last-child,
+.tracker_artifact_followup_header tlp-relative-date:last-child,
 .tracker_artifact_followup_comment_edited_by span:last-child {
     color: #afafaf;
 

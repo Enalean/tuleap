@@ -29,9 +29,9 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
     /**
      * @param Tracker_Artifact_Followup_Item[] $followups
      */
-    public function __construct(array $followups)
+    public function __construct(array $followups, PFUser $current_user)
     {
-        $this->followups = $this->buildFollowUpsPresenters($followups);
+        $this->followups = $this->buildFollowUpsPresenters($followups, $current_user);
     }
 
     public function no_comment()
@@ -43,7 +43,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
      * @param Tracker_Artifact_Followup_Item[] $followups
      * @return array
      */
-    private function buildFollowUpsPresenters(array $followups)
+    private function buildFollowUpsPresenters(array $followups, PFUser $current_user)
     {
         $presenters = array();
         foreach ($followups as $followup) {
@@ -52,7 +52,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
                 'getId'              => $followup->getId(),
                 'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),
-                'getTimeAgo'         => $followup->getTimeAgo(),
+                'getTimeAgo'         => $followup->getTimeAgo($current_user),
                 'getFollowupContent' => $followup->getFollowupContent($diff_to_previous)
             );
         }

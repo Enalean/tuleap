@@ -23,6 +23,9 @@ class DateHelper
 {
     public const SECONDS_IN_A_DAY = 86400;
 
+    /**
+     * @deprecated Use \DateHelper::relativeDate() instead
+     */
     public static function timeAgoInWords($time, $include_seconds = false, $with_title = false): string
     {
         if (! $time) {
@@ -40,6 +43,18 @@ class DateHelper
         }
 
         return $str;
+    }
+
+    public static function relativeDate(int $time, PFUser $current_user): string
+    {
+        $purifier = Codendi_HTMLPurifier::instance();
+
+        return '<tlp-relative-date
+            date="' . $purifier->purify(date('c', $time)) . '"
+            absolute-date="' . $purifier->purify(date($GLOBALS['Language']->getText('system', 'datefmt'), $time)) . '"
+            preference="relative"
+            locale="' . $purifier->purify($current_user->getLocale()) . '"
+            placement="tooltip"></tlp-relative-date>';
     }
 
     /**

@@ -240,7 +240,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      *
      * @return string html
      */
-    public function fetchFollowUp($diff_to_previous)
+    public function fetchFollowUp($diff_to_previous, PFUser $current_user)
     {
         $html = '';
 
@@ -251,7 +251,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         $html .= $this->fetchChangesetActionButtons();
         $html .= $this->fetchImportedFromXmlData();
         $html .= $this->getUserLink();
-        $html .= $this->getTimeAgo();
+        $html .= $this->getTimeAgo($current_user);
         $html .= '</div>';
 
         // The content

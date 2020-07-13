@@ -67,6 +67,8 @@ const webpack_config_for_ckeditor = {
 let entry_points = {
     "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.js"]),
     "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.js"]),
+    "tlp-relative-date": "./themes/tlp/src/js/custom-elements/relative-date/index.ts",
+    "tlp-relative-date-polyfills": "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
 };
 
 const tlp_colors = ["orange", "blue", "green", "red", "grey", "purple"];
@@ -84,18 +86,26 @@ const webpack_config_for_tlp = {
         library: "tlp",
     },
     resolve: {
+        extensions: [".js", ".ts"],
         alias: {
             select2: "select2/dist/js/select2.full.js",
         },
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_css_assets,
         ],
     },
-    plugins: [manifest_plugin, ...webpack_configurator.getCSSExtractionPlugins()],
+    plugins: [
+        manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(false),
+        ...webpack_configurator.getCSSExtractionPlugins(),
+    ],
 };
 
 const webpack_config_for_tlp_doc = {
@@ -109,8 +119,14 @@ const webpack_config_for_tlp_doc = {
     externals: {
         tlp: "tlp",
     },
+    resolve: {
+        extensions: [".js", ".ts"],
+    },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_scss_loader,
         ],
@@ -119,6 +135,7 @@ const webpack_config_for_tlp_doc = {
         // Since it has a different output, it gets its own CleanWebpackPlugin and ManifestPlugin
         webpack_configurator.getCleanWebpackPlugin(),
         webpack_configurator.getManifestPlugin(),
+        webpack_configurator.getTypescriptCheckerPlugin(false),
         ...webpack_configurator.getCSSExtractionPlugins(),
     ],
 };
