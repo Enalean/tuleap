@@ -1,23 +1,23 @@
-#
-# Codendi
+# Copyright (c) Enalean, 2015-Present. All Rights Reserved.
 # Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
-# http://www.codendi.com
 #
-# 
+# This file is a part of Tuleap.
 #
-#  License:
-#    This file is subject to the terms and conditions of the GNU General Public
-#    license. See the file COPYING in the main directory of this archive for
-#    more details.
+# Tuleap is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
 #
-# Purpose:
-#    This Perl include file mimics some of the fucntion in www/include/session.php
-#    to allow Perl scripts to handle user session stuff
+# Tuleap is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Tuleap. If not, see <http://www.gnu.org/licenses/
+#
 
-use CGI;
-use CGI::Cookie;
-
-use vars qw ( %G_SESSION %G_USER %cookies);
+use vars qw ( %G_USER );
 
 
 sub session_checkip {

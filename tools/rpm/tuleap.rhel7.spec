@@ -71,7 +71,7 @@ Manage dependencies for Tuleap mailman integration
 %package core-cvs
 Summary: CVS component for Tuleap
 Group: Development/Tools
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph, perl-CGI
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, rcs, cvsgraph
 Requires: perl-libwww-perl, perl-LWP-Protocol-https
 Requires: viewvc, viewvc-theme-tuleap >= 1.0.7
 Requires: cvs-tuleap
