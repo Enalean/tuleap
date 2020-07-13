@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -16,22 +16,19 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 declare(strict_types=1);
 
 namespace Tuleap\Request;
 
-use Throwable;
+use PHPUnit\Framework\TestCase;
 
-final class ForbiddenException extends \Exception
+final class NotFoundExceptionTest extends TestCase
 {
-    public function __construct(?string $message = null, ?Throwable $previous = null)
+    public function testNotFoundExceptionIsAssociatedWithA404Code(): void
     {
-        if ($message === null) {
-            $message = _('You are not allowed to access this resource');
-        }
-        parent::__construct($message, 403, $previous);
+        $not_found = new NotFoundException();
+        $this->assertEquals(404, $not_found->getCode());
     }
 }
