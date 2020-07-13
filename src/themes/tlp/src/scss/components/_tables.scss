@@ -194,8 +194,7 @@ $tlp-table-cell-padding: $tlp-half-spacing;
     margin: 0 0 0 ($tlp-medium-spacing / 2);
 }
 
-
-.tlp-pane-section > .tlp-table {
+.tlp-pane-section .tlp-table {
     width: calc(100% + 2 * #{$tlp-medium-spacing});
     margin: 0 (-$tlp-medium-spacing);
 
