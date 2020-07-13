@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2008. All rights reserved
  *
  * Originally written by Nicolas Terray, 2008
@@ -431,10 +431,6 @@ document.observe("dom:loaded", function () {
         elem.observe("click", function () {
             toggle_tracker_artifact_attachment_delete(elem);
         });
-    });
-
-    $$("div.artifact-submit-button input").each(function (elem) {
-        elem.observe("click", codendi.tracker.artifact.editor.disableWarnOnPageLeave);
     });
 
     // We know it is crappy, but you know what?
