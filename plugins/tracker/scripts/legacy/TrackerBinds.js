@@ -118,9 +118,10 @@ codendi.tracker.bind.Editor = Class.create({
 
                 list.childElements()
                     .sortBy(function (li) {
-                        return li
-                            .down(".tracker-admin-bindvalue_label input[type=text]")
-                            .value.toLowerCase();
+                        const bind_value_id = li.down(
+                            ".tracker-admin-bindvalue_label input[type=text]"
+                        ).value;
+                        return bind_value_id !== "None" && bind_value_id.toLowerCase();
                     })
                     .each(function (li) {
                         list.appendChild(li);
