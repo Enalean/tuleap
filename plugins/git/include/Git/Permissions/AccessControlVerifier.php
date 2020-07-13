@@ -42,12 +42,9 @@ class AccessControlVerifier
         $this->system_command         = $system_command;
     }
 
-    /**
-     * @return bool
-     */
-    public function canWrite(PFUser $user, GitRepository $repository, $reference)
+    public function canWrite(PFUser $user, GitRepository $repository, $reference): bool
     {
-        if ($this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)) {
+        if ($repository->isMigratedToGerrit() || $this->fine_grained_retriever->doesRepositoryUseFineGrainedPermissions($repository)) {
             if ($reference === '') {
                 return false;
             }
