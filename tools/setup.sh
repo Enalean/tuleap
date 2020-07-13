@@ -965,24 +965,6 @@ set -e
 build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /etc/$PROJECT_NAME/conf $PROJECT_ADMIN $PROJECT_ADMIN 700
 
-echo "Initialize MySQL database"
-/usr/bin/tuleap-cfg setup:mysql-init \
-    --host="${mysql_host}" \
-    --admin-user="${mysql_user}" \
-    --admin-password="${rt_passwd}" \
-    --db-name="${PROJECT_NAME}" \
-    --app-user="${PROJECT_ADMIN}" \
-    --app-password="${codendiadm_passwd}"
-
-echo "Load MySQL database"
-/usr/bin/tuleap-cfg setup:mysql \
-    --host="${mysql_host}" \
-    --user="${PROJECT_ADMIN}" \
-    --password="${codendiadm_passwd}" \
-    --dbname="${PROJECT_NAME}" \
-    "${siteadmin_password}" \
-    "${sys_default_domain}"
-
 set +e
 
 # Update codendiadm user password
@@ -1042,6 +1024,30 @@ build_dir /var/lib/$PROJECT_NAME/ftp/$PROJECT_NAME/DELETED $PROJECT_ADMIN $PROJE
 #
 
 setup_tuleap
+
+set -e
+
+echo "Initialize MySQL database"
+/usr/bin/tuleap-cfg setup:mysql-init \
+    --host="${mysql_host}" \
+    --admin-user="${mysql_user}" \
+    --admin-password="${rt_passwd}" \
+    --db-name="${PROJECT_NAME}" \
+    --app-user="${PROJECT_ADMIN}" \
+    --app-password="${codendiadm_passwd}" \
+    --nss-password="${dbauth_passwd}" \
+    --mediawiki="per-project"
+
+echo "Load MySQL database"
+/usr/bin/tuleap-cfg setup:mysql \
+    --host="${mysql_host}" \
+    --user="${PROJECT_ADMIN}" \
+    --password="${codendiadm_passwd}" \
+    --dbname="${PROJECT_NAME}" \
+    "${siteadmin_password}" \
+    "${sys_default_domain}"
+
+set +e
 
 if [ "$generate_ssl_certificate" = "y" ]; then
     $INSTALL_DIR/src/utils/generate_ssl_certificate.sh
