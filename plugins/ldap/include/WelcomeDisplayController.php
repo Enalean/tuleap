@@ -65,7 +65,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
      */
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables)
     {
-        assert($layout instanceof \FlamingParrot_Theme);
+        assert($layout instanceof \Layout);
 
         $currentUser = $request->getCurrentUser();
         $timezone = $request->get('timezone');
@@ -98,10 +98,10 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '</h2>';
 
         print '<h3>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', array($GLOBALS['sys_name']));
+        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', array(\ForgeConfig::get('sys_name')));
         print '</h3>';
 
-        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', array($GLOBALS['sys_name'])) . '</p>';
+        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', array(\ForgeConfig::get('sys_name'))) . '</p>';
 
         print '<fieldset>';
 
@@ -136,7 +136,7 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '</fieldset>';
 
         print '<fieldset>';
-        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', array($GLOBALS['sys_org_name'])) . '</legend>';
+        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', array(\ForgeConfig::get('sys_org_name'))) . '</legend>';
 
         print '<table>
 <tr>
@@ -148,9 +148,9 @@ class WelcomeDisplayController implements DispatchableWithRequest
 <td><strong>' . $currentUser->getEmail() . '</strong></td>
 </tr>
 <tr>
-<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array($GLOBALS['sys_name'])) . '</td>
+<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array(\ForgeConfig::get('sys_name'))) . '</td>
 <td>' . $currentUser->getUserName() . '<br>
-' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array($GLOBALS['sys_name'])) . '
+' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array(\ForgeConfig::get('sys_name'))) . '
 </td>
 </tr>
 </table>';
