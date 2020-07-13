@@ -95,7 +95,8 @@ function news_footer($params)
 
 function news_show_latest($group_id = '', $limit = 10, $show_projectname = true, $allow_submit = true, $hide_nb_comments = false, $tail_headlines = 0)
 {
-    global $sys_news_group, $Language;
+    global $Language;
+    $sys_news_group = ForgeConfig::get('sys_news_group');
 
     $return  = "";
     if (!$group_id) {

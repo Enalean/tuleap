@@ -866,7 +866,7 @@ if ($group_id && !$atid) {
             } else {
                  //@see  preDeleteArtifactType @common/tracker/ArtifactTypeFactory.class.php
                   $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'delete_success', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML)));
-                  echo $Language->getText('tracker_admin_index', 'tracker_deleted', array( $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML), $GLOBALS['sys_email_admin']));
+                  echo $Language->getText('tracker_admin_index', 'tracker_deleted', array( $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML), ForgeConfig::get('sys_email_admin')));
                 $arm = new ArtifactRulesManager();
                 $arm->deleteRulesByArtifactType($atid);
                   // Delete related reference if it exists

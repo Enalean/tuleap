@@ -167,10 +167,10 @@ class MailPresenterFactory
         $presenter = new MailRegisterByAdminNotificationPresenter(
             $attributes_presenter["logo_url"],
             $GLOBALS['Language']->getText('account_register', 'mail_approval_title'),
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array($GLOBALS['sys_name']), $attributes_presenter["login"]),
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array(ForgeConfig::get('sys_name')), $attributes_presenter["login"]),
             $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two'),
             $GLOBALS['Language']->getText('account_register', 'mail_thanks'),
-            $GLOBALS['Language']->getText('account_register', 'mail_signature', array($GLOBALS['sys_name'])),
+            $GLOBALS['Language']->getText('account_register', 'mail_signature', array(ForgeConfig::get('sys_name'))),
             $attributes_presenter["color_logo"],
             $redirect_url,
             $GLOBALS['Language']->getText('account_register', 'mail_approval_redirect_button'),

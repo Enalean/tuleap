@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -88,7 +88,7 @@ if (user_isloggedin()) {
         echo '
         <H3>' . $Language->getText('news_submit', 'submit_news_for', $hp->purify($project->getPublicName())) . '</H3>
         <P>
-        ' . $Language->getText('news_submit', 'post_explain', $GLOBALS['sys_name']) . '
+        ' . $Language->getText('news_submit', 'post_explain', ForgeConfig::get('sys_name')) . '
         <P>
         <FORM ACTION="" METHOD="POST">
         <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
@@ -120,7 +120,7 @@ if (user_isloggedin()) {
         </label>
 
         <br>
-        ' . $Language->getText('news_submit', 'news_promote', $GLOBALS['sys_name']) . '
+        ' . $Language->getText('news_submit', 'news_promote', ForgeConfig::get('sys_name')) . '
         <label class="radio">
             <INPUT TYPE="RADIO" NAME="promote_news" VALUE="3">
             ' . $Language->getText('global', 'yes') . '
@@ -130,10 +130,10 @@ if (user_isloggedin()) {
             ' . $Language->getText('global', 'no') . '
         </label>
 
-        ' . $Language->getText('news_submit', 'promote_warn', $GLOBALS['sys_name']);
+        ' . $Language->getText('news_submit', 'promote_warn', ForgeConfig::get('sys_name'));
 
         if ($project->getId() != Project::SITE_NEWS_PROJECT_ID) {
-            echo '<br><br>' . $Language->getText('news_submit', 'send_news_by_email', $GLOBALS['sys_name']) . ':<br>';
+            echo '<br><br>' . $Language->getText('news_submit', 'send_news_by_email', ForgeConfig::get('sys_name')) . ':<br>';
             echo news_fetch_ugroups($project);
         }
 

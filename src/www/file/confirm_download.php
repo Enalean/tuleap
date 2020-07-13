@@ -88,7 +88,7 @@ if (! $exchange_policy_url) {
     $exchange_policy_url = 'javascript:;';
 }
 
-echo $Language->getText('file_confirm_download', 'download_explain', array($GLOBALS['sys_org_name'], $GLOBALS['sys_email_contact'], $exchange_policy_url));
+echo $Language->getText('file_confirm_download', 'download_explain', array(ForgeConfig::get('sys_org_name'), ForgeConfig::get('sys_email_contact'), $exchange_policy_url));
 ?><br>
 
 <br><br>

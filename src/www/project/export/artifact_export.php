@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -138,7 +138,7 @@ if ($export == 'artifact') {
         if (isset($result) && $result) {
             echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'no_art_found');
         } else {
-            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'db_access_err', ForgeConfig::get('sys_name'));
             echo '<br>' . db_error();
         }
         site_project_footer(array());

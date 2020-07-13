@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -56,7 +56,7 @@ class SVN_AccessFile_Presenter
 
     public function policy()
     {
-        return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', $GLOBALS['sys_name']);
+        return $GLOBALS['Language']->getText('svn_admin_access_control', 'def_policy', ForgeConfig::get('sys_name'));
     }
 
     public function permissions_warning()

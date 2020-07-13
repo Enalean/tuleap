@@ -90,7 +90,7 @@ if ($export == 'artifact_deps') {
         if ($result) {
             echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'no_deps_found');
         } else {
-            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'db_access_err', $GLOBALS['sys_name']);
+            echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_deps_export', 'db_access_err', ForgeConfig::get('sys_name'));
             echo '<br>' . db_error();
         }
         site_project_footer(array());
