@@ -23,6 +23,7 @@ use Tuleap\Tracker\Events\IsFieldUsedInASemanticEvent;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindParameters;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindStaticXmlExporter;
 use Tuleap\Tracker\FormElement\Field\ListFields\Bind\BindVisitor;
+use Tuleap\Tracker\FormElement\View\Admin\Field\ListFields\BindValuesAdder;
 use Tuleap\Tracker\REST\FieldListStaticValueRepresentation;
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind
@@ -235,23 +236,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $this->values[$value]->getLabel();
     }
 
-    /**
-     * Fetch the value in a specific changeset
-     * @param Tracker_Artifact_Changeset $changeset
-     * @return string
-     */
-    /*public function fetchRawValueFromChangeset($changeset) {
-        $value = '';
-        if ($v = $changeset->getValue($this->field)) {
-            if (isset($v['value_id'])) {
-                $v = array($v);
-            }
-            foreach($v as $val) {
-                $value .= $this->values[$val['value_id']]['label'];
-            }
-        }
-        return $value;
-    }*/
     public function fetchRawValueFromChangeset($changeset)
     {
         $value = '';
@@ -477,7 +461,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         }
     }
 
-    private function fetchAdminEditFormModifiable()
+    private function fetchAdminEditFormModifiable(): string
     {
         $html = '';
         $html .= '<h3>' . dgettext('tuleap-tracker', 'Static values') . '</h3>';
@@ -490,7 +474,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $html .= '<table><tr><td>';
         $html .= '<input type="hidden" name="bind[order]" class="bind_order_values" value="" />';
         $html .= '<ul class="tracker-admin-bindvalue_list">';
-        foreach ($this->getAllValues() as $v) {
+
+        $retriever = new BindValuesAdder();
+        $possible_values = $retriever->addNoneValue($this->field, $this->getAllValues());
+
+        foreach ($possible_values as $v) {
             $html .= $this->fetchAdminEditRowModifiable($v);
         }
         $html .= '</ul>';
@@ -509,15 +497,17 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $html;
     }
 
-    private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $v)
+    private function fetchAdminEditRowModifiable(Tracker_FormElement_Field_List_Value $v): string
     {
+        assert($v instanceof Tracker_FormElement_Field_List_Bind_StaticValue);
         $html = '';
 
         $hp = Codendi_HTMLPurifier::instance();
 
         $is_hidden = $v->isHidden();
 
-        $html .= '<li id="staticvalue_' . $v->getId() . '" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
+        $purified_value_id = $hp->purify($v->getId());
+        $html   .= '<li id="staticvalue_' . $purified_value_id . '" class="' . ($is_hidden ? 'tracker_admin_static_value_hidden' : '') . '">';
 
         $html .= '<span class="tracker-admin-bindvalue_grip">';
         $html .= $GLOBALS['HTML']->getImage('ic/grip.png');
@@ -534,7 +524,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if (isset($this->decorators[$v->getId()])) {
             $html .= $this->decorators[$v->getId()]->decorateEdit($is_used_in_semantics);
         } else {
-            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit($this->field->id, $v->getId(), $is_used_in_semantics);
+            $html .= Tracker_FormElement_Field_List_BindDecorator::noDecoratorEdit((int) $this->field->id, $v->getId(), $is_used_in_semantics);
         }
         $html .= '</span>';
 
@@ -550,8 +540,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             } else {
                 $checked = 'checked="checked"';
             }
-            $html .= '<input type="hidden" name="bind[edit][' . $v->getId() . '][is_hidden]" value="1" />';
-            $html .= '<input type="checkbox" name="bind[edit][' . $v->getId() . '][is_hidden]" value="0" ' . $checked . ' class="tracker_admin_static_value_hidden_chk" />';
+            $html .= '<input type="hidden" name="bind[edit][' . $purified_value_id . '][is_hidden]" value="1" />';
+            $html .= '<input type="checkbox" name="bind[edit][' . $purified_value_id . '][is_hidden]" value="0" ' . $checked . ' class="tracker_admin_static_value_hidden_chk" />';
             $img_params['alt'] = 'show/hide value';
             $img_params['title'] = dgettext('tuleap-tracker', 'Show/hide this value');
         } else {
@@ -580,9 +570,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         //}}}
 
         $html .= '<span class="tracker-admin-bindvalue_label">';
-        $html .= '<input type="text" name="bind[edit][' . $v->getId() . '][label]" required value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
+        $html .= '<input type="text" name="bind[edit][' . $purified_value_id . '][label]" required value="' . $hp->purify($v->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '" />';
         $placeholder = dgettext('tuleap-tracker', 'Enter description...');
-        $html .= '<textarea name="bind[edit][' . $v->getId() . '][description]" class="tracker-admin-bindvalue_description_field" placeholder="' . $placeholder . '" cols="50" rows="3">';
+        $html .= '<textarea name="bind[edit][' . $purified_value_id . '][description]" class="tracker-admin-bindvalue_description_field" placeholder="' . $placeholder . '" cols="50" rows="3">';
         $html .= $hp->purify($v->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         $html .= '</span>';
@@ -616,16 +606,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $html;
     }
 
-    /**
-     * Say if a value can be hidden
-     *
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
-     *
-     * @return bool true if the value can be hidden
-     */
-    public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value)
+    public function canValueBeHidden(Tracker_FormElement_Field_List_Bind_StaticValue $value): bool
     {
-        return $this->getValueDao()->canValueBeHidden($this->field, $value->getId());
+        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE && $this->getValueDao()->canValueBeHidden($this->field, $value->getId());
     }
 
     /**
@@ -640,16 +623,9 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return $this->getValueDao()->canValueBeHiddenWithoutCheckingSemanticStatus($this->field, $value->getId());
     }
 
-    /**
-     * Say if a value can be deleted
-     *
-     * @param Tracker_FormElement_Field_List_Bind_StaticValue $value the value
-     *
-     * @return bool true if the value can be deleted
-     */
-    public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value)
+    public function canValueBeDeleted(Tracker_FormElement_Field_List_Bind_StaticValue $value): bool
     {
-        return $this->getValueDao()->canValueBeDeleted($this->field, $value->getId());
+        return $value->getId() !== Tracker_FormElement_Field_List::NONE_VALUE && $this->getValueDao()->canValueBeDeleted($this->field, $value->getId());
     }
 
     /**

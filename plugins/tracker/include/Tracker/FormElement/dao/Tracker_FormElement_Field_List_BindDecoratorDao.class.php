@@ -58,10 +58,10 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         }
     }
 
-    public function saveNoneLegacyColor(int $field_id, int $none_id, int $red, int $green, int $blue): bool
+    public function saveNoneLegacyColor(int $field_id, int $red, int $green, int $blue): bool
     {
         $field_id = $this->da->escapeInt($field_id);
-        $none_id  = $this->da->escapeInt($none_id);
+        $none_id  = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
         $red      = $this->da->escapeInt($red);
         $green    = $this->da->escapeInt($green);
         $blue     = $this->da->escapeInt($blue);
@@ -87,7 +87,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function updateColor($value_id, $red, $green, $blue)
+    public function updateColor(int $value_id, int $red, int $green, int $blue): void
     {
         $value_id = $this->da->escapeInt($value_id);
         $red      = $this->da->escapeInt($red);
@@ -98,7 +98,20 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
             SELECT field_id, id, $red, $green, $blue, null
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
-        return $this->update($sql);
+        $this->update($sql);
+    }
+
+    public function updateNoneLegacyColor(int $field_id, int $red, int $green, int $blue): void
+    {
+        $field_id = $this->da->escapeInt($field_id);
+        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+        $red      = $this->da->escapeInt($red);
+        $green    = $this->da->escapeInt($green);
+        $blue     = $this->da->escapeInt($blue);
+
+        $sql = "REPLACE INTO tracker_field_list_bind_decorator (field_id, value_id, red, green, blue, tlp_color_name)
+                VALUES ($field_id, $value_id, $red, $green, $blue, null)";
+        $this->update($sql);
     }
 
     public function saveTlpColor(int $value_id, string $tlp_color): bool
@@ -114,11 +127,11 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function saveNoneTlpColor(int $field_id, int $value_id, string $tlp_color): bool
+    public function saveNoneTlpColor(int $field_id, string $tlp_color): bool
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
-        $value_id  = $this->da->escapeInt($value_id);
         $field_id  = $this->da->escapeInt($field_id);
+        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
 
         $sql = "INSERT INTO tracker_field_list_bind_decorator(field_id, value_id, red, green, blue, tlp_color_name)
             VALUES ($field_id, $value_id, null, null, null, $tlp_color)";
@@ -126,7 +139,7 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
         return $this->update($sql);
     }
 
-    public function updateTlpColor($value_id, $tlp_color)
+    public function updateTlpColor(int $value_id, string $tlp_color): void
     {
         $tlp_color = $this->da->quoteSmart($tlp_color);
 
@@ -135,16 +148,27 @@ class Tracker_FormElement_Field_List_BindDecoratorDao extends DataAccessObject
             FROM tracker_field_list_bind_static_value
             WHERE original_value_id = $value_id OR id = $value_id";
 
-        return $this->update($sql);
+        $this->update($sql);
     }
 
-    public function delete($field_id, $value_id)
+    public function updateNoneTlpColor(int $field_id, string $tlp_color): void
+    {
+        $tlp_color = $this->da->quoteSmart($tlp_color);
+        $value_id = $this->da->escapeInt(Tracker_FormElement_Field_List::NONE_VALUE);
+
+        $sql = "REPLACE INTO tracker_field_list_bind_decorator  (field_id, value_id, red, green, blue, tlp_color_name)
+                VALUES ($field_id, $value_id, null, null, null, $tlp_color)";
+
+        $this->update($sql);
+    }
+
+    public function delete(int $field_id, int $value_id): void
     {
         $field_id = $this->da->escapeInt($field_id);
         $value_id = $this->da->escapeInt($value_id);
         $sql      = "DELETE FROM tracker_field_list_bind_decorator
                 WHERE field_id = $field_id
                   AND value_id = $value_id;";
-        return $this->update($sql);
+        $this->update($sql);
     }
 }

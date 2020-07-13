@@ -25,7 +25,7 @@ namespace Tuleap\Tracker\FormElement\Field\ListFields\Bind;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 
-final class BoundDecoratorSaverTest extends TestCase
+final class BoundDecoratorEditorTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -38,9 +38,9 @@ final class BoundDecoratorSaverTest extends TestCase
      */
     private $field;
     /**
-     * @var BoundDecoratorSaver
+     * @var BoundDecoratorEditor
      */
-    private $bound_decorator_saver;
+    private $bound_decorator_editor;
     /**
      * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|\Tracker_FormElement_Field_List_BindDecoratorDao
      */
@@ -49,36 +49,48 @@ final class BoundDecoratorSaverTest extends TestCase
     protected function setUp(): void
     {
         $this->bind_decorator_dao    = \Mockery::mock(\Tracker_FormElement_Field_List_BindDecoratorDao::class);
-        $this->bound_decorator_saver = new BoundDecoratorSaver($this->bind_decorator_dao);
+        $this->bound_decorator_editor = new BoundDecoratorEditor($this->bind_decorator_dao);
 
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);
         $this->field_id = 101;
         $this->field->shouldReceive('getId')->andReturn($this->field_id);
     }
 
-    public function testItHasSpecificSaveForLegacyColor(): void
+    public function testItHasSpecificEditForLegacyColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('save')->with(1024, 255, 255, 255)->once();
-        $this->bound_decorator_saver->save($this->field, 1024, "#FFFFFF");
+        $this->bind_decorator_dao->shouldReceive('updateColor')->with(1024, 255, 255, 255)->once();
+        $this->bound_decorator_editor->update($this->field, 1024, "#FFFFFF", false);
     }
 
-    public function testItHasSpecificSaveForNoneLegacyColor(): void
+    public function testItHasSpecificEditForNoneLegacyColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveNoneLegacyColor')
+        $this->bind_decorator_dao->shouldReceive('updateNoneLegacyColor')
             ->with($this->field_id, 255, 255, 255)->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "#FFFFFF");
+        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "#FFFFFF", false);
     }
 
-    public function testItHasSpecificSaveForTlpColor(): void
+    public function testItHasSpecificEditForTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveTlpColor')->with(1024, "peggy-pink")->once();
-        $this->bound_decorator_saver->save($this->field, 1024, "peggy-pink");
+        $this->bind_decorator_dao->shouldReceive('updateTlpColor')->with(1024, "peggy-pink")->once();
+        $this->bound_decorator_editor->update($this->field, 1024, "peggy-pink", false);
     }
 
-    public function testItHasSpecificSaveForNoneTlpColor(): void
+    public function testItHasSpecificEditForNoneTlpColor(): void
     {
-        $this->bind_decorator_dao->shouldReceive('saveNoneTlpColor')
+        $this->bind_decorator_dao->shouldReceive('updateNoneTlpColor')
             ->with($this->field_id, "peggy-pink")->once();
-        $this->bound_decorator_saver->save($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "peggy-pink");
+        $this->bound_decorator_editor->update($this->field, \Tracker_FormElement_Field_List::NONE_VALUE, "peggy-pink", false);
+    }
+
+    public function testItDeleteExistingNoneColorWhenFieldIsRequired(): void
+    {
+        $this->bind_decorator_dao->shouldReceive('delete')
+            ->with($this->field_id, \Tracker_FormElement_Field_List::NONE_VALUE)->once();
+        $this->bound_decorator_editor->update(
+            $this->field,
+            \Tracker_FormElement_Field_List::NONE_VALUE,
+            "#FFFFFF",
+            true
+        );
     }
 }

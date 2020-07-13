@@ -26,47 +26,52 @@ use ColorHelper;
 use Tracker_FormElement_Field_List_BindDecorator;
 use Tracker_FormElement_Field_List_BindDecoratorDao;
 
-class BoundDecoratorSaver
+class BoundDecoratorEditor
 {
     /**
      * @var Tracker_FormElement_Field_List_BindDecoratorDao
      */
-    private $bind_decorator_dao;
+    private $decorator_dao;
 
-    public function __construct(Tracker_FormElement_Field_List_BindDecoratorDao $bind_decorator_dao)
+    public function __construct(Tracker_FormElement_Field_List_BindDecoratorDao $decorator_dao)
     {
-        $this->bind_decorator_dao = $bind_decorator_dao;
+        $this->decorator_dao = $decorator_dao;
     }
-
-    public function save(\Tracker_FormElement_Field $field, int $value_id, string $color): void
+    public function update(\Tracker_FormElement_Field $field, int $value_id, string $color, bool $will_be_required): void
     {
         if ($value_id === \Tracker_FormElement_Field_List::NONE_VALUE) {
-            $this->saveNone($field, $value_id, $color);
+            $this->updateNone($field, $value_id, $color, $will_be_required);
             return;
         }
 
-        $this->saveColor($color, $value_id);
+
+        $this->updateColor($color, $value_id);
     }
 
-    private function saveNone(\Tracker_FormElement_Field $field, int $value_id, string $color): void
+    private function updateColor(string $color, int $value_id): void
     {
         if (! Tracker_FormElement_Field_List_BindDecorator::isHexaColor($color)) {
-            $this->bind_decorator_dao->saveNoneTlpColor($field->getId(), $color);
+            $this->decorator_dao->updateTlpColor($value_id, $color);
             return;
         }
 
         [$r, $g, $b] = ColorHelper::HexaToRGB($color);
-        $this->bind_decorator_dao->saveNoneLegacyColor($field->getId(), $r, $g, $b);
+        $this->decorator_dao->updateColor($value_id, $r, $g, $b);
     }
 
-    private function saveColor(string $color, int $value_id): void
+    private function updateNone(\Tracker_FormElement_Field $field, int $value_id, string $color, bool $will_be_required): void
     {
+        if ($will_be_required === true) {
+            $this->decorator_dao->delete((int) $field->getId(), $value_id);
+            return;
+        }
+
         if (! Tracker_FormElement_Field_List_BindDecorator::isHexaColor($color)) {
-            $this->bind_decorator_dao->saveTlpColor($value_id, $color);
+            $this->decorator_dao->updateNoneTlpColor((int) $field->getId(), $color);
             return;
         }
 
         [$r, $g, $b] = ColorHelper::HexaToRGB($color);
-        $this->bind_decorator_dao->save($value_id, $r, $g, $b);
+        $this->decorator_dao->updateNoneLegacyColor((int) $field->getId(), $r, $g, $b);
     }
 }
