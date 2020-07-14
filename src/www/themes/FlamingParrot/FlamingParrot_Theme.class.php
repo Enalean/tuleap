@@ -128,7 +128,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/animate.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-select/bootstrap-select.css" />';
-        echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/select2/select2.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/vendor/at/css/atwho.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/scripts/bootstrap/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" />';
@@ -224,8 +223,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($project_manager, $params, $banner);
 
-        $this->showFlamingParrotBurningParrotUnificationTour($current_user);
-
         $this->render('navbar', new FlamingParrot_NavBarPresenter(
             $this->imgroot,
             $current_user,
@@ -258,16 +255,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
             $this->project_flags_builder->buildProjectFlags($project),
             $banner
         );
-    }
-
-    private function showFlamingParrotBurningParrotUnificationTour(PFUser $current_user)
-    {
-        if (
-            $current_user->getPreference(Tuleap_Tour_WelcomeTour::TOUR_NAME) &&
-            ! $current_user->getPreference(Tuleap_Tour_FlamingParrotBurningParrotUnificationTour::TOUR_NAME)
-        ) {
-            $GLOBALS['Response']->addTour(new Tuleap_Tour_FlamingParrotBurningParrotUnificationTour());
-        }
     }
 
     private function getPresentersForProjects($list_of_projects)
@@ -381,20 +368,6 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
 
     private function endOfPage()
     {
-        $current_user = UserManager::instance()->getCurrentUser();
-        $tour_factory = new Tuleap_TourFactory(ProjectManager::instance(), new URL());
-        $custom_tours = $tour_factory->getToursForPage($current_user, $_SERVER['REQUEST_URI']);
-
-        foreach ($custom_tours as $custom_tour) {
-            if (! $current_user->getPreference($custom_tour->name)) {
-                $this->addTour($custom_tour);
-            }
-        }
-
-        if (! empty($this->tours)) {
-            $this->appendJsonEncodedVariable('tuleap.tours', $this->tours);
-        }
-
         $this->displayFooterJavascriptElements();
 
         $this->render('end-of-page', null);

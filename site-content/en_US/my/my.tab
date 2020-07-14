@@ -120,27 +120,3 @@ my_redirect	default_txt	You are on the redirection page. You may found useful li
 #
 my_monitored_forum	stop_monitoring	Monitoring has been turned off. You will not receive any more emails from this forum.
 my_monitored_forum	title	Stop monitoring a forum.
-
-my_tour	welcome_title	Welcome to Tuleap!
-my_tour	welcome	Nice to meet you $1! This is your first usage of Tuleap, so we will show you how to begin.
-my_tour	my_personal_page_title	My personal page
-my_tour	my_personal_page	This is your personal page (where you are). You can find here your personal dashboard with your own data.
-my_tour	projects_title	Projects
-my_tour	projects	This is the tab where you can create your first project. You will also find projects you can access.
-my_tour	help_title	Help
-my_tour	help	You will find here some helpers like contacts and documentation.
-my_tour	search_title	Global search
-my_tour	search	This is the Tuleap's global search. You can search data across projects and services.
-my_tour	user_menu_title	User menu
-my_tour	user_menu	You will find here your account information where you will be allowed to change your avatar, your theme, upload your SSH Keys ...
-my_tour	end_tour_title	It's time for you to use Tuleap
-my_tour	end_tour	This is the end of this welcome tour. Enjoy using Tuleap.
-
-fp_bp_unification_tour	new_style_title	New style
-fp_bp_unification_tour	new_style	This is the new navigation bar look. You may also notice that some parts of Tuleap have been restyled.
-fp_bp_unification_tour	personal_page_title	My personal page
-fp_bp_unification_tour	personal_page	You can now access to your personal page by clicking on your name.
-fp_bp_unification_tour	account_title	My account
-fp_bp_unification_tour	account	Your account preferences and settings are accessible by clicking on this cog.
-fp_bp_unification_tour	be_prepared_title	And it's not over!
-fp_bp_unification_tour	be_prepared	New features are coming. Keep your eyes open…
