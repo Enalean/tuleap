@@ -12,7 +12,12 @@ function FileDiffRestService($q, $http, ErrorModalService) {
 
     function getUnidiff(pull_request_id, file_path) {
         return $http
-            .get("/api/v1/pull_requests/" + pull_request_id + "/file_diff?path=" + file_path)
+            .get(
+                "/api/v1/pull_requests/" +
+                    encodeURIComponent(pull_request_id) +
+                    "/file_diff?path=" +
+                    encodeURIComponent(file_path)
+            )
             .then(({ data }) => data)
             .catch((response) => {
                 ErrorModalService.showError(response);
@@ -29,7 +34,10 @@ function FileDiffRestService($q, $http, ErrorModalService) {
         };
 
         return $http
-            .post("/api/v1/pull_requests/" + pull_request_id + "/inline-comments", data)
+            .post(
+                "/api/v1/pull_requests/" + encodeURIComponent(pull_request_id) + "/inline-comments",
+                data
+            )
             .then(({ data }) => data)
             .catch((response) => {
                 ErrorModalService.showError(response);
