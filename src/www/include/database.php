@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright 1999-2000 (c) The SourceForge Crew
  *
  * This file is a part of Tuleap.
@@ -28,11 +28,8 @@ if (!defined('CODENDI_DB_NOT_NULL')) {
 /**
  * @deprecated
  */
-function db_query($sql, $print = 0)
+function db_query($sql)
 {
-    if ($print) {
-        print "<br>Query is: $sql<br>";
-    }
     /** @psalm-suppress DeprecatedFunction */
     return db_query_params($sql, array());
 }

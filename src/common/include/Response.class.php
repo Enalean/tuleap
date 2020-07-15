@@ -146,8 +146,7 @@ class Response
 
     public function sendStatusCode($code)
     {
-        header("HTTP/1.0 $code");
-        echo $this->getRawFeedback();
+        http_send_status($code);
     }
 
     public function setContentType($content_type)

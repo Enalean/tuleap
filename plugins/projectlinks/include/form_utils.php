@@ -1081,6 +1081,5 @@ function update_database($tableName, $items, $selectCriteria = "")
         }
         $sql = "UPDATE $tableName SET $SQLstr WHERE ($selectCriteria);";
     }
-    global $show_dbtx;  // control echo of database update SQL
-    return db_query($sql, isset($show_dbtx));
+    return db_query($sql);
 }

@@ -285,6 +285,9 @@ class BaseLanguage
         $this->text_array = $this->compileLanguage($lang);
     }
 
+    /**
+     * @psalm-taint-specialize
+     */
     public function getText($pagename, $category, $args = "")
     {
         // If the language files were modified by an update, the compiled version might not have been generated,

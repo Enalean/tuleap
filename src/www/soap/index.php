@@ -60,7 +60,9 @@ try {
     // include the <Plugin> API (only if plugin is available)
     $event_manager->processEvent('soap', array());
 } catch (Exception $e) {
-    echo $e;
+    header('Content-Type: text/plain', true, 500);
+    echo $e->getMessage();
+    exit();
 }
 
 
