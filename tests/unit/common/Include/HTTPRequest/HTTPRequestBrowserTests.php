@@ -170,4 +170,11 @@ class HTTPRequestBrowserTests extends \PHPUnit\Framework\TestCase // phpcs:ignor
 
         $this->assertFalse($browser->isIE11());
     }
+
+    public function testDoesNotComplainsWhenNoUserAgentIsDefined(): void
+    {
+        $browser = $this->request->getBrowser();
+
+        $this->assertFalse($browser->isIE11());
+    }
 }

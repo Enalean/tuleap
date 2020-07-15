@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2019. All rights reserved
+ * Copyright (c) Enalean, 2014-Present. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -27,8 +27,10 @@ class Browser
 
     public function isIE11(): bool
     {
-        return preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT'])
-            || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0;') !== false
-                && strpos($_SERVER['HTTP_USER_AGENT'], 'rv:11.0') !== false);
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+        return preg_match('~MSIE|Internet Explorer~i', $user_agent)
+            || (strpos($user_agent, 'Trident/7.0;') !== false
+                && strpos($user_agent, 'rv:11.0') !== false);
     }
 }
