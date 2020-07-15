@@ -34,16 +34,15 @@ final class BaseLanguageFactoryTest extends \PHPUnit\Framework\TestCase
         $this->supportedLanguages = ForgeConfig::get('sys_supported_languages');
         $this->oldLocale = setlocale(LC_ALL, "0");
         setlocale(LC_ALL, 'fr_FR');
-        $GLOBALS['tmp_dir']               = $this->getTmpDir() . '/tuleap_cache';
-        $GLOBALS['sys_custom_incdir']     = $this->getTmpDir();
-        $GLOBALS['sys_incdir']            = $this->getTmpDir();
-        $GLOBALS['sys_custompluginsroot'] = $this->getTmpDir();
+        ForgeConfig::set('tmp_dir', $this->getTmpDir() . '/tuleap_cache');
+        ForgeConfig::set('sys_custom_incdir', $this->getTmpDir());
+        ForgeConfig::set('sys_incdir', $this->getTmpDir());
+        ForgeConfig::set('sys_custompluginsroot', $this->getTmpDir());
     }
 
     protected function tearDown(): void
     {
         setlocale(LC_ALL, $this->oldLocale);
-        unset($GLOBALS['tmp_dir'], $GLOBALS['sys_incdir'], $GLOBALS['sys_custom_incdir'], $GLOBALS['sys_custompluginsroot']);
         parent::tearDown();
     }
 

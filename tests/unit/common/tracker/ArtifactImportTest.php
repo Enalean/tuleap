@@ -40,7 +40,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
     {
         parent::tearDown();
         CodendiDataAccess::clearInstance();
-        unset($GLOBALS['sys_lf'], $GLOBALS['user_id'], $GLOBALS['db_qhandle']);
+        unset($GLOBALS['db_qhandle']);
     }
 
     public function testALL(): void

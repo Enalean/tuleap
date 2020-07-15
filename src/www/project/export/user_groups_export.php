@@ -51,7 +51,7 @@ if ($request->valid($vExport)) {
 
     $col_list = array('group', 'username', 'realname', 'email', 'status');
     $lbl_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group'),
-                      'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', array($GLOBALS['sys_name'])),
+                      'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username', array(ForgeConfig::get('sys_name'))),
                       'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname'),
                       'email'    => _('Email'),
                       'status'   => _('Status'));
@@ -105,7 +105,7 @@ if ($request->valid($vExport)) {
             $user = $um->getUserById($uRow['user_id']);
 
             $dsc_list = array('group'    => $GLOBALS['Language']->getText('project_export_user_groups', 'user_group_desc'),
-                              'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username_desc', array($GLOBALS['sys_name'])),
+                              'username' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_username_desc', array(ForgeConfig::get('sys_name'))),
                               'realname' => $GLOBALS['Language']->getText('project_export_user_groups', 'user_realname_desc'),
                               'email'    => _('User email address'),
                               'status'   => _('User status'));

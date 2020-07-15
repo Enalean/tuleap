@@ -617,9 +617,7 @@ class ArtifactImport
 
     public function getImportUser(&$sub_user_id, &$sub_user_name)
     {
-        global $user_id;
-
-        $sub_user_id = $user_id;
+        $sub_user_id = $GLOBALS['user_id'];
 
         if (!$this->ath->userIsAdmin()) {
             exit_permission_denied();
@@ -786,8 +784,6 @@ class ArtifactImport
    */
     public function parseFollowUpComments($followup_comments, &$parsed_comments, $art_id, $for_parse_report = false)
     {
-        global $sys_lf, $user_id;
-
       //echo "<br>\n";
         $comments = $this->splitFollowUpcomments($followup_comments);
 
@@ -820,7 +816,7 @@ class ArtifactImport
                         $arr["type"] = "<I>" . $GLOBALS['Language']->getText('global', 'none') . "</I>";
                     } else {
                         $arr["date"] = time();
-                        $arr["by"] = $user_id;
+                        $arr["by"] = $GLOBALS['user_id'];
                         $arr["type"] = 100;
                     }
                     $arr["comment"] = $comment;
@@ -961,8 +957,6 @@ class ArtifactImport
    */
     public function parseLegacyDetails($details, &$parsed_details, $for_parse_report = false)
     {
-        global $sys_lf, $user_id;
-
         $comments = preg_split("/==================================================/D", $details);
 
         $i = 0;

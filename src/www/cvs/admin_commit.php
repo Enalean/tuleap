@@ -61,7 +61,7 @@ if (!$project->isPublic()) {
 }
     echo '</p>
 	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_hdr') .
-'</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_msg', array($GLOBALS['sys_name'])) .
+'</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_msg', array(ForgeConfig::get('sys_name'))) .
         '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_lbl') .
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> ' .
         '<OPTION VALUE="1"' . (($cvs_tracked == '1') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'on') . '</OPTION>' .
@@ -81,7 +81,7 @@ if (!$project->isPublic()) {
         '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'subject') . ': <br>' .
         '<INPUT TYPE="TEXT" SIZE="30" NAME="custom_mailing_header" VALUE="' . $custom_mailing_header .
         '"></p> <h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_hdr') .
-'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', array("/cvs/?func=info&group_id=" . $group_id, $GLOBALS['sys_name'])) .
+'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', array("/cvs/?func=info&group_id=" . $group_id, ForgeConfig::get('sys_name'))) .
         '<p><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">' . $cvs_preamble . '</TEXTAREA>';
 echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '"></p></FORM>';
 
