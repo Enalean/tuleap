@@ -293,7 +293,7 @@ class Tuleap123Template extends BaseTemplate
         }
 
         $added_toolbox[] = array(
-           'text' => $GLOBALS['Language']->getText('plugin_mediawiki', 'back_to_forge', array($forge_name)),
+           'text' => sprintf(dgettext('tuleap-mediawiki', 'Go back to %1$s'), $forge_name),
            'href' => '/projects/' . $GLOBALS['group']->getUnixName()
         );
 

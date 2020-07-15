@@ -12,20 +12,231 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.7.1\n"
 
+msgid "Access control"
+msgstr "Permissions"
+
+msgid "Administrator / sysop"
+msgstr "Administrateur / sysop"
+
+msgid ""
+"All projects where upgraded to Mediawiki 1.23. This is a one-way process so "
+"it's not possible downgrade."
+msgstr ""
+"Tous les projets ont été migrés vers Mediawiki 1.23. Ce processus étant "
+"irréversible, la descente de version n'est pas possible."
+
+msgid "Anonymous"
+msgstr "Anonymous"
+
+msgid "Apply defaults"
+msgstr "Appliquer choix par défaut"
+
+msgid "Available languages"
+msgstr "Langues disponibles"
+
+msgid "Bot"
+msgstr "Bot"
+
+msgid "Bureaucrat"
+msgstr "Bureaucrat"
+
+msgid "Changes have been saved."
+msgstr "Les changements ont été sauvegardés."
+
+msgid "Currently, there are no projects that uses Mediawiki 1.23."
+msgstr "Aucun projet n'utilise Mediawiki 1.23."
+
+msgid "Global Mediawiki Administrator"
+msgstr "Administrateur d'instances de mediawiki"
+
 msgid "Granted groups"
 msgstr "Groupes autorisés"
+
+#, php-format
+msgid "Here you can map groups between %1$s and MediaWiki"
+msgstr ""
+"Cette section permet de définir les associations entre les groupes %1$s et "
+"MediaWiki"
+
+msgid "Id"
+msgstr "Id"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "List of migrated projects"
+msgstr "Liste des projets migrés"
+
+msgid "MediaWiki"
+msgstr "Mediawiki"
+
+msgid "Mediawiki"
+msgstr "Mediawiki"
+
+msgid "Mediawiki Administration"
+msgstr "Administration Mediawiki"
+
+msgid "Mediawiki groups mapping"
+msgstr "Gestion des groupes Mediawiki"
+
+msgid "Mediawiki integration in the forge"
+msgstr "Plugin qui implémente le support de Mediawiki"
 
 msgid "Mediawiki permissions"
 msgstr "Permission Mediawiki"
 
+msgid "Migrate"
+msgstr "Migrer"
+
+msgid "Migrate all projects to Mediawiki 1.23"
+msgstr "Migrer tous les projets à Mediawiki 1.23"
+
+msgid "Name"
+msgstr "Nom"
+
+msgid "Options"
+msgstr "Options"
+
+msgid "Options and groups mapping have been restored."
+msgstr "Les options et la gestion de groupes ont bien été restaurés."
+
 msgid "Permission"
 msgstr "Permission"
+
+msgid "Permissions"
+msgstr "Permissions"
+
+msgid ""
+"Please choose a language for your Mediawiki. Among other things it will "
+"define which page will be used for welcome page."
+msgstr ""
+"Veuillez choisir une langue pour votre Mediawiki. Entre autres choses elle "
+"définit la page d'accueil qui sera utilisée."
+
+msgid ""
+"Please note that upgrading to Mediawiki 1.23 is a one-way process there is "
+"no way to revert this process. This progressive migration was meant to "
+"mitigate the risks of errors during upgrade process. Please ask the upgraded "
+"projects if they noticed any troubles and to report related issues."
+msgstr ""
+"La mise à jour en 1.23 est irréversible. Cette procédure de migration "
+"progressive à été conçue pour limiter les risques d'un problème de mise à "
+"jour. Merci de demander aux projects migrés si l'upgrade n'a rien cassé et "
+"de le reporter le cas échéant."
+
+msgid "Plugin Mediawiki"
+msgstr "Plugin Mediawiki"
+
+msgid "Project id or project name"
+msgstr "Id ou nom du projet"
+
+msgid "Project name"
+msgstr "Nom du projet"
+
+msgid "Projects that use Mediawiki 1.23 (LTS)"
+msgstr "Projects qui utilisent Mediawiki 1.23 (LTS)"
+
+msgid "Read"
+msgstr "Lecture"
 
 msgid "Readers"
 msgstr "Lecteurs"
 
+msgid "Save all changes"
+msgstr "Sauvegarder tous les changements"
+
+msgid "Save changes"
+msgstr "Sauvegarder"
+
+msgid "Something went wrong during the update."
+msgstr "Une erreur s'est produite lors de l'enregistrement."
+
+msgid ""
+"Submitted project will be converted to Mediawiki 1.23 shortly (check System "
+"Events)."
+msgstr ""
+"Les projets soumis seront migrés vers Mediawiki 1.23 dans un instant "
+"(consultez les Evénements Système)"
+
+#, php-format
+msgid "The language %1$s is not supported."
+msgstr "La langue %1$s n'est pas supportée."
+
+msgid ""
+"The two MediaWiki groups \"Anonymous\" and \"User\" groups are hardcoded to "
+"\"All users\" and \"Registered users\". In this project (public) it means "
+"that all users will be able to browse the wiki content and all Registered "
+"users will be able to edit and create page (see the detailed list of "
+"permissions in the User Rights page)."
+msgstr ""
+"Les deux groupes MediaWiki \"Anonymous\" and \"User\" sont associés en dur "
+"à, respectivement, \"Tous les utilisateurs\" et \"Utilisateurs enregistrés"
+"\". Dans ce project, public, cela signifie que tous les utilisateurs "
+"anonymes (non autentifiés) pourront lire le contenu du wiki et que tous les "
+"utilisateurs autentifiés pourront modifier ou créér des pages (pour plus de "
+"détails quant aux droits, se réferer à la page User Rights page)."
+
+msgid ""
+"The two MediaWiki groups \"Anonymous\" and \"User\" groups are hardcoded to "
+"\"Nobody\" and \"Registered users\". In this project (private) it means that "
+"only project members can access the wiki and they will be able to edit and "
+"create pages (see the detailed list of permissions in the User Rights page)."
+msgstr ""
+"Les deux groupes MediaWiki \"Anonymous\" and \"User\" sont associés en dur "
+"à, respectivement, \"Personne\" et \"Utilisateurs enregistrés\". Dans ce "
+"project, privé, cela signifie que seuls les membres de projet auront accès "
+"au wiki et qu'ils pourront modifier son contenu (pour plus de détails quant "
+"aux droits, se réferer à la page User Rights page)."
+
+msgid ""
+"This permission grants mediawiki administration rights for each mediawiki of "
+"every project"
+msgstr ""
+"Cette permission donne le droit d'administration sur toutes les instances de "
+"mediawiki"
+
+msgid ""
+"This section allows you to define the user groups that can read and/or write "
+"content in this Mediawiki."
+msgstr ""
+"Cette section permet de définir les groupes d'utilisateurs qui peuvent lire "
+"et/ou écrire du contenu dans ce Mediawiki."
+
+msgid ""
+"Tick this box if you want to activate Mediawiki in full screen. This "
+"compatibility mode will let you use WikiEditor extension, not available in "
+"standard embedded view."
+msgstr ""
+"Activer cette option si vous souhaitez utiliser Mediawiki en plein écran. Ce "
+"mode vous permet d'utiliser l'extension WikiEditor, non disponible avec le "
+"rendu standard."
+
+msgid "User"
+msgstr "User"
+
+msgid "Write"
+msgstr "Ecriture"
+
 msgid "Writers"
 msgstr "Rédacteurs"
+
+#, php-format
+msgid ""
+"You can find more informations on what MediaWiki groups can do here: <a href="
+"\"%1$s\">Special:User groups rights</a>"
+msgstr ""
+"Vous pouvez trouver plus de détail sur ce que les groupes MediaWiki peuvent "
+"faire ici: <a href=\"%1$s\">Special:User groups rights</a>"
+
+msgid ""
+"You've been redirected here since no language has been set for your "
+"Mediawiki instance."
+msgstr ""
+"Vous avez été redirigé ici car aucune langue n'a été définie pour votre "
+"instance de Mediawiki."
+
+msgid "or"
+msgstr "ou"
 
 msgid "{{ user_group_name }} has no permission for Mediawiki"
 msgstr "{{ user_group_name }} n'a pas de permission pour Mediawiki"

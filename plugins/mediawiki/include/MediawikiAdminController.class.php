@@ -69,7 +69,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                 if ($request->exist('nolang')) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::INFO,
-                        $GLOBALS['Language']->getText('plugin_mediawiki', 'language_not_set_admin_warning')
+                        dgettext('tuleap-mediawiki', 'You\'ve been redirected here since no language has been set for your Mediawiki instance.')
                     );
                 }
                 $service->renderInPage(
@@ -183,16 +183,16 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     {
         switch ($mw_group_name) {
             case 'user':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_user');
+                return dgettext('tuleap-mediawiki', 'User');
             case 'bot':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_bot');
+                return dgettext('tuleap-mediawiki', 'Bot');
             case 'sysop':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_sysop');
+                return dgettext('tuleap-mediawiki', 'Administrator / sysop');
             case 'bureaucrat':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_bureaucrat');
+                return dgettext('tuleap-mediawiki', 'Bureaucrat');
             case 'anonymous':
             default:
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_anonymous');
+                return dgettext('tuleap-mediawiki', 'Anonymous');
         }
     }
 
@@ -206,7 +206,7 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             try {
                 $this->language_manager->saveLanguageOption($project, $language);
             } catch (Mediawiki_UnsupportedLanguageException $exception) {
-                $GLOBALS['Response']->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('plugin_mediawiki', 'unsupported_language', array($exception->getLanguage())));
+                $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-mediawiki', 'The language %1$s is not supported.'), $exception->getLanguage()));
             }
         }
 
@@ -251,9 +251,9 @@ class MediawikiAdminController //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             }
 
             if ($this->requestIsRestore($request)) {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_mediawiki', 'options_restored'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-mediawiki', 'Options and groups mapping have been restored.'));
             } else {
-                $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('plugin_mediawiki', 'options_saved'));
+                $GLOBALS['Response']->addFeedback(Feedback::INFO, dgettext('tuleap-mediawiki', 'Changes have been saved.'));
             }
         }
 

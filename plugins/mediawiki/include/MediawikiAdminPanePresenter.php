@@ -31,17 +31,17 @@ class MediawikiAdminPanePresenter
 
     public function admin_title()
     {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'admin_title');
+        return dgettext('tuleap-mediawiki', 'Mediawiki Administration');
     }
 
     public function permissions_label()
     {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'permissions_label');
+        return dgettext('tuleap-mediawiki', 'Permissions');
     }
 
     public function language_label()
     {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'language_label');
+        return dgettext('tuleap-mediawiki', 'Language');
     }
 
     public function group_id()
