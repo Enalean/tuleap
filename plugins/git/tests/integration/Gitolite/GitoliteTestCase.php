@@ -37,7 +37,6 @@ use GitPlugin;
 use GitRepositoryFactory;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
-use Tuleap\ForgeConfigSandbox;
 use Tuleap\TemporaryTestDirectory;
 use UserManager;
 
@@ -45,7 +44,6 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
 {
     use MockeryPHPUnitIntegration;
     use TemporaryTestDirectory;
-    use ForgeConfigSandbox;
 
     /** @var Git_GitoliteDriver */
     protected $driver;
@@ -95,6 +93,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
      * @var string
      */
     private $repo_dir;
+    private $backup_sys_data_dir;
 
     protected function setUp(): void
     {
@@ -116,6 +115,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
 
         mkdir($this->repo_dir);
 
+        $this->backup_sys_data_dir = \ForgeConfig::get('sys_data_dir');
         \ForgeConfig::set('sys_data_dir', $this->sys_data_dir);
         $this->git_exec = \Mockery::mock(\Git_Exec::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $this->git_exec->__construct($this->gitolite_admin_dir);
@@ -169,6 +169,7 @@ abstract class GitoliteTestCase extends \PHPUnit\Framework\TestCase
     {
         parent::tearDown();
         chdir($this->cwd);
+        \ForgeConfig::set('sys_data_dir', $this->backup_sys_data_dir);
     }
 
     public function assertEmptyGitStatus(): void
