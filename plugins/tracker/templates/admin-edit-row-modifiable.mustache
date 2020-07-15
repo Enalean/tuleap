@@ -29,7 +29,7 @@
         {{/ value_can_be_deleted }}
     </span>
     <span class="tracker-admin-bindvalue_label">
-        <input type="text" name="bind[edit][{{ id }}][label]" required value="{{ label }}"/>
+        <input type="text" name="bind[edit][{{ id }}][label]" required value="{{ label }}" data-value-id="{{ id }}"/>
         <textarea name="bind[edit][{{ id }}][description]" class="tracker-admin-bindvalue_description_field"
                   placeholder="{{# dgettext }}tuleap-tracker | Enter description... {{/ dgettext }}"
                   cols="50" rows="3">
