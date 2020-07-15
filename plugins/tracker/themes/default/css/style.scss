@@ -2953,6 +2953,10 @@ body.sidebar-expanded #tracker-settings > .submit-bar {
     min-width: 640px;
 }
 
+.tracker_artifact_field select {
+    width: auto;
+}
+
 .tracker_hidden_edition_field {
     display: none;
 
