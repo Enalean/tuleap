@@ -31,6 +31,7 @@ use Tuleap\System\ServiceControl;
 use TuleapCfg\Command\Configure\ConfigureApache;
 use TuleapCfg\Command\ProcessFactory;
 use TuleapCfg\Command\SiteDeploy\SiteDeployFPM;
+use TuleapCfg\Command\SiteDeploy\SiteDeployGitolite3;
 
 final class Tuleap
 {
@@ -77,6 +78,7 @@ final class Tuleap
         $this->process_factory->getProcess([__DIR__ . '/../../../../tools/utils/php73/run.php', '--module=nginx'])->mustRun();
 
         ForgeConfig::loadLocalInc();
+        $logger = new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]);
         $output->writeln('<info>Regenerate configuration for fpm</info>');
         $site_deploy_fpm = SiteDeployFPM::buildForPHP73(
             new ConsoleLogger($output, [LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL]),
@@ -84,6 +86,10 @@ final class Tuleap
             false
         );
         $site_deploy_fpm->forceDeploy();
+
+        $output->writeln('<info>Regenerate configuration for gitolite3</info>');
+        $site_deploy_gitolite3 = new SiteDeployGitolite3();
+        $site_deploy_gitolite3->deploy($logger);
 
         $output->writeln('<info>Regenerate configuration for apache</info>');
         $configure_apache = new ConfigureApache('/');

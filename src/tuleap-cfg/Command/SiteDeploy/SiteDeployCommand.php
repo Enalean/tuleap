@@ -26,6 +26,7 @@ namespace TuleapCfg\Command\SiteDeploy;
 use ForgeConfig;
 use Psr\Log\LogLevel;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
@@ -57,7 +58,7 @@ final class SiteDeployCommand extends Command
 
         $this->deployImages($output);
         $this->deployFPM($output, $php_version, $force);
-        return 0;
+        return $this->deployGitolite3Config($input, $output);
     }
 
     private function deployImages(OutputInterface $output): void
@@ -78,5 +79,24 @@ final class SiteDeployCommand extends Command
         } else {
             $deploy->configure();
         }
+    }
+
+    private function deployGitolite3Config(InputInterface $input, OutputInterface $output): int
+    {
+        $application = $this->getApplication();
+        if ($application === null) {
+            return 0;
+        }
+        $command = $application->find(SiteDeployGitolite3Command::NAME);
+        $command_definition = $command->getDefinition();
+
+        $subcommand_options = [];
+        foreach ($input->getOptions() as $name => $value) {
+            if ($command_definition->hasOption($name)) {
+                $subcommand_options[$name] = $value;
+            }
+        }
+
+        return $command->run(new ArrayInput($subcommand_options), $output);
     }
 }

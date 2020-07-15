@@ -34,4 +34,5 @@ $application->add(new \TuleapCfg\Command\SetupMysqlCommand());
 $application->add(new \TuleapCfg\Command\SetupMysqlInitCommand(new \TuleapCfg\Command\SetupMysql\ConnectionManager()));
 $application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployCommand());
 $application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployFPMCommand());
+$application->add(new \TuleapCfg\Command\SiteDeploy\SiteDeployGitolite3Command());
 $application->run();

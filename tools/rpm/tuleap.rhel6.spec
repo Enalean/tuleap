@@ -996,6 +996,8 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
 
     # deploy gitolite.rc
     %{__install} -g gitolite -o gitolite -m 00644 %{APP_DIR}/plugins/git/etc/gitolite3.rc.dist /var/lib/gitolite/.gitolite.rc
+    # Move back to Git 2.12 (2.18 is not available on CentOS/RHEL6)
+    sed -i "s~/opt/rh/rh-git218/root/usr/bin~/opt/rh/sclo-git212/root/usr/bin~" /var/lib/gitolite/.gitolite.rc
 
     # generate codendiadm ssh key for gitolite
     %{__install} -d "%{APP_HOME_DIR}/.ssh/" -g %{APP_USER} -o %{APP_USER} -m 00700
@@ -1022,13 +1024,7 @@ if [ ! -d "%{APP_DATA_DIR}/gitolite/admin" ]; then
     su -c 'cd %{APP_DATA_DIR}/gitolite/admin && git add conf/gitolite.conf && git commit -m "Remove testing" && git push origin master' - %{APP_USER}
     %{__rm} -rf %{APP_DATA_DIR}/gitolite/repositories/testing.git
 
-    # uncomment gl-membership
-    # Cannot be done before Tuleap setup. Otherwise previous clone command fails because gl-membership
-    # doesn't have DB access .
-    perl -pi -e 's/# GROUPLIST_PGM/GROUPLIST_PGM/' /var/lib/gitolite/.gitolite.rc
-
-    # SSH keys are managed by Tuleap
-    sed -i "s/'ssh-authkeys',/#'ssh-authkeys',/" /var/lib/gitolite/.gitolite.rc
+    tuleap-cfg site-deploy:gitolite3-config
 
     # add codendiadm to gitolite group
     if ! groups codendiadm | grep -q gitolite 2> /dev/null ; then
