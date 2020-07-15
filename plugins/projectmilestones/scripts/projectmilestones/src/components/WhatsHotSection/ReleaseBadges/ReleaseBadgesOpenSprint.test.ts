@@ -84,5 +84,45 @@ describe("ReleaseBadgesOpenSprint", () => {
 
             expect(wrapper.findComponent(ReleaseButtonsDescription).exists()).toBe(true);
         });
+
+        it("When a release is not in progress, Then the badge is outline", async () => {
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.get("[data-test=sprint-label]").attributes("class")).toContain(
+                "tlp-badge-outline"
+            );
+        });
+
+        it("When a release is in progress, Then the badge is not outline", async () => {
+            const end_date = new Date();
+            end_date.setDate(end_date.getDate() + 1);
+
+            sprint_data = {
+                label: "mile",
+                id: 2,
+                start_date: new Date().toString(),
+                end_date: end_date.toString(),
+                total_sprint,
+                resources: {
+                    milestones: {
+                        accept: {
+                            trackers: [
+                                {
+                                    label: "Sprint1",
+                                },
+                            ],
+                        },
+                    },
+                },
+            } as MilestoneData;
+
+            component_options.propsData = { sprint_data };
+
+            const wrapper = await getPersonalWidgetInstance(store_options);
+
+            expect(wrapper.get("[data-test=sprint-label]").attributes("class")).not.toContain(
+                "tlp-badge-outline"
+            );
+        });
     });
 });
