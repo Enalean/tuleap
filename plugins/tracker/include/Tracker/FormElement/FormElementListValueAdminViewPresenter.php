@@ -69,6 +69,10 @@ class FormElementListValueAdminViewPresenter
      * @var bool
      */
     public $value_can_be_deleted;
+    /**
+     * @var bool
+     */
+    public $is_none_value;
 
     public function __construct(
         Tracker_FormElement_Field_List_Bind_StaticValue $value,
@@ -90,5 +94,6 @@ class FormElementListValueAdminViewPresenter
         $this->image_hidden_title   = $image_hidden_title;
         $this->image_hidden_prefix  = $image_hidden_prefix;
         $this->decorator            = $decorator;
+        $this->is_none_value        = (int) $value->getId() === \Tracker_FormElement_Field_List::NONE_VALUE;
     }
 }

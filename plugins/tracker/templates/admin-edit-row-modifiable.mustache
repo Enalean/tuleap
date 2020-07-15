@@ -1,9 +1,17 @@
 <li id="staticvalue_{{ id }}"
-    class="{{# is_hidden }}tracker_admin_static_value_hidden{{/ is_hidden }} tracker-admin-one-list-field">
-    <span class="tracker-admin-bindvalue_grip">
-        <img src="/themes/FlamingParrot/images/ic/grip.png"
-             alt="/themes/FlamingParrot/images/ic/grip.png"/>
-    </span>
+    class="{{# is_hidden }}tracker_admin_static_value_hidden{{/ is_hidden }} tracker-admin-one-list-field"
+    data-value_id = "{{ id }}">
+
+    {{# is_none_value }}
+        <span class="tracker-admin-none-spacing"></span>
+    {{/ is_none_value }}
+    {{^ is_none_value }}
+        <span class="tracker-admin-bindvalue_grip">
+            <img src="/themes/FlamingParrot/images/ic/grip.png"
+                 alt="/themes/FlamingParrot/images/ic/grip.png"/>
+        </span>
+    {{/ is_none_value }}
+
     <span class="tracker-admin-bindvalue_decorator">
         {{# decorator }}
             {{> colorpicker/colorpicker-mount-point }}

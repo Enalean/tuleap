@@ -128,10 +128,16 @@ codendi.tracker.bind.Editor = Class.create({
 
                 list.childElements()
                     .sortBy(function (li) {
-                        const bind_value_id = li.down(
-                            ".tracker-admin-bindvalue_label input[type=text]"
-                        ).value;
-                        return bind_value_id !== "None" && bind_value_id.toLowerCase();
+                        if (li.dataset.value_id === none_value) {
+                            return "";
+                        }
+                        if (!li.down(".tracker-admin-bindvalue_label input[type=text]")) {
+                            return "";
+                        }
+
+                        return li
+                            .down(".tracker-admin-bindvalue_label input[type=text]")
+                            .value.toLowerCase();
                     })
                     .each(function (li) {
                         list.appendChild(li);
@@ -140,6 +146,14 @@ codendi.tracker.bind.Editor = Class.create({
             }.bind(this)
         );
 
+        let none_child;
+        list.childElements().forEach(function (child) {
+            if (parseInt(child.dataset.value_id, 10) === 100) {
+                list.removeChild(child);
+                none_child = child;
+            }
+        });
+
         Sortable.create(list, {
             handle: "tracker-admin-bindvalue_grip",
             onUpdate: function () {
@@ -147,6 +161,10 @@ codendi.tracker.bind.Editor = Class.create({
                 this.setValuesOrderField(list);
             }.bind(this),
         });
+
+        if (none_child) {
+            list.insertBefore(none_child, list.firstChild);
+        }
     },
 
     accordionForBindTypes: function () {
