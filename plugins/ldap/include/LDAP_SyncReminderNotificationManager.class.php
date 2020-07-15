@@ -123,6 +123,6 @@ class LDAP_SyncReminderNotificationManager
      */
     private function getSubject($projectName, $user)
     {
-        return $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_reminder_mail_notification_subject', [$user->getRealName(), $projectName]);
+        return sprintf(dgettext('tuleap-ldap', '[Reminder][LDAP Synch] The user %1$s will be deleted tomorrow'), $user->getRealName());
     }
 }

@@ -169,7 +169,7 @@ abstract class LDAP_GroupManager
             if ($displayFeedback) {
                 $GLOBALS['Response']->addFeedback(
                     Feedback::ERROR,
-                    $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $this->groupName)
+                    sprintf(dgettext('tuleap-ldap', 'Group %1$s not found in directory'), $this->groupName)
                 );
             }
         }

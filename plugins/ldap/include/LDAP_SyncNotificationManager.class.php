@@ -79,6 +79,6 @@ class LDAP_SyncNotificationManager
      */
     private function getSubject($projectName, $user)
     {
-        return $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_mail_notification_subject', [$user->getRealName(), $projectName]);
+        return sprintf(dgettext('tuleap-ldap', '[LDAP Daily Synchronization] %1$s is suspended, please clean up %2$s project.'), $user->getRealName(), $projectName);
     }
 }

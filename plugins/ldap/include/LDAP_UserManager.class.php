@@ -197,7 +197,7 @@ class LDAP_UserManager
             if ($user) {
                 $userIds[] = $user->getId();
             } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'user_manager_user_not_found', $u));
+                $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-ldap', 'User not found: %1$s'), $u));
             }
         }
         return $userIds;

@@ -37,7 +37,7 @@ class LDAP_LoginPresenter extends User_LoginPresenter
 
     public function account_login_login_with_tuleap()
     {
-        $ldap_name = $GLOBALS['Language']->getText('plugin_ldap', 'people_ldap');
+        $ldap_name = dgettext('tuleap-ldap', 'Enterprise Directory');
         return $GLOBALS['Language']->getOverridableText('account_login', 'page_title', [$ldap_name]);
     }
 }
