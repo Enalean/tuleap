@@ -28,7 +28,7 @@ class PersistentQueue implements \Tuleap\Queue\PersistentQueue
     {
     }
 
-    public function listen($queue_id, $topic, $callback)
+    public function listen($queue_id, $topic, callable $callback)
     {
     }
 }

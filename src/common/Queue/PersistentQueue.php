@@ -25,5 +25,8 @@ interface PersistentQueue
 {
     public function pushSinglePersistentMessage(string $topic, $content): void;
 
-    public function listen($queue_id, $topic, $callback);
+    /**
+     * @psalm-param callable(string): void $callback
+     */
+    public function listen($queue_id, $topic, callable $callback);
 }

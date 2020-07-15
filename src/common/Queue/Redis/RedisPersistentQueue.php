@@ -61,13 +61,9 @@ class RedisPersistentQueue implements PersistentQueue
     }
 
     /**
-     * @param $worker_id
-     * @param $topic
-     * @param $callback
-     *
      * @throws QueueServerConnectionException|RedisException
      */
-    public function listen($worker_id, $topic, $callback)
+    public function listen($worker_id, $topic, callable $callback)
     {
         $reconnect = false;
         $processing_queue = $this->event_queue_name . '-processing-' . $worker_id;
@@ -127,6 +123,9 @@ class RedisPersistentQueue implements PersistentQueue
         } while ($this->redis->exec() === null);
     }
 
+    /**
+     * @psalm-param callable(string): void $callback
+     */
     private function waitForEvents(\Redis $redis, string $processing_queue, callable $callback): void
     {
         $this->logger->debug('Wait for events');

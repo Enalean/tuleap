@@ -85,9 +85,9 @@ class SvnrootUpdater
         $logger = $this->logger;
 
         $this->logger->debug('Waiting for new events');
-        $this->queue->listen(self::QUEUE_PREFIX . $server_id, self::TOPIC, function ($msg) use ($logger, $generate) {
+        $this->queue->listen(self::QUEUE_PREFIX . $server_id, self::TOPIC, static function (string $msg) use ($logger, $generate): void {
             try {
-                $logger->info("Received ", $msg);
+                $logger->info("Received " . $msg);
                 $generate();
                 $logger->info("Update completed");
             } catch (Exception $e) {
