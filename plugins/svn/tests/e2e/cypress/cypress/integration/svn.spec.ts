@@ -19,7 +19,7 @@
  */
 
 describe("SVN", function () {
-    let project_id;
+    let project_id: string;
     context("Project Administrators", function () {
         beforeEach(function () {
             cy.clearCookie("__Host-TULEAP_session_hash");

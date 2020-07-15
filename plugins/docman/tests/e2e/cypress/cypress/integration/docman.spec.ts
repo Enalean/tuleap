@@ -120,6 +120,8 @@ describe("Docman", function () {
 
                 cy.get("[data-test=item_type_4]").check();
                 cy.window().then((win) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     win.CKEDITOR.instances.embedded_content.setData("<p>my content</p>");
                 });
                 cy.get("[data-test=docman_new_form]").submit();

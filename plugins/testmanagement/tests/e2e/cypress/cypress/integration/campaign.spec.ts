@@ -162,6 +162,8 @@ describe("TTM campaign", () => {
                 it("Registers a comment alongside the status", () => {
                     cy.get("[data-test=current-test-comment]").then(($container) => {
                         cy.window().then((win) => {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
                             win.CKEDITOR.instances[$container.attr("id")].setData(
                                 "<p>This does not work! Fix ASAP!</p>"
                             );

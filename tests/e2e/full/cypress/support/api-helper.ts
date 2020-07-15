@@ -28,7 +28,7 @@ Cypress.Commands.add("getFromTuleapAPI", (url: string) => {
     });
 });
 
-Cypress.Commands.add("postFromTuleapApi", (url: string, payload: unknown) => {
+Cypress.Commands.add("postFromTuleapApi", (url: string, payload: Record<string, unknown>) => {
     cy.request({
         method: "POST",
         url: url,
@@ -40,7 +40,7 @@ Cypress.Commands.add("postFromTuleapApi", (url: string, payload: unknown) => {
     });
 });
 
-Cypress.Commands.add("putFromTuleapApi", (url: string, payload: unknown) => {
+Cypress.Commands.add("putFromTuleapApi", (url: string, payload: Record<string, unknown>) => {
     cy.request({
         method: "PUT",
         url: url,

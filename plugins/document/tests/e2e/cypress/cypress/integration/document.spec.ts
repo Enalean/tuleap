@@ -203,6 +203,8 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-new-item-title]").type("My new html content");
 
                 cy.window().then((win) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     win.CKEDITOR.instances["document-new-item-embedded"].setData(
                         `<strong>This is the story of my life </strong>`
                     );
@@ -256,6 +258,8 @@ describe("Document new UI", () => {
                 cy.get("[data-test=document-new-item-title]").type("Embedded file");
 
                 cy.window().then((win) => {
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
                     win.CKEDITOR.instances["document-new-item-embedded"].setData(
                         `<strong>Our deeds determine us, as much as we determine our deeds.</strong>`
                     );

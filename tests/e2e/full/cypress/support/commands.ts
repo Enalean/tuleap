@@ -17,22 +17,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Chainable<Subject> {
-    ProjectAdministratorLogin(): void;
-    projectMemberLogin(): void;
-    platformAdminLogin(): void;
-    RestrictedMemberLogin(): void;
-    RestrictedRegularUserLogin(): void;
-    heisenbergLogin(): void;
-    userLogout(): void;
-    updatePlatformVisibilityAndAllowRestricted(): void;
-    getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
-    visitProjectService(project_unixname: string, service_label: string): void;
-    uploadFixtureFile(input: JQuery<HTMLInputElement>, file_name: string, file_type: string): void;
-    visitServiceInCurrentProject(service_label: string): void;
-    getFromTuleapAPI(url: string): Chainable<Response>;
-    postFromTuleapApi(url: string, payload: unknown): void;
-    putFromTuleapApi(url: string, payload: unknown): void;
+declare global {
+    // Be consistent with Cypress declaration
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Cypress {
+        interface Chainable<Subject> {
+            ProjectAdministratorLogin(): void;
+            projectMemberLogin(): void;
+            platformAdminLogin(): void;
+            RestrictedMemberLogin(): void;
+            RestrictedRegularUserLogin(): void;
+            heisenbergLogin(): void;
+            userLogout(): void;
+            updatePlatformVisibilityAndAllowRestricted(): void;
+            getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
+            visitProjectService(project_unixname: string, service_label: string): void;
+            uploadFixtureFile(
+                file_name: string,
+                file_type: string
+            ): Chainable<JQuery<HTMLInputElement>>;
+            visitServiceInCurrentProject(service_label: string): void;
+            getFromTuleapAPI(url: string): Chainable<Response>;
+            postFromTuleapApi(url: string, payload: unknown): void;
+            putFromTuleapApi(url: string, payload: unknown): void;
+        }
+    }
 }
 
 Cypress.Commands.add("ProjectAdministratorLogin", () => {
@@ -147,7 +156,7 @@ Cypress.Commands.add("updatePlatformVisibilityAndAllowRestricted", (): void => {
 
 Cypress.Commands.add(
     "getProjectId",
-    (project_shortname: string): Chainable<JQuery<HTMLElement>> => {
+    (project_shortname: string): Cypress.Chainable<JQuery<HTMLElement>> => {
         cy.visit(`/projects/${project_shortname}/`);
         return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
     }
@@ -175,3 +184,5 @@ Cypress.Commands.add(
             });
     }
 );
+
+export {};

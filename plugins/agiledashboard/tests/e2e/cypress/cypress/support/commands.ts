@@ -18,8 +18,14 @@
  *
  */
 
-export interface Chainable<Subject> {
-    dragAndDrop(): void;
+declare global {
+    // Be consistent with Cypress declaration
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Cypress {
+        interface Chainable<Subject> {
+            dragAndDrop(source: string, destination: string, position: string): void;
+        }
+    }
 }
 
 Cypress.Commands.add("dragAndDrop", (source: string, destination: string, position: string) => {
@@ -28,3 +34,5 @@ Cypress.Commands.add("dragAndDrop", (source: string, destination: string, positi
     // eslint-disable-next-line cypress/require-data-selectors
     cy.get(destination).trigger("mousemove", { position: position }).trigger("mouseup");
 });
+
+export {};
