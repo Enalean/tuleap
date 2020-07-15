@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2020 - present. All Rights Reserved.
+ * Copyright (c) Enalean, 2020-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,11 @@
  *
  */
 
-/// <reference types="cypress" />
-declare namespace Cypress {
-    interface Chainable<Subject> {
-        login(): void;
-        getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
-    }
+interface PostActionType {
+    RUN_JOB: string;
+    SET_FIELD_VALUE: string;
+    FROZEN_FIELDS: string;
+    HIDDEN_FIELDSETS: string;
 }
+
+export const POST_ACTION_TYPE: PostActionType;

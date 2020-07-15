@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getTrackerIdFromTrackerListPage(): Chainable<JQuery<HTMLElement>> {
+function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement>> {
     cy.visitProjectService("tql", "Trackers");
     return cy.get("[data-test=tracker-link-tql]").should("have.attr", "data-test-tracker-id");
 }
@@ -26,7 +26,7 @@ interface TrackerField {
     name: string;
     field_id: string;
 }
-function getSummaryFieldId(tracker_id: string): Chainable<string> {
+function getSummaryFieldId(tracker_id: string): Cypress.Chainable<string> {
     return cy.getFromTuleapAPI(`/api/trackers/${tracker_id}`).then((response) => {
         const tracker = response.body;
         const summary_field = tracker.fields.find(

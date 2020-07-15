@@ -206,7 +206,7 @@ module.exports = {
             },
         },
         {
-            files: ["tests/e2e/**/*.js", "tests/e2e/**/*.ts", "plugins/**/tests/e2e/**/**/*.js"],
+            files: ["tests/e2e/**/*.ts", "plugins/**/tests/e2e/**/**/*.ts"],
             env: {
                 "cypress/globals": true,
             },

@@ -45,4 +45,5 @@ is_backend_web_server_ready
 # Workaround Cypress not being happy when started the first time in a restricted environment
 CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress verify
 
+su -c '/tuleap/node_modules/.bin/tsc --noEmit --skipLibCheck -p /tuleap/tests/e2e/distlp/cypress/' -l runner
 su -c 'CYPRESS_RUN_BINARY=/Cypress/Cypress /tuleap/node_modules/.bin/cypress run --project /tuleap/tests/e2e/distlp' -l runner

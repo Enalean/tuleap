@@ -17,7 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-function getReleaseIdFromREST(): Chainable<Response> {
+import { Card, ColumnDefinition } from "../../../../../scripts/taskboard/src/type";
+
+function getReleaseIdFromREST(): Cypress.Chainable<Response> {
     return cy
         .getProjectId("taskboard-project")
         .then((project_id: JQuery<HTMLElement>) =>
@@ -57,10 +59,10 @@ describe(`Taskboard`, function () {
 
         it(`adds a card in a swimlane`, function () {
             const on_going_column = this.taskboard_columns.find(
-                (column) => column.label === "On Going"
+                (column: ColumnDefinition) => column.label === "On Going"
             );
             const quality_sunshine_swimlane = this.taskboard_swimlanes.find(
-                (swimlane) => swimlane.label === "Quality Sunshine"
+                (swimlane: Card) => swimlane.label === "Quality Sunshine"
             );
             cy.get(
                 `[data-column-id=${on_going_column.id}][data-swimlane-id=${quality_sunshine_swimlane.id}]`

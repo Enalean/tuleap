@@ -18,6 +18,18 @@
  *
  */
 
+declare global {
+    // Be consistent with Cypress declaration
+    // eslint-disable-next-line @typescript-eslint/no-namespace
+    namespace Cypress {
+        interface Chainable<Subject> {
+            login(): void;
+
+            getProjectId(project_shortname: string): Chainable<JQuery<HTMLElement>>;
+        }
+    }
+}
+
 Cypress.Commands.add("login", () => {
     cy.visit("/");
     cy.get("[data-test=form_loginname]").type("alice");
@@ -28,3 +40,5 @@ Cypress.Commands.add("getProjectId", (project_shortname: string) => {
     cy.visit(`/projects/${project_shortname}/`);
     return cy.get("[data-test=project-sidebar]").should("have.attr", "data-project-id");
 });
+
+export {};

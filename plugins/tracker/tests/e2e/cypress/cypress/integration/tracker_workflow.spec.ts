@@ -18,10 +18,10 @@
  *
  */
 
-import { PROJECT_ADMINISTRATORS_ID } from "../../../../../../../src/scripts/user/user-group-constants.js";
-import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants.js";
+import { PROJECT_ADMINISTRATORS_ID } from "../../../../../../../src/scripts/user/user-group-constants";
+import { POST_ACTION_TYPE } from "../../../../../scripts/workflow-transitions/src/constants/workflow-constants";
 
-function getTrackerIdFromTrackerListPage(): Chainable<JQuery<HTMLElement>> {
+function getTrackerIdFromTrackerListPage(): Cypress.Chainable<JQuery<HTMLElement>> {
     cy.visitProjectService("tracker-project", "Trackers");
     return cy.get("[data-test=tracker-link-workflow]").should("have.attr", "data-test-tracker-id");
 }
@@ -37,7 +37,7 @@ describe(`Tracker Workflow`, () => {
         cy.getProjectId("tracker-project").as("project_id");
         getTrackerIdFromTrackerListPage()
             .as("workflow_tracker_id")
-            .then((workflow_tracker_id) => {
+            .then((workflow_tracker_id: Cypress.ObjectLike) => {
                 cy.visit(`/plugins/tracker/workflow/${workflow_tracker_id}/transitions`);
             });
     });
