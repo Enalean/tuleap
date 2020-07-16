@@ -122,7 +122,7 @@ class Docman_Log
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : dgettext('tuleap-docman', 'Anonymous');
                         $html .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
-                        $html .= '<td>' . html_time_ago($row['time']) . '</td>';
+                        $html .= '<td>' . \DateHelper::timeAgoInWords($row['time'], false, true) . '</td>';
                         $html .= '<td>' . $user                             . '</td>';
                         if ($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];

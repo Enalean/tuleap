@@ -89,7 +89,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                     $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
-                    $content .= '<td>' . html_time_ago($versions[$key]->getDate()) . '</td>';
+                    $content .= '<td>' . \DateHelper::timeAgoInWords($versions[$key]->getDate(), false, true) . '</td>';
                     $content .= '<td>' . $this->hp->purify($user)                                                  . '</td>';
                     $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel())         . '</td>';
                     $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';
@@ -154,7 +154,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                 $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                 $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
-                $content .= '<td>' . html_time_ago($versions[$key]->getDate()) . '</td>';
+                $content .= '<td>' . \DateHelper::timeAgoInWords($versions[$key]->getDate(), false, true) . '</td>';
                 $content .= '<td>' . $this->hp->purify($user) . '</td>';
                 $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel()) . '</td>';
                 $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';

@@ -3337,7 +3337,7 @@ class Artifact
 
                 $out .= ' </span>';
                 $out .= '<span class="followup_comment_title_date">';
-                $out .= html_time_ago(db_result($orig_date, 0, 'date'));
+                $out .= \DateHelper::timeAgoInWords(db_result($orig_date, 0, 'date'), false, true);
                 $out .= '</span>';
                 if ($field_name != "comment") {
                     $out .= "  (" . $GLOBALS['Language']->getText('tracker_include_artifact', 'last_edited') . " ";
@@ -3349,7 +3349,7 @@ class Artifact
                     }
                     $out .= ' </span>';
                     $out .= '<span class="followup_comment_title_date">';
-                    $out .= html_time_ago(db_result($result, $i, 'date'));
+                    $out .= \DateHelper::timeAgoInWords(db_result($result, $i, 'date'), false, true);
                     $out .= '</span>' . ")";
                 }
                 $out .= "\n</div><!-- followup_comment_title -->\n";
