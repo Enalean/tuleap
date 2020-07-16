@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace Tuleap\common\date\helper;
 
 use DateHelper;
+use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
@@ -198,6 +199,106 @@ final class DateHelperTest extends TestCase
             date="2009-02-14T00:31:30+01:00"
             absolute-date="2009-02-14 00:31"
             preference="relative"
+            locale="en_US"
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+    }
+
+    public function testRelativeDateRelativeFistAbsoluteShown(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'getLocale' => 'en_US',
+                'getPreference' => 'relative_first-absolute_shown'
+            ])
+            ->getMock();
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="relative"
+            locale="en_US"
+            placement="right"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+    }
+
+    public function testRelativeDateRelativeFistAbsoluteTooltip(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'getLocale' => 'en_US',
+                'getPreference' => 'relative_first-absolute_tooltip'
+            ])
+            ->getMock();
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="relative"
+            locale="en_US"
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+    }
+
+    public function testRelativeDateAbsoluteFistRelativeShown(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'getLocale' => 'en_US',
+                'getPreference' => 'absolute_first-relative_shown'
+            ])
+            ->getMock();
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="absolute"
+            locale="en_US"
+            placement="right"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+    }
+
+    public function testRelativeDateAbsoluteFistRelativeTooltip(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = Mockery::mock(\PFUser::class)
+            ->shouldReceive([
+                'getLocale' => 'en_US',
+                'getPreference' => 'absolute_first-relative_tooltip'
+            ])
+            ->getMock();
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="absolute"
             locale="en_US"
             placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
     }
