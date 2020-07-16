@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015 - 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2015 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,11 +45,14 @@ class Git_HTTP_CommandFactory
 
     private function getGitHttpBackendCommand()
     {
-        $command = new Git_HTTP_CommandCentos6GitHttpBackend();
-        if (Git_Exec::isGit212Installed()) {
-            $command = new \Tuleap\Git\HTTP\CommandSCL212GitHttpBackend();
+        if (Git_Exec::isGit218Installed()) {
+            return new \Tuleap\Git\HTTP\CommandSCL218GitHttpBackend();
         }
-        return $command;
+
+        if (Git_Exec::isGit212Installed()) {
+            return new \Tuleap\Git\HTTP\CommandSCL212GitHttpBackend();
+        }
+        return new Git_HTTP_CommandCentos6GitHttpBackend();
     }
 
     private function getGitoliteCommand(PFO_User $user, Git_HTTP_Command $command)

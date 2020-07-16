@@ -6,7 +6,9 @@
 #
 
 GIT=/usr/bin/git
-if [ -f /opt/rh/sclo-git212/root/usr/bin/git ]; then
+if [ -f /opt/rh/rh-git218/root/usr/bin/git ]; then
+    GIT=/opt/rh/rh-git218/root/usr/bin/git
+elif [ -f /opt/rh/sclo-git212/root/usr/bin/git ]; then
     GIT=/opt/rh/sclo-git212/root/usr/bin/git
 fi
 

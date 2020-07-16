@@ -548,7 +548,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     {
         $config_file_contents = file_get_contents("$this->gerrit_tmpdir/project.config");
 
-        if (Git_Exec::getGitCommand() === 'git') {
+        if (strpos(Git_Exec::getGitCommand(), Git_Exec::GIT212_PATH) !== 0) {
             $expected_contents = file_get_contents("$this->fixtures/expected_access_rights.config");
         } else {
             $expected_contents = file_get_contents("$this->fixtures/expected_access_rights_git_2_12.config");

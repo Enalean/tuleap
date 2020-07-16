@@ -1,5 +1,5 @@
 _pluginGit() {
-    local -r git="/opt/rh/sclo-git212/root/usr/bin/git"
+    local -r git="/opt/rh/rh-git218/root/usr/bin/git"
     local -r gitolite="/usr/bin/gitolite"
     local -r git_group="gitolite"
     local -r git_user="gitolite"
@@ -100,19 +100,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    ${awk} '{ gsub("# GROUPLIST_PGM", "GROUPLIST_PGM");
-              gsub(""'"ssh-authkeys"'"","#"'"ssh-authkeys"'",");
-              gsub("#0,#0,#0,7", "0007"); print}' \
-            ${tuleap_src_plugins}/git/etc/gitolite3.rc.dist > \
-            ${git_home}/.gitolite.rc
-    ${chown} ${git_user}:${git_group} ${git_home}/.gitolite.rc
-    ${chmod} 640 ${git_home}/.gitolite.rc
-
-    if [ ! -f "${git_home}/.profile" ]; then
-        ${printf} "source /opt/rh/sclo-git212/enable" > ${git_home}/.profile
-        ${chown} ${git_user}:${git_group} ${git_home}/.profile
-        plugin_git_configured="true"
-    fi
+    ${tuleapcfg} site-deploy:gitolite3-config
 
     if [ ! -f "${tuleap_data}/gitolite/admin/conf/gitolite.conf" ]; then
         ${install} --group=${tuleap_unix_user} \
@@ -123,7 +111,7 @@ _pluginGit() {
         plugin_git_configured="true"
     fi
 
-    if ! ${su} --command '/opt/rh/sclo-git212/root/usr/bin/git \
+    if ! ${su} --command '/opt/rh/rh-git218/root/usr/bin/git \
         --git-dir="/var/lib/tuleap/gitolite/admin/.git"  \
         cat-file -e origin/master:conf/gitolite.conf' \
         --login ${tuleap_unix_user}; then

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -25,6 +25,7 @@
 class Git_Exec
 {
     public const GIT212_PATH = '/opt/rh/sclo-git212/root';
+    public const GIT218_PATH = '/opt/rh/rh-git218/root';
 
     public const TRANSPORT_EXT  = 'ext';
     public const TRANSPORT_FILE = 'file';
@@ -74,6 +75,11 @@ class Git_Exec
     public static function isGit212Installed()
     {
         return is_file(self::GIT212_PATH . '/usr/bin/git');
+    }
+
+    public static function isGit218Installed(): bool
+    {
+        return is_file(self::GIT218_PATH . '/usr/bin/git');
     }
 
     /**
@@ -369,8 +375,12 @@ class Git_Exec
         return $this->work_tree;
     }
 
-    public static function getGitCommand()
+    public static function getGitCommand(): string
     {
+        if (self::isGit218Installed()) {
+            return self::GIT218_PATH . '/usr/bin/git';
+        }
+
         if (self::isGit212Installed()) {
             return self::GIT212_PATH . '/usr/bin/git';
         }

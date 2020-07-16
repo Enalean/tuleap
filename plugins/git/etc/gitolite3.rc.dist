@@ -1,3 +1,6 @@
+# This file is deployed and managed by Tuleap.
+# DO NOT EDIT.
+
 # configuration variables for gitolite
 
 # This file is in perl syntax.  But you do NOT need to know perl to edit it --
@@ -168,7 +171,7 @@
 # See http://gitolite.com/gitolite/git-config.html
 $UNSAFE_PATT = qr([\n]);
 
-$ENV{PATH} = "/opt/rh/sclo-git212/root/usr/bin:$ENV{PATH}";
+$ENV{PATH} = "/opt/rh/rh-git218/root/usr/bin:$ENV{PATH}";
 
 # ------------------------------------------------------------------------------
 # per perl rules, this should be the last line in such a file:
