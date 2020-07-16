@@ -222,7 +222,7 @@ class Git_Exec
     {
         $output = array();
         $other_branches = implode(' ', array_map('escapeshellarg', $this->getOtherBranches($refname)));
-        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | git rev-list --stdin ' . escapeshellarg($newrev), $output);
+        $this->gitCmdWithOutput('rev-parse --not ' . $other_branches . ' | ' . $this->buildGitCommandForWorkTree() . ' rev-list --stdin ' . escapeshellarg($newrev), $output);
         return $output;
     }
 
@@ -415,8 +415,7 @@ class Git_Exec
      */
     protected function execInPath($cmd, &$output)
     {
-        $git = $this->getAllowedProtocolEnvVariable();
-        $git .= $this->git_cmd . ' --work-tree=' . escapeshellarg($this->work_tree) . ' --git-dir=' . escapeshellarg($this->git_dir);
+        $git = $this->buildGitCommandForWorkTree();
         $git .= ' ' . $cmd;
         try {
             $command = new System_Command();
@@ -427,11 +426,17 @@ class Git_Exec
         }
     }
 
-    private function getAllowedProtocolEnvVariable()
+    private function getAllowedProtocolEnvVariable(): string
     {
         if (count($this->allowedTransports) > 0) {
             return 'GIT_ALLOW_PROTOCOL=' . implode(':', $this->allowedTransports) . ' ';
         }
         return '';
+    }
+
+    private function buildGitCommandForWorkTree(): string
+    {
+        return $this->getAllowedProtocolEnvVariable() . $this->git_cmd . ' --work-tree=' . escapeshellarg($this->work_tree) .
+               ' --git-dir=' . escapeshellarg($this->git_dir);
     }
 }
