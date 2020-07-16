@@ -86,7 +86,7 @@ class Worker
         $task_worker = new TaskWorkerProcess();
 
         $queue = (new QueueFactory($this->logger))->getPersistentQueue(self::EVENT_QUEUE_NAME, QueueFactory::REDIS);
-        $queue->listen($this->id, '*', function ($event) use ($task_worker) {
+        $queue->listen($this->id, '*', function (string $event) use ($task_worker): void {
             $this->logger->info('Got message: ' . $event);
             try {
                 $task_worker->run($event);
