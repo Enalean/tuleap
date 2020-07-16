@@ -103,7 +103,10 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "error",
         "@typescript-eslint/no-non-null-assertion": "error",
         "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/no-use-before-define": ["error", { functions: false, typedefs: false }],
+        "@typescript-eslint/no-use-before-define": [
+            "error",
+            { functions: false, typedefs: false, classes: false },
+        ],
         // import
         "import/no-extraneous-dependencies": "error",
         "no-unsanitized/property": [

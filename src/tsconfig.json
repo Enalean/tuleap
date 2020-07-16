@@ -8,6 +8,7 @@
         "scripts/project/banner/**/*",
         "scripts/project/registration/**/*",
         "scripts/account/**/*",
-        "scripts/site-admin/project-widgets-configuration/**/*"
+        "scripts/site-admin/project-widgets-configuration/**/*",
+        "themes/tlp/src/**/*"
     ]
 }
