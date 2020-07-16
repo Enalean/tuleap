@@ -23,6 +23,13 @@ class DateHelper
 {
     public const SECONDS_IN_A_DAY = 86400;
 
+    private const PREFERENCE_NAME = "relative_dates_display";
+
+    private const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN   = "relative_first-absolute_shown";
+    private const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN   = "absolute_first-relative_shown";
+    private const PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP = "relative_first-absolute_tooltip";
+    private const PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP = "absolute_first-relative_tooltip";
+
     /**
      * @deprecated Use \DateHelper::relativeDate() instead
      */
@@ -48,13 +55,31 @@ class DateHelper
     public static function relativeDate(int $time, PFUser $current_user): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
+        switch ($current_user->getPreference(self::PREFERENCE_NAME)) {
+            case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
+                $preference = "absolute";
+                $placement = "right";
+                break;
+            case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
+                $preference = "absolute";
+                $placement = "tooltip";
+                break;
+            case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
+                $preference = "relative";
+                $placement = "right";
+                break;
+            case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
+            default:
+                $preference = "relative";
+                $placement = "tooltip";
+        }
 
         return '<tlp-relative-date
             date="' . $purifier->purify(date('c', $time)) . '"
             absolute-date="' . $purifier->purify(date($GLOBALS['Language']->getText('system', 'datefmt'), $time)) . '"
-            preference="relative"
+            preference="' . $purifier->purify($preference) . '"
             locale="' . $purifier->purify($current_user->getLocale()) . '"
-            placement="tooltip"></tlp-relative-date>';
+            placement="' . $purifier->purify($placement) . '"></tlp-relative-date>';
     }
 
     /**
