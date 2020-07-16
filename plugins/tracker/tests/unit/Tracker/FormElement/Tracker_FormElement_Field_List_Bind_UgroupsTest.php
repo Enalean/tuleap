@@ -131,7 +131,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
 
         $root = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $this->assertCount(0, $root->items->children());
     }
 
@@ -145,7 +145,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         ];
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('Integrators', $items[0]['label']);
     }
@@ -158,7 +158,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertTrue((bool) $items[0]['is_hidden']);
     }
@@ -171,7 +171,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('ugroup_project_members_name_key', $items[0]['label']);
     }
@@ -185,7 +185,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $bind_ugroup = $this->buildBindUgroups($values);
         $root        = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->items->children();
         $this->assertEquals('Integrators', $items[0]['label']);
         $this->assertEquals('Customers', $items[1]['label']);
@@ -203,7 +203,7 @@ final class Tracker_FormElement_Field_List_Bind_UgroupsTest extends TestCase //p
         $bind_ugroup    = $this->buildBindUgroups($values, $default_values);
         $root           = new SimpleXMLElement('<bind type="ugroups" />');
 
-        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXmlExporter::class));
+        $bind_ugroup->exportToXML($root, $xml_mapping, false, Mockery::mock(UserXMLExporter::class));
         $items = $root->default_values->children();
         $this->assertEquals('V687', (string) $items->value['REF']);
     }
