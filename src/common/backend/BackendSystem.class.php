@@ -167,7 +167,7 @@ class BackendSystem extends Backend
             if (mkdir($homedir, 0751)) {
                 // copy the contents of the $codendi_shell_skel dir into homedir
                 if (is_dir(ForgeConfig::get('codendi_shell_skel'))) {
-                    system("cd " . ForgeConfig::get('codendi_shell_skel') . "; tar cf - . | (cd  $homedir ; tar xf - )");
+                    system("cd " . escapeshellarg(ForgeConfig::get('codendi_shell_skel')) . "; tar cf - . | (cd  " . escapeshellarg($homedir) . " ; tar xf - )");
                 }
                 touch($homedir);
                 $this->setUserHomeOwnership($user);
@@ -435,7 +435,7 @@ class BackendSystem extends Backend
         $backupfile = ForgeConfig::get('sys_project_backup_path') . "/" . $user->getUserName() . ".tgz";
 
         if (is_dir($homedir)) {
-            system("cd " . ForgeConfig::get('homedir_prefix') . "; tar cfz $backupfile " . $user->getUserName());
+            system("cd " . ForgeConfig::get('homedir_prefix') . "; tar cfz " . escapeshellarg($backupfile) . " " . escapeshellarg($user->getUserName()));
             chmod($backupfile, 0600);
             $this->recurseDeleteInDir($homedir);
             rmdir($homedir);

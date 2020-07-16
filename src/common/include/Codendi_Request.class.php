@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012-Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -59,6 +59,8 @@ class Codendi_Request
      * @param string $variable Name of the parameter to get.
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
+     *
+     * @psalm-taint-source input
      */
     public function get($variable)
     {
@@ -87,6 +89,8 @@ class Codendi_Request
      *
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
+     *
+     * @psalm-taint-source input
      */
     public function getInArray($idx, $variable)
     {
@@ -103,6 +107,8 @@ class Codendi_Request
      * @access protected
      * @param string $variable Name of the parameter to get.
      * @param array $array Name of the parameter to get.
+     *
+     * @psalm-taint-source input
      */
     public function _get($variable, $array)
     {
@@ -214,6 +220,8 @@ class Codendi_Request
      * @param string $variable Name of the parameter to get.
      * @param mixed $validator Name of the validator (string, uint, email) or an instance of a validator
      * @param mixed $default_value Value return if the validator is not valid. Optional, default is null.
+     *
+     * @psalm-taint-source input
      */
     public function getValidated($variable, $validator = 'string', $default_value = null)
     {
@@ -274,14 +282,6 @@ class Codendi_Request
     public function getProject()
     {
         return $this->project_manager->getProject((int) $this->get('group_id'));
-    }
-
-    /**
-     * For debug only
-     */
-    public function dump()
-    {
-        var_dump($this->params);
     }
 
     /**

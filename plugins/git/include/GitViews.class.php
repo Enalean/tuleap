@@ -278,10 +278,12 @@ class GitViews extends PluginViews
 
             echo '</td>';
 
+            $purifier = Codendi_HTMLPurifier::instance();
+
             echo '<td>';
             $placeholder = dgettext('tuleap-git', 'Enter a path or leave it blank');
             echo '<input type="text" title="' . $placeholder . '" placeholder="' . $placeholder . '" id="fork_repositories_path" name="path" />';
-            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $this->user->getName() . '" />';
+            echo '<input type="hidden" id="fork_repositories_prefix" value="u/' . $purifier->purify($this->user->getName()) . '" />';
             echo '</td>';
 
             echo '<td class="last">';

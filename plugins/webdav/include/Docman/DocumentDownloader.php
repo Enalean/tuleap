@@ -22,29 +22,24 @@ declare(strict_types=1);
 
 namespace Tuleap\WebDAV\Docman;
 
+use GuzzleHttp\Psr7\ServerRequest;
+use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
+use Tuleap\Http\HTTPFactoryBuilder;
+use Tuleap\Http\Response\BinaryFileResponseBuilder;
+
 class DocumentDownloader
 {
 
-    public function downloadDocument(string $document_name, string $fileType, $fileSize, string $path)
+    public function downloadDocument(string $document_name, string $fileType, $fileSize, string $path): void
     {
-        header('Content-Description: File Transfer');
-        header('Content-Type: ' . $fileType);
-        header('Content-Disposition: attachment; filename="' . $document_name . '"');
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: ' . $fileSize);
-        if (ob_get_contents()) {
-            ob_clean();
-        }
-        flush();
-        $file = fopen($path, "r");
-        while (! feof($file)) {
-            print fread($file, 30 * 1024);
-            flush();
-        }
-        fclose($file);
-        exit;
+        $response_builder = new BinaryFileResponseBuilder(HTTPFactoryBuilder::responseFactory(), HTTPFactoryBuilder::streamFactory());
+        $response         = $response_builder->fromFilePath(
+            ServerRequest::fromGlobals(),
+            $path,
+            $document_name,
+            $fileType
+        );
+        (new SapiStreamEmitter())->emit($response);
+        exit();
     }
 }

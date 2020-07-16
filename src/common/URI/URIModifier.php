@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -26,6 +26,8 @@ class URIModifier
      * @see RFC3986 section 5.2.4 https://tools.ietf.org/html/rfc3986#section-5.2.4
      *
      * @return string
+     *
+     * @psalm-pure
      */
     public static function removeDotSegments($uri)
     {
@@ -62,6 +64,8 @@ class URIModifier
      * @see RFC3986 section 6.2.2.2 https://tools.ietf.org/html/rfc3986#section-6.2.2.2
      *
      * @return string
+     *
+     * @psalm-pure
      */
     public static function normalizePercentEncoding($uri)
     {
@@ -76,6 +80,8 @@ class URIModifier
 
     /**
      * @return string
+     *
+     * @psalm-pure
      */
     public static function removeEmptySegments($uri)
     {

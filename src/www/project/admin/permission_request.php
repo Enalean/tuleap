@@ -191,10 +191,13 @@ $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {
     $ugroupList[] = ['value' => $row['ugroup_id'], 'text' => $row['name']];
 }
+
+$purifier = Codendi_HTMLPurifier::instance();
+
 echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
 echo '<input type="hidden" name="func" value="member_req_notif_group" />';
-echo '<input type="hidden" name="group_id" value="' . $group_id . '">';
+echo '<input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">';
 echo html_build_multiple_select_box_from_array($ugroupList, "ugroups[]", $selectedUgroup, 8, false, '', false, '', false, '', false);
 echo '<br />';
 echo '<input type="submit" name="submit" value="' . $Language->getText('global', 'btn_update') . '" />';
@@ -213,12 +216,11 @@ if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
         $message = $row['msg_to_requester'];
     }
 }
-$purifier = Codendi_HTMLPurifier::instance();
 echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">
           <textarea wrap="virtual" rows="5" cols="70" name="text">' . $purifier->purify($message) . '</textarea>
           <input type="hidden" name="func" value="member_req_notif_message">
-          <input type="hidden" name="group_id" value="' . $group_id . '">
+          <input type="hidden" name="group_id" value="' . $purifier->purify($group_id) . '">
           <br><input name="submit" type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '"/></br>
      </form>';
 

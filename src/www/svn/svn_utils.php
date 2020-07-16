@@ -163,7 +163,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
         Accepts a result set from the svn_commits table. Should include all columns from
         the table, and it should be joined to USER to get the user_name.
     */
-    $url = '?func=browse&group_id=' . $group_id . '&set=' . $set . '&msort=' . $msort;
+    $url = '?func=browse&group_id=' . urlencode($group_id) . '&set=' . urlencode($set) . '&msort=' . urlencode($msort);
 
     if ($set == 'custom') {
         $url .= $pref_stg;
@@ -197,17 +197,19 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
 
     echo $Language->getText('svn_utils', 'multi_sort', [$url_alternate_sort, $text]) . "\n";
 
+    $purifier = Codendi_HTMLPurifier::instance();
+
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
         if ($offset > 0) {
             $nav_bar .=
-            '<A HREF="' . $url . '&offset=0#results"><B><< ' . $Language->getText('global', 'begin') . '</B></A>' .
+            '<A HREF="' . $purifier->purify($url) . '&offset=0#results"><B><< ' . $Language->getText('global', 'begin') . '</B></A>' .
             '&nbsp;&nbsp;&nbsp;&nbsp;' .
-            '<A HREF="' . $url . '&offset=' . ($offset - $chunksz) .
-            '#results"><B>< ' . $Language->getText('global', 'prev') . ' ' . $chunksz . '</B></A></td>';
+            '<A HREF="' . $purifier->purify($url) . '&offset=' . $purifier->purify(urlencode($offset - $chunksz)) .
+            '#results"><B>< ' . $Language->getText('global', 'prev') . ' ' . $purifier->purify($chunksz) . '</B></A></td>';
         } else {
             $nav_bar .=
-            '<span class="disable">&lt;&lt; ' . $Language->getText('global', 'begin') . '&nbsp;&nbsp;&lt; ' . $Language->getText('global', 'prev') . ' ' . $chunksz . '</span>';
+            '<span class="disable">&lt;&lt; ' . $Language->getText('global', 'begin') . '&nbsp;&nbsp;&lt; ' . $Language->getText('global', 'prev') . ' ' . $purifier->purify($chunksz) . '</span>';
         }
     }
 
@@ -245,7 +247,7 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
 
     $filter_str = '';
     if ($commiter != '100') {
-        $filter_str = "&commiter='$commiter'";
+        $filter_str = "&commiter='" . urlencode($commiter) . "'";
     }
     if ($path != '') {
         $filter_str = $filter_str . "&path='$path'";
@@ -271,15 +273,14 @@ function svn_utils_show_revision_list($result, $offset, $total_rows, $set = 'any
 
     $i = 0;
     $uh = UserHelper::instance();
-    $hp = Codendi_HTMLPurifier::instance();
     while ($row = db_fetch_array($result)) {
         // description is escaped in svn-checkins.pl
         $description = htmlspecialchars_decode($row['description'], ENT_QUOTES);
         echo '
 			<TR class="' . util_get_alt_row_color($i++) . '">' .
-        '<TD class="small"><b><A HREF="?func=detailrevision&group_id=' . $group_id . '&commit_id=' . $row['commit_id'] . $filter_str . '">' . $row['revision'] .
+        '<TD class="small"><b><A HREF="?func=detailrevision&group_id=' . $purifier->purify(urlencode($group_id)) . '&commit_id=' . $row['commit_id'] . $filter_str . '">' . $row['revision'] .
         '</b></A></TD>' .
-        '<TD class="small">' . $hp->purify($description, CODENDI_PURIFIER_BASIC, $group_id) . '</TD>' .
+        '<TD class="small">' . $purifier->purify($description, CODENDI_PURIFIER_BASIC, $group_id) . '</TD>' .
         '<TD class="small">' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']) . '</TD>' .
         '<TD class="small">' . $uh->getLinkOnUserFromUserId($row['whoid']) . '</TD></TR>';
     }

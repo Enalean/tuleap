@@ -993,6 +993,9 @@ function form_JS_ElementRef($Elementname)
 }
 
 //=============================================================================
+/**
+ * @psalm-pure
+ */
 function nz($item, $default)
 {
     if (is_null($item) || ($item == "")) {

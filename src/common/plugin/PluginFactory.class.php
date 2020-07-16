@@ -167,6 +167,7 @@ class PluginFactory // phpcs:ignore
 
     public function _getClassNameForPluginName($name)
     {
+        $name       = self::verifyPluginName($name);
         $class_name = $name . "Plugin";
         $custom     = false;
         $class_path = '';
@@ -189,6 +190,20 @@ class PluginFactory // phpcs:ignore
             }
         }
         return ['class' => $class_name, 'custom' => $custom];
+    }
+
+    /**
+     * Check for directory separator to prevent potential LFI
+     *
+     * @psalm-taint-escape text
+     * @psalm-pure
+     */
+    private static function verifyPluginName(string $name): string
+    {
+        if (strpos($name, DIRECTORY_SEPARATOR) !== false) {
+            throw new RuntimeException('$name is not expected to contain a directory separator, got ' . $name);
+        }
+        return $name;
     }
 
     private function getPluginClassPath($file_name)
@@ -392,7 +407,7 @@ class PluginFactory // phpcs:ignore
                 }
             }
         }
-        return $name;
+        return self::verifyPluginName($name);
     }
 
     public function pluginIsCustom($plugin)

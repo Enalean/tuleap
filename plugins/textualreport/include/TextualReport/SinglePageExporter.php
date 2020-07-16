@@ -72,6 +72,8 @@ class SinglePageExporter
 
     /**
      * @return string
+     *
+     * @psalm-taint-escape text
      */
     private function purifyFileName($file_name)
     {

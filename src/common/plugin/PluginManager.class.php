@@ -162,7 +162,7 @@ class PluginManager
     }
     public function getPostInstall($name)
     {
-        $path_to_file = '/' . $name . '/POSTINSTALL.txt';
+        $path_to_file = '/' . $this->getValidatedName($name) . '/POSTINSTALL.txt';
         return file_exists(ForgeConfig::get('sys_pluginsroot') . $path_to_file) ?
             file_get_contents(ForgeConfig::get('sys_pluginsroot') . $path_to_file) :
             false;
@@ -294,6 +294,17 @@ class PluginManager
     public function isNameValid($name)
     {
         return (0 === preg_match('/[^a-zA-Z0-9_-]/', $name));
+    }
+
+    /**
+     * @psalm-taint-escape text
+     */
+    private function getValidatedName(string $name): string
+    {
+        if (! $this->isNameValid($name)) {
+            throw new RuntimeException('$name does not respect the expected criteria, got ' . $name);
+        }
+        return $name;
     }
 
     public function getPluginByName($name)

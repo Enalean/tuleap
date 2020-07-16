@@ -24,6 +24,13 @@ $datetime_msg = 'yyyy-mm-dd hh:mm:ss';
 
 require_once __DIR__ . '/../../include/utils.php';
 
+/**
+ * This function does not do any sort of HTML escaping but is never expected to be used
+ * in a context where the content type is something else than text/csv. To avoid
+ * false-positives it is considered HTML is escaped.
+ *
+ * @psalm-taint-escape html
+ */
 function tocsv($string, $csv_separator)
 {
     // Escape the double quote character by doubling it

@@ -83,9 +83,9 @@ if (db_numrows($result) < 1) {
 
 <?php
 $hp = Codendi_HTMLPurifier::instance();
-$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $group_id . '" METHOD="POST">
-    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
-    <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="' . $proc_id . '">
+$return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $hp->purify(urlencode($group_id)) . '" METHOD="POST">
+    <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $hp->purify($group_id) . '">
+    <INPUT TYPE="HIDDEN" NAME="proc_id" VALUE="' . $hp->purify($proc_id) . '">
     <TR><TD>' . $Language->getText('file_file_utils', 'proc_name') . ': <font color=red>*</font> </TD>
     <TD><INPUT TYPE="TEXT" NAME="processname" VALUE="' . $hp->purify($name) . '" SIZE=30></TD></TR>
     <TR><TD>' . $Language->getText('file_file_utils', 'proc_rank') . ': <font color=red>*</font> </TD>

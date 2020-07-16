@@ -177,7 +177,7 @@ list($result, $totalrows) = cvs_get_revisions($project, $offset, $chunksz, $_tag
 
 $tech_box = commits_technician_box($projectname, '_commiter', $_commiter, 'Any');
 
-
+$purifier = Codendi_HTMLPurifier::instance();
 
 /*
     Show the new pop-up boxes to select assigned to and/or status
@@ -185,7 +185,7 @@ $tech_box = commits_technician_box($projectname, '_commiter', $_commiter, 'Any')
 echo '<H3>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'browse_by') . ':</H3>';
 echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
         <TABLE WIDTH="10%" BORDER="0">
-	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $group_id . '">
+	<INPUT TYPE="HIDDEN" NAME="group_id" VALUE="' . $purifier->purify($group_id) . '">
 	<INPUT TYPE="HIDDEN" NAME="func" VALUE="browse">
 	<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
         <TR align="center">
@@ -194,23 +194,23 @@ echo '<FORM class="form-inline" name="commit_form" ACTION="?" METHOD="GET">
                       <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'who') . '</b></TD>
                       <TD><b>' . $GLOBALS['Language']->getText('cvs_browse_commit', 'keyword') . '</b></TD>' .
         '</TR>' .
-        '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE=' . $_commit_id . '></TD>' .
+        '<TR><TD><INPUT TYPE="TEXT" CLASS="input-mini" SIZE=5 NAME=_commit_id VALUE=' . $purifier->purify($_commit_id) . '></TD>' .
         '<TD><FONT SIZE="-1">' . commits_branches_box($group_id, '_branch', $_branch, 'Any') . '</TD>' .
         '<TD><FONT SIZE="-1">' . $tech_box .
-        '</TD><TD><FONT SIZE="-1">' . '<INPUT type=text size=35 name=_srch value=' . $_srch .
+        '</TD><TD><FONT SIZE="-1">' . '<INPUT type=text size=35 name=_srch value=' . $purifier->purify($_srch) .
         '></TD>' .
        '</TR></TABLE>' .
 
 '<br><FONT SIZE="-1"><INPUT TYPE="SUBMIT" CLASS="btn" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_browse') . '">' .
 ' <input CLASS="input-mini" TYPE="text" name="chunksz" size="3" MAXLENGTH="5" ' .
-'VALUE="' . $chunksz . '">' . $GLOBALS['Language']->getText('cvs_browse_commit', 'nb_at_once') . '.' .
+'VALUE="' . $purifier->purify($chunksz) . '">' . $GLOBALS['Language']->getText('cvs_browse_commit', 'nb_at_once') . '.' .
 '</FORM>';
 
 
 if ($result && db_numrows($result) > 0) {
     //create a new $set string to be used for next/prev button
     if ($set == 'custom') {
-        $set .= '&_branch=' . $_branch . '&_commiter=' . $_commiter . '&_tag=' . $_tag . '&_srch=' . $_srch . '&chunksz=' . $chunksz;
+        $set .= '&_branch=' . urlencode((string) $_branch) . '&_commiter=' . urlencode((string) $_commiter) . '&_tag=' . urlencode((string) $_tag) . '&_srch=' . urlencode($_srch) . '&chunksz=' . urlencode((string) $chunksz);
     } elseif ($set == 'any') {
         $set .= '&_branch=100&_commiter=100&_tag=100&chunksz=' . $chunksz;
     }

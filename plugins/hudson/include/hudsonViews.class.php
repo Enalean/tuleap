@@ -232,7 +232,7 @@ class hudsonViews extends Views
             if ($dar->valid()) {
                 $row = $dar->current();
 
-                echo '<a href="/plugins/hudson/?group_id=' . $group_id . '">' . $GLOBALS['Language']->getText('plugin_hudson', 'back_to_jobs') . '</a>';
+                echo '<a href="/plugins/hudson/?group_id=' . Codendi_HTMLPurifier::instance()->purify(urlencode($group_id)) . '">' . $GLOBALS['Language']->getText('plugin_hudson', 'back_to_jobs') . '</a>';
 
                 echo '<h3>' . $GLOBALS['Language']->getText('plugin_hudson', 'editjob_title') . '</h3>';
 
@@ -392,7 +392,7 @@ class hudsonViews extends Views
                     echo '  <td>';
                     // edit job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=edit_job&group_id=' . $group_id . '&job_id=' . $job_id . '">' . $GLOBALS['HTML']->getimage(
+                    echo '    <a href="?action=edit_job&group_id=' . $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '">' . $GLOBALS['HTML']->getimage(
                         'ic/edit.png',
                         ['alt' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'edit_job')),
                         'title' => $purifier->purify($GLOBALS['Language']->getText(
@@ -403,7 +403,7 @@ class hudsonViews extends Views
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
-                    echo '    <a href="?action=delete_job&group_id=' . $group_id . '&job_id=' . $job_id . '" onclick="return confirm(';
+                    echo '    <a href="?action=delete_job&group_id=' .  $purifier->purify(urlencode($group_id)) . '&job_id=' . $purifier->purify(urlencode($job_id)) . '" onclick="return confirm(';
                     echo "'" . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'delete_job_confirmation', [$hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName()])) . "'";
                     echo ');">' . $GLOBALS['HTML']->getimage(
                         'ic/cross.png',

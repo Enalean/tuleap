@@ -212,9 +212,15 @@ if (! IS_SCRIPT) {
         (new RequestInstrumentation(Prometheus::instance()))->incrementLegacy();
     }
 
-    if (! $current_user->isAnonymous()) {
-        header('X-Tuleap-Username: ' . $current_user->getUserName());
-    }
+    (static function () use ($current_user) {
+        if (! $current_user->isAnonymous()) {
+            /**
+             * @psalm-taint-escape text
+             */
+            $header = 'X-Tuleap-Username: ' . $current_user->getUserName();
+            header($header);
+        }
+    })();
 }
 
 //Check post max size

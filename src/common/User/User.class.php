@@ -747,9 +747,16 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->unix_uid;
     }
 
-    public function getUnixHomeDir()
+    /**
+     * @psalm-taint-escape shell
+     */
+    public function getUnixHomeDir(): string
     {
-        return ForgeConfig::get('homedir_prefix') . "/" . $this->getUserName();
+        $username = $this->getUserName();
+        if (strpos($username, DIRECTORY_SEPARATOR) !== false) {
+            throw new RuntimeException('$username is not expected to contain a directory separator, got ' . $username);
+        }
+        return ForgeConfig::get('homedir_prefix') . "/" . $username;
     }
 
     /**

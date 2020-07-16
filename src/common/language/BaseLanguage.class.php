@@ -240,15 +240,15 @@ class BaseLanguage
             if (count($line) === 3) {
                 $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
             } else {
-                echo '* Error in ' . $fname . ' line ' . $i . ' string "' . trim($ary[$i]) . '" (length: ' . strlen(trim($ary[$i])) . ') : ';
+                $error_str = '* Error in ' . $fname . ' line ' . $i . ' string "' . trim($ary[$i]) . '" (length: ' . strlen(trim($ary[$i])) . ') : ';
                 if (! isset($line[0])) {
-                    echo "no index 0: empty line ? ";
+                    $error_str .= "no index 0: empty line ? ";
                 } elseif (! isset($line[1])) {
-                    echo "no index 1: did you use tabs to separate elements ? ";
+                    $error_str .= "no index 1: did you use tabs to separate elements ? ";
                 } elseif (! isset($line[2])) {
-                    echo "no index 2: keys present but string is missing ";
+                    $error_str .= "no index 2: keys present but string is missing ";
                 }
-                echo "<br>" . PHP_EOL;
+                throw new RuntimeException($error_str);
             }
         }
     }
@@ -272,6 +272,12 @@ class BaseLanguage
      */
     private function loadFromSerialized($lang)
     {
+        if (strpos($lang, DIRECTORY_SEPARATOR) !== false) {
+            throw new RuntimeException('$lang is not expected to contain a directory separator, got ' . $lang);
+        }
+        /**
+         * @psalm-taint-escape text
+         */
         $filepath = $this->getCacheDirectory() . DIRECTORY_SEPARATOR . $lang . '.php';
         if (is_file($filepath)) {
             $this->text_array = require $filepath;
