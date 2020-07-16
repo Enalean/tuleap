@@ -45,10 +45,6 @@ input[type='file'] {
     background-color: $dark-grey;
 }
 
-.tour-backdrop {
-    opacity: .3;
-}
-
 .alert {
     margin: 10px 0;
     padding: 20px;
@@ -113,47 +109,6 @@ input[type='file'] {
             background: transparentize(map-get($colors, 'primary'), .9);
             color: map-get($colors, 'text');
         }
-    }
-}
-
-
-.popover[class*='tour'] {
-    min-width: 370px;
-    max-width: 370px;
-    padding: 0;
-    border: 0;
-    background: $main;
-    box-shadow: 0 0 10px rgba(0, 0, 0, .4);
-    color: $white;
-    font-size: .85em;
-
-    &.top .arrow::after {
-        border-top-color: $main;
-    }
-
-    &.right .arrow::after {
-        border-right-color: $main;
-    }
-
-    &.bottom .arrow::after {
-        border-bottom-color: $dark-main;
-    }
-
-    &.left .arrow::after {
-        border-left-color: $main;
-    }
-
-    .popover-title {
-        border: 0;
-        background: $dark-main;
-        color: $white;
-        font-size: 1.1em;
-    }
-
-    .popover-navigation [data-role=prev],
-    .popover-navigation [data-role=next] {
-        margin-right: 5px;
-        float: left;
     }
 }
 

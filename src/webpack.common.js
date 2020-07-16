@@ -319,7 +319,6 @@ const fat_combined_files = [
         "./www/scripts/bootstrap/bootstrap-tooltip-fix-prototypejs-conflict.js",
         "./www/scripts/bootstrap/bootstrap-popover.js",
         "./www/scripts/bootstrap/bootstrap-select/bootstrap-select.js",
-        "./www/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker.fr.js",
         "./www/scripts/bootstrap/bootstrap-datetimepicker/js/bootstrap-datetimepicker-fix-prototypejs-conflict.js",
@@ -350,7 +349,6 @@ const fat_combined_files = [
         "./www/scripts/codendi/Tracker.js",
         "./www/scripts/codendi/TreeNode.js",
         "./www/scripts/tuleap/tuleap-modal.js",
-        "./www/scripts/tuleap/tuleap-tours.js",
         "./www/scripts/tuleap/tuleap-standard-homepage.js",
         "./www/scripts/tuleap/datetimepicker.js",
         "./www/scripts/tuleap/svn.js",
@@ -370,10 +368,8 @@ const fat_combined_files = [
     subset_combined_flamingparrot_files = [
         "./www/scripts/bootstrap/bootstrap-dropdown.js",
         "./www/scripts/bootstrap/bootstrap-modal.js",
-        "./www/scripts/bootstrap/bootstrap-tour/bootstrap-tour.min.js",
         "./www/scripts/jscrollpane/jquery.mousewheel.js",
         "./www/scripts/jscrollpane/jquery.jscrollpane.min.js",
-        "./www/scripts/tuleap/tuleap-tours.js",
         "./scripts/tuleap/listFilter.js",
         "./scripts/codendi/Tooltip.js",
     ];

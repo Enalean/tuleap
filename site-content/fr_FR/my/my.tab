@@ -112,27 +112,3 @@ my_redirect	default_txt	Vous êtes sur la page de redirection de Codendi. Vous t
 #
 my_monitored_forum	title	Arrêt de la surveillance d'un forum.
 my_monitored_forum	stop_monitoring	La surveillance du forum est arrêtée. Vous ne recevrez plus de courrier électronique en provenance de ce forum.
-
-my_tour	welcome_title	Bienvenue sur Tuleap !
-my_tour	welcome	Ravi de vous rencontrer $1 ! Il s'agit de votre première connexion sur Tuleap. Nous allons vous montrer comment utiliser l'outil.
-my_tour	my_personal_page_title	Ma page personnelle
-my_tour	my_personal_page	Il s'agit de votre page personnelle (là où vous vous trouvez). Vous pourrez trouver ici un ensemble d'informations vous concernant.
-my_tour	projects_title	Mes projets
-my_tour	projects	Il s'agit de l'onglet où vous pouvez créer votre premier projet. Vous y trouverez également la liste des projets auxquels vous pouvez accéder.
-my_tour	help_title	Aide
-my_tour	help	Vous pourrez trouver à cet endroit différentes aides telles que les adresses de contact ou la documentation.
-my_tour	search_title	Recherche globale
-my_tour	search	Il s'agit de la recherche globale de Tuleap. Vous pourrez y rechercher des données au travers des différents projets et services.
-my_tour	user_menu_title	Menu utilisateur
-my_tour	user_menu	Vous trouverez à cet endroit les informations de votre compte où vous pourrez changer votre avatar, votre thème ou encore ajouter vos clefs SSH.
-my_tour	end_tour_title	Vous êtes prêt à utiliser Tuleap
-my_tour	end_tour	C'est la fin de cette présentation de bienvenue. Vous pouvez dès à présent commencer à utiliser Tuleap.
-
-fp_bp_unification_tour	new_style_title	Nouveau style
-fp_bp_unification_tour	new_style	Voici la nouvelle barre de navigation. Vous remarquerez certainement que d'autres parties de Tuleap ont été redesignées.
-fp_bp_unification_tour	personal_page_title	Ma page personnelle
-fp_bp_unification_tour	personal_page	Votre page personnelle est maintenant accessible en cliquant sur votre nom.
-fp_bp_unification_tour	account_title	Mon compte
-fp_bp_unification_tour	account	Vos préférences sont accessibles en cliquant sur cette roue dentée.
-fp_bp_unification_tour	be_prepared_title	Et ce n'est pas fini !
-fp_bp_unification_tour	be_prepared	De nouvelles fonctionnalités arrivent à grand pas. Gardez l'œil ouvert…

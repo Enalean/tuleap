@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
  * This file is a part of Tuleap.
@@ -32,12 +32,6 @@ class Response
     public $_feedback;
 
     /**
-     *
-     * @var Tour[]
-     */
-    public $tours = array();
-
-    /**
     * Constructor
     */
     public function __construct()
@@ -59,19 +53,6 @@ class Response
         if (!$this->_feedback) {
             $this->clearFeedback();
         }
-    }
-
-    public function addTour(Tuleap_Tour $tour)
-    {
-        $this->tours[] = $tour;
-    }
-
-    /**
-     * @return Tuleap_Tour[]
-     */
-    public function getTours()
-    {
-        return $this->tours;
     }
 
     public function addFeedback($level, $message, $purify = CODENDI_PURIFIER_CONVERT_HTML)
