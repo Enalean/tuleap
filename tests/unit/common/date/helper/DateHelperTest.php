@@ -28,6 +28,7 @@ use DateHelper;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
 
 final class DateHelperTest extends TestCase
 {
@@ -179,5 +180,25 @@ final class DateHelperTest extends TestCase
             'in 8 minutes',
             DateHelper::timeAgoInWords($_SERVER['REQUEST_TIME'] + 500)
         );
+    }
+
+    public function testRelativeDate(): void
+    {
+        $GLOBALS['Language']
+            ->shouldReceive('getText')
+            ->with(
+                'system',
+                'datefmt',
+            )
+            ->andReturns('Y-m-d H:i');
+
+        $user = UserTestBuilder::aUser()->withLocale('en_US')->build();
+
+        $this->assertEquals('<tlp-relative-date
+            date="2009-02-14T00:31:30+01:00"
+            absolute-date="2009-02-14 00:31"
+            preference="relative"
+            locale="en_US"
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
     }
 }

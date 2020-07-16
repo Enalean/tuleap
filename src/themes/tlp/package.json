@@ -7,6 +7,11 @@
   "types": "./src/index.d.ts",
   "private": true,
   "dependencies": {
+    "@formatjs/intl-getcanonicallocales": "^1.3.0",
+    "@formatjs/intl-numberformat": "^5.2.1",
+    "@formatjs/intl-pluralrules": "^3.2.1",
+    "@formatjs/intl-relativetimeformat": "^6.2.1",
+    "@webcomponents/custom-elements": "^1.4.1",
     "flatpickr": "^4.6.2",
     "jquery": "2.1.0",
     "popper.js": "^1.14.7",

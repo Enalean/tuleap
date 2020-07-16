@@ -33,4 +33,11 @@ class Browser
             || (strpos($user_agent, 'Trident/7.0;') !== false
                 && strpos($user_agent, 'rv:11.0') !== false);
     }
+
+    public function isEdgeLegacy(): bool
+    {
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+        return strpos($user_agent, "Edge") !== false;
+    }
 }

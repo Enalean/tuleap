@@ -1,0 +1,78 @@
+<div class="tlp-property">
+    <label class="tlp-label">Date in french (relative, on the right)</label>
+    <tlp-relative-date
+        date="2020-07-13T14:16:04.467Z"
+        absolute-date="13/07/2020 16:16"
+        placement="right"
+        preference="relative"
+        locale="fr_FR"
+    ></tlp-relative-date>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Date in english (absolute, on the right)</label>
+    <tlp-relative-date
+        date="2020-07-13T14:16:04.467Z"
+        absolute-date="2020/07/13 16:16"
+        placement="right"
+        preference="absolute"
+        locale="en_US"
+    ></tlp-relative-date>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Date in brazilian portuguese (relative, tooltip)</label>
+    <tlp-relative-date
+        date="2020-07-13T14:16:04.467Z"
+        absolute-date="2020/07/13 16:16"
+        placement="tooltip"
+        preference="relative"
+        locale="pt_BR"
+    ></tlp-relative-date>
+</div>
+
+<div class="tlp-property">
+    <label class="tlp-label">Date in brazilian portuguese (absolute, tooltip)</label>
+    <tlp-relative-date
+        date="2020-07-13T14:16:04.467Z"
+        absolute-date="2020/07/13 16:16"
+        placement="tooltip"
+        preference="absolute"
+        locale="pt_BR"
+    ></tlp-relative-date>
+</div>
+
+<table class="tlp-table">
+    <thead>
+        <tr>
+            <th>Text</th>
+            <th>Date inside a table</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Absolute date</td>
+            <td>
+                <tlp-relative-date
+                    date="2020-07-13T14:16:04.467Z"
+                    absolute-date="2020/07/13 16:16"
+                    placement="top"
+                    preference="absolute"
+                    locale="en_US"
+                ></tlp-relative-date>
+            </td>
+        </tr>
+        <tr>
+            <td>Relative date</td>
+            <td>
+                <tlp-relative-date
+                    date="2020-07-13T14:16:04.467Z"
+                    absolute-date="2020/07/13 16:16"
+                    placement="top"
+                    preference="relative"
+                    locale="en_US"
+                ></tlp-relative-date>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -48,7 +48,7 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         $submitted_values = $this->getSubmittedValues($request);
 
         $presenter = new Tracker_Artifact_Presenter_EditArtifactInPlacePresenter(
-            $this->fetchFollowUps(),
+            $this->fetchFollowUps($current_user),
             $this->fetchArtifactLinks($current_user),
             $this->artifact->getTracker()->fetchFormElementsNoColumns($this->artifact, $submitted_values),
             $this->artifact,
@@ -91,10 +91,10 @@ class Tracker_Artifact_Renderer_EditInPlaceRenderer
         return $links;
     }
 
-    private function fetchFollowUps()
+    private function fetchFollowUps(PFUser $current_user)
     {
         $changesets = $this->getFollowupsContent($this->artifact);
-        $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets);
+        $presenter  = new Tracker_Artifact_Presenter_FollowUpCommentsPresenter($changesets, $current_user);
 
         return $this->renderer->renderToString('follow-ups', $presenter);
     }
