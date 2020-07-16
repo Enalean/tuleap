@@ -100,6 +100,20 @@ class ChangelogSnapshotBuilder
                 continue;
             }
 
+            if (
+                $field_mapping->getType() === Tracker_FormElementFactory::FIELD_DATE_TYPE &&
+                $changed_field_to !== null
+            ) {
+                $fields_snapshot[] = new FieldSnapshot(
+                    $field_mapping,
+                    $changed_field_to,
+                    null
+                );
+
+                $this->logger->debug("  |_ Generate date value for " . $field_id);
+                continue;
+            }
+
             if ($changed_field_to !== null) {
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,

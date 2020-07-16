@@ -87,7 +87,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(5, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(6, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -119,6 +119,11 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $this->assertSame(
             [10008],
             $snapshot->getFieldInSnapshot('attachment')->getValue()
+        );
+
+        $this->assertSame(
+            "2020-03-25",
+            $snapshot->getFieldInSnapshot('datepicker')->getValue()
         );
     }
 
@@ -215,6 +220,13 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "fromString" => null,
                         "to"         => "10008",
                         "toString"   => "file02.gif"
+                    ],
+                    6 => [
+                        "fieldId"    => "datepicker",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "2020-03-25",
+                        "toString"   => "25/Mar/20"
                     ]
                 ],
                 'author' => [
@@ -276,6 +288,14 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "Attachments",
                 "file"
             )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "datepicker",
+                "Fdatepicker",
+                "Date picker",
+                "date"
+            ),
         );
 
         return $collection;
