@@ -1175,6 +1175,9 @@ msgstr "Suppression annulée"
 msgid "Delete permanently the field"
 msgstr "Supprimer définitivement le champ"
 
+msgid "Delete the value"
+msgstr "Supprimer la valeur"
+
 #, php-format
 msgid "Delete this Canned Response : %1$s ?"
 msgstr "Détruire cette réponse type&nbsp;: %1$s ?"
@@ -4191,6 +4194,9 @@ msgstr "valeur calculée"
 
 msgid "cancel"
 msgstr "annuler"
+
+msgid "cannot hide"
+msgstr "impossible de cacher cette valeur"
 
 msgid "changed from"
 msgstr "modifié de"

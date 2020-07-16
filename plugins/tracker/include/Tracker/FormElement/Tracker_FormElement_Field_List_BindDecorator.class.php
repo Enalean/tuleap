@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved.
+ * Copyright (c) Xerox Corporation, Codendi Team, 2001-1009. All rights reserved.
  * Copyright (c) Enalean, 2011 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
@@ -125,45 +125,33 @@ class Tracker_FormElement_Field_List_BindDecorator
 
     /**
      * Display the color and allow the user to edit it
-     * @return string html
      */
-    public function decorateEdit($is_used_in_semantics)
+    public function decorateEdit($is_used_in_semantics): ColorpickerMountPointPresenter
     {
-        $html  = '';
         $color = $this->getCurrentColor();
         $id    = 'decorator_' . $this->field_id . '_' . $this->value_id;
-        $html .= self::getColorPickerMountPoint($id, $this->value_id, $color, $is_used_in_semantics);
 
-        return $html;
+        return self::getColorPickerMountPoint($id, $this->value_id, $color, $is_used_in_semantics);
     }
 
-    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color, $is_used_in_semantics)
+    private static function getColorPickerMountPoint($decorator_id, $value_id, $current_color, $is_used_in_semantics): ColorpickerMountPointPresenter
     {
         $input_name = "bind[decorator][$value_id]";
         $input_id   = $decorator_id . '_field';
 
-        $renderer = TemplateRendererFactory::build()->getRenderer(
-            TRACKER_TEMPLATE_DIR  . '/colorpicker/'
-        );
-
-        return $renderer->renderToString(
-            'colorpicker-mount-point',
-            new ColorpickerMountPointPresenter(
-                $current_color,
-                $input_name,
-                $input_id,
-                $is_used_in_semantics
-            )
+        return new ColorpickerMountPointPresenter(
+            $current_color,
+            $input_name,
+            $input_id,
+            $is_used_in_semantics
         );
     }
 
-    public static function noDecoratorEdit(int $field_id, int $value_id, bool $is_used_in_semantics): string
+    public static function noDecoratorEdit(int $field_id, int $value_id, bool $is_used_in_semantics): ColorpickerMountPointPresenter
     {
-        $html = '';
         $id   = 'decorator_' . $field_id . '_' . $value_id;
 
-        $html .= self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
-        return $html;
+        return self::getColorPickerMountPoint($id, $value_id, null, $is_used_in_semantics);
     }
 
     protected static function fetchSquareColor($id, $title, $classname, $r, $g, $b, $img = 'blank16x16.png')
