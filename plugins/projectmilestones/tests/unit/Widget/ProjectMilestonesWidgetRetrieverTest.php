@@ -175,4 +175,24 @@ class ProjectMilestonesWidgetRetrieverTest extends TestCase
 
         $this->retriever->getPreferences(10, $this->project, $this->user, $this->csrf_token);
     }
+
+    public function testCreatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void
+    {
+        $this->http->shouldReceive('getValidated')->andReturn(null);
+        $this->project_manager->shouldReceive('getProjectFromAutocompleter')->andReturn(false);
+
+        $this->project_milestones_dao->shouldNotReceive('create');
+
+        $this->assertNull($this->retriever->create($this->http));
+    }
+
+    public function testUpdatingProjectMilestoneWidgetWithAnNonExistingShouldNotCrash(): void
+    {
+        $this->http->shouldReceive('getValidated')->andReturn(null);
+        $this->project_manager->shouldReceive('getProjectFromAutocompleter')->andReturn(false);
+
+        $this->project_milestones_dao->shouldNotReceive('updateProjectMilestoneId');
+
+        $this->retriever->updatePreferences($this->http);
+    }
 }

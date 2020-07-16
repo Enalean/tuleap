@@ -149,6 +149,9 @@ class ProjectMilestonesWidgetRetriever
         $project_id = $request->getValidated("select-project-milestones-widget", 'string');
 
         $project = $this->project_manager->getProjectFromAutocompleter($project_id);
+        if ($project === false) {
+            return;
+        }
 
         $this->project_milestones_dao->updateProjectMilestoneId($widget_id, (int) $project->getID());
     }
@@ -161,10 +164,14 @@ class ProjectMilestonesWidgetRetriever
         );
     }
 
-    public function create(Codendi_Request $request): int
+    public function create(Codendi_Request $request): ?int
     {
         $project_id = $request->getValidated("select-project-milestones-widget", 'string');
         $project    = $this->project_manager->getProjectFromAutocompleter($project_id);
+
+        if ($project === false) {
+            return null;
+        }
 
         return (int) $this->project_milestones_dao->create((int) $project->getID());
     }
