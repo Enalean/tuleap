@@ -17,29 +17,33 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Modal, modal as createModal } from "./modal";
-
-const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
-const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
+import {
+    Modal,
+    modal as createModal,
+    EVENT_TLP_MODAL_SHOWN,
+    EVENT_TLP_MODAL_HIDDEN,
+    BACKDROP_ID,
+    BACKDROP_SHOWN_CLASS_NAME,
+    MODAL_DISPLAY_CLASS_NAME,
+    MODAL_SHOWN_CLASS_NAME,
+} from "./modal";
 
 jest.useFakeTimers();
 
 describe(`Modal`, () => {
     let modal_element: HTMLElement;
+    let doc: Document;
 
     beforeEach(() => {
-        modal_element = document.createElement("div");
-        document.body.append(modal_element);
-    });
-
-    afterEach(() => {
-        modal_element.remove();
+        doc = createLocalDocument();
+        modal_element = doc.createElement("div");
+        doc.body.append(modal_element);
     });
 
     describe(`show()`, () => {
         let modal: Modal;
         beforeEach(() => {
-            modal = createModal(modal_element);
+            modal = createModal(doc, modal_element);
         });
         afterEach(() => {
             modal.destroy();
@@ -47,7 +51,7 @@ describe(`Modal`, () => {
 
         it(`will add the "display" and "shown" CSS classes to the modal element`, () => {
             modal.show();
-            expect(modal_element.classList.contains("tlp-modal-display")).toBe(true);
+            expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(true);
             expectTheModalToBeShown(modal_element);
         });
 
@@ -62,12 +66,12 @@ describe(`Modal`, () => {
 
         it(`will create and show a backdrop element`, () => {
             modal.show();
-            const backdrop = document.querySelector("div#tlp-modal-backdrop");
+            const backdrop = doc.querySelector("div#" + BACKDROP_ID);
             expect(backdrop).not.toBeNull();
             if (backdrop === null) {
                 throw new Error("backdrop should exist in the document");
             }
-            expect(backdrop.classList.contains("tlp-modal-backdrop-shown")).toBe(true);
+            expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(true);
         });
     });
 
@@ -76,7 +80,7 @@ describe(`Modal`, () => {
 
         describe(`for a regular modal`, () => {
             beforeEach(() => {
-                modal = createModal(modal_element);
+                modal = createModal(doc, modal_element);
             });
             afterEach(() => {
                 modal.destroy();
@@ -90,12 +94,12 @@ describe(`Modal`, () => {
 
             it(`will remove the "backdrop shown" CSS class from the backdrop element`, () => {
                 modal.show();
-                const backdrop = document.querySelector("#tlp-modal-backdrop");
+                const backdrop = doc.querySelector("#" + BACKDROP_ID);
                 if (backdrop === null) {
                     throw new Error("backdrop should exist in the document");
                 }
                 modal.hide();
-                expect(backdrop.classList.contains("tlp-modal-backdrop-shown")).toBe(false);
+                expect(backdrop.classList.contains(BACKDROP_SHOWN_CLASS_NAME)).toBe(false);
             });
 
             it(`will remove the backdrop element after a delay`, () => {
@@ -103,7 +107,7 @@ describe(`Modal`, () => {
                 modal.hide();
                 jest.runAllTimers();
 
-                const backdrop = document.querySelector("#tlp-modal-backdrop");
+                const backdrop = doc.querySelector("#" + BACKDROP_ID);
                 expect(backdrop).toBeNull();
             });
 
@@ -112,7 +116,7 @@ describe(`Modal`, () => {
                 modal.hide();
                 jest.runAllTimers();
 
-                expect(modal_element.classList.contains("tlp-modal-display")).toBe(false);
+                expect(modal_element.classList.contains(MODAL_DISPLAY_CLASS_NAME)).toBe(false);
             });
 
             it(`will dispatch the "hidden" event after a delay`, () => {
@@ -136,20 +140,20 @@ describe(`Modal`, () => {
         });
 
         it(`given the modal had the "destroy_on_hide" option, it will destroy the modal`, () => {
-            const first_closing_element = document.createElement("span");
+            const first_closing_element = doc.createElement("span");
             first_closing_element.dataset.dismiss = "modal";
             const removeFirstClickListener = jest.spyOn(
                 first_closing_element,
                 "removeEventListener"
             );
-            const second_closing_element = document.createElement("span");
+            const second_closing_element = doc.createElement("span");
             second_closing_element.dataset.dismiss = "modal";
             const removeSecondClickListener = jest.spyOn(
                 second_closing_element,
                 "removeEventListener"
             );
             modal_element.append(first_closing_element, second_closing_element);
-            modal = createModal(modal_element, { destroy_on_hide: true });
+            modal = createModal(doc, modal_element, { destroy_on_hide: true });
             modal.show();
             modal.hide();
 
@@ -161,7 +165,7 @@ describe(`Modal`, () => {
     describe(`toggle()`, () => {
         let modal: Modal;
         beforeEach(() => {
-            modal = createModal(modal_element);
+            modal = createModal(doc, modal_element);
         });
         afterEach(() => {
             modal.destroy();
@@ -184,9 +188,9 @@ describe(`Modal`, () => {
     });
 
     it(`when I click on the backdrop element, it will hide the modal`, () => {
-        const modal = createModal(modal_element);
+        const modal = createModal(doc, modal_element);
         modal.show();
-        const backdrop = document.querySelector("#tlp-modal-backdrop");
+        const backdrop = doc.querySelector("#tlp-modal-backdrop");
         if (backdrop === null || !(backdrop instanceof HTMLElement)) {
             throw new Error("backdrop should exist in the document");
         }
@@ -198,10 +202,10 @@ describe(`Modal`, () => {
     });
 
     it(`when I click on a [data-dismiss=modal] element, it will hide the modal`, () => {
-        const closing_element = document.createElement("span");
+        const closing_element = doc.createElement("span");
         closing_element.dataset.dismiss = "modal";
         modal_element.append(closing_element);
-        const modal = createModal(modal_element);
+        const modal = createModal(doc, modal_element);
         modal.show();
 
         closing_element.dispatchEvent(new MouseEvent("click"));
@@ -212,7 +216,7 @@ describe(`Modal`, () => {
 
     describe(`removeEventListener`, () => {
         it(`removes a listener from the modal`, () => {
-            const modal = createModal(modal_element);
+            const modal = createModal(doc, modal_element);
             const listener = jest.fn();
             modal.addEventListener(EVENT_TLP_MODAL_HIDDEN, listener);
             modal.show();
@@ -228,7 +232,7 @@ describe(`Modal`, () => {
     describe(`when the modal has the keyboard option`, () => {
         let modal: Modal;
         beforeEach(() => {
-            modal = createModal(modal_element, { keyboard: true });
+            modal = createModal(doc, modal_element, { keyboard: true });
             modal.show();
         });
         afterEach(() => {
@@ -236,14 +240,14 @@ describe(`Modal`, () => {
         });
 
         it(`and I hit a key that isn't Escape, nothing happens`, () => {
-            document.body.dispatchEvent(new KeyboardEvent("keyup", { key: "A", bubbles: true }));
+            doc.body.dispatchEvent(new KeyboardEvent("keyup", { key: "A", bubbles: true }));
 
             expectTheModalToBeShown(modal_element);
         });
 
         it(`and I hit the Escape key inside an input element, nothing happens`, () => {
-            const input = document.createElement("input");
-            document.body.append(input);
+            const input = doc.createElement("input");
+            doc.body.append(input);
             simulateEscapeKey(input);
 
             expectTheModalToBeShown(modal_element);
@@ -252,8 +256,8 @@ describe(`Modal`, () => {
         });
 
         it(`and I hit the Escape key inside a select element, nothing happens`, () => {
-            const select = document.createElement("select");
-            document.body.append(select);
+            const select = doc.createElement("select");
+            doc.body.append(select);
             simulateEscapeKey(select);
 
             expectTheModalToBeShown(modal_element);
@@ -262,8 +266,8 @@ describe(`Modal`, () => {
         });
 
         it(`and I hit the Escape key inside a textarea element, nothing happens`, () => {
-            const textarea = document.createElement("textarea");
-            document.body.append(textarea);
+            const textarea = doc.createElement("textarea");
+            doc.body.append(textarea);
             simulateEscapeKey(textarea);
 
             expectTheModalToBeShown(modal_element);
@@ -273,19 +277,19 @@ describe(`Modal`, () => {
 
         it(`and given the modal was hidden, when I hit the Escape key, nothing happens`, () => {
             modal.hide();
-            simulateEscapeKey(document.body);
+            simulateEscapeKey(doc.body);
 
             expectTheModalToBeHidden(modal_element);
         });
 
         it(`and I hit the Escape key, the modal will be hidden`, () => {
-            simulateEscapeKey(document.body);
+            simulateEscapeKey(doc.body);
 
             expectTheModalToBeHidden(modal_element);
         });
 
         it(`when it is destroyed, the modal will remove its keyup listener`, () => {
-            const removeEventListener = jest.spyOn(document, "removeEventListener");
+            const removeEventListener = jest.spyOn(doc, "removeEventListener");
             modal.destroy();
 
             expect(removeEventListener).toHaveBeenCalledWith("keyup", expect.anything());
@@ -293,12 +297,16 @@ describe(`Modal`, () => {
     });
 });
 
+function createLocalDocument(): Document {
+    return document.implementation.createHTMLDocument();
+}
+
 function expectTheModalToBeShown(modal_element: HTMLElement): void {
-    expect(modal_element.classList.contains("tlp-modal-shown")).toBe(true);
+    expect(modal_element.classList.contains(MODAL_SHOWN_CLASS_NAME)).toBe(true);
 }
 
 function expectTheModalToBeHidden(modal_element: HTMLElement): void {
-    expect(modal_element.classList.contains("tlp-modal-shown")).toBe(false);
+    expect(modal_element.classList.contains(MODAL_SHOWN_CLASS_NAME)).toBe(false);
 }
 
 function simulateEscapeKey(element: HTMLElement): void {

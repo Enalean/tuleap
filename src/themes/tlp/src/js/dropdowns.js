@@ -21,21 +21,21 @@ import { findClosestElement } from "./dom-walker.js";
 
 const TRANSITION_DURATION = 75;
 
-const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
-const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
+export const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
+export const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
 
-const CLASS_TLP_DROPDOWN_MENU = "tlp-dropdown-menu";
-const CLASS_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
+export const DROPDOWN_MENU_CLASS_NAME = "tlp-dropdown-menu";
+export const DROPDOWN_SHOWN_CLASS_NAME = "tlp-dropdown-shown";
 
-export const dropdown = (trigger, options) => new Dropdown(trigger, options);
+export const dropdown = (doc, trigger, options) => new Dropdown(doc, trigger, options);
 
 class Dropdown {
-    constructor(trigger, options = { keyboard: true }) {
+    constructor(doc, trigger, options = { keyboard: true }) {
+        this.doc = doc;
         this.trigger = trigger;
 
         let { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
 
-        this.body_element = document.body;
         this.dropdown_menu = dropdown_menu;
         this.is_shown = false;
         this.keyboard = keyboard;
@@ -57,7 +57,7 @@ class Dropdown {
         while (
             dropdown_menu &&
             (dropdown_menu.nodeType !== Node.ELEMENT_NODE ||
-                !dropdown_menu.classList.contains(CLASS_TLP_DROPDOWN_MENU))
+                !dropdown_menu.classList.contains(DROPDOWN_MENU_CLASS_NAME))
         ) {
             dropdown_menu = dropdown_menu.nextSibling;
         }
@@ -70,7 +70,7 @@ class Dropdown {
     }
 
     show() {
-        this.dropdown_menu.classList.add(CLASS_TLP_DROPDOWN_SHOWN);
+        this.dropdown_menu.classList.add(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = true;
         this.reflow();
 
@@ -78,7 +78,7 @@ class Dropdown {
     }
 
     hide() {
-        this.dropdown_menu.classList.remove(CLASS_TLP_DROPDOWN_SHOWN);
+        this.dropdown_menu.classList.remove(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = false;
         this.reflow();
 
@@ -99,18 +99,18 @@ class Dropdown {
     }
 
     listenCloseEvents() {
-        document.addEventListener("click", (event) => {
+        this.doc.addEventListener("click", (event) => {
             if (
                 this.is_shown &&
-                !findClosestElement(event.target, this.dropdown_menu) &&
-                !findClosestElement(event.target, this.trigger)
+                !findClosestElement(this.doc, event.target, this.dropdown_menu) &&
+                !findClosestElement(this.doc, event.target, this.trigger)
             ) {
                 this.hide();
             }
         });
 
         if (this.keyboard) {
-            document.addEventListener("keyup", (event) => {
+            this.doc.addEventListener("keyup", (event) => {
                 if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
                     return;
                 }

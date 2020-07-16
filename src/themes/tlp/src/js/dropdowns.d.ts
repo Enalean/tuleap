@@ -30,4 +30,10 @@ declare class Dropdown {
     addEventListener(type: string, eventHandler: (evt: Event) => void): void;
     removeEventListener(type: string, eventHandler: (evt: Event) => void): void;
 }
-export function dropdown(trigger: Element, options?: DropdownOptions): Dropdown;
+export function dropdown(doc: Document, trigger: Element, options?: DropdownOptions): Dropdown;
+
+export const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
+export const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
+
+export const DROPDOWN_MENU_CLASS_NAME = "tlp-dropdown-menu";
+export const DROPDOWN_SHOWN_CLASS_NAME = "tlp-dropdown-shown";

@@ -22,7 +22,10 @@ interface Popover {
     destroy(): void;
 }
 export function createPopover(
+    doc: Document,
     popover_trigger: Element,
     popover_content: Element,
     options?: PopperOptions & { anchor?: Element; trigger?: "click" | "hover" }
 ): Popover;
+
+export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
