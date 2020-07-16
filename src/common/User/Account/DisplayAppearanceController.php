@@ -34,7 +34,7 @@ use Tuleap\Layout\JavascriptAsset;
 use Tuleap\Request\DispatchableWithBurningParrot;
 use Tuleap\Request\DispatchableWithRequest;
 use Tuleap\Request\ForbiddenException;
-use Tuleap\User\Account\Appearance\AppareancePresenterBuilder;
+use Tuleap\User\Account\Appearance\AppearancePresenterBuilder;
 
 final class DisplayAppearanceController implements DispatchableWithRequest, DispatchableWithBurningParrot
 {
@@ -53,7 +53,7 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
      */
     private $dispatcher;
     /**
-     * @var AppareancePresenterBuilder
+     * @var AppearancePresenterBuilder
      */
     private $appareance_presenter_builder;
 
@@ -61,7 +61,7 @@ final class DisplayAppearanceController implements DispatchableWithRequest, Disp
         EventDispatcherInterface $dispatcher,
         TemplateRendererFactory $renderer_factory,
         CSRFSynchronizerToken $csrf_token,
-        AppareancePresenterBuilder $appareance_presenter_builder
+        AppearancePresenterBuilder $appareance_presenter_builder
     ) {
         $this->dispatcher                   = $dispatcher;
         $this->renderer                     = $renderer_factory->getRenderer(__DIR__ . '/templates');

@@ -99,6 +99,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -133,6 +134,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -174,6 +176,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -211,6 +214,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -245,6 +249,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -289,6 +294,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -328,6 +334,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -365,6 +372,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -402,6 +410,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturn('condensed');
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -439,6 +448,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -476,6 +486,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturn('2');
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -510,6 +521,86 @@ class UpdateAppearancePreferencesTest extends TestCase
         $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
     }
 
+    public function testRejectsInvalidRelativeDatesDisplay(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('relative-dates-display', '666')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::ERROR,
+                    'message' => 'Submitted relative dates display is not valid.'
+                ],
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
+    public function testItDoesNothingIfUserKeepsTheSameRelativeDatesDisplay(): void
+    {
+        $user = Mockery::mock(\PFUser::class);
+        $user->shouldReceive(['isAnonymous' => false, 'getLanguageID' => 'fr_FR']);
+        $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturn('absolute_first-relative_shown');
+
+        $this->csrf_token->shouldReceive('check')->once();
+
+        $this->user_manager->shouldReceive('updateDB')->never();
+        $user->shouldReceive('setPreference')->never();
+
+        $request = HTTPRequestBuilder::get()
+            ->withUser($user)
+            ->withParam('relative-dates-display', 'absolute_first-relative_shown')
+            ->build();
+
+        $layout_inspector = new LayoutInspector();
+        $this->controller->process(
+            $request,
+            LayoutBuilder::buildWithInspector($layout_inspector),
+            []
+        );
+
+        $this->assertEquals(
+            [
+                [
+                    'level'   => \Feedback::INFO,
+                    'message' => 'Nothing changed'
+                ]
+            ],
+            $layout_inspector->getFeedback()
+        );
+        $this->assertEquals('/account/appearance', $layout_inspector->getRedirectUrl());
+    }
+
     public function testItDoesNothingIfUserStillDoesNotWantAccessibility(): void
     {
         $user = Mockery::mock(\PFUser::class);
@@ -517,6 +608,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -554,6 +646,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -591,6 +684,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturn('1');
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -629,6 +723,7 @@ class UpdateAppearancePreferencesTest extends TestCase
         $user->shouldReceive('getPreference')->with('display_density')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('accessibility_mode')->andReturnFalse();
         $user->shouldReceive('getPreference')->with('username_display')->andReturnFalse();
+        $user->shouldReceive('getPreference')->with('relative_dates_display')->andReturnFalse();
 
         $this->csrf_token->shouldReceive('check')->once();
 
@@ -655,6 +750,11 @@ class UpdateAppearancePreferencesTest extends TestCase
             ->with('username_display', '2')
             ->once()
             ->andReturnTrue();
+        $user
+            ->shouldReceive('setPreference')
+            ->with('relative_dates_display', 'absolute_first-relative_shown')
+            ->once()
+            ->andReturnTrue();
 
         $request = HTTPRequestBuilder::get()
             ->withUser($user)
@@ -663,6 +763,7 @@ class UpdateAppearancePreferencesTest extends TestCase
             ->withParam('accessibility_mode', '1')
             ->withParam('color', 'green')
             ->withParam('username_display', '2')
+            ->withParam('relative-dates-display', 'absolute_first-relative_shown')
             ->build();
 
         $layout_inspector = new LayoutInspector();

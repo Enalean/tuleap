@@ -28,7 +28,7 @@ use PFUser;
 use Tuleap\User\Account\AccountTabPresenterCollection;
 use UserHelper;
 
-class AppareancePresenterBuilder
+class AppearancePresenterBuilder
 {
     /**
      * @var LanguagePresenterBuilder
@@ -62,6 +62,8 @@ class AppareancePresenterBuilder
         $is_login          = $preference === UserHelper::PREFERENCES_LOGIN;
         $is_realname       = $preference === UserHelper::PREFERENCES_REAL_NAME;
 
+        $display_relative_dates_preference = $user->getPreference(\DateHelper::PREFERENCE_NAME);
+
         return new AppearancePresenter(
             $csrf_token,
             $tabs,
@@ -72,7 +74,8 @@ class AppareancePresenterBuilder
             $is_realname_login,
             $is_login_realname,
             $is_login,
-            $is_realname
+            $is_realname,
+            $display_relative_dates_preference ? $display_relative_dates_preference : ""
         );
     }
 }

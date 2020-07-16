@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #, php-format
 msgid ""
@@ -139,6 +139,12 @@ msgid ""
 msgstr ""
 "Un nouveau jeton sera généré lors de la soumission du formulaire. La "
 "description n'est pas requise mais peut vous aider à gérer vos jetons."
+
+msgid "Absolute"
+msgstr "Absolue"
+
+msgid "Absolute (relative)"
+msgstr "Absolue (relative)"
 
 msgid "Access"
 msgstr "Accès"
@@ -1608,6 +1614,15 @@ msgstr "Références"
 msgid "Registered users"
 msgstr "Utilisateurs enregistrés"
 
+msgid "Relative"
+msgstr "Relative"
+
+msgid "Relative (absolute)"
+msgstr "Relative (absolue)"
+
+msgid "Relative dates display"
+msgstr "Affichage des dates relatives"
+
 msgid "Removal from projects"
 msgstr "Retrait de projets"
 
@@ -1813,6 +1828,9 @@ msgstr "Le séparateur CSV n'est pas valide"
 
 msgid "Submitted real name is too long, it must be less than 32 characters"
 msgstr "Le nom complet doit contenir au maximum 32 caractères"
+
+msgid "Submitted relative dates display is not valid."
+msgstr "Le format d'affichage des dates relatives n'est pas valide"
 
 msgid "Submitted text format is not valid"
 msgstr "Le formal de texte n'est pas valide"
@@ -2273,6 +2291,12 @@ msgstr "Impossible de changer la couleur."
 
 msgid "Unable to change the display density."
 msgstr "Impossible de changer la densité d'affichage."
+
+msgid "Unable to change the relative dates display."
+msgstr "Impossible de changer l'affichage des dates relatives."
+
+msgid "Unable to change the username display."
+msgstr "Impossible de changer l'affichage des noms."
 
 msgid "Unable to fetch the latest activities of the project"
 msgstr "Impossible de récupérer les dernières activités du projet"

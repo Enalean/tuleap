@@ -103,6 +103,26 @@ final class AppearancePresenter
      * @psalm-readonly
      */
     public $username_display_value_realname;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_relative_first_absolute_shown = false;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_absolute_first_relative_shown = false;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_relative_first_absolute_tooltip = false;
+    /**
+     * @var bool
+     * @psalm-readonly
+     */
+    public $is_absolute_first_relative_tooltip = false;
 
     /**
      * @param LanguagePresenter[]   $languages
@@ -118,7 +138,8 @@ final class AppearancePresenter
         bool $is_realname_login,
         bool $is_login_realname,
         bool $is_login,
-        bool $is_realname
+        bool $is_realname,
+        string $relative_dates_display
     ) {
         $this->csrf_token               = $csrf_token;
         $this->tabs                     = $tabs;
@@ -135,6 +156,22 @@ final class AppearancePresenter
         $this->username_display_value_login_realname = \UserHelper::PREFERENCES_LOGIN_AND_NAME;
         $this->username_display_value_login          = \UserHelper::PREFERENCES_LOGIN;
         $this->username_display_value_realname       = \UserHelper::PREFERENCES_REAL_NAME;
+
+        switch ($relative_dates_display) {
+            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
+                $this->is_relative_first_absolute_shown = true;
+                break;
+            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
+                $this->is_absolute_first_relative_shown = true;
+                break;
+            case \DateHelper::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
+                $this->is_absolute_first_relative_tooltip = true;
+                break;
+            case \DateHelper::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
+            default:
+                $this->is_relative_first_absolute_tooltip = true;
+                break;
+        }
 
         $this->current_color = '';
         foreach ($colors as $color) {

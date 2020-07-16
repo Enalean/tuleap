@@ -367,6 +367,21 @@ describe("User preferences", () => {
                 );
             });
         });
+
+        describe("in the relative dates display section", () => {
+            it("the user can choose the way relative dates are displayed", () => {
+                cy.get("[data-test=user-prefs-relative-dates-display-format-select]").select(
+                    "absolute_first-relative_shown"
+                );
+                cy.get("[data-test=user-prefs-appearance-section-submit]").click();
+                assertFeedbackContainsMessage("User preferences successfully updated");
+
+                cy.get("[data-test=user-prefs-relative-dates-display-format-select]").should(
+                    "have.value",
+                    "absolute_first-relative_shown"
+                );
+            });
+        });
     });
 
     describe("in the [Edition & CSV] tab", () => {
