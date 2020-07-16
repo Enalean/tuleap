@@ -868,7 +868,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['label']) . '</td>' .
                 '<td class="tlp-table-cell-numeric">' . $row['number'] . '</td>' .
-                '<td>' . html_time_ago($row['date']) . '</td>' .
+                '<td>' . \DateHelper::timeAgoInWords($row['date'], false, true) . '</td>' .
                 '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>' .
                 '<td class="tlp-table-cell-actions">
                         <form method="post" action="/plugins/docman/restore_documents.php" onsubmit="return confirm(\'Confirm restore of this version\')">
@@ -951,7 +951,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 '<td>' . $hp->purify($row['title'], CODENDI_PURIFIER_BASIC, $groupId) . '</td>' .
                 '<td>' . $hp->purify($row['location']) . '</td>' .
                 '<td>' . $hp->purify($uh->getDisplayNameFromUserId($row['user'])) . '</td>' .
-                '<td>' . html_time_ago($row['date']) . '</td>' .
+                '<td>' . \DateHelper::timeAgoInWords($row['date'], false, true) . '</td>' .
                 '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>' .
                 '<td class="tlp-table-cell-actions">
                     <form method="post" action="/plugins/docman/restore_documents.php" onsubmit="return confirm(\'Confirm restore of this item\')">

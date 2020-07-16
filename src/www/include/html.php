@@ -743,10 +743,3 @@ function html_field_date(
     }
     return($html);
 }
-
-function html_time_ago($time, $include_seconds = false)
-{
-    return DateHelper::timeAgoInWords($time, $include_seconds, true);
-}
-
-?>

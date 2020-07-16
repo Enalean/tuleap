@@ -198,7 +198,7 @@ function frs_file_restore_view($group_id, CSRFSynchronizerToken $csrf_token, &$i
             $html .= '<td><a href="' . $url . '">' . $purifier->purify(
                 html_entity_decode($file['package_name'])
             ) . '</a></td>';
-            $html .= '<td>' . html_time_ago($file['delete_date']) . '</td>';
+            $html .= '<td>' . \DateHelper::timeAgoInWords($file['delete_date'], false, true) . '</td>';
             $html .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
             $html .= '<td class="tlp-table-cell-actions">';
             $html .= '<form method="post" onsubmit="return confirm(\'' . $GLOBALS['Language']->getText(
@@ -374,7 +374,7 @@ function wiki_attachment_restore_view($group_id, CSRFSynchronizerToken $csrf_tok
             $nonRestorableAttachments = $wikiAttachment->getDao()->getIdFromFilename($group_id, $wiki_attachment['name']);
             $tabbed_content .= '<tr>';
             $tabbed_content .= '<td>' . $purifier->purify($wiki_attachment['name']) . '</td>';
-            $tabbed_content .= '<td>' . html_time_ago($wiki_attachment['delete_date']) . '</td>';
+            $tabbed_content .= '<td>' . \DateHelper::timeAgoInWords($wiki_attachment['delete_date'], false, true) . '</td>';
             $tabbed_content .= '<td>' . format_date($GLOBALS['Language']->getText('system', 'datefmt'), $purgeDate) . '</td>';
             $tabbed_content .= '<td class="tlp-table-cell-actions">';
             if ($nonRestorableAttachments->rowCount()) {
