@@ -21,6 +21,14 @@ const reset_search_term = "";
 
 const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";
 
+export const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
+export const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
+export const FILTERABLE_CELL_CLASS_NAME = "tlp-table-cell-filterable";
+export const TABLE_SECTION_CLASS_NAME = "tlp-table-cell-section";
+export const HIDDEN_ROW_CLASS_NAME = "tlp-table-row-hidden";
+export const LAST_SHOWN_ROW_CLASS_NAME = "tlp-table-last-row";
+export const HIDDEN_SECTION_CLASS_NAME = "tlp-table-tbody-hidden";
+
 export function filterInlineTable(filter) {
     const target_table = getTargetTable(filter);
 
@@ -43,7 +51,7 @@ export function filterInlineTable(filter) {
         let nb_displayed;
 
         const search = filter.value.toUpperCase(),
-            has_section = target_table.querySelector(".tlp-table-cell-section");
+            has_section = target_table.querySelector("." + TABLE_SECTION_CLASS_NAME);
 
         if (has_section) {
             nb_displayed = toggleLinesWithSections(search);
@@ -62,7 +70,7 @@ export function filterInlineTable(filter) {
             should_force_current_section_to_be_displayed;
 
         for (const tbody of tbodies) {
-            const is_section = tbody.querySelector(".tlp-table-cell-section");
+            const is_section = tbody.querySelector("." + TABLE_SECTION_CLASS_NAME);
 
             if (is_section) {
                 current_section = tbody;
@@ -85,19 +93,21 @@ export function filterInlineTable(filter) {
     }
 
     function toggleLinesWithoutSections(search) {
-        const lines = target_table.querySelectorAll("tbody > tr:not(.tlp-table-empty-filter)");
+        const lines = target_table.querySelectorAll(
+            "tbody > tr:not(." + EMPTY_STATE_CLASS_NAME + ")"
+        );
 
         return toggleLines(lines, search);
     }
 
     function toggleEmptyState(nb_displayed) {
-        const empty_state = target_table.querySelector("tbody > tr.tlp-table-empty-filter");
+        const empty_state = target_table.querySelector("tbody > tr." + EMPTY_STATE_CLASS_NAME);
 
         if (empty_state) {
             if (nb_displayed < 1) {
-                empty_state.classList.add("tlp-table-empty-filter-shown");
+                empty_state.classList.add(EMPTY_STATE_SHOWN_CLASS_NAME);
             } else {
-                empty_state.classList.remove("tlp-table-empty-filter-shown");
+                empty_state.classList.remove(EMPTY_STATE_SHOWN_CLASS_NAME);
             }
         }
     }
@@ -109,15 +119,15 @@ function toggleLineInSection(
     search,
     current_section
 ) {
-    const lines = tbody.querySelectorAll("tr:not(.tlp-table-empty-filter)"),
+    const lines = tbody.querySelectorAll("tr:not(." + EMPTY_STATE_CLASS_NAME + ")"),
         search_term = should_force_current_section_to_be_displayed ? reset_search_term : search,
         nb_lines_displayed = toggleLines(lines, search_term);
 
     if (current_section) {
         if (nb_lines_displayed > 0) {
-            current_section.classList.remove("tlp-table-tbody-hidden");
+            current_section.classList.remove(HIDDEN_SECTION_CLASS_NAME);
         } else {
-            current_section.classList.add("tlp-table-tbody-hidden");
+            current_section.classList.add(HIDDEN_SECTION_CLASS_NAME);
         }
     }
 
@@ -125,7 +135,7 @@ function toggleLineInSection(
 }
 
 function toggleSection(current_section, search) {
-    const is_filterable = current_section.querySelector(".tlp-table-cell-filterable");
+    const is_filterable = current_section.querySelector("." + FILTERABLE_CELL_CLASS_NAME);
 
     let should_force_current_section_to_be_displayed;
 
@@ -135,7 +145,7 @@ function toggleSection(current_section, search) {
             search
         );
         if (should_force_current_section_to_be_displayed) {
-            current_section.classList.remove("tlp-table-tbody-hidden");
+            current_section.classList.remove(HIDDEN_SECTION_CLASS_NAME);
         }
     } else {
         should_force_current_section_to_be_displayed = false;
@@ -152,20 +162,20 @@ function toggleLines(lines, search) {
     for (const line of lines) {
         const should_be_displayed = shouldTheLineBeDisplayed(line, search);
 
-        line.classList.remove("tlp-table-last-row");
+        line.classList.remove(LAST_SHOWN_ROW_CLASS_NAME);
 
         if (should_be_displayed) {
-            line.classList.remove("tlp-table-row-hidden");
+            line.classList.remove(HIDDEN_ROW_CLASS_NAME);
 
             last_line_displayed = line;
         } else {
-            line.classList.add("tlp-table-row-hidden");
+            line.classList.add(HIDDEN_ROW_CLASS_NAME);
             nb_displayed--;
         }
     }
 
     if (last_line_displayed) {
-        last_line_displayed.classList.add("tlp-table-last-row");
+        last_line_displayed.classList.add(LAST_SHOWN_ROW_CLASS_NAME);
     }
 
     return nb_displayed;
@@ -174,7 +184,7 @@ function toggleLines(lines, search) {
 function shouldTheLineBeDisplayed(line, search) {
     let should_be_displayed = false;
 
-    const filterable_cells = line.querySelectorAll(".tlp-table-cell-filterable");
+    const filterable_cells = line.querySelectorAll("." + FILTERABLE_CELL_CLASS_NAME);
 
     for (const cell of filterable_cells) {
         const cell_content = cell.textContent.toUpperCase();

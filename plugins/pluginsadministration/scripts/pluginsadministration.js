@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, filterInlineTable } from "tlp";
+import { modal as createModal } from "tlp";
+import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
 
 document.addEventListener("DOMContentLoaded", function () {
     var switches = document.querySelectorAll(".enable-plugin-switch");

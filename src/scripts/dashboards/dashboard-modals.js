@@ -21,7 +21,8 @@ import { flatMapDeep } from "lodash";
 import { render } from "mustache";
 import { sanitize } from "dompurify";
 import { get } from "jquery";
-import { modal as createModal, filterInlineTable } from "tlp";
+import { modal as createModal } from "tlp";
+import { filterInlineTable } from "../tuleap/tables/filter-inline-table";
 
 export default init;
 

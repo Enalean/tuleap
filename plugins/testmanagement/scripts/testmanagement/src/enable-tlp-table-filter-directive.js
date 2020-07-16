@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { filterInlineTable } from "../../../../../src/scripts/tuleap/tables/filter-inline-table";
 
 export default EnableTlpTableFilter;
 
@@ -50,7 +50,7 @@ function EnableTlpTableFilter($timeout) {
         link: function (scope, element) {
             $timeout(function () {
                 var filterField = element[0];
-                tlp.filterInlineTable(filterField);
+                filterInlineTable(filterField);
                 filterField.addEventListener("keydown", preventSubmit);
             });
         },

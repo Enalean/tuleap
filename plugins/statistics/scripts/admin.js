@@ -17,7 +17,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { datePicker, modal as createModal } from "tlp";
+import { filterInlineTable } from "../../../src/scripts/tuleap/tables/filter-inline-table";
 import CKEDITOR from "ckeditor";
 import tuleap from "tuleap";
 
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var date_picker_elements = document.querySelectorAll(".tlp-input-date");
 
     [].forEach.call(date_picker_elements, function (element) {
-        tlp.datePicker(element);
+        datePicker(element);
     });
 
     var ckeditor_selector = document.querySelectorAll(".project-over-quota-massmail-body");
@@ -57,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
         }
 
-        var modal = tlp.modal(modal_element);
+        var modal = createModal(modal_element);
 
         button.addEventListener("click", function () {
             modal.toggle();
@@ -87,6 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     var filter_project_over_quota = document.getElementById("filter-table-project-over-quota");
     if (filter_project_over_quota) {
-        tlp.filterInlineTable(filter_project_over_quota);
+        filterInlineTable(filter_project_over_quota);
     }
 });

@@ -23,6 +23,7 @@ import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";
 import { sanitize } from "dompurify";
 import "../../src/js/custom-elements/relative-date";
+import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inline-table";
 
 (function loadCodeMirrorEditors() {
     var demo_panels = document.querySelectorAll(".demo");
@@ -60,7 +61,7 @@ import "../../src/js/custom-elements/relative-date";
 
             var filters = example.querySelectorAll(".tlp-search[data-target-table-id]");
             [].forEach.call(filters, function (filter) {
-                tlp.filterInlineTable(filter);
+                filterInlineTable(filter);
             });
 
             tlp.select2(document.querySelector("#area-select2"), {

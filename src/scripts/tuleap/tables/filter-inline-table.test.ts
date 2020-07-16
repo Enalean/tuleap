@@ -17,15 +17,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { filterInlineTable } from "./filter-inline-table";
-
-const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
-const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
-const FILTERABLE_CELL_CLASS_NAME = "tlp-table-cell-filterable";
-const TABLE_SECTION_CLASS_NAME = "tlp-table-cell-section";
-const HIDDEN_ROW_CLASS_NAME = "tlp-table-row-hidden";
-const LAST_SHOWN_ROW_CLASS_NAME = "tlp-table-last-row";
-const HIDDEN_SECTION_CLASS_NAME = "tlp-table-tbody-hidden";
+import {
+    filterInlineTable,
+    EMPTY_STATE_CLASS_NAME,
+    EMPTY_STATE_SHOWN_CLASS_NAME,
+    FILTERABLE_CELL_CLASS_NAME,
+    HIDDEN_ROW_CLASS_NAME,
+    LAST_SHOWN_ROW_CLASS_NAME,
+    HIDDEN_SECTION_CLASS_NAME,
+    TABLE_SECTION_CLASS_NAME,
+} from "./filter-inline-table";
 
 describe(`Filter inline Table`, () => {
     let filter_input: HTMLInputElement;
