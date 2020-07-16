@@ -17,8 +17,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal, filterInlineTable, select2 } from "tlp";
+import { modal, select2 } from "tlp";
 import { sprintf } from "sprintf-js";
+import { filterInlineTable } from "../../tuleap/tables/filter-inline-table";
 
 document.addEventListener("DOMContentLoaded", () => {
     const labels_table = document.getElementById("project-labels-table");

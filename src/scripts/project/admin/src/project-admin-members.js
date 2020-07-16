@@ -21,7 +21,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, filterInlineTable } from "tlp";
+import { modal as createModal } from "tlp";
+import { filterInlineTable } from "../../../tuleap/tables/filter-inline-table";
 
 import { escaper } from "../../../tuleap/escaper.js";
 import { sanitize } from "dompurify";

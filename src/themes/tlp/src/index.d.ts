@@ -22,7 +22,6 @@ export * from "./js/modal";
 export * from "./js/dropdowns";
 export * from "./js/popovers";
 export * from "./js/select2";
-export * from "./js/filter-inline-table";
 
 import flatpickr from "flatpickr";
 import { Options } from "flatpickr/dist/types/options";

@@ -21,3 +21,11 @@ interface TableFilter {
     filterTable(): void;
 }
 export function filterInlineTable(filter: Element): TableFilter;
+
+export const EMPTY_STATE_CLASS_NAME = "tlp-table-empty-filter";
+export const EMPTY_STATE_SHOWN_CLASS_NAME = "tlp-table-empty-filter-shown";
+export const FILTERABLE_CELL_CLASS_NAME = "tlp-table-cell-filterable";
+export const TABLE_SECTION_CLASS_NAME = "tlp-table-cell-section";
+export const HIDDEN_ROW_CLASS_NAME = "tlp-table-row-hidden";
+export const LAST_SHOWN_ROW_CLASS_NAME = "tlp-table-last-row";
+export const HIDDEN_SECTION_CLASS_NAME = "tlp-table-tbody-hidden";
