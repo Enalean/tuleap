@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -27,6 +27,7 @@ use Tuleap\PullRequest\Exception\UnknownReferenceException;
 
 class GitExec extends Git_Exec
 {
+    private const GIT_MERGE_CONFLICT_MARKER_REGEX = '^\+<<<<<<<';
 
     public function getBranchSha1($branch_name)
     {
@@ -125,18 +126,19 @@ class GitExec extends Git_Exec
         return $output;
     }
 
-    /**
-     * @return array
-     */
-    public function mergeTree($merge_base, $first_commit_reference, $second_commit_reference)
+    public function searchMergeConflictSymbolInMergeTree(string $merge_base, string $first_commit_reference, string $second_commit_reference): array
     {
         $output = [];
 
         $merge_base              = escapeshellarg($merge_base);
         $first_commit_reference  = escapeshellarg($first_commit_reference);
         $second_commit_reference = escapeshellarg($second_commit_reference);
+        $conflict_marker_regex   = escapeshellarg(self::GIT_MERGE_CONFLICT_MARKER_REGEX);
 
-        $this->gitCmdWithOutput("merge-tree $merge_base $second_commit_reference $first_commit_reference", $output);
+        $this->gitCmdWithOutput(
+            "merge-tree $merge_base $second_commit_reference $first_commit_reference | /usr/bin/grep --max-count=1 --only-matching $conflict_marker_regex || [[ $? == 1 ]]",
+            $output
+        );
 
         return $output;
     }

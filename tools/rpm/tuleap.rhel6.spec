@@ -208,7 +208,7 @@ Group: Development/Tools
 
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sclo-git212-git
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, sclo-git212-git, grep
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.

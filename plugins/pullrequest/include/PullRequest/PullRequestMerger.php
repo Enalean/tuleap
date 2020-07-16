@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016-2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -29,8 +29,8 @@ use Tuleap\PullRequest\MergeSetting\MergeSettingRetriever;
 
 class PullRequestMerger
 {
-    public const GIT_MERGE_CONFLICT_MARKER = '+<<<<<<<';
     public const MERGE_TEMPORARY_SUBFOLDER = 'tuleap-pr';
+
     /**
      * @var MergeSettingRetriever
      */
@@ -106,12 +106,10 @@ class PullRequestMerger
             return PullRequest::UNKNOWN_MERGE;
         }
 
-        $merge_result_lines = $git_exec->mergeTree($merge_bases[0], $destination_revision, $merge_revision);
+        $merge_result_conflict_marker = $git_exec->searchMergeConflictSymbolInMergeTree($merge_bases[0], $destination_revision, $merge_revision);
 
-        foreach ($merge_result_lines as $merge_result_line) {
-            if (strpos($merge_result_line, self::GIT_MERGE_CONFLICT_MARKER) === 0) {
-                return PullRequest::CONFLICT_MERGE;
-            }
+        if (count($merge_result_conflict_marker) > 0) {
+            return PullRequest::CONFLICT_MERGE;
         }
 
         return PullRequest::NO_FASTFORWARD_MERGE;
