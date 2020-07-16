@@ -41,6 +41,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExpor
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
@@ -100,12 +101,14 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->user_manager          = Mockery::mock(UserManager::class);
         $this->logger                = Mockery::mock(LoggerInterface::class);
 
-        $jira_author_retriever = new JiraAuthorRetriever(
+        $jira_author_retriever               = new JiraAuthorRetriever(
             $this->logger,
             $this->user_manager,
-            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping())
+            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping()),
+            Mockery::mock(JiraUserInfoQuerier::class)
         );
-        $this->exporter        = new ArtifactsXMLExporter(
+        $creation_state_list_value_formatter = new CreationStateListValueFormatter();
+        $this->exporter                      = new ArtifactsXMLExporter(
             $this->wrapper,
             $this->user_manager,
             new DataChangesetXMLExporter(
@@ -135,13 +138,18 @@ class ArtifactsXMLExporterTest extends TestCase
                         $this->wrapper,
                         $this->logger
                     ),
-                    new CurrentSnapshotBuilder($this->logger),
+                    new CurrentSnapshotBuilder(
+                        $this->logger,
+                        $creation_state_list_value_formatter,
+                        $jira_author_retriever
+                    ),
                     new InitialSnapshotBuilder(
-                        new CreationStateListValueFormatter(),
-                        $this->logger
+                        $creation_state_list_value_formatter,
+                        $this->logger,
+                        $jira_author_retriever
                     ),
                     new ChangelogSnapshotBuilder(
-                        new CreationStateListValueFormatter(),
+                        $creation_state_list_value_formatter,
                         $this->logger,
                         $jira_author_retriever
                     ),
@@ -187,7 +195,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
         $mapping_collection->addMapping(
@@ -195,7 +204,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
-                "string"
+                "string",
+                null
             ),
         );
         $jira_project_id = 'project';
@@ -299,7 +309,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
         $mapping_collection->addMapping(
@@ -307,7 +318,8 @@ class ArtifactsXMLExporterTest extends TestCase
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
-                "string"
+                "string",
+                null
             ),
         );
         $jira_project_id = 'project';

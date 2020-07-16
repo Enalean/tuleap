@@ -81,6 +81,9 @@ class ArtifactsXMLExporter
         $this->logger                        = $logger;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     public function exportArtifacts(
         SimpleXMLElement $tracker_node,
         FieldMappingCollection $jira_field_mapping_collection,
@@ -171,6 +174,9 @@ class ArtifactsXMLExporter
         return $url;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     private function exportBatchOfIssuesInArtifactXMLFormat(
         PFUser $forge_user,
         SimpleXMLElement $artifacts_node,

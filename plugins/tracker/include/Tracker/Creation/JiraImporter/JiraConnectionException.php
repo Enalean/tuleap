@@ -136,6 +136,20 @@ class JiraConnectionException extends \Exception
         );
     }
 
+    public static function canNotRetrieveUserInfoException(string $accountId): self
+    {
+        return new self(
+            "can not retrieve user information",
+            sprintf(
+                dgettext(
+                    'tuleap-tracker',
+                    "Fail to retrieve information of user having the accountId %s."
+                ),
+                $accountId
+            )
+        );
+    }
+
     public function getI18nMessage(): string
     {
         return $this->i18n_message;

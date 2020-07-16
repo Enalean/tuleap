@@ -115,7 +115,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -149,7 +150,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -183,7 +185,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -217,7 +220,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -251,7 +255,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -287,7 +292,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                     'display_time' => '0'
                 ],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -323,7 +329,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                     'display_time' => '1'
                 ],
                 [],
-                $collection
+                $collection,
+                null
             ]
         );
 
@@ -368,7 +375,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 $bound_values,
-                $collection
+                $collection,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ]
         );
 
@@ -413,7 +421,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 $bound_values,
-                $collection
+                $collection,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ]
         );
 
@@ -458,7 +467,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 $bound_values,
-                $collection
+                $collection,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ]
         );
 
@@ -503,7 +513,8 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
                 $jira_field->isRequired(),
                 [],
                 $bound_values,
-                $collection
+                $collection,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ]
         );
 

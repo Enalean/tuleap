@@ -26,6 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
@@ -56,15 +57,22 @@ final class JiraAuthorRetrieverTest extends TestCase
      */
     private $user_cache;
 
+    /**
+     * @var \Mockery\LegacyMockInterface|\Mockery\MockInterface|JiraUserInfoQuerier
+     */
+    private $info_querier;
+
     protected function setUp(): void
     {
         $this->user_manager = \Mockery::mock(\UserManager::class);
         $this->logger       = \Mockery::mock(LoggerInterface::class);
         $this->user_cache   = \Mockery::mock(JiraUserOnTuleapCache::class);
+        $this->info_querier = \Mockery::mock(JiraUserInfoQuerier::class);
         $this->retriever    = new JiraAuthorRetriever(
             $this->logger,
             $this->user_manager,
-            $this->user_cache
+            $this->user_cache,
+            $this->info_querier
         );
 
         $this->logger->shouldReceive('debug');
@@ -196,7 +204,7 @@ final class JiraAuthorRetrieverTest extends TestCase
     public function testItDoesNotCallUserManagerWhenUserExistsInCache(): void
     {
         $this->user_cache->shouldReceive('isUserCached')->andReturn(true);
-        $this->user_cache->shouldReceive('getUserFromCacheByJiraAccountId')
+        $this->user_cache->shouldReceive('getUserFromCache')
             ->with(\Mockery::any())
             ->andReturn($this->forge_user);
 

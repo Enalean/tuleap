@@ -27,6 +27,7 @@ use Mockery;
 use PFUser;
 use PHPUnit\Framework\TestCase;
 use SimpleXMLElement;
+use UserManager;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\FieldSnapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -37,7 +38,9 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+use UserXMLExportedCollection;
 use UserXMLExporter;
+use XML_RNGValidator;
 use XML_SimpleXMLCDATAFactory;
 
 class FieldChangeXMLExporterTest extends TestCase
@@ -49,11 +52,17 @@ class FieldChangeXMLExporterTest extends TestCase
      */
     private $exporter;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|UserManager
+     */
+    private $user_manager;
+
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->exporter = new FieldChangeXMLExporter(
+        $this->user_manager = Mockery::mock(UserManager::class);
+        $this->exporter     = new FieldChangeXMLExporter(
             new FieldChangeDateBuilder(
                 new XML_SimpleXMLCDATAFactory()
             ),
@@ -68,7 +77,13 @@ class FieldChangeXMLExporterTest extends TestCase
             ),
             new FieldChangeListBuilder(
                 new XML_SimpleXMLCDATAFactory(),
-                UserXMLExporter::build()
+                new UserXMLExporter(
+                    $this->user_manager,
+                    new UserXMLExportedCollection(
+                        new XML_RNGValidator(),
+                        new XML_SimpleXMLCDATAFactory()
+                    )
+                )
             ),
             new FieldChangeFileBuilder(),
             new StatusValuesTransformer()
@@ -81,7 +96,8 @@ class FieldChangeXMLExporterTest extends TestCase
             'description',
             'Fdescription',
             'Description',
-            'text'
+            'text',
+            null
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -118,7 +134,8 @@ class FieldChangeXMLExporterTest extends TestCase
             'sb',
             'Fsb',
             'Select Box',
-            'sb'
+            'sb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -156,7 +173,8 @@ class FieldChangeXMLExporterTest extends TestCase
             'rb',
             'Frb',
             'Radio Buttons',
-            'rb'
+            'rb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -176,6 +194,9 @@ class FieldChangeXMLExporterTest extends TestCase
             ],
             null
         );
+
+
+
         $this->exporter->exportFieldChanges(
             $snapshot,
             $changeset_node
@@ -193,7 +214,8 @@ class FieldChangeXMLExporterTest extends TestCase
             'msb',
             'Fmsb',
             'Multi Select Box',
-            'msb'
+            'msb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -239,7 +261,8 @@ class FieldChangeXMLExporterTest extends TestCase
             'status',
             'Fstatus',
             'status',
-            'sb'
+            'sb',
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $changeset_node = new SimpleXMLElement('<changeset/>');
@@ -278,5 +301,46 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertSame("list", (string) $field_change_node['type']);
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame("9010001", (string) $field_change_node->value);
+    }
+
+    public function testItExportsTheUsersInASelectboxField(): void
+    {
+        $mapping = new FieldMapping(
+            'assignee',
+            'Fassignee',
+            'assignee',
+            'sb',
+            \Tracker_FormElement_Field_List_Bind_Users::TYPE
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    [
+                        'id' => '105'
+                    ],
+                    null
+                )
+            ],
+            null
+        );
+
+        $john_doe = Mockery::mock(PFUser::class);
+        $john_doe->shouldReceive('getLdapId')->andReturn(105);
+        $john_doe->shouldReceive('getId')->andReturn(105);
+        $this->user_manager->shouldReceive('getUserById')->andReturn($john_doe);
+        $this->exporter->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame('list', (string) $field_change_node['type']);
+        $this->assertCount(1, $field_change_node->value);
+        $this->assertSame('105', (string) $field_change_node->value);
     }
 }

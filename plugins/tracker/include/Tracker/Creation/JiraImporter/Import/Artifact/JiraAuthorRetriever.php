@@ -25,6 +25,8 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use UserManager;
 
 class JiraAuthorRetriever
 {
@@ -34,7 +36,7 @@ class JiraAuthorRetriever
     private $logger;
 
     /**
-     * @var \UserManager
+     * @var UserManager
      */
     private $user_manager;
 
@@ -43,14 +45,21 @@ class JiraAuthorRetriever
      */
     private $user_cache;
 
+    /**
+     * @var JiraUserInfoQuerier
+     */
+    private $jira_user_querier;
+
     public function __construct(
         LoggerInterface $logger,
-        \UserManager $user_manager,
-        JiraUserOnTuleapCache $user_cache
+        UserManager $user_manager,
+        JiraUserOnTuleapCache $user_cache,
+        JiraUserInfoQuerier $jira_user_querier
     ) {
-        $this->logger       = $logger;
-        $this->user_manager = $user_manager;
-        $this->user_cache   = $user_cache;
+        $this->logger            = $logger;
+        $this->user_manager      = $user_manager;
+        $this->user_cache        = $user_cache;
+        $this->jira_user_querier = $jira_user_querier;
     }
 
     public function retrieveArtifactSubmitter(IssueAPIRepresentation $issue, PFUser $forge_user): PFUser
@@ -74,7 +83,7 @@ class JiraAuthorRetriever
         if ($this->user_cache->isUserCached($jira_user)) {
             $this->logger->debug("User $display_name is already in cache, skipping...");
 
-            return $this->user_cache->getUserFromCacheByJiraAccountId(
+            return $this->user_cache->getUserFromCache(
                 $jira_user
             );
         }
@@ -107,5 +116,19 @@ class JiraAuthorRetriever
     public function retrieveJiraAuthor(JiraUser $update_author, PFUser $forge_user): PFUser
     {
         return $this->retrieveUser($update_author, $forge_user);
+    }
+
+    /**
+     * @throws JiraConnectionException
+     */
+    public function getAssignedTuleapUser(PFUser $forge_user, string $jira_account_id): PFUser
+    {
+        if ($this->user_cache->hasUserWithAccountId($jira_account_id)) {
+            return $this->user_cache->getUserFromCacheByJiraAccountId($jira_account_id);
+        }
+
+        $jira_user = $this->jira_user_querier->retrieveUserFromJiraAPI($jira_account_id);
+
+        return $this->retrieveUser($jira_user, $forge_user);
     }
 }

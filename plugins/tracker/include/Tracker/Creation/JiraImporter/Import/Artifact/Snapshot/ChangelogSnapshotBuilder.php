@@ -32,6 +32,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class ChangelogSnapshotBuilder
 {
@@ -59,6 +60,9 @@ class ChangelogSnapshotBuilder
         $this->jira_author_retriever               = $jira_author_retriever;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     public function buildSnapshotFromChangelogEntry(
         PFUser $forge_user,
         Snapshot $current_snapshot,
@@ -114,10 +118,28 @@ class ChangelogSnapshotBuilder
                 continue;
             }
 
+            if (
+                $field_mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE &&
+                $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+                $changed_field_to !== null
+            ) {
+                $user              = $this->jira_author_retriever->getAssignedTuleapUser($forge_user, $changed_field_to);
+                $fields_snapshot[] = new FieldSnapshot(
+                    $field_mapping,
+                    $this->creation_state_list_value_formatter->formatListValue(
+                        (string) $user->getId()
+                    ),
+                    null
+                );
+
+                $this->logger->debug("  |_ Generate user list value for " . $field_id);
+                continue;
+            }
+
             if ($changed_field_to !== null) {
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,
-                    $this->creation_state_list_value_formatter->formatCreationListValue(
+                    $this->creation_state_list_value_formatter->formatListValue(
                         $changed_field_to
                     ),
                     null

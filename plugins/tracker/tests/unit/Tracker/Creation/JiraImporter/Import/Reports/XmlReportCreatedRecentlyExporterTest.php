@@ -79,42 +79,48 @@ final class XmlReportCreatedRecentlyExporterTest extends TestCase
             'summary',
             'Fsummary',
             'summary',
-            Tracker_FormElementFactory::FIELD_STRING_TYPE
+            Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            null
         );
 
         $this->description_field_mapping = new FieldMapping(
             'description',
             'Fdescription',
             'description',
-            Tracker_FormElementFactory::FIELD_TEXT_TYPE
+            Tracker_FormElementFactory::FIELD_TEXT_TYPE,
+            null
         );
 
         $this->status_field_mapping = new FieldMapping(
             'status',
             'Fstatus',
             'status',
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $this->priority_field_mapping = new FieldMapping(
             'priority',
             'Fpriority',
             'priority',
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $this->jira_issue_url_field_mapping = new FieldMapping(
             'jira_issue_url',
             'Fjira_issue_url',
             'jira_issue_url',
-            Tracker_FormElementFactory::FIELD_STRING_TYPE
+            Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            null
         );
 
         $this->created_field_mapping = new FieldMapping(
             'created',
             'Fcreated',
             'created',
-            Tracker_FormElementFactory::FIELD_DATE_TYPE
+            Tracker_FormElementFactory::FIELD_DATE_TYPE,
+            null
         );
 
         $tracker_node       = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><trackers />');

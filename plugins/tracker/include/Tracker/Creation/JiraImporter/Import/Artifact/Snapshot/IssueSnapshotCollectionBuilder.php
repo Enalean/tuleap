@@ -31,6 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class IssueSnapshotCollectionBuilder
 {
@@ -88,6 +89,7 @@ class IssueSnapshotCollectionBuilder
 
     /**
      * @return Snapshot[]
+     * @throws JiraConnectionException
      */
     public function buildCollectionOfSnapshotsForIssue(
         PFUser $forge_user,

@@ -28,7 +28,7 @@ class CreationStateListValueFormatter
     /**
      * @return array{id: string}|non-empty-list<array{id: string}>
      */
-    public function formatCreationListValue(string $changed_field_from): array
+    public function formatListValue(string $changed_field_from): array
     {
         if (strpos($changed_field_from, '[') === 0) {
             $formatted_value = $this->formatMultiListValues($changed_field_from);

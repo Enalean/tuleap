@@ -41,7 +41,8 @@ class PermissionsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
 
@@ -83,7 +84,8 @@ class PermissionsXMLExporterTest extends TestCase
                 'artifact_id',
                 'Fartifact_id',
                 'Artifact Id',
-                Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE
+                Tracker_FormElementFactory::FIELD_ARTIFACT_ID_TYPE,
+                null
             )
         );
 
@@ -113,7 +115,8 @@ class PermissionsXMLExporterTest extends TestCase
                 'jira_issue_url',
                 'Fjira_issue_url',
                 'Link to original issue',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
 

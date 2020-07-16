@@ -1427,6 +1427,12 @@ msgstr "Exporter toutes les colonnes"
 msgid "Export all report columns"
 msgstr "Exporter uniquement les colonnes du rapport"
 
+#, php-format
+msgid "Fail to retrieve information of user having the accountId %s."
+msgstr ""
+"Échec lors de la récupération des informations de l'utilisateur possédant "
+"l'identifiant %s."
+
 msgid ""
 "Fail to retrieve the full collection of issue changelogs in selected tracker."
 msgstr ""

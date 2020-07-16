@@ -262,7 +262,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text"
+                        "text",
+                        null
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
@@ -283,7 +284,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text"
+                        "text",
+                        null
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
@@ -293,7 +295,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "float"
+                        "float",
+                        null
                     ),
                     '11',
                     null
@@ -314,7 +317,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text"
+                        "text",
+                        null
                     ),
                     'aaaaaaaa',
                     'aaaaaaaa'
@@ -324,7 +328,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "float"
+                        "float",
+                        null
                     ),
                     '9',
                     null
@@ -345,7 +350,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "float"
+                        "float",
+                        null
                     ),
                     '9',
                     null
@@ -366,7 +372,8 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
                         "customfield_10036",
                         "Fcustomfield_10036",
                         "Field 01",
-                        "float"
+                        "float",
+                        null
                     ),
                     '11',
                     null

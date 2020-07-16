@@ -119,7 +119,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -136,7 +137,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -153,7 +155,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -170,7 +173,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -187,7 +191,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -206,7 +211,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                     'display_time' => '1'
                 ],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 
@@ -227,7 +233,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                     assert($status instanceof JiraFieldAPIAllowedValueRepresentation);
                     return $status->getId() === 9000003 && $status->getName() === "In Progress";
                 }),
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ]
         )->once();
 
@@ -244,7 +251,8 @@ class AlwaysThereFieldsExporterTest extends TestCase
                 false,
                 [],
                 [],
-                $this->field_mapping_collection
+                $this->field_mapping_collection,
+                null
             ]
         )->once();
 

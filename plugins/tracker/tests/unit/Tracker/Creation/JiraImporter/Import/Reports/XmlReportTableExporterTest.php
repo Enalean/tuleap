@@ -36,14 +36,16 @@ final class XmlReportTableExporterTest extends TestCase
             'summary',
             'Fsummary',
             'summary',
-            Tracker_FormElementFactory::FIELD_STRING_TYPE
+            Tracker_FormElementFactory::FIELD_STRING_TYPE,
+            null
         );
 
         $description_field_mapping = new FieldMapping(
             'description',
             'Fdescription',
             'description',
-            Tracker_FormElementFactory::FIELD_TEXT_TYPE
+            Tracker_FormElementFactory::FIELD_TEXT_TYPE,
+            null
         );
 
         $table_renderer_exporter = new XmlReportTableExporter(

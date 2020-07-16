@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\FormElement\FieldNameFormatter;
 use XML_SimpleXMLCDATAFactory;
 
@@ -60,7 +61,8 @@ class FieldXmlExporter
         bool $required,
         array $properties,
         array $bound_values,
-        FieldMappingCollection $jira_field_mapping_collection
+        FieldMappingCollection $jira_field_mapping_collection,
+        ?string $bind_type
     ): void {
         $field = $container_parent_node->formElements->addChild('formElement');
         $field->addAttribute('type', $type);
@@ -84,9 +86,15 @@ class FieldXmlExporter
             $properties_node->addAttribute($property_name, $property_value);
         }
 
-        if (count($bound_values) > 0) {
+        if ($bind_type === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
             $bind_node = $field->addChild("bind");
-            $bind_node->addAttribute("type", "static");
+            $bind_node->addAttribute("type", $bind_type);
+            $items = $bind_node->addChild("items");
+            $item  = $items->addChild('item');
+            $item->addAttribute('label', Tracker_FormElement_Field_List_Bind_Users::REGISTERED_USERS_UGROUP_NAME);
+        } elseif (count($bound_values) > 0) {
+            $bind_node = $field->addChild("bind");
+            $bind_node->addAttribute("type", \Tracker_FormElement_Field_List_Bind_Static::TYPE);
             $bind_node->addAttribute("is_rank_alpha", "0");
 
             $items_node = $bind_node->addChild("items");
@@ -103,7 +111,8 @@ class FieldXmlExporter
                 $jira_field_id,
                 $xml_id,
                 $formatted_name,
-                $type
+                $type,
+                $bind_type
             )
         );
     }
