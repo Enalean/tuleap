@@ -20,12 +20,15 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
+use Tracker;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
-class JiraErrorImportNotifier
+class JiraSuccessImportNotifier
 {
     /**
      * @var JiraImportNotifier
@@ -52,50 +55,58 @@ class JiraErrorImportNotifier
     ) {
         $this->jira_import_notifier = $jira_import_notifier;
         $this->base_url_builder     = $base_url_builder;
-        $this->locale_switcher      = $locale_switcher;
+        $this->locale_switcher           = $locale_switcher;
 
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
     }
 
-    public function warnUserAboutError(PendingJiraImport $pending_jira_import, string $message): void
-    {
+    public function warnUserAboutSuccess(
+        PendingJiraImport $pending_jira_import,
+        Tracker $tracker,
+        JiraUserOnTuleapCache $jira_users_on_tuleap_cache
+    ): void {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $pending_jira_import->getUser()->getLocale(),
-            function () use ($pending_jira_import, $message) {
+            function () use ($pending_jira_import, $tracker, $jira_users_on_tuleap_cache) {
                 $project = $pending_jira_import->getProject();
-                $subject = dgettext('tuleap-tracker', 'Error in your Jira import');
+                $subject = dgettext('tuleap-tracker', 'Jira import is finished');
 
-                $presenter = [
-                    'localized_created_on' => \DateHelper::formatForLanguage(
-                        $pending_jira_import->getUser()->getLanguage(),
-                        $pending_jira_import->getCreatedOn()->getTimestamp()
-                    ),
-                    'jira_server'          => $pending_jira_import->getJiraServer(),
-                    'jira_project_id'      => $pending_jira_import->getJiraProjectId(),
-                    'jira_issue_type_name' => $pending_jira_import->getJiraIssueTypeName(),
-                    'tracker_name'         => $pending_jira_import->getTrackerName(),
-                    'tracker_shortname'    => $pending_jira_import->getTrackerShortname(),
-                    'message'              => $message,
-                    'title'                => $subject,
-                ];
+                $link = $this->getLink($tracker);
+
+                $presenter = new JiraSuccessImportNotificationPresenter(
+                    $pending_jira_import,
+                    $link,
+                    $tracker,
+                    $subject,
+                    $jira_users_on_tuleap_cache
+                );
 
                 $this->jira_import_notifier->notify(
                     $subject,
                     $project,
                     $pending_jira_import,
-                    $this->renderer->renderToString('notification-error-html', $presenter),
-                    $this->renderer->renderToString('notification-error-text', $presenter),
-                    $this->getLink($project),
-                    []
+                    $this->renderer->renderToString('notification-success-html', $presenter),
+                    $this->renderer->renderToString('notification-success-text', $presenter),
+                    $link,
+                    $this->getAdditionalBreadcrumbs($tracker),
                 );
             }
         );
     }
 
-    private function getLink(\Project $project): string
+    private function getAdditionalBreadcrumbs(Tracker $tracker): array
+    {
+        $hp = \Codendi_HTMLPurifier::instance();
+
+        return [
+            '<a href="' . $this->getLink($tracker) . '">' . $hp->purify($tracker->getName()) . '</a>',
+        ];
+    }
+
+    private function getLink(Tracker $tracker): string
     {
         $base_url = $this->base_url_builder->build();
 
-        return $base_url . '/plugins/tracker?' . http_build_query(['group_id' => $project->getID()]);
+        return $base_url . '/plugins/tracker/?' . http_build_query(['tracker' => $tracker->getId()]);
     }
 }

@@ -1,0 +1,51 @@
+<h1>{{ title }}</h1>
+
+<p>
+    {{# dgettext }}
+        tuleap-tracker |
+        Congratulations! The Jira import initiated on %s has just finished. |
+        {{ localized_created_on }}
+    {{/ dgettext }}
+</p>
+
+<p>
+    {{# dgettext }}
+        tuleap-tracker |
+        You can retrieve the imported data here:
+    {{/ dgettext }}
+    <a href="{{ link }}">{{ tracker_name }}</a>
+</p>
+<br>
+<h3>{{# dgettext }} tuleap-tracker | Users mapping {{/ dgettext }}</h3>
+<p>
+    {{# has_identified_users }}
+        <h4>{{# dgettext }} tuleap-tracker | Jira users identified on Tuleap: {{/ dgettext }}</h4>
+        <ul>
+            {{# identified_users }}
+                <li>
+                    {{# dgettext }} tuleap-tracker | {{ jira_display_name }} identified as {{ tuleap_user_real_name }} (<a href="{{ tuleap_user_profile_url }}">@{{ tuleap_user_username }}</a>){{/ dgettext }}
+                </li>
+            {{/ identified_users }}
+        </ul>
+    {{/ has_identified_users }}
+    <br>
+    {{# has_not_identified_users }}
+        <h4>{{# dgettext }} tuleap-tracker | Other users Tuleap could not identify, replaced by Tracker Importer {{/ dgettext }}</h4>
+    {{/ has_not_identified_users }}
+    {{# has_email_not_matching }}
+        {{# dgettext }} tuleap-tracker | Jira users who are sharing their email address, but not matching with any Tuleap user: {{/ dgettext }}
+        <ul>
+            {{# email_not_matching }}
+                <li>{{ jira_display_name }}</li>
+            {{/ email_not_matching }}
+        </ul>
+    {{/ has_email_not_matching }}
+    {{# has_unknown_users }}
+        {{# dgettext }} tuleap-tracker | Other Jira users: {{/ dgettext }}
+        <ul>
+            {{# unknown_users }}
+                <li>{{ jira_display_name }}</li>
+            {{/ unknown_users }}
+        </ul>
+    {{/ has_unknown_users }}
+</p>

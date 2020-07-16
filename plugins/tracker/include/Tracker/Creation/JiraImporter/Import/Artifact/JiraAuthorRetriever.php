@@ -69,20 +69,19 @@ class JiraAuthorRetriever
 
     private function retrieveUser(JiraUser $jira_user, PFUser $forge_user): PFUser
     {
-        $account_id   = $jira_user->getJiraAccountId();
         $display_name = $jira_user->getDisplayName();
 
-        if ($this->user_cache->isUserCached($account_id)) {
+        if ($this->user_cache->isUserCached($jira_user)) {
             $this->logger->debug("User $display_name is already in cache, skipping...");
 
             return $this->user_cache->getUserFromCacheByJiraAccountId(
-                $account_id
+                $jira_user
             );
         }
 
         if ($jira_user->getEmailAddress() === '') {
             $this->logger->debug("Jira user $display_name does not share his/her email address, skipping...");
-            $this->user_cache->cacheUser($forge_user, $account_id);
+            $this->user_cache->cacheUser($forge_user, $jira_user);
 
             return $forge_user;
         }
@@ -92,14 +91,14 @@ class JiraAuthorRetriever
         if (count($matching_users) !== 1) {
             $this->logger->debug("Unable to identify an unique user on Tuleap side for Jira user $display_name");
 
-            $this->user_cache->cacheUser($forge_user, $account_id);
+            $this->user_cache->cacheUser($forge_user, $jira_user);
             return $forge_user;
         }
 
         $tuleap_user           = $matching_users[0];
         $tuleap_user_real_name = $tuleap_user->getRealName();
 
-        $this->user_cache->cacheUser($tuleap_user, $account_id);
+        $this->user_cache->cacheUser($tuleap_user, $jira_user);
         $this->logger->debug("Jira user $display_name has been identified as Tuleap user $tuleap_user_real_name");
 
         return $tuleap_user;

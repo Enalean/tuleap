@@ -40,6 +40,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraTuleapUsersMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
@@ -102,7 +103,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $jira_author_retriever = new JiraAuthorRetriever(
             $this->logger,
             $this->user_manager,
-            new JiraUserOnTuleapCache()
+            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping())
         );
         $this->exporter        = new ArtifactsXMLExporter(
             $this->wrapper,
@@ -349,6 +350,7 @@ class ArtifactsXMLExporterTest extends TestCase
         $john_doe = Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getRealName')->andReturn('John Doe');
         $john_doe->shouldReceive('getUserName')->andReturn('jdoe');
+        $john_doe->shouldReceive('getPublicProfileUrl')->andReturn('/users/jdoe');
         $john_doe->shouldReceive('getId')->andReturn('105');
 
         $this->user_manager->shouldReceive('getAllUsersByEmail')

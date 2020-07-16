@@ -85,7 +85,7 @@ final class JiraAuthorRetrieverTest extends TestCase
         $this->user_manager->shouldReceive('getAllUsersByEmail')->with('johndoe@example.com')->andReturn([$tuleap_user]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, '5e8dss456a2d45f3');
+        $this->user_cache->shouldReceive('cacheUser')->with($tuleap_user, \Mockery::any());
 
         $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
@@ -119,7 +119,7 @@ final class JiraAuthorRetrieverTest extends TestCase
             ]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
         $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
@@ -149,7 +149,7 @@ final class JiraAuthorRetrieverTest extends TestCase
             ->andReturn([]);
 
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
         $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
@@ -173,7 +173,7 @@ final class JiraAuthorRetrieverTest extends TestCase
     public function testItReturnsForgeUserUserDoesNotShareHisEmailAddress(): void
     {
         $this->user_cache->shouldReceive('isUserCached')->andReturn(false);
-        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, '5e8dss456a2d45f3');
+        $this->user_cache->shouldReceive('cacheUser')->with($this->forge_user, \Mockery::any());
 
         $submitter = $this->retriever->retrieveArtifactSubmitter(
             IssueAPIRepresentation::buildFromAPIResponse([
@@ -197,7 +197,7 @@ final class JiraAuthorRetrieverTest extends TestCase
     {
         $this->user_cache->shouldReceive('isUserCached')->andReturn(true);
         $this->user_cache->shouldReceive('getUserFromCacheByJiraAccountId')
-            ->with('5e8dss456a2d45f3')
+            ->with(\Mockery::any())
             ->andReturn($this->forge_user);
 
         $this->user_manager->shouldReceive('getAllUsersByEmail')->never();

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\JiraUser;
+
 class JiraUserOnTuleapCache
 {
     /**
@@ -29,18 +31,34 @@ class JiraUserOnTuleapCache
      */
     private $user_cache = [];
 
-    public function cacheUser(\PFUser $tuleap_user, string $jira_account_id): void
+    /**
+     * @var JiraTuleapUsersMapping
+     */
+    private $jira_tuleap_users_mapping;
+
+    public function __construct(JiraTuleapUsersMapping $jira_tuleap_users_mapping)
     {
-        $this->user_cache[$jira_account_id] = $tuleap_user;
+        $this->jira_tuleap_users_mapping = $jira_tuleap_users_mapping;
     }
 
-    public function isUserCached(string $jira_account_id): bool
+    public function cacheUser(\PFUser $tuleap_user, JiraUser $jira_user): void
     {
-        return isset($this->user_cache[$jira_account_id]);
+        $this->user_cache[$jira_user->getJiraAccountId()] = $tuleap_user;
+        $this->jira_tuleap_users_mapping->addUserMapping($jira_user, $tuleap_user);
     }
 
-    public function getUserFromCacheByJiraAccountId(string $account_id): \PFUser
+    public function isUserCached(JiraUser $jira_user): bool
     {
-        return $this->user_cache[$account_id];
+        return isset($this->user_cache[$jira_user->getJiraAccountId()]);
+    }
+
+    public function getUserFromCacheByJiraAccountId(JiraUser $jira_user): \PFUser
+    {
+        return $this->user_cache[$jira_user->getJiraAccountId()];
+    }
+
+    public function getJiraTuleapUsersMapping(): JiraTuleapUsersMapping
+    {
+        return $this->jira_tuleap_users_mapping;
     }
 }

@@ -20,13 +20,13 @@
 
 declare(strict_types=1);
 
-namespace Tuleap\Tracker\Creation\JiraImporter;
+namespace Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier;
 
-use Tracker;
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Tracker\Creation\JiraImporter\PendingJiraImport;
 
-class JiraSuccessImportNotifier
+class JiraErrorImportNotifier
 {
     /**
      * @var JiraImportNotifier
@@ -53,28 +53,30 @@ class JiraSuccessImportNotifier
     ) {
         $this->jira_import_notifier = $jira_import_notifier;
         $this->base_url_builder     = $base_url_builder;
-        $this->locale_switcher           = $locale_switcher;
+        $this->locale_switcher      = $locale_switcher;
 
         $this->renderer = $template_renderer_factory->getRenderer(__DIR__);
     }
 
-    public function warnUserAboutSuccess(PendingJiraImport $pending_jira_import, Tracker $tracker): void
+    public function warnUserAboutError(PendingJiraImport $pending_jira_import, string $message): void
     {
         $this->locale_switcher->setLocaleForSpecificExecutionContext(
             $pending_jira_import->getUser()->getLocale(),
-            function () use ($pending_jira_import, $tracker) {
+            function () use ($pending_jira_import, $message) {
                 $project = $pending_jira_import->getProject();
-                $subject = dgettext('tuleap-tracker', 'Jira import is finished');
-
-                $link = $this->getLink($tracker);
+                $subject = dgettext('tuleap-tracker', 'Error in your Jira import');
 
                 $presenter = [
                     'localized_created_on' => \DateHelper::formatForLanguage(
                         $pending_jira_import->getUser()->getLanguage(),
                         $pending_jira_import->getCreatedOn()->getTimestamp()
                     ),
-                    'link'                 => $link,
-                    'tracker_name'         => $tracker->getName(),
+                    'jira_server'          => $pending_jira_import->getJiraServer(),
+                    'jira_project_id'      => $pending_jira_import->getJiraProjectId(),
+                    'jira_issue_type_name' => $pending_jira_import->getJiraIssueTypeName(),
+                    'tracker_name'         => $pending_jira_import->getTrackerName(),
+                    'tracker_shortname'    => $pending_jira_import->getTrackerShortname(),
+                    'message'              => $message,
                     'title'                => $subject,
                 ];
 
@@ -82,28 +84,19 @@ class JiraSuccessImportNotifier
                     $subject,
                     $project,
                     $pending_jira_import,
-                    $this->renderer->renderToString('notification-success-html', $presenter),
-                    $this->renderer->renderToString('notification-success-text', $presenter),
-                    $link,
-                    $this->getAdditionalBreadcrumbs($tracker),
+                    $this->renderer->renderToString('notification-error-html', $presenter),
+                    $this->renderer->renderToString('notification-error-text', $presenter),
+                    $this->getLink($project),
+                    []
                 );
             }
         );
     }
 
-    private function getAdditionalBreadcrumbs(Tracker $tracker): array
-    {
-        $hp = \Codendi_HTMLPurifier::instance();
-
-        return [
-            '<a href="' . $this->getLink($tracker) . '">' . $hp->purify($tracker->getName()) . '</a>',
-        ];
-    }
-
-    private function getLink(Tracker $tracker): string
+    private function getLink(\Project $project): string
     {
         $base_url = $this->base_url_builder->build();
 
-        return $base_url . '/plugins/tracker/?' . http_build_query(['tracker' => $tracker->getId()]);
+        return $base_url . '/plugins/tracker?' . http_build_query(['group_id' => $project->getID()]);
     }
 }

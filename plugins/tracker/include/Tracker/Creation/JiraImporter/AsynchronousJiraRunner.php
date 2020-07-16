@@ -25,6 +25,9 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 use Tuleap\Cryptography\KeyFactory;
 use Tuleap\Queue\QueueFactory;
 use Tuleap\Queue\WorkerEvent;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraErrorImportNotifier;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraSuccessImportNotifier;
 
 class AsynchronousJiraRunner
 {
@@ -59,7 +62,8 @@ class AsynchronousJiraRunner
         FromJiraTrackerCreator $tracker_creator,
         JiraSuccessImportNotifier $success_notifier,
         JiraErrorImportNotifier $error_notifier,
-        \UserManager $user_manager
+        \UserManager $user_manager,
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ): void {
         if ($event->getEventName() !== self::TOPIC) {
             return;
@@ -74,7 +78,8 @@ class AsynchronousJiraRunner
                 $dao,
                 $success_notifier,
                 $error_notifier,
-                $user_manager
+                $user_manager,
+                $jira_user_on_tuleap_cache
             ),
             $dao,
             $builder

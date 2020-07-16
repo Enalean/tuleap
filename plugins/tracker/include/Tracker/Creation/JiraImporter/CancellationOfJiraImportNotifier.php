@@ -24,6 +24,7 @@ namespace Tuleap\Tracker\Creation\JiraImporter;
 
 use Tuleap\InstanceBaseURLBuilder;
 use Tuleap\Language\LocaleSwitcher;
+use Tuleap\Tracker\Creation\JiraImporter\Import\ImportNotifier\JiraImportNotifier;
 
 class CancellationOfJiraImportNotifier
 {

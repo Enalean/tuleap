@@ -30,6 +30,8 @@ use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
 use XML_SimpleXMLCDATAFactory;
@@ -60,6 +62,11 @@ class FromJiraTrackerCreatorTest extends TestCase
      */
     private $logger;
 
+    /**
+     * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserOnTuleapCache
+     */
+    private $jira_author_retriever;
+
     protected function setUp(): void
     {
         $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
@@ -67,6 +74,7 @@ class FromJiraTrackerCreatorTest extends TestCase
         $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
         $this->xml_cdata_factory     = new XML_SimpleXMLCDATAFactory();
         $this->logger                = Mockery::mock(LoggerInterface::class);
+        $this->jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
     }
 
     public function testItDuplicatedATrackerFromJira(): void
@@ -83,7 +91,8 @@ class FromJiraTrackerCreatorTest extends TestCase
                 $this->tracker_factory,
                 $this->creation_data_checker,
                 $this->xml_cdata_factory,
-                $this->logger
+                $this->logger,
+                $this->jira_author_retriever
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 
