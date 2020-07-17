@@ -102,11 +102,9 @@ class BacklogItemRepresentation
         $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
         $this->color          = $backlog_item->color();
 
-        $this->artifact = new ArtifactReference();
-        $this->artifact->build($backlog_item->getArtifact());
+        $this->artifact = ArtifactReference::build($backlog_item->getArtifact());
 
-        $this->project = new ProjectReference();
-        $this->project->build($backlog_item->getArtifact()->getTracker()->getProject());
+        $this->project = new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject());
 
         $this->parent = null;
         if ($backlog_item->getParent()) {
@@ -129,8 +127,7 @@ class BacklogItemRepresentation
 
         $this->accept = array('trackers' => array());
         foreach ($child_trackers as $child_tracker) {
-            $reference = new TrackerReference();
-            $reference->build($child_tracker);
+            $reference = TrackerReference::build($child_tracker);
 
             $this->accept['trackers'][] = $reference;
         }

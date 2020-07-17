@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,6 +22,9 @@ namespace Tuleap\Tracker\REST\v1\Workflow;
 
 use Tuleap\Project\REST\UserGroupRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class WorkflowTransitionPATCHRepresentation
 {
     /**

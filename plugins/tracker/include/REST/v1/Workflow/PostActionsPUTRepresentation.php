@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,9 @@
 
 namespace Tuleap\Tracker\REST\v1\Workflow;
 
+/**
+ * @psalm-immutable
+ */
 class PostActionsPUTRepresentation
 {
     /**

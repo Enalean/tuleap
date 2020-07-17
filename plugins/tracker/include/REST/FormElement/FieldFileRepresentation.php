@@ -24,6 +24,9 @@ use Tracker_FormElement;
 use Tracker_FormElement_Field_File;
 use Tuleap\Tracker\REST\v1\TrackerFieldsResource;
 
+/**
+ * @psalm-immutable
+ */
 class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
 {
     /**
@@ -36,14 +39,27 @@ class FieldFileRepresentation extends \Tracker_REST_FormElementRepresentation
      */
     public $max_size_upload;
 
-    public function build(Tracker_FormElement $form_element, $type, array $permissions, ?PermissionsForGroupsRepresentation $permissions_for_groups)
+    private function __construct(\Tracker_REST_FormElementRepresentation $representation, int $max_size)
     {
-        if (! $form_element instanceof Tracker_FormElement_Field_File) {
-            throw new \LogicException('FieldFileRepresentation should only be built from File field');
+        foreach (get_object_vars($representation) as $name => $value) {
+            $this->$name = $value;
         }
 
-        parent::build($form_element, $type, $permissions, $permissions_for_groups);
-        $this->file_creation_uri = TrackerFieldsResource::ROUTE . '/' . (int) $form_element->getId() . '/files';
-        $this->max_size_upload = \ForgeConfig::get('sys_max_size_upload');
+        $this->file_creation_uri = TrackerFieldsResource::ROUTE . '/' . $this->field_id . '/files';
+        $this->max_size_upload   = $max_size;
+    }
+
+    public static function build(
+        Tracker_FormElement $form_element,
+        string $type,
+        array $permissions,
+        ?PermissionsForGroupsRepresentation $permissions_for_groups
+    ): \Tracker_REST_FormElementRepresentation {
+        $representation = parent::build($form_element, $type, $permissions, $permissions_for_groups);
+        if (! $form_element instanceof Tracker_FormElement_Field_File) {
+            return $representation;
+        }
+
+        return new self($representation, \ForgeConfig::getInt('sys_max_size_upload'));
     }
 }

@@ -67,6 +67,8 @@ class Tracker_FormElement_StaticField_Separator extends Tracker_FormElement_Stat
      * To do this, fill the name field with the ad-hoc format.
      *
      * @return string label, the name if the name is not internationalized, or the localized text if so
+     *
+     * @psalm-mutation-free
      */
     public function getLabel()
     {

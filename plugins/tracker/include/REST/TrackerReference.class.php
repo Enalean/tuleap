@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@ use Tracker;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class TrackerReference
 {
 
@@ -46,15 +49,22 @@ class TrackerReference
      */
     public $project;
 
-    public function build(Tracker $tracker)
+    private function __construct(int $id, string $label, \Project $project)
     {
-        $this->id    = JsonCast::toInt($tracker->getId());
-        $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $this->id;
-        $this->label = $tracker->getName();
+        $this->id    = $id;
+        $this->uri   = CompleteTrackerRepresentation::ROUTE . '/' . $id;
+        $this->label = $label;
 
-        $project           = $tracker->getProject();
-        $project_reference = new ProjectReference();
-        $project_reference->build($project);
+        $project_reference = new ProjectReference($project);
         $this->project = $project_reference;
+    }
+
+    public static function build(Tracker $tracker): self
+    {
+        return new self(
+            JsonCast::toInt($tracker->getId()),
+            $tracker->getName(),
+            $tracker->getProject(),
+        );
     }
 }

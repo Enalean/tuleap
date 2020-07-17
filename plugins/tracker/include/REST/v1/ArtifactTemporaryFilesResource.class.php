@@ -123,9 +123,7 @@ class ArtifactTemporaryFilesResource
         $this->sendAllowHeadersForArtifactFilesId();
         $this->sendPaginationHeaders($limit, $offset, $size);
 
-        $file_data_representation = new FileDataRepresentation();
-
-        return $file_data_representation->build($chunk);
+        return new FileDataRepresentation($chunk);
     }
 
     /**
@@ -270,8 +268,7 @@ class ArtifactTemporaryFilesResource
      */
     private function buildFileRepresentation(TemporaryFile $file)
     {
-        $reference = new FileInfoRepresentation();
-        return $reference->build(
+        return new FileInfoRepresentation(
             $file->getId(),
             $file->getCreatorId(),
             $file->getDescription(),

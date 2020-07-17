@@ -120,8 +120,7 @@ class FileRepresentation
     private function getUser(FRSFile $file)
     {
         $owner = UserManager::instance()->getUserById($file->getUserId());
-        $user_representation = new UserRepresentation();
-        return $user_representation->build($owner);
+        return UserRepresentation::build($owner);
     }
 
     private function getDownloads(FRSFile $file)

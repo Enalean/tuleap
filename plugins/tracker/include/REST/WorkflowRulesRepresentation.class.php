@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013. All Rights Reserved.
+ * Copyright (c) Enalean, 2013-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\REST;
 
+/**
+ * @psalm-mutation-free
+ */
 class WorkflowRulesRepresentation
 {
 
@@ -33,7 +36,7 @@ class WorkflowRulesRepresentation
      */
     public $lists;
 
-    public function build(array $dates, array $lists)
+    public function __construct(array $dates, array $lists)
     {
         $this->dates = $dates;
         $this->lists = $lists;

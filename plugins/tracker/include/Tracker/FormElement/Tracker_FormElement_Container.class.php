@@ -498,7 +498,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return null;
     }
 
-    public function isCollapsed()
+    public function isCollapsed(): bool
     {
         return false;
     }

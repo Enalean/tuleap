@@ -76,7 +76,7 @@ class MilestoneRepresentation
     public $planning;
 
     /**
-     * @var \Tuleap\REST\ResourceReference
+     * @var ProjectReference
      */
     public $project;
 
@@ -212,11 +212,9 @@ class MilestoneRepresentation
         $this->planning = new PlanningReference();
         $this->planning->build($milestone->getPlanning());
 
-        $this->project = new ProjectReference();
-        $this->project->build($milestone->getProject());
+        $this->project = new ProjectReference($milestone->getProject());
 
-        $this->artifact = new ArtifactReference();
-        $this->artifact->build($milestone->getArtifact());
+        $this->artifact = ArtifactReference::build($milestone->getArtifact());
 
         $this->description = (string) $milestone->getArtifact()->getDescription();
 
@@ -264,8 +262,7 @@ class MilestoneRepresentation
 
         $submilestone_trackers = array();
         if ($submilestone_tracker) {
-            $submilestone_tracker_ref = new TrackerReference();
-            $submilestone_tracker_ref->build($finder->findFirstSubmilestoneTracker($milestone));
+            $submilestone_tracker_ref = TrackerReference::build($finder->findFirstSubmilestoneTracker($milestone));
             $submilestone_trackers = array($submilestone_tracker_ref);
         }
 
@@ -311,8 +308,7 @@ class MilestoneRepresentation
     {
         $trackers_representation = array();
         foreach ($trackers as $tracker) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($tracker);
+            $tracker_reference = TrackerReference::build($tracker);
             $trackers_representation[] = $tracker_reference;
         }
         return $trackers_representation;
@@ -345,8 +341,7 @@ class MilestoneRepresentation
         }
 
         if ($planning) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($planning->getPlanningTracker());
+            $tracker_reference = TrackerReference::build($planning->getPlanningTracker());
 
             $submilestone_type = $tracker_reference;
         }

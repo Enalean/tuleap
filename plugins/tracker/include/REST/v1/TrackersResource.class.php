@@ -284,10 +284,7 @@ class TrackersResource extends AuthenticatedResource
 
         return array_map(
             function (Tracker_Report $report) {
-                $rest_report = new ReportRepresentation();
-                $rest_report->build($report);
-
-                return $rest_report;
+                return new ReportRepresentation($report);
             },
             $reports
         );
@@ -490,8 +487,7 @@ class TrackersResource extends AuthenticatedResource
             }
 
             if ($with_all_field_values) {
-                $tracker_representation = new MinimalTrackerRepresentation();
-                $tracker_representation->build($artifact->getTracker());
+                $tracker_representation = MinimalTrackerRepresentation::build($artifact->getTracker());
 
                 return $builder->getArtifactRepresentationWithFieldValues($user, $artifact, $tracker_representation);
             } else {
@@ -553,8 +549,7 @@ class TrackersResource extends AuthenticatedResource
             Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
             $collection = array();
             foreach ($pagination->getArtifacts() as $artifact) {
-                $reference    = new ParentArtifactReference();
-                $reference->build($artifact);
+                $reference    = ParentArtifactReference::build($artifact);
                 $collection[] = $reference;
             }
             return $collection;

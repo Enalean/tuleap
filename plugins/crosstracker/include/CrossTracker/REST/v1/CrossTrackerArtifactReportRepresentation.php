@@ -86,25 +86,21 @@ class CrossTrackerArtifactReportRepresentation
         $this->status           = $artifact->getStatus();
         $this->last_update_date = JsonCast::toDate($artifact->getLastUpdateDate());
 
-        $user_representation = new MinimalUserRepresentation();
-        $user_representation->build($artifact->getSubmittedByUser());
+        $user_representation = MinimalUserRepresentation::build($artifact->getSubmittedByUser());
         $this->submitted_by = $user_representation;
 
         foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {
-            $user_assigned_representation = new MinimalUserRepresentation();
-            $user_assigned_representation->build($user_assigned_to);
+            $user_assigned_representation = MinimalUserRepresentation::build($user_assigned_to);
 
             $this->assigned_to[] = $user_assigned_representation;
         }
 
         $tracker = $artifact->getTracker();
-        $tracker_representation = new TrackerReference();
-        $tracker_representation->build($tracker);
+        $tracker_representation = TrackerReference::build($tracker);
 
         $this->tracker = $tracker_representation;
 
-        $project_reference = new ProjectReference();
-        $project_reference->build($tracker->getProject());
+        $project_reference = new ProjectReference($tracker->getProject());
 
         $this->project = $project_reference;
     }

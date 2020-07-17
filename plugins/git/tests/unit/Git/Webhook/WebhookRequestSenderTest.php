@@ -22,6 +22,7 @@ namespace Tuleap\Git\Webhook;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Webhook\Emitter;
 use UserHelper;
 
@@ -51,7 +52,7 @@ class WebhookRequestSenderTest extends \PHPUnit\Framework\TestCase
         $sender = new WebhookRequestSender($webhook_emitter, $webhook_factory, $logger);
 
         $repository = \Mockery::spy(\GitRepository::class);
-        $user       = \Mockery::spy(\PFUser::class);
+        $user       = UserTestBuilder::aUser()->build();
         $oldrev     = 'oldrev';
         $newrev     = 'newrev';
         $refname    = 'refs/heads/master';

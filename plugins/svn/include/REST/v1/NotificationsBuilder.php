@@ -1,6 +1,6 @@
 <?php
 /**
- *  Copyright (c) Enalean, 2017. All Rights Reserved.
+ *  Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  *  This file is a part of Tuleap.
  *
@@ -106,8 +106,7 @@ class NotificationsBuilder
         foreach ($this->user_dao->searchUsersByNotificationId($notification->getId()) as $row) {
             $user = $this->user_manager->getUserById($row['user_id']);
 
-            $user_representation = new MinimalUserRepresentation();
-            $user_representation->build($user);
+            $user_representation = MinimalUserRepresentation::build($user);
 
             $users[] = $user_representation;
         }

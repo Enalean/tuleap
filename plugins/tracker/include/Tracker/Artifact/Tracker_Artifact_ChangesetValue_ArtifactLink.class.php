@@ -205,8 +205,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     private function buildArtifactReference($artifact_id)
     {
         $tracker_artifact_factory = Tracker_ArtifactFactory::instance();
-        $artifact_reference       = new ArtifactReference();
-        $artifact_reference->build($tracker_artifact_factory->getArtifactById($artifact_id));
+        $artifact_reference       = ArtifactReference::build($tracker_artifact_factory->getArtifactById($artifact_id));
 
         return $artifact_reference;
     }

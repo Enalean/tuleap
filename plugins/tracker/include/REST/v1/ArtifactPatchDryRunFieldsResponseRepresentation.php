@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -24,6 +24,9 @@ use Tracker_FormElement_Field;
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 use Tuleap\Tracker\REST\MinimalFieldRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ArtifactPatchDryRunFieldsResponseRepresentation
 {
 
@@ -42,7 +45,7 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
      */
     public $fields_partially_migrated = [];
 
-    public function build(FeedbackFieldCollector $feedback_field_collector)
+    public function __construct(FeedbackFieldCollector $feedback_field_collector)
     {
         foreach ($feedback_field_collector->getFieldsNotMigrated() as $field) {
             $this->fields_not_migrated[] = $this->getFieldRepresentation($field);
@@ -62,9 +65,6 @@ class ArtifactPatchDryRunFieldsResponseRepresentation
      */
     private function getFieldRepresentation(Tracker_FormElement_Field $field)
     {
-        $field_representation = new MinimalFieldRepresentation();
-        $field_representation->build($field);
-
-        return $field_representation;
+        return new MinimalFieldRepresentation($field);
     }
 }

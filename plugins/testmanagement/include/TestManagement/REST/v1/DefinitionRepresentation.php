@@ -77,11 +77,9 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $artifact_representation = null;
 
         if ($requirement) {
-            $requirement_tracker_representation = new MinimalTrackerRepresentation();
-            $requirement_tracker_representation->build($requirement->getTracker());
+            $requirement_tracker_representation = MinimalTrackerRepresentation::build($requirement->getTracker());
 
-            $artifact_representation = new ArtifactRepresentation();
-            $artifact_representation->build($user, $requirement, array(), array(), $requirement_tracker_representation);
+            $artifact_representation = ArtifactRepresentation::build($user, $requirement, array(), array(), $requirement_tracker_representation);
         }
 
         $this->requirement = $artifact_representation;

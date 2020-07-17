@@ -161,7 +161,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $project_ugroup_project_admins = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN],
                 'getMembers' => [$user_admin_1],
             ]
         );
@@ -169,7 +169,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
         $project_ugroup_project_members = M::spy(
             ProjectUGroup::class,
             [
-                'getNormalizedName' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+                'getNormalizedName' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
                 'getMembers' => [$user_1, $user_2, $user_3],
             ]
         );
@@ -192,7 +192,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             (string) $xml_objet->ugroups->ugroup[0]['name'],
-            ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_ADMIN]
+            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_ADMIN]
         );
         $this->assertNotNull($xml_objet->ugroups->ugroup[0]->members);
         $this->assertEquals((string) $xml_objet->ugroups->ugroup[0]->members->member[0], 'ldap_01');
@@ -200,7 +200,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             (string) $xml_objet->ugroups->ugroup[1]['name'],
-            ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS]
+            ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS]
         );
         $this->assertNotNull($xml_objet->ugroups->ugroup[1]->members);
         $this->assertEquals((string) $xml_objet->ugroups->ugroup[1]->members->member[0], 'ldap_02');

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,15 +57,13 @@ class CrossTrackerReportRepresentation
         $this->expert_query = $report->getExpertQuery();
 
         foreach ($report->getTrackers() as $tracker) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($tracker);
+            $tracker_reference = TrackerReference::build($tracker);
 
             $this->trackers[] = $tracker_reference;
         }
 
         foreach ($report->getInvalidTrackers() as $invalid_tracker) {
-            $tracker_reference = new TrackerReference();
-            $tracker_reference->build($invalid_tracker);
+            $tracker_reference = TrackerReference::build($invalid_tracker);
 
             $this->invalid_trackers[] = $tracker_reference;
         }

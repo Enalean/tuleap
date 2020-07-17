@@ -268,7 +268,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
 
     public function getDynamicUGoupIdByName($name)
     {
-        return array_search($name, ProjectUGroup::$normalized_names);
+        return array_search($name, ProjectUGroup::NORMALIZED_NAMES);
     }
 
     public function getDynamicUGoupByName(Project $project, $name)

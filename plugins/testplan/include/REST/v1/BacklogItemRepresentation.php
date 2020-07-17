@@ -67,8 +67,7 @@ class BacklogItemRepresentation
 
         $artifact = $backlog_item->getArtifact();
 
-        $this->artifact = new ArtifactReference();
-        $this->artifact->build($artifact);
+        $this->artifact = ArtifactReference::build($artifact);
 
         $artifact_link_field  = $artifact->getAnArtifactLinkField($user);
         $this->can_add_a_test = $artifact_link_field && $artifact_link_field->userCanUpdate($user);

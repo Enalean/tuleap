@@ -496,15 +496,12 @@ class ProjectResource extends AuthenticatedResource
             ]
         );
 
-        $project_representation = new ProjectRepresentation();
-        $project_representation->build(
+        return ProjectRepresentation::build(
             $project,
             $this->user_manager->getCurrentUser(),
             $resources,
             $informations
         );
-
-        return $project_representation;
     }
 
     /**

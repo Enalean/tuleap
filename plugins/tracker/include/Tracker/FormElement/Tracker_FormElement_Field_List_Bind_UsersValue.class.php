@@ -161,8 +161,6 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
 
     public function getFullRESTValue(Tracker_FormElement_Field $field)
     {
-        $user_representation = new UserRepresentation();
-
         if ($this->getId() == 100) {
             $user = new PFUser();
         } else {
@@ -170,8 +168,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
             $user         = $user_manager->getUserByUserName($this->getUsername());
         }
 
-        $user_representation->build($user);
-        return $user_representation;
+        return UserRepresentation::build($user);
     }
 
     public function getFullRESTValueForAnonymous(Tracker_Artifact_Changeset $changeset)
@@ -180,10 +177,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $user->setEmail($changeset->getEmail());
         $user->setRealName($changeset->getEmail());
 
-        $user_representation = new UserRepresentation();
-
-        $user_representation->build($user);
-        return $user_representation;
+        return UserRepresentation::build($user);
     }
 
     private function getUserUrl()

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -71,8 +71,7 @@ class RealTimeMessageSender
             return;
         }
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
+        $user_representation = UserRepresentation::build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
@@ -89,8 +88,7 @@ class RealTimeMessageSender
             return;
         }
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
+        $user_representation = UserRepresentation::build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
@@ -106,8 +104,7 @@ class RealTimeMessageSender
         ?string $previous_status,
         ?UserRepresentation $previous_user
     ): void {
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
+        $user_representation = UserRepresentation::build($user);
         $data = array(
             'artifact_id'     => $artifact->getId(),
             'status'          => $status,
@@ -150,8 +147,7 @@ class RealTimeMessageSender
             return;
         }
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
+        $user_representation = UserRepresentation::build($user);
         $data = array(
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
@@ -176,8 +172,7 @@ class RealTimeMessageSender
             return;
         }
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($user);
+        $user_representation = UserRepresentation::build($user);
         $data    = array(
             'presence' => array(
                 'execution_id' => $artifact->getId(),
@@ -201,8 +196,7 @@ class RealTimeMessageSender
 
     private function buildArtifactLinkRepresentation(Tracker_Artifact $artifact_link): BugRepresentation
     {
-        $tracker_representation = new MinimalTrackerRepresentation();
-        $tracker_representation->build($artifact_link->getTracker());
+        $tracker_representation = MinimalTrackerRepresentation::build($artifact_link->getTracker());
 
         $artifact_link_representation = new BugRepresentation();
         $artifact_link_representation->build($artifact_link, $tracker_representation);

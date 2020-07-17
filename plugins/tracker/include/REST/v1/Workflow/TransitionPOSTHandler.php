@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -126,9 +126,7 @@ class TransitionPOSTHandler
 
     private function buildRepresentation(\Transition $transition): WorkflowTransitionPOSTRepresentation
     {
-        $transition_representation = new WorkflowTransitionPOSTRepresentation();
-        $transition_representation->build($transition);
-        return $transition_representation;
+        return new WorkflowTransitionPOSTRepresentation($transition);
     }
 
     /**

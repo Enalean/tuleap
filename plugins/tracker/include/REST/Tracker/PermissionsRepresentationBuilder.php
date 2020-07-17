@@ -70,10 +70,7 @@ class PermissionsRepresentationBuilder
                     $this->addUserGroupRepresentation($can_access_submitted_by_user, $tracker, $ugroup);
                 }
             }
-            $representation = new PermissionsRepresentation();
-            $representation->build($can_access, $can_access_submitted_by_user, $can_access_assigned_to_group, $can_access_submitted_by_group, $can_admin);
-
-            return $representation;
+            return new PermissionsRepresentation($can_access, $can_access_submitted_by_user, $can_access_assigned_to_group, $can_access_submitted_by_group, $can_admin);
         }
         return null;
     }

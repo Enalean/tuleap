@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014-2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,8 +110,7 @@ class KanbanRepresentation
         $this->archive = new KanbanArchiveInfoRepresentation();
         $this->archive->build('Archive', $user_preferences->isArchiveOpen($kanban, $user));
 
-        $this->tracker = new TrackerReference();
-        $this->tracker->build($this->getTracker($kanban));
+        $this->tracker = TrackerReference::build($this->getTracker($kanban));
 
         $this->setColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user);
 

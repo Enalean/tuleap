@@ -97,7 +97,7 @@ final class PackageRepresentationBuilderTest extends TestCase
     {
         $project_members = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
@@ -117,7 +117,7 @@ final class PackageRepresentationBuilderTest extends TestCase
         $representation  = $this->builder->getPackageForUser($this->an_frs_admin, $this->a_package, $this->a_project);
         $this->assertCount(2, $representation->permissions_for_groups->can_read);
 
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->permissions_for_groups->can_read[0]->short_name);
         $this->assertEquals('Developers', $representation->permissions_for_groups->can_read[1]->short_name);
     }
 }

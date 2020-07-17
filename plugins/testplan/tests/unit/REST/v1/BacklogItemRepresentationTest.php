@@ -36,10 +36,13 @@ class BacklogItemRepresentationTest extends TestCase
     public function testItCannotAddATestIfThereIsNoArtifactLinkField()
     {
         $artifact = Mockery::spy(\Tracker_Artifact::class);
+        $tracker  = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn('tracker_name');
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
         $artifact->shouldReceive(
             [
                 'getAnArtifactLinkField' => null,
-                'getTracker'             => Mockery::spy(Tracker::class),
+                'getTracker'             => $tracker,
             ]
         );
 
@@ -60,10 +63,13 @@ class BacklogItemRepresentationTest extends TestCase
         $field->shouldReceive('userCanUpdate')->andReturnFalse();
 
         $artifact = Mockery::spy(\Tracker_Artifact::class);
+        $tracker  = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn('tracker_name');
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
         $artifact->shouldReceive(
             [
                 'getAnArtifactLinkField' => null,
-                'getTracker'             => Mockery::spy(Tracker::class),
+                'getTracker'             => $tracker,
             ]
         );
 
@@ -84,10 +90,13 @@ class BacklogItemRepresentationTest extends TestCase
         $field->shouldReceive('userCanUpdate')->andReturnTrue();
 
         $artifact = Mockery::spy(\Tracker_Artifact::class);
+        $tracker  = Mockery::spy(Tracker::class);
+        $tracker->shouldReceive('getName')->andReturn('tracker_name');
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
         $artifact->shouldReceive(
             [
                 'getAnArtifactLinkField' => null,
-                'getTracker'             => Mockery::spy(Tracker::class),
+                'getTracker'             => $tracker,
             ]
         );
 

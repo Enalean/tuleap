@@ -86,10 +86,6 @@ final class TimetrackingRepresentation
     {
         $artifact       = Tracker_ArtifactFactory::instance()->getArtifactById($time->getArtifactId());
         $project        = $artifact->getTracker()->getProject();
-        $representation = new MinimalProjectRepresentation();
-
-        $representation->buildMinimal($project);
-
-        return $representation;
+        return new MinimalProjectRepresentation($project);
     }
 }

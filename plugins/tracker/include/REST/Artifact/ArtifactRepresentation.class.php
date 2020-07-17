@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,6 +28,9 @@ use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\Tracker\REST\TrackerRepresentation;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ArtifactRepresentation
 {
 
@@ -64,7 +67,7 @@ class ArtifactRepresentation
     public $submitted_by;
 
     /**
-     * @var Tuleap\User\REST\MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
+     * @var MinimalUserRepresentation the minimal user representation who created the first version of the artifact {@type Tuleap\User\REST\MinimalUserRepresentation} {@required true}
      */
     public $submitted_by_user;
 
@@ -84,12 +87,12 @@ class ArtifactRepresentation
     public $changesets_uri;
 
     /**
-     * @var array Field values {@type array}
+     * @var array | null Field values {@type array}
      */
     public $values = null;
 
     /**
-     * @var array values by field {@type array}
+     * @var array | null values by field {@type array}
      */
     public $values_by_field = null;
 
@@ -99,49 +102,83 @@ class ArtifactRepresentation
     public $last_modified_date;
 
     /**
-     * @var the semantic status value {@type string}
+     * @var string | null the semantic status value {@type string}
      */
     public $status;
 
     /**
-     * @var the semantic title value {@type string}
+     * @var string | null the semantic title value {@type string}
      */
     public $title;
 
     /**
-     * @var the semantic assignee value {@type array}
+     * @var array the semantic assignee value {@type array}
      */
     public $assignees;
 
-    public function build(PFUser $current_user, Tracker_Artifact $artifact, $values, $values_by_field, TrackerRepresentation $tracker_representation)
-    {
-        $this->id             = JsonCast::toInt($artifact->getId());
-        $this->uri            = self::ROUTE . '/' . $artifact->getId();
-        $this->xref           = $artifact->getXRef();
-        $this->tracker        = $tracker_representation;
-        $this->project        = new ProjectReference();
-        $this->project->build($artifact->getTracker()->getProject());
-
-        $this->submitted_by       = JsonCast::toInt($artifact->getSubmittedBy());
-        $user = $artifact->getSubmittedByUser();
-        $this->submitted_by_user = new MinimalUserRepresentation();
-        $this->submitted_by_user->build($user);
-
-        $this->submitted_on       = JsonCast::toDate($artifact->getSubmittedOn());
-        $this->html_url           = $artifact->getUri();
-        $this->changesets_uri     = self::ROUTE . '/' .  $this->id . '/' . ChangesetRepresentation::ROUTE;
+    private function __construct(
+        int $id,
+        string $uri,
+        string $xref,
+        TrackerRepresentation $tracker,
+        ProjectReference $project,
+        int $submitted_by,
+        MinimalUserRepresentation $submitted_by_user,
+        string $submitted_on,
+        string $html_url,
+        string $changesets_uri,
+        ?array $values,
+        ?array $values_by_field,
+        string $last_modified_date,
+        ?string $status,
+        ?string $title,
+        array $assignees
+    ) {
+        $this->id                 = $id;
+        $this->uri                = $uri;
+        $this->xref               = $xref;
+        $this->tracker            = $tracker;
+        $this->project            = $project;
+        $this->submitted_by       = $submitted_by;
+        $this->submitted_by_user  = $submitted_by_user;
+        $this->submitted_on       = $submitted_on;
+        $this->html_url           = $html_url;
+        $this->changesets_uri     = $changesets_uri;
         $this->values             = $values;
         $this->values_by_field    = $values_by_field;
-        $this->last_modified_date = JsonCast::toDate($artifact->getLastUpdateDate());
+        $this->last_modified_date = $last_modified_date;
+        $this->status             = $status;
+        $this->title              = $title;
+        $this->assignees          = $assignees;
+    }
 
-        $this->status = $artifact->getStatus();
-        $this->title  = $artifact->getTitle();
+    public static function build(PFUser $current_user, Tracker_Artifact $artifact, ?array $values, ?array $values_by_field, TrackerRepresentation $tracker_representation): self
+    {
+        $artifact_id = $artifact->getId();
 
-        $this->assignees = array();
+        $assignees = array();
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
-            $user_representation = new MinimalUserRepresentation();
-            $user_representation->build($assignee);
-            $this->assignees[] = $user_representation;
+            $user_representation = MinimalUserRepresentation::build($assignee);
+            $assignees[] = $user_representation;
         }
+
+        return new self(
+            JsonCast::toInt($artifact_id),
+            self::ROUTE . '/' . $artifact_id,
+            $artifact->getXRef(),
+            $tracker_representation,
+            new ProjectReference($artifact->getTracker()->getProject()),
+            JsonCast::toInt($artifact->getSubmittedBy()),
+            MinimalUserRepresentation::build($artifact->getSubmittedByUser()),
+            JsonCast::toDate($artifact->getSubmittedOn()),
+            $artifact->getUri(),
+            self::ROUTE . '/' .  $artifact_id . '/' . ChangesetRepresentation::ROUTE,
+            $values,
+            $values_by_field,
+            JsonCast::toDate($artifact->getLastUpdateDate()),
+            $artifact->getStatus(),
+            $artifact->getTitle(),
+            $assignees
+        );
     }
 }

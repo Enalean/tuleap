@@ -773,8 +773,7 @@ class PullRequestsResource extends AuthenticatedResource
             $git_repository_source->getProjectId()
         );
 
-        $user_representation = new MinimalUserRepresentation();
-        $user_representation->build($this->user_manager->getUserById($user->getId()));
+        $user_representation = MinimalUserRepresentation::build($this->user_manager->getUserById($user->getId()));
 
         return new PullRequestInlineCommentRepresentation(
             $comment_data->unidiff_offset,
@@ -1167,8 +1166,7 @@ class PullRequestsResource extends AuthenticatedResource
         $comment        = new Comment(0, $id, $user->getId(), $current_time, $comment_data->content);
         $new_comment_id = $this->comment_factory->save($comment, $user, $project_id);
 
-        $user_representation = new MinimalUserRepresentation();
-        $user_representation->build($user);
+        $user_representation = MinimalUserRepresentation::build($user);
 
         $comment_representation = new CommentRepresentation();
         $comment_representation->build($new_comment_id, $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());

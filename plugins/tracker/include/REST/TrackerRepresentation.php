@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\REST;
 
+/**
+ * @psalm-immutable
+ */
 interface TrackerRepresentation
 {
 }

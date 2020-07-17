@@ -134,8 +134,7 @@ class TransitionPOSTHandlerTest extends TestCase
 
         $result = $this->handler->handle(self::TRACKER_ID, self::FROM_ID, self::TO_ID);
 
-        $expected = new WorkflowTransitionPOSTRepresentation();
-        $expected->build($new_transition);
+        $expected = new WorkflowTransitionPOSTRepresentation($new_transition);
 
         $this->assertEquals($expected, $result);
     }

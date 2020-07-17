@@ -103,13 +103,10 @@ class PaginatedTimelineRepresentationBuilder
 
     private function buildMinimalUserRepresentation(int $user_id): MinimalUserRepresentation
     {
-        $user_representation = new MinimalUserRepresentation();
-        $user                = $this->user_manager->getUserById($user_id);
+        $user = $this->user_manager->getUserById($user_id);
         if ($user === null) {
-            $user_representation->build($this->user_manager->getUserAnonymous());
-        } else {
-            $user_representation->build($user);
+            return MinimalUserRepresentation::build($this->user_manager->getUserAnonymous());
         }
-        return $user_representation;
+        return MinimalUserRepresentation::build($user);
     }
 }

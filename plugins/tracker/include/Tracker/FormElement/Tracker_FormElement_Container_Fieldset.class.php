@@ -212,6 +212,9 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return parent::canBeRemovedFromUsage() && ! $this->isFieldsetUsedInPostAction();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getLabel(): string
     {
         if (substr($this->label, -8) !== '_lbl_key') {
@@ -284,17 +287,19 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
 
-    public function isCollapsed()
+    public function isCollapsed(): bool
     {
         $current_user = UserManager::instance()->getCurrentUser();
 
-        return $current_user->getPreference('fieldset_' . $this->getId());
+        return (bool) $current_user->getPreference('fieldset_' . $this->getId());
     }
 
     /**
      * getID - get this Tracker_FormElement_FieldSet ID.
      *
      * @return int The id.
+     *
+     * @psalm-mutation-free
      */
     public function getID()
     {

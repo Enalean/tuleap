@@ -106,10 +106,7 @@ class ExecutionCreator
             throw new RestException(400, 'The project does not contain an execution tracker');
         }
 
-        $tracker_reference = new TrackerReference();
-        $tracker_reference->build($execution_tracker);
-
-        return $tracker_reference;
+        return TrackerReference::build($execution_tracker);
     }
 
     /**

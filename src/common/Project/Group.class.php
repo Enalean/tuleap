@@ -130,9 +130,11 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->data_array['unix_box'];
     }
 
-    /*
-        Statuses include H,A,D
-    */
+    /**
+     * Statuses include H,A,D
+     *
+     * @psalm-mutation-free
+     */
     public function getStatus()
     {
         return $this->data_array['status'];
@@ -164,16 +166,25 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         return $this->getStatus() == 's' || $this->getStatus() == 'S';
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUnixName($tolower = true)
     {
         return $tolower ? $this->getUnixNameLowerCase() : $this->getUnixNameMixedCase();
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUnixNameLowerCase()
     {
         return strtolower($this->getUnixNameMixedCase());
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getUnixNameMixedCase()
     {
         return $this->data_array['unix_group_name'];
@@ -212,6 +223,8 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     /**
      * @return int group_id | null.
+     *
+     * @psalm-mutation-free
      */
     public function getID()
     {
@@ -371,10 +384,12 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      * Return true, if this group is a template to create other groups
      *
      * @return bool
+     *
+     * @psalm-mutation-free
      */
     public function isTemplate()
     {
-        return $this->getTemplateSingleton()->isTemplate($this->data_array['type']);
+        return TemplateSingleton::isTemplate($this->data_array['type']);
     }
 
 

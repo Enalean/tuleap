@@ -87,7 +87,7 @@ class ReleaseRepresentation
     public $resources;
 
     /**
-     * @var Tuleap\REST\ResourceReference
+     * @var ProjectReference
      */
     public $project;
 
@@ -133,8 +133,7 @@ class ReleaseRepresentation
                 "uri" => $this->uri . "/artifacts"
             )
         );
-        $this->project = new ProjectReference();
-        $this->project->build($release->getProject());
+        $this->project = new ProjectReference($release->getProject());
 
         foreach ($release->getFiles() as $file) {
             $file_representation = new FileRepresentation();

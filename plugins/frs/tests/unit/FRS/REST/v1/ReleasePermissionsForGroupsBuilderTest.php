@@ -105,7 +105,7 @@ final class ReleasePermissionsForGroupsBuilderTest extends TestCase
     {
         $project_members = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-            'name' => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name' => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id' => $this->project_id,
         ]);
         $this->ugroup_manager->shouldReceive('getUGroup')->with($this->a_project, ProjectUGroup::PROJECT_MEMBERS)->andReturn($project_members);
@@ -125,7 +125,7 @@ final class ReleasePermissionsForGroupsBuilderTest extends TestCase
         $representation = $this->builder->getRepresentation($this->an_frs_admin, $this->a_release);
         $this->assertCount(2, $representation->can_read);
 
-        $this->assertEquals(ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS], $representation->can_read[0]->short_name);
+        $this->assertEquals(ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS], $representation->can_read[0]->short_name);
         $this->assertEquals('Developers', $representation->can_read[1]->short_name);
     }
 }

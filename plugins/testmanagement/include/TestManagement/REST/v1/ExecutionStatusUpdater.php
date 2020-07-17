@@ -127,9 +127,6 @@ class ExecutionStatusUpdater
         if (! $submitted_by) {
             return null;
         }
-        $user_representation = new UserRepresentation();
-        $user_representation->build($submitted_by);
-
-        return $user_representation;
+        return UserRepresentation::build($submitted_by);
     }
 }

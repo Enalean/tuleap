@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -22,19 +22,31 @@ namespace Tuleap\Tracker\REST\v1;
 
 use Tuleap\Tracker\Action\Move\FeedbackFieldCollector;
 
+/**
+ * @psalm-immutable
+ */
 class ArtifactPatchResponseRepresentation
 {
 
     /**
      * @var ArtifactPatchDryRunResponseRepresentation | null {@type ArtifactPatchDryRunResponseRepresentation}
      */
-    public $dry_run = null;
+    public $dry_run;
 
-    public function build(FeedbackFieldCollector $feedback_field_collector)
+    private function __construct(?ArtifactPatchDryRunResponseRepresentation $dry_run)
     {
-        $dry_run_representation = new ArtifactPatchDryRunResponseRepresentation();
-        $dry_run_representation->build($feedback_field_collector);
+        $this->dry_run = $dry_run;
+    }
 
-        $this->dry_run = $dry_run_representation;
+    public static function withoutDryRun(): self
+    {
+        return new self(null);
+    }
+
+    public static function fromFeedbackFieldCollector(FeedbackFieldCollector $feedback_field_collector): self
+    {
+        $dry_run_representation = new ArtifactPatchDryRunResponseRepresentation($feedback_field_collector);
+
+        return new self($dry_run_representation);
     }
 }

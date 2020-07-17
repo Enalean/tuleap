@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -45,12 +45,11 @@ class PaginatedCommentsRepresentationsBuilder
         $comments_representations = array();
 
         foreach ($paginated_comments->getComments() as $comment) {
-            $user_representation = new MinimalUserRepresentation();
             $user = $this->user_manager->getUserById($comment->getUserId());
             if ($user === null) {
                 continue;
             }
-            $user_representation->build($user);
+            $user_representation = MinimalUserRepresentation::build($user);
 
             $comment_representation = new CommentRepresentation();
             $comment_representation->build($comment->getId(), $project_id, $user_representation, $comment->getPostDate(), $comment->getContent());

@@ -94,8 +94,7 @@ class IndexPresenter
         $this->lang       = $this->getLanguageAbbreviation($current_user);
         $this->project_id = $project_id;
 
-        $user_representation = new UserRepresentation();
-        $user_representation->build($current_user);
+        $user_representation = UserRepresentation::build($current_user);
         $this->current_user = json_encode($user_representation);
 
         $this->test_definition_tracker_id = intval($test_definition_tracker_id);

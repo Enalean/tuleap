@@ -907,8 +907,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
 
         $rest_array = array();
         foreach ($bind_values as $value) {
-            $representation = new \Tuleap\User\REST\UserRepresentation();
-            $representation->build($value->getUser());
+            $representation = \Tuleap\User\REST\UserRepresentation::build($value->getUser());
             $rest_array[] = $representation;
         }
         return $rest_array;
@@ -953,15 +952,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getFullRESTValue(Tracker_FormElement_Field_List_Value $value)
     {
         $user_manager        = UserManager::instance();
-        $user_representation = new UserRepresentation();
         $user = $user_manager->getUserByUserName($value->getLabel());
         if (! $user) {
             $user = new PFUser();
             $user->setEmail($value->getLabel());
         }
 
-        $user_representation->build($user);
-        return $user_representation;
+        return UserRepresentation::build($user);
     }
 
     public function accept(BindVisitor $visitor, BindParameters $parameters)

@@ -67,16 +67,13 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentationWithFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
-        $artifact_representation = new ArtifactRepresentation();
-        $artifact_representation->build(
+        return ArtifactRepresentation::build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             null,
             $tracker_representation
         );
-
-        return $artifact_representation;
     }
 
     /**
@@ -86,16 +83,13 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentationWithFieldValuesByFieldValues(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
-        $artifact_representation = new ArtifactRepresentation();
-        $artifact_representation->build(
+        return ArtifactRepresentation::build(
             $user,
             $artifact,
             null,
             $this->getFieldValuesIndexedByName($user, $artifact),
             $tracker_representation
         );
-
-        return $artifact_representation;
     }
 
     /**
@@ -105,16 +99,13 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentationWithFieldValuesInBothFormat(PFUser $user, Tracker_Artifact $artifact, TrackerRepresentation $tracker_representation)
     {
-        $artifact_representation = new ArtifactRepresentation();
-        $artifact_representation->build(
+        return ArtifactRepresentation::build(
             $user,
             $artifact,
             $this->getFieldsValues($user, $artifact),
             $this->getFieldValuesIndexedByName($user, $artifact),
             $tracker_representation
         );
-
-        return $artifact_representation;
     }
 
     /**
@@ -124,19 +115,15 @@ class ArtifactRepresentationBuilder
      */
     public function getArtifactRepresentation(PFUser $user, Tracker_Artifact $artifact)
     {
-        $tracker_representation  = new MinimalTrackerRepresentation();
-        $tracker_representation->build($artifact->getTracker());
+        $tracker_representation  = MinimalTrackerRepresentation::build($artifact->getTracker());
 
-        $artifact_representation = new ArtifactRepresentation();
-        $artifact_representation->build(
+        return ArtifactRepresentation::build(
             $user,
             $artifact,
             null,
             null,
             $tracker_representation
         );
-
-        return $artifact_representation;
     }
 
     private function getFieldsValues(PFUser $user, Tracker_Artifact $artifact)

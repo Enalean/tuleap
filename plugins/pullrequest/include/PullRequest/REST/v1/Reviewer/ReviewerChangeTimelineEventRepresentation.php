@@ -71,10 +71,7 @@ final class ReviewerChangeTimelineEventRepresentation
 
     private static function buildMinimalUserRepresentation(PFUser $user): MinimalUserRepresentation
     {
-        $minimal_user_representation = new MinimalUserRepresentation();
-        $minimal_user_representation->build($user);
-
-        return $minimal_user_representation;
+        return MinimalUserRepresentation::build($user);
     }
 
     /**

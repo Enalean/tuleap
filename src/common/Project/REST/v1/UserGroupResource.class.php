@@ -123,8 +123,7 @@ class UserGroupResource extends AuthenticatedResource
             $this->userCanSeeUserGroups($project_id);
         }
 
-        $ugroup_representation = new UserGroupRepresentation();
-        $ugroup_representation->build($project, $ugroup);
+        $ugroup_representation = new UserGroupRepresentation($project, $ugroup);
         $this->sendAllowHeadersForUserGroupId();
 
         return $ugroup_representation;
@@ -422,10 +421,7 @@ class UserGroupResource extends AuthenticatedResource
      */
     private function getUserRepresentation(PFUser $member)
     {
-        $user_representation = new UserRepresentation();
-        $user_representation->build($member);
-
-        return $user_representation;
+        return UserRepresentation::build($member);
     }
 
     /**
@@ -557,10 +553,7 @@ class UserGroupResource extends AuthenticatedResource
             );
 
             $new_ugroup                = $this->ugroup_manager->getById($new_ugroup_id);
-            $new_ugroup_representation = new UserGroupRepresentation();
-            $new_ugroup_representation->build($project, $new_ugroup);
-
-            return $new_ugroup_representation;
+            return new UserGroupRepresentation($project, $new_ugroup);
         } catch (CannotCreateUGroupException $exception) {
             throw new RestException(400, $exception->getMessage());
         } finally {

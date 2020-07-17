@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -95,8 +95,8 @@ class GitCommitRepresentation
 
         $author = $commit_metadata->getAuthor();
         if ($author !== null) {
-            $author_representation = new MinimalUserRepresentation();
-            $this->author = $author_representation->build($author);
+            $author_representation = MinimalUserRepresentation::build($author);
+            $this->author = $author_representation;
         }
 
         $this->commit_status = null;

@@ -63,7 +63,7 @@ final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
 
         $ugroup_project_member = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::PROJECT_MEMBERS,
-            'name'      => ProjectUGroup::$normalized_names[ProjectUGroup::PROJECT_MEMBERS],
+            'name'      => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::PROJECT_MEMBERS],
             'group_id'  => $project_id,
         ]);
         $ugroup_static_id      = 963;
@@ -98,7 +98,7 @@ final class DocmanServicePermissionsForGroupsBuilderTest extends TestCase
 
         $nobody_group = new ProjectUGroup([
             'ugroup_id' => ProjectUGroup::NONE,
-            'name'      => ProjectUGroup::$normalized_names[ProjectUGroup::NONE],
+            'name'      => ProjectUGroup::NORMALIZED_NAMES[ProjectUGroup::NONE],
             'group_id'  => $project_id,
         ]);
 

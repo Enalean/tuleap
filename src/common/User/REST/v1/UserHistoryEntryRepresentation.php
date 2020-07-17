@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -85,8 +85,7 @@ class UserHistoryEntryRepresentation
             $this->icon = $glyph_normal_icon->getInlineString();
         }
 
-        $project_representation = new MinimalProjectRepresentation();
-        $project_representation->buildMinimal($entry->getProject());
+        $project_representation = new MinimalProjectRepresentation($entry->getProject());
         $this->project = $project_representation;
 
         $this->quick_links = array();

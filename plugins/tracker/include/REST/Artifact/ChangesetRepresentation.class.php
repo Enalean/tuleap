@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2013 - 2015. All Rights Reserved.
+ * Copyright (c) Enalean, 2013 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -41,7 +41,7 @@ class ChangesetRepresentation
     public $submitted_by;
 
     /**
-     * @var  Tuleap\User\REST\MinimalUserRepresentation Representation of who made the change
+     * @var MinimalUserRepresentation Representation of who made the change
      */
     public $submitted_by_details;
 
@@ -56,12 +56,12 @@ class ChangesetRepresentation
     public $email;
 
     /**
-     * @var Tuleap\Tracker\REST\ChangesetCommentRepresentation Comment set by submitter (last version of the comment if several)
+     * @var ChangesetCommentRepresentation Comment set by submitter (last version of the comment if several)
      */
     public $last_comment;
 
     /**
-     * @var  Tuleap\User\REST\MinimalUserRepresentation Representation of who made the last change
+     * @var MinimalUserRepresentation Representation of who made the last change
      */
     public $last_modified_by;
 
@@ -80,22 +80,19 @@ class ChangesetRepresentation
         $this->submitted_by_details = null;
 
         if ($this->submitted_by) {
-            $this->submitted_by_details = new MinimalUserRepresentation();
-            $this->submitted_by_details->build(UserManager::instance()->getUserById($this->submitted_by));
+            $this->submitted_by_details = MinimalUserRepresentation::build(UserManager::instance()->getUserById($this->submitted_by));
         }
 
         $this->submitted_on         = JsonCast::toDate($changeset->getSubmittedOn());
         $this->email                = $changeset->getEmail();
 
-        $this->last_comment = new ChangesetCommentRepresentation();
-        $this->last_comment->build($last_comment);
+        $this->last_comment = ChangesetCommentRepresentation::build($last_comment);
 
         $this->values           = $values;
         $this->last_modified_by = null;
 
         if ($last_comment->getSubmittedBy()) {
-            $this->last_modified_by = new MinimalUserRepresentation();
-            $this->last_modified_by->build(
+            $this->last_modified_by = MinimalUserRepresentation::build(
                 UserManager::instance()->getUserById($last_comment->getSubmittedBy())
             );
         }

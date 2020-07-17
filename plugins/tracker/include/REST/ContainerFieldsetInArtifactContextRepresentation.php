@@ -24,6 +24,9 @@ use Tracker_FormElement_Container_Fieldset;
 use Tracker_REST_FormElementRepresentation;
 use Tuleap\Tracker\REST\FormElement\PermissionsForGroupsRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_FormElementRepresentation
 {
     /**
@@ -31,15 +34,24 @@ class ContainerFieldsetInArtifactContextRepresentation extends Tracker_REST_Form
      */
     public $is_hidden = false;
 
-    public function buildInArtifactContext(
+    private function __construct(Tracker_REST_FormElementRepresentation $representation, bool $is_hidden)
+    {
+        foreach (get_object_vars($representation) as $name => $value) {
+            $this->$name = $value;
+        }
+        $this->is_hidden = $is_hidden;
+    }
+
+    public static function buildContainerFieldset(
         Tracker_FormElement_Container_Fieldset $form_element,
         string $type,
         array $permissions,
         ?PermissionsForGroupsRepresentation $permissions_for_groups,
         bool $is_hidden
-    ) {
-        $this->build($form_element, $type, $permissions, $permissions_for_groups);
-
-        $this->is_hidden = $is_hidden;
+    ): self {
+        return new self(
+            parent::build($form_element, $type, $permissions, $permissions_for_groups),
+            $is_hidden
+        );
     }
 }

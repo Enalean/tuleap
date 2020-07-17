@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Artifact;
 
-require_once __DIR__ . '/../../bootstrap.php';
-
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use Tracker_Artifact_Changeset;
 use Tuleap\GlobalLanguageMock;
+use Tuleap\Test\Builders\UserTestBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureDao;
 use Tuleap\Tracker\REST\ChangesetRepresentation;
 use Tuleap\Tracker\REST\CompleteTrackerRepresentation;
@@ -78,16 +77,18 @@ final class ArtifactRepresentationBuilderTest extends TestCase
             ]
         );
 
-        $tracker  = $this->buildTrackerMock();
-        $artifact = Mockery::spy(\Tracker_Artifact::class);
+        $tracker      = $this->buildTrackerMock();
+        $artifact     = Mockery::spy(\Tracker_Artifact::class);
+        $submitted_by = UserTestBuilder::aUser()->withId(777)->build();
         $artifact->shouldReceive(
             [
                 'getId'              => 12,
                 'getTracker'         => $tracker,
                 'getSubmittedBy'     => 777,
                 'getSubmittedOn'     => 6546546554,
+                'getLastUpdateDate'  => 6546546554,
                 'getLastChangeset'   => Mockery::mock(\Tracker_Artifact_Changeset::class),
-                'getSubmittedByUser' => Mockery::spy(\PFUser::class),
+                'getSubmittedByUser' => $submitted_by,
                 'getUri'             => '/plugins/tracker/?aid=12',
                 'getXRef'            => 'Tracker_Artifact #12',
                 'getAssignedTo'      => [$current_user]
@@ -126,7 +127,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $artifact     = $this->buildBasicArtifactMock();
         $this->form_element_factory->shouldReceive('getUsedFieldsForREST')->andReturn([])->once();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
     }
 
     public function testGetArtifactRepresentationWithFieldValuesDoesntIncludeFieldsUserCantRead()
@@ -161,7 +162,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         );
         $artifact = $this->buildBasicArtifactMock();
 
-        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
+        $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
     }
 
     public function testGetArtifactRepresentationWithFieldValuesReturnsOnlyForFieldsWithValues()
@@ -192,7 +193,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $current_user = Mockery::mock(\PFUser::class);
         $artifact     = $this->buildBasicArtifactMock();
 
-        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, new MinimalTrackerRepresentation());
+        $representation = $this->builder->getArtifactRepresentationWithFieldValues($current_user, $artifact, self::buildMinimalTrackerRepresentation());
 
         $this->assertEquals(['whatever'], $representation->values);
         $this->assertNull($representation->values_by_field);
@@ -228,7 +229,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesByFieldValues(
             $current_user,
             $artifact,
-            new MinimalTrackerRepresentation()
+            self::buildMinimalTrackerRepresentation()
         );
 
         $this->assertNull($representation->values);
@@ -265,7 +266,7 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $representation = $this->builder->getArtifactRepresentationWithFieldValuesInBothFormat(
             $current_user,
             $artifact,
-            new MinimalTrackerRepresentation()
+            self::buildMinimalTrackerRepresentation()
         );
 
         $this->assertEquals(['01', 'whatever'], $representation->values);
@@ -435,12 +436,29 @@ final class ArtifactRepresentationBuilderTest extends TestCase
         $artifact = Mockery::spy(\Tracker_Artifact::class);
         $artifact->shouldReceive(
             [
+                'getId'              => 756,
                 'getTracker'         => $tracker,
                 'getLastChangeset'   => Mockery::mock(\Tracker_Artifact_Changeset::class),
-                'getSubmittedByUser' => Mockery::spy(\PFUser::class),
-                'getAssignedTo'      => []
+                'getSubmittedByUser' => UserTestBuilder::aUser()->build(),
+                'getAssignedTo'      => [],
+                'getXRef'            => 'art #756',
+                'getSubmittedBy'     => 111,
+                'getSubmittedOn'     => 10,
+                'getUri'             => '/uri/artifact/756',
+                'getLastUpdateDate'  => 10,
             ]
         );
         return $artifact;
+    }
+
+    private static function buildMinimalTrackerRepresentation(): MinimalTrackerRepresentation
+    {
+        $tracker = Mockery::mock(\Tracker::class);
+        $tracker->shouldReceive('getId')->andReturn(859);
+        $tracker->shouldReceive('getName')->andReturn('tracker name');
+        $tracker->shouldReceive('getColor')->andReturn(TrackerColor::default());
+        $tracker->shouldReceive('getProject')->andReturn(Mockery::spy(\Project::class));
+
+        return MinimalTrackerRepresentation::build($tracker);
     }
 }

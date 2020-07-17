@@ -20,6 +20,9 @@
 
 namespace Tuleap\Tracker\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 final class FilePOSTRepresentation
 {
     /**

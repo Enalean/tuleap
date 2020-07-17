@@ -90,9 +90,9 @@ class UsersArtifactsResourceController
         $artifacts = [];
         foreach ($users_artifacts->getArtifacts() as $artifact) {
             assert($artifact instanceof \Tracker_Artifact);
-            $artifacts[] = (new MyArtifactsRepresentation())->build(
+            $artifacts[] = MyArtifactsRepresentation::build(
                 $artifact,
-                (new MinimalTrackerRepresentation())->build($artifact->getTracker())
+                MinimalTrackerRepresentation::build($artifact->getTracker())
             );
         }
 

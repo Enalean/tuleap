@@ -267,8 +267,7 @@ class ProjectTrackersResource extends AuthenticatedResource
                 continue;
             }
             if ($representation === self::MINIMAL_REPRESENTATION) {
-                $tracker_minimal_representation = new MinimalTrackerRepresentation();
-                $tracker_minimal_representation->build($tracker);
+                $tracker_minimal_representation = MinimalTrackerRepresentation::build($tracker);
                 $tracker_representations[] = $tracker_minimal_representation;
             } else {
                 $tracker_representations[] = $builder->getTrackerRepresentationInTrackerContext($user, $tracker);

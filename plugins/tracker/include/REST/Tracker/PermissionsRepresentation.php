@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\REST\Tracker;
 
+/**
+ * @psalm-immutable
+ */
 class PermissionsRepresentation
 {
     /**
@@ -46,7 +49,7 @@ class PermissionsRepresentation
      */
     public $can_admin = [];
 
-    public function build(array $can_access, array $can_access_what_they_submitted, array $can_access_assigned_to_group, array $can_access_submitted_by_group, array $can_admin)
+    public function __construct(array $can_access, array $can_access_what_they_submitted, array $can_access_assigned_to_group, array $can_access_submitted_by_group, array $can_admin)
     {
         $this->can_access                    = $can_access;
         $this->can_access_submitted_by_user  = $can_access_what_they_submitted;

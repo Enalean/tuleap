@@ -1,8 +1,8 @@
 <?php
 /**
- * Copyright Enalean (c) 2019. All rights reserved.
+ * Copyright Enalean (c) 2019-Present. All rights reserved.
  *
- * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
  * owners.
  *
@@ -63,8 +63,7 @@ class TimetrackingTrackerReportRepresentation
         $this->uri   = $tracker->getUri();
         $this->label = $tracker->getName();
 
-        $project_reference = new MinimalProjectRepresentation();
-        $project_reference->buildMinimal($tracker->getProject());
+        $project_reference = new MinimalProjectRepresentation($tracker->getProject());
         $this->project = $project_reference;
 
         $this->time_per_user = $time_per_user;

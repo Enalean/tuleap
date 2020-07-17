@@ -26,6 +26,9 @@ use Project;
 use Tuleap\Project\ProjectStatusMapper;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MinimalProjectRepresentation
 {
     public const ROUTE = 'projects';
@@ -64,7 +67,7 @@ class MinimalProjectRepresentation
      */
     public $is_template;
 
-    public function buildMinimal(Project $project): void
+    public function __construct(Project $project)
     {
         $this->id          = JsonCast::toInt($project->getID());
         $this->uri         = self::ROUTE . '/' . $this->id;
