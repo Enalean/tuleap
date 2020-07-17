@@ -14,7 +14,7 @@
                 There was an error while getting the list of linked artifacts: {{ $ctrl.getError().rest_error }}
             </p>
 
-            <div class="frs-artifact-links-table" ng-repeat="link_nature in $ctrl.natures">
+            <div class="frs-artifact-links-table" ng-repeat="link_nature in $ctrl.natures" data-test="frs-artifact-links">
                 <h2>{{ link_nature.label }}</h2>
                 <table class="tlp-table">
                     <thead>
@@ -29,7 +29,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="artifact in link_nature.linked_artifacts">
+                    <tr ng-repeat="artifact in link_nature.linked_artifacts" data-test="artifact">
                         <td class="edit-column">
                             <a href="/plugins/tracker/?aid={{ artifact.id }}"><i class="fa fa-pencil-square-o"></i></a>
                         </td>

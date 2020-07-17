@@ -1,0 +1,13 @@
+{
+    "baseUrl": "https://tuleap",
+    "reporter": "junit",
+    "reporterOptions": {
+        "mochaFile": "/output/frs-plugin-results-[hash].xml"
+    },
+    "screenshotsFolder": "/output/frs-plugin-screenshots",
+    "videosFolder": "/output/frs-plugin-videos",
+    "video": true,
+    "videoUploadOnPasses": false,
+    "pluginsFile": false,
+    "pageLoadTimeout": 120000
+}
