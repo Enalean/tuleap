@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2014 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,9 @@ namespace Tuleap\Tracker\REST\Artifact;
 use Tracker_Chart_Data_Burndown;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class BurndownRepresentation
 {
     public const ROUTE = 'burndown';
@@ -62,7 +65,7 @@ class BurndownRepresentation
      */
     public $points_with_date = array();
 
-    public function build(Tracker_Chart_Data_Burndown $data_burndown)
+    public function __construct(Tracker_Chart_Data_Burndown $data_burndown)
     {
         $this->start_date           = JsonCast::toDate($data_burndown->getTimePeriod()->getStartDate());
         $this->duration             = JsonCast::toInt($data_burndown->getTimePeriod()->getDuration());
@@ -77,7 +80,5 @@ class BurndownRepresentation
         }
 
         $this->opening_days = array(1, 2, 3, 4, 5);
-
-        return $this;
     }
 }

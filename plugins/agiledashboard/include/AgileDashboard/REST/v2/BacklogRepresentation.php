@@ -21,6 +21,9 @@ namespace Tuleap\AgileDashboard\REST\v2;
 
 use Tuleap\Tracker\REST\TrackerReference;
 
+/**
+ * @psalm-immutable
+ */
 class BacklogRepresentation
 {
     public const ROUTE = 'backlog_items';
@@ -41,23 +44,36 @@ class BacklogRepresentation
      */
     public $has_user_priority_change_permission;
 
-    public function build(
+    /**
+     * @param BacklogItemRepresentation[] $content
+     */
+    private function __construct(array $content, array $accept, bool $has_user_priority_change_permission)
+    {
+        $this->content                             = $content;
+        $this->accept                              = $accept;
+        $this->has_user_priority_change_permission = $has_user_priority_change_permission;
+    }
+
+    public static function build(
         array $backlog_items,
         array $accepted_trackers,
         array $parent_trackers,
-        $has_user_priority_change_permission
-    ) {
-        $this->content = $backlog_items;
-
-        $this->accept['trackers']        = $this->getTrackersRepresentation($accepted_trackers);
-        $this->accept['parent_trackers'] = $this->getTrackersRepresentation($parent_trackers);
-
-        $this->has_user_priority_change_permission = $has_user_priority_change_permission;
-
-        return $this;
+        bool $has_user_priority_change_permission
+    ): self {
+        return new self(
+            $backlog_items,
+            [
+                'trackers'        => self::getTrackersRepresentation($accepted_trackers),
+                'parent_trackers' => self::getTrackersRepresentation($parent_trackers)
+            ],
+            $has_user_priority_change_permission
+        );
     }
 
-    private function getTrackersRepresentation(array $trackers)
+    /**
+     * @return TrackerReference[]
+     */
+    private static function getTrackersRepresentation(array $trackers): array
     {
         $trackers_representation = array();
         foreach ($trackers as $tracker) {

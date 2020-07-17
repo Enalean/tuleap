@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,7 @@ class BacklogItemRepresentationFactory
 
     public function createBacklogItemRepresentation(AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
     {
-        $backlog_item_representation = new BacklogItemRepresentation();
-        $backlog_item_representation->build($backlog_item, $this->getBacklogItemCardFields($backlog_item));
-
-        return $backlog_item_representation;
+        return BacklogItemRepresentation::build($backlog_item, $this->getBacklogItemCardFields($backlog_item));
     }
 
     private function getBacklogItemCardFields($backlog_item)

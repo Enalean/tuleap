@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\AgileDashboard\REST\v1\Kanban\CumulativeFlowDiagram;
 
+/**
+ * @psalm-immutable
+ */
 class DiagramColumnRepresentation
 {
     /** @var string */
@@ -31,10 +34,10 @@ class DiagramColumnRepresentation
     /** @var array */
     public $values;
 
-    public function build(
-        $id,
-        $label,
-        $values
+    public function __construct(
+        string $id,
+        string $label,
+        array $values
     ) {
         $this->id     = $id;
         $this->label  = $label;

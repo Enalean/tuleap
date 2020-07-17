@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -74,6 +74,8 @@ class Tracker_Chart_Data_Burndown
      * Returns the remaining effort values for each day to display on Burndown
      *
      * @return Array
+     *
+     * @psalm-mutation-free
      */
     public function getRemainingEffort()
     {
@@ -135,10 +137,7 @@ class Tracker_Chart_Data_Burndown
      */
     public function getRESTRepresentation()
     {
-        $burndown = new BurndownRepresentation();
-        return $burndown->build(
-            $this
-        );
+        return new BurndownRepresentation($this);
     }
 
     public function getJsonRepresentation()
@@ -157,6 +156,9 @@ class Tracker_Chart_Data_Burndown
         return isset($this->capacity) ? $this->capacity : 'null';
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getRemainingEffortWithoutNullValues()
     {
         if ($this->is_under_calcul === true) {
@@ -166,6 +168,9 @@ class Tracker_Chart_Data_Burndown
         return $this->removeNullRemainingEffort($this->getRemainingEffort());
     }
 
+    /**
+     * @psalm-pure
+     */
     private function removeNullRemainingEffort($remaining_efforts)
     {
         $remaining_effort_without_null_values = array();

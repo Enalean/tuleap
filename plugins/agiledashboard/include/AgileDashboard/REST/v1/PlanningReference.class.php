@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,12 +23,12 @@ use Tuleap\REST\JsonCast;
 use Tuleap\REST\v1\PlanningReferenceBase;
 
 /**
- * Basic reference of a planning
+ * @psalm-immutable
  */
 class PlanningReference extends PlanningReferenceBase
 {
 
-    public function build(Planning $planning)
+    public function __construct(Planning $planning)
     {
         $this->id  = JsonCast::toInt($planning->getId());
         $this->uri = PlanningRepresentation::ROUTE . '/' . $this->id;

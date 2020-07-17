@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017 - 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -109,15 +109,13 @@ class ItemRepresentationBuilder
             $current_user
         );
 
-        $item_representation = new KanbanItemRepresentation();
-        $item_representation->build(
+        return KanbanItemRepresentation::build(
             $artifact,
             $time_info,
             $column_identifier->getColumnId(),
             $card_fields,
             $background_color
         );
-        return $item_representation;
     }
 
     /**

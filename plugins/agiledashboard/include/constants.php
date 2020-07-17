@@ -99,9 +99,9 @@ define('AGILEDASHBOARD_EVENT_REST_OPTIONS_BURNDOWN', 'agiledashboard_event_rest_
  * Allow plugins to modify the milestone requested by a RESt call
  *
  * Parameters:
- * 'user'                     => The user who requested
- * 'milestone'                => The Milestone object
- * 'milestone_representation' => The RESt representation of the milestone
+ * 'user'                                       => The user who requested
+ * 'milestone'                                  => The Milestone object
+ * 'milestone_representation_reference_holder' => The reference to a RESt representation of the milestone
  */
 define('AGILEDASHBOARD_EVENT_REST_GET_MILESTONE', 'agiledashboard_event_rest_get_milestone');
 

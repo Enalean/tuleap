@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -57,12 +57,7 @@ class DiagramRepresentationBuilder
 
         $cumulative_flow_columns_representation = $this->getColumnsRepresentation($kanban, $user, $dates);
 
-        $diagram_representation = new DiagramRepresentation();
-        $diagram_representation->build(
-            $cumulative_flow_columns_representation
-        );
-
-        return $diagram_representation;
+        return new DiagramRepresentation($cumulative_flow_columns_representation);
     }
 
     /**

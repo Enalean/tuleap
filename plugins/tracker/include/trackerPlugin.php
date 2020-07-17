@@ -1172,7 +1172,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function agiledashboard_event_rest_get_milestone($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if ($this->buildRightVersionOfMilestonesBurndownResource($params['version'])->hasBurndown($params['user'], $params['milestone'])) {
-            $params['milestone_representation']->enableBurndown();
+            $milestone_representation_reference_holder                           = $params['milestone_representation_reference_holder'];
+            $milestone_representation_reference_holder->milestone_representation = \Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::buildWithBurndownEnabled($milestone_representation_reference_holder->milestone_representation);
         }
     }
 

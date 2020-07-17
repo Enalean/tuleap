@@ -570,7 +570,8 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         $config = $this->getConfigFactory()->getOnTopConfig($milestone->getPlanning()->getPlanningTracker());
         if ($config && $config->isEnabled()) {
-            $params['milestone_representation']->enableCardwall();
+            $milestone_representation_reference_holder                           = $params['milestone_representation_reference_holder'];
+            $milestone_representation_reference_holder->milestone_representation = \Tuleap\AgileDashboard\REST\v1\MilestoneRepresentation::buildWithCardwallEnabled($milestone_representation_reference_holder->milestone_representation);
         }
     }
 
