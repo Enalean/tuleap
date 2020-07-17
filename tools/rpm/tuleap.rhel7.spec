@@ -138,7 +138,7 @@ Group: Development/Tools
 
 %package plugin-pullrequest
 Summary: Pullrequest management for Tuleap
-Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git218-git
+Requires: %{name} = @@VERSION@@-@@RELEASE@@%{?dist}, %{name}-plugin-git, rh-git218-git, grep
 Group: Development/Tools
 %description plugin-pullrequest
 %{summary}.
