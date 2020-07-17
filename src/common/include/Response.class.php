@@ -127,7 +127,7 @@ class Response
 
     public function sendStatusCode($code)
     {
-        http_send_status($code);
+        \http_response_code($code);
     }
 
     public function setContentType($content_type)
