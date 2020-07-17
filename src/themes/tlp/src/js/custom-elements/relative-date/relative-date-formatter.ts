@@ -291,8 +291,12 @@ declare namespace Intl {
     };
 }
 
-export default function formatRelativeDate(locale: string, date: Date): string {
-    const diff_in_ms = Date.now() - date.getTime();
+export default function formatRelativeDate(
+    locale: string,
+    date: Date,
+    reference_date: Date
+): string {
+    const diff_in_ms = reference_date.getTime() - date.getTime();
     const diff_in_minutes = diff_in_ms / (60 * 1000);
 
     const a_day_in_minutes = 24 * 60;

@@ -58,9 +58,9 @@ export class RelativeDateElement extends HTMLElement {
 
         if (this.preference === "absolute") {
             this.textContent = this.absolute_date;
-            this.setTitle(formatRelativeDate(this.locale, date));
+            this.setTitle(formatRelativeDate(this.locale, date, new Date()));
         } else {
-            this.textContent = formatRelativeDate(this.locale, date);
+            this.textContent = formatRelativeDate(this.locale, date, new Date());
             this.setTitle(this.absolute_date);
         }
         this.setClassNameAccordingToPlacement();
