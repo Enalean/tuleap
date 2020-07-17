@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+declare(strict_types=1);
+
 namespace Tuleap\Git\Gitolite\SSHKey;
 
-use SystemEventManager;
-use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\GlobalParameterDao;
 
@@ -35,48 +35,21 @@ class ManagementDetector
      * @var GlobalParameterDao
      */
     private $global_parameter_dao;
-    /**
-     * @var SystemEventManager
-     */
-    private $system_event_manager;
 
     public function __construct(
         VersionDetector $version_detector,
-        GlobalParameterDao $global_parameter_dao,
-        SystemEventManager $system_event_manager
+        GlobalParameterDao $global_parameter_dao
     ) {
         $this->version_detector     = $version_detector;
         $this->global_parameter_dao = $global_parameter_dao;
-        $this->system_event_manager = $system_event_manager;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAuthorizedKeysFileManagedByTuleap()
+    public function isAuthorizedKeysFileManagedByTuleap(): bool
     {
         if (! $this->version_detector->isGitolite3()) {
             return false;
         }
 
         return $this->global_parameter_dao->isAuthorizedKeysFileManagedByTuleap();
-    }
-
-    /**
-     * @return bool
-     */
-    public function canRequestAuthorizedKeysFileManagementByTuleap()
-    {
-        if (! $this->version_detector->isGitolite3()) {
-            return false;
-        }
-
-        if ($this->global_parameter_dao->isAuthorizedKeysFileManagedByTuleap()) {
-            return false;
-        }
-
-        return ! $this->system_event_manager->isThereAnEventAlreadyOnGoing(
-            MigrateToTuleapSSHKeyManagement::NAME
-        );
     }
 }

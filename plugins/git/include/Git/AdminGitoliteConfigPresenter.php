@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2016 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -39,13 +39,11 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
     public function __construct(
         $title,
         CSRFSynchronizerToken $csrf_token,
-        $migrate_to_tuleap_ssh_keys_management,
         $authorized_projects,
         $show_big_objects_config
     ) {
         parent::__construct($title, $csrf_token);
 
-        $this->migrate_to_tuleap_ssh_keys_management = $migrate_to_tuleap_ssh_keys_management;
         $this->regenerate_gitolite_configuration     = dgettext('tuleap-git', 'Regenerate configuration');
         $this->authorized_projects                   = $authorized_projects;
         $this->show_big_objects_config               = $show_big_objects_config;
@@ -64,21 +62,6 @@ class Git_AdminGitoliteConfigPresenter extends Git_AdminPresenter
     public function submit()
     {
         return dgettext('tuleap-git', 'Submit');
-    }
-
-    public function migrate_to_tuleap_ssh_keys_management_title()
-    {
-        return dgettext('tuleap-git', 'Migrate from Gitolite to Tuleap SSH keys management');
-    }
-
-    public function migrate_to_tuleap_ssh_keys_management_description()
-    {
-        return dgettext('tuleap-git', 'Migrate to Tuleap SSH keys management allows faster keys deployment. Once the migration is done it is not possible to go back to the Gitolite management.');
-    }
-
-    public function migrate_to_tuleap_ssh_keys_management_button()
-    {
-        return dgettext('tuleap-git', 'Migrate');
     }
 
     public function update_allowed_projects_action()

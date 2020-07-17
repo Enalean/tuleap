@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012 - 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2012 - Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,7 +28,6 @@ class Git_AdminPresenter
     public $manage_gerrit                         = false;
     public $manage_mirrors                        = false;
     public $manage_gitolite_config                = false;
-    public $migrate_to_tuleap_ssh_keys_management = false;
     public $manage_general_settings               = false;
 
     public $mirrors_active          = '';

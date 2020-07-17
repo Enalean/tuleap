@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright Enalean (c) 2011-2018. All rights reserved.
+ * Copyright Enalean (c) 2011-Present. All rights reserved.
  *
  * Tuleap and Enalean names and logos are registered trademarks owned by
  * Enalean SAS. All other trademarks or names are properties of their respective
@@ -22,7 +22,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Tuleap\Git\Gitolite\SSHKey\SystemEvent\MigrateToTuleapSSHKeyManagement;
 use Tuleap\Git\SystemEvents\ParseGitolite3Logs;
 use Tuleap\Git\SystemEvents\ProjectIsSuspended;
 
@@ -286,17 +285,6 @@ class Git_SystemEventManager
         );
     }
 
-    public function queueMigrateToTuleapSSHKeyManagement()
-    {
-        $this->system_event_manager->createEvent(
-            MigrateToTuleapSSHKeyManagement::NAME,
-            null,
-            SystemEvent::PRIORITY_MEDIUM,
-            SystemEvent::OWNER_ROOT,
-            'Tuleap\\Git\\Gitolite\\SSHKey\\SystemEvent\\MigrateToTuleapSSHKeyManagement'
-        );
-    }
-
     public function isRepositoryUpdateAlreadyQueued(GitRepository $repository)
     {
         return $this->system_event_manager->areThereMultipleEventsQueuedMatchingFirstParameter(
@@ -360,12 +348,13 @@ class Git_SystemEventManager
      * - This mean that for all new platforms there would be a new empty pane (git root
      *   events)
      * So it's better to make them run in the default queue like before
+     *
+     * @return string[]
      */
-    public function getTypesForDefaultQueue()
+    public function getTypesForDefaultQueue(): array
     {
         $types = array(
             ParseGitolite3Logs::NAME,
-            MigrateToTuleapSSHKeyManagement::NAME
         );
 
         if ($this->repository_factory->hasGitShellRepositories()) {

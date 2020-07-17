@@ -773,23 +773,8 @@ msgstr "Nombre maximum de jours dans le passé"
 msgid "Maximum number of push by repository"
 msgstr "Nombre maximum de push par dépôt"
 
-msgid "Migrate"
-msgstr "Migrer"
-
-msgid "Migrate from Gitolite to Tuleap SSH keys management"
-msgstr "Migrer la gestion de la gestion des clés SSH de Gitolite à Tuleap"
-
 msgid "Migrate repo to Gerrit"
 msgstr "Migrer repo vers Gerrit"
-
-msgid ""
-"Migrate to Tuleap SSH keys management allows faster keys deployment. Once "
-"the migration is done it is not possible to go back to the Gitolite "
-"management."
-msgstr ""
-"Migrer la gestion des clés SSH de Gitolite à Tuleap permet de deployer les "
-"clés des utilisateurs plus rapidement. Une fois la migration réalisée, il "
-"n'est plus possible de revenir à la gestion des clés SSH par Gitolite."
 
 #, php-format
 msgid "Migration of %1$s to gerrit error"
@@ -1308,13 +1293,6 @@ msgid ""
 msgstr ""
 "La migration de ce dépôt vers le serveur Gerrit est en cours, merci de "
 "patienter quelques minutes."
-
-msgid ""
-"The migration to Tuleap SSH keys management has been started and will be "
-"done in a few minutes"
-msgstr ""
-"La migration à la gestion des clés par Tuleap a été démarrée et sera "
-"terminée dans quelques instants"
 
 #, php-format
 msgid "The notification is already enabled for this email %1$s"
