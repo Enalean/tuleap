@@ -17,21 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { Dropdown, dropdown as createDropdown } from "./dropdowns";
-
-const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
-const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
+import {
+    Dropdown,
+    dropdown as createDropdown,
+    EVENT_TLP_DROPDOWN_SHOWN,
+    EVENT_TLP_DROPDOWN_HIDDEN,
+    DROPDOWN_MENU_CLASS_NAME,
+    DROPDOWN_SHOWN_CLASS_NAME,
+} from "./dropdowns";
 
 jest.useFakeTimers();
 
 describe(`Dropdowns`, () => {
     let trigger_element: HTMLElement, dropdown_element: HTMLElement;
+    let doc: Document;
 
     beforeEach(() => {
-        trigger_element = document.createElement("button");
-        dropdown_element = document.createElement("div");
-        dropdown_element.classList.add("tlp-dropdown-menu");
-        document.body.append(trigger_element, dropdown_element);
+        doc = createLocalDocument();
+        trigger_element = doc.createElement("button");
+        dropdown_element = doc.createElement("div");
+        dropdown_element.classList.add(DROPDOWN_MENU_CLASS_NAME);
+        doc.body.append(trigger_element, dropdown_element);
     });
 
     afterEach(() => {
@@ -47,24 +53,24 @@ describe(`Dropdowns`, () => {
                 `<div></div><!-- comment element --><div></div>`
             );
 
-            const dropdown = createDropdown(trigger_element);
+            const dropdown = createDropdown(doc, trigger_element);
             dropdown.show();
             expectTheDropdownToBeShown(dropdown_element);
 
-            document.body.innerHTML = "";
+            doc.body.innerHTML = "";
         });
 
         it(`will crash utterly if it can't find the dropdown menu among its siblings`, () => {
             dropdown_element.remove();
 
-            const dropdown = createDropdown(trigger_element);
+            const dropdown = createDropdown(doc, trigger_element);
             expect(() => dropdown.show()).toThrowErrorMatchingInlineSnapshot(
                 `"Cannot read property 'classList' of null"`
             );
         });
 
         it(`will use the dropdown menu element passed in its options`, () => {
-            const dropdown = createDropdown(trigger_element, {
+            const dropdown = createDropdown(doc, trigger_element, {
                 dropdown_menu: dropdown_element,
             });
             dropdown.show();
@@ -75,7 +81,7 @@ describe(`Dropdowns`, () => {
     describe(`show()`, () => {
         let dropdown: Dropdown;
         beforeEach(() => {
-            dropdown = createDropdown(trigger_element);
+            dropdown = createDropdown(doc, trigger_element);
         });
 
         it(`will add the "shown" CSS class to the dropdown menu element`, () => {
@@ -97,7 +103,7 @@ describe(`Dropdowns`, () => {
     describe(`hide()`, () => {
         let dropdown: Dropdown;
         beforeEach(() => {
-            dropdown = createDropdown(trigger_element);
+            dropdown = createDropdown(doc, trigger_element);
             dropdown.show();
         });
 
@@ -121,7 +127,7 @@ describe(`Dropdowns`, () => {
     describe(`toggle()`, () => {
         let dropdown: Dropdown;
         beforeEach(() => {
-            dropdown = createDropdown(trigger_element);
+            dropdown = createDropdown(doc, trigger_element);
         });
 
         it(`when the dropdown is hidden, it will show it`, () => {
@@ -139,7 +145,7 @@ describe(`Dropdowns`, () => {
     });
 
     it(`when I click on the trigger element, it will show the dropdown`, () => {
-        const dropdown = createDropdown(trigger_element);
+        const dropdown = createDropdown(doc, trigger_element);
         dropdown.show();
         simulateClick(trigger_element);
 
@@ -149,11 +155,11 @@ describe(`Dropdowns`, () => {
     describe(`close events`, () => {
         let dropdown: Dropdown;
         beforeEach(() => {
-            dropdown = createDropdown(trigger_element);
+            dropdown = createDropdown(doc, trigger_element);
         });
 
         it(`when the dropdown is already hidden and I click outside of it, nothing happens`, () => {
-            simulateClick(document.body);
+            simulateClick(doc.body);
             expectTheDropdownToBeHidden(dropdown_element);
         });
 
@@ -163,7 +169,7 @@ describe(`Dropdowns`, () => {
             });
 
             it(`and I click inside the dropdown, it won't close it`, () => {
-                const p_in_dropdown = document.createElement("p");
+                const p_in_dropdown = doc.createElement("p");
                 p_in_dropdown.innerText = "I am a paragraph";
                 dropdown_element.append(p_in_dropdown);
 
@@ -177,7 +183,7 @@ describe(`Dropdowns`, () => {
             });
 
             it(`and I click outside of the dropdown, it will close it`, () => {
-                simulateClick(document.body);
+                simulateClick(doc.body);
                 expectTheDropdownToBeHidden(dropdown_element);
             });
         });
@@ -185,7 +191,7 @@ describe(`Dropdowns`, () => {
 
     describe(`removeEventListener`, () => {
         it(`removes a listener from the dropdown`, () => {
-            const dropdown = createDropdown(trigger_element);
+            const dropdown = createDropdown(doc, trigger_element);
             const listener = jest.fn();
             dropdown.addEventListener(EVENT_TLP_DROPDOWN_HIDDEN, listener);
             dropdown.show();
@@ -199,19 +205,19 @@ describe(`Dropdowns`, () => {
     describe(`when the dropdown has the keyboard option`, () => {
         let dropdown: Dropdown;
         beforeEach(() => {
-            dropdown = createDropdown(trigger_element);
+            dropdown = createDropdown(doc, trigger_element);
             dropdown.show();
         });
 
         it(`and I hit a key that isn't Escape, nothing happens`, () => {
-            document.body.dispatchEvent(new KeyboardEvent("keyup", { key: "A", bubbles: true }));
+            doc.body.dispatchEvent(new KeyboardEvent("keyup", { key: "A", bubbles: true }));
 
             expectTheDropdownToBeShown(dropdown_element);
         });
 
         it(`and I hit the Escape key inside an input element, nothing happens`, () => {
-            const input = document.createElement("input");
-            document.body.append(input);
+            const input = doc.createElement("input");
+            doc.body.append(input);
             simulateEscapeKey(input);
 
             expectTheDropdownToBeShown(dropdown_element);
@@ -220,8 +226,8 @@ describe(`Dropdowns`, () => {
         });
 
         it(`and I hit the Escape key inside a select element, nothing happens`, () => {
-            const select = document.createElement("select");
-            document.body.append(select);
+            const select = doc.createElement("select");
+            doc.body.append(select);
             simulateEscapeKey(select);
 
             expectTheDropdownToBeShown(dropdown_element);
@@ -230,8 +236,8 @@ describe(`Dropdowns`, () => {
         });
 
         it(`and I hit the Escape key inside a textarea element, nothing happens`, () => {
-            const textarea = document.createElement("textarea");
-            document.body.append(textarea);
+            const textarea = doc.createElement("textarea");
+            doc.body.append(textarea);
             simulateEscapeKey(textarea);
 
             expectTheDropdownToBeShown(dropdown_element);
@@ -241,24 +247,28 @@ describe(`Dropdowns`, () => {
 
         it(`and given the dropdown was hidden, when I hit the Escape key, nothing happens`, () => {
             dropdown.hide();
-            simulateEscapeKey(document.body);
+            simulateEscapeKey(doc.body);
 
             expectTheDropdownToBeHidden(dropdown_element);
         });
         it(`and I hit the Escape key, the modal will be hidden`, () => {
-            simulateEscapeKey(document.body);
+            simulateEscapeKey(doc.body);
 
             expectTheDropdownToBeHidden(dropdown_element);
         });
     });
 });
 
+function createLocalDocument(): HTMLDocument {
+    return document.implementation.createHTMLDocument();
+}
+
 function expectTheDropdownToBeShown(dropdown_element: HTMLElement): void {
-    expect(dropdown_element.classList.contains("tlp-dropdown-shown")).toBe(true);
+    expect(dropdown_element.classList.contains(DROPDOWN_SHOWN_CLASS_NAME)).toBe(true);
 }
 
 function expectTheDropdownToBeHidden(dropdown_element: HTMLElement): void {
-    expect(dropdown_element.classList.contains("tlp-dropdown-shown")).toBe(false);
+    expect(dropdown_element.classList.contains(DROPDOWN_SHOWN_CLASS_NAME)).toBe(false);
 }
 
 function simulateClick(element: HTMLElement): void {

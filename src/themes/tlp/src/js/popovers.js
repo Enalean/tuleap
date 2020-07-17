@@ -20,14 +20,15 @@
 import Popper from "popper.js";
 import { findClosestElement } from "./dom-walker.js";
 
-const CLASS_TLP_POPOVER_SHOWN = "tlp-popover-shown";
+export const POPOVER_SHOWN_CLASS_NAME = "tlp-popover-shown";
 
-export function createPopover(popover_trigger, popover_content, options = {}) {
+export function createPopover(doc, popover_trigger, popover_content, options = {}) {
     const anchor = options.anchor || popover_trigger;
     const popper = new Popper(anchor, popover_content, getPopperOptions(anchor, options));
 
     const dismiss_buttons = popover_content.querySelectorAll('[data-dismiss="popover"]');
     const listeners = buildListeners(
+        doc,
         popover_trigger,
         popover_content,
         dismiss_buttons,
@@ -62,21 +63,21 @@ function getPopperOptions(anchor, options) {
     };
 }
 
-function buildListeners(popover_trigger, popover_content, dismiss_buttons, options, popper) {
+function buildListeners(doc, popover_trigger, popover_content, dismiss_buttons, options, popper) {
     const trigger = options.trigger || popover_trigger.dataset.trigger || "hover";
     if (trigger === "hover") {
         return [
-            buildMouseOverListener(popover_trigger, popover_content, popper),
-            buildMouseOutListener(popover_trigger, popover_content),
+            buildMouseOverListener(doc, popover_trigger, popover_content, popper),
+            buildMouseOutListener(doc, popover_trigger, popover_content),
         ];
     }
     if (trigger === "click") {
         const listeners = [
-            buildTriggerClickListener(popover_trigger, popover_content, popper),
-            buildDocumentClickListener(popover_trigger, popover_content),
+            buildTriggerClickListener(doc, popover_trigger, popover_content, popper),
+            buildDocumentClickListener(doc, popover_trigger, popover_content),
         ];
         for (const dismiss of dismiss_buttons) {
-            listeners.push(buildDismissClickListener(dismiss));
+            listeners.push(buildDismissClickListener(doc, dismiss));
         }
         return listeners;
     }
@@ -96,35 +97,35 @@ function destroyListeners(listeners) {
     }
 }
 
-function buildMouseOverListener(popover_trigger, popover_content, popper) {
+function buildMouseOverListener(doc, popover_trigger, popover_content, popper) {
     return {
         element: popover_trigger,
         type: "mouseover",
         handler() {
-            hideAllShownPopovers();
+            hideAllShownPopovers(doc);
             showPopover(popover_content, popper);
         },
     };
 }
 
-function buildMouseOutListener(popover_trigger, popover_content) {
+function buildMouseOutListener(doc, popover_trigger, popover_content) {
     return {
         element: popover_trigger,
         type: "mouseout",
         handler() {
-            hideAllShownPopovers();
-            popover_content.classList.remove(CLASS_TLP_POPOVER_SHOWN);
+            hideAllShownPopovers(doc);
+            popover_content.classList.remove(POPOVER_SHOWN_CLASS_NAME);
         },
     };
 }
 
-function buildTriggerClickListener(popover_trigger, popover_content, popper) {
+function buildTriggerClickListener(doc, popover_trigger, popover_content, popper) {
     return {
         element: popover_trigger,
         type: "click",
         handler() {
-            const is_shown = popover_content.classList.contains(CLASS_TLP_POPOVER_SHOWN);
-            hideAllShownPopovers();
+            const is_shown = popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME);
+            hideAllShownPopovers(doc);
             if (!is_shown) {
                 popper.popper.setAttribute("x-trigger", "click");
                 showPopover(popover_content, popper);
@@ -133,37 +134,39 @@ function buildTriggerClickListener(popover_trigger, popover_content, popper) {
     };
 }
 
-function buildDocumentClickListener(popover_trigger, popover_content) {
+function buildDocumentClickListener(doc, popover_trigger, popover_content) {
     return {
-        element: document,
+        element: doc,
         type: "click",
         handler(event) {
             if (
-                popover_content.classList.contains(CLASS_TLP_POPOVER_SHOWN) &&
-                findClosestElement(event.target, popover_content) === null &&
-                findClosestElement(event.target, popover_trigger) === null
+                popover_content.classList.contains(POPOVER_SHOWN_CLASS_NAME) &&
+                findClosestElement(doc, event.target, popover_content) === null &&
+                findClosestElement(doc, event.target, popover_trigger) === null
             ) {
-                hideAllShownPopovers();
+                hideAllShownPopovers(doc);
             }
         },
     };
 }
 
-function buildDismissClickListener(dismiss) {
+function buildDismissClickListener(doc, dismiss) {
     return {
         element: dismiss,
         type: "click",
-        handler: hideAllShownPopovers,
+        handler() {
+            hideAllShownPopovers(doc);
+        },
     };
 }
 
-function hideAllShownPopovers() {
-    for (const popover of document.querySelectorAll("." + CLASS_TLP_POPOVER_SHOWN)) {
-        popover.classList.remove(CLASS_TLP_POPOVER_SHOWN);
+function hideAllShownPopovers(doc) {
+    for (const popover of doc.querySelectorAll("." + POPOVER_SHOWN_CLASS_NAME)) {
+        popover.classList.remove(POPOVER_SHOWN_CLASS_NAME);
     }
 }
 
 function showPopover(popover_content, popper) {
     popper.scheduleUpdate();
-    popover_content.classList.add(CLASS_TLP_POPOVER_SHOWN);
+    popover_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
 }

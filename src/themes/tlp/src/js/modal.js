@@ -19,21 +19,20 @@
 
 const TRANSITION_DURATION = 300;
 
-const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
-const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
+export const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
+export const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
 
-const CLASS_TLP_MODAL_SHOWN = "tlp-modal-shown";
-const CLASS_TLP_MODAL_BACKDROP_SHOWN = "tlp-modal-backdrop-shown";
-const CLASS_TLP_MODAL_DISPLAY = "tlp-modal-display";
+export const BACKDROP_ID = "tlp-modal-backdrop";
+export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
+export const MODAL_DISPLAY_CLASS_NAME = "tlp-modal-display";
+export const MODAL_SHOWN_CLASS_NAME = "tlp-modal-shown";
 
-const ID_TLP_MODAL_BACKDROP = "tlp-modal-backdrop";
-
-export const modal = (element, options) => new Modal(element, options);
+export const modal = (doc, element, options) => new Modal(doc, element, options);
 
 class Modal {
-    constructor(element, options = { keyboard: true }) {
+    constructor(doc, element, options = { keyboard: true }) {
         const { keyboard = true, destroy_on_hide = false } = options;
-        this.body_element = document.body;
+        this.doc = doc;
         this.element = element;
         this.is_shown = false;
         this.options = {
@@ -56,11 +55,11 @@ class Modal {
     }
 
     show() {
-        this.element.classList.add(CLASS_TLP_MODAL_DISPLAY);
+        this.element.classList.add(MODAL_DISPLAY_CLASS_NAME);
 
         reflowElement(this.element);
 
-        this.element.classList.add(CLASS_TLP_MODAL_SHOWN);
+        this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
         this.is_shown = true;
         this.addBackdrop();
 
@@ -68,7 +67,7 @@ class Modal {
     }
 
     hide() {
-        this.element.classList.remove(CLASS_TLP_MODAL_SHOWN);
+        this.element.classList.remove(MODAL_SHOWN_CLASS_NAME);
 
         reflowElement(this.element);
 
@@ -78,7 +77,7 @@ class Modal {
         }
 
         setTimeout(() => {
-            this.element.classList.remove(CLASS_TLP_MODAL_DISPLAY);
+            this.element.classList.remove(MODAL_DISPLAY_CLASS_NAME);
             this.is_shown = false;
 
             this.dispatchEvent(this.hidden_event);
@@ -86,13 +85,13 @@ class Modal {
     }
 
     addBackdrop() {
-        this.backdrop_element = document.createElement("div");
-        this.backdrop_element.id = ID_TLP_MODAL_BACKDROP;
-        this.body_element.appendChild(this.backdrop_element);
+        this.backdrop_element = this.doc.createElement("div");
+        this.backdrop_element.id = BACKDROP_ID;
+        this.doc.body.appendChild(this.backdrop_element);
 
         reflowElement(this.backdrop_element);
 
-        this.backdrop_element.classList.add(CLASS_TLP_MODAL_BACKDROP_SHOWN);
+        this.backdrop_element.classList.add(BACKDROP_SHOWN_CLASS_NAME);
         this.backdrop_element.addEventListener("click", () => {
             this.hide();
         });
@@ -102,7 +101,7 @@ class Modal {
         if (!this.backdrop_element) {
             return;
         }
-        this.backdrop_element.classList.remove(CLASS_TLP_MODAL_BACKDROP_SHOWN);
+        this.backdrop_element.classList.remove(BACKDROP_SHOWN_CLASS_NAME);
 
         setTimeout(() => {
             this.backdrop_element.remove();
@@ -115,7 +114,7 @@ class Modal {
         });
 
         if (this.options.keyboard) {
-            document.addEventListener("keyup", this.eventHandler);
+            this.doc.addEventListener("keyup", this.eventHandler);
         }
     }
 
@@ -129,7 +128,7 @@ class Modal {
         }
 
         if (this.options.keyboard) {
-            document.removeEventListener("keyup", this.eventHandler);
+            this.doc.removeEventListener("keyup", this.eventHandler);
         }
     }
 

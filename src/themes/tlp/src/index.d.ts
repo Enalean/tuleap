@@ -17,14 +17,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from "./js/fetch-wrapper";
-export * from "./js/modal";
-export * from "./js/dropdowns";
-export * from "./js/popovers";
-export * from "./js/select2";
-
+import { Modal, ModalOptions } from "./js/modal";
+import { Popover } from "./js/popovers";
 import flatpickr from "flatpickr";
 import { Options } from "flatpickr/dist/types/options";
+import { Dropdown, DropdownOptions } from "./js/dropdowns";
+import { PopperOptions } from "popper.js";
+
+export * from "./js/fetch-wrapper";
+export * from "./js/select2";
+
+export { Modal, ModalOptions };
+export function modal(element: Element, options?: ModalOptions): Modal;
+export { Dropdown, DropdownOptions };
+export function dropdown(trigger: Element, options?: DropdownOptions): Dropdown;
+export { PopperOptions, Popover };
+export function createPopover(
+    popover_trigger: Element,
+    popover_content: Element,
+    options?: PopperOptions & { anchor?: Element; trigger?: "click" | "hover" }
+): Popover;
+
 export function datePicker(
     element: Element,
     options?: Omit<Options, "enableTime" | "dateFormat"> & {

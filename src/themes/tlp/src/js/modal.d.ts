@@ -22,7 +22,7 @@ interface ModalOptions {
     destroy_on_hide?: boolean;
 }
 declare class Modal {
-    constructor(element: Element, options?: ModalOptions);
+    constructor(doc: Document, element: Element, options?: ModalOptions);
 
     toggle(): void;
     show(): void;
@@ -31,4 +31,12 @@ declare class Modal {
     addEventListener(type: string, listener: (evt: Event) => void): void;
     removeEventListener(type: string, listener: (evt: Event) => void): void;
 }
-export function modal(element: Element, options?: ModalOptions): Modal;
+export function modal(doc: Document, element: Element, options?: ModalOptions): Modal;
+
+export const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
+export const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
+
+export const BACKDROP_ID = "tlp-modal-backdrop";
+export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
+export const MODAL_DISPLAY_CLASS_NAME = "tlp-modal-display";
+export const MODAL_SHOWN_CLASS_NAME = "tlp-modal-shown";

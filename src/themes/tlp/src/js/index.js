@@ -21,16 +21,17 @@
 import "core-js/stable";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import "regenerator-runtime/runtime";
+import { modal as createModalImplementation } from "./modal.js";
+import { dropdown as createDropdownImplementation } from "./dropdowns.js";
+import { createPopover as createPopoverImplementation } from "./popovers.js";
 
 export * from "./fetch-wrapper.js";
 
 export { default as locale } from "./default_locale.js";
 
-export { modal } from "./modal.js";
-
-export { dropdown } from "./dropdowns.js";
-
-export { createPopover } from "./popovers.js";
+export const modal = (...args) => createModalImplementation(document, ...args);
+export const dropdown = (...args) => createDropdownImplementation(document, ...args);
+export const createPopover = (...args) => createPopoverImplementation(document, ...args);
 
 import jQuery from "jquery";
 // Many scripts still depend on jQuery being on window

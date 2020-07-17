@@ -18,9 +18,7 @@
  */
 
 import * as Popper from "popper.js";
-import { createPopover, Popover } from "./popovers";
-
-const POPOVER_SHOWN_CLASS = "tlp-popover-shown";
+import { createPopover, Popover, POPOVER_SHOWN_CLASS_NAME } from "./popovers";
 
 jest.mock("popper.js", () => {
     return {
@@ -37,10 +35,12 @@ jest.mock("popper.js", () => {
 
 describe(`Popovers`, () => {
     let trigger_element: HTMLElement, content_element: HTMLElement;
+    let doc: Document;
     beforeEach(() => {
-        trigger_element = document.createElement("span");
-        content_element = document.createElement("div");
-        document.body.append(trigger_element, content_element);
+        doc = createLocalDocument();
+        trigger_element = doc.createElement("span");
+        content_element = doc.createElement("div");
+        doc.body.append(trigger_element, content_element);
     });
 
     afterEach(() => {
@@ -56,11 +56,11 @@ describe(`Popovers`, () => {
 
         it(`when there is an options.anchor,
             it will use it instead of the trigger element as an anchor in popper options`, () => {
-            const anchor_element = document.createElement("div");
+            const anchor_element = doc.createElement("div");
             anchor_element.dataset.placement = "right";
-            document.body.append(anchor_element);
+            doc.body.append(anchor_element);
 
-            const popover = createPopover(trigger_element, content_element, {
+            const popover = createPopover(doc, trigger_element, content_element, {
                 anchor: anchor_element,
             });
             const placement_option = popperConstructor.mock.calls[0][2].placement;
@@ -73,7 +73,7 @@ describe(`Popovers`, () => {
         it(`when there is no options.trigger,
             it will use the trigger element's data-trigger attribute`, () => {
             trigger_element.dataset.trigger = "click";
-            const popover = createPopover(trigger_element, content_element);
+            const popover = createPopover(doc, trigger_element, content_element);
 
             trigger_element.dispatchEvent(new MouseEvent("click"));
             expectThePopoverToBeShown(content_element);
@@ -83,7 +83,7 @@ describe(`Popovers`, () => {
 
         it(`when there is neither options.trigger nor data-trigger,
             it will default to "hover" trigger`, () => {
-            const popover = createPopover(trigger_element, content_element);
+            const popover = createPopover(doc, trigger_element, content_element);
 
             trigger_element.dispatchEvent(new MouseEvent("mouseover"));
             expectThePopoverToBeShown(content_element);
@@ -95,7 +95,7 @@ describe(`Popovers`, () => {
             it will use the trigger element's data-placement attribute`, () => {
             trigger_element.dataset.placement = "left";
 
-            const popover = createPopover(trigger_element, content_element);
+            const popover = createPopover(doc, trigger_element, content_element);
             const placement_option = popperConstructor.mock.calls[0][2].placement;
             expect(placement_option).toEqual("left");
 
@@ -104,7 +104,7 @@ describe(`Popovers`, () => {
 
         it(`when there is neither options.placement nor data-placement,
             it will default to "bottom" placement`, () => {
-            const popover = createPopover(trigger_element, content_element);
+            const popover = createPopover(doc, trigger_element, content_element);
             const placement_option = popperConstructor.mock.calls[0][2].placement;
             expect(placement_option).toEqual("bottom");
 
@@ -115,7 +115,7 @@ describe(`Popovers`, () => {
     describe(`with hover trigger`, () => {
         let popover: Popover;
         beforeEach(() => {
-            popover = createPopover(trigger_element, content_element);
+            popover = createPopover(doc, trigger_element, content_element);
         });
 
         afterEach(() => {
@@ -129,11 +129,9 @@ describe(`Popovers`, () => {
             });
 
             it(`will hide all shown popovers`, () => {
-                const {
-                    first_content,
-                    second_content,
-                    cleanup,
-                } = createOtherShownPopoverContents();
+                const { first_content, second_content, cleanup } = createOtherShownPopoverContents(
+                    doc
+                );
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseover"));
                 expectThePopoverToBeHidden(first_content);
@@ -154,11 +152,9 @@ describe(`Popovers`, () => {
             });
 
             it(`will hide all shown popovers`, () => {
-                const {
-                    first_content,
-                    second_content,
-                    cleanup,
-                } = createOtherShownPopoverContents();
+                const { first_content, second_content, cleanup } = createOtherShownPopoverContents(
+                    doc
+                );
 
                 trigger_element.dispatchEvent(new MouseEvent("mouseout"));
                 expectThePopoverToBeHidden(first_content);
@@ -173,7 +169,9 @@ describe(`Popovers`, () => {
         describe(`without dismiss buttons`, () => {
             let popover: Popover;
             beforeEach(() => {
-                popover = createPopover(trigger_element, content_element, { trigger: "click" });
+                popover = createPopover(doc, trigger_element, content_element, {
+                    trigger: "click",
+                });
             });
 
             afterEach(() => {
@@ -197,7 +195,7 @@ describe(`Popovers`, () => {
                         first_content,
                         second_content,
                         cleanup,
-                    } = createOtherShownPopoverContents();
+                    } = createOtherShownPopoverContents(doc);
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
                     expectThePopoverToBeHidden(first_content);
@@ -209,13 +207,13 @@ describe(`Popovers`, () => {
 
             describe(`when I click outside of the popover`, () => {
                 it(`and it is not shown, nothing happens`, () => {
-                    document.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+                    doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
                     expectThePopoverToBeHidden(content_element);
                 });
 
                 it(`and it is shown, it will hide it`, () => {
                     trigger_element.dispatchEvent(new MouseEvent("click"));
-                    document.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+                    doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
                     expectThePopoverToBeHidden(content_element);
                 });
 
@@ -224,10 +222,10 @@ describe(`Popovers`, () => {
                         first_content,
                         second_content,
                         cleanup,
-                    } = createOtherShownPopoverContents();
+                    } = createOtherShownPopoverContents(doc);
 
                     trigger_element.dispatchEvent(new MouseEvent("click"));
-                    document.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+                    doc.body.dispatchEvent(new MouseEvent("click", { bubbles: true }));
                     expectThePopoverToBeHidden(first_content);
                     expectThePopoverToBeHidden(second_content);
 
@@ -238,11 +236,13 @@ describe(`Popovers`, () => {
 
         it(`when I click on a [data-dismiss=popover] element,
         it will hide all shown popovers`, () => {
-            const dismiss = document.createElement("button");
+            const dismiss = doc.createElement("button");
             dismiss.dataset.dismiss = "popover";
             content_element.append(dismiss);
-            const { first_content, second_content, cleanup } = createOtherShownPopoverContents();
-            const popover = createPopover(trigger_element, content_element, { trigger: "click" });
+            const { first_content, second_content, cleanup } = createOtherShownPopoverContents(doc);
+            const popover = createPopover(doc, trigger_element, content_element, {
+                trigger: "click",
+            });
 
             dismiss.dispatchEvent(new MouseEvent("click"));
             expectThePopoverToBeHidden(first_content);
@@ -255,12 +255,16 @@ describe(`Popovers`, () => {
     });
 });
 
+function createLocalDocument(): Document {
+    return document.implementation.createHTMLDocument();
+}
+
 function expectThePopoverToBeShown(content_element: HTMLElement): void {
-    expect(content_element.classList.contains(POPOVER_SHOWN_CLASS)).toBe(true);
+    expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(true);
 }
 
 function expectThePopoverToBeHidden(content_element: HTMLElement): void {
-    expect(content_element.classList.contains(POPOVER_SHOWN_CLASS)).toBe(false);
+    expect(content_element.classList.contains(POPOVER_SHOWN_CLASS_NAME)).toBe(false);
 }
 
 interface OtherShownPopovers {
@@ -269,12 +273,12 @@ interface OtherShownPopovers {
     cleanup: () => void;
 }
 
-function createOtherShownPopoverContents(): OtherShownPopovers {
-    const first_content = document.createElement("div");
-    const second_content = document.createElement("div");
-    first_content.classList.add(POPOVER_SHOWN_CLASS);
-    second_content.classList.add(POPOVER_SHOWN_CLASS);
-    document.body.append(first_content, second_content);
+function createOtherShownPopoverContents(doc: Document): OtherShownPopovers {
+    const first_content = doc.createElement("div");
+    const second_content = doc.createElement("div");
+    first_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
+    second_content.classList.add(POPOVER_SHOWN_CLASS_NAME);
+    doc.body.append(first_content, second_content);
 
     const cleanup = (): void => {
         first_content.remove();

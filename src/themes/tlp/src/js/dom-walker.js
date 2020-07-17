@@ -17,10 +17,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export function findClosestElement(element, ancestor) {
+export function findClosestElement(doc, element, ancestor) {
     let current = element;
     do {
-        if (!document.documentElement.contains(element)) {
+        if (!doc.documentElement.contains(element)) {
             return null;
         }
         if (current.isSameNode(ancestor)) {
