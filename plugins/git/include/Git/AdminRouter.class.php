@@ -23,7 +23,6 @@ use Tuleap\Git\AdminGerritBuilder;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
 use Tuleap\Git\GeneralSettingsController;
 use Tuleap\Git\GerritServerResourceRestrictor;
-use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Git\Permissions\RegexpFineGrainedDisabler;
 use Tuleap\Git\Permissions\RegexpFineGrainedEnabler;
@@ -80,10 +79,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
      * @var Restrictor
      */
     private $gerrit_restrictor;
-    /**
-     * @var ManagementDetector
-     */
-    private $management_detector;
 
     /**
      * @var BigObjectAuthorizationManager
@@ -113,7 +108,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         RegexpFineGrainedDisabler $regexp_disabler,
         GerritServerResourceRestrictor $gerrit_ressource_restrictor,
         Restrictor $gerrit_restrictor,
-        ManagementDetector $management_detector,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         IncludeAssets $include_assets,
         VersionDetector $version_detector
@@ -130,7 +124,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
         $this->regexp_disabler                  = $regexp_disabler;
         $this->gerrit_ressource_restrictor      = $gerrit_ressource_restrictor;
         $this->gerrit_restrictor                = $gerrit_restrictor;
-        $this->management_detector              = $management_detector;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->include_assets                   = $include_assets;
         $this->version_detector                 = $version_detector;
@@ -170,7 +163,6 @@ class Git_AdminRouter implements \Tuleap\Request\DispatchableWithRequest, \Tulea
                 $this->project_manager,
                 $this->git_system_event_manager,
                 $this->admin_page_renderer,
-                $this->management_detector,
                 $this->big_object_authorization_manager,
                 $this->include_assets,
                 $this->version_detector

@@ -20,14 +20,12 @@
 
 use Tuleap\Admin\AdminPageRenderer;
 use Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager;
-use Tuleap\Git\Gitolite\SSHKey\ManagementDetector;
 use Tuleap\Git\Gitolite\VersionDetector;
 use Tuleap\Layout\IncludeAssets;
 
 class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace, Squiz.Classes.ValidClassName.NotCamelCaps
 {
     public const ACTION_UPDATE_CONFIG                      = 'update_config';
-    public const ACTION_MIGRATE_SSH_KEY_MANAGEMENT         = 'migrate_to_tuleap_ssh_keys_management';
     public const ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS = "update-big-objects-allowed-projects";
 
     /**
@@ -47,10 +45,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
 
     /** @var AdminPageRenderer */
     private $admin_page_renderer;
-    /**
-     * @var ManagementDetector
-     */
-    private $management_detector;
 
     /**
      * @var BigObjectAuthorizationManager
@@ -72,7 +66,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         ProjectManager $project_manager,
         Git_SystemEventManager $system_event_manager,
         AdminPageRenderer $admin_page_renderer,
-        ManagementDetector $management_detector,
         BigObjectAuthorizationManager $big_object_authorization_manager,
         IncludeAssets $include_assets,
         VersionDetector $version_detector
@@ -81,7 +74,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $this->project_manager                  = $project_manager;
         $this->system_event_manager             = $system_event_manager;
         $this->admin_page_renderer              = $admin_page_renderer;
-        $this->management_detector              = $management_detector;
         $this->big_object_authorization_manager = $big_object_authorization_manager;
         $this->include_assets                   = $include_assets;
         $this->version_detector                 = $version_detector;
@@ -99,10 +91,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
             case self::ACTION_UPDATE_CONFIG:
                 $this->csrf->check();
                 $this->regenerateGitoliteConfigForAProject($request);
-                break;
-            case self::ACTION_MIGRATE_SSH_KEY_MANAGEMENT:
-                $this->csrf->check();
-                $this->migrateToTuleapSSHKeyManagement();
                 break;
             case self::ACTION_UPDATE_BIG_OBJECT_ALLOWED_PROJECTS:
                 $this->csrf->check();
@@ -144,18 +132,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
     private function getProject($project_name_from_autocomplete)
     {
         return $this->project_manager->getProjectFromAutocompleter($project_name_from_autocomplete);
-    }
-
-    private function migrateToTuleapSSHKeyManagement()
-    {
-        if (! $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap()) {
-            return;
-        }
-        $this->system_event_manager->queueMigrateToTuleapSSHKeyManagement();
-        $GLOBALS['Response']->addFeedback(
-            Feedback::INFO,
-            dgettext('tuleap-git', 'The migration to Tuleap SSH keys management has been started and will be done in a few minutes')
-        );
     }
 
     private function updateBigObjectAllowedProjects(Codendi_Request $request)
@@ -222,7 +198,6 @@ class Git_AdminGitoliteConfig //phpcs:ignore PSR1.Classes.ClassDeclaration.Missi
         $admin_presenter = new Git_AdminGitoliteConfigPresenter(
             $title,
             $this->csrf,
-            $this->management_detector->canRequestAuthorizedKeysFileManagementByTuleap(),
             $this->big_object_authorization_manager->getAuthorizedProjects(),
             $this->version_detector->isGitolite3()
         );
