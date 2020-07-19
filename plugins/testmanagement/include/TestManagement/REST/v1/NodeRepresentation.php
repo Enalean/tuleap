@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2015-2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2015-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\TestManagement\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class NodeRepresentation extends NodeReferenceRepresentation
 {
     /**
@@ -31,4 +34,10 @@ class NodeRepresentation extends NodeReferenceRepresentation
      * @var array
      */
     public $reverse_links = array();
+
+    public function __construct(array $links, array $reverse_links)
+    {
+        $this->links         = $links;
+        $this->reverse_links = $reverse_links;
+    }
 }

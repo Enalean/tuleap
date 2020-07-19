@@ -56,11 +56,11 @@ class ArtifactNodeBuilder
         $nodes        = array();
         $artifact_ids = array($artifact->getId());
 
-        $node = new NodeRepresentation();
+        $node = new NodeRepresentation(
+            $this->getLinks($user, $artifact->getId(), $nodes, $artifact_ids),
+            $this->getReverseLinks($user, $artifact->getId(), $nodes, $artifact_ids)
+        );
         $this->buildNode($node, $artifact->getId(), $nodes);
-
-        $node->links         = $this->getLinks($user, $artifact->getId(), $nodes, $artifact_ids);
-        $node->reverse_links = $this->getReverseLinks($user, $artifact->getId(), $nodes, $artifact_ids);
 
         $this->updateNodesWithArtifactValues($artifact_ids, $nodes);
 

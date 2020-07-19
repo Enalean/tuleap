@@ -23,6 +23,9 @@ namespace Tuleap\TestManagement\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\User\REST\UserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class PreviousResultRepresentation
 {
 
@@ -51,13 +54,13 @@ class PreviousResultRepresentation
      */
     public $has_been_run_at_least_once;
 
-    public function build(
+    public function __construct(
         int $submitted_on,
         UserRepresentation $submitted_by,
         ?string $status,
         string $result,
         bool $has_been_run_at_least_once
-    ): void {
+    ) {
         $this->submitted_on               = JsonCast::toDate($submitted_on);
         $this->submitted_by               = $submitted_by;
         $this->status                     = $status;

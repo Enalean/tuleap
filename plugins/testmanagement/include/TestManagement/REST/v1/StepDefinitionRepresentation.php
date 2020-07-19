@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -23,6 +23,9 @@ namespace Tuleap\TestManagement\REST\v1;
 use Tuleap\REST\JsonCast;
 use Tuleap\TestManagement\Step\Step;
 
+/**
+ * @psalm-immutable
+ */
 class StepDefinitionRepresentation
 {
     /**
@@ -50,14 +53,32 @@ class StepDefinitionRepresentation
      */
     public $rank;
 
-    public function build(Step $step, \Codendi_HTMLPurifier $purifier, \Tracker_Artifact $artifact): void
+    private function __construct(
+        int $id,
+        string $description,
+        string $description_format,
+        string $expected_results,
+        string $expected_results_format,
+        int $rank
+    ) {
+        $this->id                      = $id;
+        $this->description             = $description;
+        $this->description_format      = $description_format;
+        $this->expected_results        = $expected_results;
+        $this->expected_results_format = $expected_results_format;
+        $this->rank                    = $rank;
+    }
+
+    public static function build(Step $step, \Codendi_HTMLPurifier $purifier, \Tracker_Artifact $artifact): self
     {
-        $this->id                      = JsonCast::toInt($step->getId());
-        $project_id                      = $artifact->getTracker()->getGroupId();
-        $this->description             = $purifier->purifyHTMLWithReferences($step->getDescription(), $project_id);
-        $this->description_format      = $step->getDescriptionFormat();
-        $this->expected_results        = $purifier->purifyHTMLWithReferences($step->getExpectedResults() ?? '', $project_id);
-        $this->expected_results_format = $step->getExpectedResultsFormat();
-        $this->rank                    = JsonCast::toInt($step->getRank());
+        $project_id = $artifact->getTracker()->getGroupId();
+        return new self(
+            JsonCast::toInt($step->getId()),
+            $purifier->purifyHTMLWithReferences($step->getDescription(), $project_id),
+            $step->getDescriptionFormat(),
+            $purifier->purifyHTMLWithReferences($step->getExpectedResults() ?? '', $project_id),
+            $step->getExpectedResultsFormat(),
+            JsonCast::toInt($step->getRank())
+        );
     }
 }

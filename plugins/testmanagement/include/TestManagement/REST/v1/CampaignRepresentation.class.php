@@ -26,6 +26,9 @@ use Tracker_FormElement_Field;
 use Tracker_FormElementFactory;
 use Tuleap\TestManagement\Campaign\Campaign;
 
+/**
+ * @psalm-immutable
+ */
 class CampaignRepresentation
 {
     public const ROUTE = 'testmanagement_campaigns';
@@ -42,18 +45,6 @@ class CampaignRepresentation
      * @var int
      */
     public $total;
-
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
-    /** @var int */
-    private $tracker_id;
-
-    /** @var Tracker_Artifact */
-    private $artifact;
-
-    /** @var PFUser */
-    private $user;
 
     /** @var string ID of the artifact */
     public $id;
@@ -88,51 +79,74 @@ class CampaignRepresentation
     /** @var bool */
     public $user_can_update;
 
-    public function build(
+    public function __construct(
+        string $id,
+        string $label,
+        string $status,
+        int $nb_of_notrun,
+        int $nb_of_passed,
+        int $nb_of_failed,
+        int $nb_of_blocked,
+        array $resources,
+        JobConfigurationRepresentation $job_configuration,
+        bool $user_can_update
+    ) {
+        $this->id                = $id;
+        $this->label             = $label;
+        $this->status            = $status;
+        $this->nb_of_notrun      = $nb_of_notrun;
+        $this->nb_of_passed      = $nb_of_passed;
+        $this->nb_of_failed      = $nb_of_failed;
+        $this->nb_of_blocked     = $nb_of_blocked;
+        $this->resources         = $resources;
+        $this->job_configuration = $job_configuration;
+        $this->user_can_update   = $user_can_update;
+
+        $this->uri   = self::ROUTE . '/' . $this->id;
+        $this->total = $nb_of_notrun + $nb_of_passed + $nb_of_failed + $nb_of_blocked;
+    }
+
+    public static function build(
         Campaign $campaign,
         Tracker_FormElementFactory $form_element_factory,
         PFUser $user
-    ): void {
-        $artifact = $campaign->getArtifact();
+    ): self {
+        $artifact     = $campaign->getArtifact();
+        $id           = $artifact->getId();
+        $tracker_id   = $artifact->getTrackerId();
+        $label_field  = self::getLabelField($form_element_factory, $tracker_id, $user);
+        $field_value  = self::getFieldValue($artifact, $label_field);
 
-        $this->artifact             = $artifact;
-        $this->tracker_id           = $artifact->getTrackerId();
-        $this->form_element_factory = $form_element_factory;
-        $this->user                 = $user;
-        $this->id                   = (string) $artifact->getId();
-        $this->uri                  = self::ROUTE . '/' . $this->id;
+        $executions_status = self::getExecutionsStatus($artifact, $user);
 
-        $label_field  = $this->getLabelField();
-        $field_value  = $this->getFieldValue($label_field);
-        $this->label  = $field_value instanceof \Tracker_Artifact_ChangesetValue_Text ? $field_value->getText() : '';
-        $this->status = $this->artifact->getStatus();
-
-        $executions_status = $this->getExecutionsStatus();
-
-        $this->nb_of_notrun  = $executions_status[self::STATUS_NOT_RUN];
-        $this->nb_of_passed  = $executions_status[self::STATUS_PASSED];
-        $this->nb_of_failed  = $executions_status[self::STATUS_FAILED];
-        $this->nb_of_blocked = $executions_status[self::STATUS_BLOCKED];
-        $this->total         = $this->nb_of_notrun + $this->nb_of_passed + $this->nb_of_failed + $this->nb_of_blocked;
-
-        $this->user_can_update = $this->isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
-        $this->job_configuration = new JobConfigurationRepresentation();
-        $this->job_configuration->build(
+        $user_can_update   = self::isUserAllowedToUpdateLabelField($user, $artifact, $label_field);
+        $job_configuration = new JobConfigurationRepresentation(
             $campaign->getJobConfiguration(),
-            $this->user_can_update
+            $user_can_update
         );
 
-        $this->resources = [
+        return new self(
+            (string) $id,
+            $field_value instanceof \Tracker_Artifact_ChangesetValue_Text ? $field_value->getText() : '',
+            $artifact->getStatus(),
+            $executions_status[self::STATUS_NOT_RUN],
+            $executions_status[self::STATUS_PASSED],
+            $executions_status[self::STATUS_FAILED],
+            $executions_status[self::STATUS_BLOCKED],
             [
-                'type' => ExecutionRepresentation::ROUTE,
-                'uri'  => self::ROUTE . '/' . $this->id . '/' . ExecutionRepresentation::ROUTE
-            ]
-        ];
+                [
+                    'type' => ExecutionRepresentation::ROUTE,
+                    'uri'  => self::ROUTE . '/' . $id . '/' . ExecutionRepresentation::ROUTE
+                ]
+            ],
+            $job_configuration,
+            $user_can_update,
+        );
     }
 
-    private function getFieldValue(Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
+    private static function getFieldValue(Tracker_Artifact $artifact, Tracker_FormElement_Field $field): ?\Tracker_Artifact_ChangesetValue
     {
-        return $this->artifact->getValue($field);
+        return $artifact->getValue($field);
     }
 
     /**
@@ -140,7 +154,7 @@ class CampaignRepresentation
      *
      * @psalm-return array{notrun: int, blocked: int, passed: int, failed: int}
      */
-    private function getExecutionsStatus(): array
+    private static function getExecutionsStatus(Tracker_Artifact $campaign_artifact, PFUser $user): array
     {
         $executions = [
             self::STATUS_NOT_RUN => 0,
@@ -149,7 +163,7 @@ class CampaignRepresentation
             self::STATUS_FAILED  => 0
         ];
 
-        $linked_artifacts = $this->artifact->getLinkedArtifacts($this->user);
+        $linked_artifacts = $campaign_artifact->getLinkedArtifacts($user);
 
         foreach ($linked_artifacts as $artifact) {
             if (isset($executions[$artifact->getStatus()])) {
@@ -160,27 +174,23 @@ class CampaignRepresentation
         return $executions;
     }
 
-    /**
-     *
-     * @return bool
-     */
-    private function isUserAllowedToUpdateLabelField(
+    private static function isUserAllowedToUpdateLabelField(
         PFUser $user,
         Tracker_Artifact $artifact,
         Tracker_FormElement_Field $label_field
-    ) {
+    ): bool {
         return $artifact->userCanUpdate($user) && $label_field->userCanUpdate($user);
     }
 
     /**
      * @return Tracker_FormElement_Field
      */
-    private function getLabelField()
+    private static function getLabelField(Tracker_FormElementFactory $form_element_factory, int $tracker_id, PFUser $user)
     {
-        return $this->form_element_factory->getUsedFieldByNameForUser(
-            $this->tracker_id,
+        return $form_element_factory->getUsedFieldByNameForUser(
+            $tracker_id,
             self::FIELD_NAME,
-            $this->user
+            $user
         );
     }
 }

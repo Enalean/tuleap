@@ -24,6 +24,9 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\Artifact\FileUploadData;
 use Tuleap\User\REST\UserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class ExecutionRepresentation
 {
     public const ROUTE = 'testmanagement_executions';
@@ -100,7 +103,7 @@ class ExecutionRepresentation
      */
     public $max_size_upload;
 
-    public function build(
+    public function __construct(
         int $artifact_id,
         string $status,
         string $results,
@@ -112,7 +115,7 @@ class ExecutionRepresentation
         int $time,
         array $steps_results,
         ?FileUploadData $file_field_data
-    ): void {
+    ) {
         $this->id               = JsonCast::toInt($artifact_id);
         $this->uri              = self::ROUTE . '/' . $this->id;
         $this->results          = $results;

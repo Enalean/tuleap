@@ -22,18 +22,21 @@ namespace Tuleap\TestManagement\REST\v1;
 
 use Tuleap\TestManagement\Campaign\JobConfiguration;
 
+/**
+ * @psalm-immutable
+ */
 class JobConfigurationRepresentation
 {
     /**
-     * @var string $url {@type string} {@required false}
+     * @var string | null $url {@type string} {@required false}
      */
     public $url;
     /**
-     * @var string $token {@type string} {@required false}
+     * @var string | null $token {@type string} {@required false}
      */
     public $token;
 
-    public function build(JobConfiguration $job_configuration, bool $is_user_allowed_to_see_token): void
+    public function __construct(JobConfiguration $job_configuration, bool $is_user_allowed_to_see_token)
     {
         $this->url = $job_configuration->getUrl();
 

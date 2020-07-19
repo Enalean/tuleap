@@ -22,6 +22,9 @@ declare(strict_types=1);
 
 namespace Tuleap\TestManagement\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class AutomatedTestsResultPATCHRepresentation
 {
     /**

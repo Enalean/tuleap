@@ -783,8 +783,8 @@ class CampaignsResource
             }
 
             $job_configuration = new JobConfiguration(
-                $job_representation->url,
-                new ConcealedString($job_representation->token)
+                $job_representation->url ?? '',
+                new ConcealedString($job_representation->token ?? '')
             );
             $campaign->setJobConfiguration($job_configuration);
         }
