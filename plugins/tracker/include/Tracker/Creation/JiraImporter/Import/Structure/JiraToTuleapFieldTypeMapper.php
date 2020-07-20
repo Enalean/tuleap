@@ -251,15 +251,29 @@ class JiraToTuleapFieldTypeMapper
                         \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     );
                     break;
-                case 'reporter':
-                case 'assignee':
+                case AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME:
                     $this->field_xml_exporter->exportField(
                         $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
                         Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
                         $id,
                         $jira_field_label,
                         $id,
-                        10,
+                        AlwaysThereFieldsExporter::JIRA_ASSIGNEE_RANK,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    );
+                    break;
+                case AlwaysThereFieldsExporter::JIRA_REPORTER_NAME:
+                    $this->field_xml_exporter->exportField(
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
+                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        AlwaysThereFieldsExporter::JIRA_REPORTER_RANK,
                         $required,
                         [],
                         $jira_field->getBoundValues(),

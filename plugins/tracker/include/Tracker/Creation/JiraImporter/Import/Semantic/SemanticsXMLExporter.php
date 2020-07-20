@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Semantic;
 
 use SimpleXMLElement;
+use Tracker_Semantic_Contributor;
 use Tracker_Semantic_Description;
 use Tracker_Semantic_Status;
 use Tracker_Semantic_Title;
@@ -42,6 +43,7 @@ class SemanticsXMLExporter
         $this->exportTitleSemantic($semantics_node, $field_mapping_collection);
         $this->exportDescriptionSemantic($semantics_node, $field_mapping_collection);
         $this->exportStatusSemantic($semantics_node, $field_mapping_collection, $status_values_collection);
+        $this->exportContributorSemantic($semantics_node, $field_mapping_collection);
     }
 
     private function exportTitleSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
@@ -102,5 +104,22 @@ class SemanticsXMLExporter
             $open_value_node = $open_values_node->addChild('open_value');
             $open_value_node->addAttribute("REF", "V" . $allowed_value_representation->getId());
         }
+    }
+
+    private function exportContributorSemantic(SimpleXMLElement $semantics_node, FieldMappingCollection $field_mapping_collection): void
+    {
+        $assignee_field = $field_mapping_collection->getMappingFromJiraField(AlwaysThereFieldsExporter::JIRA_ASSIGNEE_NAME);
+        if ($assignee_field === null) {
+            return;
+        }
+
+        $semantic_node = $semantics_node->addChild("semantic");
+        $semantic_node->addAttribute("type", Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+
+        $semantic_node->addChild("shortname", Tracker_Semantic_Contributor::CONTRIBUTOR_SEMANTIC_SHORTNAME);
+        $semantic_node->addChild("label", dgettext('tuleap-tracker', 'Contributor/assignee'));
+        $semantic_node->addChild("description", dgettext('tuleap-tracker', 'Define the contributor/assignee of an artifact'));
+        $field_node = $semantic_node->addChild("field");
+        $field_node->addAttribute("REF", (string) $assignee_field->getXMLId());
     }
 }

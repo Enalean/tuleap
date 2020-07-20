@@ -69,6 +69,15 @@ class SemanticsXMLExporterTest extends TestCase
                 \Tracker_FormElement_Field_List_Bind_Static::TYPE
             )
         );
+        $mapping->addMapping(
+            new FieldMapping(
+                'assignee',
+                'Fassignee',
+                'Assignee',
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            )
+        );
 
         $collection = Mockery::mock(StatusValuesCollection::class);
 
@@ -91,7 +100,7 @@ class SemanticsXMLExporterTest extends TestCase
         );
 
         $this->assertNotNull($tracker_node->semantics);
-        $this->assertCount(3, $tracker_node->semantics->children());
+        $this->assertCount(4, $tracker_node->semantics->children());
 
         $semantic_title_node = $tracker_node->semantics->semantic[0];
         $this->assertSame("title", (string) $semantic_title_node['type']);
@@ -105,6 +114,10 @@ class SemanticsXMLExporterTest extends TestCase
         $this->assertSame("status", (string) $semantic_status_node['type']);
         $this->assertSame("Fstatus", (string) $semantic_status_node->field['REF']);
         $this->assertCount(2, $semantic_status_node->open_values->children());
+
+        $semantic_assignee_node = $tracker_node->semantics->semantic[3];
+        $this->assertSame("contributor", (string) $semantic_assignee_node['type']);
+        $this->assertSame("Fassignee", (string) $semantic_assignee_node->field['REF']);
     }
 
     public function testItDoesNotExportSemanticTitleIfSummaryFieldNotfoundInMapping(): void

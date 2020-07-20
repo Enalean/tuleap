@@ -38,6 +38,8 @@ class AlwaysThereFieldsExporter
     public const JIRA_STATUS_NAME            = "status";
     public const JIRA_PRIORITY_NAME          = "priority";
     public const JIRA_ATTACHMENT_NAME        = "attachment";
+    public const JIRA_ASSIGNEE_NAME          = "assignee";
+    public const JIRA_REPORTER_NAME          = "reporter";
 
     public const JIRA_LINK_FIELD_ID        = "jira_issue_url";
     public const JIRA_ARTIFACT_ID_FIELD_ID = "artifact_id";
@@ -55,6 +57,8 @@ class AlwaysThereFieldsExporter
     public const JIRA_PRIORITY_RANK        = 6;
     public const JIRA_ARTIFACT_ID_RANK     = 7;
     public const JIRA_LINK_RANK            = 8;
+    public const JIRA_ASSIGNEE_RANK        = 9;
+    public const JIRA_REPORTER_RANK        = 10;
 
     public const JIRA_ATTACHMENT_RANK  = 1;
     public const JIRA_SUMMARY_RANK     = 1;
