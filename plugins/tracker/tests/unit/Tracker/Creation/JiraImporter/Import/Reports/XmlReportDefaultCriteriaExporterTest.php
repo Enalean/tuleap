@@ -43,14 +43,16 @@ final class XmlReportDefaultCriteriaExporterTest extends TestCase
             'status',
             'Fstatus',
             'status',
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $priority_field_mapping = new FieldMapping(
             'priority',
             'Fpriority',
             'priority',
-            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+            Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $criteria_exporter = new XmlReportDefaultCriteriaExporter();

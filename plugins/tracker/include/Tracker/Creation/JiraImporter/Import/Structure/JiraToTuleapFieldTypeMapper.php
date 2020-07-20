@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Structure;
 
 use Psr\Log\LoggerInterface;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\ErrorCollector;
@@ -92,7 +93,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textfield':
@@ -106,7 +108,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'description':
@@ -120,7 +123,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:textarea':
@@ -134,7 +138,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:float':
@@ -148,7 +153,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datepicker':
@@ -164,7 +170,8 @@ class JiraToTuleapFieldTypeMapper
                             'display_time' => '0'
                         ],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:datetime':
@@ -180,7 +187,8 @@ class JiraToTuleapFieldTypeMapper
                             'display_time' => '1'
                         ],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        null
                     );
                     break;
                 case AlwaysThereFieldsExporter::JIRA_PRIORITY_NAME:
@@ -194,7 +202,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:radiobuttons':
@@ -208,7 +217,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiselect':
@@ -222,7 +232,8 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:select':
@@ -236,10 +247,42 @@ class JiraToTuleapFieldTypeMapper
                         $required,
                         [],
                         $jira_field->getBoundValues(),
-                        $jira_field_mapping_collection
+                        $jira_field_mapping_collection,
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     );
                     break;
+                case 'reporter':
                 case 'assignee':
+                    $this->field_xml_exporter->exportField(
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::RIGHT_COLUMN_NAME),
+                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        10,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    );
+                    break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
+                    $this->field_xml_exporter->exportField(
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
+                        Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        11,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    );
+                    break;
+                case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
                 case 'attachment':
                 case 'status':
                 case 'creator':
@@ -250,8 +293,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'resolutiondate': // this field is not always displayed in issue view, always created.
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multigrouppicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:grouppicker':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:userpicker':
-                case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multicheckboxes':
                 case 'com.atlassian.jira.toolkit:attachments':
                 case 'comment':
@@ -292,7 +333,6 @@ class JiraToTuleapFieldTypeMapper
                 case 'com.atlassian.jira.toolkit:reporterdomain':
                 case 'com.atlassian.jira.toolkit:lastusercommented':
                 case 'com.atlassian.servicedesk.assets-plugin:assetfield':
-                case 'reporter':
                 case 'com.atlassian.jira.toolkit:userproperty': // ???
                 case 'com.atlassian.jira.toolkit:lastupdaterorcommenter':
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiversion': //version somthing internal to jira

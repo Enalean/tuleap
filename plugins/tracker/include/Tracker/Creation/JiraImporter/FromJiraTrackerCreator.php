@@ -36,7 +36,6 @@ use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
 use Tuleap\Project\XML\Import\ImportConfig;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDownloader;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -75,9 +74,9 @@ class FromJiraTrackerCreator
     private $logger;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var JiraUserOnTuleapCache
      */
-    private $jira_author_retriever;
+    private $jira_user_on_tuleap_cache;
 
     public function __construct(
         TrackerXmlImport $tracker_xml_import,
@@ -85,14 +84,14 @@ class FromJiraTrackerCreator
         TrackerCreationDataChecker $creation_data_checker,
         XML_SimpleXMLCDATAFactory $cdata_section_factory,
         LoggerInterface $logger,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ) {
-        $this->tracker_xml_import    = $tracker_xml_import;
-        $this->tracker_factory       = $tracker_factory;
-        $this->creation_data_checker = $creation_data_checker;
-        $this->cdata_section_factory = $cdata_section_factory;
-        $this->logger                = $logger;
-        $this->jira_author_retriever = $jira_author_retriever;
+        $this->tracker_xml_import        = $tracker_xml_import;
+        $this->tracker_factory           = $tracker_factory;
+        $this->creation_data_checker     = $creation_data_checker;
+        $this->cdata_section_factory     = $cdata_section_factory;
+        $this->logger                    = $logger;
+        $this->jira_user_on_tuleap_cache = $jira_user_on_tuleap_cache;
     }
 
     public static function build(JiraUserOnTuleapCache $jira_user_on_tuleap_cache): self
@@ -101,11 +100,6 @@ class FromJiraTrackerCreator
         $tracker_xml_import = TrackerXmlImport::build($user_finder, BackendLogger::getDefaultLogger());
 
         $logger = BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
-        $jira_author_retriever = new JiraAuthorRetriever(
-            $logger,
-            \UserManager::instance(),
-            $jira_user_on_tuleap_cache
-        );
 
         return new self(
             $tracker_xml_import,
@@ -118,7 +112,7 @@ class FromJiraTrackerCreator
             ),
             new XML_SimpleXMLCDATAFactory(),
             $logger,
-            $jira_author_retriever
+            $jira_user_on_tuleap_cache
         );
     }
 
@@ -217,7 +211,7 @@ class FromJiraTrackerCreator
         return JiraXmlExporter::build(
             $jira_credentials,
             $this->logger,
-            $this->jira_author_retriever
+            $this->jira_user_on_tuleap_cache
         );
     }
 }

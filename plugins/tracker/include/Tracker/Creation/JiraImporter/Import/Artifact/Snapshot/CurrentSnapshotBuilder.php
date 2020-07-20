@@ -23,11 +23,17 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
+use DateTimeImmutable;
 use PFUser;
 use Psr\Log\LoggerInterface;
+use Tracker_FormElement_Field_List_Bind_Users;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class CurrentSnapshotBuilder
 {
@@ -36,11 +42,29 @@ class CurrentSnapshotBuilder
      */
     private $logger;
 
-    public function __construct(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
+    /**
+     * @var CreationStateListValueFormatter
+     */
+    private $creation_state_list_value_formatter;
+
+    /**
+     * @var JiraAuthorRetriever
+     */
+    private $jira_author_retriever;
+
+    public function __construct(
+        LoggerInterface $logger,
+        CreationStateListValueFormatter $creation_state_list_value_formatter,
+        JiraAuthorRetriever $jira_author_retriever
+    ) {
+        $this->logger                              = $logger;
+        $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
+        $this->jira_author_retriever               = $jira_author_retriever;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     public function buildCurrentSnapshot(
         PFUser $forge_user,
         IssueAPIRepresentation $issue_api_representation,
@@ -54,9 +78,10 @@ class CurrentSnapshotBuilder
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
 
             if ($mapping !== null && $value !== null) {
+                $field_value       = $this->getBoundValue($mapping, $forge_user, $value);
                 $field_snapshots[] = new FieldSnapshot(
                     $mapping,
-                    $value,
+                    $field_value,
                     $rendered_value
                 );
             }
@@ -64,7 +89,7 @@ class CurrentSnapshotBuilder
 
         $current_snapshot = new Snapshot(
             $forge_user,
-            new \DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME)),
+            new DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME)),
             $field_snapshots,
             null
         );
@@ -72,5 +97,29 @@ class CurrentSnapshotBuilder
         $this->logger->debug("Current snapshot built successfully");
 
         return $current_snapshot;
+    }
+
+    /**
+     * @param mixed $value
+     * @return mixed
+     * @throws JiraConnectionException
+     */
+    private function getBoundValue(
+        FieldMapping $mapping,
+        PFUser $forge_user,
+        $value
+    ) {
+        if ($mapping->getBindType() === Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+            $user = $this->jira_author_retriever->getAssignedTuleapUser(
+                $forge_user,
+                $value['accountId']
+            );
+
+            $value = $this->creation_state_list_value_formatter->formatListValue(
+                (string) $user->getId()
+            );
+        }
+
+        return $value;
     }
 }

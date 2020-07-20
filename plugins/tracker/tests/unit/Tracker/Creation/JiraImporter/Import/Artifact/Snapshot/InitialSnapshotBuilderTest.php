@@ -34,6 +34,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -43,10 +44,12 @@ class InitialSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForInitialChangeset(): void
     {
-        $logger    = Mockery::mock(LoggerInterface::class);
-        $generator = new InitialSnapshotBuilder(
+        $logger                = Mockery::mock(LoggerInterface::class);
+        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
+        $generator             = new InitialSnapshotBuilder(
             new CreationStateListValueFormatter(),
-            $logger
+            $logger,
+            $jira_author_retriever
         );
 
         $logger->shouldReceive('debug');
@@ -75,7 +78,7 @@ class InitialSnapshotBuilderTest extends TestCase
         $jira_base_url = 'URL';
 
         $current_snapshot         = $this->buildCurrentSnapshot($user);
-        $changelog_entires        = $this->buildChangelogEntries();
+        $changelog_entries        = $this->buildChangelogEntries();
         $field_mapping_collection = $this->buildFieldMappingCollection();
         $attachment_collection    = new AttachmentCollection(
             [
@@ -96,10 +99,15 @@ class InitialSnapshotBuilderTest extends TestCase
             ]
         );
 
+        $mysterio = Mockery::mock(PFUser::class);
+        $mysterio->shouldReceive('getId')->andReturn('104');
+
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->andReturn($mysterio);
+
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
             $current_snapshot,
-            $changelog_entires,
+            $changelog_entries,
             $field_mapping_collection,
             $jira_issue_api,
             $attachment_collection,
@@ -116,6 +124,7 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertSame(['id' => "10000"], $initial_snapshot->getFieldInSnapshot('status')->getValue());
         $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
         $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
+        $this->assertSame(['id' => '104'], $initial_snapshot->getFieldInSnapshot('assignee')->getValue());
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
 
         $this->assertSame(
@@ -132,7 +141,8 @@ class InitialSnapshotBuilderTest extends TestCase
                 "status",
                 "Fstatus",
                 "status",
-                "sb"
+                "sb",
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             )
         );
         $collection->addMapping(
@@ -140,7 +150,8 @@ class InitialSnapshotBuilderTest extends TestCase
                 "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
-                "msb"
+                "msb",
+                null
             )
         );
         $collection->addMapping(
@@ -148,7 +159,8 @@ class InitialSnapshotBuilderTest extends TestCase
                 "description",
                 "Fdescription",
                 "Description",
-                "text"
+                "text",
+                null
             ),
         );
         $collection->addMapping(
@@ -156,7 +168,8 @@ class InitialSnapshotBuilderTest extends TestCase
                 "jira_issue_url",
                 "Fjira_issue_url",
                 "Link to original issue",
-                "string"
+                "string",
+                null
             ),
         );
         $collection->addMapping(
@@ -164,7 +177,17 @@ class InitialSnapshotBuilderTest extends TestCase
                 "attachment",
                 "Fattachment",
                 "Attachments",
-                "file"
+                "file",
+                null
+            ),
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "assignee",
+                "Fassignee",
+                "Assignee",
+                "sb",
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
             ),
         );
 
@@ -301,6 +324,26 @@ class InitialSnapshotBuilderTest extends TestCase
                     ]
                 ]
             ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "106",
+                    "created" => "2020-03-25T14:15:11.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "assignee",
+                            "from"       => "e8d9s4f123ds",
+                            "fromString" => "Mysterio",
+                            "to"         => "e485s54bacs5",
+                            "toString"   => "John (The great) Doe"
+                        ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
+                    ]
+                ]
+            ),
         ];
     }
 
@@ -315,7 +358,8 @@ class InitialSnapshotBuilderTest extends TestCase
                         "status",
                         "Fstatus",
                         "status",
-                        "sb"
+                        "sb",
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     ),
                     [
                         'id' => "10000"
@@ -327,7 +371,8 @@ class InitialSnapshotBuilderTest extends TestCase
                         "customfield_10040",
                         "Fcustomfield_10040",
                         "Field 02",
-                        "msb"
+                        "msb",
+                        \Tracker_FormElement_Field_List_Bind_Static::TYPE
                     ),
                     [
                         ['id' => "10009"]
@@ -339,7 +384,8 @@ class InitialSnapshotBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text"
+                        "text",
+                        null
                     ),
                     "dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq",
                     null
@@ -349,10 +395,24 @@ class InitialSnapshotBuilderTest extends TestCase
                         "attachment",
                         "Fattachment",
                         "Attachments",
-                        "file"
+                        "file",
+                        null
                     ),
                     [
                         "id" => "10007"
+                    ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "assignee",
+                        "Fassignee",
+                        "Assignee",
+                        "sb",
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    ),
+                    [
+                        "id" => "104"
                     ],
                     null
                 ),

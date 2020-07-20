@@ -157,6 +157,8 @@ class FieldChangeXMLExporter
             $mapping->getType() === Tracker_FormElementFactory::FIELD_RADIO_BUTTON_TYPE
         ) {
             assert(is_array($value));
+            assert($mapping->getBindType() !== null);
+
             $value_ids = [
                 $value['id']
             ];
@@ -170,7 +172,7 @@ class FieldChangeXMLExporter
             $this->field_change_list_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                $mapping->getBindType(),
                 $value_ids
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE) {

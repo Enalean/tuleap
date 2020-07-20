@@ -31,6 +31,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExpor
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\IssueSnapshotCollectionBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 use XML_SimpleXMLCDATAFactory;
 
 class DataChangesetXMLExporter
@@ -73,6 +74,9 @@ class DataChangesetXMLExporter
         $this->logger                            = $logger;
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     public function exportIssueDataInChangesetXML(
         PFUser $user,
         SimpleXMLElement $artifact_node,

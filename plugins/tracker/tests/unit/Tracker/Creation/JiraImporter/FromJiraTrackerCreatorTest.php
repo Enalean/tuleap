@@ -30,7 +30,6 @@ use Tracker;
 use TrackerFactory;
 use TrackerXmlImport;
 use Tuleap\Cryptography\ConcealedString;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
 use Tuleap\Tracker\Creation\JiraImporter\Import\JiraXmlExporter;
 use Tuleap\Tracker\Creation\TrackerCreationDataChecker;
@@ -65,16 +64,16 @@ class FromJiraTrackerCreatorTest extends TestCase
     /**
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|JiraUserOnTuleapCache
      */
-    private $jira_author_retriever;
+    private $jira_user_on_tuleap_cache;
 
     protected function setUp(): void
     {
-        $this->tracker_xml_import    = Mockery::mock(TrackerXmlImport::class);
-        $this->tracker_factory       = Mockery::mock(TrackerFactory::class);
-        $this->creation_data_checker = Mockery::mock(TrackerCreationDataChecker::class);
-        $this->xml_cdata_factory     = new XML_SimpleXMLCDATAFactory();
-        $this->logger                = Mockery::mock(LoggerInterface::class);
-        $this->jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
+        $this->tracker_xml_import        = Mockery::mock(TrackerXmlImport::class);
+        $this->tracker_factory           = Mockery::mock(TrackerFactory::class);
+        $this->creation_data_checker     = Mockery::mock(TrackerCreationDataChecker::class);
+        $this->xml_cdata_factory         = new XML_SimpleXMLCDATAFactory();
+        $this->logger                    = Mockery::mock(LoggerInterface::class);
+        $this->jira_user_on_tuleap_cache = Mockery::mock(JiraUserOnTuleapCache::class);
     }
 
     public function testItDuplicatedATrackerFromJira(): void
@@ -92,7 +91,7 @@ class FromJiraTrackerCreatorTest extends TestCase
                 $this->creation_data_checker,
                 $this->xml_cdata_factory,
                 $this->logger,
-                $this->jira_author_retriever
+                $this->jira_user_on_tuleap_cache
             ]
         )->makePartial()->shouldAllowMockingProtectedMethods();
 

@@ -31,8 +31,10 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntr
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
+use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 
 class InitialSnapshotBuilder
 {
@@ -45,18 +47,24 @@ class InitialSnapshotBuilder
      */
     private $logger;
 
+    /**
+     * @var JiraAuthorRetriever
+     */
+    private $jira_author_retriever;
+
     public function __construct(
         CreationStateListValueFormatter $creation_state_list_value_formatter,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        JiraAuthorRetriever $jira_author_retriever
     ) {
         $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
-        $this->logger = $logger;
+        $this->logger                              = $logger;
+        $this->jira_author_retriever               = $jira_author_retriever;
     }
 
     /**
      * @param ChangelogEntryValueRepresentation[] $changelog_entries
-     *
-     * @throws \Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException
+     * @throws JiraConnectionException
      */
     public function buildInitialSnapshot(
         PFUser $forge_user,
@@ -79,6 +87,7 @@ class InitialSnapshotBuilder
             $field_snapshots,
             $already_parsed_fields_keys
         );
+
         $this->logger->debug("Initial attachments built successfully ");
 
         foreach ($changelog_entries as $changelog_entry) {
@@ -86,7 +95,8 @@ class InitialSnapshotBuilder
                 $changelog_entry,
                 $current_snapshot,
                 $field_snapshots,
-                $already_parsed_fields_keys
+                $already_parsed_fields_keys,
+                $forge_user
             );
         }
         $this->logger->debug("Initial fields values built successfully ");
@@ -194,11 +204,15 @@ class InitialSnapshotBuilder
         }
     }
 
+    /**
+     * @throws JiraConnectionException
+     */
     private function retrieveInitialFieldsValueInChangelogEntry(
         ChangelogEntryValueRepresentation $changelog_entry,
         Snapshot $current_snapshot,
         array &$field_snapshots,
-        array &$already_parsed_fields_keys
+        array &$already_parsed_fields_keys,
+        PFUser $forge_user
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
             $changed_field_id       = $changed_field->getFieldId();
@@ -219,11 +233,19 @@ class InitialSnapshotBuilder
                     continue;
                 }
 
+                $field_mapping = $current_snapshot_field->getFieldMapping();
                 if ($this->fieldListHasInitialValue($changed_field)) {
-                    $field_snapshots[] = new FieldSnapshot(
-                        $current_snapshot_field->getFieldMapping(),
-                        $this->creation_state_list_value_formatter->formatCreationListValue(
-                            $changed_field_from
+                    $value = $changed_field_from;
+
+                    if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
+                        $user  = $this->jira_author_retriever->getAssignedTuleapUser($forge_user, $changed_field_from);
+                        $value = (string) $user->getId();
+                    }
+
+                    $field_snapshots[]   = new FieldSnapshot(
+                        $field_mapping,
+                        $this->creation_state_list_value_formatter->formatListValue(
+                            $value,
                         ),
                         $current_snapshot_field->getRenderedValue()
                     );
@@ -233,7 +255,7 @@ class InitialSnapshotBuilder
 
                 if ($this->fieldTextHasInitialValue($changed_field)) {
                     $field_snapshots[] = new FieldSnapshot(
-                        $current_snapshot_field->getFieldMapping(),
+                        $field_mapping,
                         $changed_field_from_string,
                         null
                     );

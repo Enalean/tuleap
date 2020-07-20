@@ -36,6 +36,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBu
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserOnTuleapCache;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraUserInfoQuerier;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\ChangelogSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\CurrentSnapshotBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\InitialSnapshotBuilder;
@@ -198,7 +200,7 @@ class JiraXmlExporter
     public static function build(
         JiraCredentials $jira_credentials,
         LoggerInterface $logger,
-        JiraAuthorRetriever $jira_author_retriever
+        JiraUserOnTuleapCache $jira_user_on_tuleap_cache
     ): self {
         $error_collector = new ErrorCollector();
 
@@ -223,6 +225,17 @@ class JiraXmlExporter
             $default_criteria_exporter,
             $cdata_factory,
             $report_table_exporter
+        );
+
+        $creation_state_list_value_formatter = new CreationStateListValueFormatter();
+        $jira_author_retriever = new JiraAuthorRetriever(
+            $logger,
+            UserManager::instance(),
+            $jira_user_on_tuleap_cache,
+            new JiraUserInfoQuerier(
+                $wrapper,
+                $logger
+            )
         );
 
         return new self(
@@ -263,13 +276,18 @@ class JiraXmlExporter
                             $wrapper,
                             $logger
                         ),
-                        new CurrentSnapshotBuilder($logger),
+                        new CurrentSnapshotBuilder(
+                            $logger,
+                            $creation_state_list_value_formatter,
+                            $jira_author_retriever
+                        ),
                         new InitialSnapshotBuilder(
-                            new CreationStateListValueFormatter(),
-                            $logger
+                            $creation_state_list_value_formatter,
+                            $logger,
+                            $jira_author_retriever
                         ),
                         new ChangelogSnapshotBuilder(
-                            new CreationStateListValueFormatter(),
+                            $creation_state_list_value_formatter,
                             $logger,
                             $jira_author_retriever
                         ),

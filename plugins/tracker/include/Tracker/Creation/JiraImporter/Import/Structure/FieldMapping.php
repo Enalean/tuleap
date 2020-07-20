@@ -48,12 +48,18 @@ class FieldMapping
      */
     private $type;
 
-    public function __construct(string $jira_field_id, string $xml_id, string $field_name, string $type)
+    /**
+     * @var string|null
+     */
+    private $bind_type;
+
+    public function __construct(string $jira_field_id, string $xml_id, string $field_name, string $type, ?string $bind_type)
     {
         $this->jira_field_id = $jira_field_id;
         $this->xml_id        = $xml_id;
         $this->field_name    = $field_name;
         $this->type          = $type;
+        $this->bind_type     = $bind_type;
     }
 
     public function getJiraFieldId(): string
@@ -74,5 +80,10 @@ class FieldMapping
     public function getType(): string
     {
         return $this->type;
+    }
+
+    public function getBindType(): ?string
+    {
+        return $this->bind_type;
     }
 }

@@ -61,7 +61,8 @@ final class FieldXmlExporterTest extends TestCase
             true,
             [],
             [],
-            $collection
+            $collection,
+            null
         );
 
         $form_element_node = $parent_node->formElements->formElement;

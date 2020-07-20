@@ -85,7 +85,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -98,7 +99,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -111,7 +113,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -124,7 +127,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -137,7 +141,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -152,7 +157,8 @@ class AlwaysThereFieldsExporter
                 'display_time' => '1'
             ],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
 
         $this->field_xml_exporter->exportField(
@@ -165,7 +171,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             $status_values_collection->getAllValues(),
-            $field_mapping_collection
+            $field_mapping_collection,
+            \Tracker_FormElement_Field_List_Bind_Static::TYPE
         );
 
         $this->field_xml_exporter->exportField(
@@ -178,7 +185,8 @@ class AlwaysThereFieldsExporter
             false,
             [],
             [],
-            $field_mapping_collection
+            $field_mapping_collection,
+            null
         );
     }
 }

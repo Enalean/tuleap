@@ -43,7 +43,7 @@ class CreationStateListValueFormatterTest extends TestCase
     {
         $value = "10000";
 
-        $formatted_value = $this->formatter->formatCreationListValue($value);
+        $formatted_value = $this->formatter->formatListValue($value);
 
         $this->assertSame(['id' => "10000"], $formatted_value);
     }
@@ -52,7 +52,7 @@ class CreationStateListValueFormatterTest extends TestCase
     {
         $value = "[10000, 10001]";
 
-        $formatted_value = $this->formatter->formatCreationListValue($value);
+        $formatted_value = $this->formatter->formatListValue($value);
 
         $this->assertSame(
             [

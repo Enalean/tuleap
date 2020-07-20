@@ -49,16 +49,26 @@ class JiraUserOnTuleapCache
 
     public function isUserCached(JiraUser $jira_user): bool
     {
-        return isset($this->user_cache[$jira_user->getJiraAccountId()]);
+        return $this->hasUserWithAccountId($jira_user->getJiraAccountId());
     }
 
-    public function getUserFromCacheByJiraAccountId(JiraUser $jira_user): \PFUser
+    public function getUserFromCache(JiraUser $jira_user): \PFUser
     {
-        return $this->user_cache[$jira_user->getJiraAccountId()];
+        return $this->getUserFromCacheByJiraAccountId($jira_user->getJiraAccountId());
     }
 
     public function getJiraTuleapUsersMapping(): JiraTuleapUsersMapping
     {
         return $this->jira_tuleap_users_mapping;
+    }
+
+    public function getUserFromCacheByJiraAccountId(string $jira_account_id): \PFUser
+    {
+        return $this->user_cache[$jira_account_id];
+    }
+
+    public function hasUserWithAccountId(string $jira_account_id): bool
+    {
+        return isset($this->user_cache[$jira_account_id]);
     }
 }

@@ -47,7 +47,8 @@ class SemanticsXMLExporterTest extends TestCase
                 'summary',
                 'Fsummary',
                 'summary',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
         $mapping->addMapping(
@@ -55,7 +56,8 @@ class SemanticsXMLExporterTest extends TestCase
                 'description',
                 'Fdescription',
                 'description',
-                Tracker_FormElementFactory::FIELD_TEXT_TYPE
+                Tracker_FormElementFactory::FIELD_TEXT_TYPE,
+                null
             )
         );
         $mapping->addMapping(
@@ -63,7 +65,8 @@ class SemanticsXMLExporterTest extends TestCase
                 'status',
                 'Fstatus',
                 'status',
-                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             )
         );
 

@@ -28,7 +28,9 @@ use PFUser;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 
@@ -38,13 +40,21 @@ class CurrentSnapshotBuilderTest extends TestCase
 
     public function testItBuildsSnapshotForIssueCurrentData(): void
     {
-        $logger = Mockery::mock(LoggerInterface::class);
-        $builder = new CurrentSnapshotBuilder($logger);
+        $logger                = Mockery::mock(LoggerInterface::class);
+        $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
+        $builder               = new CurrentSnapshotBuilder(
+            $logger,
+            new CreationStateListValueFormatter(),
+            $jira_author_retriever
+        );
 
         $user                          = Mockery::mock(PFUser::class);
+        $john_doe                      = Mockery::mock(PFUser::class);
         $jira_issue_api                = $this->buildIssueAPIResponse();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
 
+        $john_doe->shouldReceive('getId')->andReturn(105);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e6a7dae9')->andReturn($john_doe);
         $logger->shouldReceive('debug');
 
         $snapshot = $builder->buildCurrentSnapshot(
@@ -55,7 +65,7 @@ class CurrentSnapshotBuilderTest extends TestCase
 
         $this->assertSame(1587820210, $snapshot->getDate()->getTimestamp());
         $this->assertSame($user, $snapshot->getUser());
-        $this->assertCount(2, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(3, $snapshot->getAllFieldsSnapshot());
 
         foreach ($snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
@@ -64,6 +74,9 @@ class CurrentSnapshotBuilderTest extends TestCase
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'issuetype') {
                 $this->assertSame(['id' => '10004'], $field_snapshot->getValue());
+                $this->assertNull($field_snapshot->getRenderedValue());
+            } elseif ($field_id === 'assignee') {
+                $this->assertSame(['id' => '105'], $field_snapshot->getValue());
                 $this->assertNull($field_snapshot->getRenderedValue());
             } else {
                 $this->fail("Unexpected field $field_id in mapping");
@@ -85,7 +98,12 @@ class CurrentSnapshotBuilderTest extends TestCase
                             'id' => '10004'
                         ],
                     'created' => '2020-03-25T14:10:10.823+0100',
-                    'updated' => '2020-04-25T14:10:10.823+0100'
+                    'updated' => '2020-04-25T14:10:10.823+0100',
+                    'assignee' => [
+                        'accountId'    => 'e6a7dae9',
+                        'displayName'  => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
+                    ]
                 ],
                 'renderedFields' => []
             ]
@@ -100,7 +118,8 @@ class CurrentSnapshotBuilderTest extends TestCase
                 'summary',
                 'Fsummary',
                 'Summary',
-                Tracker_FormElementFactory::FIELD_STRING_TYPE
+                Tracker_FormElementFactory::FIELD_STRING_TYPE,
+                null
             )
         );
         $collection->addMapping(
@@ -108,7 +127,17 @@ class CurrentSnapshotBuilderTest extends TestCase
                 'issuetype',
                 'Fissuetype',
                 'Issue Type',
-                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                'assignee',
+                'Fassignee',
+                'Assignee',
+                Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
             )
         );
 

@@ -53,6 +53,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $logger->shouldReceive('debug');
 
         $user                          = Mockery::mock(PFUser::class);
+        $john_doe                      = Mockery::mock(PFUser::class);
         $changelog_entry               = $this->buildChangelogEntry();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
         $current_snapshot              = $this->buildCurrentSnapshot($user);
@@ -75,7 +76,9 @@ class ChangelogSnapshotBuilderTest extends TestCase
             ]
         );
 
+        $john_doe->shouldReceive('getId')->andReturn(105);
         $jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e8a7dbae5')->andReturn($john_doe);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $user,
@@ -87,7 +90,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(6, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(7, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -125,6 +128,11 @@ class ChangelogSnapshotBuilderTest extends TestCase
             "2020-03-25",
             $snapshot->getFieldInSnapshot('datepicker')->getValue()
         );
+
+        $this->assertSame(
+            ['id' => '105'],
+            $snapshot->getFieldInSnapshot('assignee')->getValue()
+        );
     }
 
     private function buildCurrentSnapshot(PFUser $user): Snapshot
@@ -138,7 +146,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "description",
                         "Fdescription",
                         "Description",
-                        "text"
+                        "text",
+                        null
                     ),
                     "*aaaaaaaaa*",
                     "<p>aaaaaaaaa</p>"
@@ -148,7 +157,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "textfield",
                         "Ftextfield",
                         "Text Field",
-                        "text"
+                        "text",
+                        null
                     ),
                     "*text area v2*",
                     "<p>text area v2</p>"
@@ -158,13 +168,25 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "attachment",
                         "Fattachment",
                         "Attachments",
-                        "file"
+                        "file",
+                        null
                     ),
                     [
                         [
                             'id' => "10007"
                         ]
                     ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        'assignee',
+                        'Fassignee',
+                        'Assignee',
+                        'sb',
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    ),
+                    ['id' => '105'],
                     null
                 )
             ],
@@ -222,11 +244,19 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "toString"   => "file02.gif"
                     ],
                     6 => [
+
                         "fieldId"    => "datepicker",
                         "from"       => null,
                         "fromString" => null,
                         "to"         => "2020-03-25",
                         "toString"   => "25/Mar/20"
+                    ],
+                    7 => [
+                        "fieldId"    => "assignee",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "e8a7dbae5",
+                        "toString"   => "John Doe"
                     ]
                 ],
                 'author' => [
@@ -246,7 +276,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "customfield_10036",
                 "Fcustomfield_10036",
                 "Field 01",
-                "float"
+                "float",
+                null
             )
         );
         $collection->addMapping(
@@ -254,7 +285,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "status",
                 "Fstatus",
                 "status",
-                "sb"
+                "sb",
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             )
         );
         $collection->addMapping(
@@ -262,7 +294,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "customfield_10040",
                 "Fcustomfield_10040",
                 "Field 02",
-                "msb"
+                "msb",
+                \Tracker_FormElement_Field_List_Bind_Static::TYPE
             ),
         );
         $collection->addMapping(
@@ -270,7 +303,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "description",
                 "Fdescription",
                 "Description",
-                "text"
+                "text",
+                null
             )
         );
         $collection->addMapping(
@@ -278,7 +312,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "textfield",
                 "Ftextfield",
                 "Text Field",
-                "text"
+                "text",
+                null
             )
         );
         $collection->addMapping(
@@ -286,7 +321,17 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "attachment",
                 "Fattachment",
                 "Attachments",
-                "file"
+                "file",
+                null
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "assignee",
+                "Fassignee",
+                "Assignee",
+                "sb",
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
             )
         );
         $collection->addMapping(
@@ -294,7 +339,8 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "datepicker",
                 "Fdatepicker",
                 "Date picker",
-                "date"
+                "date",
+                null
             ),
         );
 
