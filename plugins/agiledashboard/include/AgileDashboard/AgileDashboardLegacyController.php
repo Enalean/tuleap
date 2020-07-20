@@ -77,6 +77,10 @@ class AgileDashboardLegacyController implements DispatchableWithRequest
 
         $router = $this->router_builder->build($request);
 
-        $router->route($request);
+        try {
+            $router->route($request);
+        } catch (\Planning_NotFoundException $exception) {
+            throw new NotFoundException('', $exception);
+        }
     }
 }
