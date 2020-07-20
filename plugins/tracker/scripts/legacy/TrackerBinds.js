@@ -25,6 +25,8 @@ codendi.tracker = codendi.tracker || {};
 
 codendi.tracker.bind = {};
 
+const none_value = "100";
+
 codendi.tracker.bind.Editor = Class.create({
     initialize: function (element) {
         if (!element) {
@@ -71,21 +73,29 @@ codendi.tracker.bind.Editor = Class.create({
     editStaticValues: function (element) {
         var tf_label = element;
         var ta_description = element.up().down("textarea");
-        var link = new Element("a", { href: "#", title: "Edit " + tf_label.value }).update(
-            tuleap.escaper.html(tf_label.value)
-        );
+        let link;
+
+        if (tf_label.getAttribute("data-value-id") === none_value) {
+            link = new Element("span").update(tuleap.escaper.html(tf_label.value));
+        } else {
+            link = new Element("a", { href: "#", title: "Edit " + tf_label.value }).update(
+                tuleap.escaper.html(tf_label.value)
+            );
+        }
         var descr = new Element("div")
             .addClassName("tracker-admin-bindvalue_description")
             .update(this.nl2br(tuleap.escaper.html(this.wordwrap(ta_description.value, 80, "\n"))));
         tf_label.insert({ before: link });
         link.insert({ after: descr });
-        link.observe("click", function (evt) {
-            link.hide();
-            descr.hide();
-            tf_label.show();
-            ta_description.show();
-            evt.stop();
-        });
+        if (tf_label.getAttribute("data-value-id") !== none_value) {
+            link.observe("click", function (evt) {
+                link.hide();
+                descr.hide();
+                tf_label.show();
+                ta_description.show();
+                evt.stop();
+            });
+        }
         tf_label.hide();
         ta_description.hide();
     },
