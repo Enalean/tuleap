@@ -635,9 +635,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                             if (isset($info['description']) && trim($info['description']) != $bind_static_value->getDescription()) {
                                 $new_description = trim($info['description']);
                             }
-                            if (isset($info['is_hidden']) && trim($info['is_hidden']) != $bind_static_value->isHidden()) {
-                                $new_is_hidden = trim($info['is_hidden']);
+
+                            if ($value_dao->canValueBeHidden($this->field, $value_id)) {
+                                $new_is_hidden = ! isset($info['is_hidden']);
                             }
+
                             if ($new_label !== null || $new_description !== null || $new_is_hidden !== null) {
                                 //something has changed. we can save it
                                 $value_dao->save(
@@ -674,6 +676,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     break;
             }
         }
+
         return parent::process($params, $no_redirect);
     }
 

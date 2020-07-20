@@ -18,9 +18,9 @@
         {{/ decorator }}
     </span>
     <span class="tracker-admin-bindvalue_actions">
-        <input type="hidden" name="bind[edit][{{ id }}][is_hidden]" value="1"/>
         {{# value_can_be_hidden }}
-            <input type="checkbox" name="bind[edit][{{ id }}][is_hidden]" value="0"
+            <input type="checkbox"
+                   name="bind[edit][{{ id }}][is_hidden]"
                    {{^ is_hidden }}checked="checked"{{/ is_hidden }}
                    class="tracker_admin_static_value_hidden_chk"/>
         {{/ value_can_be_hidden }}
