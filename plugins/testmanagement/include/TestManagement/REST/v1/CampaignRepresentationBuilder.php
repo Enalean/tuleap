@@ -58,14 +58,11 @@ class CampaignRepresentationBuilder
 
     public function getCampaignRepresentation(PFUser $user, Campaign $campaign): CampaignRepresentation
     {
-        $campaign_representation = new CampaignRepresentation();
-        $campaign_representation->build(
+        return CampaignRepresentation::build(
             $campaign,
             $this->tracker_form_element_factory,
             $user
         );
-
-        return $campaign_representation;
     }
 
     /**
@@ -96,8 +93,7 @@ class CampaignRepresentationBuilder
 
         foreach ($paginated_campaigns->getArtifacts() as $artifact) {
             $campaign = $this->campaign_retriever->getByArtifact($artifact);
-            $campaign_representation = new CampaignRepresentation();
-            $campaign_representation->build($campaign, $this->tracker_form_element_factory, $user);
+            $campaign_representation    = CampaignRepresentation::build($campaign, $this->tracker_form_element_factory, $user);
             $campaign_representations[] = $campaign_representation;
         }
 

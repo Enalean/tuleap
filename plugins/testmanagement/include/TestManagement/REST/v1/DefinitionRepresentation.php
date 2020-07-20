@@ -29,6 +29,9 @@ use Tuleap\TestManagement\Step\Definition\Field\StepDefinitionChangesetValue;
 use Tuleap\Tracker\REST\Artifact\ArtifactRepresentation;
 use Tuleap\Tracker\REST\MinimalTrackerRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class DefinitionRepresentation extends MinimalDefinitionRepresentation
 {
     public const FIELD_DESCRIPTION = 'details';
@@ -36,22 +39,16 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
 
     /**
      * @var String
-     *
-     * @psalm-readonly
      */
     public $description;
 
     /**
      * @var array {@type StepDefinitionRepresentation}
-     *
-     * @psalm-readonly
      */
     public $steps;
 
     /**
      * @var ArtifactRepresentation | null
-     *
-     * @psalm-readonly
      */
     public $requirement;
 
@@ -77,7 +74,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         $artifact_representation = null;
 
         if ($requirement) {
-            $requirement_tracker_representation = MinimalTrackerRepresentation::build($requirement->getTracker());
+            $requirement_tracker_representation = self::getMinimalTrackerRepresentation($requirement);
 
             $artifact_representation = ArtifactRepresentation::build($user, $requirement, array(), array(), $requirement_tracker_representation);
         }
@@ -99,8 +96,7 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
 
         foreach ($value->getValue() as $step) {
-            $representation = new StepDefinitionRepresentation();
-            $representation->build($step, $purifier, $artifact);
+            $representation = StepDefinitionRepresentation::build($step, $purifier, $artifact);
 
             $this->steps[] = $representation;
         }
@@ -122,5 +118,10 @@ class DefinitionRepresentation extends MinimalDefinitionRepresentation
         }
 
         return $html_purifier->purifyHTMLWithReferences($field_value->getText(), $artifact->getTracker()->getGroupId());
+    }
+
+    private static function getMinimalTrackerRepresentation(Tracker_Artifact $artifact): MinimalTrackerRepresentation
+    {
+        return MinimalTrackerRepresentation::build($artifact->getTracker());
     }
 }

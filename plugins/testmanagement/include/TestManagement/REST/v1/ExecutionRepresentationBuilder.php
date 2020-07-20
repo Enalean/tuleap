@@ -173,8 +173,7 @@ class ExecutionRepresentationBuilder
             $definition,
             $definitions_changeset_ids
         );
-        $execution_representation = new ExecutionRepresentation();
-        $execution_representation->build(
+        $execution_representation = new ExecutionRepresentation(
             $execution->getId(),
             $execution->getStatus(),
             $this->getExecutionResult($user, $execution),
@@ -358,16 +357,13 @@ class ExecutionRepresentationBuilder
 
         $has_been_run_at_least_once = ! $execution->isFirstChangeset($last_changeset);
 
-        $previous_result_representation = new PreviousResultRepresentation();
-        $previous_result_representation->build(
+        return new PreviousResultRepresentation(
             $last_changeset->getSubmittedOn(),
             $user_representation,
             $execution->getStatusForChangeset($last_changeset),
             $this->getExecutionResult($user, $execution),
             $has_been_run_at_least_once
         );
-
-        return $previous_result_representation;
     }
 
     /**
