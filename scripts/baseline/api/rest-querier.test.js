@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp_fetch from "tlp-fetch";
+import * as tlp_fetch from "tlp";
 import { mockFetchSuccess } from "../../../../../src/themes/tlp/mocks/tlp-fetch-mock-helper.js";
 import {
     getOpenMilestones,
@@ -28,7 +28,7 @@ import {
 } from "./rest-querier";
 import { create, createList } from "../support/factories";
 
-jest.mock("tlp-fetch");
+jest.mock("tlp");
 
 describe("Rest queries:", () => {
     let result;

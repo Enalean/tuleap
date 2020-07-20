@@ -43,9 +43,6 @@ module.exports = [
         externals: {
             tlp: "tlp",
         },
-        resolve: {
-            alias: webpack_configurator.extendAliases(webpack_configurator.tlp_fetch_alias),
-        },
         module: {
             rules: [
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
