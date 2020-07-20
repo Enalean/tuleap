@@ -282,6 +282,10 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
             if ($new_rev == '0000000000000000000000000000000000000000') {
                 $this->abandonFromSourceBranch($user, $repository, $branch_name);
             } else {
+                if (! $user->isAnonymous()) {
+                    $this->markManuallyMerged($user, $repository, $branch_name, $new_rev);
+                }
+
                 $pull_request_updater = new PullRequestUpdater(
                     $this->getPullRequestFactory(),
                     new PullRequestMerger(
@@ -300,10 +304,6 @@ class pullrequestPlugin extends Plugin // phpcs:ignore
                     PullRequestNotificationSupport::buildDispatcher(self::getLogger())
                 );
                 $pull_request_updater->updatePullRequests($user, $repository, $branch_name, $new_rev);
-            }
-
-            if (! $user->isAnonymous()) {
-                $this->markManuallyMerged($user, $repository, $branch_name, $new_rev);
             }
         }
     }
