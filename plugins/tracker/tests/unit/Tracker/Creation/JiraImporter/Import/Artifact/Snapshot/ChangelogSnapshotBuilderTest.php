@@ -54,6 +54,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
         $user                          = Mockery::mock(PFUser::class);
         $john_doe                      = Mockery::mock(PFUser::class);
+        $mysterio                      = Mockery::mock(PFUser::class);
         $changelog_entry               = $this->buildChangelogEntry();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
         $current_snapshot              = $this->buildCurrentSnapshot($user);
@@ -77,8 +78,10 @@ class ChangelogSnapshotBuilderTest extends TestCase
         );
 
         $john_doe->shouldReceive('getId')->andReturn(105);
+        $mysterio->shouldReceive('getId')->andReturn(106);
         $jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
         $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e8a7dbae5')->andReturn($john_doe);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'a7e8b9c5')->andReturn($mysterio);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
             $user,
@@ -90,7 +93,7 @@ class ChangelogSnapshotBuilderTest extends TestCase
 
         $this->assertSame($user, $snapshot->getUser());
         $this->assertSame(1585141810, $snapshot->getDate()->getTimestamp());
-        $this->assertCount(7, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(8, $snapshot->getAllFieldsSnapshot());
 
         $this->assertNull($snapshot->getFieldInSnapshot('environment'));
         $this->assertSame("9", $snapshot->getFieldInSnapshot('customfield_10036')->getValue());
@@ -132,6 +135,14 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $this->assertSame(
             ['id' => '105'],
             $snapshot->getFieldInSnapshot('assignee')->getValue()
+        );
+
+        $this->assertSame(
+            [
+                ['id' => '105'],
+                ['id' => '106']
+            ],
+            $snapshot->getFieldInSnapshot('homies')->getValue()
         );
     }
 
@@ -187,6 +198,20 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         \Tracker_FormElement_Field_List_Bind_Users::TYPE
                     ),
                     ['id' => '105'],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        'homies',
+                        'Fhomies',
+                        'Homies',
+                        'msb',
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    ),
+                    [
+                        ['id' => '105'],
+                        ['id' => '106'],
+                    ],
                     null
                 )
             ],
@@ -257,6 +282,13 @@ class ChangelogSnapshotBuilderTest extends TestCase
                         "fromString" => null,
                         "to"         => "e8a7dbae5",
                         "toString"   => "John Doe"
+                    ],
+                    8 => [
+                        "fieldId"    => "homies",
+                        "from"       => null,
+                        "fromString" => null,
+                        "to"         => "e8a7dbae5, a7e8b9c5",
+                        "toString"   => "John Doe, Mysterio"
                     ]
                 ],
                 'author' => [
@@ -331,6 +363,15 @@ class ChangelogSnapshotBuilderTest extends TestCase
                 "Fassignee",
                 "Assignee",
                 "sb",
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "homies",
+                "Fhomies",
+                "Homies",
+                "msb",
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE
             )
         );

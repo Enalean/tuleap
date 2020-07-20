@@ -525,6 +525,52 @@ final class JiraToTuleapFieldTypeMapperTest extends TestCase
         );
     }
 
+    public function testJiraMultiUserPickerFieldIsMappedToMultiSelectBoxField(): void
+    {
+        $bound_values = [
+            new JiraFieldAPIAllowedValueRepresentation(
+                1,
+                'value01'
+            ),
+            new JiraFieldAPIAllowedValueRepresentation(
+                2,
+                'value02'
+            )
+        ];
+
+        $jira_field = new JiraFieldAPIRepresentation(
+            'multiselectid',
+            'Multi Select',
+            false,
+            'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker',
+            $bound_values
+        );
+
+        $collection = new FieldMappingCollection();
+
+        $this->field_exporter->shouldReceive('exportField')->withArgs(
+            [
+                $this->custom_fieldset,
+                Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                $jira_field->getId(),
+                $jira_field->getLabel(),
+                $jira_field->getId(),
+                12,
+                $jira_field->isRequired(),
+                [],
+                $bound_values,
+                $collection,
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            ]
+        );
+
+        $this->mapper->exportFieldToXml(
+            $jira_field,
+            $this->containers_collection,
+            $collection
+        );
+    }
+
     public function testUnsupportedFieldIsLoggedForDebugPurpose(): void
     {
         $jira_field = new JiraFieldAPIRepresentation(

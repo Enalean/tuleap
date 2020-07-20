@@ -343,4 +343,54 @@ class FieldChangeXMLExporterTest extends TestCase
         $this->assertCount(1, $field_change_node->value);
         $this->assertSame('105', (string) $field_change_node->value);
     }
+
+    public function testItExportsTheUsersInAMultiSelectboxField(): void
+    {
+        $mapping = new FieldMapping(
+            'homies',
+            'Fhomies',
+            'homies',
+            'msb',
+            \Tracker_FormElement_Field_List_Bind_Users::TYPE
+        );
+
+        $changeset_node = new SimpleXMLElement('<changeset/>');
+        $snapshot = new Snapshot(
+            Mockery::mock(PFUser::class),
+            new \DateTimeImmutable(),
+            [
+                new FieldSnapshot(
+                    $mapping,
+                    [
+
+                        ['id' => '105'],
+                        ['id' => '106']
+                    ],
+                    null
+                )
+            ],
+            null
+        );
+
+        $john_doe = Mockery::mock(PFUser::class);
+        $john_doe->shouldReceive('getLdapId')->andReturn(105);
+        $john_doe->shouldReceive('getId')->andReturn(105);
+
+        $mysterio = Mockery::mock(PFUser::class);
+        $mysterio->shouldReceive('getLdapId')->andReturn(106);
+        $mysterio->shouldReceive('getId')->andReturn(106);
+
+        $this->user_manager->shouldReceive('getUserById')->with(105)->andReturn($john_doe);
+        $this->user_manager->shouldReceive('getUserById')->with(106)->andReturn($mysterio);
+        $this->exporter->exportFieldChanges(
+            $snapshot,
+            $changeset_node
+        );
+
+        $field_change_node = $changeset_node->field_change;
+        $this->assertSame('list', (string) $field_change_node['type']);
+        $this->assertCount(2, $field_change_node->value);
+        $this->assertSame('105', (string) $field_change_node->value[0]);
+        $this->assertSame('106', (string) $field_change_node->value[1]);
+    }
 }

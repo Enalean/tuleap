@@ -50,11 +50,14 @@ class CurrentSnapshotBuilderTest extends TestCase
 
         $user                          = Mockery::mock(PFUser::class);
         $john_doe                      = Mockery::mock(PFUser::class);
+        $mysterio                      = Mockery::mock(PFUser::class);
         $jira_issue_api                = $this->buildIssueAPIResponse();
         $jira_field_mapping_collection = $this->buildFieldMappingCollection();
 
         $john_doe->shouldReceive('getId')->andReturn(105);
+        $mysterio->shouldReceive('getId')->andReturn(106);
         $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e6a7dae9')->andReturn($john_doe);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'd45a6r4f')->andReturn($mysterio);
         $logger->shouldReceive('debug');
 
         $snapshot = $builder->buildCurrentSnapshot(
@@ -65,7 +68,7 @@ class CurrentSnapshotBuilderTest extends TestCase
 
         $this->assertSame(1587820210, $snapshot->getDate()->getTimestamp());
         $this->assertSame($user, $snapshot->getUser());
-        $this->assertCount(3, $snapshot->getAllFieldsSnapshot());
+        $this->assertCount(4, $snapshot->getAllFieldsSnapshot());
 
         foreach ($snapshot->getAllFieldsSnapshot() as $field_snapshot) {
             $field_id = $field_snapshot->getFieldMapping()->getJiraFieldId();
@@ -77,6 +80,15 @@ class CurrentSnapshotBuilderTest extends TestCase
                 $this->assertNull($field_snapshot->getRenderedValue());
             } elseif ($field_id === 'assignee') {
                 $this->assertSame(['id' => '105'], $field_snapshot->getValue());
+                $this->assertNull($field_snapshot->getRenderedValue());
+            } elseif ($field_id === 'homies') {
+                $this->assertSame(
+                    [
+                        ['id' => '105'],
+                        ['id' => '106'],
+                    ],
+                    $field_snapshot->getValue()
+                );
                 $this->assertNull($field_snapshot->getRenderedValue());
             } else {
                 $this->fail("Unexpected field $field_id in mapping");
@@ -103,6 +115,17 @@ class CurrentSnapshotBuilderTest extends TestCase
                         'accountId'    => 'e6a7dae9',
                         'displayName'  => 'John Doe',
                         'emailAddress' => 'john.doe@example.com'
+                    ],
+                    'homies' => [
+                        [
+                            'accountId'    => 'e6a7dae9',
+                            'displayName'  => 'John Doe',
+                            'emailAddress' => 'john.doe@example.com'
+                        ], [
+                            'accountId'    => 'd45a6r4f',
+                            'displayName'  => 'Mysterio',
+                            'emailAddress' => 'myster.io@example.com'
+                        ]
                     ]
                 ],
                 'renderedFields' => []
@@ -137,6 +160,15 @@ class CurrentSnapshotBuilderTest extends TestCase
                 'Fassignee',
                 'Assignee',
                 Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE,
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            )
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                'homies',
+                'Fhomies',
+                'Homies',
+                Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE
             )
         );

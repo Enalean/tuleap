@@ -40,6 +40,20 @@ class CreationStateListValueFormatter
     }
 
     /**
+     * @param int[] $user_ids
+     * @return non-empty-list<array{id: string}>
+     */
+    public function formatMultiUserListValues(array $user_ids): array
+    {
+        return array_map(
+            function (int $user_id) {
+                return $this->formatValueAsArray((string) $user_id);
+            },
+            $user_ids
+        );
+    }
+
+    /**
      * @return non-empty-list<array{id: string}>
      */
     private function formatMultiListValues(string $changed_field_from): array
