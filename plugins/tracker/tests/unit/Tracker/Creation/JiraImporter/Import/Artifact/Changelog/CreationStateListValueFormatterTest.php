@@ -62,4 +62,20 @@ class CreationStateListValueFormatterTest extends TestCase
             $formatted_value
         );
     }
+
+    public function testItFormatsMultiUserListValues(): void
+    {
+        $value = [105, 106, 201];
+
+        $formatted_value = $this->formatter->formatMultiUserListValues($value);
+
+        $this->assertSame(
+            [
+                ['id' => "105"],
+                ['id' => "106"],
+                ['id' => "201"],
+            ],
+            $formatted_value
+        );
+    }
 }

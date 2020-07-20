@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\Attachment;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
@@ -47,9 +48,11 @@ class InitialSnapshotBuilderTest extends TestCase
         $logger                = Mockery::mock(LoggerInterface::class);
         $jira_author_retriever = Mockery::mock(JiraAuthorRetriever::class);
         $generator             = new InitialSnapshotBuilder(
-            new CreationStateListValueFormatter(),
             $logger,
-            $jira_author_retriever
+            new ListFieldChangeInitialValueRetriever(
+                new CreationStateListValueFormatter(),
+                $jira_author_retriever
+            )
         );
 
         $logger->shouldReceive('debug');
@@ -101,8 +104,10 @@ class InitialSnapshotBuilderTest extends TestCase
 
         $mysterio = Mockery::mock(PFUser::class);
         $mysterio->shouldReceive('getId')->andReturn('104');
+        $john_doe = Mockery::mock(PFUser::class);
+        $john_doe->shouldReceive('getId')->andReturn('105');
 
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->andReturn($mysterio);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->andReturnValues([$mysterio, $john_doe]);
 
         $initial_snapshot = $generator->buildInitialSnapshot(
             $user,
@@ -125,6 +130,13 @@ class InitialSnapshotBuilderTest extends TestCase
         $this->assertSame([['id' => "10009"]], $initial_snapshot->getFieldInSnapshot('customfield_10040')->getValue());
         $this->assertSame("dsdsdsds\n\nqdsdsqdsqdsq\n\n\n\ndsqdsdsq", $initial_snapshot->getFieldInSnapshot('description')->getValue());
         $this->assertSame(['id' => '104'], $initial_snapshot->getFieldInSnapshot('assignee')->getValue());
+        $this->assertSame(
+            [
+                ['id' => '105'],
+            ],
+            $initial_snapshot->getFieldInSnapshot('homies')->getValue()
+        );
+
         $this->assertNull($initial_snapshot->getFieldInSnapshot('description')->getRenderedValue());
 
         $this->assertSame(
@@ -187,6 +199,15 @@ class InitialSnapshotBuilderTest extends TestCase
                 "Fassignee",
                 "Assignee",
                 "sb",
+                \Tracker_FormElement_Field_List_Bind_Users::TYPE
+            ),
+        );
+        $collection->addMapping(
+            new FieldMapping(
+                "homies",
+                "Fhomies",
+                "Homies",
+                "msb",
                 \Tracker_FormElement_Field_List_Bind_Users::TYPE
             ),
         );
@@ -344,6 +365,26 @@ class InitialSnapshotBuilderTest extends TestCase
                     ]
                 ]
             ),
+            ChangelogEntryValueRepresentation::buildFromAPIResponse(
+                [
+                    "id" => "107",
+                    "created" => "2020-03-25T14:15:11.823+0100",
+                    "items" => [
+                        0 => [
+                            "fieldId"    => "homies",
+                            "from"       => 'e485s54bacs5',
+                            "fromString" => 'John (The great) Doe',
+                            "to"         => "e485s54bacs5, a5b1d5f6e78b",
+                            "toString"   => "John (The great) Doe, Mysterio (The mysterious)"
+                        ]
+                    ],
+                    'author' => [
+                        'accountId' => 'e8a7dbae5',
+                        'displayName' => 'John Doe',
+                        'emailAddress' => 'john.doe@example.com'
+                    ]
+                ]
+            ),
         ];
     }
 
@@ -413,6 +454,20 @@ class InitialSnapshotBuilderTest extends TestCase
                     ),
                     [
                         "id" => "104"
+                    ],
+                    null
+                ),
+                new FieldSnapshot(
+                    new FieldMapping(
+                        "homies",
+                        "Fhomies",
+                        "Homies",
+                        "msb",
+                        \Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    ),
+                    [
+                        ["id" => "104"],
+                        ["id" => "105"],
                     ],
                     null
                 ),

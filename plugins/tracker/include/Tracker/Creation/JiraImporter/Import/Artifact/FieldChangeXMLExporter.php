@@ -26,7 +26,6 @@ namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 use DateTimeImmutable;
 use SimpleXMLElement;
 use Tracker_Artifact_ChangesetValue_Text;
-use Tracker_FormElement_Field_List_Bind_Static;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot\Snapshot;
@@ -177,6 +176,7 @@ class FieldChangeXMLExporter
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE) {
             assert(is_array($value));
+            assert($mapping->getBindType() !== null);
             $value_ids = [];
             foreach ($value as $value_from_api) {
                 $value_ids[] = $value_from_api['id'];
@@ -185,7 +185,7 @@ class FieldChangeXMLExporter
             $this->field_change_list_builder->build(
                 $changeset_node,
                 $mapping->getFieldName(),
-                Tracker_FormElement_Field_List_Bind_Static::TYPE,
+                $mapping->getBindType(),
                 $value_ids
             );
         } elseif ($mapping->getType() === Tracker_FormElementFactory::FIELD_FILE_TYPE) {

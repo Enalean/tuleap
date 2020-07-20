@@ -36,6 +36,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentDo
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentValuesBuilder;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Comment\CommentXMLValueEnhancer;
@@ -144,9 +145,11 @@ class ArtifactsXMLExporterTest extends TestCase
                         $jira_author_retriever
                     ),
                     new InitialSnapshotBuilder(
-                        $creation_state_list_value_formatter,
                         $this->logger,
-                        $jira_author_retriever
+                        new ListFieldChangeInitialValueRetriever(
+                            $creation_state_list_value_formatter,
+                            $jira_author_retriever
+                        )
                     ),
                     new ChangelogSnapshotBuilder(
                         $creation_state_list_value_formatter,

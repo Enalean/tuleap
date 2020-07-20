@@ -33,6 +33,7 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationState
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 
 class ChangelogSnapshotBuilder
 {
@@ -133,6 +134,40 @@ class ChangelogSnapshotBuilder
                 );
 
                 $this->logger->debug("  |_ Generate user list value for " . $field_id);
+                continue;
+            }
+
+            if (
+                $field_mapping->getType() === \Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE &&
+                $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
+                $changed_field_to !== null
+            ) {
+                $account_ids = explode(',', $changed_field_to);
+                $selected_users_ids = [];
+
+                foreach ($account_ids as $account_id) {
+                    $user = $this->jira_author_retriever->getAssignedTuleapUser(
+                        $forge_user,
+                        trim($account_id)
+                    );
+
+                    if ((int) $user->getId() === (int) TrackerImporterUser::ID) {
+                        continue;
+                    }
+
+                    $selected_users_ids[] = $user->getId();
+                }
+
+                $fields_snapshot[] = new FieldSnapshot(
+                    $field_mapping,
+                    $this->creation_state_list_value_formatter->formatMultiUserListValues(
+                        $selected_users_ids
+                    ),
+                    null
+                );
+
+                $this->logger->debug("  |_ Generate multi user list value for " . $field_id);
+
                 continue;
             }
 

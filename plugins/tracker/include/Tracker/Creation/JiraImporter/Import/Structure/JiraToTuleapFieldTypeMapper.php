@@ -297,6 +297,20 @@ class JiraToTuleapFieldTypeMapper
                     );
                     break;
                 case 'com.atlassian.jira.plugin.system.customfieldtypes:multiuserpicker':
+                    $this->field_xml_exporter->exportField(
+                        $containers_collection->getContainerByName(ContainersXMLCollectionBuilder::CUSTOM_FIELDSET_NAME),
+                        Tracker_FormElementFactory::FIELD_MULTI_SELECT_BOX_TYPE,
+                        $id,
+                        $jira_field_label,
+                        $id,
+                        12,
+                        $required,
+                        [],
+                        $jira_field->getBoundValues(),
+                        $jira_field_mapping_collection,
+                        Tracker_FormElement_Field_List_Bind_Users::TYPE
+                    );
+                    break;
                 case 'attachment':
                 case 'status':
                 case 'creator':

@@ -29,9 +29,8 @@ use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryItemsRepresentation;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntryValueRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\CreationStateListValueFormatter;
+use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ListFieldChangeInitialValueRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\IssueAPIRepresentation;
-use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\JiraAuthorRetriever;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMapping;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Structure\FieldMappingCollection;
 use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
@@ -39,27 +38,21 @@ use Tuleap\Tracker\Creation\JiraImporter\JiraConnectionException;
 class InitialSnapshotBuilder
 {
     /**
-     * @var CreationStateListValueFormatter
-     */
-    private $creation_state_list_value_formatter;
-    /**
      * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var JiraAuthorRetriever
+     * @var ListFieldChangeInitialValueRetriever
      */
-    private $jira_author_retriever;
+    private $list_field_change_value_retriever;
 
     public function __construct(
-        CreationStateListValueFormatter $creation_state_list_value_formatter,
         LoggerInterface $logger,
-        JiraAuthorRetriever $jira_author_retriever
+        ListFieldChangeInitialValueRetriever $list_field_change_value_retriever
     ) {
-        $this->creation_state_list_value_formatter = $creation_state_list_value_formatter;
-        $this->logger                              = $logger;
-        $this->jira_author_retriever               = $jira_author_retriever;
+        $this->logger                            = $logger;
+        $this->list_field_change_value_retriever = $list_field_change_value_retriever;
     }
 
     /**
@@ -235,18 +228,10 @@ class InitialSnapshotBuilder
 
                 $field_mapping = $current_snapshot_field->getFieldMapping();
                 if ($this->fieldListHasInitialValue($changed_field)) {
-                    $value = $changed_field_from;
-
-                    if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE) {
-                        $user  = $this->jira_author_retriever->getAssignedTuleapUser($forge_user, $changed_field_from);
-                        $value = (string) $user->getId();
-                    }
-
-                    $field_snapshots[]   = new FieldSnapshot(
+                    $bound_value       = $this->list_field_change_value_retriever->retrieveBoundValue($changed_field_from, $field_mapping, $forge_user);
+                    $field_snapshots[] = new FieldSnapshot(
                         $field_mapping,
-                        $this->creation_state_list_value_formatter->formatListValue(
-                            $value,
-                        ),
+                        $bound_value,
                         $current_snapshot_field->getRenderedValue()
                     );
                     $this->logger->debug(" |_ List field " . $changed_field_id . " has an initial value");
