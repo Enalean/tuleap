@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,6 +21,9 @@
 
 namespace Tuleap\Git\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class GitFileContentRepresentation
 {
     /** @var string */
@@ -42,7 +45,7 @@ class GitFileContentRepresentation
     public $content;
 
 
-    public function build($name, $path, $content, $size)
+    public function __construct($name, $path, $content, $size)
     {
         $this->encoding = 'base64';
         $this->size     = $size;

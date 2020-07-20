@@ -21,10 +21,21 @@
 
 namespace Tuleap\Git\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class GitRepositoryListRepresentation
 {
     /**
      * @var GitRepositoryRepresentation[]
      */
     public $repositories;
+
+    /**
+     * @param GitRepositoryRepresentation[] $repositories
+     */
+    public function __construct(array $repositories)
+    {
+        $this->repositories = $repositories;
+    }
 }

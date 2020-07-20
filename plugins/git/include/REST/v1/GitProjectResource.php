@@ -173,7 +173,6 @@ final class GitProjectResource extends AuthenticatedResource
 
         $user    = \UserManager::instance()->getCurrentUser();
         $project = $this->getProject($id, $user);
-        $result  = new GitRepositoryListRepresentation();
 
         $query_parameter_parser = new QueryParameterParser(new JsonDecoder());
 
@@ -219,7 +218,9 @@ final class GitProjectResource extends AuthenticatedResource
             \EventManager::instance(),
             new \Git_GitRepositoryUrlManager($git_plugin, new \Tuleap\InstanceBaseURLBuilder())
         );
-        $result->repositories = $repository_resource_builder->buildWithList($user, $git_repositories, $fields);
+        $result = new GitRepositoryListRepresentation(
+            $repository_resource_builder->buildWithList($user, $git_repositories, $fields)
+        );
 
         $this->optionsGit($id);
         Header::sendPaginationHeaders($limit, $offset, $total_number_repositories, self::MAX_LIMIT);

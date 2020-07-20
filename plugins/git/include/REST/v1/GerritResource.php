@@ -128,8 +128,7 @@ class GerritResource extends AuthenticatedResource
 
         $representations = array();
         foreach ($servers as $server) {
-            $representation = new GerritServerRepresentation();
-            $representation->build($server);
+            $representation = new GerritServerRepresentation($server);
             $representations[] = $representation;
         }
 

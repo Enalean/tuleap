@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -28,54 +28,82 @@ use GitRepositoryPermissionsManager;
 use GitDao;
 use UGroupManager;
 
+/**
+ * @psalm-immutable
+ */
 class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepresentationBase
 {
-
-    /** @var GitRepositoryPermissionsManager */
-    private $repository_permissions_manager;
-
-    /** @var UGroupManager */
-    private $ugroup_manager;
-
-    public function __construct()
+    /**
+     * @param MinimalUserGroupRepresentation[] $read
+     * @param MinimalUserGroupRepresentation[] $write
+     * @param MinimalUserGroupRepresentation[] $rewind
+     */
+    private function __construct(array $read, array $write, array $rewind)
     {
-        $this->repository_permissions_manager = new GitRepositoryPermissionsManager(new GitDao());
-        $this->ugroup_manager                 = new UGroupManager();
+        $this->read   = $read;
+        $this->write  = $write;
+        $this->rewind = $rewind;
     }
 
-    public function build(GitRepository $repository)
+    public static function build(GitRepository $repository): self
     {
-        $this->read   = $this->getUGroupsReaders($repository);
-        $this->write  = $this->getUGroupsWriters($repository);
-        $this->rewind = $this->getUGroupsRewinders($repository);
+        $repository_permissions_manager = new GitRepositoryPermissionsManager(new GitDao());
+        $ugroup_manager                 = new UGroupManager();
+
+        return new self(
+            self::getUGroupsReaders($repository_permissions_manager, $ugroup_manager, $repository),
+            self::getUGroupsWriters($repository_permissions_manager, $ugroup_manager, $repository),
+            self::getUGroupsRewinders($repository_permissions_manager, $ugroup_manager, $repository),
+        );
     }
 
-    private function getUGroupsReaders(GitRepository $repository)
-    {
-        $read_ugroups_rows   = $this->repository_permissions_manager->getUGroupsReaders($repository);
+    /**
+     * @return MinimalUserGroupRepresentation[]
+     */
+    private static function getUGroupsReaders(
+        GitRepositoryPermissionsManager $repository_permissions_manager,
+        UGroupManager $ugroup_manager,
+        GitRepository $repository
+    ): array {
+        $read_ugroups_rows = $repository_permissions_manager->getUGroupsReaders($repository);
 
-        return $this->buildUGroupRepresentations($repository, $read_ugroups_rows);
+        return self::buildUGroupRepresentations($ugroup_manager, $repository, $read_ugroups_rows);
     }
 
-    private function getUGroupsWriters(GitRepository $repository)
-    {
-        $write_ugroups_rows  = $this->repository_permissions_manager->getUGroupsWriters($repository);
+    /**
+     * @return MinimalUserGroupRepresentation[]
+     */
+    private static function getUGroupsWriters(
+        GitRepositoryPermissionsManager $repository_permissions_manager,
+        UGroupManager $ugroup_manager,
+        GitRepository $repository
+    ): array {
+        $write_ugroups_rows = $repository_permissions_manager->getUGroupsWriters($repository);
 
-        return $this->buildUGroupRepresentations($repository, $write_ugroups_rows);
+        return self::buildUGroupRepresentations($ugroup_manager, $repository, $write_ugroups_rows);
     }
 
-    private function getUGroupsRewinders(GitRepository $repository)
-    {
-        $rewind_ugroups_rows = $this->repository_permissions_manager->getUGroupsRewinders($repository);
+    /**
+     * @return MinimalUserGroupRepresentation[]
+     */
+    private static function getUGroupsRewinders(
+        GitRepositoryPermissionsManager $repository_permissions_manager,
+        UGroupManager $ugroup_manager,
+        GitRepository $repository
+    ): array {
+        $rewind_ugroups_rows = $repository_permissions_manager->getUGroupsRewinders($repository);
 
-        return $this->buildUGroupRepresentations($repository, $rewind_ugroups_rows);
+        return self::buildUGroupRepresentations($ugroup_manager, $repository, $rewind_ugroups_rows);
     }
 
-    private function buildUGroupRepresentations(GitRepository $repository, $ugroup_rows)
+    /**
+     * @return MinimalUserGroupRepresentation[]
+     */
+    private static function buildUGroupRepresentations(UGroupManager $ugroup_manager, GitRepository $repository, $ugroup_rows): array
     {
         $ugroup_representations = array();
         foreach ($ugroup_rows as $row) {
-            $ugroup = $this->ugroup_manager->getById($row['ugroup_id']);
+            $ugroup = $ugroup_manager->getById($row['ugroup_id']);
             $rewind_ugroup_representation = new MinimalUserGroupRepresentation();
             $rewind_ugroup_representation->build((int) $repository->getProjectId(), $ugroup);
 

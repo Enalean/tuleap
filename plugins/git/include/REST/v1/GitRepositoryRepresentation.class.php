@@ -24,6 +24,9 @@ namespace Tuleap\Git\REST\v1;
 use GitRepository;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class GitRepositoryRepresentation
 {
     public const ROUTE = 'git';
@@ -106,29 +109,45 @@ class GitRepositoryRepresentation
      */
     public $additional_information;
 
-    /**
-     * @param string        $html_url
-     * @param               $server_representation
-     * @param string        $last_update_date
-     * @param array         $additional_information
-     */
-    public function build(
+    private function __construct(
         GitRepository $repository,
-        $html_url,
-        $server_representation,
-        $last_update_date,
-        array $additional_information
+        string $repository_path,
+        string $html_url,
+        ?GerritServerRepresentation $server_representation,
+        string $last_update_date,
+        array $additional_information,
+        ?GitRepositoryPermissionRepresentation $permissions
     ) {
         $this->id                     = JsonCast::toInt($repository->getId());
         $this->uri                    = self::ROUTE . '/' . $this->id;
         $this->name                   = $repository->getName();
         $this->label                  = $repository->getLabel();
-        $this->path                   = $repository->getPath();
+        $this->path                   = $repository_path;
         $this->path_without_project   = $repository->getPathWithoutProject();
         $this->description            = $repository->getDescription();
         $this->server                 = $server_representation;
         $this->html_url               = $html_url;
         $this->last_update_date       = JsonCast::toDate($last_update_date);
         $this->additional_information = $additional_information;
+        $this->permissions            = $permissions;
+    }
+
+    public static function build(
+        GitRepository $repository,
+        string $html_url,
+        ?GerritServerRepresentation $server_representation,
+        string $last_update_date,
+        array $additional_information,
+        ?GitRepositoryPermissionRepresentation $permissions
+    ): self {
+        return new self(
+            $repository,
+            $repository->getPath(),
+            $html_url,
+            $server_representation,
+            $last_update_date,
+            $additional_information,
+            $permissions
+        );
     }
 }
