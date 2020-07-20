@@ -231,6 +231,9 @@ class Planning_MilestoneFactory
     public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id)
     {
         $planning = $this->planning_factory->getPlanning($planning_id);
+        if ($planning === null) {
+            throw new Planning_NotFoundException();
+        }
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
         if ($artifact && $artifact->userCanView($user)) {
