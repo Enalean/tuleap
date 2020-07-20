@@ -96,7 +96,7 @@ class Docman_Log
         return $this->dif;
     }
 
-    public function fetchLogsForItem($item_id, $display_access_logs)
+    public function fetchLogsForItem($item_id, $display_access_logs, \PFUser $current_user): string
     {
         $html = '';
         $uh   = UserHelper::instance();
@@ -111,7 +111,7 @@ class Docman_Log
                 $titles[] = dgettext('tuleap-docman', 'What');
                 $titles[] = dgettext('tuleap-docman', 'Old Value');
                 $titles[] = dgettext('tuleap-docman', 'New Value');
-                $html .= html_build_list_table_top($titles, false, false, false);
+                $html .= html_build_list_table_top($titles, false, false, false, null, "table");
 
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
@@ -122,7 +122,7 @@ class Docman_Log
                     if ($row['type'] != PLUGIN_DOCMAN_EVENT_ACCESS || $display_access_logs) {
                         $user = $row['user_id'] ? $hp->purify($uh->getDisplayNameFromUserId($row['user_id'])) : dgettext('tuleap-docman', 'Anonymous');
                         $html .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
-                        $html .= '<td>' . \DateHelper::timeAgoInWords($row['time'], false, true) . '</td>';
+                        $html .= '<td>' . \DateHelper::relativeDateBlockContext($row['time'], $current_user) . '</td>';
                         $html .= '<td>' . $user                             . '</td>';
                         if ($row['type'] == PLUGIN_DOCMAN_EVENT_METADATA_UPDATE) {
                             $_old_v = $row['old_value'];

@@ -200,7 +200,7 @@ final class DateHelperTest extends TestCase
             absolute-date="2009-02-14 00:31"
             preference="relative"
             locale="en_US"
-            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 
     public function testRelativeDateRelativeFistAbsoluteShown(): void
@@ -225,7 +225,7 @@ final class DateHelperTest extends TestCase
             absolute-date="2009-02-14 00:31"
             preference="relative"
             locale="en_US"
-            placement="right"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+            placement="right"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 
     public function testRelativeDateRelativeFistAbsoluteTooltip(): void
@@ -250,7 +250,7 @@ final class DateHelperTest extends TestCase
             absolute-date="2009-02-14 00:31"
             preference="relative"
             locale="en_US"
-            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 
     public function testRelativeDateAbsoluteFistRelativeShown(): void
@@ -275,7 +275,7 @@ final class DateHelperTest extends TestCase
             absolute-date="2009-02-14 00:31"
             preference="absolute"
             locale="en_US"
-            placement="right"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+            placement="right"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 
     public function testRelativeDateAbsoluteFistRelativeTooltip(): void
@@ -300,6 +300,6 @@ final class DateHelperTest extends TestCase
             absolute-date="2009-02-14 00:31"
             preference="absolute"
             locale="en_US"
-            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDate(1234567890, $user));
+            placement="tooltip"></tlp-relative-date>', DateHelper::relativeDateInlineContext(1234567890, $user));
     }
 }

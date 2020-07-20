@@ -76,6 +76,6 @@ abstract class Tracker_Artifact_Followup_Item
 
     public function getTimeAgo(PFUser $current_user)
     {
-        return DateHelper::relativeDate($this->getFollowUpDate(), $current_user);
+        return DateHelper::relativeDateInlineContext($this->getFollowUpDate(), $current_user);
     }
 }

@@ -52,13 +52,16 @@ class DateHelper
         return $str;
     }
 
-    public static function relativeDate(int $time, PFUser $current_user): string
+    /**
+     * @param "top" | "right" $position
+     */
+    private static function relativeDate(int $time, PFUser $current_user, string $position): string
     {
         $purifier = Codendi_HTMLPurifier::instance();
         switch ($current_user->getPreference(self::PREFERENCE_NAME)) {
             case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_SHOWN:
                 $preference = "absolute";
-                $placement = "right";
+                $placement = $position;
                 break;
             case self::PREFERENCE_ABSOLUTE_FIRST_RELATIVE_TOOLTIP:
                 $preference = "absolute";
@@ -66,7 +69,7 @@ class DateHelper
                 break;
             case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_SHOWN:
                 $preference = "relative";
-                $placement = "right";
+                $placement = $position;
                 break;
             case self::PREFERENCE_RELATIVE_FIRST_ABSOLUTE_TOOLTIP:
             default:
@@ -80,6 +83,16 @@ class DateHelper
             preference="' . $purifier->purify($preference) . '"
             locale="' . $purifier->purify($current_user->getLocale()) . '"
             placement="' . $purifier->purify($placement) . '"></tlp-relative-date>';
+    }
+
+    public static function relativeDateBlockContext(int $time, PFUser $current_user): string
+    {
+        return self::relativeDate($time, $current_user, "top");
+    }
+
+    public static function relativeDateInlineContext(int $time, PFUser $current_user): string
+    {
+        return self::relativeDate($time, $current_user, "right");
     }
 
     /**
