@@ -45,28 +45,28 @@
         </div>
         <div class="document-quick-look-properties-column">
             <div class="tlp-property">
-                <label for="document-creation-date" class="tlp-label" v-translate>
+                <label class="tlp-label" v-translate>
                     Creation
                 </label>
-                <p
-                    id="document-creation-date"
-                    class="tlp-tooltip tlp-tooltip-left"
-                    v-bind:data-tlp-tooltip="getFormattedDate(item.creation_date)"
-                >
-                    {{ getFormattedDateForDisplay(item.creation_date) }}
-                </p>
+                <tlp-relative-date
+                    v-bind:date="item.creation_date"
+                    v-bind:absolute-date="getFormattedDate(item.creation_date)"
+                    v-bind:placement="relative_date_placement"
+                    v-bind:preference="relative_date_preference"
+                    v-bind:locale="user_locale"
+                />
             </div>
             <div class="tlp-property">
-                <label for="document-last-update-date" class="tlp-label" v-translate>
+                <label class="tlp-label" v-translate>
                     Last update date
                 </label>
-                <p
-                    id="document-last-update-date"
-                    class="tlp-tooltip tlp-tooltip-left"
-                    v-bind:data-tlp-tooltip="getFormattedDate(item.last_update_date)"
-                >
-                    {{ getFormattedDateForDisplay(item.last_update_date) }}
-                </p>
+                <tlp-relative-date
+                    v-bind:date="item.last_update_date"
+                    v-bind:absolute-date="getFormattedDate(item.last_update_date)"
+                    v-bind:placement="relative_date_placement"
+                    v-bind:preference="relative_date_preference"
+                    v-bind:locale="user_locale"
+                />
             </div>
             <div
                 class="tlp-property"
@@ -104,14 +104,15 @@
 <script>
 import prettyBytes from "pretty-bytes-es5";
 import { mapState } from "vuex";
-import {
-    formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow,
-} from "../../../helpers/date-formatter.js";
+import { formatDateUsingPreferredUserFormat } from "../../../helpers/date-formatter.js";
 import UserBadge from "../../User/UserBadge.vue";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
 import QuickLookDocumentAdditionalMetadataList from "./QuickLookDocumentAdditionalMetadataList.vue";
 import ApprovalTableBadge from "../ApprovalTables/ApprovalTableBadge.vue";
+import {
+    relativeDatePlacement,
+    relativeDatePreference,
+} from "../../../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
 
 export default {
     components: { ApprovalTableBadge, QuickLookDocumentAdditionalMetadataList, UserBadge },
@@ -119,7 +120,7 @@ export default {
         item: Object,
     },
     computed: {
-        ...mapState(["date_time_format"]),
+        ...mapState(["date_time_format", "relative_dates_display", "user_locale"]),
         metadata_right_column() {
             const metadata_length = this.get_custom_metadata.length;
 
@@ -158,13 +159,16 @@ export default {
                 ({ short_name }) => !hardcoded_metadata.includes(short_name)
             );
         },
+        relative_date_preference() {
+            return relativeDatePreference(this.relative_dates_display);
+        },
+        relative_date_placement() {
+            return relativeDatePlacement(this.relative_dates_display, "right");
+        },
     },
     methods: {
         getFormattedDate(date) {
             return formatDateUsingPreferredUserFormat(date, this.date_time_format);
-        },
-        getFormattedDateForDisplay(date) {
-            return getElapsedTimeFromNow(date);
         },
     },
 };

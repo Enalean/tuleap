@@ -296,7 +296,10 @@ export default function formatRelativeDate(
     date: Date,
     reference_date: Date
 ): string {
-    const diff_in_ms = reference_date.getTime() - date.getTime();
+    const diff = reference_date.getTime() - date.getTime();
+    const sign = diff >= 0 ? -1 : +1;
+
+    const diff_in_ms = Math.abs(diff);
     const diff_in_minutes = diff_in_ms / (60 * 1000);
 
     const a_day_in_minutes = 24 * 60;
@@ -305,29 +308,32 @@ export default function formatRelativeDate(
 
     if (diff_in_ms <= 59000) {
         return new Intl.RelativeTimeFormat(locale).format(
-            -Math.round(diff_in_ms / 1000),
+            sign * Math.round(diff_in_ms / 1000),
             "seconds"
         );
     } else if (diff_in_minutes <= 44) {
-        return new Intl.RelativeTimeFormat(locale).format(-Math.round(diff_in_minutes), "minutes");
+        return new Intl.RelativeTimeFormat(locale).format(
+            sign * Math.round(diff_in_minutes),
+            "minutes"
+        );
     } else if (diff_in_minutes < a_day_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
-            -Math.round(diff_in_minutes / 60),
+            sign * Math.round(diff_in_minutes / 60),
             "hours"
         );
     } else if (diff_in_minutes < a_month_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
-            -Math.round(diff_in_minutes / a_day_in_minutes),
+            sign * Math.round(diff_in_minutes / a_day_in_minutes),
             "days"
         );
     } else if (diff_in_minutes < a_year_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(
-            -Math.round(diff_in_minutes / a_month_in_minutes),
+            sign * Math.round(diff_in_minutes / a_month_in_minutes),
             "months"
         );
     }
     return new Intl.RelativeTimeFormat(locale).format(
-        -Math.round(diff_in_minutes / a_year_in_minutes),
+        sign * Math.round(diff_in_minutes / a_year_in_minutes),
         "years"
     );
 }

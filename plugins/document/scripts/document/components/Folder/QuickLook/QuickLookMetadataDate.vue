@@ -28,14 +28,15 @@
         >
             Today
         </div>
-        <div
-            class="tlp-tooltip tlp-tooltip-left"
-            v-bind:data-tlp-tooltip="getFormattedDate"
+        <tlp-relative-date
             v-else-if="is_date_valid"
             data-test="metadata-date-formatted-display"
-        >
-            {{ getFormattedDateForDisplay(metadata.value) }}
-        </div>
+            v-bind:date="metadata.value"
+            v-bind:absolute-date="getFormattedDate"
+            v-bind:placement="relative_date_placement"
+            v-bind:preference="relative_date_preference"
+            v-bind:locale="user_locale"
+        />
         <span
             class="document-quick-look-property-empty"
             data-test="metadata-date-permanent"
@@ -58,18 +59,22 @@
 import { mapState } from "vuex";
 import {
     formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow,
     isDateValid,
     isToday,
 } from "../../../helpers/date-formatter.js";
 import { METADATA_OBSOLESCENCE_DATE_SHORT_NAME } from "../../../constants.js";
+import {
+    relativeDatePlacement,
+    relativeDatePreference,
+} from "../../../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
+
 export default {
     name: "QuickLookMetadataDate",
     props: {
         metadata: Object,
     },
     computed: {
-        ...mapState(["date_time_format"]),
+        ...mapState(["date_time_format", "relative_dates_display", "user_locale"]),
         is_date_valid() {
             return isDateValid(this.metadata.value);
         },
@@ -86,11 +91,14 @@ export default {
         getFormattedDate() {
             return formatDateUsingPreferredUserFormat(this.metadata.value, this.date_time_format);
         },
+        relative_date_preference() {
+            return relativeDatePreference(this.relative_dates_display);
+        },
+        relative_date_placement() {
+            return relativeDatePlacement(this.relative_dates_display, "right");
+        },
     },
     methods: {
-        getFormattedDateForDisplay(date) {
-            return getElapsedTimeFromNow(date);
-        },
         isMetadataObsolescenceDate() {
             return this.metadata.short_name === METADATA_OBSOLESCENCE_DATE_SHORT_NAME;
         },

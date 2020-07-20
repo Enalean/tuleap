@@ -25,6 +25,7 @@ import localVue from "../../../helpers/local-vue.js";
 import { createStoreMock } from "../../../../../../../src/scripts/vue-components/store-wrapper-jest.js";
 
 import * as date_formatter from "../../../helpers/date-formatter.js";
+import "../../../../../../../src/themes/tlp/src/js/custom-elements/relative-date";
 
 describe("QuickLookMetadataDate", () => {
     let metadata_factory, state, store;
@@ -62,12 +63,7 @@ describe("QuickLookMetadataDate", () => {
         expect(wrapper.find("[data-test=metadata-date-today]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=metadata-date-permanent]").exists()).toBeFalsy();
         expect(wrapper.find("[data-test=metadata-date-empty]").exists()).toBeFalsy();
-
-        expect(
-            wrapper
-                .get("[data-test=metadata-date-formatted-display]")
-                .element.getAttribute("data-tlp-tooltip")
-        ).toContain("02/07/2019 00:00");
+        expect(wrapper.find("[data-test=metadata-date-formatted-display]").exists()).toBeTruthy();
     });
     it(`Given a date without value
         Then it displays it as empty`, () => {

@@ -90,4 +90,64 @@ describe("relative-date-formatter", () => {
             "2 years ago"
         );
     });
+    it("Displays in X seconds", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_second_in_ms))).toBe(
+            "in 1 second"
+        );
+        expect(
+            formatRelativeDate("en-US", new Date(now), new Date(now - 59 * a_second_in_ms))
+        ).toBe("in 59 seconds");
+    });
+    it("Displays in X minutes", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_minute_in_ms))).toBe(
+            "in 1 minute"
+        );
+        expect(
+            formatRelativeDate("en-US", new Date(now), new Date(now - 44 * a_minute_in_ms))
+        ).toBe("in 44 minutes");
+    });
+    it("Displays in X hours", () => {
+        expect(
+            formatRelativeDate("en-US", new Date(now), new Date(now - 45 * a_minute_in_ms))
+        ).toBe("in 1 hour");
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_hour_in_ms))).toBe(
+            "in 1 hour"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 2 * a_hour_in_ms))).toBe(
+            "in 2 hours"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 23 * a_hour_in_ms))).toBe(
+            "in 23 hours"
+        );
+    });
+    it("Displays in X days", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_day_in_ms))).toBe(
+            "in 1 day"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 2 * a_day_in_ms))).toBe(
+            "in 2 days"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 29 * a_day_in_ms))).toBe(
+            "in 29 days"
+        );
+    });
+    it("Displays in X months", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_month_in_ms))).toBe(
+            "in 1 month"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 2 * a_month_in_ms))).toBe(
+            "in 2 months"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 11 * a_month_in_ms))).toBe(
+            "in 11 months"
+        );
+    });
+    it("Displays in X years", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - a_year_in_ms))).toBe(
+            "in 1 year"
+        );
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now - 2 * a_year_in_ms))).toBe(
+            "in 2 years"
+        );
+    });
 });

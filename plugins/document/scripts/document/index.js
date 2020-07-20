@@ -27,6 +27,7 @@ import { createStore } from "./store/index.js";
 import { createRouter } from "./router/index.js";
 import moment from "moment";
 import "moment-timezone";
+import "../../../../src/themes/tlp/src/js/custom-elements/relative-date";
 
 document.addEventListener("DOMContentLoaded", () => {
     Vue.use(VueDOMPurifyHTML);
@@ -69,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     const csrf_token_name = vue_mount_point.dataset.csrfTokenName;
     const csrf_token = vue_mount_point.dataset.csrfToken;
+    const relative_dates_display = vue_mount_point.dataset.relativeDatesDisplay;
 
     moment.tz(user_timezone);
     moment.locale(user_locale);
@@ -98,6 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
             is_changelog_proposed_after_dnd,
             csrf_token_name,
             csrf_token,
+            user_locale,
+            relative_dates_display,
         },
     }).$mount(vue_mount_point);
 });
