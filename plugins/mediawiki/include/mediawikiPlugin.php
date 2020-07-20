@@ -883,7 +883,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
         $quick_links_collector->addQuickLink(
             new NavigationDropdownItemPresenter(
-                $GLOBALS['Language']->getText('plugin_mediawiki', 'service_lbl_key'),
+                dgettext('tuleap-mediawiki', 'Mediawiki'),
                 $this->getPluginPath() . '/forge_admin.php?' . http_build_query(
                     array(
                         'group_id' => $project->getID(),

@@ -186,16 +186,16 @@ class PermissionPerGroupPaneBuilder
     {
         switch ($mw_group_name) {
             case 'user':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_user');
+                return dgettext('tuleap-mediawiki', 'User');
             case 'bot':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_bot');
+                return dgettext('tuleap-mediawiki', 'Bot');
             case 'sysop':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_sysop');
+                return dgettext('tuleap-mediawiki', 'Administrator / sysop');
             case 'bureaucrat':
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_bureaucrat');
+                return dgettext('tuleap-mediawiki', 'Bureaucrat');
             case 'anonymous':
             default:
-                return $GLOBALS['Language']->getText('plugin_mediawiki', 'group_name_anonymous');
+                return dgettext('tuleap-mediawiki', 'Anonymous');
         }
     }
 

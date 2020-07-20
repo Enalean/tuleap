@@ -55,7 +55,7 @@ class ServiceMediawiki extends Service
             );
         }
 
-        $title       = $title . ' - ' . $GLOBALS['Language']->getText('plugin_mediawiki', 'service_lbl_key');
+        $title       = $title . ' - ' . dgettext('tuleap-mediawiki', 'Mediawiki');
         parent::displayHeader($title, $breadcrumbs, $toolbar);
     }
 

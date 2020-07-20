@@ -33,11 +33,11 @@ class MediawikiAdminAllProjects extends User_ForgeUserGroupPermission
 
     public function getName()
     {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'permission_delegation_name');
+        return dgettext('tuleap-mediawiki', 'Global Mediawiki Administrator');
     }
 
     public function getDescription()
     {
-        return $GLOBALS['Language']->getText('plugin_mediawiki', 'permission_delegation_description');
+        return dgettext('tuleap-mediawiki', 'This permission grants mediawiki administration rights for each mediawiki of every project');
     }
 }
