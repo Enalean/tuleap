@@ -164,6 +164,7 @@ const webpack_config_for_kanban = {
             striptags$: path.resolve(__dirname, "node_modules/striptags"),
             "escape-string-regexp$": path.resolve(__dirname, "node_modules/escape-string-regexp"),
         }),
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
@@ -182,6 +183,7 @@ const webpack_config_for_kanban = {
     },
     plugins: [
         manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(false),
         webpack_configurator.getMomentLocalePlugin(),
         webpack_configurator.getVueLoaderPlugin(),
     ],
@@ -221,6 +223,7 @@ const webpack_config_for_planning_v2 = {
                 ),
             }
         ),
+        extensions: [".ts", ".js"],
     },
     module: {
         rules: [
@@ -236,6 +239,7 @@ const webpack_config_for_planning_v2 = {
     },
     plugins: [
         manifest_plugin,
+        webpack_configurator.getTypescriptCheckerPlugin(false),
         webpack_configurator.getMomentLocalePlugin(),
         webpack_configurator.getVueLoaderPlugin(),
     ],

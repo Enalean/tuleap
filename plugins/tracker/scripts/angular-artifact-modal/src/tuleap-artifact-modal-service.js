@@ -176,6 +176,7 @@ function ArtifactModalService(
                 getArtifactWithCompleteTrackerStructure(artifact_id),
                 getFollowupsCommentsOrderUserPreference(user_id, tracker_id, modal_model),
                 getTextFieldsFormatUserPreference(user_id, modal_model),
+                getRelativeDatesDisplayUserPreference(user_id, modal_model),
             ])
             .then(function (promises) {
                 const tracker = promises[0].tracker;
@@ -236,6 +237,13 @@ function ArtifactModalService(
                 modal_model.text_fields_format =
                     data.value !== false ? data.value : TEXT_FORMAT_TEXT;
             });
+    }
+
+    function getRelativeDatesDisplayUserPreference(user_id, modal_model) {
+        return $q.when(getUserPreference(user_id, "relative_dates_display")).then(function (data) {
+            modal_model.relative_dates_display =
+                data.value !== false ? data.value : "relative_first-absolute_tooltip";
+        });
     }
 
     function applyWorkflowTransitions(tracker, field_values) {

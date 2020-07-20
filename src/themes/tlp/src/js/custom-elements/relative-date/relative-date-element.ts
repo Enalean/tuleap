@@ -27,31 +27,62 @@ export class RelativeDateElement extends HTMLElement {
         super();
     }
 
+    static get observedAttributes(): string[] {
+        return ["absolute-date", "date", "placement", "locale", "preference"];
+    }
+
     public connectedCallback(): void {
+        this.updateDates();
+    }
+
+    public attributeChangedCallback(): void {
+        this.updateDates();
+    }
+
+    public updateDates(): void {
         if (!this.locale) {
-            throw new Error("Missing required attribute locale for tlp-relative-date component");
+            if (process.env.NODE_ENV !== "production") {
+                throw new Error(
+                    "Missing required attribute locale for tlp-relative-date component"
+                );
+            }
+            return;
         }
 
         if (!this.date) {
-            throw new Error("Missing required attribute `date` for tlp-relative-date component");
+            if (process.env.NODE_ENV !== "production") {
+                throw new Error(
+                    "Missing required attribute `date` for tlp-relative-date component"
+                );
+            }
+            return;
         }
 
         if (!this.absolute_date) {
-            throw new Error(
-                "Missing required attribute `absolute-date` for tlp-relative-date component"
-            );
+            if (process.env.NODE_ENV !== "production") {
+                throw new Error(
+                    "Missing required attribute `absolute-date` for tlp-relative-date component"
+                );
+            }
+            return;
         }
 
         if (!allowed_preferences.includes(this.preference)) {
-            throw new Error(
-                "Missing required attribute `preference` (absolute|relative) for tlp-relative-date component"
-            );
+            if (process.env.NODE_ENV !== "production") {
+                throw new Error(
+                    "Missing required attribute `preference` (absolute|relative) for tlp-relative-date component"
+                );
+            }
+            return;
         }
 
         if (!allowed_placements.includes(this.placement)) {
-            throw new Error(
-                "Missing required attribute `placement` (top|right|tooltip) for tlp-relative-date component"
-            );
+            if (process.env.NODE_ENV !== "production") {
+                throw new Error(
+                    "Missing required attribute `placement` (top|right|tooltip) for tlp-relative-date component"
+                );
+            }
+            return;
         }
 
         const date = new Date(this.date);

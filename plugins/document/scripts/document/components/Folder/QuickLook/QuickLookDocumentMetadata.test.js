@@ -23,7 +23,6 @@ import QuickLookDocumentMetadata from "./QuickLookDocumentMetadata.vue";
 
 import localVue from "../../../helpers/local-vue.js";
 import { TYPE_FILE, TYPE_FOLDER } from "../../../constants.js";
-import "../../../../../../../src/themes/tlp/src/js/custom-elements/relative-date";
 
 describe("QuickLookDocumentMetadata", () => {
     let metadata_factory, store;
@@ -36,6 +35,9 @@ describe("QuickLookDocumentMetadata", () => {
                 localVue,
                 propsData: { ...props },
                 mocks: { $store: store },
+                stubs: {
+                    "tlp-relative-date": true,
+                },
             });
         };
 
