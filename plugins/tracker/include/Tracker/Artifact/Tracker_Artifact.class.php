@@ -727,7 +727,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $changeset->updateComment($request->get('content'), $current_user, $comment_format, $_SERVER['REQUEST_TIME']);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
-                            echo $changeset->getComment()->fetchFollowUp();
+                            echo $changeset->getComment()->fetchFollowUp($current_user);
                         }
                     }
                 }
@@ -823,7 +823,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'get-new-changesets':
                 $changeset_id = $request->getValidated('changeset_id', 'uint', 0);
                 $changeset_factory = $this->getChangesetFactory();
-                $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id));
+                $GLOBALS['Response']->sendJSON($changeset_factory->getNewChangesetsFormattedForJson($this, $changeset_id, $current_user));
                 break;
             case 'edit':
                 $GLOBALS['Response']->redirect($this->getUri());

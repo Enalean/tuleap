@@ -22,10 +22,15 @@ class Tracker_Artifact_ChangesetJsonPresenter
 {
     /** @var Tracker_Artifact_Changeset */
     private $changeset;
+    /**
+     * @var PFUser
+     */
+    private $current_user;
 
-    public function __construct(Tracker_Artifact_Changeset $changeset)
+    public function __construct(Tracker_Artifact_Changeset $changeset, \PFUser $current_user)
     {
-        $this->changeset = $changeset;
+        $this->changeset    = $changeset;
+        $this->current_user = $current_user;
     }
 
     public function author_updated()
@@ -48,7 +53,7 @@ class Tracker_Artifact_ChangesetJsonPresenter
     {
         $comment = $this->changeset->getComment();
         if ($comment) {
-            return $comment->fetchFollowUp();
+            return $comment->fetchFollowUp($this->current_user);
         }
     }
 

@@ -303,7 +303,12 @@ export default function formatRelativeDate(
     const a_month_in_minutes = 30 * 24 * 60;
     const a_year_in_minutes = 12 * 30 * 24 * 60;
 
-    if (diff_in_minutes <= 44) {
+    if (diff_in_ms <= 59000) {
+        return new Intl.RelativeTimeFormat(locale).format(
+            -Math.round(diff_in_ms / 1000),
+            "seconds"
+        );
+    } else if (diff_in_minutes <= 44) {
         return new Intl.RelativeTimeFormat(locale).format(-Math.round(diff_in_minutes), "minutes");
     } else if (diff_in_minutes < a_day_in_minutes) {
         return new Intl.RelativeTimeFormat(locale).format(

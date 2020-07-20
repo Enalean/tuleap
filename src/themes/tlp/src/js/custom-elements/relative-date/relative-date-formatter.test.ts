@@ -19,7 +19,8 @@
 
 import formatRelativeDate from "./relative-date-formatter";
 
-const a_minute_in_ms = 60 * 1000;
+const a_second_in_ms = 1000;
+const a_minute_in_ms = 60 * a_second_in_ms;
 const a_hour_in_ms = 60 * a_minute_in_ms;
 const a_day_in_ms = 24 * a_hour_in_ms;
 const a_month_in_ms = 30 * a_day_in_ms;
@@ -28,8 +29,16 @@ const a_year_in_ms = 12 * a_month_in_ms;
 const now = 1234567890000;
 
 describe("relative-date-formatter", () => {
+    it("Displays X seconds ago", () => {
+        expect(formatRelativeDate("en-US", new Date(now), new Date(now))).toBe("0 seconds ago");
+        expect(formatRelativeDate("en-US", new Date(now - a_second_in_ms), new Date(now))).toBe(
+            "1 second ago"
+        );
+        expect(
+            formatRelativeDate("en-US", new Date(now - 59 * a_second_in_ms), new Date(now))
+        ).toBe("59 seconds ago");
+    });
     it("Displays X minutes ago", () => {
-        expect(formatRelativeDate("en-US", new Date(now), new Date(now))).toBe("0 minutes ago");
         expect(formatRelativeDate("en-US", new Date(now - a_minute_in_ms), new Date(now))).toBe(
             "1 minute ago"
         );
