@@ -27,6 +27,44 @@ codendi.tracker.bind = {};
 
 const none_value = "100";
 
+function getRequiredHtmlElement(list) {
+    const data_attribute = "adminForm";
+    const container = findClosestElement(list, data_attribute);
+    if (!container) {
+        throw new Error("could not find adminForm");
+    }
+
+    const required = container.querySelector("#formElement_required");
+    if (!required) {
+        throw new Error("could not find required checkbox");
+    }
+
+    return required;
+}
+
+function hideNoneValue(list) {
+    const required = getRequiredHtmlElement(list);
+
+    list.childElements().forEach(function (child) {
+        if (required.checked && child.dataset.value_id === none_value) {
+            child.classList.add("hide-none-value");
+        } else {
+            child.classList.remove("hide-none-value");
+        }
+    });
+}
+
+function findClosestElement(element, data_attribute) {
+    let current = element;
+    do {
+        if (current.dataset[data_attribute] !== undefined) {
+            return current;
+        }
+        current = current.parentElement;
+    } while (current !== null && current.nodeType === Node.ELEMENT_NODE);
+    return null;
+}
+
 codendi.tracker.bind.Editor = Class.create({
     initialize: function (element) {
         if (!element) {
@@ -36,9 +74,7 @@ codendi.tracker.bind.Editor = Class.create({
         $(element)
             .select('input[type=text][name^="bind[edit]"]')
             .each(this.editStaticValues.bind(this));
-        $(element)
-            .select(".tracker-admin-bindvalue_list")
-            .each(this.sortFieldStaticValues.bind(this));
+        $(element).select(".tracker-admin-bindvalue_list").each(this.updateBind.bind(this));
         this.accordionForBindTypes();
         this.addNew();
     },
@@ -112,6 +148,20 @@ codendi.tracker.bind.Editor = Class.create({
             .setStyle({
                 width: new_width + "px",
             });
+    },
+
+    updateBind: function (list) {
+        this.sortFieldStaticValues(list);
+        this.observeRequiredCheckedAction(list);
+        hideNoneValue(list);
+    },
+
+    observeRequiredCheckedAction: function (list) {
+        const required = getRequiredHtmlElement(list);
+
+        required.addEventListener("click", function () {
+            hideNoneValue(list);
+        });
     },
 
     sortFieldStaticValues: function (list) {

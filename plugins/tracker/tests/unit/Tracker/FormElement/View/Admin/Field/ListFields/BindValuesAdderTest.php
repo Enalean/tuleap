@@ -47,26 +47,13 @@ final class BindValuesAdderTest extends TestCase
         $this->field = \Mockery::mock(\Tracker_FormElement_Field_List::class);
     }
 
-    public function testItReturnsAllRequiredValues(): void
-    {
-        $this->field->shouldReceive('isRequired')->andReturnTrue();
-
-        $values = [
-            \Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class)
-        ];
-
-        $result = $this->adder->addNoneValue($this->field, $values);
-
-        $this->assertSame($values, $result);
-    }
-
-    public function testItReturnsAllValuesWithNoneWhenFieldIsNotRequired(): void
+    public function testItAlwaysReturnsAllValuesWithNone(): void
     {
         $this->field->shouldReceive('isRequired')->andReturnFalse();
 
         $value = \Mockery::mock(\Tracker_FormElement_Field_List_Bind_StaticValue::class);
 
-        $result = $this->adder->addNoneValue($this->field, [$value]);
+        $result = $this->adder->addNoneValue([$value]);
 
         $expected_values = [new Tracker_FormElement_Field_List_Bind_StaticValue_None(), $value];
 
