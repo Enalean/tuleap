@@ -379,14 +379,6 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
     }
 
     /**
-     * @return string html
-     */
-    public function getDateSubmittedOn()
-    {
-        return DateHelper::timeAgoInWords($this->submitted_on, false, true);
-    }
-
-    /**
      * @return string
      */
     public function getFollowUpClassnames($diff_to_previous)
