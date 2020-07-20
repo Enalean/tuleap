@@ -150,7 +150,7 @@ class Tracker_Artifact_Changeset_Comment
      *
      * @return string the HTML code of this comment
      */
-    public function fetchFollowUp()
+    public function fetchFollowUp(PFUser $current_user)
     {
         if ($this->hasEmptyBody()) {
             return null;
@@ -161,7 +161,7 @@ class Tracker_Artifact_Changeset_Comment
         if ($this->parent_id) {
             $html .= dgettext('tuleap-tracker', 'last edited by:');
             $html .= ' ' . $uh->getLinkOnUserFromUserId($this->submitted_by) . ' ';
-            $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+            $html .= DateHelper::relativeDate($this->submitted_on, $current_user);
         }
         $html .= '</div>';
 

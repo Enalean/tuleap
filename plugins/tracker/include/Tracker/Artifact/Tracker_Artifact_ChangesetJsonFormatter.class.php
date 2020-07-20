@@ -27,19 +27,22 @@ class Tracker_Artifact_ChangesetJsonFormatter
         $this->renderer = $renderer;
     }
 
-    public function format(Tracker_Artifact_Changeset $changeset)
+    public function format(Tracker_Artifact_Changeset $changeset, PFUser $current_user)
     {
         return array(
             'id'           => $changeset->getId(),
             'submitted_by' => $changeset->getSubmittedBy(),
             'submitted_on' => date('c', $changeset->getSubmittedOn()),
             'email'        => $changeset->getEmail(),
-            'html'         => $this->getChangeContentForJson($changeset),
+            'html'         => $this->getChangeContentForJson($changeset, $current_user),
         );
     }
 
-    protected function getChangeContentForJson(Tracker_Artifact_Changeset $changeset)
+    protected function getChangeContentForJson(Tracker_Artifact_Changeset $changeset, PFUser $current_user)
     {
-        return $this->renderer->renderToString('changeset-popup', new Tracker_Artifact_ChangesetJsonPresenter($changeset));
+        return $this->renderer->renderToString(
+            'changeset-popup',
+            new Tracker_Artifact_ChangesetJsonPresenter($changeset, $current_user)
+        );
     }
 }

@@ -31,7 +31,7 @@ abstract class Tracker_Artifact_Followup_Item
 
     abstract public function getSubmitterUrl();
 
-    abstract public function getFollowupContent($diff_to_previous);
+    abstract public function getFollowupContent($diff_to_previous, \PFUser $current_user);
 
     /**
      * Return diff between this followup and previous one (HTML code)

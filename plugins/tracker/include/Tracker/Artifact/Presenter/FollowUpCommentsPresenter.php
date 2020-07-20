@@ -53,7 +53,7 @@ class Tracker_Artifact_Presenter_FollowUpCommentsPresenter
                 'getAvatar'          => $followup->getAvatar(),
                 'getUserLink'        => $followup->getUserLink(),
                 'getTimeAgo'         => $followup->getTimeAgo($current_user),
-                'getFollowupContent' => $followup->getFollowupContent($diff_to_previous)
+                'getFollowupContent' => $followup->getFollowupContent($diff_to_previous, $current_user)
             );
         }
 

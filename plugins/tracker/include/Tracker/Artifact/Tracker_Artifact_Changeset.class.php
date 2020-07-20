@@ -209,13 +209,13 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
         return $this->submitted_on;
     }
 
-    public function getFollowupContent($diff_to_previous)
+    public function getFollowupContent($diff_to_previous, \PFUser $current_user)
     {
         $html = '';
 
         //The comment
         if ($comment = $this->getComment()) {
-            $follow_up = $comment->fetchFollowUp();
+            $follow_up = $comment->fetchFollowUp($current_user);
             $html .= '<div class="tracker_artifact_followup_comment">';
             $html .= $follow_up;
             $html .= '</div>';
@@ -256,7 +256,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
 
         // The content
         $html .= '<div class="tracker_artifact_followup_content">';
-        $html .= $this->getFollowupContent($diff_to_previous);
+        $html .= $this->getFollowupContent($diff_to_previous, $current_user);
         $html .= '</div>';
 
         $html .= '<div style="clear:both;"></div>';

@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace,Squiz.Classes.ValidClassName.NotCamelCaps
 class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -36,7 +37,7 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\Tes
         $json_formatter = new Tracker_Artifact_ChangesetJsonFormatter($template_renderer);
 
         $this->assertEquals(
-            $json_formatter->format($changeset),
+            $json_formatter->format($changeset, Mockery::mock(PFUser::class)),
             array(
                 'id'           => 15,
                 'submitted_by' => 45,
