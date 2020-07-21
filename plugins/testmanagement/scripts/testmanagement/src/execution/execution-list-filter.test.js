@@ -123,4 +123,15 @@ describe("ExecutionListFilter", function () {
         var results = ngFilter("ExecutionListFilter")(list, "tracker", { passed: true }, null);
         expect(results.length).toEqual(1);
     });
+
+    it("filters all tests when all filters are disabled", function () {
+        const result = ngFilter("ExecutionListFilter")(
+            list,
+            "",
+            { passed: false, blocked: false, failed: false, notrun: false },
+            null
+        );
+
+        expect(result.length).toEqual(0);
+    });
 });
