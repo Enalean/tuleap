@@ -19,7 +19,7 @@
  */
 @import 'statistics';
 
-$artifact-body-padding: $tlp-spacing;
+$artifact-body-padding: $tlp-medium-spacing;
 
 .baseline-statistic-epics {
     @extend %statistic;
@@ -70,7 +70,7 @@ $artifact-body-padding: $tlp-spacing;
 }
 
 .baseline-content-artifact-li {
-    margin-top: $tlp-spacing;
+    margin-top: $tlp-medium-spacing;
     counter-increment: artifact-counter;
 
     &::before {
@@ -94,7 +94,7 @@ $artifact-body-padding: $tlp-spacing;
 }
 
 .baseline-content-artifact-depth-reached-message {
-    margin-top: $tlp-spacing;
+    margin-top: $tlp-medium-spacing;
 }
 
 .baseline-content-artifact-body {
@@ -102,8 +102,8 @@ $artifact-body-padding: $tlp-spacing;
 }
 
 .baseline-content-artifact-body-field-label {
-    margin-top: $tlp-spacing;
-    margin-bottom: $tlp-half-spacing;
+    margin-top: $tlp-medium-spacing;
+    margin-bottom: $tlp-small-spacing;
     color: $tlp-swatch-firemist-silver;
 }
 
