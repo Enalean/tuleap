@@ -20,7 +20,7 @@
 .tlp-date-on-right::after {
     content: attr(title);
     display: inline-block;
-    margin: 0 0 0 $tlp-half-spacing;
+    margin: 0 0 0 $tlp-small-spacing;
     color: $tlp-ui-dimmed;
     font-size: 11px;
     white-space: nowrap;
@@ -33,7 +33,7 @@
         content: attr(title);
         display: inline-block;
         position: absolute;
-        top: -$tlp-half-spacing + 1px;
+        top: -$tlp-small-spacing + 1px;
         color: $tlp-ui-dimmed;
         font-size: 11px;
         line-height: 10px;

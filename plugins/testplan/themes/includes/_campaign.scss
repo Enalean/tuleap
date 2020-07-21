@@ -45,7 +45,7 @@
 }
 
 .test-plan-campaign {
-    margin: 0 0 $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
     cursor: pointer;
 
@@ -77,7 +77,7 @@
     }
 
     > .tlp-pane-container > .tlp-pane-section:last-child {
-        padding: $tlp-small-spacing $tlp-spacing $tlp-spacing;
+        padding: $tlp-small-spacing $tlp-medium-spacing $tlp-medium-spacing;
     }
 }
 
