@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -123,7 +123,7 @@ class UserSuspensionManagerTest extends TestCase
         $this->user_suspension_manager->sendNotificationMailToIdleAccounts($test_date);
     }
 
-    public function testCheckUserAccountValidity()
+    public function testCheckUserAccountValidity(): void
     {
         $test_date = (new \DateTimeImmutable())->setTimestamp(1579699252);
 
@@ -146,9 +146,7 @@ class UserSuspensionManagerTest extends TestCase
             ->andReturn(array(array(null)));
 
         $this->dao->shouldReceive('suspendAccount')->with($non_project_member_1);
-        $this->dao->shouldReceive('verifySuspension')->with($non_project_member_1)->andReturn(true);
         $this->dao->shouldReceive('suspendAccount')->with($non_project_member_2);
-        $this->dao->shouldReceive('verifySuspension')->with($non_project_member_2)->andReturn(true);
 
         $this->dao->shouldReceive('suspendInactiveAccounts')->with(Matchers::equalTo($last_valid_access))->once();
         $this->dao->shouldReceive('suspendExpiredAccounts')->with($test_date)->once();

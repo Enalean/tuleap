@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2019-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -107,18 +107,6 @@ class UserSuspensionDao extends DataAccessObject
         $select = 'SELECT NULL from user where user_id = ? and add_date < ? ';
         return $this->getDB()->run($select, $user_id, $timestamp);
     }
-
-    public function verifySuspension(int $user_id): bool
-    {
-        $sql = "SELECT user.status FROM user WHERE user.user_id = ? ";
-        $res = $this->getDB()->run($sql, $user_id);
-        if ($res[0]['status'] == 'S') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 
     public function getUsersWithoutConnectionOrAccessBetweenDates(DateTimeImmutable $start_date, DateTimeImmutable $end_date): array
     {
