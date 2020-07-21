@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import store from "../store/index.js";
 import CreatePullrequestButton from "./CreatePullrequestButton.vue";
 import CreatePullrequestModal from "./CreatePullrequestModal.vue";

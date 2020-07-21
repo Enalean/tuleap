@@ -94,7 +94,7 @@
 <script>
 import { sprintf } from "sprintf-js";
 import { mapState, mapGetters } from "vuex";
-import { modal } from "tlp";
+import { createModal } from "tlp";
 import ModalFeedback from "../ModalCommon/ModalFeedback.vue";
 
 export default {
@@ -149,7 +149,7 @@ export default {
         },
     },
     mounted() {
-        this.modal = modal(this.$el);
+        this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.resetModal);
 
         this.modal.show();

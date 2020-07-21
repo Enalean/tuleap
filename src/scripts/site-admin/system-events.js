@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const details_buttons = document.querySelectorAll(".systemevents-display-edit-modal");

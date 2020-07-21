@@ -45,14 +45,14 @@ describe(`WorkflowFieldChange`, () => {
 
     it(`when mounted(), it will create a TLP modal`, () => {
         createWrapper();
-        expect(tlp.modal).toHaveBeenCalled();
+        expect(tlp.createModal).toHaveBeenCalled();
     });
 
     it(`when I click the "Change or remove" button, it will open a confirmation modal`, () => {
         const modal = {
             show: jest.fn(),
         };
-        jest.spyOn(tlp, "modal").mockReturnValue(modal);
+        jest.spyOn(tlp, "createModal").mockReturnValue(modal);
         createWrapper();
 
         const change_remove_button = wrapper.get("[data-test=change-or-remove-button]");

@@ -76,7 +76,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 export default {
     name: "GlobalErrorModal",

@@ -18,7 +18,7 @@
  */
 
 import { sanitize } from "dompurify";
-import { modal } from "tlp";
+import { createModal } from "tlp";
 import { injectClasses } from "./illustration-inject-class-helper";
 
 const illustration_helper_button = document.getElementById("doc-colors-illustration-helper-button");
@@ -29,7 +29,7 @@ const illustration_helper_preview = document.getElementById(
 );
 
 if (illustration_helper_button) {
-    const illustration_helper_modal = modal(
+    const illustration_helper_modal = createModal(
         document.getElementById("doc-colors-illustration-helper-modal"),
         {}
     );

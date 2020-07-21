@@ -126,7 +126,7 @@ describe("TlpModalService -", function () {
                     show: jest.fn(),
                     addEventListener: jest.fn(),
                 };
-                tlp_modal = jest.spyOn(tlp, "modal").mockReturnValue(fake_modal_object);
+                tlp_modal = jest.spyOn(tlp, "createModal").mockReturnValue(fake_modal_object);
             });
 
             afterEach(function () {
@@ -166,7 +166,7 @@ describe("TlpModalService -", function () {
 
             it(`and tlpModalOptions,
                 when I open a new modal,
-                then the tlpModalOptions will be passed to tlp.modal()
+                then the tlpModalOptions will be passed to tlp.createModal()
                 and a promise will be resolved`, async () => {
                 var tlp_modal_options = { keyboard: false };
 

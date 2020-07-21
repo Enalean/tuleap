@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { select2, createModal, datePicker, createPopover, dropdown as createDropdown } from "tlp";
 import CodeMirror from "codemirror";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/addon/scroll/simplescrollbars";
@@ -56,7 +56,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
             });
             var datepickers = example.querySelectorAll(".tlp-input-date");
             [].forEach.call(datepickers, function (datepicker) {
-                tlp.datePicker(datepicker);
+                datePicker(datepicker);
             });
 
             var filters = example.querySelectorAll(".tlp-search[data-target-table-id]");
@@ -64,96 +64,96 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 filterInlineTable(filter);
             });
 
-            tlp.select2(document.querySelector("#area-select2"), {
+            select2(document.querySelector("#area-select2"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#area-select2-adjusted"), {
+            select2(document.querySelector("#area-select2-adjusted"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#area-without-autocomplete"), {
+            select2(document.querySelector("#area-without-autocomplete"), {
                 placeholder: "Choose an area",
                 allowClear: true,
                 minimumResultsForSearch: Infinity,
             });
-            tlp.select2(document.querySelector("#area-select2-help"), {
+            select2(document.querySelector("#area-select2-help"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#area-select2-mandatory"), {
+            select2(document.querySelector("#area-select2-mandatory"), {
                 placeholder: "Choose an area",
             });
-            tlp.select2(document.querySelector("#area-select2-disabled"));
-            tlp.select2(document.querySelector("#area-select2-error"), {
-                placeholder: "Choose an area",
-                allowClear: true,
-            });
-            tlp.select2(document.querySelector("#area-select2-small"), {
+            select2(document.querySelector("#area-select2-disabled"));
+            select2(document.querySelector("#area-select2-error"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#area-select2-large"), {
+            select2(document.querySelector("#area-select2-small"), {
+                placeholder: "Choose an area",
+                allowClear: true,
+            });
+            select2(document.querySelector("#area-select2-large"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
 
-            tlp.select2(document.querySelector("#types-select2"), {
+            select2(document.querySelector("#types-select2"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#typess-select2"), {
+            select2(document.querySelector("#typess-select2"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#types-select2-adjusted"), {
+            select2(document.querySelector("#types-select2-adjusted"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#types-select2-help"), {
+            select2(document.querySelector("#types-select2-help"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#types-select2-mandatory"), {
+            select2(document.querySelector("#types-select2-mandatory"), {
                 placeholder: "Choose a type",
             });
-            tlp.select2(document.querySelector("#types-select2-disabled"), {
-                placeholder: "Choose a type",
-                allowClear: true,
-            });
-            tlp.select2(document.querySelector("#types-select2-error"), {
+            select2(document.querySelector("#types-select2-disabled"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#types-select2-small"), {
+            select2(document.querySelector("#types-select2-error"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#types-select2-large"), {
+            select2(document.querySelector("#types-select2-small"), {
                 placeholder: "Choose a type",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#append-select2"), {
+            select2(document.querySelector("#types-select2-large"), {
+                placeholder: "Choose a type",
+                allowClear: true,
+            });
+            select2(document.querySelector("#append-select2"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#append-select2-small"), {
+            select2(document.querySelector("#append-select2-small"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#append-select2-large"), {
+            select2(document.querySelector("#append-select2-large"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#select2-prepend"), {
+            select2(document.querySelector("#select2-prepend"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#select2-prepend-small"), {
+            select2(document.querySelector("#select2-prepend-small"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
-            tlp.select2(document.querySelector("#select2-prepend-large"), {
+            select2(document.querySelector("#select2-prepend-large"), {
                 placeholder: "Choose an area",
                 allowClear: true,
             });
@@ -168,7 +168,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
 
             var modal_buttons = example.querySelectorAll("[data-target^=modal-]");
             [].forEach.call(modal_buttons, function (button) {
-                var modal = tlp.modal(document.getElementById(button.dataset.target), {});
+                var modal = createModal(document.getElementById(button.dataset.target), {});
                 button.addEventListener("click", function () {
                     modal.toggle();
                 });
@@ -176,14 +176,14 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
 
             var popover_triggers = document.querySelectorAll(".popover-example");
             [].forEach.call(popover_triggers, function (trigger) {
-                tlp.createPopover(trigger, document.getElementById(trigger.id + "-content"));
+                createPopover(trigger, document.getElementById(trigger.id + "-content"));
             });
 
             var popover_anchor_example_trigger = document.getElementById(
                 "popover-anchor-example-trigger"
             );
             if (popover_anchor_example_trigger) {
-                tlp.createPopover(
+                createPopover(
                     popover_anchor_example_trigger,
                     document.getElementById("popover-anchor-example-content"),
                     {
@@ -203,12 +203,12 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
 
             var dropdown_trigger = document.getElementById("dropdown-example");
             if (dropdown_trigger) {
-                tlp.dropdown(dropdown_trigger);
+                createDropdown(dropdown_trigger);
             }
 
             var dropdown_trigger_options = document.getElementById("dropdown-example-options");
             if (dropdown_trigger_options) {
-                tlp.dropdown(dropdown_trigger_options, {
+                createDropdown(dropdown_trigger_options, {
                     keyboard: false,
                     dropdown_menu: document.getElementById("dropdown-menu-example-options"),
                 });
@@ -218,7 +218,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 "dropdown-disable-options"
             );
             if (dropdown_trigger_disabled_options) {
-                tlp.dropdown(dropdown_trigger_disabled_options, {
+                createDropdown(dropdown_trigger_disabled_options, {
                     keyboard: false,
                     dropdown_menu: document.getElementById("dropdown-menu-disable-options"),
                 });
@@ -228,7 +228,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 "dropdown-split-example"
             );
             if (dropdown_trigger_split_example1_options) {
-                tlp.dropdown(dropdown_trigger_split_example1_options, {
+                createDropdown(dropdown_trigger_split_example1_options, {
                     dropdown_menu: document.getElementById("dropdown-split-example-menu"),
                 });
             }
@@ -237,7 +237,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 "dropdown-split-example2"
             );
             if (dropdown_trigger_split_example2_options) {
-                tlp.dropdown(dropdown_trigger_split_example2_options, {
+                createDropdown(dropdown_trigger_split_example2_options, {
                     dropdown_menu: document.getElementById("dropdown-split-example2-menu"),
                 });
             }
@@ -246,7 +246,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
                 "dropdown-large-split-example"
             );
             if (dropdown_trigger_large_split_example_options) {
-                tlp.dropdown(dropdown_trigger_large_split_example_options, {
+                createDropdown(dropdown_trigger_large_split_example_options, {
                     dropdown_menu: document.getElementById("dropdown-large-split-example-menu"),
                 });
             }
@@ -261,7 +261,7 @@ import { filterInlineTable } from "../../../../scripts/tuleap/tables/filter-inli
             ]
                 .map((id) => document.getElementById(id))
                 .filter((element) => Boolean(element))
-                .forEach((trigger) => tlp.dropdown(trigger));
+                .forEach((trigger) => createDropdown(trigger));
         }
         setTimeout(updatePreview, 10);
     });

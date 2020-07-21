@@ -29,7 +29,7 @@ import { Modal } from "tlp";
 jest.mock("tlp", () => {
     return {
         __esModule: true,
-        modal: jest.fn(),
+        createModal: jest.fn(),
     };
 });
 
@@ -37,7 +37,7 @@ describe("AgreementModal -", () => {
     it("Load policy agreement content and display it in the modal", async () => {
         const modal_show = jest.fn();
 
-        jest.spyOn(tlp, "modal").mockImplementation(() => {
+        jest.spyOn(tlp, "createModal").mockImplementation(() => {
             return ({
                 show: modal_show,
             } as unknown) as Modal;

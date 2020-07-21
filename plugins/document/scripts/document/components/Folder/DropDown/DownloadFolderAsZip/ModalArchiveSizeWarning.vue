@@ -111,7 +111,7 @@
 </template>
 <script>
 import { mapState } from "vuex";
-import { modal } from "tlp";
+import { createModal } from "tlp";
 
 export default {
     name: "ModalArchiveSizeWarning",
@@ -152,7 +152,7 @@ export default {
         },
     },
     mounted() {
-        this.modal = modal(this.$el);
+        this.modal = createModal(this.$el);
         this.modal.addEventListener("tlp-modal-hidden", this.close);
         this.modal.show();
     },

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, modal as createModal } from "tlp";
+import { get, createModal } from "tlp";
 import { filterInlineTable } from "../../../tuleap/tables/filter-inline-table";
 import { sanitize } from "dompurify";
 import Gettext from "node-gettext";

@@ -30,7 +30,7 @@ describe(`Modal Opener`, () => {
     let doc: Document, createModal: jest.SpyInstance;
     beforeEach(() => {
         doc = createLocalDocument();
-        createModal = jest.spyOn(tlp, "modal");
+        createModal = jest.spyOn(tlp, "createModal");
         jest.resetAllMocks();
     });
 

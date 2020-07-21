@@ -19,7 +19,7 @@
 
 import {
     Modal,
-    modal as createModal,
+    createModal,
     EVENT_TLP_MODAL_SHOWN,
     EVENT_TLP_MODAL_HIDDEN,
     BACKDROP_ID,

@@ -103,7 +103,7 @@
 <script>
 import { postRepository } from "../api/rest-querier.js";
 import { getProjectId } from "../repository-list-presenter.js";
-import { modal as tlpModal } from "tlp";
+import { createModal } from "tlp";
 
 export default {
     name: "GitRepositoryCreate",
@@ -126,7 +126,7 @@ export default {
         },
     },
     mounted() {
-        const create_modal = tlpModal(this.$refs.create_modal);
+        const create_modal = createModal(this.$refs.create_modal);
 
         create_modal.addEventListener("tlp-modal-hidden", this.reset);
 

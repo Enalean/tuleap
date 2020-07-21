@@ -80,7 +80,7 @@ import ModalErrorFeedback from "./ModalErrorFeedback.vue";
 import PreConditionsSkeleton from "./Skeletons/PreConditionsSkeleton.vue";
 import FilledPreConditionsSection from "./FilledPreConditionsSection.vue";
 import TransitionModalTitle from "./TransitionModalTitle.vue";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { mapMutations, mapState } from "vuex";
 
 export default {

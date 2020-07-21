@@ -99,7 +99,7 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import { FetchWrapperError, Modal, modal as createModal } from "tlp";
+import { FetchWrapperError, Modal, createModal } from "tlp";
 import { namespace, State } from "vuex-class";
 import { CreateCampaignPayload } from "../../store/campaign/type";
 import CreateCampaignTestSelector from "./CreateCampaignTestSelector.vue";

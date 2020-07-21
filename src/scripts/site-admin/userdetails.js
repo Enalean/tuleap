@@ -15,7 +15,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal, datePicker } from "tlp";
+import { createModal, datePicker } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
     initExpirationDatepicker();

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { createModal, select2, dropdown as createDropdown } from "tlp";
 import jQuery from "jquery";
 
 !(function ($) {
@@ -28,7 +28,7 @@ import jQuery from "jquery";
     function initIconSelectors() {
         var icon_select_elements = document.querySelectorAll(".provider-icon-selector");
         [].forEach.call(icon_select_elements, function (icon_select_element) {
-            tlp.select2(icon_select_element, {
+            select2(icon_select_element, {
                 containerCssClass: "provider-icon-container",
                 dropdownCssClass: "provider-icon-results",
                 minimumResultsForSearch: Infinity,
@@ -45,7 +45,7 @@ import jQuery from "jquery";
     function initColorSelectors() {
         var color_select_elements = document.querySelectorAll(".provider-color-selector");
         [].forEach.call(color_select_elements, function (color_select_element) {
-            tlp.select2(color_select_element, {
+            select2(color_select_element, {
                 containerCssClass: "provider-color-container",
                 dropdownCssClass: "provider-color-results",
                 minimumResultsForSearch: Infinity,
@@ -90,7 +90,7 @@ import jQuery from "jquery";
         var modal_generic_providers_config_element = document.getElementById(
             "siteadmin-config-providers-modal-create-generic"
         );
-        var modal_generic_providers_config = tlp.modal(modal_generic_providers_config_element);
+        var modal_generic_providers_config = createModal(modal_generic_providers_config_element);
 
         document
             .querySelector(".add-generic-provider-button")
@@ -102,12 +102,12 @@ import jQuery from "jquery";
             "siteadmin-config-providers-modal-create-azure"
         );
 
-        var modal_azure_providers_config = tlp.modal(modal_azure_providers_config_element);
+        var modal_azure_providers_config = createModal(modal_azure_providers_config_element);
 
         document.querySelector(".add-azure-provider-button").addEventListener("click", function () {
             modal_azure_providers_config.toggle();
         });
-        tlp.dropdown(document.getElementById("dropdown-specific-providers"), {
+        createDropdown(document.getElementById("dropdown-specific-providers"), {
             dropdown_menu: document.getElementById("dropdown-specific-providers-menu"),
         });
     }
@@ -120,7 +120,7 @@ import jQuery from "jquery";
             var dom_provider_modal_edit = document.getElementById(
                 edit_button.getAttribute("data-edit-modal-id")
             );
-            var tlp_providers_modal_edit = tlp.modal(dom_provider_modal_edit);
+            var tlp_providers_modal_edit = createModal(dom_provider_modal_edit);
 
             edit_button.addEventListener("click", function () {
                 tlp_providers_modal_edit.toggle();
@@ -136,7 +136,7 @@ import jQuery from "jquery";
             var dom_provider_modal_delete = document.getElementById(
                 delete_button.getAttribute("data-delete-modal-id")
             );
-            var tlp_providers_modal_delete = tlp.modal(dom_provider_modal_delete);
+            var tlp_providers_modal_delete = createModal(dom_provider_modal_delete);
 
             delete_button.addEventListener("click", function () {
                 tlp_providers_modal_delete.toggle();

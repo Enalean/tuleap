@@ -18,7 +18,7 @@
  *
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", function () {
     const modal_element = document.getElementById("add-import-endpoint");

@@ -46,7 +46,7 @@
 </template>
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import WidgetLinkToArtifact from "./WidgetLinkToArtifact.vue";
 import WidgetModalTimes from "./modal/WidgetModalTimes.vue";
 

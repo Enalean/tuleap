@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import { sprintf } from "sprintf-js";
 import { mapState } from "vuex";
 import ModalHeader from "../ModalCommon/ModalHeader.vue";

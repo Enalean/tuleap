@@ -44,7 +44,7 @@ describe("PermissionsUpdateModal", () => {
         };
 
         let hideFunction = null;
-        jest.spyOn(tlp, "modal").mockReturnValue({
+        jest.spyOn(tlp, "createModal").mockReturnValue({
             addEventListener(type, listener) {
                 hideFunction = listener;
             },

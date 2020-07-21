@@ -65,7 +65,7 @@ describe("ModalConfirmDeletion", () => {
         store = createStoreMock(store_options);
         jest.spyOn(store, "dispatch").mockImplementation();
 
-        jest.spyOn(tlp, "modal").mockReturnValue({
+        jest.spyOn(tlp, "createModal").mockReturnValue({
             addEventListener: () => {},
             show: () => {},
             hide: () => {},

@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal } from "tlp";
+import { createModal } from "tlp";
 import { autocomplete_users_for_select2 } from "../../../src/scripts/tuleap/autocomplete-for-select2.js";
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const modal_add_permission_element = document.getElementById("siteadmin-add-permission-modal");
-    const modal_add_permission = modal(modal_add_permission_element, {});
+    const modal_add_permission = createModal(modal_add_permission_element, {});
 
     document.getElementById("button-grant-permission").addEventListener("click", () => {
         modal_add_permission.toggle();
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const modal_revoke_permission_element = document.getElementById(
         "siteadmin-revoke-permission-modal"
     );
-    const modal_revoke_permission = modal(modal_revoke_permission_element, {});
+    const modal_revoke_permission = createModal(modal_revoke_permission_element, {});
 
     document.getElementById("button-revoke-permission").addEventListener("click", () => {
         modal_revoke_permission.toggle();

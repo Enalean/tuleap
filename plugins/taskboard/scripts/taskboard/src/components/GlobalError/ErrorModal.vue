@@ -78,7 +78,7 @@
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
 import { namespace } from "vuex-class";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 const error = namespace("error");
 

@@ -94,7 +94,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from "vuex";
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 import WorkflowModeSwitchModal from "./WorkflowModeSwitchModal.vue";
 
 export default {
