@@ -77,6 +77,8 @@ export default {
         is_changelog_proposed_after_dnd: Boolean,
         csrf_token: String,
         csrf_token_name: String,
+        user_locale: String,
+        relative_dates_display: String,
     },
     computed: {
         ...mapState("error", [
@@ -119,6 +121,8 @@ export default {
             this.is_item_status_metadata_used,
             this.is_obsolescence_date_metadata_used,
             this.is_changelog_proposed_after_dnd,
+            this.user_locale,
+            this.relative_dates_display,
         ]);
 
         window.addEventListener("beforeunload", (event) => {

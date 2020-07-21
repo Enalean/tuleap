@@ -45,9 +45,13 @@ module.exports = [
         },
         resolve: {
             alias: webpack_configurator.tlp_fetch_alias,
+            extensions: [".ts", ".js"],
         },
         module: {
             rules: [
+                ...webpack_configurator.configureTypescriptRules(
+                    webpack_configurator.babel_options_ie11
+                ),
                 webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
                 webpack_configurator.rule_easygettext_loader,
                 webpack_configurator.rule_vue_loader,
@@ -57,6 +61,7 @@ module.exports = [
         plugins: [
             webpack_configurator.getCleanWebpackPlugin(),
             webpack_configurator.getManifestPlugin(),
+            webpack_configurator.getTypescriptCheckerPlugin(true),
             webpack_configurator.getVueLoaderPlugin(),
             webpack_configurator.getMomentLocalePlugin(),
             new MomentTimezoneDataPlugin({

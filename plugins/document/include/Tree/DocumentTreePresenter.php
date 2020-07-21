@@ -90,6 +90,10 @@ class DocumentTreePresenter
      * @var bool
      */
     public $is_changelog_proposed_after_dnd;
+    /**
+     * @var string
+     */
+    public $relative_dates_display;
 
     public function __construct(
         \Project $project,
@@ -119,5 +123,6 @@ class DocumentTreePresenter
         $this->max_archive_size                   = $file_download_limits->getMaxArchiveSize();
         $this->warning_threshold                  = $file_download_limits->getWarningThreshold();
         $this->is_changelog_proposed_after_dnd    = $history_settings->isChangelogProposedAfterDragAndDrop();
+        $this->relative_dates_display             = $user->getPreference(\DateHelper::PREFERENCE_NAME) ?: \DateHelper::PREFERENCE_DEFAULT;
     }
 }

@@ -57,6 +57,8 @@ function initApp(
         is_item_status_metadata_used,
         is_obsolescence_date_metadata_used,
         is_changelog_proposed_after_dnd,
+        user_locale,
+        relative_dates_display,
     ]
 ) {
     state.user_id = user_id;
@@ -75,6 +77,8 @@ function initApp(
     state.is_item_status_metadata_used = is_item_status_metadata_used;
     state.is_obsolescence_date_metadata_used = is_obsolescence_date_metadata_used;
     state.is_changelog_proposed_after_dnd = is_changelog_proposed_after_dnd;
+    state.user_locale = user_locale;
+    state.relative_dates_display = relative_dates_display;
 }
 
 function saveAscendantHierarchy(state, hierarchy) {
