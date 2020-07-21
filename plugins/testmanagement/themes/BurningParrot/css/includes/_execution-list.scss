@@ -168,16 +168,95 @@ $toolbar-height: 46px;
     font-size: 14px;
 }
 
-.tests-list-filters {
+.tests-list-filters > .tests-filter-bar {
     display: flex;
-    flex: 0 0 auto;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    background: unset;
 
-    > .tlp-search {
-        flex: 1;
-        min-width: 75px;
-        margin-right: 20px;
+    &:focus-within {
+        transition: border-color .15s linear;
+        border: 1px solid $tlp-theme-color;
     }
+
+    > .tests-list-filter-search {
+        flex: 1;
+        margin: 0 0 0 18px;
+        border-style: none;
+    }
+
+}
+
+.tests-filters-dropdown {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tests-toggle-filters {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    margin: 3px 3px 3px 0;
+    border-radius: 20px;
+
+    &:hover {
+        transition: 125ms background-color ease-in-out;
+        background: #f0f1f8;
+        cursor: pointer;
+    }
+
+    > .test-status-icon {
+        margin: 0 $tlp-half-spacing 0 0;
+
+        &:first-child {
+            margin: 0 $tlp-half-spacing 0 11px;
+        }
+
+        &:last-child {
+            margin: 0 11px 0 0;
+        }
+
+        &.filtered-status {
+            color: $tlp-ui-border-dark;
+        }
+    }
+}
+
+#filters-dropdown-menu {
+    right: -18px;
+    margin: 44px 0 0;
+    border-bottom: 1px solid $tlp-ui-border-normal;
+    border-top-style: none;
+    box-shadow: none;
+
+    &::after,
+    &::before {
+        content: unset;
+    }
+
+    > .tests-filter-option {
+        display: flex;
+        justify-content: space-between;
+        margin: 0 0 $tlp-spacing 0;
+        padding: 0 16px;
+        white-space: nowrap;
+
+        &:last-child {
+            margin: 0;
+        }
+
+        > .tests-filter-option-title {
+            margin: 0 42px 0 0;
+        }
+    }
+}
+
+.tests-search-bar-icon {
+    position: relative;
+    left: 11px;
+    color: #687a7c;
 }
 
 .tests-list-category {

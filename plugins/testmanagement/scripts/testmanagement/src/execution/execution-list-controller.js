@@ -22,6 +22,7 @@ import angular from "angular";
 
 import { sortAlphabetically } from "../ksort.js";
 import { setError } from "../feedback-state.js";
+import { dropdown } from "tlp";
 
 export default ExecutionListCtrl;
 
@@ -29,6 +30,7 @@ ExecutionListCtrl.$inject = [
     "$scope",
     "$state",
     "$filter",
+    "$element",
     "gettextCatalog",
     "ExecutionService",
     "CampaignService",
@@ -41,6 +43,7 @@ function ExecutionListCtrl(
     $scope,
     $state,
     $filter,
+    $element,
     gettextCatalog,
     ExecutionService,
     CampaignService,
@@ -61,6 +64,7 @@ function ExecutionListCtrl(
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
         shouldShowEmptyState: () => self.should_show_empty_state,
+        isStatusHidden,
     });
 
     function checkActiveClassOnExecution(execution) {
@@ -162,6 +166,14 @@ function ExecutionListCtrl(
             $scope.campaign = campaign;
             ExecutionService.updateCampaign($scope.campaign);
         });
+
+        const trigger = $element.find("#toggle-filters-dropdown");
+        const dropdown_menu = $element.find("#filters-dropdown-menu");
+
+        dropdown(trigger[0], {
+            dropdown_menu: dropdown_menu[0],
+        });
+
         watchAndSortCategories();
     }
 
@@ -244,5 +256,9 @@ function ExecutionListCtrl(
 
         //eslint-disable-next-line you-dont-need-lodash-underscore/size
         return _.size(filtered_executions) > 0;
+    }
+
+    function isStatusHidden(status) {
+        return $scope.status[status] === false;
     }
 }
