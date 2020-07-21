@@ -64,6 +64,9 @@ final class JiraAuthorRetrieverTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->forge_user = \Mockery::mock(\PFUser::class);
+        $this->forge_user->shouldReceive('getRealName')->andReturn("Tracker Importer (forge__tracker_importer_user)");
+
         $this->user_manager = \Mockery::mock(\UserManager::class);
         $this->logger       = \Mockery::mock(LoggerInterface::class);
         $this->user_cache   = \Mockery::mock(JiraUserOnTuleapCache::class);
@@ -72,13 +75,11 @@ final class JiraAuthorRetrieverTest extends TestCase
             $this->logger,
             $this->user_manager,
             $this->user_cache,
-            $this->info_querier
+            $this->info_querier,
+            $this->forge_user
         );
 
         $this->logger->shouldReceive('debug');
-
-        $this->forge_user = \Mockery::mock(\PFUser::class);
-        $this->forge_user->shouldReceive('getRealName')->andReturn("Tracker Importer (forge__tracker_importer_user)");
     }
 
     protected function tearDown(): void
@@ -107,8 +108,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                         'emailAddress' => 'johndoe@example.com'
                     ]
                 ],
-            ]),
-            $this->forge_user
+            ])
         );
 
         $this->assertEquals("John Doe", $submitter->getRealName());
@@ -141,8 +141,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                         'emailAddress' => 'johndoe@example.com'
                     ]
                 ],
-            ]),
-            $this->forge_user
+            ])
         );
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
@@ -171,8 +170,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                         'emailAddress' => 'johndoe@example.com'
                     ]
                 ],
-            ]),
-            $this->forge_user
+            ])
         );
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
@@ -194,8 +192,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                         'displayName' => 'John Doe',
                     ]
                 ],
-            ]),
-            $this->forge_user
+            ])
         );
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());
@@ -224,8 +221,7 @@ final class JiraAuthorRetrieverTest extends TestCase
                         ]
                     ],
                 ]
-            ),
-            $this->forge_user
+            )
         );
 
         $this->assertEquals("Tracker Importer (forge__tracker_importer_user)", $submitter->getRealName());

@@ -102,11 +102,16 @@ class ArtifactsXMLExporterTest extends TestCase
         $this->user_manager          = Mockery::mock(UserManager::class);
         $this->logger                = Mockery::mock(LoggerInterface::class);
 
-        $jira_author_retriever               = new JiraAuthorRetriever(
+        $forge_user = \Mockery::mock(\PFUser::class);
+        $forge_user->shouldReceive('getId')->andReturn(TrackerImporterUser::ID);
+        $forge_user->shouldReceive('getUserName')->andReturn('Tracker Importer');
+
+        $jira_author_retriever = new JiraAuthorRetriever(
             $this->logger,
             $this->user_manager,
-            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping()),
-            Mockery::mock(JiraUserInfoQuerier::class)
+            new JiraUserOnTuleapCache(new JiraTuleapUsersMapping(), $forge_user),
+            Mockery::mock(JiraUserInfoQuerier::class),
+            $forge_user
         );
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
         $this->exporter                      = new ArtifactsXMLExporter(

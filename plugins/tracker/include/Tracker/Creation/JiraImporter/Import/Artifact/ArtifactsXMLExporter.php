@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact;
 
-use PFUser;
 use Psr\Log\LoggerInterface;
 use SimpleXMLElement;
 use Tuleap\Tracker\Creation\JiraImporter\ClientWrapper;
@@ -101,7 +100,6 @@ class ArtifactsXMLExporter
         $artifacts_node = $tracker_node->addChild('artifacts');
 
         $this->exportBatchOfIssuesInArtifactXMLFormat(
-            $user,
             $artifacts_node,
             $jira_issues_response,
             $jira_base_url,
@@ -118,7 +116,6 @@ class ArtifactsXMLExporter
             $jira_issues_response = $this->getIssues($jira_project_id, $jira_issue_type_name, $start_at, $max_results);
 
             $this->exportBatchOfIssuesInArtifactXMLFormat(
-                $user,
                 $artifacts_node,
                 $jira_issues_response,
                 $jira_base_url,
@@ -178,7 +175,6 @@ class ArtifactsXMLExporter
      * @throws JiraConnectionException
      */
     private function exportBatchOfIssuesInArtifactXMLFormat(
-        PFUser $forge_user,
         SimpleXMLElement $artifacts_node,
         array $jira_issues_response,
         string $jira_base_url,
@@ -212,7 +208,6 @@ class ArtifactsXMLExporter
 
             $this->logger->debug("  |_ Exporting data for issue");
             $this->data_changeset_xml_exporter->exportIssueDataInChangesetXML(
-                $forge_user,
                 $artifact_node,
                 $jira_field_mapping_collection,
                 $issue_api_representation,

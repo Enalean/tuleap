@@ -50,33 +50,39 @@ class JiraAuthorRetriever
      */
     private $jira_user_querier;
 
+    /**
+     * @var PFUser
+     */
+    private $default_user;
+
     public function __construct(
         LoggerInterface $logger,
         UserManager $user_manager,
         JiraUserOnTuleapCache $user_cache,
-        JiraUserInfoQuerier $jira_user_querier
+        JiraUserInfoQuerier $jira_user_querier,
+        PFUser $default_user
     ) {
         $this->logger            = $logger;
         $this->user_manager      = $user_manager;
         $this->user_cache        = $user_cache;
         $this->jira_user_querier = $jira_user_querier;
+        $this->default_user      = $default_user;
     }
 
-    public function retrieveArtifactSubmitter(IssueAPIRepresentation $issue, PFUser $forge_user): PFUser
+    public function retrieveArtifactSubmitter(IssueAPIRepresentation $issue): PFUser
     {
         $creator = $issue->getFieldByKey('creator');
 
         if ($creator === null) {
-            return $forge_user;
+            return $this->default_user;
         }
 
         return $this->retrieveUser(
-            new JiraUser($creator),
-            $forge_user
+            new JiraUser($creator)
         );
     }
 
-    private function retrieveUser(JiraUser $jira_user, PFUser $forge_user): PFUser
+    private function retrieveUser(JiraUser $jira_user): PFUser
     {
         $display_name = $jira_user->getDisplayName();
 
@@ -90,9 +96,9 @@ class JiraAuthorRetriever
 
         if ($jira_user->getEmailAddress() === '') {
             $this->logger->debug("Jira user $display_name does not share his/her email address, skipping...");
-            $this->user_cache->cacheUser($forge_user, $jira_user);
+            $this->user_cache->cacheUser($this->default_user, $jira_user);
 
-            return $forge_user;
+            return $this->default_user;
         }
 
         $matching_users = $this->user_manager->getAllUsersByEmail($jira_user->getEmailAddress());
@@ -100,8 +106,8 @@ class JiraAuthorRetriever
         if (count($matching_users) !== 1) {
             $this->logger->debug("Unable to identify an unique user on Tuleap side for Jira user $display_name");
 
-            $this->user_cache->cacheUser($forge_user, $jira_user);
-            return $forge_user;
+            $this->user_cache->cacheUser($this->default_user, $jira_user);
+            return $this->default_user;
         }
 
         $tuleap_user           = $matching_users[0];
@@ -113,15 +119,15 @@ class JiraAuthorRetriever
         return $tuleap_user;
     }
 
-    public function retrieveJiraAuthor(JiraUser $update_author, PFUser $forge_user): PFUser
+    public function retrieveJiraAuthor(JiraUser $update_author): PFUser
     {
-        return $this->retrieveUser($update_author, $forge_user);
+        return $this->retrieveUser($update_author);
     }
 
     /**
      * @throws JiraConnectionException
      */
-    public function getAssignedTuleapUser(PFUser $forge_user, string $jira_account_id): PFUser
+    public function getAssignedTuleapUser(string $jira_account_id): PFUser
     {
         if ($this->user_cache->hasUserWithAccountId($jira_account_id)) {
             return $this->user_cache->getUserFromCacheByJiraAccountId($jira_account_id);
@@ -129,6 +135,6 @@ class JiraAuthorRetriever
 
         $jira_user = $this->jira_user_querier->retrieveUserFromJiraAPI($jira_account_id);
 
-        return $this->retrieveUser($jira_user, $forge_user);
+        return $this->retrieveUser($jira_user);
     }
 }

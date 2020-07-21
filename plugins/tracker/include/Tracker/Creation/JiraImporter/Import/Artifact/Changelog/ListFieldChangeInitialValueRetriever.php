@@ -53,8 +53,7 @@ class ListFieldChangeInitialValueRetriever
      */
     public function retrieveBoundValue(
         string $changed_field_from,
-        FieldMapping $field_mapping,
-        \PFUser $forge_user
+        FieldMapping $field_mapping
     ) {
         if ($field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Static::TYPE) {
             return $this->creation_state_list_value_formatter->formatListValue(
@@ -63,7 +62,7 @@ class ListFieldChangeInitialValueRetriever
         }
 
         if ($field_mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE) {
-            $user  = $this->jira_author_retriever->getAssignedTuleapUser($forge_user, $changed_field_from);
+            $user  = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_from);
             return $this->creation_state_list_value_formatter->formatListValue(
                 (string) $user->getId(),
             );
@@ -74,7 +73,6 @@ class ListFieldChangeInitialValueRetriever
 
         foreach ($account_ids as $account_id) {
             $user = $this->jira_author_retriever->getAssignedTuleapUser(
-                $forge_user,
                 trim($account_id)
             );
 

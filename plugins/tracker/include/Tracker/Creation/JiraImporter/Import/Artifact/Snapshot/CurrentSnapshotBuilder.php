@@ -67,7 +67,7 @@ class CurrentSnapshotBuilder
      * @throws JiraConnectionException
      */
     public function buildCurrentSnapshot(
-        PFUser $forge_user,
+        PFUser $snapshot_owner,
         IssueAPIRepresentation $issue_api_representation,
         FieldMappingCollection $jira_field_mapping_collection
     ): Snapshot {
@@ -79,7 +79,7 @@ class CurrentSnapshotBuilder
             $mapping        = $jira_field_mapping_collection->getMappingFromJiraField($key);
 
             if ($mapping !== null && $value !== null) {
-                $field_value       = $this->getBoundValue($mapping, $forge_user, $value);
+                $field_value       = $this->getBoundValue($mapping, $value);
                 $field_snapshots[] = new FieldSnapshot(
                     $mapping,
                     $field_value,
@@ -89,7 +89,7 @@ class CurrentSnapshotBuilder
         }
 
         $current_snapshot = new Snapshot(
-            $forge_user,
+            $snapshot_owner,
             new DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_UPDATED_ON_NAME)),
             $field_snapshots,
             null
@@ -107,7 +107,6 @@ class CurrentSnapshotBuilder
      */
     private function getBoundValue(
         FieldMapping $mapping,
-        PFUser $forge_user,
         $value
     ) {
         if (
@@ -115,7 +114,6 @@ class CurrentSnapshotBuilder
             $mapping->getType() === \Tracker_FormElementFactory::FIELD_SELECT_BOX_TYPE
         ) {
             $user = $this->jira_author_retriever->getAssignedTuleapUser(
-                $forge_user,
                 $value['accountId']
             );
 
@@ -132,7 +130,6 @@ class CurrentSnapshotBuilder
 
             foreach ($value as $user_representation) {
                 $user = $this->jira_author_retriever->getAssignedTuleapUser(
-                    $forge_user,
                     $user_representation['accountId']
                 );
 
