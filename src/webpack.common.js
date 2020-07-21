@@ -65,8 +65,8 @@ const webpack_config_for_ckeditor = {
 };
 
 let entry_points = {
-    "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.js"]),
-    "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.js"]),
+    "tlp-en_US": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.en_US.ts"]),
+    "tlp-fr_FR": polyfills_for_fetch.concat(["dom4", "./themes/tlp/src/index.fr_FR.ts"]),
     "tlp-relative-date": "./themes/tlp/src/js/custom-elements/relative-date/index.ts",
     "tlp-relative-date-polyfills": "./themes/tlp/src/js/custom-elements/relative-date/polyfills.ts",
 };
@@ -96,7 +96,6 @@ const webpack_config_for_tlp = {
             ...webpack_configurator.configureTypescriptRules(
                 webpack_configurator.babel_options_ie11
             ),
-            webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_scss_loader,
             webpack_configurator.rule_css_assets,
         ],
@@ -153,18 +152,23 @@ const webpack_config_for_flaming_parrot_code = {
         tuleap: "tuleap",
     },
     resolve: {
-        alias: {
-            // keymaster-sequence isn't on npm
-            "keymaster-sequence": path.resolve(
-                __dirname,
-                "./scripts/FlamingParrot/keymaster-sequence/keymaster.sequence.min.js"
-            ),
+        alias: webpack_configurator.extendAliases(
             // navbar-history-flamingparrot needs this because TLP is not included in FlamingParrot
-            "tlp-fetch": path.resolve(__dirname, "./themes/tlp/src/js/fetch-wrapper.js"),
-        },
+            webpack_configurator.tlp_fetch_alias,
+            {
+                // keymaster-sequence isn't on npm
+                "keymaster-sequence": path.resolve(
+                    __dirname,
+                    "./scripts/FlamingParrot/keymaster-sequence/keymaster.sequence.min.js"
+                ),
+            }
+        ),
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             {
                 test: /keymaster\.sequence\.min\.js$/,
@@ -186,12 +190,13 @@ const webpack_config_for_rich_text_editor = {
         tuleap: "tuleap",
     },
     resolve: {
-        alias: {
-            "tlp-fetch": path.resolve(__dirname, "./themes/tlp/src/js/fetch-wrapper.js"),
-        },
+        alias: webpack_configurator.tlp_fetch_alias,
     },
     module: {
         rules: [
+            ...webpack_configurator.configureTypescriptRules(
+                webpack_configurator.babel_options_ie11
+            ),
             webpack_configurator.configureBabelRule(webpack_configurator.babel_options_ie11),
             webpack_configurator.rule_po_files,
         ],

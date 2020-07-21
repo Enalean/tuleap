@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
+ * Copyright (c) Enalean, 2017 - present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,28 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-const path = require("path");
-const path_to_tlp = path.join(__dirname, "../../../src/themes/tlp/");
+export * from "./js/index";
 
-const tlp_fetch_alias = {
-    "tlp-fetch": path.join(path_to_tlp, "src/js/fetch-wrapper.ts"),
-};
-
-const angular_tlp_alias = {
-    "angular-tlp": path.join(path_to_tlp, "angular-tlp/index.js"),
-};
-
-const easygettext_loader_alias = {
-    "easygettext-loader": path.resolve(__dirname, "./easygettext-loader.js"),
-};
-
-function extendAliases(...aliases) {
-    return Object.assign({}, ...aliases);
-}
-
-module.exports = {
-    extendAliases,
-    angular_tlp_alias,
-    easygettext_loader_alias,
-    tlp_fetch_alias,
-};
+import "../node_modules/select2/dist/js/i18n/en.js";

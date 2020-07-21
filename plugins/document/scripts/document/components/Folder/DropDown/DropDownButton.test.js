@@ -21,10 +21,14 @@ import { shallowMount } from "@vue/test-utils";
 import localVue from "../../../helpers/local-vue.js";
 import DropDownButton from "./DropDownButton.vue";
 import EventBus from "../../../helpers/event-bus.js";
+import * as tlp from "tlp";
+
+jest.mock("tlp");
 
 describe("DropDownButton", () => {
     let dropdown_factory;
     beforeEach(() => {
+        jest.spyOn(tlp, "dropdown");
         dropdown_factory = (props = {}) => {
             return shallowMount(DropDownButton, {
                 localVue,

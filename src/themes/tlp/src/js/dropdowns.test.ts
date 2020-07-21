@@ -60,13 +60,22 @@ describe(`Dropdowns`, () => {
             doc.body.innerHTML = "";
         });
 
-        it(`will crash utterly if it can't find the dropdown menu among its siblings`, () => {
+        it(`will throw when it can't find the dropdown menu among its siblings`, () => {
             dropdown_element.remove();
 
-            const dropdown = createDropdown(doc, trigger_element);
-            expect(() => dropdown.show()).toThrowErrorMatchingInlineSnapshot(
-                `"Cannot read property 'classList' of null"`
+            expect(() => createDropdown(doc, trigger_element)).toThrow(
+                "Could not find .tlp-dropdown-menu"
             );
+        });
+
+        it(`will throw when the dropdown menu is not an HTML element`, () => {
+            const svg_element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+
+            expect(() =>
+                createDropdown(doc, trigger_element, { dropdown_menu: svg_element })
+            ).toThrow("Dropdown menu must be an HTML element");
+
+            svg_element.remove();
         });
 
         it(`will use the dropdown menu element passed in its options`, () => {
@@ -166,6 +175,14 @@ describe(`Dropdowns`, () => {
         describe(`when the dropdown is shown`, () => {
             beforeEach(() => {
                 dropdown.show();
+            });
+
+            it(`and I click on something that is not an Element, it won't close it`, () => {
+                const text_in_dropdown = document.createTextNode("Some text");
+                dropdown_element.append(text_in_dropdown);
+
+                simulateClick(text_in_dropdown);
+                expectTheDropdownToBeShown(dropdown_element);
             });
 
             it(`and I click inside the dropdown, it won't close it`, () => {
@@ -271,10 +288,10 @@ function expectTheDropdownToBeHidden(dropdown_element: HTMLElement): void {
     expect(dropdown_element.classList.contains(DROPDOWN_SHOWN_CLASS_NAME)).toBe(false);
 }
 
-function simulateClick(element: HTMLElement): void {
+function simulateClick(element: EventTarget): void {
     element.dispatchEvent(new Event("click", { bubbles: true }));
 }
 
-function simulateEscapeKey(element: HTMLElement): void {
+function simulateEscapeKey(element: EventTarget): void {
     element.dispatchEvent(new KeyboardEvent("keyup", { key: "Escape", bubbles: true }));
 }

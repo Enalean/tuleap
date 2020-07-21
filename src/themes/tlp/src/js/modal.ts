@@ -21,16 +21,40 @@ const TRANSITION_DURATION = 300;
 
 export const EVENT_TLP_MODAL_SHOWN = "tlp-modal-shown";
 export const EVENT_TLP_MODAL_HIDDEN = "tlp-modal-hidden";
+type ModalEventType = "tlp-modal-shown" | "tlp-modal-hidden";
 
 export const BACKDROP_ID = "tlp-modal-backdrop";
 export const BACKDROP_SHOWN_CLASS_NAME = "tlp-modal-backdrop-shown";
 export const MODAL_DISPLAY_CLASS_NAME = "tlp-modal-display";
 export const MODAL_SHOWN_CLASS_NAME = "tlp-modal-shown";
 
-export const modal = (doc, element, options) => new Modal(doc, element, options);
+export interface ModalOptions {
+    keyboard?: boolean;
+    destroy_on_hide?: boolean;
+}
 
-class Modal {
-    constructor(doc, element, options = { keyboard: true }) {
+export type ModalEventListener = (event: CustomEvent<{ target: HTMLElement }>) => void;
+
+interface EventListener {
+    type: ModalEventType;
+    eventHandler: ModalEventListener;
+}
+
+export const modal = (doc: Document, element: Element, options?: ModalOptions): Modal =>
+    new Modal(doc, element, options);
+
+export class Modal {
+    private readonly doc: Document;
+    private readonly element: Element;
+    is_shown: boolean;
+    private readonly options: ModalOptions;
+    private readonly event_listeners: EventListener[] = [];
+    private backdrop_element: HTMLDivElement | null = null;
+    private readonly shown_event: CustomEvent<{ target: Element }>;
+    private readonly hidden_event: CustomEvent<{ target: Element }>;
+    private readonly eventHandler: ModalEventHandler;
+
+    constructor(doc: Document, element: Element, options: ModalOptions = { keyboard: true }) {
         const { keyboard = true, destroy_on_hide = false } = options;
         this.doc = doc;
         this.element = element;
@@ -45,19 +69,16 @@ class Modal {
         this.hidden_event = new CustomEvent(EVENT_TLP_MODAL_HIDDEN, {
             detail: { target: this.element },
         });
-        this.event_listeners = [];
         this.eventHandler = new ModalEventHandler(this);
         this.listenCloseEvents();
     }
 
-    toggle() {
+    toggle(): void {
         this.is_shown ? this.hide() : this.show();
     }
 
-    show() {
+    show(): void {
         this.element.classList.add(MODAL_DISPLAY_CLASS_NAME);
-
-        reflowElement(this.element);
 
         this.element.classList.add(MODAL_SHOWN_CLASS_NAME);
         this.is_shown = true;
@@ -66,10 +87,8 @@ class Modal {
         this.dispatchEvent(this.shown_event);
     }
 
-    hide() {
+    hide(): void {
         this.element.classList.remove(MODAL_SHOWN_CLASS_NAME);
-
-        reflowElement(this.element);
 
         this.removeBackdrop();
         if (this.options.destroy_on_hide) {
@@ -84,12 +103,10 @@ class Modal {
         }, TRANSITION_DURATION);
     }
 
-    addBackdrop() {
+    addBackdrop(): void {
         this.backdrop_element = this.doc.createElement("div");
         this.backdrop_element.id = BACKDROP_ID;
         this.doc.body.appendChild(this.backdrop_element);
-
-        reflowElement(this.backdrop_element);
 
         this.backdrop_element.classList.add(BACKDROP_SHOWN_CLASS_NAME);
         this.backdrop_element.addEventListener("click", () => {
@@ -97,18 +114,15 @@ class Modal {
         });
     }
 
-    removeBackdrop() {
-        if (!this.backdrop_element) {
-            return;
-        }
-        this.backdrop_element.classList.remove(BACKDROP_SHOWN_CLASS_NAME);
+    removeBackdrop(): void {
+        this.backdrop_element?.classList.remove(BACKDROP_SHOWN_CLASS_NAME);
 
         setTimeout(() => {
-            this.backdrop_element.remove();
+            this.backdrop_element?.remove();
         }, TRANSITION_DURATION);
     }
 
-    listenCloseEvents() {
+    listenCloseEvents(): void {
         this.close_elements.forEach((close_element) => {
             close_element.addEventListener("click", this.eventHandler);
         });
@@ -118,7 +132,7 @@ class Modal {
         }
     }
 
-    destroy() {
+    destroy(): void {
         this.close_elements.forEach((close_element) => {
             close_element.removeEventListener("click", this.eventHandler);
         });
@@ -132,20 +146,20 @@ class Modal {
         }
     }
 
-    addEventListener(type, eventHandler) {
-        let listener = { type, eventHandler };
+    addEventListener(type: ModalEventType, eventHandler: ModalEventListener): void {
+        const listener = { type, eventHandler };
         this.event_listeners.push(listener);
     }
 
-    removeEventListener(type, eventHandler) {
-        for (let [index, listener] of this.event_listeners.entries()) {
+    removeEventListener(type: ModalEventType, eventHandler: ModalEventListener): void {
+        for (const [index, listener] of this.event_listeners.entries()) {
             if (listener.type === type && listener.eventHandler === eventHandler) {
                 this.event_listeners.splice(index, 1);
             }
         }
     }
 
-    dispatchEvent(event) {
+    dispatchEvent(event: CustomEvent): void {
         for (const listener of this.event_listeners) {
             if (event.type === listener.type) {
                 listener.eventHandler(event);
@@ -153,46 +167,39 @@ class Modal {
         }
     }
 
-    get close_elements() {
-        let children = this.element.querySelectorAll('[data-dismiss="modal"]');
-        let close_elements = [];
-
-        [].forEach.call(children, (child) => {
-            close_elements.push(child);
-        });
-
-        return close_elements;
+    get close_elements(): Element[] {
+        const children = this.element.querySelectorAll('[data-dismiss="modal"]');
+        return [...children];
     }
 }
 
-function reflowElement(element) {
-    element.offsetHeight;
-}
+const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
 
-class ModalEventHandler {
-    constructor(modal) {
+class ModalEventHandler implements EventListenerObject {
+    private readonly modal: Modal;
+
+    constructor(modal: Modal) {
         this.modal = modal;
     }
 
-    handleEvent(event) {
+    handleEvent(event: Event): void {
         if (event.type === "click") {
             this.closeElementCallback();
-        } else if (event.type === "keyup") {
+        } else if (event.type === "keyup" && event instanceof KeyboardEvent) {
             this.keyupCallback(event);
         }
     }
 
-    closeElementCallback() {
+    closeElementCallback(): void {
         this.modal.hide();
     }
 
-    keyupCallback(event) {
+    keyupCallback(event: KeyboardEvent): void {
         if (event.key !== "Escape" && !isEscapeKeyForInternetExplorer11(event.key)) {
             return;
         }
 
-        let tag_name = event.target.tagName.toUpperCase();
-        if (tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA") {
+        if (isInputElement(event.target)) {
             return;
         }
 
@@ -202,4 +209,10 @@ class ModalEventHandler {
     }
 }
 
-const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";
+function isInputElement(eventTarget: EventTarget | null): boolean {
+    if (!(eventTarget instanceof Element)) {
+        return false;
+    }
+    const tag_name = eventTarget.tagName.toUpperCase();
+    return tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA";
+}

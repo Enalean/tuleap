@@ -17,25 +17,54 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { findClosestElement } from "./dom-walker.js";
+import { findClosestElement } from "./dom-walker";
 
 const TRANSITION_DURATION = 75;
 
 export const EVENT_TLP_DROPDOWN_SHOWN = "tlp-dropdown-shown";
 export const EVENT_TLP_DROPDOWN_HIDDEN = "tlp-dropdown-hidden";
+type DropdownEventType = "tlp-dropdown-shown" | "tlp-dropdown-hidden";
 
 export const DROPDOWN_MENU_CLASS_NAME = "tlp-dropdown-menu";
 export const DROPDOWN_SHOWN_CLASS_NAME = "tlp-dropdown-shown";
 
-export const dropdown = (doc, trigger, options) => new Dropdown(doc, trigger, options);
+export interface DropdownOptions {
+    keyboard?: boolean;
+    dropdown_menu?: Element;
+}
+export type DropdownEventHandler = (event: CustomEvent<{ target: HTMLElement }>) => void;
 
-class Dropdown {
-    constructor(doc, trigger, options = { keyboard: true }) {
+interface EventListener {
+    type: DropdownEventType;
+    eventHandler: DropdownEventHandler;
+}
+
+export const dropdown = (doc: Document, trigger: Element, options?: DropdownOptions): Dropdown =>
+    new Dropdown(doc, trigger, options);
+
+const isEscapeKeyForInternetExplorer11 = (key: string): boolean => key === "Esc";
+
+export class Dropdown {
+    private readonly doc: Document;
+    private readonly trigger: Element;
+    private readonly dropdown_menu: HTMLElement;
+    private readonly keyboard: boolean;
+    is_shown: boolean;
+    private readonly shown_event: CustomEvent<{ target: HTMLElement }>;
+    private readonly hidden_event: CustomEvent<{ target: HTMLElement }>;
+    private readonly event_listeners: EventListener[];
+
+    constructor(doc: Document, trigger: Element, options: DropdownOptions = { keyboard: true }) {
         this.doc = doc;
         this.trigger = trigger;
 
-        let { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
-
+        const { keyboard = true, dropdown_menu = this.getDropdownMenu() } = options;
+        if (dropdown_menu === null) {
+            throw new Error("Could not find .tlp-dropdown-menu");
+        }
+        if (!(dropdown_menu instanceof HTMLElement)) {
+            throw new Error("Dropdown menu must be an HTML element");
+        }
         this.dropdown_menu = dropdown_menu;
         this.is_shown = false;
         this.keyboard = keyboard;
@@ -51,12 +80,12 @@ class Dropdown {
         this.listenCloseEvents();
     }
 
-    getDropdownMenu() {
+    getDropdownMenu(): HTMLElement | null {
         let dropdown_menu = this.trigger.nextSibling;
 
         while (
             dropdown_menu &&
-            (dropdown_menu.nodeType !== Node.ELEMENT_NODE ||
+            (!(dropdown_menu instanceof HTMLElement) ||
                 !dropdown_menu.classList.contains(DROPDOWN_MENU_CLASS_NAME))
         ) {
             dropdown_menu = dropdown_menu.nextSibling;
@@ -65,11 +94,11 @@ class Dropdown {
         return dropdown_menu;
     }
 
-    toggle() {
+    toggle(): void {
         this.is_shown ? this.hide() : this.show();
     }
 
-    show() {
+    show(): void {
         this.dropdown_menu.classList.add(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = true;
         this.reflow();
@@ -77,7 +106,7 @@ class Dropdown {
         this.dispatchEvent(this.shown_event);
     }
 
-    hide() {
+    hide(): void {
         this.dropdown_menu.classList.remove(DROPDOWN_SHOWN_CLASS_NAME);
         this.is_shown = false;
         this.reflow();
@@ -87,19 +116,22 @@ class Dropdown {
         }, TRANSITION_DURATION);
     }
 
-    reflow() {
+    reflow(): void {
         this.dropdown_menu.offsetHeight;
     }
 
-    listenOpenEvents() {
+    listenOpenEvents(): void {
         this.trigger.addEventListener("click", (event) => {
             event.preventDefault();
             this.toggle();
         });
     }
 
-    listenCloseEvents() {
+    listenCloseEvents(): void {
         this.doc.addEventListener("click", (event) => {
+            if (!(event.target instanceof Element)) {
+                return;
+            }
             if (
                 this.is_shown &&
                 !findClosestElement(this.doc, event.target, this.dropdown_menu) &&
@@ -115,8 +147,7 @@ class Dropdown {
                     return;
                 }
 
-                let tag_name = event.target.tagName.toUpperCase();
-                if (tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA") {
+                if (isInputElement(event.target)) {
                     return;
                 }
 
@@ -127,20 +158,20 @@ class Dropdown {
         }
     }
 
-    addEventListener(type, eventHandler) {
-        let listener = { type, eventHandler };
+    addEventListener(type: DropdownEventType, eventHandler: DropdownEventHandler): void {
+        const listener = { type, eventHandler };
         this.event_listeners.push(listener);
     }
 
-    removeEventListener(type, eventHandler) {
-        for (let [index, listener] of this.event_listeners.entries()) {
+    removeEventListener(type: DropdownEventType, eventHandler: DropdownEventHandler): void {
+        for (const [index, listener] of this.event_listeners.entries()) {
             if (listener.type === type && listener.eventHandler === eventHandler) {
                 this.event_listeners.slice(index, 1);
             }
         }
     }
 
-    dispatchEvent(event) {
+    dispatchEvent(event: CustomEvent): void {
         for (const listener of this.event_listeners) {
             if (event.type === listener.type) {
                 listener.eventHandler(event);
@@ -149,4 +180,10 @@ class Dropdown {
     }
 }
 
-const isEscapeKeyForInternetExplorer11 = (key) => key === "Esc";
+function isInputElement(eventTarget: EventTarget | null): boolean {
+    if (!(eventTarget instanceof Element)) {
+        return false;
+    }
+    const tag_name = eventTarget.tagName.toUpperCase();
+    return tag_name === "INPUT" || tag_name === "SELECT" || tag_name === "TEXTAREA";
+}

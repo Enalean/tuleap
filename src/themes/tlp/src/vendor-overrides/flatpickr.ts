@@ -23,11 +23,12 @@ flatpickr.defaultConfig.prevArrow = "<i class='fa fa-angle-left'></i>";
 flatpickr.defaultConfig.nextArrow = "<i class='fa fa-angle-right'></i>";
 flatpickr.l10ns.default.firstDayOfWeek = 1;
 
-export default datePicker;
-
-function datePicker(element, options) {
+export function datePicker(
+    element: HTMLInputElement,
+    options?: flatpickr.Options.Options
+): flatpickr.Instance {
     if (isNaN(Date.parse(element.value))) {
-        element.value = null;
+        element.value = "";
     }
     options = options || {};
 

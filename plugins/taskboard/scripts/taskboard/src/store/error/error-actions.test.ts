@@ -34,13 +34,13 @@ describe("Error modules actions", () => {
 
     describe(`handleGlobalError`, () => {
         it("sets a global error message when a message can be extracted from the FetchWrapperError instance", async () => {
-            const error = new Error() as FetchWrapperError;
-            error.response = {
+            const response = {
                 json: () =>
                     Promise.resolve({
                         error: { code: 500, message: "Internal Server Error" },
                     }),
             } as Response;
+            const error = new FetchWrapperError("Internal Server Error", response);
 
             await actions.handleGlobalError(context, error);
 
@@ -52,10 +52,10 @@ describe("Error modules actions", () => {
         });
 
         it("leaves the global error message empty when a message can not be extracted from the FetchWrapperError instance", async () => {
-            const error = new Error() as FetchWrapperError;
-            error.response = {
+            const response = {
                 json: () => Promise.reject(),
             } as Response;
+            const error = new FetchWrapperError("Internal Server Error", response);
 
             await actions.handleGlobalError(context, error);
 
@@ -67,13 +67,13 @@ describe("Error modules actions", () => {
     describe(`handleModalError`, () => {
         it(`when a message can be extracted from the FetchWrapperError,
             it will set an error message that will show up in a modal window`, async () => {
-            const error = new Error() as FetchWrapperError;
-            error.response = {
+            const response = {
                 json: () =>
                     Promise.resolve({
                         error: { code: 500, message: "Internal Server Error" },
                     }),
             } as Response;
+            const error = new FetchWrapperError("Internal Server Error", response);
 
             await actions.handleModalError(context, error);
 
@@ -85,10 +85,10 @@ describe("Error modules actions", () => {
 
         it(`when a message can't be extracted from the FetchWrapperError,
             it will leave the modal error message empty`, async () => {
-            const error = new Error() as FetchWrapperError;
-            error.response = {
+            const response = {
                 json: () => Promise.reject(),
             } as Response;
+            const error = new FetchWrapperError("Internal Server Error", response);
 
             await actions.handleModalError(context, error);
 
