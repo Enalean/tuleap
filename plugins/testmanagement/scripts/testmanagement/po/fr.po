@@ -273,8 +273,7 @@ msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"
 
 msgid "You are not allowed to upload images bigger than {{ max_size }}"
-msgstr ""
-"Vous n'êtes pas autorisé inserer des images plus lourdes que {{ max_size }}"
+msgstr "Vous n'êtes pas autorisé à insérer des images plus lourdes que {{ max_size }}"
 
 msgid ""
 "You have just updated the test definition, so it has been reset. Please "
