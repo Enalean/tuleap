@@ -21,7 +21,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { get, post, del } from "tlp-fetch";
+import { get, post, del } from "tlp";
 import DateUtils from "../support/date-utils";
 
 export {
