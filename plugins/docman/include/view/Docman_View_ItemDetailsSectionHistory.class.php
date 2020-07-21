@@ -39,20 +39,22 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
     {
         $content = '';
 
+        $current_user = UserManager::instance()->getCurrentUser();
+
         if ($this->item instanceof Docman_File) {
-            $content .= $this->getFileVersions();
+            $content .= $this->getFileVersions($current_user);
         } elseif ($this->item instanceof Docman_Link) {
-            $content .= $this->getLinkVersions();
+            $content .= $this->getLinkVersions($current_user);
         }
 
         if ($this->logger) {
-            $content .= $this->logger->fetchLogsForItem($this->item->getId(), $this->display_access_logs);
+            $content .= $this->logger->fetchLogsForItem($this->item->getId(), $this->display_access_logs, $current_user);
         }
 
         return $content;
     }
 
-    private function getFileVersions()
+    private function getFileVersions(\PFUser $current_user): string
     {
         $uh      = UserHelper::instance();
         $content = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
@@ -70,7 +72,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $titles[] = dgettext('tuleap-docman', 'Change Log');
                 $titles[] = dgettext('tuleap-docman', 'Approval');
                 $titles[] = dgettext('tuleap-docman', 'Delete');
-                $content .= html_build_list_table_top($titles, false, false, false);
+                $content .= html_build_list_table_top($titles, false, false, false, null, "table");
                 $odd_even = array('boxitem', 'boxitemalt');
                 $i = 0;
                 foreach ($versions as $key => $nop) {
@@ -89,7 +91,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                     $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                     $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                     $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
-                    $content .= '<td>' . \DateHelper::timeAgoInWords($versions[$key]->getDate(), false, true) . '</td>';
+                    $content .= '<td>' . \DateHelper::relativeDateBlockContext($versions[$key]->getDate(), $current_user) . '</td>';
                     $content .= '<td>' . $this->hp->purify($user)                                                  . '</td>';
                     $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel())         . '</td>';
                     $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';
@@ -124,7 +126,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
         return $content;
     }
 
-    private function getLinkVersions()
+    private function getLinkVersions(\PFUser $current_user): string
     {
         $uh      = UserHelper::instance();
         $content = '<h3>' . dgettext('tuleap-docman', 'Versions') . '</h3>';
@@ -140,7 +142,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 dgettext('tuleap-docman', 'Label'),
                 dgettext('tuleap-docman', 'Change Log'),
             );
-            $content .= html_build_list_table_top($titles, false, false, false);
+            $content .= html_build_list_table_top($titles, false, false, false, null, "table");
 
             $odd_even = array('boxitem', 'boxitemalt');
             $i = 0;
@@ -154,7 +156,7 @@ class Docman_View_ItemDetailsSectionHistory extends Docman_View_ItemDetailsSecti
                 $user = $versions[$key]->getAuthorId() ? $uh->getDisplayNameFromUserId($versions[$key]->getAuthorId()) : dgettext('tuleap-docman', 'Anonymous');
                 $content .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                 $content .= '<td align="center"><a href="' . $download . '">' . $versions[$key]->getNumber() . '</a></td>';
-                $content .= '<td>' . \DateHelper::timeAgoInWords($versions[$key]->getDate(), false, true) . '</td>';
+                $content .= '<td>' . \DateHelper::relativeDateBlockContext($versions[$key]->getDate(), $current_user) . '</td>';
                 $content .= '<td>' . $this->hp->purify($user) . '</td>';
                 $content .= '<td>' . $this->hp->purify($versions[$key]->getLabel()) . '</td>';
                 $content .= '<td>' . $this->hp->purify($versions[$key]->getChangelog(), CODENDI_PURIFIER_LIGHT) . '</td>';

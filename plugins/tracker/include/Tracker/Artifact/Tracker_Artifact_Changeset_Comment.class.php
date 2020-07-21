@@ -161,7 +161,7 @@ class Tracker_Artifact_Changeset_Comment
         if ($this->parent_id) {
             $html .= dgettext('tuleap-tracker', 'last edited by:');
             $html .= ' ' . $uh->getLinkOnUserFromUserId($this->submitted_by) . ' ';
-            $html .= DateHelper::relativeDate($this->submitted_on, $current_user);
+            $html .= DateHelper::relativeDateInlineContext($this->submitted_on, $current_user);
         }
         $html .= '</div>';
 

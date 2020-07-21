@@ -357,6 +357,16 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         // This stops styles inadvertently clashing with the main site.
         if ($this->currentRequestIsForPlugin()) {
             echo $this->getAssets()->getHTMLSnippet('docman.js');
+
+            $core_assets = new IncludeAssets(
+                __DIR__ . '/../../../src/www/assets/core',
+                '/assets/core'
+            );
+            $browser = new Browser();
+            if ($browser->isEdgeLegacy() || $browser->isIE11()) {
+                echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
+            }
+            echo $core_assets->getHTMLSnippet('tlp-relative-date.js');
         }
     }
 
