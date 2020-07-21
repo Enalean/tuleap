@@ -80,11 +80,10 @@ class ChangelogSnapshotBuilderTest extends TestCase
         $john_doe->shouldReceive('getId')->andReturn(105);
         $mysterio->shouldReceive('getId')->andReturn(106);
         $jira_author_retriever->shouldReceive('retrieveJiraAuthor')->andReturn($user);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e8a7dbae5')->andReturn($john_doe);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'a7e8b9c5')->andReturn($mysterio);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('e8a7dbae5')->andReturn($john_doe);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('a7e8b9c5')->andReturn($mysterio);
 
         $snapshot = $builder->buildSnapshotFromChangelogEntry(
-            $user,
             $current_snapshot,
             $changelog_entry,
             $attachment_collection,

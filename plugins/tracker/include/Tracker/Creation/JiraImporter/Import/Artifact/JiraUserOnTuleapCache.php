@@ -36,9 +36,15 @@ class JiraUserOnTuleapCache
      */
     private $jira_tuleap_users_mapping;
 
-    public function __construct(JiraTuleapUsersMapping $jira_tuleap_users_mapping)
+    /**
+     * @var \PFUser
+     */
+    private $forge_user;
+
+    public function __construct(JiraTuleapUsersMapping $jira_tuleap_users_mapping, \PFUser $forge_user)
     {
         $this->jira_tuleap_users_mapping = $jira_tuleap_users_mapping;
+        $this->forge_user                = $forge_user;
     }
 
     public function cacheUser(\PFUser $tuleap_user, JiraUser $jira_user): void
@@ -64,6 +70,10 @@ class JiraUserOnTuleapCache
 
     public function getUserFromCacheByJiraAccountId(string $jira_account_id): \PFUser
     {
+        if (! $this->hasUserWithAccountId($jira_account_id)) {
+            return $this->forge_user;
+        }
+
         return $this->user_cache[$jira_account_id];
     }
 

@@ -181,7 +181,6 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         );
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
-            $this->user,
             $this->jira_issue_api,
             $this->attachment_collection,
             $this->jira_field_mapping_collection,
@@ -234,7 +233,6 @@ class IssueSnapshotCollectionBuilderTest extends TestCase
         $this->comment_values_builder->shouldReceive('buildCommentCollectionForIssue')->andReturn([]);
 
         $collection = $this->builder->buildCollectionOfSnapshotsForIssue(
-            $this->user,
             $this->jira_issue_api,
             $this->attachment_collection,
             $this->jira_field_mapping_collection,

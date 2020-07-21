@@ -56,8 +56,8 @@ class CurrentSnapshotBuilderTest extends TestCase
 
         $john_doe->shouldReceive('getId')->andReturn(105);
         $mysterio->shouldReceive('getId')->andReturn(106);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'e6a7dae9')->andReturn($john_doe);
-        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with($user, 'd45a6r4f')->andReturn($mysterio);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('e6a7dae9')->andReturn($john_doe);
+        $jira_author_retriever->shouldReceive('getAssignedTuleapUser')->with('d45a6r4f')->andReturn($mysterio);
         $logger->shouldReceive('debug');
 
         $snapshot = $builder->buildCurrentSnapshot(

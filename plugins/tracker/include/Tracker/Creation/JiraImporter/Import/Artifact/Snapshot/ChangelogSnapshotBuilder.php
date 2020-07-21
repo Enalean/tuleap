@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
-use PFUser;
 use Psr\Log\LoggerInterface;
 use Tracker_FormElementFactory;
 use Tuleap\Tracker\Creation\JiraImporter\Import\AlwaysThereFieldsExporter;
@@ -65,7 +64,6 @@ class ChangelogSnapshotBuilder
      * @throws JiraConnectionException
      */
     public function buildSnapshotFromChangelogEntry(
-        PFUser $forge_user,
         Snapshot $current_snapshot,
         ChangelogEntryValueRepresentation $changelog_entry,
         AttachmentCollection $attachment_collection,
@@ -124,7 +122,7 @@ class ChangelogSnapshotBuilder
                 $field_mapping->getBindType() === \Tracker_FormElement_Field_List_Bind_Users::TYPE &&
                 $changed_field_to !== null
             ) {
-                $user              = $this->jira_author_retriever->getAssignedTuleapUser($forge_user, $changed_field_to);
+                $user              = $this->jira_author_retriever->getAssignedTuleapUser($changed_field_to);
                 $fields_snapshot[] = new FieldSnapshot(
                     $field_mapping,
                     $this->creation_state_list_value_formatter->formatListValue(
@@ -147,7 +145,6 @@ class ChangelogSnapshotBuilder
 
                 foreach ($account_ids as $account_id) {
                     $user = $this->jira_author_retriever->getAssignedTuleapUser(
-                        $forge_user,
                         trim($account_id)
                     );
 
@@ -206,7 +203,7 @@ class ChangelogSnapshotBuilder
         }
 
         return new Snapshot(
-            $this->jira_author_retriever->retrieveJiraAuthor($changelog_entry->getChangelogOwner(), $forge_user),
+            $this->jira_author_retriever->retrieveJiraAuthor($changelog_entry->getChangelogOwner()),
             $changelog_entry->getCreated(),
             $fields_snapshot,
             null

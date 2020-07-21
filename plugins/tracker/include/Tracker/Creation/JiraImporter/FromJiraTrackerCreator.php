@@ -123,6 +123,7 @@ class FromJiraTrackerCreator
      * @throws XML_ParseException
      * @throws TrackerFromXmlException
      * @throws JiraConnectionException
+     * @throws \RuntimeException
      */
     public function createFromJira(
         Project $project,
@@ -200,6 +201,7 @@ class FromJiraTrackerCreator
 
     /**
      * protected for testing purpose
+     * @throws \RuntimeException
      */
     protected function getJiraExporter(
         ConcealedString $jira_token,

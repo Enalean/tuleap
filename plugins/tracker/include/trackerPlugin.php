@@ -183,6 +183,7 @@ use Tuleap\Tracker\Webhook\WebhookFactory;
 use Tuleap\Tracker\Widget\ProjectRendererWidgetXMLImporter;
 use Tuleap\Tracker\Workflow\WorkflowMenuTabPresenterBuilder;
 use Tuleap\Tracker\Workflow\WorkflowTransitionController;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use Tuleap\Upload\FileBeingUploadedLocker;
 use Tuleap\Upload\FileBeingUploadedWriter;
 use Tuleap\Upload\FileUploadController;
@@ -1598,7 +1599,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function workerEvent(WorkerEvent $event)
     {
         $user_manager              = $this->getUserManager();
-        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping());
+        $forge_user                = $user_manager->getUserById(TrackerImporterUser::ID);
+        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
+            new JiraTuleapUsersMapping(),
+            $forge_user
+        );
 
         AsynchronousJiraRunner::addListener(
             $event,
@@ -2264,7 +2269,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     private function getJiraRunner(\Psr\Log\LoggerInterface $logger): JiraRunner
     {
-        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(new JiraTuleapUsersMapping());
+        $user_manager              = $this->getUserManager();
+        $forge_user                = $user_manager->getUserById(TrackerImporterUser::ID);
+        $jira_user_on_tuleap_cache = new JiraUserOnTuleapCache(
+            new JiraTuleapUsersMapping(),
+            $forge_user
+        );
 
         return new JiraRunner(
             $logger,

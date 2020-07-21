@@ -83,7 +83,7 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
         $john_doe = \Mockery::mock(\PFUser::class);
         $john_doe->shouldReceive('getid')->andReturn(105);
         $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
-            ->with($this->forge_user, 'e8a6c4d54')
+            ->with('e8a6c4d54')
             ->andReturn($john_doe);
 
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(
@@ -107,11 +107,11 @@ class ListFieldChangeInitialValueRetrieverTest extends TestCase
         $john_doe->shouldReceive('getId')->andReturn(105);
 
         $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
-            ->with($this->forge_user, 'e8a6c4d54')
+            ->with('e8a6c4d54')
             ->andReturn($john_doe);
 
         $this->jira_author_retriever->shouldReceive('getAssignedTuleapUser')
-            ->with($this->forge_user, 'a7e9f1b2c')
+            ->with('a7e9f1b2c')
             ->andReturn($this->forge_user);
 
         $list_value = $this->list_field_change_initial_value_retriever->retrieveBoundValue(

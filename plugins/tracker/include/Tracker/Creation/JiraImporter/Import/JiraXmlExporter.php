@@ -73,6 +73,7 @@ use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeFloatBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeListBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeStringBuilder;
 use Tuleap\Tracker\XML\Exporter\FieldChange\FieldChangeTextBuilder;
+use Tuleap\Tracker\XML\Importer\TrackerImporterUser;
 use UserManager;
 use UserXMLExporter;
 use XML_SimpleXMLCDATAFactory;
@@ -198,6 +199,9 @@ class JiraXmlExporter
         $this->xml_report_updated_recently_exporter = $xml_report_updated_recently_exporter;
     }
 
+    /**
+     * @throws \RuntimeException
+     */
     public static function build(
         JiraCredentials $jira_credentials,
         LoggerInterface $logger,
@@ -229,14 +233,22 @@ class JiraXmlExporter
         );
 
         $creation_state_list_value_formatter = new CreationStateListValueFormatter();
+        $user_manager                        = UserManager::instance();
+        $forge_user                          = $user_manager->getUserById(TrackerImporterUser::ID);
+
+        if ($forge_user === null) {
+            throw new \RuntimeException("Unable to find TrackerImporterUser");
+        }
+
         $jira_author_retriever = new JiraAuthorRetriever(
             $logger,
-            UserManager::instance(),
+            $user_manager,
             $jira_user_on_tuleap_cache,
             new JiraUserInfoQuerier(
                 $wrapper,
                 $logger
-            )
+            ),
+            $forge_user
         );
 
         return new self(
@@ -249,7 +261,7 @@ class JiraXmlExporter
             new PermissionsXMLExporter(),
             new ArtifactsXMLExporter(
                 $wrapper,
-                UserManager::instance(),
+                $user_manager,
                 new DataChangesetXMLExporter(
                     new XML_SimpleXMLCDATAFactory(),
                     new FieldChangeXMLExporter(

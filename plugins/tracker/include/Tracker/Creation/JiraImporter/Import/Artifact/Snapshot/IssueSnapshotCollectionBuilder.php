@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Snapshot;
 
-use PFUser;
 use Psr\Log\LoggerInterface;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Attachment\AttachmentCollection;
 use Tuleap\Tracker\Creation\JiraImporter\Import\Artifact\Changelog\ChangelogEntriesBuilder;
@@ -92,7 +91,6 @@ class IssueSnapshotCollectionBuilder
      * @throws JiraConnectionException
      */
     public function buildCollectionOfSnapshotsForIssue(
-        PFUser $forge_user,
         IssueAPIRepresentation $issue_api_representation,
         AttachmentCollection $attachment_collection,
         FieldMappingCollection $jira_field_mapping_collection,
@@ -101,13 +99,13 @@ class IssueSnapshotCollectionBuilder
         $this->logger->debug("Start build collection of snapshot ...");
 
         $jira_issue_key   = $issue_api_representation->getKey();
-        $artifact_creator = $this->jira_author_retriever->retrieveArtifactSubmitter($issue_api_representation, $forge_user);
+        $artifact_creator = $this->jira_author_retriever->retrieveArtifactSubmitter($issue_api_representation);
 
         $snapshots_collection = [];
         $changelog_entries    = $this->changelog_entries_builder->buildEntriesCollectionForIssue($jira_issue_key);
 
         $current_snapshot = $this->current_snapshot_builder->buildCurrentSnapshot(
-            $forge_user,
+            $artifact_creator,
             $issue_api_representation,
             $jira_field_mapping_collection
         );
@@ -126,7 +124,6 @@ class IssueSnapshotCollectionBuilder
 
         foreach ($changelog_entries as $changelog_entry) {
             $changelog_snapshot = $this->changelog_snapshot_builder->buildSnapshotFromChangelogEntry(
-                $forge_user,
                 $current_snapshot,
                 $changelog_entry,
                 $attachment_collection,
@@ -143,7 +140,7 @@ class IssueSnapshotCollectionBuilder
             $commenter = $comment->getUpdateAuthor();
 
             $comment_snapshot = new Snapshot(
-                $this->jira_author_retriever->retrieveJiraAuthor($commenter, $forge_user),
+                $this->jira_author_retriever->retrieveJiraAuthor($commenter),
                 $comment->getDate(),
                 [],
                 $comment

@@ -60,7 +60,7 @@ class InitialSnapshotBuilder
      * @throws JiraConnectionException
      */
     public function buildInitialSnapshot(
-        PFUser $forge_user,
+        PFUser $snapshot_owner,
         Snapshot $current_snapshot,
         array $changelog_entries,
         FieldMappingCollection $jira_field_mapping_collection,
@@ -88,8 +88,7 @@ class InitialSnapshotBuilder
                 $changelog_entry,
                 $current_snapshot,
                 $field_snapshots,
-                $already_parsed_fields_keys,
-                $forge_user
+                $already_parsed_fields_keys
             );
         }
         $this->logger->debug("Initial fields values built successfully ");
@@ -110,7 +109,7 @@ class InitialSnapshotBuilder
         $this->logger->debug("Link to Jira built successfully ");
 
         $initial_snapshot = new Snapshot(
-            $forge_user,
+            $snapshot_owner,
             new \DateTimeImmutable($issue_api_representation->getFieldByKey(AlwaysThereFieldsExporter::JIRA_CREATED_NAME)),
             $field_snapshots,
             null
@@ -204,8 +203,7 @@ class InitialSnapshotBuilder
         ChangelogEntryValueRepresentation $changelog_entry,
         Snapshot $current_snapshot,
         array &$field_snapshots,
-        array &$already_parsed_fields_keys,
-        PFUser $forge_user
+        array &$already_parsed_fields_keys
     ): void {
         foreach ($changelog_entry->getItemRepresentations() as $changed_field) {
             $changed_field_id       = $changed_field->getFieldId();
@@ -228,7 +226,7 @@ class InitialSnapshotBuilder
 
                 $field_mapping = $current_snapshot_field->getFieldMapping();
                 if ($this->fieldListHasInitialValue($changed_field)) {
-                    $bound_value       = $this->list_field_change_value_retriever->retrieveBoundValue($changed_field_from, $field_mapping, $forge_user);
+                    $bound_value       = $this->list_field_change_value_retriever->retrieveBoundValue($changed_field_from, $field_mapping);
                     $field_snapshots[] = new FieldSnapshot(
                         $field_mapping,
                         $bound_value,

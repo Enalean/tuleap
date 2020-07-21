@@ -134,6 +134,7 @@ class JiraRunner
     /**
      * @throws \Tuleap\Queue\NoQueueSystemAvailableException
      * @throws NoNoopPersistentQueueForJiraImport
+     * @throws \RuntimeException
      */
     private function getPersistentQueue(): \Tuleap\Queue\PersistentQueue
     {
