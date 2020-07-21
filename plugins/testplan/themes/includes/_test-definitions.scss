@@ -21,7 +21,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: $tlp-half-spacing;
+    padding: $tlp-small-spacing;
     border: 1px solid $tlp-ui-border-normal;
     border-top: 0;
     border-bottom-right-radius: 3px;
@@ -40,13 +40,13 @@
     display: flex;
     width: 100%;
     min-height: inherit;
-    margin: 0 0 $tlp-half-spacing;
-    padding: $tlp-spacing $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
+    padding: $tlp-medium-spacing $tlp-small-spacing;
 }
 
 .test-plan-test-definition-skeleton-xref {
     width: 70px;
-    margin: 0 $tlp-half-spacing 0 0;
+    margin: 0 $tlp-small-spacing 0 0;
 }
 
 .test-plan-test-definition-skeleton-title {
@@ -58,8 +58,8 @@
     align-items: baseline;
     justify-content: space-between;
     width: 100%;
-    margin: 0 0 $tlp-half-spacing;
-    padding: $tlp-half-spacing;
+    margin: 0 0 $tlp-small-spacing;
+    padding: $tlp-small-spacing;
     transition: border-color 75ms ease-in-out, background-color 75ms ease-in-out;
 
     &:last-of-type {
@@ -123,10 +123,10 @@
 }
 
 .test-plan-add-test-button {
-    margin: $tlp-medium-spacing - $tlp-half-spacing;
+    margin: $tlp-medium-spacing - $tlp-small-spacing;
 
     &.test-plan-add-test-button-with-empty-state {
-        margin: 0 0 $tlp-large-spacing - $tlp-half-spacing;
+        margin: 0 0 $tlp-large-spacing - $tlp-small-spacing;
     }
 }
 
