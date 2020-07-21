@@ -66,7 +66,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'hudsonPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'hudsonPluginInfo')) {
             require_once('hudsonPluginInfo.class.php');
             $this->pluginInfo = new hudsonPluginInfo($this);
         }
@@ -131,7 +131,7 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
 
     protected function getMinimalHudsonJobFactory()
     {
-        if (!$this->hudsonJobFactory) {
+        if (! $this->hudsonJobFactory) {
             $this->hudsonJobFactory = new MinimalHudsonJobFactory();
         }
         return $this->hudsonJobFactory;
@@ -405,12 +405,12 @@ class hudsonPlugin extends PluginWithLegacyInternalRouting //phpcs:ignore PSR1.C
      */
     public function statistics_collector($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!empty($params['formatter'])) {
+        if (! empty($params['formatter'])) {
             $formatter = $params['formatter'];
             $jobDao = new PluginHudsonJobDao(CodendiDataAccess::instance());
             $dar = $jobDao->countJobs($formatter->groupId);
             $count = 0;
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                     $row = $dar->getRow();
                 if ($row) {
                     $count = $row['count'];

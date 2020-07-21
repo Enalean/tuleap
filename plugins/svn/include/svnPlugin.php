@@ -239,7 +239,7 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'SvnPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'SvnPluginInfo')) {
             $this->pluginInfo = new SvnPluginInfo($this);
         }
         return $this->pluginInfo;

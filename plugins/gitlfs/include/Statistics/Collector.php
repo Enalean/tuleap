@@ -59,7 +59,7 @@ class Collector
 
     private function registerCollectionTime(array &$params, $time)
     {
-        if (!isset($params['time_to_collect'][\gitlfsPlugin::SERVICE_SHORTNAME])) {
+        if (! isset($params['time_to_collect'][\gitlfsPlugin::SERVICE_SHORTNAME])) {
             $params['time_to_collect'][\gitlfsPlugin::SERVICE_SHORTNAME] = 0;
         }
 

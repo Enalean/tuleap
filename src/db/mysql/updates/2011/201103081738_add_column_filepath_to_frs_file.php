@@ -54,11 +54,11 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('frs_file', 'filepath')) {
+        if (! $this->db->columnNameExists('frs_file', 'filepath')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('filepath not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'filepath')) {
+        if (! $this->db->columnNameExists('frs_file_deleted', 'filepath')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('filepath not created in frs_file_deleted');
         }
     }

@@ -238,7 +238,7 @@ abstract class LDAP_GroupManager
                 }
             }
             foreach ($ldapGroupMembers as $userId) {
-                if (!isset($this->usersNotImpacted[$userId])) {
+                if (! isset($this->usersNotImpacted[$userId])) {
                     $this->usersToAdd[$userId] = $userId;
                 }
             }

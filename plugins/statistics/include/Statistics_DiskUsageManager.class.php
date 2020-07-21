@@ -157,13 +157,13 @@ class Statistics_DiskUsageManager
             $res['date'] = $date;
 
             $dar = $dao->searchTotalUserSize($date);
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 $row = $dar->getRow();
                 $res['service'][self::USR_HOME] = $row['size'];
             }
 
             $dar = $dao->searchSiteSize($date);
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 foreach ($dar as $row) {
                     if (strpos($row['service'], self::PATH) !== false) {
                         $path = substr($row['service'], strlen(self::PATH . '_') - 1);
@@ -180,7 +180,7 @@ class Statistics_DiskUsageManager
     {
         $dao  = $this->_getDao();
         $date = $dao->searchMostRecentDate();
-        return  $this->getGeneralData($date);
+        return $this->getGeneralData($date);
     }
 
     private function getKeyFromGroupBy($row, $groupBy)
@@ -217,10 +217,10 @@ class Statistics_DiskUsageManager
         $groupBy = strtoupper($groupBy);
         $dao     = $this->_getDao();
         $dar     = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
-                if (!isset($res[$row['service']])) {
+                if (! isset($res[$row['service']])) {
                     $res[$row['service']] = $dates;
                 }
                 $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
@@ -262,7 +262,7 @@ class Statistics_DiskUsageManager
         // Start values
         $dao = $this->_getDao();
         $dar = $dao->searchServiceSizeStart($startDate, $groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 if (isset($values[$row['service']])) {
                     $values[$row['service']]['service']    = $row['service'];
@@ -273,7 +273,7 @@ class Statistics_DiskUsageManager
 
         // End values
         $dar = $dao->searchServiceSizeEnd($endDate, $groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 if (isset($values[$row['service']])) {
                     $values[$row['service']]['service']   = $row['service'];
@@ -332,7 +332,7 @@ class Statistics_DiskUsageManager
 
         $this->event_manager->processEvent($usage_refresh);
 
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             return $this->computeTotalSizeOfProject($dar, $usage_refresh);
         }
         return false;
@@ -370,7 +370,7 @@ class Statistics_DiskUsageManager
         $projects_sizes = array();
         $projects       = $dao->searchAllGroups();
 
-        if ($projects && !$projects->isError()) {
+        if ($projects && ! $projects->isError()) {
             foreach ($projects as $project) {
                 $projects_sizes[] = $this->returnTotalSizeOfProjectNearDate($project['group_id'], $date);
             }
@@ -384,7 +384,7 @@ class Statistics_DiskUsageManager
         $result = array();
 
         $project_size_dar = $dao->returnTotalSizeProjectNearDate($group_id, $date);
-        if ($project_size_dar && !$project_size_dar->isError()) {
+        if ($project_size_dar && ! $project_size_dar->isError()) {
             $project_row  = $project_size_dar->getRow();
             $project_size = $project_row['size'];
             $result       = array(
@@ -429,7 +429,7 @@ class Statistics_DiskUsageManager
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerProjectForPeriod($groupId, $groupBy, $startDate, $endDate);
-        if ($dar && !$dar->isError() && $dar->rowCount()) {
+        if ($dar && ! $dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
@@ -443,7 +443,7 @@ class Statistics_DiskUsageManager
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerUserForPeriod($userId, $groupBy, $startDate, $endDate);
-        if ($dar && !$dar->isError() && $dar->rowCount()) {
+        if ($dar && ! $dar->isError() && $dar->rowCount()) {
             foreach ($dar as $row) {
                 $res[$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];
             }
@@ -457,10 +457,10 @@ class Statistics_DiskUsageManager
         $groupBy = strtoupper($groupBy);
         $dao  = $this->_getDao();
         $dar = $dao->searchSizePerServiceForPeriod($services, $groupBy, $startDate, $endDate, $groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount()) {
+        if ($dar && ! $dar->isError() && $dar->rowCount()) {
             $dates = $this->getRangeDates($dar, $groupBy);
             foreach ($dar as $row) {
-                if (!isset($res[$row['service']])) {
+                if (! isset($res[$row['service']])) {
                     $res[$row['service']] = $dates;
                 }
                 $res[$row['service']][$this->getKeyFromGroupBy($row, $groupBy)] = $row['size'];

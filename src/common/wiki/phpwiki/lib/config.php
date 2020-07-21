@@ -23,7 +23,7 @@
  * The run-time code has been moved to lib/IniConfig.php:fix_configs()
  */
 
-if (!defined("LC_ALL")) {
+if (! defined("LC_ALL")) {
     define("LC_ALL", 0);
     define("LC_CTYPE", 2);
 }
@@ -61,13 +61,13 @@ function browserAgent()
     if ($HTTP_USER_AGENT !== false) {
         return $HTTP_USER_AGENT;
     }
-    if (!$HTTP_USER_AGENT) {
+    if (! $HTTP_USER_AGENT) {
         $HTTP_USER_AGENT = @$_SERVER['HTTP_USER_AGENT'];
     }
-    if (!$HTTP_USER_AGENT) { // CGI
+    if (! $HTTP_USER_AGENT) { // CGI
         $HTTP_USER_AGENT = @$_ENV['HTTP_USER_AGENT'];
     }
-    if (!$HTTP_USER_AGENT) { // local CGI testing
+    if (! $HTTP_USER_AGENT) { // local CGI testing
         $HTTP_USER_AGENT = 'none';
     }
     return $HTTP_USER_AGENT;
@@ -123,7 +123,7 @@ function isBrowserSafari($version = false)
  */
 function guessing_lang($languages = false)
 {
-    if (!$languages) {
+    if (! $languages) {
         // make this faster
         $languages = array("en","de","es","fr","it","ja","zh","nl","sv");
         // ignore possible "_<territory>" and codeset "ja.utf8"
@@ -147,7 +147,7 @@ function guessing_lang($languages = false)
 
     if (isset($GLOBALS['request'])) { // in fixup-dynamic-config there's no request yet
         $accept = $GLOBALS['request']->get('HTTP_ACCEPT_LANGUAGE');
-    } elseif (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+    } elseif (! empty($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
         $accept = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     }
 
@@ -222,7 +222,7 @@ function guessing_setlocale($category, $locale)
                  'ja.euc-jp' => array('ja_JP','ja_JP.eucJP','japanese.euc'),
                  'zh' => array('zh_TW', 'zh_CN'),
                  );
-    if (!$locale or $locale == 'C') {
+    if (! $locale or $locale == 'C') {
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');
         if ($locale) {
@@ -246,7 +246,7 @@ function guessing_setlocale($category, $locale)
     } else {
         list ($lang) = preg_split('/_/D', $locale);
     }
-    if (!isset($alt[$lang])) {
+    if (! isset($alt[$lang])) {
         return false;
     }
 
@@ -280,11 +280,11 @@ function update_locale($loc)
     // $LANG or DEFAULT_LANGUAGE is too less information, at least on unix for
     // setlocale(), for bindtextdomain() to succeed.
     $setlocale = guessing_setlocale(LC_ALL, $loc); // [56ms]
-    if (!$setlocale) { // system has no locale for this language, so gettext might fail
+    if (! $setlocale) { // system has no locale for this language, so gettext might fail
         $setlocale = FileFinder::_get_lang();
         list ($setlocale,) = preg_split('/_/D', $setlocale, 2);
         $setlocale = guessing_setlocale(LC_ALL, $setlocale); // try again
-        if (!$setlocale) {
+        if (! $setlocale) {
             $setlocale = $loc;
         }
     }
@@ -328,7 +328,7 @@ function deduce_script_name()
     if (empty($script) or $script[0] != '/') {
         // Some places (e.g. Lycos) only supply a relative name in
         // SCRIPT_NAME, but give what we really want in SCRIPT_URL.
-        if (!empty($s['SCRIPT_URL'])) {
+        if (! empty($s['SCRIPT_URL'])) {
             $script = $s['SCRIPT_URL'];
         }
     }

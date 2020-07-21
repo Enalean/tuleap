@@ -31,7 +31,7 @@ class DbaDatabase
         $this->_timeout = DBA_DATABASE_DEFAULT_TIMEOUT;
         $this->_dbh = false;
         if (function_exists("dba_handlers")) { // since 4.3.0
-            if (!in_array($handler, dba_handlers())) {
+            if (! in_array($handler, dba_handlers())) {
                 $this->_error(
                     sprintf(
                         _("The DBA handler %s is unsupported!") . "\n" .
@@ -65,7 +65,7 @@ class DbaDatabase
         $ErrorManager->pushErrorHandler(new WikiMethodCb($this, '_dba_open_error_handler'));
 
         // oops, you don't have DBA support.
-        if (!function_exists("dba_open")) {
+        if (! function_exists("dba_open")) {
             echo "You don't seem to have DBA support compiled into PHP.";
         }
 
@@ -96,7 +96,7 @@ class DbaDatabase
         }
         $ErrorManager->popErrorHandler();
 
-        if (!$dbh) {
+        if (! $dbh) {
             if (($error = $this->_dba_open_error)) {
                 $error->errno = E_USER_ERROR;
                 $error->errstr .= "\nfile: " . $this->_file
@@ -108,7 +108,7 @@ class DbaDatabase
             }
         }
         $this->_dbh = $dbh;
-        return !empty($dbh);
+        return ! empty($dbh);
     }
 
     public function close()
@@ -135,14 +135,14 @@ class DbaDatabase
 
     public function insert($key, $val)
     {
-        if (!dba_insert($key, $val, $this->_dbh)) {
+        if (! dba_insert($key, $val, $this->_dbh)) {
             return $this->_error("insert($key)");
         }
     }
 
     public function replace($key, $val)
     {
-        if (!dba_replace($key, $val, $this->_dbh)) {
+        if (! dba_replace($key, $val, $this->_dbh)) {
             return $this->_error("replace($key)");
         }
     }
@@ -160,7 +160,7 @@ class DbaDatabase
 
     public function delete($key)
     {
-        if (!dba_delete($key, $this->_dbh)) {
+        if (! dba_delete($key, $this->_dbh)) {
             return $this->_error("delete($key)");
         }
     }
@@ -175,16 +175,16 @@ class DbaDatabase
         $dbh = &$this->_dbh;
         if (dba_exists($key, $dbh)) {
             if ($val !== false) {
-                if (!dba_replace($key, $val, $dbh)) {
+                if (! dba_replace($key, $val, $dbh)) {
                     return $this->_error("store[replace]($key)");
                 }
             } else {
-                if (!dba_delete($key, $dbh)) {
+                if (! dba_delete($key, $dbh)) {
                     return $this->_error("store[delete]($key)");
                 }
             }
         } else {
-            if (!dba_insert($key, $val, $this->_dbh)) {
+            if (! dba_insert($key, $val, $this->_dbh)) {
                 return $this->_error("store[insert]($key)");
             }
         }
@@ -192,14 +192,14 @@ class DbaDatabase
 
     public function sync()
     {
-        if (!dba_sync($this->_dbh)) {
+        if (! dba_sync($this->_dbh)) {
             return $this->_error("sync()");
         }
     }
 
     public function optimize()
     {
-        if (!dba_optimize($this->_dbh)) {
+        if (! dba_optimize($this->_dbh)) {
             return $this->_error("optimize()");
         }
         return 1;

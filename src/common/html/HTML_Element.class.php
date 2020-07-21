@@ -66,7 +66,7 @@ abstract class HTML_Element
     protected function renderValue()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        return  $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML);
+        return $hp->purify($this->getValue(), CODENDI_PURIFIER_CONVERT_HTML);
     }
     public function getId()
     {

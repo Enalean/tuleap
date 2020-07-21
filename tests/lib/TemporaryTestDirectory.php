@@ -34,7 +34,7 @@ trait TemporaryTestDirectory
      */
     protected function generateTemporaryDirectory(): void
     {
-        if (!$this->temporary_directory) {
+        if (! $this->temporary_directory) {
             do {
                 $this->temporary_directory = '/tmp/tuleap_tests_' . \bin2hex(\random_bytes(16));
             } while (file_exists($this->temporary_directory));

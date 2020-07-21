@@ -44,7 +44,7 @@ class b201510071857_add_semantic_description extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_semantic_description')) {
+        if (! $this->db->tableNameExists('tracker_semantic_description')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_semantic_description table is missing');
         }
     }

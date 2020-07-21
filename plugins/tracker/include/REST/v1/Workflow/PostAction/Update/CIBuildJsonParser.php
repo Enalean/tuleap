@@ -35,13 +35,13 @@ class CIBuildJsonParser implements PostActionUpdateJsonParser
 
     public function parse(Workflow $workflow, array $json): PostAction
     {
-        if (!isset($json['job_url'])) {
+        if (! isset($json['job_url'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', "Mandatory attribute job_url not found in CI build action.")
             );
         }
-        if (!is_string($json['job_url'])) {
+        if (! is_string($json['job_url'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', "Bad job_url attribute format: string expected.")

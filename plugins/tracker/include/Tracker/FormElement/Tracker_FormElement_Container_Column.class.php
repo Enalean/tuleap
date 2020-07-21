@@ -159,7 +159,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     {
         $html = '';
         //Fetch only if it has not been already done
-        if (!$this->hasBeenDisplayed()) {
+        if (! $this->hasBeenDisplayed()) {
             //search for next siblings
             $next = array();
             $tf   = Tracker_FormElementFactory::instance();

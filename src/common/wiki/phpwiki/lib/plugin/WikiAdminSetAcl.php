@@ -138,7 +138,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
                 return $this->disabled("(action != 'browse')");
             }
         }
-        if (!ENABLE_PAGEPERM) {
+        if (! ENABLE_PAGEPERM) {
             return $this->disabled("ENABLE_PAGEPERM = false");
         }
 
@@ -150,7 +150,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $post_args = $request->getArg('admin_setacl');
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost()) {
+        if ($p && ! $request->isPost()) {
             $pages = $p;
         } elseif ($this->_list) {
             $pages = $this->_list;
@@ -158,10 +158,10 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         $header = HTML::p();
         if (
             $p && $request->isPost() &&
-            !empty($post_args['acl']) && empty($post_args['cancel'])
+            ! empty($post_args['acl']) && empty($post_args['cancel'])
         ) {
             // without individual PagePermissions:
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -176,7 +176,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
                 );
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['acl'])) {
+                if (! empty($post_args['acl'])) {
                     $next_action = 'verify';
                 }
                 foreach ($p as $name => $c) {
@@ -251,7 +251,7 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
             }
         }
         $perm_tree = pagePermissions($name);
-        $table = pagePermissionsAclFormat($perm_tree, !empty($pages));
+        $table = pagePermissionsAclFormat($perm_tree, ! empty($pages));
         $header->pushContent(HTML::strong(_("Selected Pages: ")), HTML::tt(join(', ', $pages)), HTML::br());
         $first_page = $GLOBALS['request']->_dbi->getPage($name);
         $owner = $first_page->getOwner();
@@ -285,11 +285,11 @@ class WikiPlugin_WikiAdminSetAcl extends WikiPlugin_WikiAdminSelect
         //$header->pushContent(HTML::input(array('name' => 'admin_setacl[acl]',
         //                                       'value' => $post_args['acl'])));
         $header->pushContent(HTML::br());
-        if (!empty($pages) and DEBUG) {
+        if (! empty($pages) and DEBUG) {
             $checkbox = HTML::input(array('type' => 'checkbox',
                                         'name' => 'admin_setacl[updatechildren]',
                                         'value' => 1));
-            if (!empty($post_args['updatechildren'])) {
+            if (! empty($post_args['updatechildren'])) {
                 $checkbox->setAttr('checked', 'checked');
             }
             $header->pushContent(

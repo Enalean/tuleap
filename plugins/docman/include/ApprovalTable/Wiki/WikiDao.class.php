@@ -61,7 +61,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
             ' ORDER BY wiki_version_id DESC' .
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             return $row['wiki_version_id'];
         } else {
@@ -83,7 +83,7 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
             '         AND i.group_id = wp.group_id)' .
             ' WHERE i.item_id = ' . $itemId;
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             if ($row['version'] !== null) {
                 return $row['version'];
@@ -131,6 +131,6 @@ class Docman_ApprovalTableWikiDao extends Docman_ApprovalTableItemDao
             '   )' .
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        return ($dar && !$dar->isError() && $dar->rowCount() == 1);
+        return ($dar && ! $dar->isError() && $dar->rowCount() == 1);
     }
 }

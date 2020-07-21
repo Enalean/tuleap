@@ -55,7 +55,7 @@ abstract class GitViewsRepositoriesTraversalStrategy
             $delDate  = $repository[GitDao::REPOSITORY_DELETION_DATE];
             $r = $this->getRepository($repository);
 
-            if (!$r->userCanRead($user)) {
+            if (! $r->userCanRead($user)) {
                 continue;
             }
             //we do not want to display deleted repository

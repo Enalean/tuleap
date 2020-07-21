@@ -65,7 +65,7 @@ class Home implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $args)
     {
         $project = ProjectManager::instance()->getProjectFromAutocompleter($args['name']);
-        if ($project && !$project->isError()) {
+        if ($project && ! $project->isError()) {
             $group_id = $project->getId();
 
             //set up the group_id

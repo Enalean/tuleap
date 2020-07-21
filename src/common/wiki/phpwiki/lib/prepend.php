@@ -22,7 +22,7 @@ define('PHPWIKI_VERSION', '1.3.12p2');
   * for easier coding.
   */
 foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
-    if (!isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
+    if (! isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
         $GLOBALS['HTTP_' . $k . '_VARS'] = $GLOBALS['_' . $k];
     }
 }
@@ -66,7 +66,7 @@ class DebugTimer
         }
 
         if (isset($this->_times)) {
-            if (!$now) {
+            if (! $now) {
                 $now = posix_times();
             }
             $ticks = $now[$which] - $this->_times[$which];
@@ -78,7 +78,7 @@ class DebugTimer
 
     public function getStats()
     {
-        if (!isset($this->_times)) {
+        if (! isset($this->_times)) {
             // posix_times() not available.
             return sprintf("real: %.3f", $this->getTime('real'));
         }
@@ -136,13 +136,13 @@ function ExitWiki($errormsg = false)
     global $ErrorManager;
     $ErrorManager->flushPostponedErrors();
 
-    if (!empty($errormsg)) {
+    if (! empty($errormsg)) {
         PrintXML(HTML::br(), $errormsg);
         print "\n</body></html>";
     }
     exit;
 }
-if (!defined('DEBUG') or (defined('DEBUG') and DEBUG > 2)) {
+if (! defined('DEBUG') or (defined('DEBUG') and DEBUG > 2)) {
     $ErrorManager->setPostponedErrorMask(E_ALL); // ignore all errors
     $ErrorManager->setFatalHandler(new WikiFunctionCb('ExitWiki'));
 } else {

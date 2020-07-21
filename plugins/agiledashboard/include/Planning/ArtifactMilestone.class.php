@@ -238,7 +238,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone
 
     public function hasAncestors()
     {
-        return !empty($this->parent_milestones);
+        return ! empty($this->parent_milestones);
     }
 
     public function getAncestors()

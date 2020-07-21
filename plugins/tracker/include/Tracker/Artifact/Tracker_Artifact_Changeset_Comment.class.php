@@ -165,7 +165,7 @@ class Tracker_Artifact_Changeset_Comment
         }
         $html .= '</div>';
 
-        if (!empty($this->body)) {
+        if (! empty($this->body)) {
             // consider markdown format to be similar to text one for now
             $considered_body_format = $this->bodyFormat;
             if ($considered_body_format === self::MARKDOWN_COMMENT) {
@@ -176,7 +176,7 @@ class Tracker_Artifact_Changeset_Comment
                 name="tracker_artifact_followup_comment_body_format_' . $this->changeset->getId() . '"
                 value="' . $considered_body_format . '" />';
             $html        .= '<div class="tracker_artifact_followup_comment_body">';
-            if ($this->parent_id && !trim($this->body)) {
+            if ($this->parent_id && ! trim($this->body)) {
                 $html .= '<em>' . dgettext('tuleap-tracker', 'Comment has been cleared') . '</em>';
             } elseif ($this->bodyFormat === self::MARKDOWN_COMMENT) {
                 $content_interpretor = CommonMarkInterpreter::build(Codendi_HTMLPurifier::instance());
@@ -289,8 +289,8 @@ class Tracker_Artifact_Changeset_Comment
     {
         $formatted_comment = '';
         $comment = '';
-        if (!empty($this->body)) {
-            if ($this->parent_id && !trim($this->body)) {
+        if (! empty($this->body)) {
+            if ($this->parent_id && ! trim($this->body)) {
                 $comment =
                 '<em>' . dgettext('tuleap-tracker', "Comment has been cleared") . '</em>';
             } else {
@@ -310,7 +310,7 @@ class Tracker_Artifact_Changeset_Comment
     {
         $hp = Codendi_HTMLPurifier::instance();
 
-        if ($user && !$user->isAnonymous()) {
+        if ($user && ! $user->isAnonymous()) {
             $user_info =
                 '<a href="mailto:' . $hp->purify($user->getEmail()) . '">' .
                     $hp->purify($user->getRealName()) . ' (' . $hp->purify($user->getUserName()) . ')

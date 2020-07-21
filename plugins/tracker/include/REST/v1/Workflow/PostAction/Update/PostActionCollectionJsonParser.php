@@ -50,7 +50,7 @@ class PostActionCollectionJsonParser
     {
         $post_actions = [];
         foreach ($json as $post_action_json) {
-            if (!is_array($post_action_json)) {
+            if (! is_array($post_action_json)) {
                 throw new I18NRestException(
                     400,
                     sprintf(

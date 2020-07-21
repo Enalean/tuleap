@@ -249,7 +249,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         $this->id = $this->user_id;
 
         //set the locale
-        if (!$this->language_id) {
+        if (! $this->language_id) {
             //Detect browser settings
             $accept_language = isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '';
             $this->locale = $GLOBALS['Language']->getLanguageFromAcceptLanguage($accept_language);
@@ -323,7 +323,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $_group_data;
     public function getUserGroupData()
     {
-        if (!is_array($this->_group_data)) {
+        if (! is_array($this->_group_data)) {
             if ($this->user_id) {
                 $this->setUserGroupData($this->getUserGroupDao()->searchByUserId($this->user_id));
             }
@@ -454,7 +454,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected $_tracker_data;
     protected function getTrackerData()
     {
-        if (!$this->_tracker_data) {
+        if (! $this->_tracker_data) {
             $this->_tracker_data = array();
             $id = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
@@ -502,10 +502,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getUgroups($group_id, $instances): array
     {
         $hash = md5(serialize($instances));
-        if (!isset($this->_ugroups)) {
+        if (! isset($this->_ugroups)) {
             $this->_ugroups = array();
         }
-        if (!isset($this->_ugroups[$hash])) {
+        if (! isset($this->_ugroups[$hash])) {
             $this->_ugroups[$hash] = array_merge($this->getDynamicUgroups($group_id, $instances), $this->getStaticUgroups($group_id));
         }
         return $this->_ugroups[$hash];
@@ -536,10 +536,10 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function getDynamicUgroups($group_id, $instances)
     {
         $hash = md5(serialize($instances));
-        if (!isset($this->_dynamics_ugroups)) {
+        if (! isset($this->_dynamics_ugroups)) {
             $this->_dynamics_ugroups = array();
         }
-        if (!isset($this->_dynamics_ugroups[$hash])) {
+        if (! isset($this->_dynamics_ugroups[$hash])) {
             $this->_dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $this->id);
         }
         return $this->_dynamics_ugroups[$hash];
@@ -576,7 +576,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getLanguage()
     {
-        if (!$this->language) {
+        if (! $this->language) {
             $this->language = $this->getLanguageFactory()->getBaseLanguage($this->getLocale());
         }
         return $this->language;
@@ -892,7 +892,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function isRestricted()
     {
-        return (!$this->isAnonymous() && $this->getStatus() == 'R');
+        return (! $this->isAnonymous() && $this->getStatus() == 'R');
     }
 
     /**
@@ -1255,7 +1255,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     // Preferences
     protected function getPreferencesDao()
     {
-        if (!$this->_preferencesdao) {
+        if (! $this->_preferencesdao) {
             $this->_preferencesdao = new UserPreferencesDao();
         }
         return $this->_preferencesdao;
@@ -1263,7 +1263,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
 
     protected function getUserGroupDao()
     {
-        if (!$this->_usergroupdao) {
+        if (! $this->_usergroupdao) {
             $this->_usergroupdao = new UserGroupDao();
         }
         return $this->_usergroupdao;
@@ -1277,9 +1277,9 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getPreference($preference_name)
     {
-        if (!isset($this->_preferences[$preference_name])) {
+        if (! isset($this->_preferences[$preference_name])) {
             $this->_preferences[$preference_name] = false;
-            if (!$this->isAnonymous()) {
+            if (! $this->isAnonymous()) {
                 $dao = $this->getPreferencesDao();
                 $dar = $dao->search($this->getId(), $preference_name);
                 if ($row = $dar->getRow()) {
@@ -1300,7 +1300,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function setPreference($preference_name, $preference_value)
     {
         $this->_preferences[$preference_name] = false;
-        if (!$this->isAnonymous()) {
+        if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
             if ($dao->set($this->getId(), $preference_name, $preference_value)) {
                 $this->_preferences[$preference_name] = $preference_value;
@@ -1358,7 +1358,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     public function delPreference($preference_name)
     {
         $this->_preferences[$preference_name] = false;
-        if (!$this->isAnonymous()) {
+        if (! $this->isAnonymous()) {
             $dao = $this->getPreferencesDao();
             if (! $dao->delete($this->getId(), $preference_name)) {
                 return false;
@@ -1545,7 +1545,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     protected function getLanguageFactory()
     {
-        if (!isset($this->languageFactory)) {
+        if (! isset($this->languageFactory)) {
             $this->languageFactory = new BaseLanguageFactory();
         }
         return $this->languageFactory;

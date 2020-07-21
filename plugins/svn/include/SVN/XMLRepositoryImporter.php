@@ -148,7 +148,7 @@ class XMLRepositoryImporter
         RuleName $rule_name,
         \PFUser $committer
     ) {
-        if (!$rule_name->isValid($this->name)) {
+        if (! $rule_name->isValid($this->name)) {
             throw new XMLImporterException("Repository name '{$this->name}' is invalid: " . $rule_name->getErrorMessage());
         }
 
@@ -167,7 +167,7 @@ class XMLRepositoryImporter
             throw new XMLImporterException($e->getMessage());
         }
 
-        if (!$sysevent) {
+        if (! $sysevent) {
             throw new XMLImporterException("Could not create system event");
         }
 
@@ -190,19 +190,19 @@ class XMLRepositoryImporter
 
         $logger->info("[svn] Importing SVN repository {$this->name}");
 
-        if (!empty($this->dump_file_path)) {
+        if (! empty($this->dump_file_path)) {
             $this->importCommits($logger, $repo);
         }
 
-        if (!empty($this->access_file_contents)) {
+        if (! empty($this->access_file_contents)) {
             $this->importAccessFile($logger, $repo, $accessfile_history_creator);
         }
 
-        if (!empty($this->subscriptions)) {
+        if (! empty($this->subscriptions)) {
             $this->importSubscriptions($logger, $repo, $mail_notification_manager);
         }
 
-        if (!empty($this->references)) {
+        if (! empty($this->references)) {
             $this->importReferences($configuration, $logger, $repo);
         }
 

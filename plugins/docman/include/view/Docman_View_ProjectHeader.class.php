@@ -75,7 +75,7 @@
 
     /* protected */ public function _getAdditionalHtmlParams($params)
     {
-        return  array(
+        return array(
             'group'  => $params['group_id'],
             'toptab' => 'docman');
     }

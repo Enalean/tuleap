@@ -45,7 +45,7 @@ $package_factory = FRSPackageFactory::instance();
 $files_factory   = new FRSFileFactory();
 
 $router = new FRSReleaseRouter(
-    new  FRSReleaseController(
+    new FRSReleaseController(
         $release_factory,
         new User_ForgeUserGroupFactory(new UserGroupDao())
     ),

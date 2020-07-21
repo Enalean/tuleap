@@ -178,7 +178,7 @@ class AdminController
 
         if (
             $notification_to_update
-            && !empty($notification_to_update)
+            && ! empty($notification_to_update)
         ) {
             $this->updateMailingList($request, $repository, $notification_to_update);
         } else {
@@ -196,7 +196,7 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $form_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (!$is_path_valid) {
+        if (! $is_path_valid) {
             $this->addFeedbackPathError();
             $this->redirectOnDisplayNotification($request);
             return;
@@ -217,7 +217,7 @@ class AdminController
             return;
         }
 
-        if (!$autocompleter->isNotificationEmpty()) {
+        if (! $autocompleter->isNotificationEmpty()) {
             $mail_notification = new MailNotification(
                 0,
                 $repository,
@@ -266,7 +266,7 @@ class AdminController
         $is_path_valid = $request->valid($valid_path) && $new_path !== '';
         $invalid_entries->generateWarningMessageForInvalidEntries();
 
-        if (!$is_path_valid) {
+        if (! $is_path_valid) {
             $this->addFeedbackPathError($request);
             $this->redirectOnDisplayNotification($request);
             return;
@@ -274,7 +274,7 @@ class AdminController
 
         $notification = $this->mail_notification_manager->getByIdAndRepository($repository, $notification_id);
 
-        if (!$notification) {
+        if (! $notification) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::WARN,
                 sprintf(
@@ -316,7 +316,7 @@ class AdminController
             $autocompleter->getUgroups()
         );
         try {
-            if (!$autocompleter->isNotificationEmpty()) {
+            if (! $autocompleter->isNotificationEmpty()) {
                 $this->mail_notification_manager->update($email_notification);
             } else {
                 $this->mail_notification_manager->removeByNotificationId($notification_id);

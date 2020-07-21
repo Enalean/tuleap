@@ -59,9 +59,9 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
     {
         foreach (glob($this->dumper->getKeyDirPath() . '/*.pub') as $file) {
             $file_name = basename($file);
-            if (!$this->isReservedName($file_name)) {
+            if (! $this->isReservedName($file_name)) {
                 $user_name = substr($file_name, 0, strpos($file_name, '@'));
-                if (!isset($dumped_users[$user_name])) {
+                if (! isset($dumped_users[$user_name])) {
                     $this->dumper->getGitExec()->rm($file);
                 }
             }

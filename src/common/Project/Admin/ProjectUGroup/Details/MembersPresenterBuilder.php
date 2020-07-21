@@ -65,8 +65,7 @@ class MembersPresenterBuilder
         $is_dynamic_group                     = ! $ugroup->isStatic();
         $is_synchronized_with_project_members = $this->detector->isSynchronizedWithProjectMembers($ugroup->getProject());
 
-        return new
-        MembersPresenter(
+        return new MembersPresenter(
             $members,
             $can_be_updated,
             $is_dynamic_group,

@@ -66,7 +66,7 @@ class SVN_Hooks
     {
         $unix_group_name = substr($repository_path, strlen(ForgeConfig::get('svn_prefix')) + 1);
         $project = $this->project_manager->getProjectByUnixName($unix_group_name);
-        if ($project && !$project->isError() && !$project->isDeleted()) {
+        if ($project && ! $project->isError() && ! $project->isDeleted()) {
             return $project;
         }
         throw new Exception('Invalid project');

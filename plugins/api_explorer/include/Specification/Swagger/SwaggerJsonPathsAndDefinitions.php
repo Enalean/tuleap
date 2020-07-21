@@ -174,10 +174,10 @@ final class SwaggerJsonPathsAndDefinitions
                 $r[] = $this->parameter($info, $description);
             }
         }
-        if (!empty($children)) {
+        if (! empty($children)) {
             if (
                 1 === count($children) &&
-                !empty($children[0]['children'])
+                ! empty($children[0]['children'])
             ) {
                 $firstChild = $children[0];
                 $description = ''; //'<section class="body-param">';
@@ -260,7 +260,7 @@ final class SwaggerJsonPathsAndDefinitions
             )
         );
         $return = Util::nestedValue($route, ['metadata', 'return']);
-        if (!empty($return)) {
+        if (! empty($return)) {
             $this->setType($r[$code]->schema, new ValidationInfo($return));
         }
 
@@ -303,7 +303,7 @@ final class SwaggerJsonPathsAndDefinitions
             }
             $r->properties[$info->name] = $p;
         }
-        if (!empty($required)) {
+        if (! empty($required)) {
             $r->required = $required;
         }
         //TODO: add $r->subTypes https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md#527-model-object

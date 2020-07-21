@@ -70,7 +70,7 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
 
     private function valueIsSystemValueNone($value)
     {
-        return $value === self::SYS_VALUE_NONE_EN  ||
+        return $value === self::SYS_VALUE_NONE_EN ||
                $value === self::SYS_VALUE_NONE_FR;
     }
 

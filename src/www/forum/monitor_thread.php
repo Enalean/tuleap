@@ -26,7 +26,7 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../forum/forum_utils.php';
 
-if (!user_isloggedin()) {
+if (! user_isloggedin()) {
     exit_not_logged_in();
     return;
 }
@@ -66,7 +66,7 @@ if ($request->valid($vFrm)) {
     $forum_id = $request->get('forum_id');
 
     // Check permissions
-    if (!forum_utils_access_allowed($forum_id)) {
+    if (! forum_utils_access_allowed($forum_id)) {
         exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('forum_forum', 'forum_restricted'));
     }
 
@@ -97,7 +97,7 @@ if ($request->valid($vFrm)) {
     $result = db_query($sql);
     $rows = db_numrows($result);
 
-    if (!$result || $rows < 1) {
+    if (! $result || $rows < 1) {
         //empty forum
         $ret_val = $GLOBALS['Language']->getText('forum_forum', 'no_msg', $forum_name) . '<P>' . db_error();
     } else {

@@ -223,7 +223,7 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
 
     public function countKanbanCardsAfter(int $timestamp): int
@@ -236,6 +236,6 @@ class AgileDashboard_KanbanDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
 }

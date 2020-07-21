@@ -235,8 +235,8 @@ class ScatterPlot extends Plot
                 $img->Line($xt, $yzero, $xt, $yt);
             }
 
-            if (!empty($this->csimtargets[$i])) {
-                if (!empty($this->csimwintargets[$i])) {
+            if (! empty($this->csimtargets[$i])) {
+                if (! empty($this->csimwintargets[$i])) {
                     $this->mark->SetCSIMTarget($this->csimtargets[$i], $this->csimwintargets[$i]);
                 } else {
                     $this->mark->SetCSIMTarget($this->csimtargets[$i]);

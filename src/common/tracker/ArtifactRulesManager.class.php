@@ -39,7 +39,7 @@ class ArtifactRulesManager
     protected $rules_by_tracker_id;
     public function getAllRulesByArtifactTypeWithOrder($artifact_type_id)
     {
-        if (!isset($this->rules_by_tracker_id[$artifact_type_id])) {
+        if (! isset($this->rules_by_tracker_id[$artifact_type_id])) {
             $fact = $this->_getArtifactRuleFactory();
             $this->rules_by_tracker_id[$artifact_type_id] = $fact->getAllRulesByArtifactTypeWithOrder($artifact_type_id);
         }
@@ -121,10 +121,10 @@ class ArtifactRulesManager
         $dependencies = array();
         foreach ($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
             if (is_a($rule, 'ArtifactRuleValue')) {
-                if (!isset($dependencies[$rule->source_field])) {
+                if (! isset($dependencies[$rule->source_field])) {
                     $dependencies[$rule->source_field] = array();
                 }
-                if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
+                if (! isset($dependencies[$rule->source_field][$rule->target_field])) {
                     $dependencies[$rule->source_field][$rule->target_field] = array();
                 }
                 $dependencies[$rule->source_field][$rule->target_field][] = $rule;
@@ -203,7 +203,7 @@ class ArtifactRulesManager
                 }
             }
         }
-        return !$error_occured;
+        return ! $error_occured;
     }
 
     /**
@@ -213,7 +213,7 @@ class ArtifactRulesManager
      */
     public function _getSelectedValuesForField($db_result, $field_id, $field_values)
     {
-        if (!is_array($field_values)) {
+        if (! is_array($field_values)) {
             $field_values = array($field_values);
         }
         $selected_values = array();
@@ -233,7 +233,7 @@ class ArtifactRulesManager
 
     public function fieldIsAForbiddenSource($artifact_type_id, $field_id, $target_id)
     {
-        return !$this->ruleExists($artifact_type_id, $field_id, $target_id) &&
+        return ! $this->ruleExists($artifact_type_id, $field_id, $target_id) &&
                 (
                     $field_id == $target_id ||
                     $this->isCyclic($artifact_type_id, $field_id, $target_id) ||
@@ -262,7 +262,7 @@ class ArtifactRulesManager
 
     public function fieldIsAForbiddenTarget($artifact_type_id, $field_id, $source_id)
     {
-        return !$this->ruleExists($artifact_type_id, $source_id, $field_id) &&
+        return ! $this->ruleExists($artifact_type_id, $source_id, $field_id) &&
                 (
                     $field_id == $source_id ||
                     $this->isCyclic($artifact_type_id, $source_id, $field_id) ||

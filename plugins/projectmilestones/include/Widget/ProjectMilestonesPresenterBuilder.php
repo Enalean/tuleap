@@ -228,7 +228,7 @@ class ProjectMilestonesPresenterBuilder
             throw ProjectMilestonesException::buildBrowserIsIE11();
         }
 
-        if (!$project) {
+        if (! $project) {
             throw ProjectMilestonesException::buildProjectDontExist();
         }
 
@@ -240,11 +240,11 @@ class ProjectMilestonesPresenterBuilder
             throw ProjectMilestonesException::buildUserNotAccessToProject();
         }
 
-        if (!$project->usesService(AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
+        if (! $project->usesService(AgileDashboardPlugin::PLUGIN_SHORTNAME)) {
             throw ProjectMilestonesException::buildNoAgileDashboardPlugin();
         }
 
-        if (!$root_planning) {
+        if (! $root_planning) {
             throw ProjectMilestonesException::buildRootPlanningDontExist();
         }
 
@@ -369,7 +369,7 @@ class ProjectMilestonesPresenterBuilder
 
     private function getVirturalTopMilestone(): Planning_VirtualTopMilestone
     {
-        if (!isset($this->planning_virtual_top_milestone)) {
+        if (! isset($this->planning_virtual_top_milestone)) {
             $this->planning_virtual_top_milestone = $this->planning_milestone_factory->getVirtualTopMilestone($this->current_user, $this->project);
         }
 
@@ -378,7 +378,7 @@ class ProjectMilestonesPresenterBuilder
 
     private function getTimeframeSemantic(): SemanticTimeframe
     {
-        if (!isset($this->semantic_timeframe)) {
+        if (! isset($this->semantic_timeframe)) {
             $this->semantic_timeframe = $this->semantic_timeframe_builder->getSemantic($this->root_planning->getPlanningTracker());
         }
         return $this->semantic_timeframe;

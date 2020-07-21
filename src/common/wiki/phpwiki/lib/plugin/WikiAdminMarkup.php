@@ -73,8 +73,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
             $page = $dbi->getPage($name);
             $current = $page->getCurrentRevision();
             $markup = $current->get('markup');
-            if (!$markup or $newmarkup != $markup) {
-                if (!mayAccessPage('change', $name)) {
+            if (! $markup or $newmarkup != $markup) {
+                if (! mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Access denied to change page '%s'.",
                         WikiLink($name)
@@ -119,7 +119,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
     public function run($dbi, $argstr, &$request, $basepage)
     {
         if ($request->getArg('action') != 'browse') {
-            if (!$request->getArg('action') == _("PhpWikiAdministration/Markup")) {
+            if (! $request->getArg('action') == _("PhpWikiAdministration/Markup")) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -129,24 +129,24 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) {
+        if (! $p) {
             $p = $this->_list;
         }
         $post_args = $request->getArg('admin_markup');
-        if (!$request->isPost() and empty($post_args['markup'])) {
+        if (! $request->isPost() and empty($post_args['markup'])) {
             $post_args['markup'] = $args['markup'];
         }
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost()) {
+        if ($p && ! $request->isPost()) {
             $pages = $p;
         }
         if (
             $p && $request->isPost() &&
-            !empty($post_args['button']) && empty($post_args['cancel'])
+            ! empty($post_args['button']) && empty($post_args['cancel'])
         ) {
             // without individual PagePermissions:
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -161,7 +161,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
                 );
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['markup'])) {
+                if (! empty($post_args['markup'])) {
                     $next_action = 'verify';
                 }
                 foreach ($p as $name => $c) {

@@ -52,7 +52,7 @@ class LDAP_CleanUpManager
     {
         $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();
         $suspendedUsersList  = $directoryCleanUpDao->getAllSuspendedUsers($_SERVER['REQUEST_TIME']);
-        if (!$suspendedUsersList) {
+        if (! $suspendedUsersList) {
             $this->getBackendLogger()->error("[LDAP Clean Up] Error when getting all suspended users");
         } else {
             foreach ($suspendedUsersList as $currentUserData) {
@@ -73,7 +73,7 @@ class LDAP_CleanUpManager
         $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();
         $deletionDate        = $_SERVER['REQUEST_TIME'] + ($this->retentionPeriod * 24 * 60 * 60);
         $creationResult      = $directoryCleanUpDao->createForecastDeletionDate($user->getId(), $deletionDate);
-        if (!$creationResult) {
+        if (! $creationResult) {
             $this->getBackendLogger()->error("[LDAP Clean Up] Error when adding forecast deletion date to user " . $user->getUserName());
         } else {
             $this->getBackendLogger()->info("[LDAP Clean Up] Forecast deletion date added to user  " . $user->getUserName());
@@ -91,12 +91,12 @@ class LDAP_CleanUpManager
         if ($user->getStatus() == 'S') {
             $user->setStatus('D');
             $deletionResult = $this->getUserManager()->updateDb($user);
-            if (!$deletionResult) {
+            if (! $deletionResult) {
                 $this->getBackendLogger()->error("[LDAP Clean Up] Error when deleting user " . $user->getUserName());
             } else {
                 $directoryCleanUpDao = $this->getLDAPDirectoryCleanUpDao();
                 $resetResult         = $directoryCleanUpDao->resetForecastDeletionDate($user->getId());
-                if (!$resetResult) {
+                if (! $resetResult) {
                     $this->getBackendLogger()->warning("[LDAP Clean Up] Unable to reset forecast deletion date for user " . $user->getUserName());
                 }
                 $this->removeUserFromProjects($user);

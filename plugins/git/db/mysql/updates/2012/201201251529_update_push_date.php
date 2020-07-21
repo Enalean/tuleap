@@ -67,7 +67,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git_log', 'push_date')) {
+        if (! $this->db->columnNameExists('plugin_git_log', 'push_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Type of the column push_date in table plugin_git_log still not updated');
         }
     }

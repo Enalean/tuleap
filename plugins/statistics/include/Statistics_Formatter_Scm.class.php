@@ -64,7 +64,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $readProjectsNumber[] = $read_project_label;
         $readUsersNumber[]    = $read_user_label;
         $readDar              = $this->dao->totalRead($this->startDate, $this->endDate);
-        if ($readDar && !$readDar->isError()) {
+        if ($readDar && ! $readDar->isError()) {
             foreach ($readDar as $row) {
                 $readIndex[]          = $row['month'] . " " . $row['year'];
                 $readProjectsNumber[] = $row['projects'];
@@ -100,7 +100,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $commitProjectsNumber[] = $commit_project_label;
         $commitUsersNumber[]    = $commit_user_label;
         $commitsDar             = $this->dao->totalCommits($this->startDate, $this->endDate);
-        if ($commitsDar && !$commitsDar->isError()) {
+        if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 $commitsIndex[]         = $row['month'] . " " . $row['year'];
                 $commitProjectsNumber[] = $row['projects'];
@@ -125,7 +125,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $result['project'][] = dgettext('tuleap-statistics', 'Top projects');
         $result['commits'][] = dgettext('tuleap-statistics', 'Top projects (number of commits)');
         $commitsDar = $this->dao->commitsByProject($this->startDate, $this->endDate);
-        if ($commitsDar && !$commitsDar->isError()) {
+        if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 if ($row) {
                     $result['project'][] = $row['project'];
@@ -146,7 +146,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $result['user'][]    = dgettext('tuleap-statistics', 'Top users');
         $result['commits'][] = dgettext('tuleap-statistics', 'Top users (number of commits)');
         $commitsDar = $this->dao->commitsByUser($this->startDate, $this->endDate);
-        if ($commitsDar && !$commitsDar->isError()) {
+        if ($commitsDar && ! $commitsDar->isError()) {
             foreach ($commitsDar as $row) {
                 if ($row) {
                     $result['user'][]    = $row['user'];
@@ -167,7 +167,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $repositories[] = dgettext('tuleap-statistics', 'Total number of repositories containing commits');
         $count = 0;
         $dar = $this->dao->repositoriesWithCommit($this->startDate, $this->endDate);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             $row = $dar->getRow();
             if ($row) {
                 $count = $row['count'];
@@ -195,7 +195,7 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
         $this->addLine($commitStats['commit_projects_number']);
         $this->addLine($commitStats['commit_users_number']);
 
-        if (!$this->groupId) {
+        if (! $this->groupId) {
             $this->addLine($this->repositoriesWithCommit());
             $projectStats = $this->topCommitByProject();
             $this->addLine($projectStats['project']);

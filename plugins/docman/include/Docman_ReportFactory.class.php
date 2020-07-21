@@ -62,7 +62,7 @@ class Docman_ReportFactory
             // todo Verify validity of the info
             $dao = $this->getDao();
             $dar = $dao->searchById($reportId);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $noDbReport = false;
                 $row = $dar->getRow();
                 $report = new Docman_Report();
@@ -185,7 +185,7 @@ class Docman_ReportFactory
             $validateFilterFactory = new Docman_ValidateFilterFactory();
             $validateFilter = $validateFilterFactory->getFromFilter($filter);
             if ($validateFilter !== null) {
-                if (!$validateFilter->validate()) {
+                if (! $validateFilter->validate()) {
                     $feedback->log('error', $validateFilter->getMessage());
                 }
             }
@@ -241,7 +241,7 @@ class Docman_ReportFactory
             }
             unset($column);
         }
-        if (!$thereIsAsort && $keepRefOnUpdateDate !== null) {
+        if (! $thereIsAsort && $keepRefOnUpdateDate !== null) {
             $keepRefOnUpdateDate->setSort(PLUGIN_DOCMAN_SORT_DESC);
         }
     }
@@ -251,7 +251,7 @@ class Docman_ReportFactory
         $report = null;
         $dao = $this->getDao();
         $dar = $dao->searchById($id);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $report = new Docman_Report();
             $report->initFromRow($dar->current());
         }

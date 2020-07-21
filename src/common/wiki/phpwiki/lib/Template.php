@@ -27,7 +27,7 @@ class Template
         }
         $this->_name = $name;
         $file = $WikiTheme->findTemplate($name);
-        if (!$file) {
+        if (! $file) {
             trigger_error("no template for $name found.", E_USER_WARNING);
             return;
         }
@@ -36,7 +36,7 @@ class Template
             $WikiTheme->_theme = $oldtheme;
         }
         $fp = fopen($file, "rb");
-        if (!$fp) {
+        if (! $fp) {
             trigger_error("$file not found", E_USER_WARNING);
             return;
         }
@@ -126,17 +126,17 @@ class Template
 
     public function printExpansion($defaults = false)
     {
-        if (!is_array($defaults)) { // HTML object or template object
+        if (! is_array($defaults)) { // HTML object or template object
             $defaults = array('CONTENT' => $defaults);
         }
         $this->_vars = array_merge($defaults, $this->_locals);
         extract($this->_vars);
 
         global $request;
-        if (!isset($user)) {
+        if (! isset($user)) {
             $user = $request->getUser();
         }
-        if (!isset($page)) {
+        if (! isset($page)) {
             $page = $request->getPage();
         }
 
@@ -210,7 +210,7 @@ class Template
             $error->errfile .= " (In template '$this->_name')";
         }
 
-        if (!empty($this->_tmpl)) {
+        if (! empty($this->_tmpl)) {
             $lines = explode("\n", $this->_tmpl);
             if (isset($lines[$error->errline - 1])) {
                 $error->errstr .= ":\n\t" . $lines[$error->errline - 1];
@@ -237,7 +237,7 @@ function Template($name, $args = false)
 function alreadyTemplateProcessed($name)
 {
     global $request;
-    return !empty($request->_TemplatesProcessed[$name]) ? true : false;
+    return ! empty($request->_TemplatesProcessed[$name]) ? true : false;
 }
 /**
  * Make and expand the top-level template.
@@ -254,7 +254,7 @@ function GeneratePage($content, $title, $page_revision = false, $args = false)
 {
     global $request;
 
-    if (!is_array($args)) {
+    if (! is_array($args)) {
         $args = array();
     }
 
@@ -262,7 +262,7 @@ function GeneratePage($content, $title, $page_revision = false, $args = false)
     $args['TITLE'] = $title;
     $args['revision'] = $page_revision;
 
-    if (!isset($args['HEADER'])) {
+    if (! isset($args['HEADER'])) {
         $args['HEADER'] = $title;
     }
 
@@ -277,7 +277,7 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
 {
     global $request;
 
-    if (!is_array($args)) {
+    if (! is_array($args)) {
         $args = array();
     }
 
@@ -286,7 +286,7 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
     $args['TITLE'] = SplitPagename($title);
     $args['revision'] = $page_revision;
 
-    if (!isset($args['HEADER'])) {
+    if (! isset($args['HEADER'])) {
         $args['HEADER'] = SplitPagename($title);
     }
 

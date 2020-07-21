@@ -114,7 +114,7 @@ class Codendi_Session extends PHP_Session
             //throw new Exception('ERROR - Empty session namespace');
         }
         //only array can be iterated
-        if (!is_array($session)) {
+        if (! is_array($session)) {
             return $session;
         }
         $pathway = explode('.', $namespace);
@@ -123,16 +123,16 @@ class Codendi_Session extends PHP_Session
         foreach ($pathway as $path) {
                 $i = $i + 1;
                 //last path element not reached yet <=> wrong path
-            if (!$create_path && $i < $count && ((is_array($session) && !isset($session[$path])) || !is_array($session) || !is_array($session[$path]) )) {
+            if (! $create_path && $i < $count && ((is_array($session) && ! isset($session[$path])) || ! is_array($session) || ! is_array($session[$path]) )) {
                 $r = null;
                 return $r;
             }
 
                 //only array can be iterated
-            if (!is_array($session)) {
+            if (! is_array($session)) {
                 return $session;
             }
-            if (!isset($session[$path])) {
+            if (! isset($session[$path])) {
                 if ($create_path) {
                     $session[$path] = array();
                 } else {

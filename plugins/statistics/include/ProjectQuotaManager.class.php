@@ -108,7 +108,7 @@ class ProjectQuotaManager
      */
     private function isProjectOverQuota($current_size, $allowed_size)
     {
-        if (!empty($current_size) && ($current_size > $allowed_size)) {
+        if (! empty($current_size) && ($current_size > $allowed_size)) {
             return true;
         }
         return false;
@@ -169,7 +169,7 @@ class ProjectQuotaManager
     {
         $allowedQuota = null;
         $res = $this->dao->getProjectCustomQuota($groupId);
-        if ($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && ! $res->isError() && $res->rowCount() == 1) {
             $row          = $res->getRow();
             $allowedQuota = $row[Statistics_ProjectQuotaDao::REQUEST_SIZE];
         }
@@ -230,7 +230,7 @@ class ProjectQuotaManager
     public function getDefaultQuota()
     {
         $quota = intval($this->diskUsageManager->getProperty('allowed_quota'));
-        if (!$quota) {
+        if (! $quota) {
             $quota = 5;
         }
         return $quota;
@@ -244,7 +244,7 @@ class ProjectQuotaManager
     public function getMaximumQuota()
     {
         $maxQuota = intval($this->diskUsageManager->getProperty('maximum_quota'));
-        if (!$maxQuota) {
+        if (! $maxQuota) {
             $maxQuota = 50;
         }
         return $maxQuota;
@@ -267,7 +267,7 @@ class ProjectQuotaManager
      */
     public function getDao()
     {
-        if (!isset($this->dao)) {
+        if (! isset($this->dao)) {
             $this->dao = new Statistics_ProjectQuotaDao();
         }
         return $this->dao;

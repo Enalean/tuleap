@@ -59,7 +59,7 @@ class Docman_LogDao extends DataAccessObject
             ' AND time > ' . $this->da->escapeInt($date) .
             ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        return ($dar && !$dar->isError() && $dar->rowCount() == 1);
+        return ($dar && ! $dar->isError() && $dar->rowCount() == 1);
     }
 
     /**
@@ -69,23 +69,23 @@ class Docman_LogDao extends DataAccessObject
     public function create($group_id, $item_id, $user_id, $type, $old_value = null, $new_value = null, $field = null)
     {
         $sql = 'INSERT INTO plugin_docman_log (time, group_id, item_id, user_id, type';
-        if (!is_null($old_value)) {
+        if (! is_null($old_value)) {
             $sql .= ', old_value';
         }
-        if (!is_null($new_value)) {
+        if (! is_null($new_value)) {
             $sql .= ', new_value';
         }
-        if (!is_null($field)) {
+        if (! is_null($field)) {
             $sql .= ', field';
         }
         $sql .= ') VALUES (' . $this->da->quoteSmart(time()) . ', ' . $this->da->quoteSmart($group_id) . ', ' . $this->da->quoteSmart($item_id) . ', ' . $this->da->quoteSmart($user_id) . ', ' . $this->da->quoteSmart($type) . '';
-        if (!is_null($old_value)) {
+        if (! is_null($old_value)) {
             $sql .= ', ' . $this->da->quoteSmart($old_value);
         }
-        if (!is_null($new_value)) {
+        if (! is_null($new_value)) {
             $sql .= ', ' . $this->da->quoteSmart($new_value);
         }
-        if (!is_null($field)) {
+        if (! is_null($field)) {
             $sql .= ', ' . $this->da->quoteSmart($field);
         }
         $sql .= ')';

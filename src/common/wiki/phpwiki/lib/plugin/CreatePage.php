@@ -69,7 +69,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
     public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        if (!$s) {
+        if (! $s) {
             return '';
         }
         // Prevent spaces at the start and end of a page name
@@ -78,7 +78,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
         $param = array('action' => 'edit');
         if ($template and $dbi->isWikiPage($template)) {
             $param['template'] = $template;
-        } elseif (!empty($initial_content)) {
+        } elseif (! empty($initial_content)) {
             // Warning! Potential URI overflow here on the GET redirect. Better use template.
             $param['initial_content'] = $initial_content;
         }
@@ -90,7 +90,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
         // FIXME: expand vars in templates here.
         if (
             strlen($url) > 255
-            or (!empty($vars) and !empty($param['template']))
+            or (! empty($vars) and ! empty($param['template']))
             or preg_match('/%%\w+%%/', $initial_content)
         ) { // need variable expansion
             unset($param['initial_content']);
@@ -98,13 +98,13 @@ class WikiPlugin_CreatePage extends WikiPlugin
             $page = $dbi->getPage($s);
             $current = $page->getCurrentRevision();
             $version = $current->getVersion();
-            if ($version and !$overwrite) {
+            if ($version and ! $overwrite) {
                 return $this->error(fmt("%s already exists", WikiLink($s)));
             } else {
                 $user = $request->getUser();
                 $meta = array('markup' => 2.0,
                               'author' => $user->getId());
-                if (!empty($param['template']) and !$initial_content) {
+                if (! empty($param['template']) and ! $initial_content) {
                     $tmplpage = $dbi->getPage($template);
                     $currenttmpl = $tmplpage->getCurrentRevision();
                     $initial_content = $currenttmpl->getPackedContent();
@@ -114,7 +114,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
                 // expand variables in $initial_content
                 if (preg_match('/%%\w+%%/', $initial_content)) {
                     $var = array();
-                    if (!empty($vars)) {
+                    if (! empty($vars)) {
                         foreach (preg_split("/&/D", $vars) as $pair) {
                             list($key,$val) = preg_split("/=/D", $pair);
                             $var[$key] = $val;

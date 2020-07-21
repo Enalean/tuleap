@@ -204,10 +204,10 @@ class Docman_CloneItemsVisitor implements ItemVisitor
             }
         }
         // Check for special metadata
-        if (!$this->_metadataEnabled($item->getGroupId(), 'status')) {
+        if (! $this->_metadataEnabled($item->getGroupId(), 'status')) {
             $newItem->setStatus(PLUGIN_DOCMAN_ITEM_STATUS_NONE);
         }
-        if (!$this->_metadataEnabled($item->getGroupId(), 'obsolescence_date')) {
+        if (! $this->_metadataEnabled($item->getGroupId(), 'obsolescence_date')) {
             $newItem->setObsolescenceDate(PLUGIN_DOCMAN_ITEM_VALIDITY_PERMANENT);
         }
 
@@ -298,7 +298,7 @@ class Docman_CloneItemsVisitor implements ItemVisitor
 
     public function _metadataEnabled($srcGroupId, $mdLabel)
     {
-        if (!isset($this->_cacheMetadataUsage[$mdLabel])) {
+        if (! isset($this->_cacheMetadataUsage[$mdLabel])) {
             $srcSettingsBo = $this->_getSettingsBo($srcGroupId);
             $dstSettingsBo = $this->_getSettingsBo($this->dstGroupId);
             $this->_cacheMetadataUsage[$mdLabel] = ($srcSettingsBo->getMetadataUsage($mdLabel)

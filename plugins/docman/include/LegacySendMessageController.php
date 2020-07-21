@@ -47,10 +47,10 @@ final class LegacySendMessageController implements DispatchableWithRequest
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
         $func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));
 
-        if ($request->exist('Submit') &&  $request->existAndNonEmpty('func') && $func === 'docman_access_request') {
+        if ($request->exist('Submit') && $request->existAndNonEmpty('func') && $func === 'docman_access_request') {
             $defaultMsg = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
             $dar = $this->project_manager->getMessageToRequesterForAccessProject($request->get('groupId'));
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
                     $defaultMsg = $row['msg_to_requester'];

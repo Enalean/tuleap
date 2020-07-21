@@ -85,7 +85,7 @@ class ChooseNewsItemController
         }
 
         // admin pages can be reached by news admin (N2) or project admin (A)
-        if (! user_ismember($project->getID(), 'A') &&  ! user_ismember($project->getID(), 'N2')) {
+        if (! user_ismember($project->getID(), 'A') && ! user_ismember($project->getID(), 'N2')) {
             exit_error($GLOBALS['Language']->getText('news_admin_index', 'permission_denied'), $GLOBALS['Language']->getText('news_admin_index', 'need_to_be_admin'));
         }
     }

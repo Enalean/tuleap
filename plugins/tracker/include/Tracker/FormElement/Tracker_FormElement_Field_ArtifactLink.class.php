@@ -387,7 +387,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             // If it is sourrounded by /.../ then assume a regexp
             $expr = $field_name . " RLIKE " . $this->getCriteriaDao()->da->quoteSmart($matches[1]);
         }
-        if (!$expr) {
+        if (! $expr) {
             $matches = array();
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)\$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
@@ -911,7 +911,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $html_name_new = 'name="' . $name . '[new_values]"';
         }
         $hp = Codendi_HTMLPurifier::instance();
-        if (!$read_only) {
+        if (! $read_only) {
             $html .= '<input type="text"
                              ' . $html_name_new . '
                              value="' .  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  . '"
@@ -1238,7 +1238,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if (empty($value) || !$value->getValue()) {
+        if (empty($value) || ! $value->getValue()) {
             return '-';
         }
         $output = '';
@@ -1376,7 +1376,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     protected function getChangesetValues($changeset_id)
     {
-        if (!isset($this->artifact_links_by_changeset[$changeset_id])) {
+        if (! isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = array();
 
             $da = CodendiDataAccess::instance();
@@ -1517,7 +1517,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
             $hasNoLastChangesetValues = empty($last_changeset_values);
         }
 
-        $hasLastChangesetValues   = !$hasNoLastChangesetValues;
+        $hasLastChangesetValues   = ! $hasNoLastChangesetValues;
 
         if (
             ($hasNoLastChangesetValues &&
@@ -1541,7 +1541,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     private function allLastChangesetValuesRemoved($last_changeset_values, $submitted_value)
     {
-        return !empty($submitted_value['removed_values'])
+        return ! empty($submitted_value['removed_values'])
             && count($last_changeset_values) == count($submitted_value['removed_values']);
     }
 
@@ -1568,7 +1568,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
      */
     private function getArtifactFactory()
     {
-        if (!$this->artifact_factory) {
+        if (! $this->artifact_factory) {
             $this->artifact_factory = Tracker_ArtifactFactory::instance();
         }
         return $this->artifact_factory;
@@ -1914,7 +1914,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         foreach (explode(',', $ids) as $id) {
             $artifact = $art_factory->getArtifactById(trim($id));
 
-            if (!is_null($artifact) && $artifact->getTracker()->isActive()) {
+            if (! is_null($artifact) && $artifact->getTracker()->isActive()) {
                 $nature_html .= $this->getTemplateRenderer()->renderToString(
                     'artifactlink-nature-table-row',
                     new ArtifactInNatureTablePresenter($artifact, $artifact_html_classes, $this)

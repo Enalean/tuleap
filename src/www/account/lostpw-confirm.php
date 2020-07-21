@@ -63,7 +63,7 @@ if ($reset_token !== null) {
     $mail->setBodyText($message);
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail_is_sent = $mail->send();
-    if (!$mail_is_sent) {
+    if (! $mail_is_sent) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))), CODENDI_PURIFIER_FULL);
     }
 }

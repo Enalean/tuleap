@@ -125,7 +125,7 @@ class Tracker_DateReminderDao extends DataAccessObject
                 " . $distance . "
                 )";
         $reminderId = $this->updateAndGetLastId($sql);
-        if ($reminderId && !empty($roles)) {
+        if ($reminderId && ! empty($roles)) {
             return $this->insertDateReminderRoles($reminderId, $roles);
         }
         return $reminderId;
@@ -163,7 +163,7 @@ class Tracker_DateReminderDao extends DataAccessObject
             $sql = "DELETE FROM tracker_reminder_notified_roles
                 WHERE reminder_id = $reminderId";
             $result = $this->update($sql);
-            if ($result && !empty($roles)) {
+            if ($result && ! empty($roles)) {
                 return $this->insertDateReminderRoles($reminderId, $roles);
             }
         }

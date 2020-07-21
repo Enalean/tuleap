@@ -47,7 +47,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
         $pm = ProjectManager::instance();
         $dar = $pm->getMessageToRequesterForAccessProject($project->getID());
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
                 $message = $row['msg_to_requester'];
@@ -79,11 +79,11 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     public function urlTransform($url)
     {
         $query = $this->urlQueryToArray($url);
-        if (!isset($query['action'])) {
+        if (! isset($query['action'])) {
             $url = $url . '&action=details&section=permissions';
         } else {
             if ($query['action'] == 'details') {
-                if (!isset($query['section'])) {
+                if (! isset($query['section'])) {
                     $url = $url . '&section=permissions';
                 } else {
                     // replace any existing section by 'permissions'

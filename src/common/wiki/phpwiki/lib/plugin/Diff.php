@@ -112,7 +112,7 @@ class WikiPlugin_Diff extends WikiPlugin
         }
 
         if ($version) {
-            if (!($new = $page->getRevision($version))) {
+            if (! ($new = $page->getRevision($version))) {
                 NoSuchRevision($request, $page, $version);
             }
             $new_version = fmt("version %d", $version);
@@ -122,7 +122,7 @@ class WikiPlugin_Diff extends WikiPlugin
         }
 
         if (preg_match('/^\d+$/', $previous)) {
-            if (!($old = $page->getRevision($previous))) {
+            if (! ($old = $page->getRevision($previous))) {
                 NoSuchRevision($request, $page, $previous);
             }
             $old_version = fmt("version %d", $previous);
@@ -248,7 +248,7 @@ class _HWLDF_WordAccumulator
     public function _flushGroup($new_tag)
     {
         if ($this->_group !== false) {
-            if (!$this->_line) {
+            if (! $this->_line) {
                 $this->_line = HTML();
             }
             $this->_line->pushContent($this->_tag
@@ -279,7 +279,7 @@ class _HWLDF_WordAccumulator
 
         foreach ($words as $word) {
             // new-line should only come as first char of word.
-            if (!$word) {
+            if (! $word) {
                 continue;
             }
             if ($word[0] == "\n") {
@@ -287,7 +287,7 @@ class _HWLDF_WordAccumulator
                 $this->_flushLine($tag);
                 $word = substr($word, 1);
             }
-            assert(!strstr($word, "\n"));
+            assert(! strstr($word, "\n"));
             $this->_group .= $word;
         }
     }
@@ -318,7 +318,7 @@ class WordLevelDiff extends MappedDiff
     {
         // FIXME: fix POSIX char class.
         if (
-            !preg_match_all(
+            ! preg_match_all(
                 '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
                 implode("\n", $lines),
                 $m
@@ -401,7 +401,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 
     public function _lines($lines, $class, $prefix = false, $elem = false)
     {
-        if (!$prefix) {
+        if (! $prefix) {
             $prefix = HTML::raw('&nbsp;');
         }
         $div = HTML::div(array('class' => 'difftext'));
@@ -493,7 +493,7 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 
     public function _lines($lines, $class, $prefix = false, $elem = false)
     {
-        if (!$prefix) {
+        if (! $prefix) {
             $prefix = HTML::raw('&nbsp;');
         }
         $prefix = HTML::td(array('class' => 'prefix',

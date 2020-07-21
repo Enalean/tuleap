@@ -223,7 +223,7 @@ class UGroupDao extends DataAccessObject
                 FROM ugroup 
                 WHERE group_id = ' . $groupId . ' AND ugroup_id = ' . $ugroupId;
         $res = $this->retrieve($sql);
-        if ($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && ! $res->isError() && $res->rowCount() == 1) {
             return true;
         } else {
             return false;

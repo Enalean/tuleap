@@ -79,6 +79,6 @@ class LDAP_SyncNotificationManager
      */
     private function getSubject($projectName, $user)
     {
-        return  $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
+        return $GLOBALS['Language']->getText('plugin_ldap', 'ldap_sync_mail_notification_subject', array($user->getRealName(), $projectName));
     }
 }

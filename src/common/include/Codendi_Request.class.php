@@ -171,7 +171,7 @@ class Codendi_Request
         if (is_array($array)) {
             if (count($array) > 0) {
                 foreach ($array as $key => $v) {
-                    if (!$validator->validate($v)) {
+                    if (! $validator->validate($v)) {
                         $isValid = false;
                     }
                 }
@@ -241,7 +241,7 @@ class Codendi_Request
      */
     public function getCurrentUser()
     {
-        if (!$this->current_user) {
+        if (! $this->current_user) {
             $this->current_user = UserManager::instance()->getCurrentUser();
         }
         return $this->current_user;

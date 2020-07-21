@@ -54,11 +54,11 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_agiledashboard_planning')) {
+        if (! $this->db->tableNameExists('plugin_agiledashboard_planning')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_agiledashboard_planning table is missing');
         }
 
-        if (!$this->db->tableNameExists('plugin_agiledashboard_planning_backlog_tracker')) {
+        if (! $this->db->tableNameExists('plugin_agiledashboard_planning_backlog_tracker')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_agiledashboard_planning_backlog_tracker table is missing');
         }
     }

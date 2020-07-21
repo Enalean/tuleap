@@ -86,27 +86,27 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('frs_file', 'computed_md5')) {
+        if (! $this->db->columnNameExists('frs_file', 'computed_md5')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'computed_md5')) {
+        if (! $this->db->columnNameExists('frs_file_deleted', 'computed_md5')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('computed_md5 not created in frs_file_deleted');
         }
 
-        if (!$this->db->columnNameExists('frs_file', 'reference_md5')) {
+        if (! $this->db->columnNameExists('frs_file', 'reference_md5')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'reference_md5')) {
+        if (! $this->db->columnNameExists('frs_file_deleted', 'reference_md5')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('reference_md5 not created in frs_file_deleted');
         }
 
-        if (!$this->db->columnNameExists('frs_file', 'user_id')) {
+        if (! $this->db->columnNameExists('frs_file', 'user_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file');
         }
 
-        if (!$this->db->columnNameExists('frs_file_deleted', 'user_id')) {
+        if (! $this->db->columnNameExists('frs_file_deleted', 'user_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_id not created in frs_file_deleted');
         }
     }

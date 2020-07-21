@@ -171,7 +171,7 @@ class Legend
 
     public function Pos($aX, $aY, $aHAlign = 'right', $aVAlign = 'top')
     {
-        if (!($aX < 1 && $aY < 1)) {
+        if (! ($aX < 1 && $aY < 1)) {
             JpGraphError::RaiseL(25120);//(" Position for legend must be given as percentage in range 0-1");
         }
         $this->xpos = $aX;
@@ -288,7 +288,7 @@ class Legend
         // Find out maximum width we need for legend box
         $abs_width = $mtw + $this->xlmargin + ($numcolumns - 1) * $this->mark_abs_hsize;
 
-        if ($this->xabspos === -1  && $this->yabspos === -1) {
+        if ($this->xabspos === -1 && $this->yabspos === -1) {
             $this->xabspos = $this->xpos * $aImg->width;
             $this->yabspos = $this->ypos * $aImg->height;
         }
@@ -389,7 +389,7 @@ class Legend
             // and that is fine. However for a multiline paragraph there is no single baseline
             // and in that case the y1 corresponds to the lowest y for the bounding box. In that
             // case we center the mark in the middle of the paragraph
-            if (!preg_match('/\n/', $p[0])) {
+            if (! preg_match('/\n/', $p[0])) {
                 // Single line
                 $marky = ceil($y1 - $this->mark_abs_vsize / 2) - 1;
             } else {
@@ -403,7 +403,7 @@ class Legend
 
             $x1 += $this->mark_abs_hsize;
 
-            if (!empty($p[2]) && $p[2]->GetType() > -1) {
+            if (! empty($p[2]) && $p[2]->GetType() > -1) {
                 // Make a plot mark legend. This is constructed with a mark which
                 // is run through with a line
 
@@ -439,7 +439,7 @@ class Legend
                         $p[2]->Stroke($aImg, $x1, $marky);
                     }
                 }
-            } elseif (!empty($p[2]) && (is_string($p[3]) || $p[3] > 0 )) {
+            } elseif (! empty($p[2]) && (is_string($p[3]) || $p[3] > 0 )) {
                 // Draw a styled line
                 $aImg->SetColor($p[1]);
                 $aImg->SetLineStyle($p[3]);
@@ -511,7 +511,7 @@ class Legend
             );
 
             // Add CSIM for Legend if defined
-            if (!empty($p[4])) {
+            if (! empty($p[4])) {
                 $xs = $x1 - $this->mark_abs_hsize;
                 $ys = $y1 + 1;
                 $xe = $x1 + $aImg->GetTextWidth($p[0]) + $this->mark_abs_hsize + $this->xmargin;
@@ -520,11 +520,11 @@ class Legend
                 if (! empty($p[4])) {
                     $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($p[4]) . "\"";
 
-                    if (!empty($p[6])) {
+                    if (! empty($p[6])) {
                         $this->csimareas .= " target=\"" . $p[6] . "\"";
                     }
 
-                    if (!empty($p[5])) {
+                    if (! empty($p[5])) {
                         $tmp = sprintf($p[5], $p[0]);
                         $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
                     }
@@ -535,7 +535,7 @@ class Legend
             if ($i >= $this->layout_n) {
                 $x1 = $xp + $this->xlmargin;
                 $row++;
-                if (!empty($rowheight[$row])) {
+                if (! empty($rowheight[$row])) {
                     $y1 += $rowheight[$row];
                 }
                 $i = 1;

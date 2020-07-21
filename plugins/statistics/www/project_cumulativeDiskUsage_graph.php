@@ -63,7 +63,7 @@ $duMgr           = new Statistics_DiskUsageManager(
 );
 
 $statPeriod = $duMgr->getProperty('statistics_period');
-if (!$statPeriod) {
+if (! $statPeriod) {
     $statPeriod = 3;
 }
 $endDate = date('Y-m-d');

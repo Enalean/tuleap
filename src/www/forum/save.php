@@ -33,7 +33,7 @@ if (user_isloggedin()) {
     if ($request->valid($vForumId)) {
         $forum_id = $request->get('forum_id');
                 // Check permissions
-        if (!forum_utils_access_allowed($forum_id)) {
+        if (! forum_utils_access_allowed($forum_id)) {
             exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
         }
 
@@ -41,7 +41,7 @@ if (user_isloggedin()) {
         $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
-            if (!forum_utils_news_access($forum_id)) {
+            if (! forum_utils_news_access($forum_id)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
             }
         }
@@ -73,7 +73,7 @@ if (user_isloggedin()) {
 
         $result = db_query($sql);
 
-        if (!$result || db_numrows($result) < 1) {
+        if (! $result || db_numrows($result) < 1) {
          /*
           User is not already monitoring thread, so
           insert a row so monitoring can begin
@@ -82,7 +82,7 @@ if (user_isloggedin()) {
 
             $result = db_query($sql);
 
-            if (!$result) {
+            if (! $result) {
                 echo "<span class=\"highlight\">" . $Language->getText('forum_save', 'insert_err') . "</span>";
                 echo db_error();
             } else {
@@ -93,7 +93,7 @@ if (user_isloggedin()) {
             $sql = "UPDATE forum_saved_place SET save_date='" . time() . "' WHERE user_id='" . $db_escaped_user_id . "' AND forum_id=" . db_ei($forum_id);
             $result = db_query($sql);
 
-            if (!$result) {
+            if (! $result) {
                 echo "<span class=\"highlight\">" . $Language->getText('forum_save', 'update_err') . "</span>";
                 echo db_error();
             } else {

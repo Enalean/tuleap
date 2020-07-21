@@ -108,7 +108,7 @@ class PreCommit
     {
         if (
             $this->repositoryUsesImmutableTags()
-            && !$this->isCommitAllowed()
+            && ! $this->isCommitAllowed()
         ) {
             throw new SVN_CommitToTagDeniedException("Commit to tag is not allowed");
         }
@@ -199,7 +199,7 @@ class PreCommit
             )%x";
 
         if (preg_match($pattern, $path)) {
-            return !$this->isCommitDoneOnWhitelistElement($path);
+            return ! $this->isCommitDoneOnWhitelistElement($path);
         }
 
         return false;
@@ -208,7 +208,7 @@ class PreCommit
     private function isCommitDoneOnWhitelistElement($path)
     {
         $whitelist = $this->getImmutableTagFromRepository()->getWhitelist();
-        if (!$whitelist) {
+        if (! $whitelist) {
             return false;
         }
 

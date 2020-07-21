@@ -21,12 +21,12 @@
 
 require_once __DIR__ . '/../project/export/project_export_utils.php';
 //  make sure this person has permission to view artifacts
-if (!$ath->userCanView()) {
+if (! $ath->userCanView()) {
     exit_permission_denied();
 }
 
 // Check if this tracker is valid (not deleted)
-if (!$ath->isValid()) {
+if (! $ath->isValid()) {
     exit_error($Language->getText('global', 'error'), $GLOBALS['Language']->getText('tracker_add', 'invalid'));
 }
 

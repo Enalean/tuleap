@@ -87,7 +87,7 @@ class WikiPluginCached extends WikiPlugin
         }
         if (strlen($plugincall_arg) > PLUGIN_CACHED_MAXARGLEN) {
             // we can't send the data as URL so we just send the id
-            if (!$request->getSessionVar('imagecache' . $id)) {
+            if (! $request->getSessionVar('imagecache' . $id)) {
                 $request->setSessionVar('imagecache' . $id, $plugincall);
             }
             $plugincall_arg = false; // not needed anymore
@@ -341,7 +341,7 @@ class WikiPluginCached extends WikiPlugin
     // how to handle alternate images? always provide alternate static images?
     public function embedObject($url, $type, $args = false, $params = false)
     {
-        if (!$args) {
+        if (! $args) {
             $args = array();
         }
         $object = HTML::object(array_merge($args, array('src' => $url, 'type' => $type)));
@@ -368,7 +368,7 @@ class WikiPluginCached extends WikiPlugin
      */
     public function glueArgs($argarray)
     {
-        if (!empty($argarray)) {
+        if (! empty($argarray)) {
             $argstr = '';
             foreach ($argarray as $key => $value) {
                 $argstr .= $key . '=' . '"' . $value . '" ';

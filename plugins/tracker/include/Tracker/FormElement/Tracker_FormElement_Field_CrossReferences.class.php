@@ -169,7 +169,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function fetchCriteriaValue($criteria)
     {
         $value = $this->getCriteriaValue($criteria);
-        if (!$value) {
+        if (! $value) {
             $value = '';
         }
         $hp = Codendi_HTMLPurifier::instance();
@@ -393,7 +393,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 $tgt  = '';
                 $both = '';
                 $output = PHP_EOL;
-                if (!empty($refs['target'])) {
+                if (! empty($refs['target'])) {
                     foreach ($refs['target'] as $refTgt) {
                         $tgt .= $refTgt['ref'];
                         $tgt .= PHP_EOL;
@@ -403,7 +403,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     $output .= ' -> Target : ' . PHP_EOL . $tgt;
                     $output .= PHP_EOL;
                 }
-                if (!empty($refs['source'])) {
+                if (! empty($refs['source'])) {
                     foreach ($refs['source'] as $refSrc) {
                         $src .= $refSrc['ref'];
                         $src .= PHP_EOL;
@@ -413,7 +413,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                     $output .= ' -> Source : ' . PHP_EOL . $src;
                     $output .= PHP_EOL;
                 }
-                if (!empty($refs['both'])) {
+                if (! empty($refs['both'])) {
                     foreach ($refs['both'] as $refBoth) {
                         $both .= $refBoth['ref'];
                         $both .= PHP_EOL;

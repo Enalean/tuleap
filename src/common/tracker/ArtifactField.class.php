@@ -623,7 +623,7 @@ class ArtifactField
             $val = $this->getDisplaySize();
         }
         $t = explode('/', $val);
-        if (!isset($t[1])) {
+        if (! isset($t[1])) {
             $t[1] = '';
         }
         return $t;
@@ -742,7 +742,7 @@ class ArtifactField
       // If only active field
             $status_cond = "";
             if ($active_only) {
-                if ($checked && !is_array($checked)) { //TODO: investigate why $checked may be an array
+                if ($checked && ! is_array($checked)) { //TODO: investigate why $checked may be an array
                     $status_cond = "AND  (status IN ('A','P') OR value_id='" . db_ei($checked) . "') ";
                 } else {
                     $status_cond = "AND  status IN ('A','P') ";
@@ -810,7 +810,7 @@ class ArtifactField
     {
         $res_value = false;
         $gvf = $this->getGlobalValueFunction();
-        if (!isset($gvf[0]) || !$gvf[0]) {
+        if (! isset($gvf[0]) || ! $gvf[0]) {
             $status_in = array();
             foreach ($status as $s) {
                 $status_in[] = "'" . db_es($s) . "'";
@@ -838,7 +838,7 @@ class ArtifactField
     {
         $res = null;
         $gvf = $this->getGlobalValueFunction();
-        if (!isset($gvf[0]) || !$gvf[0]) {
+        if (! isset($gvf[0]) || ! $gvf[0]) {
             $sql = "SELECT value_id,value,field_id,group_artifact_id,description,order_id,status " .
             "FROM artifact_field_value_list " .
             "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id= " . db_ei($this->field_id) . " " .
@@ -922,7 +922,7 @@ class ArtifactField
 
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             return false;
         } else {
             return true;
@@ -944,7 +944,7 @@ class ArtifactField
 
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             return false;
         }
 
@@ -968,7 +968,7 @@ class ArtifactField
                  //don't insert the row if there's more
                  //than 1 item selected and this item is None
                 } else {
-                    if (!$this->insertSingleValue($artifact_id, $value[$i])) {
+                    if (! $this->insertSingleValue($artifact_id, $value[$i])) {
                         $rc_update = false;
                     }
                 }
@@ -1035,7 +1035,7 @@ class ArtifactField
      */
     public function insertSingleValue($artifact_id, $value)
     {
-        if (!$this->insertFieldValue($artifact_id, $value)) {
+        if (! $this->insertFieldValue($artifact_id, $value)) {
             // This might happen if the submitted type is incorrect.
             // In this case, insert the default value, and return false.
             $this->insertDefaultValue($artifact_id);
@@ -1313,7 +1313,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'upd_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1325,7 +1325,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'use_err', array($field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1408,7 +1408,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'upd_err', array($field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1460,7 +1460,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'upd_err', array($field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1487,7 +1487,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1497,7 +1497,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'use_del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1507,7 +1507,7 @@ class ArtifactField
          "WHERE group_artifact_id=" . db_ei($group_artifact_id) . " AND field_id=" . db_ei($this->field_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'del_err', array($this->field_id,$group_artifact_id,db_error())));
             return false;
         }
@@ -1600,7 +1600,7 @@ class ArtifactField
         db_ei($this->getID()) . "," . db_ei($group_artifact_id) . "," . db_ei($value_id) . ",'" . db_es($value) . "','" . db_es($description) . "'," . db_ei($order_id) . ",'A')";
 
         $res_insert = db_query($sql);
-        if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+        if (! $res_insert || db_affected_rows($res_insert) <= 0) {
             $this->setError($Language->getText('tracker_common_field', 'vl_ins_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }
@@ -1643,7 +1643,7 @@ class ArtifactField
          "WHERE field_id=" . db_ei($this->getID()) . " AND group_artifact_id=" . db_ei($group_artifact_id) . " AND value_id=" . db_ei($value_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'vl_upd_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }
@@ -1668,7 +1668,7 @@ class ArtifactField
         "WHERE field_id=" . db_ei($this->getID()) . " AND group_artifact_id=" . db_ei($group_artifact_id) . " AND value_id=" . db_ei($value_id);
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $this->setError($Language->getText('tracker_common_field', 'vl_del_err', array($this->getID(),$group_artifact_id,$value_id,db_error())));
             return false;
         }

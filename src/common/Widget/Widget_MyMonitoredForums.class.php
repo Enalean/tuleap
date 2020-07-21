@@ -60,7 +60,7 @@ class Widget_MyMonitoredForums extends Widget
 
         $result = db_query($sql);
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $html_my_monitored_forums .= $GLOBALS['Language']->getText('my_index', 'my_forums_msg');
         } else {
             $request = HTTPRequest::instance();
@@ -104,7 +104,7 @@ class Widget_MyMonitoredForums extends Widget
                 $html = '';
                 $count_new = max(0, $count_diff);
                 for ($i = 0; $i < $rows2; $i++) {
-                    if (!$hide_now) {
+                    if (! $hide_now) {
                         $group_forum_id = db_result($result2, $i, 'group_forum_id');
                         $html .= '
                     <TR class="' . util_get_alt_row_color($i) . '"><TD WIDTH="99%">' .

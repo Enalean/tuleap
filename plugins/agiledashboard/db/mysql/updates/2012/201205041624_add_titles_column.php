@@ -52,10 +52,10 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_agiledashboard_planning', 'backlog_title')) {
+        if (! $this->db->columnNameExists('plugin_agiledashboard_planning', 'backlog_title')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column backlog_title to plugin_agiledashboard_planning');
         }
-        if (!$this->db->columnNameExists('plugin_agiledashboard_planning', 'plan_title')) {
+        if (! $this->db->columnNameExists('plugin_agiledashboard_planning', 'plan_title')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column plan_title to plugin_agiledashboard_planning');
         }
     }

@@ -209,19 +209,19 @@ class CrossReferenceFactory
 
          // HTML part (stored in $display)
         $display = '';
-        if (!$condensed) {
+        if (! $condensed) {
             $display .= '<p id="cross_references_legend">' . $Language->getText('cross_ref_fact_include', 'legend') . '</p>';
         }
         // loop through natures
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
             $div_classes = "nature";
 
-            if (!$condensed) {
+            if (! $condensed) {
                 $div_classes .= " not-condensed";
             }
 
             $display .= '<div class="' . $div_classes . '">';
-            if (!$condensed) {
+            if (! $condensed) {
                 $display .= "<p><b>" . $available_natures[$nature]['label'] . "</b>";
             }
 
@@ -289,7 +289,7 @@ class CrossReferenceFactory
                         } else {
                             $span .= $ref;
                         }
-                        if ($with_links && $can_delete && !$condensed) {
+                        if ($with_links && $can_delete && ! $condensed) {
                             $params = $this->getParams($currRef);
                             $span .= '<a class="delete_ref"
                                            href="/reference/rmreference.php' . $params . '"

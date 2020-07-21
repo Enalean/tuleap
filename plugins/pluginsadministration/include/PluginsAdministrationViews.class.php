@@ -256,7 +256,7 @@ class PluginsAdministrationViews extends Views
 
     public function _searchPlugins()
     {
-        if (!$this->_plugins) {
+        if (! $this->_plugins) {
             $this->_plugins    = array();
 
             $plugin_manager               = $this->plugin_manager;
@@ -290,7 +290,7 @@ class PluginsAdministrationViews extends Views
                     'dont_touch'    => $dont_touch,
                     'dont_restrict' => $dont_restrict);
 
-                if (isset($noFUConfig, $forgeUpgradeConfig) && !$forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
+                if (isset($noFUConfig, $forgeUpgradeConfig) && ! $forgeUpgradeConfig->existsInPath($plugin->getFilesystemPath())) {
                     $noFUConfig[] = array('name' => $name, 'plugin' => $plugin);
                 }
             }

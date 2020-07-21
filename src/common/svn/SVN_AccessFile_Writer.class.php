@@ -57,13 +57,13 @@ class SVN_AccessFile_Writer
         $buffer = '';
         if ($fd) {
             $in_settings = false;
-            while (!feof($fd)) {
+            while (! feof($fd)) {
                 $line = fgets($fd, 4096);
                 //if for display: don't include comment lines
                 if ($display && strpos($line, '# END CODENDI DEFAULT') !== false) {
                     $in_settings = false;
                     break;
-                } elseif (!$display && strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
+                } elseif (! $display && strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
                     $in_settings = true;
                 }
 
@@ -73,7 +73,7 @@ class SVN_AccessFile_Writer
 
                 if ($display && strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
                     $in_settings = true;
-                } elseif (!$display && strpos($line, '# END CODENDI DEFAULT') !== false) {
+                } elseif (! $display && strpos($line, '# END CODENDI DEFAULT') !== false) {
                     $in_settings = false;
                     break;
                 }

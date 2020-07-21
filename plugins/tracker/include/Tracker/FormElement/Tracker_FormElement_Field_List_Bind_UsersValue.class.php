@@ -183,7 +183,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     private function getUserUrl()
     {
         $user_name    = $this->user_name;
-        if (!$user_name) {
+        if (! $user_name) {
             $user_name = $this->getUser()->getUserName();
         }
 

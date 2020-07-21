@@ -46,7 +46,7 @@ class b201206211032_add_postaction_field_int_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_field_int')) {
+        if (! $this->db->tableNameExists('tracker_workflow_transition_postactions_field_int')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_field_int table is missing');
         }
     }

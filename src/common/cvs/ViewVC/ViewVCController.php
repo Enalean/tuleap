@@ -48,7 +48,7 @@ class ViewVCController implements DispatchableWithRequest
         }
         // be backwards compatible with old viewvc.cgi links that are now redirected
         $root    = $request->get('root');
-        if (!$root) {
+        if (! $root) {
             $root = $request->get('cvsroot');
         }
 

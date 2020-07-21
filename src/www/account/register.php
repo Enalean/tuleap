@@ -42,7 +42,7 @@ $is_register_page_accessible = true;
 $event_manager = EventManager::instance();
 $event_manager->processEvent('display_newaccount', array('allow' => &$is_register_page_accessible));
 
-if (! $request->getCurrentUser()->isSuperUser() && !$is_register_page_accessible) {
+if (! $request->getCurrentUser()->isSuperUser() && ! $is_register_page_accessible) {
     exit_error(
         $GLOBALS['Language']->getText('include_session', 'insufficient_access'),
         $GLOBALS['Language']->getText('include_session', 'no_access')
@@ -63,29 +63,29 @@ function register_valid(bool $is_password_needed, $mail_confirm_code, array &$er
 
     $vRealName = new Valid_RealNameFormat('form_realname');
     $vRealName->required();
-    if (!$request->valid($vRealName)) {
+    if (! $request->valid($vRealName)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
         $errors['form_realname'] = $Language->getText('account_register', 'err_realname');
         return 0;
     }
 
-    if ($is_password_needed && !$request->existAndNonEmpty('form_pw')) {
+    if ($is_password_needed && ! $request->existAndNonEmpty('form_pw')) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopasswd'));
         $errors['form_pw'] = $Language->getText('account_register', 'err_nopasswd');
         return 0;
     }
     $tz = $request->get('timezone');
-    if (!is_valid_timezone($tz)) {
+    if (! is_valid_timezone($tz)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_notz'));
         $errors['timezone'] = $Language->getText('account_register', 'err_notz');
         return 0;
     }
-    if (!$request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::get('sys_user_approval') && $request->get('page') != "admin_creation")) {
+    if (! $request->existAndNonEmpty('form_register_purpose') && (ForgeConfig::get('sys_user_approval') && $request->get('page') != "admin_creation")) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_nopurpose'));
         $errors['form_register_purpose'] = $Language->getText('account_register', 'err_nopurpose');
         return 0;
     }
-    if (!validate_email($request->get('form_email'))) {
+    if (! validate_email($request->get('form_email'))) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_email'));
         $errors['form_email'] = $Language->getText('account_register', 'err_email');
         return 0;
@@ -325,8 +325,8 @@ if ($request->isPost() && $request->exist('Register')) {
         $is_thanks = true;
 
         if (ForgeConfig::get('sys_user_approval') == 0 || $admin_creation) {
-            if (!$admin_creation) {
-                if (!send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
+            if (! $admin_creation) {
+                if (! send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
@@ -398,7 +398,7 @@ $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
 $HTML->header(array('title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class));
 
 
-if (!$confirmation_register || ! isset($presenter, $template)) {
+if (! $confirmation_register || ! isset($presenter, $template)) {
     $reg_err = isset($GLOBALS['register_error']) ? $GLOBALS['register_error'] : '';
     display_account_form($is_password_needed, $reg_err, $errors);
 } else {

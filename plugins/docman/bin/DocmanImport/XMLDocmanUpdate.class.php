@@ -58,14 +58,14 @@ class XMLDocmanUpdate extends XMLDocmanImport
 
         $tagCounts = $this->tagCount($mergedTree);
 
-        if (!$this->continue) {
+        if (! $this->continue) {
             $this->logger->info($tagCounts['IN_BOTH'] . " item(s) will be updated");
         }
         $this->logger->info($tagCounts['IN_SECOND'] . " item(s) will be created");
-        if (!$this->continue) {
+        if (! $this->continue) {
             $this->logger->info($tagCounts['IN_FIRST'] . " item(s) will be removed");
         }
-        if (!$this->continue) {
+        if (! $this->continue) {
             echo "Are you sure you want to update the document tree? (y/n) [n] ";
         } else {
             echo "Are you sure you want to continue the upload? (y/n) [n] ";
@@ -158,7 +158,7 @@ class XMLDocmanUpdate extends XMLDocmanImport
                     // In both => update or re-create item
                     $node = $tree['xmlElement'];
 
-                    if (!$this->continue) {
+                    if (! $this->continue) {
                         if ($node['type'] == 'file' || $node['type'] == 'embeddedfile') {
                             if ($this->checkVersionChecksums($itemId, $node)) {
                                 $this->updateItem($itemId, $node);

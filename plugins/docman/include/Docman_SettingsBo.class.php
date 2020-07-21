@@ -38,7 +38,7 @@ class Docman_SettingsBo
     public static function instance($groupId)
     {
         static $_plugin_docman_settings_bo_i;
-        if (!isset($_plugin_docman_settings_bo_i[$groupId])) {
+        if (! isset($_plugin_docman_settings_bo_i[$groupId])) {
             $_plugin_docman_settings_bo_i[$groupId] = new Docman_SettingsBo($groupId);
         }
         return $_plugin_docman_settings_bo_i[$groupId];
@@ -57,7 +57,7 @@ class Docman_SettingsBo
         if ($this->row === null) {
             $dao = $this->getDao();
             $dar = $dao->searchByGroupId($this->groupId);
-            if ($dar && !$dar->isError() && $dar->valid()) {
+            if ($dar && ! $dar->isError() && $dar->valid()) {
                 $this->row = $dar->current();
             }
         }
@@ -108,7 +108,7 @@ class Docman_SettingsBo
     public function updateMetadataUsage($label, $useIt)
     {
         $dao = $this->getDao();
-        if (!$this->settingsExist()) {
+        if (! $this->settingsExist()) {
             $dao->create($this->groupId, 'Tree');
         }
         return $dao->updateMetadataUsageForGroupId($this->groupId, $label, $useIt);

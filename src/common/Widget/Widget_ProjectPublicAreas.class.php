@@ -120,13 +120,13 @@ class Widget_ProjectPublicAreas extends Widget
             $cvs_commit_num = db_result($result, 0, 0);
             $cvs_add_num = db_result($result, 0, 1);
             $cvs_co_num = db_result($result, 0, 2);
-            if (!$cvs_commit_num) {
+            if (! $cvs_commit_num) {
                 $cvs_commit_num = 0;
             }
-            if (!$cvs_add_num) {
+            if (! $cvs_add_num) {
                 $cvs_add_num = 0;
             }
-            if (!$cvs_co_num) {
+            if (! $cvs_co_num) {
                 $cvs_co_num = 0;
             }
             $uri = session_make_url('/cvs/viewvc.php/?root=' . urlencode($project->getUnixName(false)) . '&roottype=cvs');
@@ -148,7 +148,7 @@ class Widget_ProjectPublicAreas extends Widget
             $sql = "SELECT SUM(svn_access_count) AS accesses from group_svn_full_history where group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
             $svn_accesses = db_result($result, 0, 0);
-            if (!$svn_accesses) {
+            if (! $svn_accesses) {
                 $svn_accesses = 0;
             }
 
@@ -176,18 +176,18 @@ class Widget_ProjectPublicAreas extends Widget
             //  get the Group object
             $pm = ProjectManager::instance();
             $group = $pm->getProject($group_id);
-            if (!$group || !is_object($group) || $group->isError()) {
+            if (! $group || ! is_object($group) || $group->isError()) {
                 exit_no_group();
             }
             $atf = new ArtifactTypeFactory($group);
-            if (!$group || !is_object($group) || $group->isError()) {
+            if (! $group || ! is_object($group) || $group->isError()) {
                 exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('include_project_home', 'no_arttypefact'));
             }
 
             // Get the artfact type list
             $at_arr = $atf->getArtifactTypes();
 
-            if (!$at_arr || count($at_arr) < 1) {
+            if (! $at_arr || count($at_arr) < 1) {
                 $html .= '<br><i>' . $GLOBALS['Language']->getText('include_project_home', 'no_trackers_accessible') . '</i>';
             } else {
                 $html .= '<ul>';

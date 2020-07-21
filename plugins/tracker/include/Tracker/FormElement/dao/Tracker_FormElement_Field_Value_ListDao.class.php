@@ -31,13 +31,13 @@ class Tracker_FormElement_Field_Value_ListDao extends Tracker_FormElement_Field_
     {
         $changeset_value_id = $this->da->escapeInt($changeset_value_id);
         $values = array();
-        if (!is_array($value_ids)) {
+        if (! is_array($value_ids)) {
             $value_ids = array($value_ids);
         }
         $nb_values = count($value_ids);
         foreach ($value_ids as $v) {
             $v = $this->da->escapeInt($v);
-            if (!$v) {
+            if (! $v) {
                 $v = 100; //None value
             }
             // if $nb_values > 1 && $v == 100, then skip the None value.

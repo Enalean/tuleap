@@ -72,7 +72,7 @@ class WikiServiceAdminActions extends WikiActions
     public function create()
     {
         $page = $_POST['page'];
-        if (!empty($_POST['upage'])) {
+        if (! empty($_POST['upage'])) {
             $page = $_POST['upage'];
         }
 
@@ -116,7 +116,7 @@ class WikiServiceAdminActions extends WikiActions
                     $wa = new WikiAttachment();
                     $wa->initWithId($id);
                     if ($wa->validate() && $wa->gid == $_REQUEST['group_id'] && $wa->isAutorized($user->getId())) {
-                        if (!$wa->deleteAttachment()) {
+                        if (! $wa->deleteAttachment()) {
                             $deleteStatus = false;
                         }
                     } else {
@@ -137,7 +137,7 @@ class WikiServiceAdminActions extends WikiActions
     public function update()
     {
         $page = $_POST['page'];
-        if (!empty($_POST['upage'])) {
+        if (! empty($_POST['upage'])) {
             $page = $_POST['upage'];
         }
 
@@ -166,7 +166,7 @@ class WikiServiceAdminActions extends WikiActions
             $ret = $w->setPermissions($_POST['ugroups']);
         }
 
-        if (!$ret) {
+        if (! $ret) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback))
@@ -194,7 +194,7 @@ class WikiServiceAdminActions extends WikiActions
             $ret = $wp->setPermissions($_POST['ugroups']);
         }
 
-        if (!$ret) {
+        if (! $ret) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText(
@@ -230,7 +230,7 @@ class WikiServiceAdminActions extends WikiActions
         } else {
             $ret = $wa->setPermissions($_POST['ugroups']);
         }
-        if (!$ret) {
+        if (! $ret) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
                 $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback))

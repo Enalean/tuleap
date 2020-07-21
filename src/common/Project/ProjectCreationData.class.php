@@ -134,7 +134,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     public function getField($group_desc_id)
     {
-        if (!isset($this->data_fields['form_' . $group_desc_id])) {
+        if (! isset($this->data_fields['form_' . $group_desc_id])) {
             return null;
         }
         return $this->data_fields['form_' . $group_desc_id];
@@ -208,7 +208,7 @@ class ProjectCreationData //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
             return Project::ACCESS_PUBLIC;
         }
 
-        if ($are_restricted_enabled && !$should_project_allow_restricted) {
+        if ($are_restricted_enabled && ! $should_project_allow_restricted) {
             return Project::ACCESS_PRIVATE_WO_RESTRICTED;
         }
 

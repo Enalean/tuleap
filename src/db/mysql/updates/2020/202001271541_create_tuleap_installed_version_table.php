@@ -45,7 +45,7 @@ final class b202001271541_create_tuleap_installed_version_table extends ForgeUpg
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tuleap_installed_version')) {
+        if (! $this->db->tableNameExists('tuleap_installed_version')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tuleap_installed_version table is missing');
         }
     }

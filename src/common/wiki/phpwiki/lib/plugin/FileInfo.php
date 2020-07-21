@@ -67,21 +67,21 @@ class WikiPlugin_FileInfo extends WikiPlugin
     public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        if (!$file) {
+        if (! $file) {
             return $this->error(sprintf(_("A required argument '%s' is missing."), 'file'));
         }
-        if (!$display) {
+        if (! $display) {
             return $this->error(sprintf(_("A required argument '%s' is missing."), 'display'));
         }
 
         $dir = getcwd();
         chdir(PHPWIKI_DIR);
     // sanify $file name
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             trigger_error("file \"$file\" not found", E_USER_WARNING);
         }
         $realfile = realpath($file);
-        if (!string_starts_with($realfile, realpath(getUploadDataPath()))) {
+        if (! string_starts_with($realfile, realpath(getUploadDataPath()))) {
             return $this->error("invalid path \"$file\"");
         } else {
             $isuploaded = 1;
@@ -133,7 +133,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
             }
         }
         chdir($dir);
-        if (!$format) {
+        if (! $format) {
             $format = '';
             foreach ($s as $x) {
                 $format .= " %s";
@@ -200,7 +200,7 @@ class WikiPlugin_FileInfo extends WikiPlugin
 
     public function exeversion($file)
     {
-        if (!isWindows()) {
+        if (! isWindows()) {
             return "?";
         }
         if (function_exists('res_list_type') or loadPhpExtension('win32std')) {

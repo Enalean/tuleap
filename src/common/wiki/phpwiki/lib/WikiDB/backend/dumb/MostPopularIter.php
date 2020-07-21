@@ -20,7 +20,7 @@ class WikiDB_backend_dumb_MostPopularIter extends WikiDB_backend_iterator
         $pages = &$this->_pages;
 
         while ($page = & $all_pages->next()) {
-            if (!isset($page['pagedata'])) {
+            if (! isset($page['pagedata'])) {
                 $page['pagedata'] = $backend->get_pagedata($page['pagename']);
             }
             $pages[] = $page;

@@ -82,7 +82,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
         // Remove ugroup binding to this user group
-        if (!$this->processUgroupBinding($ugroup_id, $group_id)) {
+        if (! $this->processUgroupBinding($ugroup_id, $group_id)) {
             $this->error("Could not process binding to this user group ($ugroup_id)");
             return false;
         }
@@ -133,7 +133,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent
     {
         $ugroup_binding               = $this->getUgroupBinding();
         $ugroups_successfully_updated = true;
-        if (!$ugroup_binding->checkUGroupValidity($group_id, $ugroup_id)) {
+        if (! $ugroup_binding->checkUGroupValidity($group_id, $ugroup_id)) {
             //The user group is removed, we remove all its binding traces
             $ugroups_successfully_updated = $ugroup_binding->removeAllUGroupsBinding($ugroup_id);
         } else {

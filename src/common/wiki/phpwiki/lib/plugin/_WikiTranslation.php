@@ -194,7 +194,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
     // reverse translation:
     public function translate_to_en($text, $lang = false)
     {
-        if (!$lang) {
+        if (! $lang) {
             $lang = $this->lang; // current locale
         }
         if ($lang == 'en') {
@@ -204,15 +204,15 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         $this->_locales = array();
         $this->_reverse_locales = array();
 
-        if (!isset($this->_locales[$lang])) {
+        if (! isset($this->_locales[$lang])) {
             $this->init_locale($lang);
         }
-        assert(!empty($this->_locales[$lang]));
-        if (!isset($this->_reverse_locales[$lang])) {
+        assert(! empty($this->_locales[$lang]));
+        if (! isset($this->_reverse_locales[$lang])) {
             // and now do a reverse lookup in the $locale hash
             $this->_reverse_locales[$lang] = array_flip($this->_locales[$lang]);
         }
-        if (!empty($this->_reverse_locales[$lang][$text])) {
+        if (! empty($this->_reverse_locales[$lang][$text])) {
             return $this->_reverse_locales[$lang][$text];
         } else {
             return $text;
@@ -225,21 +225,21 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
      */
     public function fast_translate($text, $to_lang, $from_lang = false)
     {
-        if (!$from_lang) {
+        if (! $from_lang) {
             $from_lang = $this->lang; // current locale
         }
         if ($from_lang == $to_lang) {
             return $text;
         }
         // setup hash from en => to_lang
-        if (!isset($this->_locales[$to_lang])) {
+        if (! isset($this->_locales[$to_lang])) {
             $this->init_locale($to_lang);
         }
         if ($from_lang != 'en') {
             // get reverse gettext: translate to english
             $text = $this->translate_to_en($text, $from_lang);
         }
-        return !empty($this->_locales[$to_lang][$text])
+        return ! empty($this->_locales[$to_lang][$text])
                  ? $this->_locales[$to_lang][$text]
                  : $text;
     }
@@ -247,14 +247,14 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
     //FIXME! There's something wrong.
     public function translate($text, $to_lang, $from_lang = false)
     {
-        if (!$from_lang) {
+        if (! $from_lang) {
             $from_lang = $this->lang; // current locale
         }
         if ($from_lang == $to_lang) {
             return $text;
         }
         // Speed up hash lookup. Not needed for gettext module
-        if (!isset($this->_locales[$from_lang]) and !function_exists('bindtextdomain')) {
+        if (! isset($this->_locales[$from_lang]) and ! function_exists('bindtextdomain')) {
             $this->init_locale($from_lang);
         }
         if ($from_lang != 'en') {
@@ -283,10 +283,10 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
         $this->args = $this->getArgs($argstr, $request);
         extract($this->args);
         $this->request = &$request;
-        if (!$from_lang) {
+        if (! $from_lang) {
             $from_lang = $request->getPref('lang');
         }
-        if (!$from_lang) {
+        if (! $from_lang) {
             $from_lang = $GLOBALS['LANG'];
         }
         $this->lang = $from_lang;
@@ -313,17 +313,17 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
             // But here we cannot change the header anymore. So we can decide to ignore them,
             // or display them with all the errors.
             //FIXME: do iconv the ob
-            if ($GLOBALS['charset'] != 'utf-8' and !defined('NEED_ICONV_TO')) {
+            if ($GLOBALS['charset'] != 'utf-8' and ! defined('NEED_ICONV_TO')) {
                 define('NEED_ICONV_TO', 'utf-8');
                 //either the extension or external
                 //$GLOBALS['charset'] = 'utf-8';
             }
         }
         $to_lang = $languages[0];
-        if (!empty($string) and count($languages) == 1) {
+        if (! empty($string) and count($languages) == 1) {
             return $this->translate($string, $to_lang, $from_lang);
         }
-        if (!empty($page)) {
+        if (! empty($page)) {
             $pagename = $page;
             if ($dbi->isWikiPage($pagename)) {
                 $url = '';
@@ -358,7 +358,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 new _PageList_Column_customlang($field, $from_lang, $this)
             );
         }
-        if (!empty($string)) {
+        if (! empty($string)) {
             $pagelist->addPage($string);
             return $pagelist;
         }
@@ -373,7 +373,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 break;
             case 'pages':
                 // not all pages, only the pgsrc pages
-                if (!is_array($exclude)) {
+                if (! is_array($exclude)) {
                     $exclude = $pagelist->explodePageList(
                         $exclude,
                         false,
@@ -392,7 +392,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                     if (in_array($pagename, $exclude)) {
                         continue;             // exclude page.
                     }
-                    if ($match != '*' and !glob_match($match, $pagename)) {
+                    if ($match != '*' and ! glob_match($match, $pagename)) {
                         continue;
                     }
                     $page_handle = $dbi->getPage($pagename);
@@ -400,14 +400,14 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 }
                 break;
             case 'wikiwords':
-                if (!isset($this->_locales[$from_lang])) {
+                if (! isset($this->_locales[$from_lang])) {
                     $this->init_locale($from_lang);
                 }
                 $locale = & $this->_locales[$from_lang];
                 if (is_array($locale)) {
                     $count = 0;
                     foreach ($locale as $from => $to) {
-                        if ($match != '*' and !glob_match($match, $from)) {
+                        if ($match != '*' and ! glob_match($match, $from)) {
                             continue;
                         }
                         if (isWikiWord($from)) {
@@ -432,7 +432,7 @@ class WikiPlugin__WikiTranslation extends WikiPlugin
                 );
                 foreach ($fileset->getFiles() as $file) {
                     $b = urldecode(substr($file, 0, -4));
-                    if (!in_array($b, $buttons)) {
+                    if (! in_array($b, $buttons)) {
                         $buttons[] = $b;
                     }
                 }
@@ -496,7 +496,7 @@ class _PageList_Column_customlang extends _PageList_Column
             global $WikiTheme;
             $link = $WikiTheme->linkUnknownWikiWord($trans);
             if (
-                !($this->_noT or $this->_nolinks)
+                ! ($this->_noT or $this->_nolinks)
                 and $this->dbi->isWikiPage($trans)
             ) {
                 $url = WikiURL($trans, array('action' => 'TranslateText',
@@ -519,7 +519,7 @@ class _PageList_Column_customlang extends _PageList_Column
                 return '';
             }
         } elseif (is_object($page)) {
-            if (!$this->_nolinks) {
+            if (! $this->_nolinks) {
                 return WikiLink($trans, 'auto');
             } else {
                 return $trans;

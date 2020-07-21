@@ -31,7 +31,7 @@ class BackendMailingList extends Backend
      */
     protected function _getMailingListDao()
     {
-        if (!$this->_mailinglistdao) {
+        if (! $this->_mailinglistdao) {
             $this->_mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
         }
         return $this->_mailinglistdao;
@@ -166,7 +166,7 @@ class BackendMailingList extends Backend
     {
         $deleteStatus = true;
         $res = $this->_getMailingListDao()->searchByProject($projectId);
-        if ($res && !$res->isError()) {
+        if ($res && ! $res->isError()) {
             while ($row = $res->getRow()) {
                 if ($this->_getMailingListDao()->deleteList($row['group_list_id'])) {
                     $deleteStatus = $this->deleteList($row['group_list_id']) && $deleteStatus;

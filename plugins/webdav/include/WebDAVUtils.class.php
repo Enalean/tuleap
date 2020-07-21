@@ -303,10 +303,10 @@ class WebDAVUtils
      */
     public function processDocmanRequest(WebDAV_Request $request)
     {
-        if (!$this->docmanPlugin) {
+        if (! $this->docmanPlugin) {
             $pluginMgr = PluginManager::instance();
             $this->docmanPlugin = $pluginMgr->getPluginByName('docman');
-            if (!$this->docmanPlugin || ($this->docmanPlugin && !$pluginMgr->isPluginAvailable($this->docmanPlugin))) {
+            if (! $this->docmanPlugin || ($this->docmanPlugin && ! $pluginMgr->isPluginAvailable($this->docmanPlugin))) {
                 throw new WebDAVExceptionServerError($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
             }
         }

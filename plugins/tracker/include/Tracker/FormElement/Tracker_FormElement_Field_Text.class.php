@@ -100,7 +100,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         $matches = array();
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
-        if (!$expr) {
+        if (! $expr) {
             // else transform into a series of LIKE %word%
             if (is_array($criteria_value)) {
                 $split = preg_split('/\s+/', $criteria_value['value']);
@@ -499,12 +499,12 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         if (parent::testImport()) {
             if (static::class == 'Tracker_FormElement_Field_Text') {
-                if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
+                if (! (isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;
                 }
             } elseif (static::class == 'Tracker_FormElement_Field_String') {
-                if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
+                if (! (isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
                     var_dump($this, 'Properties must be "maxchars" and "size"');
                     return false;
                 }
@@ -525,7 +525,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
     {
         $rule = $this->getRuleString();
         $content = $this->getRightContent($value);
-        if (!($is_valid = $rule->isValid($content))) {
+        if (! ($is_valid = $rule->isValid($content))) {
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel()));
         }
         return $is_valid;

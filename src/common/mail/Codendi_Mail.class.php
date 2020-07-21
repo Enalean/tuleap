@@ -204,9 +204,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function setTo($to, $raw = false)
     {
         list($to,) = $this->_cleanupMailFormat($to);
-        if (!$raw) {
+        if (! $raw) {
             $to = $this->validateCommaSeparatedListOfAddresses($to);
-            if (!empty($to)) {
+            if (! empty($to)) {
                 foreach ($to as $row) {
                     $this->addTo($row['email'], $row['real_name']);
                 }
@@ -242,9 +242,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setBcc($bcc, $raw = false)
     {
-        if (!$raw) {
+        if (! $raw) {
             $bcc = $this->validateCommaSeparatedListOfAddresses($bcc);
-            if (!empty($bcc)) {
+            if (! empty($bcc)) {
                 foreach ($bcc as $row) {
                     $this->addBcc($row['email'], $row['real_name']);
                 }
@@ -280,9 +280,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function setCc($cc, $raw = false)
     {
-        if (!$raw) {
+        if (! $raw) {
             $cc = $this->validateCommaSeparatedListOfAddresses($cc);
-            if (!empty($cc)) {
+            if (! empty($cc)) {
                 foreach ($cc as $row) {
                     $this->addCc($row['email'], $row['real_name']);
                 }
@@ -364,7 +364,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     public function getLookAndFeelTemplate()
     {
-        if (!$this->look_and_feel_template) {
+        if (! $this->look_and_feel_template) {
             $this->look_and_feel_template = new Tuleap_Template_Mail();
         }
         return $this->look_and_feel_template;

@@ -364,7 +364,7 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new TestManagementPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -708,12 +708,12 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
         $temporary_path  = $this->getTmpDir() . "/$temporaray_file";
 
         $dom = dom_import_simplexml($xml_content);
-        if (!$dom) {
+        if (! $dom) {
             return;
         }
 
         $dom_document = $dom->ownerDocument;
-        if (!$dom_document) {
+        if (! $dom_document) {
             return;
         }
 

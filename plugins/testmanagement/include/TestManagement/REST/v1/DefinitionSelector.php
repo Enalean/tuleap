@@ -110,7 +110,7 @@ class DefinitionSelector
     public function selectAllDefinitions(PFUser $user, Project $project): array
     {
         $tracker_id = $this->config->getTestDefinitionTrackerId($project);
-        if (!$tracker_id) {
+        if (! $tracker_id) {
             return [];
         }
 

@@ -71,7 +71,7 @@ class b201312250950_add_reminder_roles_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_reminder_notified_roles')) {
+        if (! $this->db->tableNameExists('tracker_reminder_notified_roles')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_reminder_notified_roles');
         }
     }

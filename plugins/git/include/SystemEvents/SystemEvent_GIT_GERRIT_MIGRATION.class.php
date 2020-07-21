@@ -142,7 +142,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
     private function verbalizeAccessRightMigration()
     {
         $migrate_access_rights = $this->getParameter(2);
-        if (!$migrate_access_rights) {
+        if (! $migrate_access_rights) {
             return ', without access rights';
         }
     }

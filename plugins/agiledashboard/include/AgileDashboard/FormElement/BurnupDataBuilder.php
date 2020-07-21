@@ -116,7 +116,7 @@ class BurnupDataBuilder
         $server_timezone = TimezoneRetriever::getServerTimezone();
         date_default_timezone_set($server_timezone);
 
-        $start = new  DateTime();
+        $start = new DateTime();
         $start->setTimestamp((int) $time_period->getStartDate());
         $start->setTime(0, 0, 0);
 

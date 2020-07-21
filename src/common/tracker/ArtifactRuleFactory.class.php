@@ -53,7 +53,7 @@ class ArtifactRuleFactory
     public static function instance()
     {
         static $_artifactrulefactory_instance;
-        if (!$_artifactrulefactory_instance) {
+        if (! $_artifactrulefactory_instance) {
             $rules_dao         = new ArtifactRuleDao(CodendiDataAccess::instance());
             $_artifactrulefactory_instance = new ArtifactRuleFactory($rules_dao);
         }
@@ -62,7 +62,7 @@ class ArtifactRuleFactory
 
     public function & getRuleById($id)
     {
-        if (!isset($this->rules[$id])) {
+        if (! isset($this->rules[$id])) {
             $this->rules[$id] = null;
             //We retrieve rule
             $dar = $this->rules_dao->searchById($id);
@@ -79,7 +79,7 @@ class ArtifactRuleFactory
         $dar = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
         $rules = array();
         while ($rule_row = $dar->getRow()) {
-            if (!isset($this->rules[$rule_row['id']])) {
+            if (! isset($this->rules[$rule_row['id']])) {
                 $rule_row['group_artifact_id'] = $artifact_type;
                 $this->rules[$rule_row['id']] = $this->_buildRuleInstance($rule_row);
             }

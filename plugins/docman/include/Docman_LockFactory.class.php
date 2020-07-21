@@ -55,7 +55,7 @@ class Docman_LockFactory
     public function getProjectLockInfos($groupId)
     {
         $dar = $this->dao->searchLocksForProjectByGroupId($groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             return $dar;
         } else {
             return false;
@@ -72,7 +72,7 @@ class Docman_LockFactory
     public function getLockInfoForItem($item)
     {
         $dar = $this->dao->searchLockForItem($item->getId());
-        if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() === 1) {
             return $dar->current();
         }
         return false;

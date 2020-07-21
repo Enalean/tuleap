@@ -67,7 +67,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
                                    'cellpadding' => 2,
                                    'cellspacing' => 0));
         $pagedata = $backend->get_pagedata($page);
-        if (!$pagedata) {
+        if (! $pagedata) {
             // FIXME: invalid HTML
             $html->pushContent(HTML::p(fmt("No pagedata for %s", $page)));
         } else {
@@ -99,7 +99,7 @@ class WikiPlugin__BackendInfo extends WikiPlugin
 
         foreach ($data as $key => $val) {
             if (is_integer($key)) {
-            } elseif ($key == 'passwd' and !$user->isAdmin()) {
+            } elseif ($key == 'passwd' and ! $user->isAdmin()) {
                 $data[$key] = $val ? _("<not displayed>") : _("<empty>");
             } elseif ($key and $key == '_cached_html') {
                 $val = TransformedText::unpack($val);

@@ -84,7 +84,7 @@ class XMLExport
     {
         try {
             if (is_dir($directoryPath)) {
-                if (!is_writable($directoryPath)) {
+                if (! is_writable($directoryPath)) {
                     throw new DocmanExportException("Folder [" . $directoryPath . "] already exist and is not writable");
                 } else {
                     return true;
@@ -92,12 +92,12 @@ class XMLExport
             }
 
             $parentDirectory = dirname($directoryPath);
-            if (!is_dir($parentDirectory)) {
+            if (! is_dir($parentDirectory)) {
                 throw new DocmanExportException("Folder [" . $parentDirectory . "] does not exist");
                 return false;
             }
 
-            if (!is_writable($parentDirectory)) {
+            if (! is_writable($parentDirectory)) {
                 throw new DocmanExportException("Folder [" . $parentDirectory . "] is not writable");
                 return false;
             }

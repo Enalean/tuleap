@@ -66,7 +66,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'repository_namespace')) {
+        if (! $this->db->columnNameExists('plugin_git', 'repository_namespace')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_namespace in table plugin_git is missing');
         }
     }

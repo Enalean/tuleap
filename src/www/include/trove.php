@@ -26,7 +26,7 @@
 function trove_setnode($group_id, $trove_cat_id, $rootnode = 0)
 {
     // verify we were passed information
-    if ((!$group_id) || (!$trove_cat_id)) {
+    if ((! $group_id) || (! $trove_cat_id)) {
         return 1;
     }
 
@@ -39,7 +39,7 @@ function trove_setnode($group_id, $trove_cat_id, $rootnode = 0)
     $row_verifycat = db_fetch_array($res_verifycat);
 
     // if we didnt get a rootnode, find it
-    if (!$rootnode) {
+    if (! $rootnode) {
         $rootnode = trove_getrootcat($trove_cat_id);
     }
 

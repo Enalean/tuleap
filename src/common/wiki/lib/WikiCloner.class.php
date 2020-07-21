@@ -206,8 +206,8 @@ class WikiCloner
         $recent_infos = array();
         foreach ($array as $tmpl_id => $new_id) {
             $recent_infos = $this->getTemplatePageRecentInfos($tmpl_id);
-            if (!empty($recent_infos)) {
-                if (!empty($recent_infos['latestminor'])) {
+            if (! empty($recent_infos)) {
+                if (! empty($recent_infos['latestminor'])) {
                     $result = db_query(sprintf(
                         "INSERT INTO wiki_recent (id, latestversion, latestmajor, latestminor)"
                               . "VALUES(%d, %d, %d, %d)",
@@ -655,7 +655,7 @@ class WikiCloner
     {
         $result = db_query(sprintf("INSERT INTO wiki_attachment (group_id, name)"
         . "VALUES(%d, '%s')", $this->group_id, $this->escapeString($name)));
-        if (!empty($result)) {
+        if (! empty($result)) {
             $res = db_query(sprintf("SELECT id FROM wiki_attachment WHERE group_id=%d AND name='%s'", $this->group_id, $this->escapeString($name)));
             while ($row = db_fetch_array($res)) {
                 $id = $row[0];
@@ -682,7 +682,7 @@ class WikiCloner
             db_es($this->_serialize($data)),
             $this->group_id
         ));
-        if (!empty($result)) {
+        if (! empty($result)) {
             $res = db_query(sprintf("SELECT id from wiki_page where pagename='%s' and group_id=%d", db_es($pagename), $this->group_id));
             while ($row = db_fetch_array($res)) {
                 $id = $row[0];

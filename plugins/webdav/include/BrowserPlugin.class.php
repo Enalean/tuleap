@@ -236,7 +236,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
         ob_start();
 
-        echo"<h3>" . $this->purifier->purify($node->getName()) . "</h3>";
+        echo "<h3>" . $this->purifier->purify($node->getName()) . "</h3>";
 
         echo '';
 
@@ -295,7 +295,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
             if (isset($file[200]['{DAV:}resourcetype'])) {
                 $type = $file[200]['{DAV:}resourcetype']->getValue();
                 // resourcetype can have multiple values
-                if (!is_array($type)) {
+                if (! is_array($type)) {
                     $type = array($type);
                 }
                 foreach ($type as $k => $v) {
@@ -391,7 +391,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
             echo '</td></tr>';
         }
 
-        echo"</table>";
+        echo "</table>";
 
         echo $GLOBALS['HTML']->pv_footer(array());
 

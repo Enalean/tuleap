@@ -55,7 +55,7 @@ class referencealias_corePlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\ReferenceAliasCore\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -86,7 +86,7 @@ class referencealias_corePlugin extends Plugin
         $project   = $params['project'];
         $reference = $this->references_builder->getReference($project, $keyword, $value);
 
-        if (!empty($reference)) {
+        if (! empty($reference)) {
             $params['reference'] = $reference;
         }
     }

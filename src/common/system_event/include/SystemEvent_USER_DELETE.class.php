@@ -58,7 +58,7 @@ class SystemEvent_USER_DELETE extends SystemEvent
         }
 
         // Archive user home directory
-        if (!Backend::instance('System')->archiveUserHome($user_id)) {
+        if (! Backend::instance('System')->archiveUserHome($user_id)) {
             $this->error("Could not archive user home");
             return false;
         }

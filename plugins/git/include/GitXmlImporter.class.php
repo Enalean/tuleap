@@ -166,7 +166,7 @@ class GitXmlImporter
         $extraction_path
     ) {
         $xml_git = $xml_input->git;
-        if (!$xml_git) {
+        if (! $xml_git) {
             $this->logger->debug('No git node found into xml.');
             return true;
         }
@@ -198,7 +198,7 @@ class GitXmlImporter
     private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode)
     {
         $ugroup_ids = array();
-        if (!empty($admins_xmlnode)) {
+        if (! empty($admins_xmlnode)) {
             $this->logger->debug($admins_xmlnode->count() . ' ugroups as admins.');
             $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $admins_xmlnode);
         }
@@ -353,7 +353,7 @@ class GitXmlImporter
     ) {
         $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $permission_xmlnode);
 
-        if (!empty($ugroup_ids)) {
+        if (! empty($ugroup_ids)) {
             $this->permission_manager->savePermissions($project, $repository->getId(), $permission_type, $ugroup_ids);
         }
     }

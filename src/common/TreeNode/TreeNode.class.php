@@ -168,7 +168,7 @@ class TreeNode /*implements Visitable*/
      */
     public function removeChild($key, $object = null)
     {
-        if (!$key && $object && is_array($this->children)) {
+        if (! $key && $object && is_array($this->children)) {
             $key = array_search($object, $this->children);
         }
         if (isset($key) && is_int($key) && is_array($this->children) && array_key_exists($key, $this->children)) {
@@ -255,7 +255,7 @@ class TreeNode /*implements Visitable*/
      */
     public function addSingularChild(TreeNode $child)
     {
-        if (!$this->hasChild($child)) {
+        if (! $this->hasChild($child)) {
             $this->addChild($child);
         }
     }

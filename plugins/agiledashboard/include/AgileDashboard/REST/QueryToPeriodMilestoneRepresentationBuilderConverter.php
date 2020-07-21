@@ -59,7 +59,7 @@ class QueryToPeriodMilestoneRepresentationBuilderConverter
             throw MalformedQueryParameterException::invalidQueryPeriodParameter();
         }
 
-        if (!isset($query_object->period)) {
+        if (! isset($query_object->period)) {
             throw MalformedQueryParameterException::invalidQueryPeriodParameter();
         }
 

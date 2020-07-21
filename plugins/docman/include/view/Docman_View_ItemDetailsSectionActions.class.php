@@ -48,7 +48,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
 
         //{{{ Move
         $content .= '<dt>' . dgettext('tuleap-docman', 'Move') . '</dt><dd>';
-        if (!$this->is_moveable || !($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
+        if (! $this->is_moveable || ! ($this->_controller->userCanWrite($this->item->getId()) && $this->_controller->userCanWrite($this->item->getParentId()))) {
             if (is_a($this->item, 'Docman_Folder')) {
                 $content .= dgettext('tuleap-docman', 'You cannot move this folder.');
             } else {
@@ -166,7 +166,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
             } elseif ($copiedItemId === false && $cutItemId !== false && $item->getId() != $cutItemId) {
                 $srcItem = $itemFactory->getItemFromDb($cutItemId);
             }
-            if ($srcItem && !$itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
+            if ($srcItem && ! $itemFactory->isInSubTree($this->item->getId(), $srcItem->getId())) {
                 $content .= '</dd>';
                 $content .= '<dt>' . dgettext('tuleap-docman', 'Paste') . '</dt><dd>';
                 $copyurl = DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_paste', 'id' => $this->item->getId()]);
@@ -182,7 +182,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
         $content = '';
         $content .= '<dt>' . dgettext('tuleap-docman', 'Update') . '</dt><dd>';
 
-        if (!$this->_controller->userCanWrite($this->item->getid())) {
+        if (! $this->_controller->userCanWrite($this->item->getid())) {
             $content .= dgettext('tuleap-docman', 'You cannot update this document.');
         } else {
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">update</a> this document.'), DocmanViewURLBuilder::buildActionUrl($item, ['default_url' => $this->url], ['action' => 'action_update', 'id' => $this->item->getId()]));
@@ -207,7 +207,7 @@ class Docman_View_ItemDetailsSectionActions extends Docman_View_ItemDetailsSecti
     private function getSectionForNewVersion()
     {
         $content = '<dt>' . dgettext('tuleap-docman', 'New Version') . '</dt><dd>';
-        if (!$this->_controller->userCanWrite($this->item->getid())) {
+        if (! $this->_controller->userCanWrite($this->item->getid())) {
             $content .= dgettext('tuleap-docman', 'You cannot create a new version.');
         } else {
             $content .= sprintf(dgettext('tuleap-docman', 'You can <a href="%1$s">create a new version</a>.'), DocmanViewURLBuilder::buildActionUrl($this->item, ['default_url' => $this->url], ['action' => 'action_new_version', 'id' => $this->item->getId()]));

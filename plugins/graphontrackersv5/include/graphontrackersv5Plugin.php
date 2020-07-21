@@ -247,7 +247,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
      */
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
+        if (! is_a($this->pluginInfo, 'GraphOnTrackersV5PluginInfo')) {
             require_once('GraphOnTrackersV5PluginInfo.class.php');
             $this->pluginInfo = new GraphOnTrackersV5PluginInfo($this);
         }
@@ -261,7 +261,7 @@ class GraphOnTrackersV5Plugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDe
     {
         $request = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if (!isset($this->allowedForProject[$group_id])) {
+        if (! isset($this->allowedForProject[$group_id])) {
             $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }

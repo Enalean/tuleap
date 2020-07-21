@@ -477,7 +477,7 @@ class DB_common extends PEAR
         if (is_object($code)) {
             // because we the static PEAR::raiseError, our global
             // handler should be used if it is set
-            if ($mode === null && !empty($this->_default_error_mode)) {
+            if ($mode === null && ! empty($this->_default_error_mode)) {
                 $mode    = $this->_default_error_mode;
                 $options = $this->_default_error_options;
             }
@@ -989,7 +989,7 @@ class DB_common extends PEAR
      */
     public function executeEmulateQuery($stmt, $data = array())
     {
-        if (!is_array($data)) {
+        if (! is_array($data)) {
             $data = array($data);
         }
 
@@ -1006,7 +1006,7 @@ class DB_common extends PEAR
                 $realquery .= $this->quoteSmart($value);
             } elseif ($this->prepare_types[$stmt][$i] == DB_PARAM_OPAQUE) {
                 $fp = @fopen($value, 'rb');
-                if (!$fp) {
+                if (! $fp) {
                     return $this->raiseError(DB_ERROR_ACCESS_VIOLATION);
                 }
                 $realquery .= $this->quoteSmart(fread($fp, filesize($value)));
@@ -1264,7 +1264,7 @@ class DB_common extends PEAR
     ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order
-        if (!is_array($params)) {
+        if (! is_array($params)) {
             if (is_array($fetchmode)) {
                 if ($params === null) {
                     $tmp = DB_FETCHMODE_DEFAULT;
@@ -1568,7 +1568,7 @@ class DB_common extends PEAR
     ) {
         // compat check, the params and fetchmode parameters used to
         // have the opposite order
-        if (!is_array($params)) {
+        if (! is_array($params)) {
             if (is_array($fetchmode)) {
                 if ($params === null) {
                     $tmp = DB_FETCHMODE_DEFAULT;

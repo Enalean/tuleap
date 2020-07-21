@@ -600,7 +600,7 @@ class CampaignsResource
             $campaign_artifact->getTracker()->getProject()
         );
 
-        if (!$campaign_artifact->userCanUpdate($user)) {
+        if (! $campaign_artifact->userCanUpdate($user)) {
             throw new RestException(403, "You don't have the permission to update this campaign");
         }
 
@@ -794,7 +794,7 @@ class CampaignsResource
     {
         $user = $this->user_manager->getCurrentUser();
 
-        if (!$user) {
+        if (! $user) {
             throw new RestException(
                 400,
                 'User not found'

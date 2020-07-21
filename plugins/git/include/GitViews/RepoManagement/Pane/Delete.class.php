@@ -69,7 +69,7 @@ class Delete extends Pane
         $html .= '<input type="hidden" id="action" name="action" value="repo_management" />';
         $html .= '<input type="hidden" name="pane" value="' . $this->getIdentifier() . '" />';
         $disabled = '';
-        if (!$this->repository->canBeDeleted()) {
+        if (! $this->repository->canBeDeleted()) {
             $html .= '<p>' . 'You cannot delete' . '</p>';
             $disabled = 'readonly="readonly" disabled="disabled"';
         }

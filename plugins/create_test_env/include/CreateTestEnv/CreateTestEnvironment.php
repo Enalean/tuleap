@@ -129,7 +129,7 @@ class CreateTestEnvironment
      */
     private function serializeXmlIntoFile(\SimpleXMLElement $xml, $filename)
     {
-        if (!is_dir($this->output_dir) && !mkdir($this->output_dir, 0770, true) && !is_dir($this->output_dir)) {
+        if (! is_dir($this->output_dir) && ! mkdir($this->output_dir, 0770, true) && ! is_dir($this->output_dir)) {
             throw new Exception\UnableToCreateTemporaryDirectoryException(sprintf('Directory "%s" was not created', $this->output_dir));
         }
         if ($xml->saveXML($this->output_dir . DIRECTORY_SEPARATOR . $filename) !== true) {

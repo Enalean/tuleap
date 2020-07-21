@@ -64,10 +64,10 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         $args['action'] = strtolower($args['action']);
         extract($args);
 
-        if (!$action) {
+        if (! $action) {
             $this->error("No action specified");
         }
-        if (!($default_label = $this->_getLabel($action))) {
+        if (! ($default_label = $this->_getLabel($action))) {
             $this->error("Bad action");
         }
         if ($request->getArg('action') != 'browse') {
@@ -78,7 +78,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
 
         if ($request->isPost() and $posted['action'] == $action) { // a different form. we might have multiple
             $user = $request->getUser();
-            if (!$user->isAdmin()) {
+            if (! $user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 return $this->error(_("You must be an administrator to use this plugin."));
             }
@@ -108,7 +108,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
     public function do_action(&$request, $args)
     {
         $method = strtolower('_do_' . str_replace('-', '_', $args['action']));
-        if (!method_exists($this, $method)) {
+        if (! method_exists($this, $method)) {
             return $this->error("Bad action");
         }
 
@@ -158,7 +158,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             }
         }
         $pages->free();
-        if (!$count) {
+        if (! $count) {
             return _("No pages with bad names had to be deleted.");
         } else {
             return HTML(
@@ -179,7 +179,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
         $list = HTML::ol(array('align' => 'left'));
         $pages = $dbi->getAllPages('include_empty');
         while (($page = $pages->next())) {
-            if (!$page->exists() and ($links = $page->getBackLinks('include_empty')) and !$links->next()) {
+            if (! $page->exists() and ($links = $page->getBackLinks('include_empty')) and ! $links->next()) {
                 $pagename = $page->getName();
                 if ($pagename == 'global_data' or $pagename == '.') {
                     continue;
@@ -194,7 +194,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             }
         }
         $pages->free();
-        if (!$count) {
+        if (! $count) {
             return _("No empty, unreferenced pages were found.");
         } else {
             return HTML(
@@ -255,7 +255,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             }
             $prefs = $user->getPreferences();
             if ($prefs->get('email')) {
-                if (!$prefs->get('userid')) {
+                if (! $prefs->get('userid')) {
                     $prefs->set('userid', $username);
                 }
                 $group = (int) (count($pagelist->_rows) / $pagelist->_group_rows);
@@ -268,7 +268,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
                     $page_handle
                 ));
                 $row->pushContent($email->format($pagelist, $prefs, $page_handle));
-                if (!empty($args['verify'])) {
+                if (! empty($args['verify'])) {
                     $prefs->_prefs['email']->set(
                         'emailVerified',
                         empty($args['verified'][$username]) ? 0 : 2
@@ -280,7 +280,7 @@ class WikiPlugin_WikiAdminUtils extends WikiPlugin
             }
         }
         $request->_user = $current_user;
-        if (!empty($args['verify'])) {
+        if (! empty($args['verify'])) {
             return HTML($pagelist->_generateTable(false));
         } else {
             $args['verify'] = 1;

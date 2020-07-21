@@ -66,7 +66,7 @@ class RadarLogTicks extends Ticks
                 $grid[] = $yt;
                 $aMajPos[] = $xt + 2 * $dx_maj;
                 $aMajPos[] = $yt - $aImg->GetFontheight() / 2;
-                if (!$this->supress_tickmarks) {
+                if (! $this->supress_tickmarks) {
                     if ($this->majcolor != '') {
                         $aImg->PushColor($this->majcolor);
                     }
@@ -87,7 +87,7 @@ class RadarLogTicks extends Ticks
                 $step *= 10;
                 $count = 1;
             } else {
-                if (!$this->supress_minor_tickmarks) {
+                if (! $this->supress_minor_tickmarks) {
                     if ($this->mincolor != '') {
                         $aImg->PushColor($this->mincolor);
                     }
@@ -182,7 +182,7 @@ class RadarLinearTicks extends Ticks
             $grid[] = $yt;
             $aMajPos[($i - 1) * 2] = $xt + 2 * $dx;
             $aMajPos[($i - 1) * 2 + 1] = $yt - $aImg->GetFontheight() / 2;
-            if (!$this->supress_tickmarks) {
+            if (! $this->supress_tickmarks) {
                 if ($this->majcolor != '') {
                     $aImg->PushColor($this->majcolor);
                 }
@@ -197,7 +197,7 @@ class RadarLinearTicks extends Ticks
         $ticklen2 = $this->minor_abs_size;
         $dx = round(sin($aAxisAngle) * $ticklen2);
         $dy = round(cos($aAxisAngle) * $ticklen2);
-        if (!$this->supress_tickmarks && !$this->supress_minor_tickmarks) {
+        if (! $this->supress_tickmarks && ! $this->supress_minor_tickmarks) {
             if ($this->mincolor != '') {
                 $aImg->PushColor($this->mincolor);
             }
@@ -249,7 +249,7 @@ class RadarAxis extends AxisPrototype
         // Draw axis
         $this->img->SetColor($this->color);
         $this->img->SetLineWeight($this->weight);
-        if (!$this->hide) {
+        if (! $this->hide) {
             $this->img->Line($this->scale->scale_abs[0], $pos, $x, $y);
         }
 
@@ -260,7 +260,7 @@ class RadarAxis extends AxisPrototype
         }
 
         // Draw labels
-        if ($lf && !$this->hide) {
+        if ($lf && ! $this->hide) {
             $this->img->SetFont($this->font_family, $this->font_style, $this->font_size);
             $this->img->SetTextAlign('left', 'top');
             $this->img->SetColor($this->label_color);
@@ -347,7 +347,7 @@ class RadarAxis extends AxisPrototype
             $dy = 0;
         }
 
-        if (!$this->hide) {
+        if (! $this->hide) {
             $this->title->Stroke($this->img, $xt - $dx * $w, $yt - $dy * $h, $title);
         }
     }
@@ -395,7 +395,7 @@ class RadarGrid
 
     public function Stroke($img, $grid)
     {
-        if (!$this->show) {
+        if (! $this->show) {
             return;
         }
 
@@ -626,7 +626,7 @@ class RadarGraph extends Graph
 
     public function ShowMinorTickmarks($aFlag = true)
     {
-        $this->yscale->ticks->SupressMinorTickMarks(!$aFlag);
+        $this->yscale->ticks->SupressMinorTickMarks(! $aFlag);
     }
 
     public function SetScale($axtype, $ymin = 1, $ymax = 1, $dummy1 = null, $dumy2 = null)
@@ -789,12 +789,12 @@ class RadarGraph extends Graph
         $n = count($this->plots);
         // Set Y-scale
 
-        if (!$this->yscale->IsSpecified() && count($this->plots) > 0) {
+        if (! $this->yscale->IsSpecified() && count($this->plots) > 0) {
             list($min,$max) = $this->GetPlotsYMinMax($this->plots);
             $this->yscale->AutoScale($this->img, 0, $max, $this->len / $this->ytick_factor);
         } elseif (
             $this->yscale->IsSpecified() &&
-                ( $this->yscale->auto_ticks || !$this->yscale->ticks->IsSpecified())
+                ( $this->yscale->auto_ticks || ! $this->yscale->ticks->IsSpecified())
         ) {
             // The tick calculation will use the user suplied min/max values to determine
             // the ticks. If auto_ticks is false the exact user specifed min and max
@@ -834,7 +834,7 @@ class RadarGraph extends Graph
             }
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             if ($this->background_image != '') {
                 $this->StrokeFrameBackground();
             } else {
@@ -844,7 +844,7 @@ class RadarGraph extends Graph
         }
         $astep = 2 * M_PI / $nbrpnts;
 
-        if (!$_csim) {
+        if (! $_csim) {
             if ($this->iIconDepth == DEPTH_BACK) {
                 $this->StrokeIcons();
             }
@@ -857,7 +857,7 @@ class RadarGraph extends Graph
             $this->footer->Stroke($this->img);
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             if ($this->grid_depth == DEPTH_BACK) {
                 // Draw axis and grid
                 for ($i = 0,$a = M_PI / 2; $i < $nbrpnts; ++$i, $a += $astep) {
@@ -876,7 +876,7 @@ class RadarGraph extends Graph
             $this->plots[$i]->Stroke($this->img, $this->posy, $this->yscale, $a);
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             if ($this->grid_depth != DEPTH_BACK) {
                 // Draw axis and grid
                 for ($i = 0,$a = M_PI / 2; $i < $nbrpnts; ++$i, $a += $astep) {
@@ -893,8 +893,8 @@ class RadarGraph extends Graph
         }
 
         // Should we do any final image transformation
-        if ($this->iImgTrans && !$_csim) {
-            if (!class_exists('ImgTrans', false)) {
+        if ($this->iImgTrans && ! $_csim) {
+            if (! class_exists('ImgTrans', false)) {
                 require_once('jpgraph_imgtrans.php');
             }
 
@@ -910,7 +910,7 @@ class RadarGraph extends Graph
             );
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
                // If the filename is given as the special "__handle"
                // then the image handler is returned and the image is NOT
                // streamed back

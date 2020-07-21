@@ -72,7 +72,7 @@ class MyProjects extends \Widget
                            " AND groups.status = 'A'" .
                            " ORDER BY $order");
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $html .= '<div class="empty-pane">';
             $html .= '<svg class="empty-pane-icon" xmlns="http://www.w3.org/2000/svg" width="239" height="287" viewBox="0 0 239 287">';
             $html .= '    <defs>';
@@ -239,7 +239,7 @@ class MyProjects extends \Widget
             . "AND user_group.user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' "
             . "AND groups.status='A' ORDER BY group_name");
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $rss->addItem(array(
                 'title'       => 'Error',
                 'description' => $GLOBALS['Language']->getText('my_index', 'not_member') . db_error(),

@@ -44,7 +44,7 @@ class PermissionsManager implements IPermissionsManagerNG
      */
     public static function instance()
     {
-        if (!self::$_permissionmanager_instance) {
+        if (! self::$_permissionmanager_instance) {
             self::$_permissionmanager_instance = new PermissionsManager(new PermissionsDao(CodendiDataAccess::instance()));
         }
         return self::$_permissionmanager_instance;
@@ -74,7 +74,7 @@ class PermissionsManager implements IPermissionsManagerNG
     */
     public function userHasPermission($object_id, $permission_type, array $ugroups)
     {
-        if (!isset($this->_permissions[$object_id])) {
+        if (! isset($this->_permissions[$object_id])) {
             $this->_permissions[$object_id] = array();
         }
 
@@ -111,7 +111,7 @@ class PermissionsManager implements IPermissionsManagerNG
         if (isset($this->_permissions[$object_id])) {
             foreach ($this->_permissions[$object_id] as $ugroup_id => $permissions) {
                 foreach ($permissions as $perm) {
-                    if (!isset($perms[$perm])) {
+                    if (! isset($perms[$perm])) {
                         $perms[$perm] = array();
                     }
                     $perms[$perm][] = $ugroup_id;
@@ -186,7 +186,7 @@ class PermissionsManager implements IPermissionsManagerNG
     public function getAuthorizedUgroupIds($objectId, $permissionType, $withName = true)
     {
         $dar = $this->getAuthorizedUgroups($objectId, $permissionType, $withName);
-        if (!$dar || $dar->isError()) {
+        if (! $dar || $dar->isError()) {
             return array();
         }
 
@@ -270,18 +270,18 @@ class PermissionsManager implements IPermissionsManagerNG
     protected function buildPermissionsCache(&$dar, &$ugroups)
     {
         while ($row = $dar->getRow()) {
-            if (!isset($this->_permissions[$row['object_id']])) {
+            if (! isset($this->_permissions[$row['object_id']])) {
                 $this->_permissions[$row['object_id']] = array();
             }
             foreach ($ugroups as $ugroup) {
-                if (!isset($this->_permissions[$row['object_id']][$ugroup])) {
+                if (! isset($this->_permissions[$row['object_id']][$ugroup])) {
                     $this->_permissions[$row['object_id']][$ugroup] = array();
                 }
             }
-            if (!isset($this->_permissions[$row['object_id']][$row['ugroup_id']])) {
+            if (! isset($this->_permissions[$row['object_id']][$row['ugroup_id']])) {
                 $this->_permissions[$row['object_id']][$row['ugroup_id']] = array();
             }
-            if (!in_array($row['permission_type'], $this->_permissions[$row['object_id']][$row['ugroup_id']])) {
+            if (! in_array($row['permission_type'], $this->_permissions[$row['object_id']][$row['ugroup_id']])) {
                 $this->_permissions[$row['object_id']][$row['ugroup_id']][] = $row['permission_type'];
             }
         }

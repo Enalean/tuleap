@@ -37,7 +37,7 @@ rcs_id('$Id: CreateToc.php,v 1.36 2007/07/19 12:41:25 labbenes Exp $');
  * - bug #969495 "existing labels not honored" seems to be fixed.
  */
 
-if (!defined('TOC_FULL_SYNTAX')) {
+if (! defined('TOC_FULL_SYNTAX')) {
     define('TOC_FULL_SYNTAX', 1);
 }
 
@@ -228,7 +228,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $s = str_replace(' ', '_', $s);
         $i = 1;
         $anchor = $s;
-        while (!empty($anchors[$anchor])) {
+        while (! empty($anchors[$anchor])) {
             $anchor = sprintf("%s_%d", $s, $i++);
         }
         $anchors[$anchor] = $i;
@@ -244,7 +244,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $levels = false,
         $basepage = ''
     ) {
-        if (!$levels) {
+        if (! $levels) {
             $levels = array(1,2);
         }
         $tocCounter = $this->_initTocCounter();
@@ -265,7 +265,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
                     )
                 ) {
                     $this->_tocCounter($tocCounter, $level);
-                    if (!strstr($content[$i], '#[')) {
+                    if (! strstr($content[$i], '#[')) {
                         $s = trim($match[2]);
 
                         // Remove escape char from toc titles.
@@ -383,7 +383,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             $page = new WikiPageName($pagename, $basepage);
             $pagename = $page->name;
         }
-        if (!$pagename) {
+        if (! $pagename) {
             return $this->error(_("no page specified"));
         }
         if ($jshide and isBrowserIE() and browserDetect("Mac")) {
@@ -393,7 +393,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $page = $dbi->getPage($pagename);
         $current = $page->getCurrentRevision();
         //FIXME: I suspect this only to crash with Apache2
-        if (!$current->get('markup') or $current->get('markup') < 2) {
+        if (! $current->get('markup') or $current->get('markup') < 2) {
             if (in_array(php_sapi_name(), array('apache2handler','apache2filter'))) {
                 trigger_error(_("CreateToc disabled for old markup"), E_USER_WARNING);
                 return '';
@@ -410,7 +410,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             */
         $list = HTML::ul(array('id' => 'toclist','class' => 'toc'));
 
-        if (!strstr($headers, ",")) {
+        if (! strstr($headers, ",")) {
             $headers = array($headers);
         } else {
             $headers = explode(",", $headers);

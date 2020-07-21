@@ -79,7 +79,7 @@ class Tracker_Key
     public function isValidPublicKey($key)
     {
         preg_match('/-----BEGIN PUBLIC KEY-----(.*)-----END PUBLIC KEY-----$/s', $key, $match);
-        if (!empty($match)) {
+        if (! empty($match)) {
             $rsa = new \phpseclib\Crypt\RSA();
             $rsa->loadKey($key);
             if ($rsa->getSize() < 2048 || $rsa->getSize() > 8192) {

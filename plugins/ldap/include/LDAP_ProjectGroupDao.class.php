@@ -54,7 +54,7 @@ class LDAP_ProjectGroupDao extends DataAccessObject
         $sql = 'SELECT * FROM plugin_ldap_project_group' .
             ' WHERE group_id = ' . db_ei($groupId);
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return $dar->getRow();
         } else {
             return false;

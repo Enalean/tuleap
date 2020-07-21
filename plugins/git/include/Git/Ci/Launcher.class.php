@@ -60,7 +60,7 @@ class Git_Ci_Launcher
     private function launchForRepository(GitRepository $repository)
     {
         $res = $this->dao->retrieveTriggersPathByRepository($repository->getId());
-        if ($res && !$res->isError() && $res->rowCount() > 0) {
+        if ($res && ! $res->isError() && $res->rowCount() > 0) {
             foreach ($res as $row) {
                 try {
                     $this->jenkins_client->setToken($row['token'])->launchJobBuild($row['job_url']);

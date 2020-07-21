@@ -59,7 +59,7 @@ class Widget_MyMonitoredFp extends Widget
 
         $result = db_query($sql);
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $html_my_monitored_fp .= $GLOBALS['Language']->getText('my_index', 'my_files_msg');
         } else {
             $html_my_monitored_fp .= '<table class="tlp-table" style="width:100%">';
@@ -102,7 +102,7 @@ class Widget_MyMonitoredFp extends Widget
                 $html = '';
                 $count_new = max(0, $count_diff);
                 for ($i = 0; $i < $rows2; $i++) {
-                    if (!$hide_now) {
+                    if (! $hide_now) {
                         $html .= '
                         <TR class="' . util_get_alt_row_color($i) . '">' .
                             '<TD WIDTH="99%">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/file/showfiles.php?group_id=' . $group_id . '">' .

@@ -72,7 +72,7 @@ class GroupFactory
 
         $rows = db_numrows($result);
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             if (isset($GLOBALS['Language'])) {
                 $this->setError();
             }
@@ -89,7 +89,7 @@ class GroupFactory
     public function getMemberGroups()
     {
                 global $Language;
-        if (!user_isloggedin()) {
+        if (! user_isloggedin()) {
             $this->setError();
             return false;
         }
@@ -108,7 +108,7 @@ class GroupFactory
 
         $rows = db_numrows($result);
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $this->setError();
             return false;
         }
@@ -124,14 +124,14 @@ class GroupFactory
     {
         global $Language;
         $result_my_groups = $this->getMemberGroups();
-        if ($this->isError() || !$result_my_groups) {
+        if ($this->isError() || ! $result_my_groups) {
             return false;
         } else {
             $pm = ProjectManager::instance();
             $my_groups = array();
             while ($res_group = db_fetch_array($result_my_groups)) {
                 $group = $pm->getProject($res_group['group_id']);
-                if ($group && !$group->isError()) {
+                if ($group && ! $group->isError()) {
                     $my_groups[$group->getID()] = $group;
                 }
             }

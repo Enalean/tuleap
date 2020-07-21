@@ -149,7 +149,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                     "description='" . db_es(htmlspecialchars($description)) . "' " .
                     "WHERE group_forum_id=" . db_ei($group_forum_id) . " AND group_id=" . db_ei($group_id);
                     $result = db_query($sql);
-                    if (!$result || db_affected_rows($result) < 1) {
+                    if (! $result || db_affected_rows($result) < 1) {
                         $feedback .= ' ' . $Language->getText('forum_admin_index', 'upd_err') . ' ';
                     } else {
                         $feedback .= ' ' . $Language->getText('forum_admin_index', 'upd_success') . ' ';
@@ -235,7 +235,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         $result = db_query($sql);
         $rows = db_numrows($result);
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             echo '
 				<H2>' . $Language->getText('forum_admin_index', 'forum_not_found') . '</H2>
 				<P>
@@ -307,7 +307,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
     /*
         Not logged in or insufficient privileges
     */
-    if (!$request->valid($vGroupId)) {
+    if (! $request->valid($vGroupId)) {
         exit_no_group();
     } else {
         exit_permission_denied();

@@ -36,7 +36,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
      */
     public function setLog($log)
     {
-        if (!isset($this->log) || $this->log == '') {
+        if (! isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
             $this->log .= PHP_EOL . $log;
@@ -76,7 +76,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
 
             //Compute Md5sum for files
             $md5Computed = $this->computeFRSMd5Sum($file->getFileLocation());
-            if (!$md5Computed) {
+            if (! $md5Computed) {
                 $body = $language->getText(
                     'mail_system_event',
                     'md5_compute_error',
@@ -90,14 +90,14 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent
                 return false;
             }
             // Update DB
-            if (!$this->updateDB($fileId, $md5Computed)) {
+            if (! $this->updateDB($fileId, $md5Computed)) {
                 $this->error('Could not update the computed checksum for file (Filename: ' . $file->getFileName() . ')');
                 return false;
             }
 
             //Compare file checksum
             $file = $fileFactory->getFRSFileFromDb($fileId);
-            if (!$this->compareMd5Checksums($file)) {
+            if (! $this->compareMd5Checksums($file)) {
                 $body = $language->getText(
                     'mail_system_event',
                     'md5_compare_error',

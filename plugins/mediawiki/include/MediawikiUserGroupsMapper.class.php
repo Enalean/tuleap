@@ -95,11 +95,11 @@ class MediawikiUserGroupsMapper
         $list = array();
 
         foreach (self::$MEDIAWIKI_MODIFIABLE_GROUP_NAMES as $mw_group_name) {
-            if (!array_key_exists($mw_group_name, $group_mapping1)) {
+            if (! array_key_exists($mw_group_name, $group_mapping1)) {
                 $group_mapping1[$mw_group_name] = array();
             }
 
-            if (!array_key_exists($mw_group_name, $group_mapping2)) {
+            if (! array_key_exists($mw_group_name, $group_mapping2)) {
                 $group_mapping2[$mw_group_name] = array();
             }
 

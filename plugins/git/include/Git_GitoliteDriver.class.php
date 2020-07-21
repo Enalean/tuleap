@@ -226,7 +226,7 @@ class Git_GitoliteDriver
             if (is_dir($headsPath)) {
                 $dir = new DirectoryIterator($headsPath);
                 foreach ($dir as $fileinfo) {
-                    if (!$fileinfo->isDot()) {
+                    if (! $fileinfo->isDot()) {
                         return true;
                     }
                 }
@@ -347,7 +347,7 @@ class Git_GitoliteDriver
 
     public function delete($path)
     {
-        if (empty($path) || !is_writable($path)) {
+        if (empty($path) || ! is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied ' . $path);
         }
         $rcode = 0;
@@ -389,7 +389,7 @@ class Git_GitoliteDriver
 
     private function getAuthorizedKeysPath()
     {
-        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
+        if (! file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
             return self::NEW_AUTHORIZED_KEYS_PATH;
         }
         return self::OLD_AUTHORIZED_KEYS_PATH;
@@ -469,16 +469,16 @@ class Git_GitoliteDriver
 
         $backup_path = realpath($backup_path);
 
-        if (!$this->extractRepository($backup_path)) {
+        if (! $this->extractRepository($backup_path)) {
             $this->logger->error('[Gitolite][Restore] Unable to restore repository: ' . $repository->getName());
             return false;
         }
         $this->deleteBackup($repository, $backup_directory);
 
-        if (!$this->getDao()->activate($repository->getId())) {
+        if (! $this->getDao()->activate($repository->getId())) {
             $this->logger->error('[Gitolite][Restore] Unable to activate repository after restore: ' . $repository->getName());
         }
-        if (!$repository->getBackend()->updateRepoConf($repository)) {
+        if (! $repository->getBackend()->updateRepoConf($repository)) {
             $this->logger->warning('[Gitolite][Restore] Unable to update repository configuration after restore : ' . $repository->getName());
         }
 

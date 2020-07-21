@@ -182,7 +182,7 @@ final class EmailNotificationTask implements PostCreationTask
             $user = $this->recipients_manager->getUserFromRecipientName($recipient);
 
             if ($user) {
-                $ignore_perms    = !$check_perms;
+                $ignore_perms    = ! $check_perms;
                 $recipient_mail  = $user->getEmail();
                 $message_content = $this->getMessageContent($changeset, $user, $is_update, $check_perms);
                 $headers         = array_filter(array($this->getCustomReplyToHeader($changeset->getArtifact())));
@@ -315,7 +315,7 @@ final class EmailNotificationTask implements PostCreationTask
 
     private function getMessageContent(Tracker_Artifact_Changeset $changeset, \PFUser $user, $is_update, $check_perms)
     {
-        $ignore_perms = !$check_perms;
+        $ignore_perms = ! $check_perms;
 
         $lang        = $user->getLanguage();
 
@@ -427,7 +427,7 @@ final class EmailNotificationTask implements PostCreationTask
             // Last changes
             if ($changes) {
                 //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
-                if (!empty($comment->body)) {
+                if (! empty($comment->body)) {
                     $output .= '
                         <tr>
                             <td colspan="2">

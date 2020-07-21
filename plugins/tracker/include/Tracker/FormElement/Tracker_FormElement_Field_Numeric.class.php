@@ -155,7 +155,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
-        if (!$expr) {
+        if (! $expr) {
             $matches = array();
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
@@ -271,7 +271,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if (empty($value) || !$value->getNumeric()) {
+        if (empty($value) || ! $value->getNumeric()) {
             return '-';
         }
         $output = '';
@@ -367,7 +367,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         assert($from instanceof Tracker_Artifact_ChangesetValue_Numeric);
         assert($to instanceof Tracker_Artifact_ChangesetValue_Numeric);
         $html = '';
-        if (!$from || !($from_value = $from->getNumeric())) {
+        if (! $from || ! ($from_value = $from->getNumeric())) {
             $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
             $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
@@ -421,7 +421,7 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     public function testImport()
     {
         if (parent::testImport()) {
-            if (!($this->default_properties['maxchars'] && $this->default_properties['size'])) {
+            if (! ($this->default_properties['maxchars'] && $this->default_properties['size'])) {
                 var_dump($this, 'Properties must be "maxchars" and "size"');
                 return false;
             }

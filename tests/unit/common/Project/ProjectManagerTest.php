@@ -179,7 +179,7 @@ final class ProjectManagerTest extends TestCase
 
     public function testGetGroupByIdForSoapNoProject(): void
     {
-        if (!defined('GET_GROUP_FAULT')) {
+        if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
         $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -190,7 +190,7 @@ final class ProjectManagerTest extends TestCase
 
     public function testGetGroupByIdForSoapProjectError(): void
     {
-        if (!defined('GET_GROUP_FAULT')) {
+        if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
         $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -203,7 +203,7 @@ final class ProjectManagerTest extends TestCase
 
     public function testGetGroupByIdForSoapProjectNotActive(): void
     {
-        if (!defined('GET_GROUP_FAULT')) {
+        if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
         $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -217,7 +217,7 @@ final class ProjectManagerTest extends TestCase
 
     public function testGetGroupByIdForSoapRestricted(): void
     {
-        if (!defined('GET_GROUP_FAULT')) {
+        if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
         $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -232,7 +232,7 @@ final class ProjectManagerTest extends TestCase
 
     public function testGetGroupByIdForSoapPass(): void
     {
-        if (!defined('GET_GROUP_FAULT')) {
+        if (! defined('GET_GROUP_FAULT')) {
             define('GET_GROUP_FAULT', '3000');
         }
         $pm = \Mockery::mock(\ProjectManager::class)->makePartial()->shouldAllowMockingProtectedMethods();

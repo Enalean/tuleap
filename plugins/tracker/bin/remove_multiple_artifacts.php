@@ -40,7 +40,7 @@ $first_artifact_id = $argv[3];
 $last_artifact_id  = $argv[4];
 $password          = null;
 
-if (!isset($password)) {
+if (! isset($password)) {
     echo "Password for $user_name: ";
 
     if (PHP_OS != 'WINNT') {

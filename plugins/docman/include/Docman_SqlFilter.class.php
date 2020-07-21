@@ -41,7 +41,7 @@ class Docman_SqlFilterFactory
         } elseif (is_a($filter, 'Docman_FilterText')) {
             $f = new Docman_SqlFilterText($filter);
         } elseif (is_a($filter, 'Docman_FilterListAdvanced')) {
-            if (!in_array(0, $filter->getValue())) {
+            if (! in_array(0, $filter->getValue())) {
                 $f = new Docman_SqlFilterListAdvanced($filter);
             }
         } elseif (is_a($filter, 'Docman_FilterList')) {

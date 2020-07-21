@@ -259,7 +259,7 @@ class ExecutionsResource
 
         $user     = $this->getCurrentUser();
         $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $id);
-        if (!$artifact) {
+        if (! $artifact) {
             throw new RestException(404);
         }
 
@@ -321,7 +321,7 @@ class ExecutionsResource
                 $results
             );
 
-            if (!empty($values)) {
+            if (! empty($values)) {
                 $artifact_reference = $creator->create($user, $tracker_reference, $values);
             } else {
                 throw new RestException(400, "No valid data are provided");
@@ -362,7 +362,7 @@ class ExecutionsResource
             $execution_artifact->getTracker()->getProject()
         );
 
-        if (!$execution_artifact->userCanUpdate($user)) {
+        if (! $execution_artifact->userCanUpdate($user)) {
             throw new RestException(403);
         }
 
@@ -484,7 +484,7 @@ class ExecutionsResource
             $issue_artifact->getTracker()->getProject()
         );
 
-        if (!$execution_artifact || !$issue_artifact) {
+        if (! $execution_artifact || ! $issue_artifact) {
             throw new RestException(404);
         }
 
@@ -494,7 +494,7 @@ class ExecutionsResource
         }
 
         $is_linked = $execution_artifact->linkArtifact($issue_artifact->getId(), $user);
-        if (!$is_linked) {
+        if (! $is_linked) {
             throw new RestException(400, 'Could not link the issue artifact to the test execution');
         }
 
@@ -694,7 +694,7 @@ class ExecutionsResource
     private function getCurrentUser(): PFUser
     {
         $user = $this->user_manager->getCurrentUser();
-        if (!$user) {
+        if (! $user) {
             throw new RestException(404, "User not found");
         }
 

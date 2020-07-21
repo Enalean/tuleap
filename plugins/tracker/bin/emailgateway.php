@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../../src/www/include/pre.php';
 
 $fd = fopen("php://stdin", "r");
 $raw_mail = "";
-while (!feof($fd)) {
+while (! feof($fd)) {
     $raw_mail .= fread($fd, 1024);
 }
 fclose($fd);

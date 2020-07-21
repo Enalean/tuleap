@@ -56,7 +56,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
-            if (!isset($args['order'])) {
+            if (! isset($args['order'])) {
                 $args['order'] = 'reverse';
             }
         } else {
@@ -70,7 +70,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                 $args['user'] = '';
             }
         }
-        if (!$args['user'] or $args['user'] == ADMIN_USER) {
+        if (! $args['user'] or $args['user'] == ADMIN_USER) {
             if (BLOG_EMPTY_DEFAULT_PREFIX) {
                 $args['user'] = '';         // "Blogs/day" pages
             } else {
@@ -85,7 +85,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
         //    unset($pagelist->_columns['pagename']);
 
         $sp = HTML::Raw('&middot; ');
-        if (!empty($args['month'])) {
+        if (! empty($args['month'])) {
             $prefix = $parent . $this->_blogPrefix('wikiblog') . SUBPAGE_SEPARATOR . $args['month'];
             $pages = $dbi->titleSearch(new TextSearchQuery("^" . $prefix, true, 'posix'));
             $html = HTML::ul();
@@ -97,7 +97,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                 $blog = $this->_blog($rev);
                 $html->pushContent(HTML::li(WikiLink($page, 'known', $rev->get('summary'))));
             }
-            if (!$args['noheader']) {
+            if (! $args['noheader']) {
                 return HTML(
                     HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
                     $html
@@ -109,7 +109,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
 
         $blogs = $this->findBlogs($dbi, $args['user'], 'wikiblog');
         if ($blogs) {
-            if (!$basepage) {
+            if (! $basepage) {
                 $basepage = _("BlogArchives");
             }
             $html = HTML::ul();
@@ -142,7 +142,7 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
                     $m['title'] . " (" . $m['num'] . ")"
                 )));
             }
-            if (!$args['noheader']) {
+            if (! $args['noheader']) {
                 return HTML(HTML::h3(_("Blog Archives:")), $html);
             } else {
                 return $html;
@@ -155,10 +155,10 @@ class WikiPlugin_BlogArchives extends WikiPlugin_WikiBlog
     // box is used to display a fixed-width, narrow version with common header
     public function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) {
+        if (! $request) {
             $request = $GLOBALS['request'];
         }
-        if (!$args or empty($args['limit'])) {
+        if (! $args or empty($args['limit'])) {
             $args['limit'] = 10;
         }
         $args['noheader'] = 1;

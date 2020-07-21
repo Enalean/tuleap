@@ -77,13 +77,13 @@ class Tracker_Permission_PermissionPresenterBuilder
                 $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
                     Tracker_Permission_Command::PERMISSION_ASSIGNEE,
                     dgettext('tuleap-tracker', 'have access to artifacts assigned to group'),
-                    (isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && !isset($permissions[Tracker::PERMISSION_SUBMITTER]))
+                    (isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && ! isset($permissions[Tracker::PERMISSION_SUBMITTER]))
                 );
 
                 $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(
                     Tracker_Permission_Command::PERMISSION_SUBMITTER,
                     dgettext('tuleap-tracker', 'have access to artifacts submitted by group'),
-                    !isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
+                    ! isset($permissions[Tracker::PERMISSION_ASSIGNEE]) && isset($permissions[Tracker::PERMISSION_SUBMITTER])
                 );
 
                 $permission_type_list[] = new Tracker_Permission_PermissionTypePresenter(

@@ -64,7 +64,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
                 WHERE repository_id = ? AND repository_deletion_date = "0000-00-00 00:00:00"';
         $result = $this->getDB()->run($sql, $id);
 
-        return !empty($result) && count($result) === 1;
+        return ! empty($result) && count($result) === 1;
     }
 
     public function initialize($repositoryId)
@@ -90,7 +90,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
 
         try {
             $parent   = $repository->getParent();
-            if (!empty($parent)) {
+            if (! empty($parent)) {
                 $parentId = $parent->getId();
             }
         } catch (GitDaoException $e) {
@@ -353,7 +353,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         } catch (PDOException $ex) {
             return false;
         }
-        return !empty($result);
+        return ! empty($result);
     }
 
     /**

@@ -88,11 +88,11 @@ class WebDAVFRS extends Sabre_DAV_Directory
         // Check for errors
 
         // Check if Package exists
-        if (!$package->exist()) {
+        if (! $package->exist()) {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'package_not_available'));
         }
 
-        if (!$package->userCanRead($this->getUser())) {
+        if (! $package->userCanRead($this->getUser())) {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
         }
 
@@ -257,7 +257,7 @@ class WebDAVFRS extends Sabre_DAV_Directory
     {
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
-            if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {
+            if (! $utils->getPackageFactory()->isPackageNameExist($name, $this->getGroupId())) {
                 $packageData['name'] = htmlspecialchars($name);
                 $packageData['group_id'] = $this->getGroupId();
                 $packageData['status_id'] = 1;

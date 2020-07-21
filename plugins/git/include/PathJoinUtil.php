@@ -27,7 +27,7 @@ final class PathJoinUtil
 {
     private static function notEmpty($e): bool
     {
-        return !empty($e) || $e === '0';
+        return ! empty($e) || $e === '0';
     }
 
     public static function unixPathJoin(array $elements): string

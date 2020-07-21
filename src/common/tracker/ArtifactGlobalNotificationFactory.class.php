@@ -57,7 +57,7 @@ class ArtifactGlobalNotificationFactory
         $dao = new ArtifactGlobalNotificationDao(CodendiDataAccess::instance());
         $feedback = '';
         $arr_email_address = preg_split('/[,;]/D', $data['addresses']);
-        if (!util_validateCCList($arr_email_address, $feedback, false)) {
+        if (! util_validateCCList($arr_email_address, $feedback, false)) {
             $GLOBALS['Response']->addFeedback('error', $feedback);
         } else {
             $data['addresses'] = util_cleanup_emails(implode(', ', $arr_email_address));
@@ -73,7 +73,7 @@ class ArtifactGlobalNotificationFactory
         $addresses = array();
         $notifs = $this->getGlobalNotificationsForTracker($tracker_id);
         foreach ($notifs as $key => $nop) {
-            if (!$update || $notifs[$key]->isAllUpdates()) {
+            if (! $update || $notifs[$key]->isAllUpdates()) {
                 foreach (preg_split('/[,;]/D', $notifs[$key]->getAddresses()) as $address) {
                     $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
                 }

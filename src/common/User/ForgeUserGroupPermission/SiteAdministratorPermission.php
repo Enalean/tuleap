@@ -48,7 +48,7 @@ class SiteAdministratorPermission extends User_ForgeUserGroupPermission
 
     public function getCannotRemoveLabel()
     {
-        return  _('You can\'t remove the last platform administration permission.');
+        return _('You can\'t remove the last platform administration permission.');
     }
 
     private function getPermissionChecker()

@@ -61,7 +61,7 @@ class Docman_ItemFactory
      */
     public static function instance($group_id)
     {
-        if (!isset(self::$instance[$group_id])) {
+        if (! isset(self::$instance[$group_id])) {
             self::$instance[$group_id] = new Docman_ItemFactory($group_id);
         }
         return self::$instance[$group_id];
@@ -315,7 +315,7 @@ class Docman_ItemFactory
         $dar = $dao->searchById($id, $params);
 
         $item = null;
-        if (!$dar->isError() && $dar->valid()) {
+        if (! $dar->isError() && $dar->valid()) {
             $row  = $dar->current();
             $item = Docman_ItemFactory::getItemFromRow($row);
         }
@@ -329,7 +329,7 @@ class Docman_ItemFactory
         $itemArray = array();
 
         $dar = $dao->searchByParentsId(array($item->getId()));
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             while ($dar->valid()) {
                 $row = $dar->current();
 
@@ -474,7 +474,7 @@ class Docman_ItemFactory
     {
         // {{1}} Exclude collapsed items
         $expandedFolders = array();
-        if (!$expandAll) {
+        if (! $expandAll) {
             $fld = $this->_getExpandedUserPrefs($rootItem->getId(), $user->getId());
             foreach ($fld as $v) {
                 $expandedFolders[$v] = true;
@@ -495,7 +495,7 @@ class Docman_ItemFactory
             $parentIds = array();
             $itemIds = array();
             $itemRows = array();
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 $dar->rewind();
                 while ($dar->valid()) {
                     $row = $dar->current();
@@ -583,7 +583,7 @@ class Docman_ItemFactory
             $parentIds = array();
             $itemIds   = array();
             $itemRows = array();
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 $dar->rewind();
                 while ($dar->valid()) {
                     $row = $dar->current();
@@ -626,7 +626,7 @@ class Docman_ItemFactory
         }
 
         $nbItemsFound = 0;
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $this->preloadItemPerms($dar, $user, $this->groupId);
             $dar->rewind();
             while ($dar->valid()) {
@@ -681,7 +681,7 @@ class Docman_ItemFactory
      */
     public function getItemList($id, &$nbItemsFound, $params = null)
     {
-        if (!$id) {
+        if (! $id) {
             $dao = $this->_getItemDao();
             $id = $dao->searchRootIdForGroupId($this->groupId);
         }
@@ -939,10 +939,10 @@ class Docman_ItemFactory
      */
     public function isItemTheOnlyChildOfRoot($groupId)
     {
-        if (!isset($this->onlyOneChildForRoot[$groupId])) {
+        if (! isset($this->onlyOneChildForRoot[$groupId])) {
             $dao = $this->_getItemDao();
             $dar = $dao->hasRootOnlyOneChild($groupId);
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 if ($dar->rowCount() > 1) {
                     $this->onlyOneChildForRoot[$groupId] = false;
                 } elseif ($dar->rowCount() == 0) {
@@ -1025,7 +1025,7 @@ class Docman_ItemFactory
         $parents = array($item_id);
         do {
             $dar = $dao->searchByParentsId($parents);
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 $parents = array();
                 while ($dar->valid()) {
                     $row = $dar->current();
@@ -1062,7 +1062,7 @@ class Docman_ItemFactory
         $dpm = Docman_PermissionsManager::instance($this->groupId);
         $dpm->retreiveReadPermissionsForItems($itemIds, $user);
         foreach ($itemArray as $item) {
-            if (!$dpm->userCanRead($user, $item->getId())) {
+            if (! $dpm->userCanRead($user, $item->getId())) {
                 unset($itemList[$item->getId()]);
                 unset($orphans[$item->getId()]);
             }
@@ -1083,7 +1083,7 @@ class Docman_ItemFactory
             // If some items are missing, look for them in the DB.
             if (is_array($wantedItems) && count($wantedItems) > 0) {
                 $dar = $dao->searchByIdList($wantedItems);
-                if ($dar && !$dar->isError()) {
+                if ($dar && ! $dar->isError()) {
                     $this->preloadItemPerms($dar, $user, $this->groupId);
                     while ($dar->valid()) {
                         $row = $dar->current();
@@ -1144,7 +1144,7 @@ class Docman_ItemFactory
                             unset($orphans[$itemId]);
                         }
                     } else {
-                        if (!isset($orphans[$itemId])) {
+                        if (! isset($orphans[$itemId])) {
                             $orphans[$itemId] = $itemId;
                         }
                         $wantedItems[] = $pid;
@@ -1175,7 +1175,7 @@ class Docman_ItemFactory
      */
     public function getRoot($group_id)
     {
-        if (!isset($this->rootItems[$group_id])) {
+        if (! isset($this->rootItems[$group_id])) {
             $dao = $this->_getItemDao();
             $id = $dao->searchRootIdForGroupId($group_id);
             $this->rootItems[$group_id] = $this->getItemFromDb($id);
@@ -1277,7 +1277,7 @@ class Docman_ItemFactory
      */
     public function getCutPreference($user, $groupId = null)
     {
-        if (!isset($this->cutItem[$user->getId()])) {
+        if (! isset($this->cutItem[$user->getId()])) {
             $cutId = false;
             $id = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_cut');
             if ($groupId !== null && $id !== false) {
@@ -1293,7 +1293,7 @@ class Docman_ItemFactory
 
     public function getCopyPreference($user)
     {
-        if (!isset($this->copiedItem[$user->getId()])) {
+        if (! isset($this->copiedItem[$user->getId()])) {
             $this->copiedItem[$user->getId()] = user_get_preference(PLUGIN_DOCMAN_PREF . '_item_copy');
         }
         return $this->copiedItem[$user->getId()];
@@ -1377,7 +1377,7 @@ class Docman_ItemFactory
                 $class = get_class($item);
                 $type = strtolower(substr(strrchr($class, '_'), 1));
 
-                if (!isset($stats['types'][$type])) {
+                if (! isset($stats['types'][$type])) {
                     $stats['types'][$type] = 0;
                 }
 
@@ -1391,7 +1391,7 @@ class Docman_ItemFactory
                 } elseif ($type == 'folder') {
                     $childStats = $this->getFolderTreeStats($item);
                     foreach ($childStats['types'] as $k => $v) {
-                        if (!isset($stats['types'][$k])) {
+                        if (! isset($stats['types'][$k])) {
                             $stats['types'][$k] = 0;
                         }
                         $stats['types'][$k] += $v;
@@ -1475,7 +1475,7 @@ class Docman_ItemFactory
                 $user = $this->_getUserManager()->getCurrentUser();
                 try {
                     foreach ($rootChildren as $children) {
-                        if (!$this->deleteSubTree($children, $user, true)) {
+                        if (! $this->deleteSubTree($children, $user, true)) {
                             $deleteStatus = false;
                         }
                     }
@@ -1503,7 +1503,7 @@ class Docman_ItemFactory
      */
     public function deleteSubTree(Docman_Item $item, PFUser $user, $cascadeWiki)
     {
-        if ($item && !$this->isRoot($item)) {
+        if ($item && ! $this->isRoot($item)) {
             // Cannot delete one folder if at least on of the document inside
             // cannot be deleted
             $dPm = Docman_PermissionsManager::instance($item->getGroupId());
@@ -1552,7 +1552,7 @@ class Docman_ItemFactory
     {
         $dao = $this->_getItemDao();
         $dar = $dao->listItemsToPurge($time);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $item = new Docman_Item($row);
                 $this->purgeDeletedItem($item);
@@ -1599,7 +1599,7 @@ class Docman_ItemFactory
             }
         }
 
-        if (!$isFile || $oneRestored) {
+        if (! $isFile || $oneRestored) {
             // Log the event
             $user = $this->_getUserManager()->getCurrentUser();
             $this->_getEventManager()->processEvent('plugin_docman_event_restore', array(

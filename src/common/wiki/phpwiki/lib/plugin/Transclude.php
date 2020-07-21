@@ -78,7 +78,7 @@ class WikiPlugin_Transclude extends WikiPlugin
         $args = ($this->getArgs($argstr, $request));
         extract($args);
 
-        if (!$src) {
+        if (! $src) {
             return $this->error(fmt("%s parameter missing", "'src'"));
         }
         // FIXME: Better recursion detection.

@@ -34,7 +34,7 @@ class BackendAliases extends Backend
      */
     protected function getMailingListDao()
     {
-        if (!$this->mailinglistdao) {
+        if (! $this->mailinglistdao) {
             $this->mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
         }
         return $this->mailinglistdao;
@@ -75,7 +75,7 @@ class BackendAliases extends Backend
         $alias_file_new = $alias_file . ".new";
         $alias_file_old = $alias_file . ".old";
 
-        if (!$fp = fopen($alias_file_new, 'w')) {
+        if (! $fp = fopen($alias_file_new, 'w')) {
             $this->log("Can't open file for writing: $alias_file_new", Backend::LOG_ERROR);
             return false;
         }
@@ -91,7 +91,7 @@ class BackendAliases extends Backend
         fclose($fp);
 
         // Replace current file by new one
-        if (!$this->installNewFileVersion($alias_file_new, $alias_file, $alias_file_old, true)) {
+        if (! $this->installNewFileVersion($alias_file_new, $alias_file, $alias_file_old, true)) {
             return false;
         }
 

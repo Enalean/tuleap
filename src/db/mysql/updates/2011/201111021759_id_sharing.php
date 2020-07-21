@@ -92,10 +92,10 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_idsharing_tracker')) {
+        if (! $this->db->tableNameExists('tracker_idsharing_tracker')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_idsharing_tracker table is missing');
         }
-        if (!$this->db->tableNameExists('tracker_idsharing_artifact')) {
+        if (! $this->db->tableNameExists('tracker_idsharing_artifact')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_idsharing_artifact table is missing');
         }
     }

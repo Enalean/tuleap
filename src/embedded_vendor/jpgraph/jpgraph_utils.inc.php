@@ -109,7 +109,7 @@ class DateScaleUtils
                 for ($y = self::$startyear; $y <= self::$endyear; ++$y) {
                     if ($aMinor) {
                         while ($m <= 12) {
-                            if (!($y == self::$endyear && $m > self::$endmonth)) {
+                            if (! ($y == self::$endyear && $m > self::$endmonth)) {
                                 self::$minTickPositions[$j++] = mktime(0, 0, 0, $m, 1, $y);
                             }
                             ++$m;
@@ -279,7 +279,7 @@ class DateScaleUtils
                         // Set minor tick at the middle of the month
                         if ($aMinor) {
                             if ($m <= $stopmonth) {
-                                if (!($y == self::$endyear && $m == $stopmonth && self::$endday < 15)) {
+                                if (! ($y == self::$endyear && $m == $stopmonth && self::$endday < 15)) {
                                     self::$minTickPositions[$j++] = mktime(0, 0, 0, $m, 15, $y);
                                 }
                             }
@@ -540,10 +540,10 @@ class ReadFileData
             }
 
             // fgetcsv returns NULL for empty lines
-            if (!is_null($aLine)) {
+            if (! is_null($aLine)) {
                 $num_lines++;
 
-                if (!($aOptions['ignore_first'] && $num_lines == 1) && is_numeric($aLine[0])) {
+                if (! ($aOptions['ignore_first'] && $num_lines == 1) && is_numeric($aLine[0])) {
                     for ($i = 0; $i < $num_cols; $i++) {
                         $aData[$keys[$i]][] = floatval($aLine[$i]);
                     }

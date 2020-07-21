@@ -47,7 +47,7 @@ class CacheableMarkup extends XmlContent
 
     public function unpack($packed)
     {
-        if (!$packed) {
+        if (! $packed) {
             return false;
         }
 
@@ -97,11 +97,11 @@ class CacheableMarkup extends XmlContent
 
         $links = array();
         foreach ($this->_content as $item) {
-            if (!isa($item, 'Cached_DynamicContent')) {
+            if (! isa($item, 'Cached_DynamicContent')) {
                 continue;
             }
 
-            if (!($item_links = $item->getWikiPageLinks($this->_basepage))) {
+            if (! ($item_links = $item->getWikiPageLinks($this->_basepage))) {
                 continue;
             }
             foreach ($item_links as $pagename) {
@@ -120,7 +120,7 @@ class CacheableMarkup extends XmlContent
             foreach ($item as $subitem) {
                 $this->_append($subitem);
             }
-        } elseif (!is_object($item)) {
+        } elseif (! is_object($item)) {
             $purifier    = Codendi_HTMLPurifier::instance();
             $this->_buf .= $purifier->purify((string) $item, CODENDI_PURIFIER_BASIC_NOBR, GROUP_ID);
         } elseif (isa($item, 'Cached_DynamicContent')) {
@@ -139,11 +139,11 @@ class CacheableMarkup extends XmlContent
                 }
                 $this->_buf .= "</$item->_tag>";
 
-                if (!isset($this->_description) and $item->getTag() == 'p') {
+                if (! isset($this->_description) and $item->getTag() == 'p') {
                     $this->_glean_description($item->asString());
                 }
             }
-            if (!$item->isInlineElement()) {
+            if (! $item->isInlineElement()) {
                 $this->_buf .= "\n";
             }
         } elseif (isa($item, 'XmlContent')) {
@@ -162,13 +162,13 @@ class CacheableMarkup extends XmlContent
     public function _glean_description($text)
     {
         static $two_sentences;
-        if (!$two_sentences) {
+        if (! $two_sentences) {
             $two_sentences = "[.?!][\")]*\s+[\"(]*[[:upper:])]"
                              . ".*"
                              . "[.?!][\")]*\s*[\"(]*([[:upper:])]|$)";
         }
 
-        if (!isset($this->_description) and preg_match("/$two_sentences/sx", $text)) {
+        if (! isset($this->_description) and preg_match("/$two_sentences/sx", $text)) {
             $this->_description = preg_replace("/\s*\n\s*/", " ", trim($text));
         }
     }
@@ -434,7 +434,7 @@ class Cached_ExternalLink extends Cached_Link
             // Ignores nofollow when the user who saved the page was authenticated.
             $page = $request->getPage($basepage);
             $current = $page->getCurrentRevision();
-            if (!$current->get('author_id')) {
+            if (! $current->get('author_id')) {
                 $link->setAttr('rel', 'nofollow');
             }
         }
@@ -544,7 +544,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent
         if (isset($this->_tightenable)) {
             if ($this->_tightenable == 3) {
                 $span = HTML::span(array('class' => 'plugin'), $xml);
-                if (!empty($id)) {
+                if (! empty($id)) {
                     $span->setAttr('id', $id);
                 }
                 return $span;
@@ -553,7 +553,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent
             $div->setInClass('top', ($this->_tightenable & 1) != 0);
             $div->setInClass('bottom', ($this->_tightenable & 2) != 0);
         }
-        if (!empty($id)) {
+        if (! empty($id)) {
             $div->setAttr('id', $id);
         }
         $div->pushContent($xml);
@@ -577,7 +577,7 @@ class Cached_PluginInvocation extends Cached_DynamicContent
     {
         static $loader = false;
 
-        if (!$loader) {
+        if (! $loader) {
             include_once('lib/WikiPlugin.php');
             $loader = new WikiPluginLoader();
         }

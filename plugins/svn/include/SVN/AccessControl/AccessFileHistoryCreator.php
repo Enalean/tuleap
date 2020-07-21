@@ -126,7 +126,7 @@ class AccessFileHistoryCreator
      */
     private function saveAccessFile(Repository $repository, AccessFileHistory $history, SVN_AccessFile_Writer $access_file_writer)
     {
-        if (!$access_file_writer->write_with_defaults($history->getContent())) {
+        if (! $access_file_writer->write_with_defaults($history->getContent())) {
             $this->checkAccessFileWriteError($repository, $access_file_writer);
         }
     }
@@ -170,7 +170,7 @@ class AccessFileHistoryCreator
             $content,
             $timestamp
         );
-        if (!$this->dao->create($file_history)) {
+        if (! $this->dao->create($file_history)) {
             throw new CannotCreateAccessFileHistoryException(
                 dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );
@@ -208,7 +208,7 @@ class AccessFileHistoryCreator
 
     private function saveUsedVersion(Repository $repository, $version_id)
     {
-        if (!$this->dao->useAVersion($repository->getId(), $version_id)) {
+        if (! $this->dao->useAVersion($repository->getId(), $version_id)) {
             throw new CannotCreateAccessFileHistoryException(
                 dgettext('tuleap-svn', 'Unable to update Access Control File.')
             );

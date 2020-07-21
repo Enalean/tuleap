@@ -162,7 +162,7 @@ class Docman_NotificationsManager
         foreach ($this->notifications as $notification) {
             $success &= $this->mail_builder->buildAndSendEmail($this->project, $notification, new MailEnhancer());
         }
-        if (!$success) {
+        if (! $success) {
             $this->_feedback->log('warning', 'Error when sending some notifications.');
         }
     }
@@ -229,7 +229,7 @@ class Docman_NotificationsManager
 
     protected function _addMessage(PFUser $to, $subject, $msg, $link)
     {
-        if (!isset($this->notifications[$msg])) {
+        if (! isset($this->notifications[$msg])) {
             $subject = '[' . $this->_group_name . ' - Documents] ' . $subject;
 
             $this->notifications[$msg] = new Notification(
@@ -247,7 +247,7 @@ class Docman_NotificationsManager
     protected function getMessageLink($type, $params)
     {
         if ($this->project->getTruncatedEmailsUsage()) {
-            return  $this->url_provider->getHistoryUrl($params['item']);
+            return $this->url_provider->getHistoryUrl($params['item']);
         }
 
         switch ($type) {

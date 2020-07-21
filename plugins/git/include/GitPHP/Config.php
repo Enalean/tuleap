@@ -72,7 +72,7 @@ class Config
      */
     public static function GetInstance() // @codingStandardsIgnoreLine
     {
-        if (!self::$instance) {
+        if (! self::$instance) {
             self::$instance = new Config();
         }
         return self::$instance;
@@ -89,11 +89,11 @@ class Config
      */
     public function LoadConfig($configFile) // @codingStandardsIgnoreLine
     {
-        if (!is_file($configFile)) {
+        if (! is_file($configFile)) {
             throw new MessageException('Could not load config file ' . $configFile, true, 500);
         }
 
-        if (!include($configFile)) {
+        if (! include($configFile)) {
             throw new MessageException('Could not read config file ' . $configFile, true, 500);
         }
 

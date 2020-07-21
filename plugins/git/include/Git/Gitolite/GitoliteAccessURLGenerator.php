@@ -46,7 +46,7 @@ class GitoliteAccessURLGenerator
         } elseif (! $ssh_url) {
             $ssh_url = 'ssh://gitolite@' . ForgeConfig::get('sys_default_domain');
         }
-        return  $ssh_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
+        return $ssh_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
     }
 
     /**
@@ -56,7 +56,7 @@ class GitoliteAccessURLGenerator
     {
         $http_url = $this->getConfigurationParameter('git_http_url');
         if ($http_url) {
-            return  $http_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
+            return $http_url . '/' . $repository->getProject()->getUnixName() . '/' . $repository->getFullName() . '.git';
         }
         return '';
     }

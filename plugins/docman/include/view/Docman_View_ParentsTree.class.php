@@ -58,8 +58,8 @@ class Docman_View_ParentsTree /* implements Visitor*/
     {
         $hp = Codendi_HTMLPurifier::instance();
         $selected = '';
-        if (!isset($params['selected']) || !$params['selected']) {
-            if ($this->docman->userCanWrite($folder['id']) && (!$params['select'] || $params['select'] == $folder['id'])) {
+        if (! isset($params['selected']) || ! $params['selected']) {
+            if ($this->docman->userCanWrite($folder['id']) && (! $params['select'] || $params['select'] == $folder['id'])) {
                 $selected = 'checked="checked"';
                 $params['selected'] = true;
             }
@@ -90,7 +90,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
 
     public function _itemCanBeFetched(&$item, $params)
     {
-        $ok = !isset($params['excludes']) || !in_array($item->getId(), $params['excludes']);
+        $ok = ! isset($params['excludes']) || ! in_array($item->getId(), $params['excludes']);
         return $ok;
     }
 

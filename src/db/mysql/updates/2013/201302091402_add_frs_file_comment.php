@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('frs_file', 'comment')) {
+        if (! $this->db->columnNameExists('frs_file', 'comment')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column comment not created in system_event');
         }
     }

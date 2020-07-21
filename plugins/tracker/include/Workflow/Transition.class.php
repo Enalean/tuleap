@@ -130,13 +130,13 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
         return is_null($source_from) && is_null($target_from) && is_null($source_to) && is_null($target_to)
 
-            || is_null($source_from) && is_null($target_from) && !is_null($source_to) && !is_null($target_to)
+            || is_null($source_from) && is_null($target_from) && ! is_null($source_to) && ! is_null($target_to)
                 && $source_to->getId() === $target_to->getId()
 
-            || !is_null($source_from) && !is_null($target_from) && is_null($source_to) && is_null($target_to)
+            || ! is_null($source_from) && ! is_null($target_from) && is_null($source_to) && is_null($target_to)
                 && $source_from->getId() === $target_from->getId()
 
-            || !is_null($source_from) && !is_null($target_from) && !is_null($source_to) && !is_null($target_to)
+            || ! is_null($source_from) && ! is_null($target_from) && ! is_null($source_to) && ! is_null($target_to)
                 && $source_from->getId() === $target_from->getId() && $source_to->getId() === $target_to->getId();
     }
 
@@ -178,7 +178,7 @@ class Transition // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getWorkflow()
     {
-        if (!$this->workflow) {
+        if (! $this->workflow) {
             $this->workflow = WorkflowFactory::instance()->getWorkflow($this->workflow_id);
         }
         if ($this->workflow === null) {

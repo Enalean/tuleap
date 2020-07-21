@@ -136,7 +136,7 @@ class GitRepositoryManager
      */
     private function initRepository(GitRepository $repository, GitRepositoryCreator $creator)
     {
-        if (!$creator->isNameValid($repository->getName())) {
+        if (! $creator->isNameValid($repository->getName())) {
             throw new GitRepositoryNameIsInvalidException(
                 sprintf(dgettext('tuleap-git', 'Repository name is not well formatted. Allowed characters: %1$s and max length is %2$s, no slashes at the beginning or the end, it also must not finish with ".git".'), $creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)
             );
@@ -356,7 +356,7 @@ class GitRepositoryManager
             $ns_chunk = explode('/', $namespace);
             foreach ($ns_chunk as $chunk) {
                 //TODO use creator
-                if (!$repository->getBackend()->isNameValid($chunk)) {
+                if (! $repository->getBackend()->isNameValid($chunk)) {
                     throw new Exception(dgettext('tuleap-git', 'Invalid namespace, please only use alphanumeric characters.'));
                 }
             }

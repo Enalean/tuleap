@@ -49,13 +49,13 @@ class Tracker_Report_Renderer_Table_SortDao extends DataAccessObject
     {
         $renderer_id = $this->da->escapeInt($renderer_id);
         $field_id    = $this->da->escapeInt($field_id);
-        if (!isset($rank)) {
+        if (! isset($rank)) {
             $rank        = (int) $this->prepareRanking('tracker_report_renderer_table_sort', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);
         }
 
-        if (!isset($is_desc)) {
+        if (! isset($is_desc)) {
             $is_desc = 0;
         } else {
             $is_desc = $this->da->escapeInt($is_desc);

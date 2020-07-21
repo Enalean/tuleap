@@ -21,7 +21,7 @@
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if (!$request->valid($vGroupId)) {
+if (! $request->valid($vGroupId)) {
     exit_no_group(); // need a group_id !!!
 } else {
     $group_id = $request->get('group_id');
@@ -58,7 +58,7 @@ if (!$request->valid($vGroupId)) {
     $vOrder = new Valid_WhiteList('order', array('revision', 'description', 'date', 'who'));
 
     // Morder
-    if (user_isloggedin() && !$request->existAndNonEmpty('morder')) {
+    if (user_isloggedin() && ! $request->existAndNonEmpty('morder')) {
         $morder = user_get_preference('svn_commit_browse_order' . $group_id);
     }
     $vMorder = new Valid_String('morder');
@@ -147,7 +147,7 @@ if (!$request->valid($vGroupId)) {
 
     $vSet = new Valid_WhiteList('set', array('custom', 'my', 'any'));
     $vSet->required();
-    if (!$request->valid($vSet)) {
+    if (! $request->valid($vSet)) {
         /*
          if no set is passed in, see if a preference was set
          if no preference or not logged in, use my set
@@ -156,7 +156,7 @@ if (!$request->valid($vGroupId)) {
             $custom_pref = user_get_preference('svn_commits_browcust' . $group_id);
             if ($custom_pref) {
                 $pref_arr = explode('|', $custom_pref);
-                if (!$_rev_id) {
+                if (! $_rev_id) {
                     $_rev_id = $pref_arr[0];
                 }
                 $_commiter = $pref_arr[1];

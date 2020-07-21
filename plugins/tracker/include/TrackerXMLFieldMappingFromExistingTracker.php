@@ -56,7 +56,7 @@ class TrackerXMLFieldMappingFromExistingTracker
     {
         $all_form_elements[(string) $xml_form_element->name] = $xml_form_element;
 
-        if (!isset($xml_form_element->formElements)) {
+        if (! isset($xml_form_element->formElements)) {
             return;
         }
 

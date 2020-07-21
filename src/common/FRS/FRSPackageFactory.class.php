@@ -75,7 +75,7 @@ class FRSPackageFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -94,7 +94,7 @@ class FRSPackageFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -114,7 +114,7 @@ class FRSPackageFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -137,7 +137,7 @@ class FRSPackageFactory
         $dar = $dao->searchByGroupId($_id);
 
         $packages = array();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $data_array) {
                 $packages[] = $this->getFRSPackageFromArray($data_array);
             }
@@ -168,7 +168,7 @@ class FRSPackageFactory
     private function instantiateActivePackagesForUserFromDar($group_id, PFUser $user, LegacyDataAccessResultInterface $dar)
     {
         $packages = array();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $frsrf = new FRSReleaseFactory();
 
             foreach ($dar as $data_array) {
@@ -210,7 +210,7 @@ class FRSPackageFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         } else {
             $res = $dar->current();
@@ -318,7 +318,7 @@ class FRSPackageFactory
     {
         $package = $this->getFRSPackageFromDb($package_id, $group_id);
 
-        if (!$package_id) {
+        if (! $package_id) {
             //package not found for this project
             return false;
         } else {
@@ -339,9 +339,9 @@ class FRSPackageFactory
     {
         $deleteState = true;
         $resPackages = $this->getFRSPackagesFromDb($groupId);
-        if (!empty($resPackages)) {
+        if (! empty($resPackages)) {
             foreach ($resPackages as $package) {
-                if (!$this->delete_package($groupId, $package->getPackageID())) {
+                if (! $this->delete_package($groupId, $package->getPackageID())) {
                     $deleteState = false;
                 }
             }
@@ -485,7 +485,7 @@ class FRSPackageFactory
     public $dao;
     public function _getFRSPackageDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new FRSPackageDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
         }
         return $this->dao;

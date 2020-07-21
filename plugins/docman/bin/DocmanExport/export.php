@@ -47,7 +47,7 @@ function usage()
     $consoleLogger->error("Usage: export.php groupId targetname");
 }
 
-if (!isset($argv[2])) {
+if (! isset($argv[2])) {
     $consoleLogger->error("No target directory specified");
     usage();
     return false;

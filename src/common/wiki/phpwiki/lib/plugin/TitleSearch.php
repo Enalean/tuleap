@@ -105,9 +105,9 @@ class WikiPlugin_TitleSearch extends WikiPlugin
         }
         // Provide an unknown WikiWord link to allow for page creation
         // when a search returns no results
-        if (!$args['noheader']) {
+        if (! $args['noheader']) {
             $s = $args['s'];
-            if (!$pagelist->getTotal() and !$query->_regex) {
+            if (! $pagelist->getTotal() and ! $query->_regex) {
                 $s = WikiLink($args['s'], 'auto');
             }
             $pagelist->setCaption(fmt("Title search results for '%s'", $s));

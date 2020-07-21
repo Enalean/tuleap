@@ -49,6 +49,6 @@ abstract class User_ForgeUserGroupPermission
 
     public function getCannotRemoveLabel()
     {
-        return  "";
+        return "";
     }
 }

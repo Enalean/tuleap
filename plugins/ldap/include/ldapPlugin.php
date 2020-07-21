@@ -185,7 +185,7 @@ class LdapPlugin extends Plugin
      */
     public function getLdap()
     {
-        if (!isset($this->ldapInstance)) {
+        if (! isset($this->ldapInstance)) {
             $this->ldapInstance = $this->instanciateLDAP();
         }
         return $this->ldapInstance;
@@ -250,7 +250,7 @@ class LdapPlugin extends Plugin
      */
     public function getLdapUserManager()
     {
-        if (!isset($this->_ldapUmInstance)) {
+        if (! isset($this->_ldapUmInstance)) {
             $this->_ldapUmInstance = new LDAP_UserManager($this->getLdap(), LDAP_UserSync::instance());
         }
         return $this->_ldapUmInstance;
@@ -272,7 +272,7 @@ class LdapPlugin extends Plugin
      */
     public function ajax_search_user($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if ($this->isLDAPUserManagementEnabled() && !$params['codendiUserOnly']) {
+        if ($this->isLDAPUserManagementEnabled() && ! $params['codendiUserOnly']) {
             $params['pluginAnswered'] = true;
 
             $validEmail = isset($params['validEmail']) ? $params['validEmail'] : false;
@@ -378,7 +378,7 @@ class LdapPlugin extends Plugin
     {
         if ($this->isLdapAuthType()) {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
-            if (!$ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
+            if (! $ldapUserDao->alreadyLoggedInOnce(UserManager::instance()->getCurrentUser()->getId())) {
                 $return_to_arg = "";
                 if ($params['return_to']) {
                     $return_to_arg = '?return_to=' . urlencode($params['return_to']);
@@ -616,7 +616,7 @@ class LdapPlugin extends Plugin
             if ($ldapId !== false) {
                 $result = db_query("UPDATE user SET ldap_id='" . db_es($ldapId) . "' WHERE user_id=" . db_ei($params['user_id']));
             }
-            if (!$result) {
+            if (! $result) {
                 $GLOBALS['feedback'] .= ' ' . $Language->getText('admin_usergroup', 'error_upd_u');
                 echo db_error();
             } else {
@@ -849,7 +849,7 @@ class LdapPlugin extends Plugin
     {
         if ($params['ugroup_id']) {
             $ldapUserGroupManager = $this->getLdapUserGroupManager();
-            if (!$ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
+            if (! $ldapUserGroupManager->isMembersUpdateAllowed($params['ugroup_id'])) {
                 $params['allowed'] = false;
             }
         }

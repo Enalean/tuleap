@@ -39,7 +39,7 @@ class Docman_View_RawTree extends Docman_View_View
     }
     public function getActionOnIconForFolder(&$folder, $force_collapse = true)
     {
-        return $force_collapse || !(user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $folder->getGroupId() . '_' . $folder->getId()) === false) ? 'collapseFolder' : 'expandFolder';
+        return $force_collapse || ! (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $folder->getGroupId() . '_' . $folder->getId()) === false) ? 'collapseFolder' : 'expandFolder';
     }
     public function getClassForFolderLink()
     {

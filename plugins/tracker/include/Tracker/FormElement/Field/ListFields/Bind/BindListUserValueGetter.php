@@ -197,7 +197,7 @@ class BindListUserValueGetter
         $query = $this->getUsersSorted($sql, $order_by_sql);
         $rows  = $this->bind_defaultvalue_dao->retrieve($query);
 
-        if (!$rows) {
+        if (! $rows) {
             return [];
         }
 

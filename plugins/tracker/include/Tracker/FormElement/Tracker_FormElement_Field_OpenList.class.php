@@ -236,7 +236,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
-                $selected_values = !empty($value) ? $value->getListValues() : array();
+                $selected_values = ! empty($value) ? $value->getListValues() : array();
                 foreach ($selected_values as $value) {
                     if ($value->getId() != 100) {
                         $output .= $value->getLabel();
@@ -748,7 +748,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         $bindvalue_ids = array();
         foreach ($criteria_value as $key => $val) {
             $val = trim($val);
-            if (!$val) {
+            if (! $val) {
                 unset($criteria_value[$key]);
             } elseif ($val[0] === self::OPEN_PREFIX) {
                 if ($v = $this->getOpenValueById(substr($val, 1))) {

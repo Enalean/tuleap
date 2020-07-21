@@ -78,7 +78,7 @@ class SetFieldValueRepresentation extends PostActionRepresentation
      */
     public static function forDate($id, $field_id, $value)
     {
-        if (!array_key_exists($value, self::DATE_VALUE_MAPPING)) {
+        if (! array_key_exists($value, self::DATE_VALUE_MAPPING)) {
             throw new UnsupportedDateValueException($value, array_keys(self::DATE_VALUE_MAPPING));
         }
         return new self(

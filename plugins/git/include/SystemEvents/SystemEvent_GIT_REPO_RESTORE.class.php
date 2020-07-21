@@ -44,7 +44,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
         $parameters    = $this->getParametersAsArray();
         $repository_id = 0;
 
-        if (!empty($parameters[0])) {
+        if (! empty($parameters[0])) {
             $repository_id = (int) $parameters[0];
         } else {
             $this->error('Missing argument repository id');
@@ -59,7 +59,7 @@ class SystemEvent_GIT_REPO_RESTORE extends SystemEvent
             return false;
         }
 
-        if (!$repository->getBackend()->restoreArchivedRepository($repository)) {
+        if (! $repository->getBackend()->restoreArchivedRepository($repository)) {
             $this->error('Unable to restore repository : ' . $repository->getName());
             return false;
         }

@@ -81,7 +81,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
         $success = $this->insertArtifact($tracker, $user, $artifact, $submitted_on, 0);
-        if (!$success) {
+        if (! $success) {
             return false;
         }
         return $artifact;
@@ -99,7 +99,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
         CreatedFileURLMapping $url_mapping,
         TrackerImportConfig $tracker_import_config
     ): ?Tracker_Artifact_Changeset {
-        if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
+        if (! $this->fields_validator->validate($artifact, $user, $fields_data)) {
             return null;
         }
 
@@ -170,7 +170,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     ) {
         $artifact = $this->getBareArtifact($tracker, $submitted_on, $user->getId(), 0);
 
-        if (!$this->fields_validator->validate($artifact, $user, $fields_data)) {
+        if (! $this->fields_validator->validate($artifact, $user, $fields_data)) {
             $this->logger->debug(
                 sprintf('Creation of artifact in tracker #%d failed: fields are not valid', $tracker->getId())
             );
@@ -225,7 +225,7 @@ class Tracker_ArtifactCreator //phpcs:ignore
     ) {
         $use_artifact_permissions = 0;
         $id = $this->artifact_dao->create($tracker->id, $user->getId(), $submitted_on, $use_artifact_permissions);
-        if (!$id) {
+        if (! $id) {
             $this->logger->error(
                 sprintf('Insert of an artifact in tracker #%d failed', $tracker->getId())
             );

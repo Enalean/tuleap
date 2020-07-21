@@ -76,7 +76,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
     {
         $this->_args = $this->getArgs($argstr, $request);
         extract($this->_args);
-        if (!$page) {
+        if (! $page) {
             return '';
         }
 
@@ -91,7 +91,7 @@ class WikiPlugin_EditMetaData extends WikiPlugin
         if ($request->isPost() and $request->_user->isAdmin() and $request->getArg('metaedit')) {
             $metafield = trim($request->getArg('metafield'));
             $metavalue = trim($request->getArg('metavalue'));
-            if (!in_array($metafield, $readonly_pagemeta)) {
+            if (! in_array($metafield, $readonly_pagemeta)) {
                 if (preg_match('/^(.*?)\[(.*?)\]$/', $metafield, $matches)) {
                     list(,$array_field, $array_key) = $matches;
                     $array_value = $pagemeta[$array_field];

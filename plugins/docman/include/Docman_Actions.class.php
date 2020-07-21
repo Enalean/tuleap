@@ -348,7 +348,7 @@ class Docman_Actions extends Actions
                 if (isset($item['obsolescence_date']) && $item['obsolescence_date'] != 0) {
                     if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $item['obsolescence_date'], $d)) {
                         $item['obsolescence_date'] = mktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                    } elseif (!preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
+                    } elseif (! preg_match('/^[0-9]*$/', $item['obsolescence_date'])) {
                         $item['obsolescence_date'] = 0;
                     }
                 } else {
@@ -594,7 +594,7 @@ class Docman_Actions extends Actions
             if (isset($data['obsolescence_date']) && $data['obsolescence_date'] != 0) {
                 if (preg_match('/^([0-9]+)-([0-9]+)-([0-9]+)$/', $data['obsolescence_date'], $d)) {
                     $data['obsolescence_date'] = gmmktime(0, 0, 0, $d[2], $d[3], $d[1]);
-                } elseif (!preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
+                } elseif (! preg_match('/^[0-9]*$/', $data['obsolescence_date'])) {
                     $data['obsolescence_date'] = 0;
                 }
             }
@@ -776,7 +776,7 @@ class Docman_Actions extends Actions
     protected $filestorage;
     protected function _getFileStorage()
     {
-        if (!$this->filestorage) {
+        if (! $this->filestorage) {
             $this->filestorage = new Docman_FileStorage($this->_controler->getProperty('docman_root'));
         }
         return $this->filestorage;
@@ -795,7 +795,7 @@ class Docman_Actions extends Actions
     protected $version_factory;
     public function _getVersionFactory()
     {
-        if (!$this->version_factory) {
+        if (! $this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
         }
         return $this->version_factory;
@@ -803,7 +803,7 @@ class Docman_Actions extends Actions
     protected $permissions_manager;
     public function &_getPermissionsManagerInstance()
     {
-        if (!$this->permissions_manager) {
+        if (! $this->permissions_manager) {
             $this->permissions_manager = PermissionsManager::instance();
         }
         return $this->permissions_manager;
@@ -817,7 +817,7 @@ class Docman_Actions extends Actions
     protected $userManager;
     public function _getUserManagerInstance()
     {
-        if (!$this->userManager) {
+        if (! $this->userManager) {
             $this->userManager = UserManager::instance();
         }
         return $this->userManager;
@@ -1227,7 +1227,7 @@ class Docman_Actions extends Actions
     {
         /** @psalm-suppress DeprecatedFunction */
         [$return_code, $feedback] = permission_process_selection_form($_POST['group_id'], $_POST['permission_type'], $_POST['object_id'], $_POST['ugroups']);
-        if (!$return_code) {
+        if (! $return_code) {
             $this->_controler->feedback->log('error', $feedback);
         } else {
             $this->_controler->feedback->log('info', dgettext('tuleap-docman', 'Permissions successfully updated.'));
@@ -1279,7 +1279,7 @@ class Docman_Actions extends Actions
                 }
 
                 // Usage
-                if (!$md->isRequired()) {
+                if (! $md->isRequired()) {
                     $_useIt = (int) $request->get('use_it');
                     if ($_useIt === 1) {
                         $md->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
@@ -1465,7 +1465,7 @@ class Docman_Actions extends Actions
         if (
             $srcGo != false &&
             ($srcGo->isPublic() ||
-            (!$srcGo->isPublic() &&
+            (! $srcGo->isPublic() &&
             $srcGo->userIsMember()))
         ) {
             $mdFactory = new Docman_MetadataFactory($srcGo->getGroupId());
@@ -1480,32 +1480,32 @@ class Docman_Actions extends Actions
     public function monitor($params)
     {
         $user = $this->_controler->getUser();
-        if (!$user->isAnonymous()) {
+        if (! $user->isAnonymous()) {
             $something_happen  = false;
             $already_monitored = $this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId());
             $already_cascaded  = $this->_controler->notificationsManager->userExists($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE);
-            if ($params['monitor'] && !$already_monitored) {
+            if ($params['monitor'] && ! $already_monitored) {
                 //monitor
-                if (!$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
+                if (! $this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {
                     $this->_controler->feedback->log('error', "Unable to add monitoring on '" . $params['item']->getTitle() . "'.");
                 }
                 $something_happen = true;
-            } elseif (!$params['monitor'] && $already_monitored) {
+            } elseif (! $params['monitor'] && $already_monitored) {
                 //unmonitor
-                if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId())) {
+                if (! $this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId())) {
                     $this->_controler->feedback->log('error', "Unable to remove monitoring on '" . $params['item']->getTitle() . "'.");
                 }
                 $something_happen = true;
             }
-            if (isset($params['cascade']) && $params['cascade'] && $params['monitor'] && !$already_cascaded) {
+            if (isset($params['cascade']) && $params['cascade'] && $params['monitor'] && ! $already_cascaded) {
                 //cascade
-                if (!$this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if (! $this->_controler->notificationsManager->add($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $this->_controler->feedback->log('error', "Unable to add cascade on '" . $params['item']->getTitle() . "'.");
                 }
                 $something_happen = true;
-            } elseif (!(isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
+            } elseif (! (isset($params['cascade']) && $params['cascade'] && $params['monitor']) && $already_cascaded) {
                 //uncascade
-                if (!$this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
+                if (! $this->_controler->notificationsManager->removeUser($user->getId(), $params['item']->getId(), PLUGIN_DOCMAN_NOTIFICATION_CASCADE)) {
                     $this->_controler->feedback->log('error', "Unable to remove cascade on '" . $params['item']->getTitle() . "'.");
                 }
                 $something_happen = true;
@@ -1588,7 +1588,7 @@ class Docman_Actions extends Actions
     {
         $table = $atf->getTable();
         $newOwner = false;
-        if (!$table->isCustomizable()) {
+        if (! $table->isCustomizable()) {
             // Cannot set status of an old table to something else than 'close'
             // or 'deleted'
             if (
@@ -1606,10 +1606,10 @@ class Docman_Actions extends Actions
         // Change owner
         if ($newOwner === false) {
             $_owner = UserManager::instance()->findUser($owner);
-            if (!$_owner) {
+            if (! $_owner) {
                 $newOwner = $table->getOwner();
             } else {
-                if (!$_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
+                if (! $_owner->isAnonymous() && ($_owner->isActive() || $_owner->isRestricted())) {
                     $newOwner = $_owner->getId();
                 } else {
                     $newOwner = $table->getOwner();
@@ -1785,7 +1785,7 @@ class Docman_Actions extends Actions
         $tableEditable = false;
         if ($oldTable === null || ($import !== false && $import !== 'keep')) {
             $created = $atf->createTable($user->getId(), $import);
-            if (!$created) {
+            if (! $created) {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'An error occurred on approval table creation for this item.'));
             }
         }
@@ -1799,7 +1799,7 @@ class Docman_Actions extends Actions
         if ($tableEditable) {
             $this->_approval_update_settings($atf, $sStatus, $notification, $notificationOccurence, $description, $owner);
             $table = $atf->getTable();
-            if (!$table->isClosed()) {
+            if (! $table->isClosed()) {
                 $atrf = new Docman_ApprovalTableReviewerFactory($table, $item, $this->_controler->notificationsManager);
                 $this->_approval_update_add_users($atrf, $usUserList, $sUgroup);
                 if (is_array($sSelUser) && count($sSelUser) > 0) {
@@ -1907,7 +1907,7 @@ class Docman_Actions extends Actions
             if ($r->getScope() == 'I' && $r->getUserId() != $user->getId()) {
                 $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'You can not delete report you do not own. Cancel deletion.'));
             } else {
-                if ($r->getScope() == 'P' && !$this->_controler->userCanAdmin()) {
+                if ($r->getScope() == 'P' && ! $this->_controler->userCanAdmin()) {
                     $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Only admin can delete Project wide reports.'));
                 } else {
                     if ($reportFactory->deleteReport($r)) {
@@ -1962,7 +1962,7 @@ class Docman_Actions extends Actions
         if (
             $go != false &&
             ($go->isPublic() ||
-            (!$go->isPublic() &&
+            (! $go->isPublic() &&
             $go->userIsMember()))
         ) {
             $srcReportFactory = new Docman_ReportFactory($importGroupId);

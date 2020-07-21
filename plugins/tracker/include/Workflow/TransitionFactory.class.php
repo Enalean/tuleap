@@ -65,7 +65,7 @@ class TransitionFactory
      */
     public static function instance(): self
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self(
                 Workflow_Transition_ConditionFactory::build(),
                 EventManager::instance(),
@@ -87,7 +87,7 @@ class TransitionFactory
      */
     public function getInstanceFromRow($row, ?Workflow $workflow = null)
     {
-        if (!$workflow) {
+        if (! $workflow) {
             $workflow = WorkflowFactory::instance()->getWorkflow($row['workflow_id']);
         }
 
@@ -400,7 +400,7 @@ class TransitionFactory
         $pm = PermissionsManager::instance();
         $permission_type = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
         foreach ($ugroups_ids as $ugroup_id) {
-            if (!$pm->addPermission($permission_type, (int) $transition_id, $ugroup_id)) {
+            if (! $pm->addPermission($permission_type, (int) $transition_id, $ugroup_id)) {
                 return false;
             }
         }

@@ -194,13 +194,13 @@ class PiePlot
         $xp = floor($radius * cos($sa) + $xc);
         $yp = floor($yc - $radius * sin($sa));
         $coords .= ", $xp, $yp";
-        if (!empty($this->csimtargets[$i])) {
+        if (! empty($this->csimtargets[$i])) {
             $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtargets[$i] . "\"";
             $tmp = "";
-            if (!empty($this->csimwintargets[$i])) {
+            if (! empty($this->csimwintargets[$i])) {
                 $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
             }
-            if (!empty($this->csimalts[$i])) {
+            if (! empty($this->csimalts[$i])) {
                 $tmp = sprintf($this->csimalts[$i], $this->data[$i]);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
@@ -238,7 +238,7 @@ class PiePlot
 
     public function Explode($aExplodeArr)
     {
-        if (!is_array($aExplodeArr)) {
+        if (! is_array($aExplodeArr)) {
             JpGraphError::RaiseL(15003);
             //("Argument to PiePlot::Explode() must be an array with integer distances.");
         }
@@ -326,7 +326,7 @@ class PiePlot
         } else {
             $this->setslicecolors = array_slice($this->setslicecolors, 0, $n);
             $numcolors = count($this->setslicecolors);
-            if ($graph->pieaa && !($this instanceof PiePlot3D)) {
+            if ($graph->pieaa && ! ($this instanceof PiePlot3D)) {
                 $this->setslicecolors = array_reverse($this->setslicecolors);
             }
         }
@@ -1252,13 +1252,13 @@ class PiePlotC extends PiePlot
         $yp = floor($yc - ($this->imidsize * $radius * sin($ea)));
         $coords .= ", $xp, $yp";
 
-        if (!empty($this->csimtargets[$i])) {
+        if (! empty($this->csimtargets[$i])) {
             $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" .
             $this->csimtargets[$i] . "\"";
-            if (!empty($this->csimwintargets[$i])) {
+            if (! empty($this->csimwintargets[$i])) {
                 $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
             }
-            if (!empty($this->csimalts[$i])) {
+            if (! empty($this->csimalts[$i])) {
                 $tmp = sprintf($this->csimalts[$i], $this->data[$i]);
                 $this->csimareas .= " title=\"$tmp\"  alt=\"$tmp\" ";
             }
@@ -1298,7 +1298,7 @@ class PiePlotC extends PiePlot
                 $img->Circle($xc, $yc, round($radius * $this->imidsize));
             }
 
-            if (!empty($this->middlecsimtarget)) {
+            if (! empty($this->middlecsimtarget)) {
                 $this->AddMiddleCSIM($xc, $yc, round($radius * $this->imidsize));
             }
         }
@@ -1317,10 +1317,10 @@ class PiePlotC extends PiePlot
         $r = round($r);
         $this->csimareas .= "<area shape=\"circle\" coords=\"$xc,$yc,$r\" href=\"" .
         $this->middlecsimtarget . "\"";
-        if (!empty($this->middlecsimwintarget)) {
+        if (! empty($this->middlecsimwintarget)) {
             $this->csimareas .= " target=\"" . $this->middlecsimwintarget . "\"";
         }
-        if (!empty($this->middlecsimalt)) {
+        if (! empty($this->middlecsimalt)) {
             $tmp = $this->middlecsimalt;
             $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
         }
@@ -1466,7 +1466,7 @@ class PieGraph extends Graph
         $n = count($this->plots);
 
         if ($this->pieaa) {
-            if (!$_csim) {
+            if (! $_csim) {
                 if ($this->background_image != "") {
                     $this->StrokeFrameBackground();
                 } else {
@@ -1541,7 +1541,7 @@ class PieGraph extends Graph
                 $this->plots[$i]->Legend($this);
             }
         } else {
-            if (!$_csim) {
+            if (! $_csim) {
                 if ($this->background_image != "") {
                     $this->StrokeFrameBackground();
                 } else {
@@ -1562,7 +1562,7 @@ class PieGraph extends Graph
         $this->footer->Stroke($this->img);
         $this->StrokeTitles();
 
-        if (!$_csim) {
+        if (! $_csim) {
             // Stroke texts
             if ($this->texts != null) {
                 $n = count($this->texts);
@@ -1577,7 +1577,7 @@ class PieGraph extends Graph
 
             // Should we do any final image transformation
             if ($this->iImgTrans) {
-                if (!class_exists('ImgTrans', false)) {
+                if (! class_exists('ImgTrans', false)) {
                     require_once('jpgraph_imgtrans.php');
                     //JpGraphError::Raise('In order to use image transformation you must include the file jpgraph_imgtrans.php in your script.');
                 }

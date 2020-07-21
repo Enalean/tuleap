@@ -14,7 +14,7 @@ use Tuleap\Mediawiki\ForgeUserGroupPermission\MediawikiAdminAllProjects;
 
 require_once MEDIAWIKI_BASE_DIR . '/MediawikiManager.class.php';
 
-if (!defined('MEDIAWIKI')) {
+if (! defined('MEDIAWIKI')) {
     die(-1);
 }
 
@@ -309,13 +309,13 @@ class Tuleap123Template extends BaseTemplate
 
     protected function renderPortals($sidebar)
     {
-        if (!isset($sidebar['SEARCH'])) {
+        if (! isset($sidebar['SEARCH'])) {
             $sidebar['SEARCH'] = true;
         }
-        if (!isset($sidebar['TOOLBOX'])) {
+        if (! isset($sidebar['TOOLBOX'])) {
             $sidebar['TOOLBOX'] = true;
         }
-        if (!isset($sidebar['LANGUAGES'])) {
+        if (! isset($sidebar['LANGUAGES'])) {
             $sidebar['LANGUAGES'] = true;
         }
 

@@ -102,32 +102,32 @@ class Planning_FormPresenter extends PlanningPresenter
 
     public function createPlanning()
     {
-        return  dgettext('tuleap-agiledashboard', 'Create a new planning');
+        return dgettext('tuleap-agiledashboard', 'Create a new planning');
     }
 
     public function editPlanning()
     {
-        return  dgettext('tuleap-agiledashboard', 'Edit planning:');
+        return dgettext('tuleap-agiledashboard', 'Edit planning:');
     }
 
     public function planningNameFieldLabel()
     {
-        return  dgettext('tuleap-agiledashboard', 'Name');
+        return dgettext('tuleap-agiledashboard', 'Name');
     }
 
     public function planningBacklogTitleFieldLabel()
     {
-        return  dgettext('tuleap-agiledashboard', 'Backlog title');
+        return dgettext('tuleap-agiledashboard', 'Backlog title');
     }
 
     public function planningPlanTitleFieldLabel()
     {
-        return  dgettext('tuleap-agiledashboard', 'Plan title');
+        return dgettext('tuleap-agiledashboard', 'Plan title');
     }
 
     public function planningPriorityChangePermissionFieldLabel()
     {
-        return  dgettext('tuleap-agiledashboard', 'Who can prioritize items?');
+        return dgettext('tuleap-agiledashboard', 'Who can prioritize items?');
     }
 
     public function priority_change_permission()

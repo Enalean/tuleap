@@ -77,16 +77,16 @@ class Pack
      */
     public function __construct($project, $hash)
     {
-        if (!(preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
+        if (! (preg_match('/[0-9A-Fa-f]{40}/', $hash))) {
             throw new \Exception(sprintf(dgettext("gitphp", 'Invalid hash %1$s'), $hash));
         }
         $this->hash = $hash;
         $this->project = $project;
 
-        if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
+        if (! file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.idx')) {
             throw new \Exception('Pack index does not exist');
         }
-        if (!file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
+        if (! file_exists($project->GetPath() . '/objects/pack/pack-' . $hash . '.pack')) {
             throw new \Exception('Pack file does not exist');
         }
     }
@@ -115,7 +115,7 @@ class Pack
      */
     public function ContainsObject($hash) // @codingStandardsIgnoreLine
     {
-        if (!preg_match('/[0-9a-fA-F]{40}/', $hash)) {
+        if (! preg_match('/[0-9a-fA-F]{40}/', $hash)) {
             return false;
         }
 
@@ -133,7 +133,7 @@ class Pack
      */
     private function FindPackedObject($hash) // @codingStandardsIgnoreLine
     {
-        if (!preg_match('/[0-9a-fA-F]{40}/', $hash)) {
+        if (! preg_match('/[0-9a-fA-F]{40}/', $hash)) {
             return false;
         }
 

@@ -24,10 +24,10 @@ define('WIKIAUTH_USER', 2);     // real auth from a database/file/server.
 define('WIKIAUTH_ADMIN', 10);  // Wiki Admin
 define('WIKIAUTH_UNOBTAINABLE', 100);  // Permissions that no user can achieve
 
-if (!defined('COOKIE_EXPIRATION_DAYS')) {
+if (! defined('COOKIE_EXPIRATION_DAYS')) {
     define('COOKIE_EXPIRATION_DAYS', 365);
 }
-if (!defined('COOKIE_DOMAIN')) {
+if (! defined('COOKIE_DOMAIN')) {
     define('COOKIE_DOMAIN', '/');
 }
 
@@ -98,7 +98,7 @@ class WikiUser
             $this->_userid = $userid;
             $this->_level = $authlevel;
         }
-        if (!$this->_ok()) {
+        if (! $this->_ok()) {
             // Paranoia: if state is at all inconsistent, log out...
             $this->_userid = false;
             $this->_level = false;
@@ -184,7 +184,7 @@ class WikiUser
 
     public function isValidName($userid = false)
     {
-        if (!$userid) {
+        if (! $userid) {
             $userid = $this->_userid;
         }
         return preg_match("/^[\w\.@\-]+$/", $userid) and strlen($userid) < 32;
@@ -205,16 +205,16 @@ class WikiUser
             return new WikiUser($this->_request); // Log out
         } elseif ($cancel) {
             return false;        // User hit cancel button.
-        } elseif (!$login && !$userid) {
+        } elseif (! $login && ! $userid) {
             return false;       // Nothing to do?
         }
 
-        if (!$this->isValidName($userid)) {
+        if (! $this->isValidName($userid)) {
             return _("Invalid username.");
         }
 
         $authlevel = $this->_pwcheck($userid, $passwd);
-        if (!$authlevel) {
+        if (! $authlevel) {
             return _("Invalid password or userid.");
         } elseif ($authlevel < $require_level) {
             return _("Insufficient permissions.");
@@ -295,7 +295,7 @@ class WikiUser
     // Return the number of changed entries
     public function setPreferences($prefs, $id_only = false)
     {
-        if (!is_object($prefs)) {
+        if (! is_object($prefs)) {
             $prefs = new UserPreferences($prefs);
         }
         // update the session and id
@@ -322,7 +322,7 @@ class WikiUser
                             E_USER_WARNING
                         );
                     } else {
-                        if ($this->isAdmin() || !$homepage->get('locked')) {
+                        if ($this->isAdmin() || ! $homepage->get('locked')) {
                             $homepage->set('pref', serialize($prefs->_prefs));
                             return sizeof($prefs->_prefs);
                         } else {
@@ -369,10 +369,10 @@ class WikiUser
     // how to store metadata in not existing pages? how about versions?
     public function homePage()
     {
-        if (!$this->_userid) {
+        if (! $this->_userid) {
             return false;
         }
-        if (!empty($this->_homepage)) {
+        if (! empty($this->_homepage)) {
             return $this->_homepage;
         } else {
             $this->_homepage = $this->_dbi->getPage($this->_userid);
@@ -382,7 +382,7 @@ class WikiUser
 
     public function hasHomePage()
     {
-        return !$this->homePage();
+        return ! $this->homePage();
     }
 
     // create user by checking his homepage
@@ -470,7 +470,7 @@ class WikiUser
             return true;
         }
         if (
-            !empty($passwd)
+            ! empty($passwd)
              && crypt($passwd, $stored_passwd) == $stored_passwd
         ) {
             return true;
@@ -677,7 +677,7 @@ class UserPreferences
     public function _getPref($name)
     {
         global $UserPreferences;
-        if (!isset($UserPreferences[$name])) {
+        if (! isset($UserPreferences[$name])) {
             if ($name == 'passwd2') {
                 return false;
             }
@@ -692,7 +692,7 @@ class UserPreferences
         if (isset($this->_prefs[$name])) {
             return $this->_prefs[$name];
         }
-        if (!($pref = $this->_getPref($name))) {
+        if (! ($pref = $this->_getPref($name))) {
             return false;
         }
         return $pref->default_value;
@@ -700,7 +700,7 @@ class UserPreferences
 
     public function set($name, $value)
     {
-        if (!($pref = $this->_getPref($name))) {
+        if (! ($pref = $this->_getPref($name))) {
             return false;
         }
 
@@ -727,7 +727,7 @@ class UserPreferences
     }
     public function unpack($packed)
     {
-        if (!$packed) {
+        if (! $packed) {
             return false;
         }
         if (substr($packed, 0, 2) == "O:") {

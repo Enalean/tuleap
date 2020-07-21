@@ -62,7 +62,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
             while ($it->valid()) {
                 $o = $it->current();
                 $params['parent'] = $item;
-                if (!$o->accept($this, $params)) {
+                if (! $o->accept($this, $params)) {
                     $one_item_has_not_been_deleted = true;
                 }
                 $it->next();
@@ -215,7 +215,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     public $version_factory;
     public function _getVersionFactory()
     {
-        if (!$this->version_factory) {
+        if (! $this->version_factory) {
             $this->version_factory = new Docman_VersionFactory();
         }
         return $this->version_factory;
@@ -224,7 +224,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     public $item_factory;
     public function _getItemFactory()
     {
-        if (!$this->item_factory) {
+        if (! $this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
@@ -233,7 +233,7 @@ class Docman_ActionsDeleteVisitor implements ItemVisitor
     public $lock_factory;
     public function _getLockFactory()
     {
-        if (!$this->lock_factory) {
+        if (! $this->lock_factory) {
             $this->lock_factory = new \Docman_LockFactory(new \Docman_LockDao(), new \Docman_Log());
         }
         return $this->lock_factory;

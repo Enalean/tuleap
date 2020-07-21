@@ -220,32 +220,32 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart
     public function createDb($id)
     {
         $field_start = $this->getField_start();
-        if (!is_string($field_start) && !is_int($field_start) && $field_start) {
+        if (! is_string($field_start) && ! is_int($field_start) && $field_start) {
             $field_start = $field_start->getid();
         }
 
         $field_due = $this->getField_due();
-        if (!is_string($field_due) && !is_int($field_due) && $field_due) {
+        if (! is_string($field_due) && ! is_int($field_due) && $field_due) {
             $field_due = $field_due->getid();
         }
 
         $field_finish = $this->getField_finish();
-        if (!is_string($field_finish) && !is_int($field_finish) && $field_finish) {
+        if (! is_string($field_finish) && ! is_int($field_finish) && $field_finish) {
             $field_finish = $field_finish->getid();
         }
 
         $field_percentage = $this->getField_percentage();
-        if (!is_string($field_percentage) && !is_int($field_percentage) && $field_percentage) {
+        if (! is_string($field_percentage) && ! is_int($field_percentage) && $field_percentage) {
                 $field_percentage = $field_percentage->getid();
         }
 
         $field_righttext = $this->getField_righttext();
-        if (!is_string($field_righttext) && !is_int($field_righttext) && $field_righttext) {
+        if (! is_string($field_righttext) && ! is_int($field_righttext) && $field_righttext) {
                 $field_righttext = $field_righttext->getid();
         }
 
         $field_summary = $this->getSummary();
-        if (!is_string($field_summary) && !is_int($field_summary) && $field_summary) {
+        if (! is_string($field_summary) && ! is_int($field_summary) && $field_summary) {
             $field_summary = $field_summary->getid();
         }
 

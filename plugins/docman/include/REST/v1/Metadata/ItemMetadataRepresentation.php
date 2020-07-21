@@ -74,7 +74,7 @@ class ItemMetadataRepresentation
         $this->type                      = $type;
         $this->value                     = $value;
         $this->post_processed_value      = $post_processed_value;
-        $this->is_required               = JsonCast::toBoolean(!$is_empty_allowed);
+        $this->is_required               = JsonCast::toBoolean(! $is_empty_allowed);
         $this->is_multiple_value_allowed = $is_multiple_value_allowed;
         $this->list_value                = $list_value;
         $this->short_name                = $short_name;

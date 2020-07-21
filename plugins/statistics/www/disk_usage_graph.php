@@ -143,18 +143,18 @@ if (strtotime($startDate) > strtotime($endDate)) {
 
 // Display graph
 $graph = new Statistics_DiskUsageGraph($duMgr);
-if (!$error) {
+if (! $error) {
     switch ($graphType) {
         case 'graph_service':
-            $graph->displayServiceGraph($services, $selectedGroupByDate, $startDate, $endDate, !$relative);
+            $graph->displayServiceGraph($services, $selectedGroupByDate, $startDate, $endDate, ! $relative);
             break;
 
         case 'graph_user':
-            $graph->displayUserGraph($userId, $selectedGroupByDate, $startDate, $endDate, !$relative);
+            $graph->displayUserGraph($userId, $selectedGroupByDate, $startDate, $endDate, ! $relative);
             break;
 
         case 'graph_project':
-            $graph->displayProjectGraph($groupId, $services, $selectedGroupByDate, $startDate, $endDate, !$relative);
+            $graph->displayProjectGraph($groupId, $services, $selectedGroupByDate, $startDate, $endDate, ! $relative);
             break;
 
         default:

@@ -51,7 +51,7 @@ class Util
 
         $end = substr($path, -1);
 
-        if (!(( ($end == '/') || ($end == ':')))) {
+        if (! (( ($end == '/') || ($end == ':')))) {
             $path .= '/';
         }
 

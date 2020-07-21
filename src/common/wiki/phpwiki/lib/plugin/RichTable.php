@@ -160,7 +160,7 @@ class WikiPlugin_RichTable extends WikiPlugin
                 continue;
             }
             $key_val = preg_split("/\s*=\s*/", $attr_pair);
-            if (!empty($key_val[1])) {
+            if (! empty($key_val[1])) {
                 $options[trim($key_val[0])] = trim($key_val[1]);
             }
         }

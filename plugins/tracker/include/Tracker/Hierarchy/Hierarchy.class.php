@@ -35,7 +35,7 @@ class Tracker_Hierarchy
      */
     public function addRelationship($parent_id, $child_id)
     {
-        if (!array_key_exists($parent_id, $this->parents)) {
+        if (! array_key_exists($parent_id, $this->parents)) {
             $this->parents[$parent_id] = null;
         }
         $this->parents[$child_id] = $parent_id;

@@ -120,7 +120,7 @@
      */
     public function _initSearchAndSortParams($params)
     {
-        if (!count($this->dfltSortParams)) {
+        if (! count($this->dfltSortParams)) {
             $this->dfltSortParams = array();
             $this->dfltSearchParams = array();
 
@@ -155,7 +155,7 @@
                         // The second part of the test aims to avoid to add
                         // sort_update_date=0 in the URL as it's the default
                         // sort (no need to define it)
-                        if ($c !== null && !($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
+                        if ($c !== null && ! ($c->md !== null && $c->md->getLabel() == 'update_date' && $c->sort == PLUGIN_DOCMAN_SORT_DESC)) {
                             $sort = $c->getSort();
                             if ($sort !== null) {
                                 $this->dfltSortParams[$c->getSortParameter()] = $sort;

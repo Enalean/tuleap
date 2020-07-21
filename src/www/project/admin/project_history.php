@@ -39,7 +39,7 @@ if ($request->valid($vGroupId)) {
 $eventsList = array('any', 'event_permission', 'event_project', 'event_ug', 'event_user', 'event_others');
 $validEvents = new Valid_WhiteList('events_box', $eventsList);
 $event = $request->getValidated('events_box', $validEvents, null);
-if (!$event) {
+if (! $event) {
     //Check event value within pagination process
     $validPaginationEvents = new Valid_WhiteList('event', $eventsList);
     $event = $request->getValidated('event', $validPaginationEvents, null);
@@ -78,7 +78,7 @@ $vStartDate->required();
 $startDate = $request->get('start');
 if ($request->valid($vStartDate)) {
     $startDate = $request->get('start');
-} elseif (!empty($startDate)) {
+} elseif (! empty($startDate)) {
     $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_start_date'));
     $startDate = null;
 }
@@ -89,7 +89,7 @@ $vEndDate->required();
 $endDate = $request->get('end');
 if ($request->valid($vEndDate)) {
     $endDate = $request->get('end');
-} elseif (!empty($endDate)) {
+} elseif (! empty($endDate)) {
     $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_utils', 'verify_end_date'));
     $endDate = null;
 }
@@ -108,7 +108,7 @@ if ($request->valid($validBy)) {
 }
 
 $offset = $request->getValidated('offset', 'uint', 0);
-if (!$offset || $offset < 0) {
+if (! $offset || $offset < 0) {
     $offset = 0;
 }
 $limit  = 50;

@@ -96,7 +96,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
-                    if (!$target_id || !$this->fieldIsAForbiddenSource($this->artifact_type->getId(), $field->getId(), $target_id)) {
+                    if (! $target_id || ! $this->fieldIsAForbiddenSource($this->artifact_type->getId(), $field->getId(), $target_id)) {
                         $sources[$field->getId()] = $field;
                     }
                 }
@@ -113,7 +113,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         foreach ($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
                 if ($field->isMultiSelectBox() || $field->isSelectBox()) {
-                    if (!$source_id || !$this->fieldIsAForbiddenTarget($this->artifact_type->getId(), $field->getId(), $source_id)) {
+                    if (! $source_id || ! $this->fieldIsAForbiddenTarget($this->artifact_type->getId(), $field->getId(), $source_id)) {
                         $targets[$field->getId()] = $field;
                     }
                 }

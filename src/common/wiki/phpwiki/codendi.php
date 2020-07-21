@@ -49,7 +49,7 @@ function codendi_main()
      *
      * See also <?plugin WikiAdminUtils action=purge-cache ?>
      */
-    if (!defined('WIKIDB_NOCACHE_MARKUP')) {
+    if (! defined('WIKIDB_NOCACHE_MARKUP')) {
         if ($request->getArg('nocache')) { // 1 or purge
             define('WIKIDB_NOCACHE_MARKUP', $request->getArg('nocache'));
         } else {
@@ -71,7 +71,7 @@ function codendi_main()
     // Memory optimization:
     // http://www.procata.com/blog/archives/2004/05/27/rephlux-and-php-memory-usage/
     // kill the global PEAR _PEAR_destructor_object_list
-    if (!empty($_PEAR_destructor_object_list)) {
+    if (! empty($_PEAR_destructor_object_list)) {
         $_PEAR_destructor_object_list = array();
     }
     require_once __DIR__ . '/lib/prepend.php';

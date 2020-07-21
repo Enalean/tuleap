@@ -162,7 +162,7 @@ class Text
     // jpgraph_gantt
     public function Show($aShow = true)
     {
-        $this->hide = !$aShow;
+        $this->hide = ! $aShow;
     }
 
     // Specify font

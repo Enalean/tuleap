@@ -17,7 +17,7 @@ function smarty_function_scripturl($params, &$smarty)
 {
     if (Tuleap\Git\GitPHP\Config::GetInstance()->HasKey('self')) {
         $selfurl = Tuleap\Git\GitPHP\Config::GetInstance()->GetValue('self');
-        if (!empty($selfurl)) {
+        if (! empty($selfurl)) {
             if (substr($selfurl, -4) != '.php') {
                 $selfurl = Tuleap\Git\GitPHP\Util::AddSlash($selfurl);
             }

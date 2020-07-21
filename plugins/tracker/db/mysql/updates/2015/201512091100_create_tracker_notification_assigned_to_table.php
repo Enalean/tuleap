@@ -40,7 +40,7 @@ class b201512091100_create_tracker_notification_assigned_to_table extends ForgeU
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_tracker_notification_assigned_to')) {
+        if (! $this->db->tableNameExists('plugin_tracker_notification_assigned_to')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table plugin_tracker_notification_assigned_to not created');
         }
     }

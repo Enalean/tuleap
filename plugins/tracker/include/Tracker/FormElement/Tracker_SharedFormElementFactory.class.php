@@ -39,7 +39,7 @@ class Tracker_SharedFormElementFactory
     public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user, $tracker_is_empty, $force_absolute_ranking)
     {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
-        if (!$formElement) {
+        if (! $formElement) {
             $exception_message = sprintf(dgettext('tuleap-tracker', 'There is no field with ID:%1$s'), $formElement_data['field_id']);
             throw new Exception($exception_message);
         }

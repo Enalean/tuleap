@@ -84,7 +84,7 @@ class MediawikiSiteAdminController
         $token->check();
 
         $project_to_add  = $request->get('project-to-allow');
-        if ($request->get('allow-project') && !empty($project_to_add)) {
+        if ($request->get('allow-project') && ! empty($project_to_add)) {
             $this->allowProject($project_to_add);
         }
 

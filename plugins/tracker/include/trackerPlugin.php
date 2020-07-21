@@ -327,7 +327,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'trackerPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'trackerPluginInfo')) {
             include_once('trackerPluginInfo.class.php');
             $this->pluginInfo = new trackerPluginInfo($this);
         }
@@ -570,7 +570,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['name']) {
+        if (! $params['name']) {
             switch ($params['permission_type']) {
                 case 'PLUGIN_TRACKER_FIELD_SUBMIT':
                     $params['name'] = dgettext('tuleap-tracker', 'Can submit tracker field');
@@ -639,7 +639,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['object_name']) {
+        if (! $params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
             if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
                 $object_id = $params['object_id'];
@@ -684,7 +684,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public $_cached_permission_user_allowed_to_change;
     public function permission_user_allowed_to_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['allowed']) {
+        if (! $params['allowed']) {
             $allowed = array(
                 Tracker::PERMISSION_ADMIN,
                 Tracker::PERMISSION_FULL,
@@ -701,7 +701,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 $group_id  = $params['group_id'];
                 $object_id = $params['object_id'];
                 $type      = $this->getObjectTypeFromPermissions($params);
-                if (!isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
+                if (! isset($this->_cached_permission_user_allowed_to_change[$type][$object_id])) {
                     switch ($type) {
                         case 'tracker':
                             if ($tracker = TrackerFactory::instance()->getTrackerById($object_id)) {

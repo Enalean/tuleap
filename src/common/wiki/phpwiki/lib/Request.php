@@ -49,7 +49,7 @@ class Request
 
     public function get($key)
     {
-        if (!empty($_SERVER)) {
+        if (! empty($_SERVER)) {
             $vars = &$_SERVER;
         } else { // cgi or other servers than Apache
             $vars = &$_ENV;
@@ -114,14 +114,14 @@ class Request
         }
 
         foreach ($exclude as $ex) {
-            if (!empty($get_args[$ex])) {
+            if (! empty($get_args[$ex])) {
                 unset($get_args[$ex]);
             }
         }
 
         $pagename = $get_args['pagename'];
         unset($get_args['pagename']);
-        if (!empty($get_args['action']) and $get_args['action'] == 'browse') {
+        if (! empty($get_args['action']) and $get_args['action'] == 'browse') {
             unset($get_args['action']);
         }
 
@@ -143,7 +143,7 @@ class Request
 
     public function httpVersion()
     {
-        if (!preg_match('@HTTP\s*/\s*(\d+.\d+)@', $this->get('SERVER_PROTOCOL'), $m)) {
+        if (! preg_match('@HTTP\s*/\s*(\d+.\d+)@', $this->get('SERVER_PROTOCOL'), $m)) {
             return false;
         }
         return (float) $m[1];
@@ -156,7 +156,7 @@ class Request
     {
         $bogus = defined('DISABLE_HTTP_REDIRECT') && DISABLE_HTTP_REDIRECT;
 
-        if (!$bogus) {
+        if (! $bogus) {
             header("Location: $url");
             /*
              * "302 Found" is not really meant to be sent in response
@@ -243,7 +243,7 @@ class Request
      */
     public function appendValidators($validator_set)
     {
-        if (!isset($this->_validators)) {
+        if (! isset($this->_validators)) {
             $this->setValidators($validator_set);
             return;
         }
@@ -265,7 +265,7 @@ class Request
         $validators = &$this->_validators;
 
         // Set validator headers
-        if ($this->_is_buffering_output or !headers_sent()) {
+        if ($this->_is_buffering_output or ! headers_sent()) {
             if (($etag = $validators->getETag()) !== false) {
                 header("ETag: " . $etag->asString());
             }
@@ -344,7 +344,7 @@ class Request
             return;
         }*/
         if (defined('COMPRESS_OUTPUT')) {
-            if (!COMPRESS_OUTPUT) {
+            if (! COMPRESS_OUTPUT) {
                 $compress = false;
             }
         } elseif (isCGI()) { // necessary?
@@ -360,8 +360,8 @@ class Request
         // This effectively eliminates CGI, but all other servers also. hmm.
         if (
             $compress
-            and (!function_exists('ob_gzhandler')
-                 or !function_exists('apache_note'))
+            and (! function_exists('ob_gzhandler')
+                 or ! function_exists('apache_note'))
         ) {
             $compress = false;
         }
@@ -376,8 +376,8 @@ class Request
         // This should eliminate a lot or reported problems.
         if (
             $compress
-            and (!$this->get("HTTP_ACCEPT_ENCODING")
-                 or !strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip"))
+            and (! $this->get("HTTP_ACCEPT_ENCODING")
+                 or ! strstr($this->get("HTTP_ACCEPT_ENCODING"), "gzip"))
         ) {
             $compress = false;
         }
@@ -425,7 +425,7 @@ class Request
 
     public function discardOutput()
     {
-        if (!empty($this->_is_buffering_output)) {
+        if (! empty($this->_is_buffering_output)) {
             ob_clean();
             $this->_is_buffering_output = false;
         } else {
@@ -443,7 +443,7 @@ class Request
     public function chunkOutput()
     {
         if (
-            !empty($this->_is_buffering_output) or
+            ! empty($this->_is_buffering_output) or
             (@ob_get_level())
         ) {
             $this->_do_chunked_output = true;
@@ -462,10 +462,10 @@ class Request
     {
         $this->_finishing = true;
 
-        if (!empty($this->_is_buffering_output)) {
+        if (! empty($this->_is_buffering_output)) {
             // if _is_compressing_output then ob_get_length() returns
             // the uncompressed length, not the gzip'ed as required.
-            if (!headers_sent() and !$this->_is_compressing_output) {
+            if (! headers_sent() and ! $this->_is_compressing_output) {
                 if (empty($this->_do_chunked_output)) {
                     $this->_ob_get_length = ob_get_length();
                 }
@@ -477,7 +477,7 @@ class Request
         while (@ob_end_flush()) {
 // hmm. there's some error in redirect
         }        session_write_close();
-        if (!empty($this->_dbi)) {
+        if (! empty($this->_dbi)) {
             $this->_dbi->close();
             unset($this->_dbi);
         }
@@ -554,7 +554,7 @@ class Request_SessionVars
 
         // Avoid to get a notice if session is already started,
         // for example if session.auto_start is activated
-        if (!session_id()) {
+        if (! session_id()) {
             session_start();
         }
     }
@@ -569,7 +569,7 @@ class Request_SessionVars
 
     public function set($key, $val)
     {
-        if (!function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
+        if (! function_usable('get_cfg_var') or get_cfg_var('register_globals')) {
             // This is funky but necessary, at least in some PHP's
             $GLOBALS[$key] = $val;
         }
@@ -578,7 +578,7 @@ class Request_SessionVars
 
     public function delete($key)
     {
-        if (!function_usable('ini_get')) {
+        if (! function_usable('ini_get')) {
             unset($GLOBALS[$key]);
         }
         if (DEBUG) {
@@ -600,7 +600,7 @@ class Request_UploadedFile
     public function getUploadedFile($postname)
     {
         // Against php5 with !ini_get('register-long-arrays'). See Bug #1180115
-        if (!isset($_FILES[$postname])) {
+        if (! isset($_FILES[$postname])) {
             return false;
         }
 
@@ -630,9 +630,9 @@ class Request_UploadedFile
 
         // With windows/php 4.2.1 is_uploaded_file() always returns false.
         // Be sure that upload_tmp_dir ends with a slash!
-        if (!is_uploaded_file($fileinfo['tmp_name'])) {
+        if (! is_uploaded_file($fileinfo['tmp_name'])) {
             if (isWindows()) {
-                if (!$tmp_file = get_cfg_var('upload_tmp_dir')) {
+                if (! $tmp_file = get_cfg_var('upload_tmp_dir')) {
                     $tmp_file = dirname(tempnam('', ''));
                 }
                 $tmp_file .= '/' . basename($fileinfo['tmp_name']);
@@ -705,7 +705,7 @@ class Request_UploadedFile
                 while (($header = fgets($fd, 4096))) {
                     if (trim($header) == '') {
                         break;
-                    } elseif (!preg_match('/^content-(length|type):/i', $header)) {
+                    } elseif (! preg_match('/^content-(length|type):/i', $header)) {
                         rewind($fd);
                         break;
                     }
@@ -761,7 +761,7 @@ class HTTP_ETag
      */
     public function parse($strval)
     {
-        if (!preg_match(':^(W/)?"(.+)"$:i', trim($strval), $m)) {
+        if (! preg_match(':^(W/)?"(.+)"$:i', trim($strval), $m)) {
             return false;       // parse failed
         }
         list(,$weak,$str) = $m;
@@ -833,13 +833,13 @@ class HTTP_ValidatorSet
 
         // Pick the most recent mtime
         if (isset($that->_mtime)) {
-            if (!isset($this->_mtime) || $that->_mtime > $this->_mtime) {
+            if (! isset($this->_mtime) || $that->_mtime > $this->_mtime) {
                 $this->_mtime = $that->_mtime;
             }
         }
 
         // If either is weak, we're weak
-        if (!empty($that->_weak)) {
+        if (! empty($that->_weak)) {
             $this->_weak = true;
         }
         if (is_array($this->_tag)) {
@@ -912,7 +912,7 @@ class HTTP_ValidatorSet
     {
         if ($this->_tag && ($taglist = $request->get("HTTP_IF_MATCH"))) {
             $tag = $this->getETag();
-            if (!$tag->matches($taglist, 'strong')) {
+            if (! $tag->matches($taglist, 'strong')) {
                 return _HTTP_VAL_FAILED;
             }
         }

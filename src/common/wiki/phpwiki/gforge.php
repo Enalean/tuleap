@@ -19,7 +19,7 @@
  */
 
 require_once __DIR__ . '/../../../www/include/pre.php';
-if (!$group_id || !$project) {
+if (! $group_id || ! $project) {
     exit_error("Invalid Project", "Invalid Project");
 } else {
     define('VIRTUAL_PATH', $_SERVER['SCRIPT_NAME'] . '/' . $project->getUnixName());

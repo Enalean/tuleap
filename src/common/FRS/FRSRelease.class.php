@@ -191,7 +191,7 @@ class FRSRelease
      */
     public function getProject()
     {
-        if (!isset($this->project)) {
+        if (! isset($this->project)) {
             $this->project = $this->_getProjectManager()->getProject($this->getGroupID());
         }
         return $this->project;
@@ -254,7 +254,7 @@ class FRSRelease
      */
     public function getGroupID()
     {
-        if (!isset($this->group_id)) {
+        if (! isset($this->group_id)) {
             if (isset($this->project)) {
                 $this->group_id = $this->project->getID();
             } else {
@@ -334,7 +334,7 @@ class FRSRelease
      */
     public function &getFiles()
     {
-        if (!is_array($this->release_files) || count($this->release_files) < 1) {
+        if (! is_array($this->release_files) || count($this->release_files) < 1) {
             $this->release_files = array();
             $frsff = new FRSFileFactory();
             $this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());

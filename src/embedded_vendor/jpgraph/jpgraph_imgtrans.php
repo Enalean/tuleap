@@ -62,7 +62,7 @@ class ImgTrans
             $yp = $h - $y - 1;
             $yt = floor($yp * $aHorizon / ($aSkewDist + $yp));
 
-            if (!$aQuality) {
+            if (! $aQuality) {
                 if ($last <= $yt) {
                     continue;
                 }
@@ -87,7 +87,7 @@ class ImgTrans
                     $syt = $hh - $yt - 1;
                 }
 
-                if (!empty($set[$yt])) {
+                if (! empty($set[$yt])) {
                     $nrgb = imagecolorat($newgdh, $xt, $syt);
                     $nr = ($nrgb >> 16) & 0xFF;
                     $ng = ($nrgb >> 8) & 0xFF;
@@ -141,7 +141,7 @@ class ImgTrans
         $last = -1;
         for ($x = 0; $x < $w - 1; ++$x) {
             $xt = floor($x * $aHorizon / ($aSkewDist + $x));
-            if (!$aQuality) {
+            if (! $aQuality) {
                 if ($last >= $xt) {
                     continue;
                 }
@@ -168,7 +168,7 @@ class ImgTrans
                     $sxt = $xt;
                 }
 
-                if (!empty($set[$xt])) {
+                if (! empty($set[$xt])) {
                     $nrgb = imagecolorat($newgdh, $sxt, $yt);
                     $nr = ($nrgb >> 16) & 0xFF;
                     $ng = ($nrgb >> 8) & 0xFF;

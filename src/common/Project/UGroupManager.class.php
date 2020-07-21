@@ -330,7 +330,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getById($ugroupId)
     {
         $dar = $this->getDao()->searchByUGroupId($ugroupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return new ProjectUGroup($dar->getRow());
         } else {
             return new ProjectUGroup();
@@ -344,7 +344,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     public function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new UGroupDao();
         }
         return $this->dao;
@@ -380,7 +380,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $users   = array();
         $dao     = $this->getUGroupUserDao();
         $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
-        if ($members && !$members->isError()) {
+        if ($members && ! $members->isError()) {
             foreach ($members as $member) {
                 $users[] = $um->getUserById($member['user_id']);
             }
@@ -488,7 +488,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getUgroupBindingSource($ugroupId)
     {
         $dar = $this->getDao()->getUgroupBindingSource($ugroupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return new ProjectUGroup($dar->getRow());
         } else {
             return null;
@@ -516,7 +516,7 @@ class UGroupManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     public function getExistingUgroups($groupId, $predefined = null)
     {
         $dar = $this->getUserGroupDao()->getExistingUgroups($groupId, $predefined);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             return $dar;
         }
         return array();

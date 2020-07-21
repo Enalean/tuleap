@@ -1241,12 +1241,12 @@ if (defined('NUSOAP')) {
             }
 
             $project = new Project($group_id);
-            if (!$project->usesService('tracker')) {
+            if (! $project->usesService('tracker')) {
                 return new SoapFault(GET_SERVICE_FAULT, 'Tracker service is not used for this project.', 'getTrackerList');
             }
 
             $atf = new ArtifactTypeFactory($group);
-            if (!$atf || !is_object($atf)) {
+            if (! $atf || ! is_object($atf)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getTrackerList');
             } elseif ($atf->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf->getErrorMessage(), 'getTrackerList');
@@ -1277,14 +1277,14 @@ if (defined('NUSOAP')) {
                 //skip if error
             } else {
                 $ath = new ArtifactType($at_arr[$i]->getGroup(), $at_arr[$i]->getID());
-                if (!$ath || !is_object($ath)) {
+                if (! $ath || ! is_object($ath)) {
                     return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes');
                 }
                 if ($ath->isError()) {
                     return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactTypes');
                 }
                 // Check if this tracker is valid (not deleted)
-                if (!$ath->isValid()) {
+                if (! $ath->isValid()) {
                     return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes');
                 }
 
@@ -1292,7 +1292,7 @@ if (defined('NUSOAP')) {
                 if ($ath->userCanView($user_id)) {
                     // get the reports description (light desc of reports)
                     $report_fact = new ArtifactReportFactory();
-                    if (!$report_fact || !is_object($report_fact)) {
+                    if (! $report_fact || ! is_object($report_fact)) {
                         return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactTypes');
                     }
                     $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], $user_id));
@@ -1361,7 +1361,7 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($group, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactType', 'getArtifactType');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $at->getErrorMessage(), 'getArtifactType');
@@ -1400,7 +1400,7 @@ if (defined('NUSOAP')) {
             }
 
             $atf = new ArtifactTypeFactory($group);
-            if (!$atf || !is_object($atf)) {
+            if (! $atf || ! is_object($atf)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, 'Could Not Get ArtifactTypeFactory', 'getArtifactTypes');
             } elseif ($atf->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FACTORY_FAULT, $atf->getErrorMessage(), 'getArtifactTypes');
@@ -1440,20 +1440,20 @@ if (defined('NUSOAP')) {
 
         $field_sets = array();
         $ath = new ArtifactType($at->getGroup(), $at->getID());
-        if (!$ath || !is_object($ath)) {
+        if (! $ath || ! is_object($ath)) {
             return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactTypes');
         }
         if ($ath->isError()) {
             return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactTypes');
         }
         // Check if this tracker is valid (not deleted)
-        if (!$ath->isValid()) {
+        if (! $ath->isValid()) {
             return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactTypes');
         }
         // Check if the user can view this tracker
         if ($ath->userCanView($user_id)) {
             $art_fieldset_fact = new ArtifactFieldSetFactory($at);
-            if (!$art_fieldset_fact || !is_object($art_fieldset_fact)) {
+            if (! $art_fieldset_fact || ! is_object($art_fieldset_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldSetFactory', 'getFieldSets');
             } elseif ($art_fieldset_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_fieldset_fact->getErrorMessage(), 'getFieldSets');
@@ -1632,7 +1632,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifacts');
             } elseif (! $at->userCanView()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifacts');
@@ -1640,13 +1640,13 @@ if (defined('NUSOAP')) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifacts');
             }
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactTypes');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactTypes');
             }
             $af = new ArtifactFactory($at);
-            if (!$af || !is_object($af)) {
+            if (! $af || ! is_object($af)) {
                 return new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifacts');
             } elseif ($af->isError()) {
                 return new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af->getErrorMessage(), 'getArtifacts');
@@ -1691,7 +1691,7 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactsFromReport');
             } elseif (! $at->userCanView()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactsFromReport');
@@ -1699,20 +1699,20 @@ if (defined('NUSOAP')) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactsFromReport');
             }
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactsFromReport');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactsFromReport');
             }
             $af = new ArtifactFactory($at);
-            if (!$af || !is_object($af)) {
+            if (! $af || ! is_object($af)) {
                 return new SoapFault(GET_ARTIFACT_FACTORY_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport');
             } elseif ($af->isError()) {
                 return new SoapFault(GET_ARTIFACT_FACTORY_FAULT, $af->getErrorMessage(), 'getArtifactsFromReport');
             }
 
             $ar = new ArtifactReport($report_id, $group_artifact_id);
-            if (!$ar || !is_object($ar)) {
+            if (! $ar || ! is_object($ar)) {
                 return new SoapFault(GET_ARTIFACT_REPORT_FAULT, 'Could Not Get ArtifactFactory', 'getArtifactsFromReport');
             } elseif ($ar->isError()) {
                 return new SoapFault(GET_ARTIFACT_REPORT_FAULT, $ar->getErrorMessage(), 'getArtifactsFromReport');
@@ -1754,25 +1754,25 @@ if (defined('NUSOAP')) {
             }
 
             $ath = new ArtifactType($grp, $group_artifact_id);
-            if (!$ath || !is_object($ath)) {
+            if (! $ath || ! is_object($ath)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'getArtifactById');
             }
             if ($ath->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'getArtifactById');
             }
             // Check if this tracker is valid (not deleted)
-            if (!$ath->isValid()) {
+            if (! $ath->isValid()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'getArtifactById');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById');
             }
             $a = new Artifact($ath, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactById');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactById');
@@ -2033,24 +2033,24 @@ if (defined('NUSOAP')) {
             }
 
             $ath = new ArtifactType($grp, $group_artifact_id);
-            if (!$ath || !is_object($ath)) {
+            if (! $ath || ! is_object($ath)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact');
             }
             if ($ath->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'addArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if (!$ath->isValid()) {
+            if (! $ath->isValid()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact');
             }
 
             // check the user if he can submit artifacts for this tracker
-            if (!$ath->userCanSubmit($user_id)) {
+            if (! $ath->userCanSubmit($user_id)) {
                 return new SoapFault(PERMISSION_DENIED_FAULT, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'addArtifact');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifact');
@@ -2070,7 +2070,7 @@ if (defined('NUSOAP')) {
                     }
 
                     // check the allow empty value. If the empty value is not allowed and the field not filled, we put the default value.
-                    if (!$used_field->isEmptyOk()) {
+                    if (! $used_field->isEmptyOk()) {
                         // the field must be filled, so we will check if it is
                         if ($used_field->isStandardField()) {
                             $used_field_name = $used_field->getName();
@@ -2116,7 +2116,7 @@ if (defined('NUSOAP')) {
             }
 
             $a = new Artifact($ath);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifact');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifact');
@@ -2126,10 +2126,10 @@ if (defined('NUSOAP')) {
 
             //Check Field Dependencies
             $arm = new ArtifactRulesManager();
-            if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
+            if (! $arm->validate($ath->getID(), $data, $art_field_fact)) {
                 return new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'addArtifact');
             }
-            if (!$a->create($data)) {
+            if (! $a->create($data)) {
                 return new SoapFault(CREATE_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifact');
             } else {
                 // Send the notification
@@ -2184,21 +2184,21 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'addArtifact');
             }
             if ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if (!$at->isValid()) {
+            if (! $at->isValid()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'addArtifact');
             }
 
             $group_artifact_id = $at->getID();
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifact');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifact');
@@ -2255,25 +2255,25 @@ if (defined('NUSOAP')) {
             }
 
             $ath = new ArtifactType($grp, $group_artifact_id);
-            if (!$ath || !is_object($ath)) {
+            if (! $ath || ! is_object($ath)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'updateArtifact');
             }
             if ($ath->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'updateArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if (!$ath->isValid()) {
+            if (! $ath->isValid()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'updateArtifact');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'updateArtifact');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'updateArtifact');
             }
             $a = new Artifact($ath, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'updateArtifact');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'updateArtifact');
@@ -2283,7 +2283,7 @@ if (defined('NUSOAP')) {
 
             //Check Field Dependencies
             $arm = new ArtifactRulesManager();
-            if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
+            if (! $arm->validate($ath->getID(), $data, $art_field_fact)) {
                 return new SoapFault(INVALID_FIELD_DEPENDENCY_FAULT, 'Invalid Field Dependency', 'updateArtifact');
             }
 
@@ -2343,21 +2343,21 @@ if (defined('NUSOAP')) {
                 return $e;
             }
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'ArtifactType could not be created', 'updateArtifact');
             }
             if ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'updateArtifact');
             }
             // Check if this tracker is valid (not deleted)
-            if (!$at->isValid()) {
+            if (! $at->isValid()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'This tracker is no longer valid.', 'updateArtifact');
             }
 
             $group_artifact_id = $at->getID();
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'updateArtifact');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'updateArtifact');
@@ -2407,21 +2407,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactFollowups');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactFollowups');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactFollowups');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactFollowups');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactFollowups');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactFollowups');
@@ -2480,7 +2480,7 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCannedResponses');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactCannedResponses');
@@ -2529,7 +2529,7 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactReports');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactReports');
@@ -2539,7 +2539,7 @@ if (defined('NUSOAP')) {
             }
 
             $report_fact = new ArtifactReportFactory();
-            if (!$report_fact || !is_object($report_fact)) {
+            if (! $report_fact || ! is_object($report_fact)) {
                 return new SoapFault(GET_REPORT_FACTORY_FAULT, 'Could Not Get ArtifactReportFactory', 'getArtifactReports');
             }
 
@@ -2614,21 +2614,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactAttachedFiles');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactAttachedFiles');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFiles');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactAttachedFiles');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactAttachedFiles');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactAttachedFiles');
@@ -2669,21 +2669,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactAttachedFile');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactAttachedFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactAttachedFile');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactAttachedFile');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactAttachedFile');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactAttachedFile');
@@ -2778,21 +2778,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactDependencies');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactDependencies');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactDependencies');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactDependencies');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactDependencies');
@@ -2856,21 +2856,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactInverseDependencies');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactInverseDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactInverseDependencies');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactInverseDependencies');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactInverseDependencies');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactInverseDependencies');
@@ -2940,28 +2940,28 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFile');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifactFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFile');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactFile');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFile');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactFile');
             }
 
             $af = new ArtifactFile($a);
-            if (!$af || !is_object($af)) {
+            if (! $af || ! is_object($af)) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'addArtifactFile');
             } elseif ($af->isError()) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'addArtifactFile');
@@ -2973,7 +2973,7 @@ if (defined('NUSOAP')) {
 
             $id = $af->create($filename, $filetype, $filesize, $bin_data, $description, $changes);
 
-            if (!$id) {
+            if (! $id) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'addArtifactFile');
             } else {
                 // Send the notification
@@ -3018,34 +3018,34 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFile');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactFile');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactFile');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'deleteArtifactFile');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFile');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactFile');
             }
 
             $af = new ArtifactFile($a, $file_id);
-            if (!$af || !is_object($af)) {
+            if (! $af || ! is_object($af)) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, 'Could Not Create File Object', 'deleteArtifactFile');
             } elseif ($af->isError()) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'deleteArtifactFile');
             }
 
-            if (!$af->delete()) {
+            if (! $af->delete()) {
                 return new SoapFault(GET_ARTIFACT_FILE_FAULT, $af->getErrorMessage(), 'deleteArtifactFile');
             }
 
@@ -3081,29 +3081,29 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactDependencies');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifactDependencies');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactDependencies');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactDependencies');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactDependencies');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactDependencies');
             }
 
             $changes = array();
-            if (!$a->addDependencies($is_dependent_on_artifact_ids, $changes, false, false)) {
-                if (!isset($changes) || !is_array($changes) || count($changes) == 0) {
+            if (! $a->addDependencies($is_dependent_on_artifact_ids, $changes, false, false)) {
+                if (! isset($changes) || ! is_array($changes) || count($changes) == 0) {
                     return new SoapFault(ADD_DEPENDENCY_FAULT, 'Dependencies addition for artifact #' . $a->getID() . ' failed', 'addArtifactDependencies');
                 }
             } else {
@@ -3143,14 +3143,14 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'updateArtifactFollowUp');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'updateArtifactFollowUp');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById');
@@ -3158,7 +3158,7 @@ if (defined('NUSOAP')) {
 
             $a = new Artifact($at, $artifact_id);
 
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'updateArtifactFollowUp');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'updateArtifactFollowUp');
@@ -3166,7 +3166,7 @@ if (defined('NUSOAP')) {
 
             $res = $a->getFollowUpDetails($artifact_history_id);
 
-            if (!$a->updateFollowupComment($artifact_history_id, $comment, $changes, $res['format'])) {
+            if (! $a->updateFollowupComment($artifact_history_id, $comment, $changes, $res['format'])) {
                 return new SoapFault(UPDATE_ARTIFACT_FOLLOWUP_FAULT, $a->getErrorMessage(), 'updateArtifactFollowUp');
             } else {
             // Send the notification
@@ -3212,14 +3212,14 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactFollowUp');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactFollowUp');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactById');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactById');
@@ -3227,13 +3227,13 @@ if (defined('NUSOAP')) {
 
             $a = new Artifact($at, $artifact_id);
 
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactFollowUp');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactFollowUp');
             }
 
-            if (!$a->deleteFollowupComment($artifact_id, $artifact_history_id)) {
+            if (! $a->deleteFollowupComment($artifact_id, $artifact_history_id)) {
                 return new SoapFault(DELETE_ARTIFACT_FOLLOWUP_FAULT, $a->getErrorMessage(), 'deleteArtifactFollowUp');
             } else {
                 return true;
@@ -3270,27 +3270,27 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactDependency');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactDependency');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactDependency');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'deleteArtifactDependency');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactDependency');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactDependency');
             }
 
-            if (!$a->existDependency($dependent_on_artifact_id) || !$a->deleteDependency($dependent_on_artifact_id, $changes)) {
+            if (! $a->existDependency($dependent_on_artifact_id) || ! $a->deleteDependency($dependent_on_artifact_id, $changes)) {
                 return new SoapFault(DELETE_DEPENDENCY_FAULT, 'Error deleting dependency' . $dependent_on_artifact_id, 'deleteArtifactDependency');
             } else {
                 return $dependent_on_artifact_id;
@@ -3329,27 +3329,27 @@ if (defined('NUSOAP')) {
             }
 
             $ath = new ArtifactType($grp, $group_artifact_id);
-            if (!$ath || !is_object($ath)) {
+            if (! $ath || ! is_object($ath)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactFollowup');
             } elseif ($ath->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $ath->getErrorMessage(), 'addArtifactFollowup');
             }
 
             $art_field_fact = new ArtifactFieldFactory($ath);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactFollowup');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactFollowup');
             }
 
             $a = new Artifact($ath, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactFollowup');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactFollowup');
             }
             // add the follow up with 0 as canned_response_id. To set a canned response, just put the content in the body comment.
-            if (!$a->addFollowUpComment($body, $comment_type_id, 0, $changes, $format)) {
+            if (! $a->addFollowUpComment($body, $comment_type_id, 0, $changes, $format)) {
                 return new SoapFault(CREATE_FOLLOWUP_FAULT, 'Comment could not be saved', 'addArtifactFollowup');
             } else {
                 // Send notification
@@ -3434,21 +3434,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactCCList');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactCCList');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactCCList');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactCCList');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactCCList');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactCCList');
@@ -3503,21 +3503,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'addArtifactCC');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'addArtifactCC');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'addArtifactCC');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'addArtifactCC');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'addArtifactCC');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'addArtifactCC');
@@ -3555,21 +3555,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'deleteArtifactCC');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'deleteArtifactCC');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'deleteArtifactCC');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'deleteArtifactCC');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'deleteArtifactCC');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'deleteArtifactCC');
@@ -3610,21 +3610,21 @@ if (defined('NUSOAP')) {
             }
 
             $at = new ArtifactType($grp, $group_artifact_id);
-            if (!$at || !is_object($at)) {
+            if (! $at || ! is_object($at)) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, 'Could Not Get ArtifactType', 'getArtifactHistory');
             } elseif ($at->isError()) {
                 return new SoapFault(GET_ARTIFACT_TYPE_FAULT, $at->getErrorMessage(), 'getArtifactHistory');
             }
 
             $art_field_fact = new ArtifactFieldFactory($at);
-            if (!$art_field_fact || !is_object($art_field_fact)) {
+            if (! $art_field_fact || ! is_object($art_field_fact)) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, 'Could Not Get ArtifactFieldFactory', 'getArtifactHistory');
             } elseif ($art_field_fact->isError()) {
                 return new SoapFault(GET_ARTIFACT_FIELD_FACTORY_FAULT, $art_field_fact->getErrorMessage(), 'getArtifactHistory');
             }
 
             $a = new Artifact($at, $artifact_id);
-            if (!$a || !is_object($a)) {
+            if (! $a || ! is_object($a)) {
                 return new SoapFault(GET_ARTIFACT_FAULT, 'Could Not Get Artifact', 'getArtifactHistory');
             } elseif ($a->isError()) {
                 return new SoapFault(GET_ARTIFACT_FAULT, $a->getErrorMessage(), 'getArtifactHistory');

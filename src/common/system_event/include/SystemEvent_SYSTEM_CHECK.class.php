@@ -77,7 +77,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $dar = $mailinglistdao->searchAllActiveML();
         foreach ($dar as $row) {
             $list = new MailingList($row);
-            if (!$backendMailingList->listExists($list)) {
+            if (! $backendMailingList->listExists($list)) {
                 $backendMailingList->createList($list->getId());
             }
             // TODO what about lists that changed their setting (description, public/private) ?
@@ -86,7 +86,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         $project_manager = ProjectManager::instance();
         foreach ($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {
             // Recreate project directories if they were deleted
-            if (!$backendSystem->createProjectHome($project->getId())) {
+            if (! $backendSystem->createProjectHome($project->getId())) {
                 $this->error("Could not create project home");
                 return false;
             }
@@ -94,16 +94,16 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
             if ($project->usesCVS()) {
                 $backendCVS->setCVSRootListNeedUpdate();
 
-                if (!$backendCVS->repositoryExists($project)) {
-                    if (!$backendCVS->createProjectCVS($project->getId())) {
+                if (! $backendCVS->repositoryExists($project)) {
+                    if (! $backendCVS->createProjectCVS($project->getId())) {
                         $this->error("Could not create/initialize project CVS repository");
                         return false;
                     }
-                    $backendCVS->setCVSPrivacy($project, !$project->isPublic() || $project->isCVSPrivate());
+                    $backendCVS->setCVSPrivacy($project, ! $project->isPublic() || $project->isCVSPrivate());
                 }
                 $backendCVS->createLockDirIfMissing($project);
                 // check post-commit hooks
-                if (!$backendCVS->updatePostCommit($project)) {
+                if (! $backendCVS->updatePostCommit($project)) {
                     return false;
                 }
                 $backendCVS->updateCVSwriters($project->getID());
@@ -115,13 +115,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
             }
 
             if ($project->usesSVN()) {
-                if (!$backendSVN->repositoryExists($project)) {
-                    if (!$backendSVN->createProjectSVN($project->getId())) {
+                if (! $backendSVN->repositoryExists($project)) {
+                    if (! $backendSVN->createProjectSVN($project->getId())) {
                         $this->error("Could not create/initialize project SVN repository");
                         return false;
                     }
                     $backendSVN->updateSVNAccess($project->getId(), $project->getSVNRootPath());
-                    $backendSVN->setSVNPrivacy($project, !$project->isPublic() || $project->isSVNPrivate());
+                    $backendSVN->setSVNPrivacy($project, ! $project->isPublic() || $project->isSVNPrivate());
                     $backendSVN->setSVNApacheConfNeedUpdate();
                 } else {
                     $backendSVN->checkSVNAccessPresence($project->getId());
@@ -142,7 +142,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent
         }
 
         // If no codendi_svnroot.conf file, force recreate.
-        if (!is_file(ForgeConfig::get('svn_root_file'))) {
+        if (! is_file(ForgeConfig::get('svn_root_file'))) {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
 

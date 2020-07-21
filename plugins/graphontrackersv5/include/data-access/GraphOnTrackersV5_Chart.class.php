@@ -363,7 +363,7 @@ abstract class GraphOnTrackersV5_Chart implements Visitable
 
     private function graphCanBeUpdated($readonly, PFUser $current_user)
     {
-        return !$readonly && ! $current_user->isAnonymous();
+        return ! $readonly && ! $current_user->isAnonymous();
     }
 
     /**

@@ -54,7 +54,7 @@ class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\ReferenceAliasMediawiki\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;

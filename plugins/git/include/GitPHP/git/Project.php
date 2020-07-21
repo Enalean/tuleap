@@ -316,11 +316,11 @@ class Project
         $path = $this->projectRoot . $project;
         $fullPath = realpath($path);
 
-        if (!is_dir($fullPath)) {
+        if (! is_dir($fullPath)) {
             throw new RepositoryNotExistingException(sprintf(dgettext("gitphp", '%1$s is not a directory'), $project));
         }
 
-        if (!is_file($fullPath . '/HEAD')) {
+        if (! is_file($fullPath . '/HEAD')) {
             throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is not a git repository'), $project));
         }
 
@@ -330,7 +330,7 @@ class Project
 
         $pathPiece = substr($fullPath, 0, strlen($realProjectRoot));
 
-        if ((!is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
+        if ((! is_link($path)) && (strcmp($pathPiece, $realProjectRoot) !== 0)) {
             throw new RepositoryAccessException(sprintf(dgettext("gitphp", '%1$s is outside of the projectroot'), $project));
         }
 
@@ -418,7 +418,7 @@ class Project
         }
 
         $cloneurl = Util::AddSlash(Config::GetInstance()->GetValue('cloneurl', ''));
-        if (!empty($cloneurl)) {
+        if (! empty($cloneurl)) {
             $cloneurl .= $this->project;
         }
 
@@ -457,7 +457,7 @@ class Project
         }
 
         $pushurl = Util::AddSlash(Config::GetInstance()->GetValue('pushurl', ''));
-        if (!empty($pushurl)) {
+        if (! empty($pushurl)) {
             $pushurl .= $this->project;
         }
 
@@ -586,7 +586,7 @@ class Project
      */
     public function GetHeadCommit() // @codingStandardsIgnoreLine
     {
-        if (!$this->readHeadRef) {
+        if (! $this->readHeadRef) {
             $this->ReadHeadCommit();
         }
 
@@ -621,7 +621,7 @@ class Project
             $this->head = $regs[1];
         } elseif (preg_match('/^ref: (.+)$/', $head, $regs)) {
             /* standard pointer to head */
-            if (!$this->readRefs) {
+            if (! $this->readRefs) {
                 $this->ReadRefList();
             }
 
@@ -646,7 +646,7 @@ class Project
      */
     public function GetEpoch() // @codingStandardsIgnoreLine
     {
-        if (!$this->epochRead) {
+        if (! $this->epochRead) {
             $this->ReadEpoch();
         }
 
@@ -664,7 +664,7 @@ class Project
      */
     public function GetAge() // @codingStandardsIgnoreLine
     {
-        if (!$this->epochRead) {
+        if (! $this->epochRead) {
             $this->ReadEpoch();
         }
 
@@ -694,7 +694,7 @@ class Project
      */
     private function ReadEpochRaw() // @codingStandardsIgnoreLine
     {
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
 
@@ -763,7 +763,7 @@ class Project
             return $this->commitCache[$hash];
         }
 
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
 
@@ -793,7 +793,7 @@ class Project
      */
     public function GetRefs($type = '') // @codingStandardsIgnoreLine
     {
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
 
@@ -884,12 +884,12 @@ class Project
                     // standard tag/head
                     $key = 'refs/' . $regs[2] . '/' . $regs[3];
                     if ($regs[2] == 'tags') {
-                        if (!isset($this->tags[$key])) {
+                        if (! isset($this->tags[$key])) {
                             $lastRef = $this->LoadTag($regs[3], $regs[1]);
                             $this->tags[$key] = $lastRef;
                         }
                     } elseif ($regs[2] == 'heads') {
-                        if (!isset($this->heads[$key])) {
+                        if (! isset($this->heads[$key])) {
                             $this->heads[$key] = new Head($this, $regs[3], $regs[1]);
                         }
                     }
@@ -944,7 +944,7 @@ class Project
      */
     public function GetTags($count = 0) // @codingStandardsIgnoreLine
     {
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
         return $this->GetTagsRaw($count);
@@ -986,13 +986,13 @@ class Project
             return null;
         }
 
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
 
         $key = 'refs/tags/' . $tag;
 
-        if (!isset($this->tags[$key])) {
+        if (! isset($this->tags[$key])) {
             $this->tags[$key] = $this->LoadTag($tag);
         }
 
@@ -1032,7 +1032,7 @@ class Project
      */
     public function GetHeads($count = 0) // @codingStandardsIgnoreLine
     {
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
         return $this->GetHeadsRaw($count);
@@ -1073,13 +1073,13 @@ class Project
             return null;
         }
 
-        if (!$this->readRefs) {
+        if (! $this->readRefs) {
             $this->ReadRefList();
         }
 
         $key = 'refs/heads/' . $head;
 
-        if (!isset($this->heads[$key])) {
+        if (! isset($this->heads[$key])) {
             $this->heads[$key] = new Head($this, $head);
         }
 
@@ -1165,7 +1165,7 @@ class Project
         while (($commit = array_shift($queue)) !== null) {
             $parents = $commit->GetParents();
             foreach ($parents as $parent) {
-                if (!isset($inc[$parent->GetHash()])) {
+                if (! isset($inc[$parent->GetHash()])) {
                     $inc[$parent->GetHash()] = 1;
                     $queue[] = $parent;
                     $num++;
@@ -1261,7 +1261,7 @@ class Project
      */
     public function GetObject($hash, &$type = 0) // @codingStandardsIgnoreLine
     {
-        if (!preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
+        if (! preg_match('/^[0-9A-Fa-f]{40}$/', $hash)) {
             return false;
         }
 
@@ -1287,7 +1287,7 @@ class Project
             return $data;
         }
 
-        if (!$this->packsRead) {
+        if (! $this->packsRead) {
             $this->ReadPacks();
         }
 
@@ -1457,7 +1457,7 @@ class Project
 
         $revlist = explode("\n", $exe->Execute(GitExe::REV_LIST, $args));
 
-        if (!$revlist[count($revlist) - 1]) {
+        if (! $revlist[count($revlist) - 1]) {
             /* the last newline creates a null entry */
             array_splice($revlist, -1, 1);
         }

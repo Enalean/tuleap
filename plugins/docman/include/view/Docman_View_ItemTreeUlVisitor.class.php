@@ -58,7 +58,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
         $this->firstNodeStripped   = false;
         $this->hp                  = Codendi_HTMLPurifier::instance();
         $this->params              = $params ?? [];
-        if (!isset($this->params['default_url'])) {
+        if (! isset($this->params['default_url'])) {
             $this->params['default_url'] = null;
         }
     }
@@ -150,7 +150,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
     public function _displayItem(&$item, $params)
     {
         $li_displayed = false;
-        if ($this->stripFirstNode && !$this->firstNodeStripped) {
+        if ($this->stripFirstNode && ! $this->firstNodeStripped) {
             $this->firstNodeStripped = true;
             if (isset($this->params['display_description']) && $this->params['display_description']) {
                 $this->html .= '<p>' . $item->getDescription() . '</p>';
@@ -160,7 +160,7 @@ class Docman_View_ItemTreeUlVisitor implements \Tuleap\Docman\Item\ItemVisitor
                 $this->html .= '<li id="item_' . $item->getId() . '" class="' . Docman_View_Browse::getItemClasses($params) . '">';
                 $params['expanded'] = true;
                 $open = '_open';
-                if (!isset($this->params['item_to_move']) && (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $item->getGroupId() . '_' . $item->getId()) === false)) {
+                if (! isset($this->params['item_to_move']) && (user_get_preference(PLUGIN_DOCMAN_EXPAND_FOLDER_PREF . '_' . $item->getGroupId() . '_' . $item->getId()) === false)) {
                     $params['expanded'] = false;
                     $open   = '';
                 }

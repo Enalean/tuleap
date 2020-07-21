@@ -89,7 +89,7 @@ class Docman_ApprovalTableNotificationCycle
         }
 
         if (
-            !$isLastReviewer &&
+            ! $isLastReviewer &&
             $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL
         ) {
             $this->notifyNextReviewer();
@@ -112,7 +112,7 @@ class Docman_ApprovalTableNotificationCycle
     {
         $this->sendNotifReviewDeclined($reviewer);
         if (
-            !$isLastReviewer &&
+            ! $isLastReviewer &&
             $this->table->getNotification() == PLUGIN_DOCMAN_APPROVAL_NOTIF_SEQUENTIAL
         ) {
             $this->notifyNextReviewer();
@@ -177,12 +177,12 @@ class Docman_ApprovalTableNotificationCycle
         $dao = $this->_getReviewerDao();
 
         $dar = $dao->getFirstReviewerByStatus($this->table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
             $dar = $dao->getFirstReviewerByStatus($this->table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
                                                                               PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($row['reviewer_id']);
             }
@@ -209,7 +209,7 @@ class Docman_ApprovalTableNotificationCycle
      */
     private function enableMonitorForReviewer($reviewerId)
     {
-        if (($this->notificationManager !== null) && !$this->notificationManager->userExists($reviewerId, $this->item->getId())) {
+        if (($this->notificationManager !== null) && ! $this->notificationManager->userExists($reviewerId, $this->item->getId())) {
             $this->notificationManager->add($reviewerId, $this->item->getId());
         }
     }
@@ -446,7 +446,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
         $nbDeclined = 0;
         $rejected = false;
         $revIterator = $this->table->getReviewerIterator();
-        while (!$rejected && $revIterator->valid()) {
+        while (! $rejected && $revIterator->valid()) {
             $reviewer = $revIterator->current();
             switch ($reviewer->getState()) {
                 case PLUGIN_DOCMAN_APPROVAL_STATE_APPROVED:

@@ -67,7 +67,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_log')) {
+        if (! $this->db->tableNameExists('plugin_git_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_log table is missing');
         }
     }

@@ -204,7 +204,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
             $plugin_docman_widget_embedded = $request->get('plugin_docman_widget_embedded');
             $vTitle = new Valid_String('title');
             $vTitle->required();
-            if (!$request->validInArray('plugin_docman_widget_embedded', $vTitle)) {
+            if (! $request->validInArray('plugin_docman_widget_embedded', $vTitle)) {
                 if ($item = $this->getItem($plugin_docman_widget_embedded['item_id'])) {
                     $plugin_docman_widget_embedded['title'] = $item->getTitle();
                 }
@@ -295,7 +295,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
             $item = Docman_ItemFactory::instance($row['group_id'])->getItemFromRow($row);
             $dPm  = Docman_PermissionsManager::instance($row['group_id']);
             $user = UserManager::instance()->getCurrentUser();
-            if (!$dPm->userCanRead($user, $item->getId())) {
+            if (! $dPm->userCanRead($user, $item->getId())) {
                 $item = null;
             }
         }

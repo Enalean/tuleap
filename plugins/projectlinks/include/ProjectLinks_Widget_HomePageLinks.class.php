@@ -162,7 +162,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
         $ulClosed = true;
         foreach ($dar as $row) {
             if ($row['link_name'] != $previousLinkName) {
-                if (!$ulClosed) {
+                if (! $ulClosed) {
                     // Do not close the list when the list is not started
                     $html .= "    </ul>\n";
                     $html .= "  </li>\n";
@@ -187,7 +187,7 @@ class ProjectLinks_Widget_HomePageLinks extends Widget
             $previousLinkName = $row['link_name'];
         }
 
-        if (!$ulClosed) {
+        if (! $ulClosed) {
             $html .= "    </ul>\n";
             $html .= "  </li>\n";
         }

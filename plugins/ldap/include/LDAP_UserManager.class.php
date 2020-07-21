@@ -89,7 +89,7 @@ class LDAP_UserManager
      */
     public function getLdapFromLdapId($ldapId)
     {
-        if (!isset($this->ldapResultCache[$ldapId])) {
+        if (! isset($this->ldapResultCache[$ldapId])) {
             $lri = $this->getLdap()->searchEdUid($ldapId);
             if ($lri && $lri->count() == 1) {
                 $this->ldapResultCache[$ldapId] = $lri->current();
@@ -108,7 +108,7 @@ class LDAP_UserManager
      */
     public function getLdapFromUser($user)
     {
-        if ($user && !$user->isAnonymous()) {
+        if ($user && ! $user->isAnonymous()) {
             return $this->getLdapFromLdapId($user->getLdapId());
         } else {
             return false;
@@ -149,7 +149,7 @@ class LDAP_UserManager
     public function getUserFromLdap(LDAPResult $lr)
     {
         $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
-        if (!$user) {
+        if (! $user) {
             $user = $this->createAccountFromLdap($lr);
         }
         return $user;
@@ -349,8 +349,7 @@ class LDAP_UserManager
 
     private function mergeDefaultAttributesAndSiteAttributes()
     {
-        return
-        array_values(
+        return array_values(
             array_unique(
                 array_merge(
                     $this->ldap->getDefaultAttributes(),
@@ -496,7 +495,7 @@ class LDAP_UserManager
     public function areUsersSupendable($nbr_all_users)
     {
         $nbr_users_to_suspend = count($this->getUsersToBeSuspended());
-        if ((!$threshold_users_suspension = $this->ldap->getLDAPParam('threshold_users_suspension')) || $nbr_users_to_suspend == 0) {
+        if ((! $threshold_users_suspension = $this->ldap->getLDAPParam('threshold_users_suspension')) || $nbr_users_to_suspend == 0) {
             return true;
         }
         return $this->checkThreshold($nbr_users_to_suspend, $nbr_all_users);

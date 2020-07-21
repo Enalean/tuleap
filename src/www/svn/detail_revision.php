@@ -6,7 +6,7 @@
 
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if (!$request->valid($vGroupId)) {
+if (! $request->valid($vGroupId)) {
     exit_no_group(); // need a group_id !!!
 } else {
     $group_id = $request->get('group_id');

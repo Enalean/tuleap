@@ -1055,7 +1055,7 @@ class MilestoneResource extends AuthenticatedResource
         }
 
         if (! $artifact->userCanView()) {
-            throw new  RestException(403, 'Cannot link this item');
+            throw new RestException(403, 'Cannot link this item');
         }
 
         return $artifact;

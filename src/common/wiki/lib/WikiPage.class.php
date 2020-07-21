@@ -309,13 +309,13 @@ class WikiPage
                             'wiki_page'  => $this->pagename,
                             'group_id' => self::$gid
                             ));
-            if (!$userCanAccess) {
+            if (! $userCanAccess) {
                 return false;
             }
         } else {
             // Check if user is authorized.
             if ($this->permissionExist()) {
-                if (!permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, self::$gid)) {
+                if (! permission_is_authorized(Wiki_PermissionsManager::WIKI_PERMISSION_READ, $this->id, $uid, self::$gid)) {
                     return false;
                 }
             }

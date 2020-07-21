@@ -58,7 +58,7 @@ class MetadataListOfValuesElementListBuilderTest extends TestCase
         $element_two->initFromRow($value_two);
         $expected_list_of_elements = [$element, $element_two];
 
-        $list_of_elements_builder = new  MetadataListOfValuesElementListBuilder($this->dao);
+        $list_of_elements_builder = new MetadataListOfValuesElementListBuilder($this->dao);
 
         $list_of_elements = $list_of_elements_builder->build($id, $only_active);
 

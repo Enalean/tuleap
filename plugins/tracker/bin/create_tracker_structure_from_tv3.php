@@ -45,7 +45,7 @@ if ($project->isError() || ! $project->isActive()) {
     exit(1);
 }
 $tv3 = new ArtifactType($project, $tv3_tracker_id);
-if (! $tv3 || !is_object($tv3) || $tv3->isError() || ! $tv3->isValid()) {
+if (! $tv3 || ! is_object($tv3) || $tv3->isError() || ! $tv3->isValid()) {
     fwrite(STDERR, 'ERROR: Given tracker v3 does not exist or is invalid' . PHP_EOL);
     exit(1);
 }

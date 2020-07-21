@@ -68,7 +68,7 @@ if ($request->valid($vUserId)) {
     $user_id = $request->get('user_id');
     $user    = $um->getUserById($user_id);
 }
-if (!$user_id || !$user) {
+if (! $user_id || ! $user) {
     $GLOBALS['Response']->addFeedback('error', 'Invalid user');
 }
 
@@ -93,7 +93,7 @@ if ($request->isPost()) {
         $vDate = new Valid('expiry_date');
         $vDate->addRule(new Rule_Date());
         //$vDate->required();
-        if (!$request->valid($vDate)) {
+        if (! $request->valid($vDate)) {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('admin_usergroup', 'data_not_parsed'));
         } else {
             if ($request->existAndNonEmpty('expiry_date')) {
@@ -232,7 +232,7 @@ if ($request->isPost()) {
                 }
             }
 
-            if ($user->getUnixStatus() != 'N' && !$user->getUnixUid()) {
+            if ($user->getUnixStatus() != 'N' && ! $user->getUnixUid()) {
                 $um->assignNextUnixUid($user);
             }
             $GLOBALS['Response']->redirect('/admin/usergroup.php?user_id=' . $user->getId());

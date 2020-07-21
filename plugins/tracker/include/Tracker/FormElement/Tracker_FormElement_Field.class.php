@@ -114,7 +114,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $this->criteria_value = array();
         }
 
-        if (!isset($this->criteria_value[$criteria->getReport()->getId()])) {
+        if (! isset($this->criteria_value[$criteria->getReport()->getId()])) {
             $this->criteria_value[$criteria->getReport()->getId()] = null;
             $dao = $this->getCriteriaDao();
             if ($dao && $v = $dao->searchByCriteriaId($criteria->id)->getRow()) {
@@ -931,7 +931,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     {
         $purifier = Codendi_HTMLPurifier::instance();
         $html     = '';
-        if (!isset($used[$this->id])) {
+        if (! isset($used[$this->id])) {
             $html .= '<option value="' . $this->id . '">' . $purifier->purify($this->getLabel()) . '</option>';
         }
         return $html;
@@ -1065,12 +1065,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ($is_submission) {
             $hasPermission = $this->userCanSubmit();
         }
-        if ($last_changeset_value === null && ((!is_array($submitted_value) && $submitted_value === null) || (is_array($submitted_value) && empty($submitted_value))) && $hasPermission && $this->isRequired()) {
+        if ($last_changeset_value === null && ((! is_array($submitted_value) && $submitted_value === null) || (is_array($submitted_value) && empty($submitted_value))) && $hasPermission && $this->isRequired()) {
             $is_valid = false;
             $this->setHasErrors(true);
 
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'The field %1$s is required.'), $this->getLabel() . ' (' . $this->getName() . ')'));
-        } elseif (((!is_array($submitted_value) && $submitted_value !== null) || (is_array($submitted_value) && !empty($submitted_value))) && ! $hasPermission) {
+        } elseif (((! is_array($submitted_value) && $submitted_value !== null) || (is_array($submitted_value) && ! empty($submitted_value))) && ! $hasPermission) {
             $is_valid = false;
             $this->setHasErrors(true);
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'You are not allowed to update the field %1$s.'), $this->getLabel()));
@@ -1214,13 +1214,13 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             //If a field is not submitable, but has a required default value, the value has to  be submitted ...
             if ($is_submission) {
                 $hasPermission = $this->userCanSubmit($submitter) ||
-                    (!$this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue() != null);
+                    (! $this->userCanSubmit($submitter) && $this->isrequired() && $this->getDefaultValue() != null);
             }
         }
 
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
-            if ($submitted_value === null || !$hasPermission || !$this->hasChanges($artifact, $previous_changesetvalue, $submitted_value)) {
+            if ($submitted_value === null || ! $hasPermission || ! $this->hasChanges($artifact, $previous_changesetvalue, $submitted_value)) {
                 //keep the old value
                 if ($changeset_value_id = $dao->save($new_changeset_id, $this->id, 0)) {
                     $updated = $this->keepValue($artifact, $changeset_value_id, $previous_changesetvalue);
@@ -1477,7 +1477,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function getPermissionsByUgroupId()
     {
-        if (!$this->cache_permissions) {
+        if (! $this->cache_permissions) {
             $this->cache_permissions = array();
             //berk... legacy permission code... legacy db functions... berk!
             $sql = "SELECT ugroup_id, permission_type

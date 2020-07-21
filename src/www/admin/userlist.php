@@ -121,7 +121,7 @@ if ($request->exist('export')) {
 
 $dao = new UserDao(CodendiDataAccess::instance());
 $offset = $request->getValidated('offset', 'uint', 0);
-if (!$offset || $offset < 0) {
+if (! $offset || $offset < 0) {
     $offset = 0;
 }
 $limit = 25;

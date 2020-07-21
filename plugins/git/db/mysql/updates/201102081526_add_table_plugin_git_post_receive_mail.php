@@ -45,7 +45,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_post_receive_mail')) {
+        if (! $this->db->tableNameExists('plugin_git_post_receive_mail')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_post_receive_mail table is missing');
         }
     }

@@ -192,7 +192,7 @@ class Tracker_Action_CopyArtifact
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
             $config = new \Tuleap\Project\XML\Import\ImportConfig();
             $artifact = $this->xml_importer->importBareArtifact($tracker, $xml_artifact, $config);
-            if (!$artifact) {
+            if (! $artifact) {
                 return null;
             } else {
                 $new_artifacts[] = $artifact;

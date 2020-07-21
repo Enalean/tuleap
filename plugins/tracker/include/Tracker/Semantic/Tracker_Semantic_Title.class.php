@@ -149,7 +149,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
             $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
             $submit_btn .= $GLOBALS['Language']->getText('global', 'save_change') . '</button>';
 
-            if (!$this->getFieldId()) {
+            if (! $this->getFieldId()) {
                 $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>title</em> yet.</p>');
                 $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . ' ';
                 $html .= $select . ' <br> ' . $submit_btn;
@@ -230,7 +230,7 @@ class Tracker_Semantic_Title extends Tracker_Semantic
      */
     public static function load(Tracker $tracker)
     {
-        if (!isset(self::$_instances[$tracker->getId()])) {
+        if (! isset(self::$_instances[$tracker->getId()])) {
             $field_id = null;
             $dao = new Tracker_Semantic_TitleDao();
             if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {

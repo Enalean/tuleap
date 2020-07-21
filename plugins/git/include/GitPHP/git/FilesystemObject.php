@@ -100,7 +100,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      */
     public function GetName() // @codingStandardsIgnoreLine
     {
-        if (!empty($this->path)) {
+        if (! empty($this->path)) {
             return basename($this->path);
         }
 
@@ -117,7 +117,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      */
     public function GetPath() // @codingStandardsIgnoreLine
     {
-        if (!empty($this->path)) {
+        if (! empty($this->path)) {
             return $this->path;
         }
 
@@ -127,7 +127,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
 
     public function GetFullPath() // @codingStandardsIgnoreLine
     {
-        if (!(isset($_GET['f']))) {
+        if (! (isset($_GET['f']))) {
             return $this->path;
         }
 
@@ -244,7 +244,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
      */
     public function GetPathTree() // @codingStandardsIgnoreLine
     {
-        if (!$this->pathTreeRead) {
+        if (! $this->pathTreeRead) {
             $this->ReadPathTree();
         }
 
@@ -272,7 +272,7 @@ abstract class FilesystemObject extends GitObject implements GitObjectType
         while (($pos = strrpos($path, '/')) !== false) {
             $path = substr($path, 0, $pos);
             $pathhash = $this->commit->PathToHash($path);
-            if (!empty($pathhash)) {
+            if (! empty($pathhash)) {
                 $parent = $this->GetProject()->GetTree($pathhash);
                 $parent->SetPath($path);
                 $this->pathTree[] = $parent;

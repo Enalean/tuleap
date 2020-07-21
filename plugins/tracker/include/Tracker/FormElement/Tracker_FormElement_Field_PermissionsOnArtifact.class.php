@@ -148,7 +148,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $is_disabled = false;
         $is_checked  = ($this->getPermissionsValidator()->isArtifactPermissionChecked($value) === true);
 
-        return  $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
+        return $this->getArtifactValueHTML($this->getId(), $is_checked, $is_disabled);
     }
 
     /**
@@ -324,7 +324,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
     public function fetchFollowUp($artifact, $from, $to)
     {
         $html = '';
-        if (!$from || !($from_value = $this->getValue($from['value_id']))) {
+        if (! $from || ! ($from_value = $this->getValue($from['value_id']))) {
             $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
             $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
@@ -836,7 +836,7 @@ class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElemen
         $pm = PermissionsManager::instance();
         $permission_type = self::PERMISSION_TYPE;
         foreach ($ugroups as $ugroup) {
-            if (!$pm->addPermission($permission_type, $artifact_id, $ugroup)) {
+            if (! $pm->addPermission($permission_type, $artifact_id, $ugroup)) {
                 return false;
             }
         }

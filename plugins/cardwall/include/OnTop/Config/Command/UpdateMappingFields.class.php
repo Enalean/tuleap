@@ -71,12 +71,12 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     public function execute(Codendi_Request $request)
     {
-        if (!is_array($request->get('mapping_field'))) {
+        if (! is_array($request->get('mapping_field'))) {
             return;
         }
         $mapping_fields = $this->getMappingFields();
         foreach ($request->get('mapping_field') as $mapping_tracker_id => $mapping_tracker_info) {
-            if (!isset($mapping_tracker_info['field'])) {
+            if (! isset($mapping_tracker_info['field'])) {
                 continue;
             }
             $field_id = (int) $mapping_tracker_info['field'];
@@ -123,7 +123,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
 
     private function saveValuesMapping(array $mapping_tracker_info, Tracker $mapping_tracker, Tracker_FormElement $field)
     {
-        if (empty($mapping_tracker_info['values']) || !is_array($mapping_tracker_info['values'])) {
+        if (empty($mapping_tracker_info['values']) || ! is_array($mapping_tracker_info['values'])) {
             return;
         }
         $nb_changes      = 0;
@@ -175,7 +175,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
                 }
             }
         }
-        return !$no_update_needed;
+        return ! $no_update_needed;
     }
 
     private function areMappingValuesAdded(array $values, array $already_processed)
@@ -196,6 +196,6 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     private function fieldHasChanged(array $mapping_fields, ?Tracker $mapping_tracker = null, ?Tracker_FormElement $field = null)
     {
-        return !isset($mapping_fields[$mapping_tracker->getId()]) || ($field !== null && $mapping_fields[$mapping_tracker->getId()] != $field->getId());
+        return ! isset($mapping_fields[$mapping_tracker->getId()]) || ($field !== null && $mapping_fields[$mapping_tracker->getId()] != $field->getId());
     }
 }

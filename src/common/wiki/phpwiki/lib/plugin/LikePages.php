@@ -94,11 +94,11 @@ class WikiPlugin_LikePages extends WikiPlugin
 
         // Search for pages containing either the suffix or the prefix.
         $search = $match = array();
-        if (!empty($prefix)) {
+        if (! empty($prefix)) {
             $search[] = $this->_quote($prefix);
             $match[]  = '^' . preg_quote($prefix, '/');
         }
-        if (!empty($suffix)) {
+        if (! empty($suffix)) {
             $search[] = $this->_quote($suffix);
             $match[]  = preg_quote($suffix, '/') . '$';
         }
@@ -112,13 +112,13 @@ class WikiPlugin_LikePages extends WikiPlugin
         $match_re = '/' . join('|', $match) . '/';
 
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader) {
+        if (! $noheader) {
             $pagelist->setCaption($descrip);
         }
         $pages = $dbi->titleSearch($query);
         while ($page = $pages->next()) {
             $name = $page->getName();
-            if (!preg_match($match_re, $name)) {
+            if (! preg_match($match_re, $name)) {
                 continue;
             }
             $pagelist->addPage($page);

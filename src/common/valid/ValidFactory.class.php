@@ -294,7 +294,7 @@ class Valid_File extends Valid
      */
     public function isEmptyValue($file)
     {
-        if (!is_array($file)) {
+        if (! is_array($file)) {
             return false;
         } elseif (parent::isEmptyValue($file['name'])) {
             return false;

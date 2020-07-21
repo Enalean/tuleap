@@ -40,7 +40,7 @@ class b201411051547_add_fast_compute_option extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('tracker_field_computed', 'fast_compute')) {
+        if (! $this->db->columnNameExists('tracker_field_computed', 'fast_compute')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column fast_compute to tracker_field_computed');
         }
     }

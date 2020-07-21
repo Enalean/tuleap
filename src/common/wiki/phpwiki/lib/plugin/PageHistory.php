@@ -39,7 +39,7 @@ class _PageHistory_PageRevisionIter extends WikiDB_PageRevisionIterator
         if (! $this->_include_major) {
             $this->_include_minor = true;
         } else {
-            $this->_include_minor = !empty($include_minor_revisions);
+            $this->_include_minor = ! empty($include_minor_revisions);
         }
 
         if (empty($include_all_revisions)) {
@@ -51,7 +51,7 @@ class _PageHistory_PageRevisionIter extends WikiDB_PageRevisionIterator
 
     public function next()
     {
-        if (!$this->_iter) {
+        if (! $this->_iter) {
             return false;
         }
 
@@ -260,7 +260,7 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
 
     public function item_properties($rev)
     {
-        if (!($title = $this->summary($rev))) {
+        if (! ($title = $this->summary($rev))) {
             $title = sprintf(_("Version %d"), $rev->getVersion());
         }
 
@@ -335,7 +335,7 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
         $format = $args['format'];
 
         $fmt_class = $WikiTheme->getFormatter('PageHistory', $format);
-        if (!$fmt_class) {
+        if (! $fmt_class) {
             if ($format == 'rss') {
                 $fmt_class = '_PageHistory_RssFormatter';
             } else {

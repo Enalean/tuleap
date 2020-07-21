@@ -65,7 +65,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'user_id')) {
+        if (! $this->db->columnNameExists('plugin_git', 'user_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column user_id in table plugin_git is missing');
         }
     }

@@ -368,7 +368,7 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
 
     public function countMilestonesAfter(int $timestamp)
@@ -383,6 +383,6 @@ class AgileDashboard_Milestone_MilestoneDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
 }

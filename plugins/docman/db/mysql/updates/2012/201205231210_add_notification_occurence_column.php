@@ -64,7 +64,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_docman_approval', 'notification_occurence')) {
+        if (! $this->db->columnNameExists('plugin_docman_approval', 'notification_occurence')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column notification_occurence in table plugin_docman_approval still not created');
         }
     }

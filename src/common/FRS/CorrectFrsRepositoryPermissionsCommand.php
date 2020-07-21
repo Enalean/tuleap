@@ -63,7 +63,7 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
             }
 
             if ($file->getFilename() === 'DELETED' && $file->getGroup() !== 496) {
-                if (!chgrp($this->directory->getPath() . '/' . $file, 496)) {
+                if (! chgrp($this->directory->getPath() . '/' . $file, 496)) {
                     $output->writeln("<error>Wrong permissions of $file has not been changed.</error>");
                     continue;
                 }
@@ -74,7 +74,7 @@ class CorrectFrsRepositoryPermissionsCommand extends Command
             $project = $this->project_manager->getProjectByUnixName($file->getFilename());
 
             if ($project && $project->getUnixGID() !== $file->getGroup()) {
-                if (!chgrp($this->directory->getPath() . '/' . $file, $project->getUnixGID())) {
+                if (! chgrp($this->directory->getPath() . '/' . $file, $project->getUnixGID())) {
                     $output->writeln("<error>Wrong permissions of $file has not been changed.</error>");
                     continue;
                 }

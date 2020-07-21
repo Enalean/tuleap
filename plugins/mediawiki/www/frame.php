@@ -14,11 +14,11 @@ $pluginname = 'mediawiki';
 
 $project_manager = ProjectManager::instance();
 $group = $project_manager->getProject($group_id);
-if (!$group) {
+if (! $group) {
     exit_error("Invalid Project", "Invalid Project");
 }
 
-if (!$group->usesPlugin($pluginname)) {
+if (! $group->usesPlugin($pluginname)) {
     exit_error("Error", "First activate the $pluginname plugin through the Project's Admin Interface");
 }
 

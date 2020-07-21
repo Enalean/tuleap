@@ -36,7 +36,7 @@ class DocmanLinksValidityChecker
     {
         $valid_http = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
         $valid_ftp  = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
-        if (!$valid_ftp->isValid($link_url) && !$valid_http->isValid($link_url)) {
+        if (! $valid_ftp->isValid($link_url) && ! $valid_http->isValid($link_url)) {
             throw new RestException(
                 400,
                 sprintf('The link is not a valid URL')

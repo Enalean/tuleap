@@ -32,7 +32,7 @@ class SystemEvent_MOVE_FRS_FILE extends SystemEvent
      */
     public function setLog($log)
     {
-        if (!isset($this->log) || $this->log == '') {
+        if (! isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
             $this->log .= PHP_EOL . $log;

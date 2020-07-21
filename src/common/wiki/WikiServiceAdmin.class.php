@@ -45,7 +45,7 @@ class WikiServiceAdmin extends Controler
         $this->wiki = new Wiki($this->gid);
 
       // If Wiki for project doesn't exist, propose creation...
-        if (!$this->wiki->exist()) {
+        if (! $this->wiki->exist()) {
             header('Location: /wiki/index.php?group_id=' . $this->gid . '&view=install');
         }
 
@@ -61,11 +61,11 @@ class WikiServiceAdmin extends Controler
       // Default behaviour: display default view:
         $this->view = 'main';
 
-        if (!empty($_REQUEST['view'])) {
+        if (! empty($_REQUEST['view'])) {
             $this->view = $_REQUEST['view'];
         }
 
-        if (!empty($_REQUEST['action'])) {
+        if (! empty($_REQUEST['action'])) {
             $this->action = $_REQUEST['action'];
         }
     }

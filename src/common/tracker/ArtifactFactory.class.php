@@ -47,7 +47,7 @@ class ArtifactFactory
     {
         global $Language;
 
-        if (!$ArtifactType || !is_object($ArtifactType)) {
+        if (! $ArtifactType || ! is_object($ArtifactType)) {
             $this->setError('ArtifactFactory:: ' . $Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
@@ -142,7 +142,7 @@ class ArtifactFactory
             $cpt_criteria = 0;  // counter for criteria (used to build the SQL query)
             foreach ($criteria as $c => $cr) {
                 $af = $art_field_fact->getFieldFromName($cr->field_name);
-                if (!$af || !is_object($af)) {
+                if (! $af || ! is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : ' . $cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
@@ -202,7 +202,7 @@ class ArtifactFactory
         $offset = intval($offset);
         $max_rows = intval($max_rows);
         if ($max_rows > 0) {
-            if (!$offset || $offset < 0) {
+            if (! $offset || $offset < 0) {
                 $offset = 0;
             }
             $sql .= " LIMIT " .  db_ei($offset)  . "," .  db_ei($max_rows);
@@ -238,7 +238,7 @@ class ArtifactFactory
         $prefs = array();
 
         $report = new ArtifactReport($report_id, $group_artifact_id);
-        if (!$report || !is_object($report)) {
+        if (! $report || ! is_object($report)) {
             $this->setError('Cannot Get ArtifactReport From ID : ' . $report_id);
             return false;
         } elseif ($report->isError()) {
@@ -253,7 +253,7 @@ class ArtifactFactory
         if (is_array($criteria)) {
             foreach ($criteria as $cr) {
                 $af = $art_field_fact->getFieldFromName($cr->field_name);
-                if (!$af || !is_object($af)) {
+                if (! $af || ! is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : ' . $cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {
@@ -285,7 +285,7 @@ class ArtifactFactory
                 $field_name = $sort_cr->field_name;
                 // check if fieldname is ok
                 $af = $art_field_fact->getFieldFromName($sort_cr->field_name);
-                if (!$af || !is_object($af)) {
+                if (! $af || ! is_object($af)) {
                     $this->setError('Cannot Get ArtifactField From Name : ' . $sort_cr->field_name);
                     return false;
                 } elseif ($art_field_fact->isError()) {

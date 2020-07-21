@@ -75,6 +75,6 @@ class ColumnPresenterCollectionRetriever
     {
         $preference_name = 'plugin_taskboard_collapse_column_' . $milestone->getArtifactId() . '_' . $column->getId();
 
-        return !empty($user->getPreference($preference_name));
+        return ! empty($user->getPreference($preference_name));
     }
 }

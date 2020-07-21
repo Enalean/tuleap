@@ -291,7 +291,7 @@ class PermissionItemUpdater
                 }
 
                 //If the user set an explicit permission and there was no perms before or they have been removed
-                if ($wanted_permission != 100 && (!count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)) {
+                if ($wanted_permission != 100 && (! count($old_permissions[$ugroup_id]['permissions']) || $perms_cleared)) {
                     //Then give the permission
                     if (isset(self::PERMISSIONS_DEFINITIONS[$wanted_permission]['type'])) {
                         /** @psalm-var value-of<Docman_PermissionsManager::ITEM_PERMISSION_TYPES> $permission */

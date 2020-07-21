@@ -90,7 +90,7 @@ class TreeNode_GetStateVisitor
 
     public function visit(TreeNode $node, $prefix = null)
     {
-        if (!$prefix) {
+        if (! $prefix) {
             $prefix = array();
         }
         $this->setState($node, $prefix);

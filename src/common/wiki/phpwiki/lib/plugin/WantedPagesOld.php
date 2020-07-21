@@ -65,7 +65,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
         extract($this->getArgs($argstr, $request));
 
         if ($exclude) {
-            if (!is_array($exclude)) {
+            if (! is_array($exclude)) {
                 $exclude = explode(',', $exclude);
             }
         }
@@ -81,7 +81,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
         // There's probably a more memory-efficient way to do this (eg
         // a tailored SQL query via the backend, but this gets the job
         // done.
-        if (!$page) {
+        if (! $page) {
             $include_empty = false;
             $allpages_iter = $dbi->getAllPages($include_empty, $sortby, $limit);
             while ($page_handle = $allpages_iter->next()) {
@@ -117,7 +117,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 $row = HTML::li(WikiLink((string) $key, 'unknown'));
                 $this->_rows->pushContent($row);
             }
-            if (!$noheader) {
+            if (! $noheader) {
                 if ($pageisWikiPage) {
                     $pagelink = WikiLink($page);
                 } else {
@@ -167,7 +167,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 $this->_rows->pushContent($row);
             }
             $c = count($this->pagelist);
-            if (!$noheader) {
+            if (! $noheader) {
                 $caption = sprintf(
                     _("Wanted Pages in this wiki (%d total):"),
                     $c

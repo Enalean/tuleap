@@ -40,7 +40,7 @@ class TemplateSingleton
     public static function instance()
     {
         static $template_instance;
-        if (!$template_instance) {
+        if (! $template_instance) {
             $template_instance = new TemplateSingleton();
         }
         return $template_instance;

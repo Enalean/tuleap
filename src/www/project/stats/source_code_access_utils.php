@@ -70,7 +70,7 @@ function logs_display($sql, $span, $field, $title = '')
             print '<tr class="' . util_get_alt_row_color($i++) . '">'
             . ' <td>' . strftime("%e %b %Y", $row['time']) . '</td>';
             if (isset($row['type'])) {
-                print' <td>' . $hp->purify($row['type']) . '</td>';
+                print ' <td>' . $hp->purify($row['type']) . '</td>';
             }
 
             print ' <td> <a href="/users/' . $hp->purify($row["user_name"]) . '/">' . $hp->purify($row["user_name"]) . '</a> (' . $hp->purify($row["realname"]) . ')</td>'
@@ -192,7 +192,7 @@ function filedownload_logs_daily($project, $span = 7, $who = "allusers")
 {
     // check first if service is used by this project
     // if service not used return immediately
-    if (!$project->usesFile()) {
+    if (! $project->usesFile()) {
         return;
     }
 
@@ -260,7 +260,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
     $hp = Codendi_HTMLPurifier::instance();
     // check first if service is used by this project
     // if service not used return immediately
-    if (!$project->usesCVS()) {
+    if (! $project->usesCVS()) {
         return;
     }
 
@@ -275,7 +275,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
 
     // if there are any days, we have valid data.
     if (($nb_downloads = db_numrows($res)) >= 1) {
-        print    '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
+        print '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
         . '<TR valign="top">'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_admin_utils', 'date') . '</B></TD>'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_export_utils', 'user') . '</B></TD>'
@@ -287,7 +287,7 @@ function cvsaccess_logs_daily($project, $span = 7, $who = "allusers")
         $i = 0;
         while ($row = db_fetch_array($res)) {
             $i++;
-            print    '<TR class="' . util_get_alt_row_color($i) . '">'
+            print '<TR class="' . util_get_alt_row_color($i) . '">'
             . '<TD>' . substr($row["day"], 6, 2) . ' ' . $month_name[substr($row["day"], 4, 2) - 1] . ' ' . substr($row["day"], 0, 4) . '</TD>'
              . '<TD> <a href="/users/' . $hp->purify($row["user_name"]) . '/">' . $hp->purify($row["user_name"]) . '</a> (' . $hp->purify($row["realname"]) . ')</TD>'
             . '<TD>' . $hp->purify($row["email"]) . '</TD>'
@@ -364,7 +364,7 @@ function svnaccess_logs_daily($project, $span = 7, $who = "allusers")
 
     // if there are any days, we have valid data.
     if (($nb_downloads = db_numrows($res)) >= 1) {
-        print    '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
+        print '<P><TABLE width="100%" cellpadding=2 cellspacing=0 border=0>'
         . '<TR valign="top">'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_admin_utils', 'date') . '</B></TD>'
         . '<TD><B>' . $GLOBALS['Language']->getText('project_export_utils', 'user') . '</B></TD>'
@@ -375,7 +375,7 @@ function svnaccess_logs_daily($project, $span = 7, $who = "allusers")
         $i = 0;
         while ($row = db_fetch_array($res)) {
             $i++;
-            print    '<TR class="' . util_get_alt_row_color($i) . '">'
+            print '<TR class="' . util_get_alt_row_color($i) . '">'
             . '<TD>' . substr($row["day"], 6, 2) . ' ' . $month_name[substr($row["day"], 4, 2) - 1] . ' ' . substr($row["day"], 0, 4) . '</TD>'
              . '<TD> <a href="/users/' . $hp->purify($row["user_name"]) . '/">' . $hp->purify($row["user_name"]) . '</a> (' . $hp->purify($row["realname"]) . ')</TD>'
             . '<TD>' . $hp->purify($row["email"]) . '</TD>'
@@ -408,7 +408,7 @@ function wiki_logs_daily($project, $span = 7, $who = "allusers")
 {
   // check first if service is used by this project
   // if service not used return immediately
-    if (!$project->usesWiki()) {
+    if (! $project->usesWiki()) {
         return;
     }
 
@@ -441,7 +441,7 @@ function wiki_attachments_logs_daily($project, $span = 7, $who = "allusers")
 {
     // check first if service is used by this project
     // if service not used return immediately
-    if (!$project->usesWiki()) {
+    if (! $project->usesWiki()) {
         return;
     }
 

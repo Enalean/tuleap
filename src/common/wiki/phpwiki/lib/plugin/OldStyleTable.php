@@ -86,7 +86,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         $default = $this->getDefaultArguments();
         foreach (array('cellpadding','cellspacing','border') as $arg) {
-            if (!is_numeric($args[$arg])) {
+            if (! is_numeric($args[$arg])) {
                 $args[$arg] = $default[$arg];
             }
         }
@@ -104,14 +104,14 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
             }
         }
         $table = HTML::table($table_args);
-        if (!empty($caption)) {
+        if (! empty($caption)) {
             $table->pushContent(HTML::caption(array('valign' => 'top'), $caption));
         }
         if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) {
             $lines[0] = '';
         }
         foreach ($lines as $line) {
-            if (!$line) {
+            if (! $line) {
                 continue;
             }
             if (strstr($line, "=")) {

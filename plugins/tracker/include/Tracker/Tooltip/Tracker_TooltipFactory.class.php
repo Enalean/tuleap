@@ -35,7 +35,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c();
         }
@@ -62,7 +62,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
         $row = array();
         foreach ($xml->field as $field) {
             $att = $field->attributes();
-            if (!isset($xml_mapping[(string) $att['REF']])) {
+            if (! isset($xml_mapping[(string) $att['REF']])) {
                 continue;
             }
             $row[] = $xml_mapping[(string) $att['REF']];

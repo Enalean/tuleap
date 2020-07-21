@@ -79,7 +79,7 @@ final class SystemEventUserActiveStatusChange extends SystemEvent
         // Check parameters
         $user_id = $this->getIdFromParam();
         $user    = $this->user_manager->getUserById($user_id);
-        if ($user && !$user->isAnonymous()) {
+        if ($user && ! $user->isAnonymous()) {
             $this->cleanRestrictedUserFromProjectMembershipIfNecessary($user);
             if ($this->createUser($user)) {
                 $this->done();

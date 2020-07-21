@@ -56,7 +56,7 @@ class WikiPlugin_InterWikiSearch extends WikiPlugin
         $args = $this->getArgs($argstr, $request);
         extract($args);
 
-        if (defined('DEBUG') && !DEBUG) {
+        if (defined('DEBUG') && ! DEBUG) {
             return $this->disabled("Sorry, this plugin is currently out of order.");
         }
 

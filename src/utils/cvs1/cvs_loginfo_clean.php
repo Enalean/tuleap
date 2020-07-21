@@ -36,7 +36,7 @@ $project_list = array_map('cvs_loginfo_format_data', $file_list);
 
 foreach ($file_list as $key => $filename) {
     $output = '';
-    if (!$backendCVS->_RcsCheckout($filename, $output)) {
+    if (! $backendCVS->_RcsCheckout($filename, $output)) {
         $backendCVS->log("Unable to checkout $filename, output=$output", Backend::LOG_ERROR);
         continue;
     }
@@ -50,12 +50,12 @@ foreach ($file_list as $key => $filename) {
             $lines_to_write[] = $line;
         }
     }
-    if (!empty($lines_to_write)) {
-        if (!$backendCVS->writeArrayToFile($lines_to_write, $filename)) {
+    if (! empty($lines_to_write)) {
+        if (! $backendCVS->writeArrayToFile($lines_to_write, $filename)) {
             $backendCVS->log("An error occured during file $filename was being written ... skipping commit!", Backend::LOG_ERROR);
             continue;
         }
-        if (!$backendCVS->_RcsCommit($filename, $output)) {
+        if (! $backendCVS->_RcsCommit($filename, $output)) {
             $backendCVS->log("Unable to commit $filename, output=$output", Backend::LOG_ERROR);
         } else {
             $backendCVS->log("File $filename successfully modified", Backend::LOG_INFO);

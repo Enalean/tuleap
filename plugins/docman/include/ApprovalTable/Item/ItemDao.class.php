@@ -36,7 +36,7 @@ class Docman_ApprovalTableItemDao extends DataAccessObject
     public function tableExist($tableId)
     {
         $dar = $this->getTableById($tableId, 'NULL');
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return true;
         }
         return false;

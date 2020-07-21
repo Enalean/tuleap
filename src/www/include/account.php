@@ -66,7 +66,7 @@ function account_make_login_from_email($email)
 function account_namevalid($name, $key = '')
 {
     $rule = new Rule_UserName();
-    if (!$rule->isValid($name)) {
+    if (! $rule->isValid($name)) {
         $GLOBALS['register_error'] = $rule->getErrorMessage();
         return 0;
     }
@@ -84,7 +84,7 @@ function account_namevalid($name, $key = '')
 function account_groupnamevalid($name)
 {
     $rule = new Rule_ProjectName();
-    if (!$rule->isValid($name)) {
+    if (! $rule->isValid($name)) {
         $GLOBALS['register_error'] = $rule->getErrorMessage();
         return 0;
     }
@@ -95,7 +95,7 @@ function account_groupnamevalid($name)
 // print out shell selects
 function account_shellselects($current)
 {
-    if (!$current) {
+    if (! $current) {
         $current = '/sbin/nologin';
     }
     foreach (PFUser::getAllUnixShells() as $shell) {

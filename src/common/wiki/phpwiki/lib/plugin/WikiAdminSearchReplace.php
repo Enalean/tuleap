@@ -98,10 +98,10 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $ul = HTML::ul();
         $count = 0;
         $post_args = $request->getArg('admin_replace');
-        $case_exact = !empty($post_args['case_exact']);
-        $regex = !empty($post_args['regex']);
+        $case_exact = ! empty($post_args['case_exact']);
+        $regex = ! empty($post_args['regex']);
         foreach ($pages as $pagename) {
-            if (!mayAccessPage('edit', $pagename)) {
+            if (! mayAccessPage('edit', $pagename)) {
                 $ul->pushContent(HTML::li(fmt("Access denied to change page '%s'.", $pagename)));
             } elseif (($result = $this->replaceHelper($dbi, $pagename, $from, $to, $case_exact, $regex))) {
                 $ul->pushContent(HTML::li(fmt("Replaced '%s' with '%s' in page '%s'.", $from, $to, WikiLink($pagename))));
@@ -142,13 +142,13 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) {
+        if (! $p) {
             $p = $this->_list;
         }
         $post_args = $request->getArg('admin_replace');
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost()) {
+        if ($p && ! $request->isPost()) {
             $pages = $p;
         }
         if (
@@ -156,17 +156,17 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             empty($post_args['cancel'])
         ) {
             // without individual PagePermissions:
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
 
-            if ($post_args['action'] == 'verify' and !empty($post_args['from'])) {
+            if ($post_args['action'] == 'verify' and ! empty($post_args['from'])) {
                 // Real action
                 return $this->searchReplacePages($dbi, $request, array_keys($p), $post_args['from'], $post_args['to']);
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['from'])) {
+                if (! empty($post_args['from'])) {
                     $next_action = 'verify';
                 }
                 foreach ($p as $name => $c) {
@@ -258,7 +258,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_replace[case_exact]',
                                       'value' => 1));
-        if (!empty($post_args['case_exact'])) {
+        if (! empty($post_args['case_exact'])) {
             $checkbox->setAttr('checked', 'checked');
         }
         $header->pushContent(HTML::br(), $checkbox, " ", _("case-exact"));
@@ -266,7 +266,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
                                          'name' => 'admin_replace[regex]',
                                          //'disabled' => 'disabled',
                                          'value' => 1));
-        if (!empty($post_args['regex'])) {
+        if (! empty($post_args['regex'])) {
             $checkbox_re->setAttr('checked', 'checked');
         }
         $header->pushContent(HTML::br(), HTML::span(//array('style'=>'color: #aaa'),

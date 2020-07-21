@@ -66,7 +66,7 @@ class WebhooksPresenter
         $this->title = $title;
 
         $this->webhooks     = $webhooks;
-        $this->has_webhooks = !empty($webhooks);
+        $this->has_webhooks = ! empty($webhooks);
 
         $this->csrf_token = $csrf_token;
 

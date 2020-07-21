@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('ugroup', 'source_id')) {
+        if (! $this->db->columnNameExists('ugroup', 'source_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column source_id not created in ugroup');
         }
     }

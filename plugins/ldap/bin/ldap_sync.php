@@ -46,7 +46,7 @@ if ($pluginManager->isPluginAvailable($ldapPlugin)) {
         $percentage_users_to_suspend = ($nbr_users_to_suspend / $nbr_active_users) * 100;
         echo "Number of users that will be suspended     : " . $nbr_users_to_suspend . "\n";
         echo "Number of active users                     : " . $nbr_active_users . "\n";
-        if (!$threshold_users_suspension = $ldapPlugin->getLdap()->getLDAPParam('threshold_users_suspension')) {
+        if (! $threshold_users_suspension = $ldapPlugin->getLdap()->getLDAPParam('threshold_users_suspension')) {
             echo "Threshold                                  : Is Not defined \n";
         } else {
             echo "Threshold                                  : " . $threshold_users_suspension . " % \n";

@@ -78,7 +78,7 @@ class ArtifactFieldHtml extends ArtifactField
     {
         $hp = Codendi_HTMLPurifier::instance();
         $output = SimpleSanitizer::unsanitize($this->getLabel()) . ': ';
-        if (!$ascii) {
+        if (! $ascii) {
             $output =  $hp->purify($output, CODENDI_PURIFIER_CONVERT_HTML);
             if ($tooltip) {
                 $output = '<a class="artifact_field_tooltip" href="#" title="' . $hp->purify(SimpleSanitizer::unsanitize($this->description), CODENDI_PURIFIER_CONVERT_HTML) . '">' . $output . '</a>';
@@ -109,17 +109,17 @@ class ArtifactFieldHtml extends ArtifactField
     {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
-        if (!$text_none) {
+        if (! $text_none) {
             $text_none = $Language->getText('global', 'none');
         }
-        if (!$text_any) {
+        if (! $text_any) {
             $text_any = $Language->getText('global', 'any');
         }
-        if (!$text_unchanged) {
+        if (! $text_unchanged) {
             $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
-        if (!$group_artifact_id) {
+        if (! $group_artifact_id) {
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
             $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
@@ -190,7 +190,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $isDefaultValuePresent = true;
             }
         }
-        if (!$isDefaultValuePresent && !is_array($default_value)) {
+        if (! $isDefaultValuePresent && ! is_array($default_value)) {
             // for single select box, if the default value is not present,
             // we add the javascript for this "missing value" (the corresponding html code will be added by html_build_select_box_from_arrays)
             $output .= "\n\t.addOption('" . $hp->purify($Language->getText('tracker_include_field', 'unknown_value'), CODENDI_PURIFIER_JS_QUOTE) . "', '" . (int) $default_value . "', true)\n";
@@ -214,17 +214,17 @@ class ArtifactFieldHtml extends ArtifactField
     {
         global $Language;
          $hp = Codendi_HTMLPurifier::instance();
-        if (!$text_none) {
+        if (! $text_none) {
             $text_none = $Language->getText('global', 'none');
         }
-        if (!$text_any) {
+        if (! $text_any) {
             $text_any = $Language->getText('global', 'any');
         }
-        if (!$text_unchanged) {
+        if (! $text_unchanged) {
             $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
-        if (!$group_artifact_id) {
+        if (! $group_artifact_id) {
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
             $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
@@ -304,7 +304,7 @@ class ArtifactFieldHtml extends ArtifactField
                 $html = $Language->getText('tracker_include_field', 'any_time');
             }
         } else {
-            if (!$size || !$maxlength) {
+            if (! $size || ! $maxlength) {
                 list($size, $maxlength) = $this->getGlobalDisplaySize();
             }
 
@@ -379,7 +379,7 @@ class ArtifactFieldHtml extends ArtifactField
     public function fieldText($value = '', $size = 0, $maxlength = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        if (!$size || !$maxlength) {
+        if (! $size || ! $maxlength) {
             list($size, $maxlength) = $this->getGlobalDisplaySize();
         }
 
@@ -416,7 +416,7 @@ class ArtifactFieldHtml extends ArtifactField
     public function fieldTextarea($value = '', $cols = 0, $rows = 0)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        if (!$cols || !$rows) {
+        if (! $cols || ! $rows) {
             list($cols, $rows) = $this->getGlobalDisplaySize();
         }
 
@@ -468,27 +468,27 @@ class ArtifactFieldHtml extends ArtifactField
         global $Language;
         $hp = Codendi_HTMLPurifier::instance();
         //Use url parameters to populate fields
-        if (!$ro) {
+        if (! $ro) {
             $request = HTTPRequest::instance();
             if ($request->get('func') == 'add' && $request->exist($this->field_name)) {
                 $value = htmlentities($request->get($this->field_name), ENT_QUOTES, 'UTF-8');
             }
         }
 
-        if (!$text_none) {
+        if (! $text_none) {
             $text_none = $Language->getText('global', 'none');
         }
-        if (!$text_any) {
+        if (! $text_any) {
             $text_any = $Language->getText('global', 'any');
         }
-        if (!$text_unchanged) {
+        if (! $text_unchanged) {
             $text_unchanged = $Language->getText('global', 'unchanged');
         }
 
         $output = "";
 
         if ($label) {
-            $output = $this->labelDisplay($break, $ascii, !$ro);
+            $output = $this->labelDisplay($break, $ascii, ! $ro);
         }
         // display depends upon display type of this field
         switch ($this->getDisplayType()) {
@@ -503,7 +503,7 @@ class ArtifactFieldHtml extends ArtifactField
                             $arr[$i] = $text_none;
                         } else {
                             $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id, $arr[$i]));
-                            if (!$ascii) {
+                            if (! $ascii) {
                                 $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_BASIC_NOBR, $project_id);
                             }
                         }
@@ -578,13 +578,13 @@ class ArtifactFieldHtml extends ArtifactField
                             $arr[$i] = $text_none;
                         } else {
                                     $arr[$i] = SimpleSanitizer::unsanitize($this->getValue($group_artifact_id, $arr[$i]));
-                            if (!$ascii) {
+                            if (! $ascii) {
                                 $arr[$i] =  $hp->purify($arr[$i], CODENDI_PURIFIER_BASIC_NOBR, $project_id);
                             }
                         }
                     }
                       $output .= join(",", $arr);
-                    if (!$ascii) {
+                    if (! $ascii) {
                         if ($htmlEmail) {
                             //The span is used to pass values id that would be processed in JS as dependency sources' values
                             $output .= '<span id="' . $this->field_name . '" style="display: none;">' . implode(',', $valueArray) . '</span>';

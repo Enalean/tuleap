@@ -94,18 +94,18 @@ class WebDAVRoot extends Sabre_DAV_Directory
         // Check for errors
 
         // Check if WebDAV plugin is activated for the project
-        if (!$this->isWebDAVAllowedForProject($projectId)) {
+        if (! $this->isWebDAVAllowedForProject($projectId)) {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'plugin_not_available'));
         }
         $project = $this->getWebDAVProject($projectId);
 
         // Check if project exists
-        if (!$project->exist()) {
+        if (! $project->exist()) {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'project_not_available'));
         }
 
         // Check if the project has the active status
-        if (!$project->isActive()) {
+        if (! $project->isActive()) {
             // Access denied error
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized'));
         }
@@ -113,7 +113,7 @@ class WebDAVRoot extends Sabre_DAV_Directory
         // Check if the user can access to the project
         // it's important to notice that even if in the listing the user don't see all public projects
         // she still have the right to access to all of them
-        if (!$project->userCanRead()) {
+        if (! $project->userCanRead()) {
             // Access denied error
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'project_access_not_authorized'));
         }

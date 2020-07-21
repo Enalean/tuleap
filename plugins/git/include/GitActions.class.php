@@ -538,7 +538,7 @@ class GitActions extends PluginActions
             return false;
         }
         $repository = $this->factory->getRepositoryById($repositoryId);
-        if (!$repository) {
+        if (! $repository) {
             $this->getController()->addError(dgettext('tuleap-git', 'The repository does not exist'));
             $c->redirect('/plugins/git/?action=index&group_id=' . $projectId);
             return;
@@ -628,7 +628,7 @@ class GitActions extends PluginActions
                 $res = false;
                 $controller->addInfo(sprintf(dgettext('tuleap-git', 'The notification is already enabled for this email %1$s'), $mail));
             } else {
-                if (!$repository->notificationAddMail($mail)) {
+                if (! $repository->notificationAddMail($mail)) {
                     $res = false;
                     $controller->addError(sprintf(dgettext('tuleap-git', 'Could not add mail %1$s'), $mail));
                 }
@@ -882,7 +882,7 @@ class GitActions extends PluginActions
         $repository = $this->_loadRepository($projectId, $repoId);
         if (strcmp($repoAccess, 'private') == 0 && strcmp($repository->getAccess(), $repoAccess) != 0) {
             $mailsToDelete = $repository->getNonMemberMails();
-            if (!empty($mailsToDelete)) {
+            if (! empty($mailsToDelete)) {
                 $repository->setDescription($repoDescription);
                 $repository->save();
                 $this->addData(array('repository' => $repository));
@@ -962,7 +962,7 @@ class GitActions extends PluginActions
         }
 
         $are_there_changes = false;
-        if (!empty($repoAccess)) {
+        if (! empty($repoAccess)) {
             if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
                 $are_there_changes = $this->permission_changes_detector->areThereChangesInPermissionsForRepository(
                     $repository,
@@ -1056,7 +1056,7 @@ class GitActions extends PluginActions
         $repositories = $dao->getProjectRepositoryList($projectId);
         foreach ($repositories as $repoId => $repoData) {
             $r = $factory->getRepositoryById($repoId);
-            if (!$r) {
+            if (! $r) {
                 continue;
             }
             if ($r->getAccess() == GitRepository::PRIVATE_ACCESS) {

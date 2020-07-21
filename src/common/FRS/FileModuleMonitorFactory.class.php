@@ -40,7 +40,7 @@ class FileModuleMonitorFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -64,7 +64,7 @@ class FileModuleMonitorFactory
         $dao    = $this->_getFileModuleMonitorDao();
         $dar    = $dao->whoIsPubliclyMonitoringPackage($packageId);
         $result = array();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $result = $dar;
         }
         return $result;
@@ -77,7 +77,7 @@ class FileModuleMonitorFactory
         $dar = $dao->searchById($_id);
 
         $data_array = array();
-        if (!$dar->isError() && $dar->valid()) {
+        if (! $dar->isError() && $dar->valid()) {
             while ($dar->valid()) {
                 $data_array[] = $dar->current();
                 $dar->next();
@@ -105,7 +105,7 @@ class FileModuleMonitorFactory
             return;
         }
 
-        if (!$dar->valid() || $dar->rowCount() < 1) {
+        if (! $dar->valid() || $dar->rowCount() < 1) {
             return false;
         } else {
             return true;
@@ -114,7 +114,7 @@ class FileModuleMonitorFactory
 
     public function _getFileModuleMonitorDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new FileModuleMonitorDao(CodendiDataAccess::instance());
         }
         return $this->dao;
@@ -153,7 +153,7 @@ class FileModuleMonitorFactory
         if ($user) {
             $publicly = true;
             if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
-                if (!$this->isMonitoring($fileModuleId, $user, $publicly)) {
+                if (! $this->isMonitoring($fileModuleId, $user, $publicly)) {
                     $anonymous = false;
                     $result = $this->setMonitor($fileModuleId, $user, $anonymous);
                     if ($result) {
@@ -205,7 +205,7 @@ class FileModuleMonitorFactory
      */
     public function stopMonitoringForUsers($users, $groupId, $fileModuleId, FRSPackage $package, UserManager $um, UserHelper $userHelper)
     {
-        if ($users && !empty($users) && is_array($users)) {
+        if ($users && ! empty($users) && is_array($users)) {
             foreach ($users as $userId) {
                 $user = $um->getUserById($userId);
                 if ($user) {
@@ -547,9 +547,9 @@ class FileModuleMonitorFactory
     private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId)
     {
         $performAction = false;
-        if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
+        if ($anonymous && (! $this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
             $performAction = true;
-        } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
+        } elseif (! $anonymous && ! $this->isMonitoring($fileModuleId, $currentUser, ! $anonymous)) {
             $performAction = true;
             $historyDao    = new ProjectHistoryDao();
             $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
@@ -557,7 +557,7 @@ class FileModuleMonitorFactory
         if ($performAction) {
             $this->stopMonitor($fileModuleId, $currentUser);
             $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
-            if (!$result) {
+            if (! $result) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
             } else {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'p_monitored'));
@@ -592,7 +592,7 @@ class FileModuleMonitorFactory
                     case 'add_monitoring':
                         $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
                         foreach ($users as $userName) {
-                            if (!empty($userName)) {
+                            if (! empty($userName)) {
                                 $user = $um->findUser($userName);
                                 if ($user !== null) {
                                     $this->addUserMonitoring($user, $groupId, $fileModuleId, $package, $frspf, $userHelper);

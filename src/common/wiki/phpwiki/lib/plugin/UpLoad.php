@@ -119,7 +119,7 @@ ws[cfh]"
                                                  'value' => MAX_UPLOAD_SIZE)));
         /// MV add pv
         /// @todo: have a generic method to transmit pv
-        if (!empty($_REQUEST['pv'])) {
+        if (! empty($_REQUEST['pv'])) {
             $contents->pushContent(HTML::input(array('type' => 'hidden',
                                                      'name' => 'pv',
                                                      'value' => $_REQUEST['pv'])));
@@ -136,7 +136,7 @@ ws[cfh]"
         if ($request->isPost() and $this->only_authenticated) {
             // Make sure that the user is logged in.
             $user = $request->getUser();
-            if (!$user->isAuthenticated()) {
+            if (! $user->isAuthenticated()) {
                 $message->pushContent(
                     HTML::h2(_("ACCESS DENIED: You must log in to upload files.")),
                     HTML::br(),
@@ -250,7 +250,7 @@ ws[cfh]"
         $attchList->pushContent($attchTab);
 
         $url = WikiURL("UpLoad");
-        if (!empty($_REQUEST['pv'])) {
+        if (! empty($_REQUEST['pv'])) {
             $url .= '&pv=' . $_REQUEST['pv'];
         }
         $attchList->pushContent(HTML::a(
@@ -276,9 +276,9 @@ ws[cfh]"
     {
         global $WikiTheme;
         $user = $GLOBALS['request']->_user;
-        if (!is_writable($upload_log)) {
+        if (! is_writable($upload_log)) {
             trigger_error(_("The upload logfile is not writable."), E_USER_WARNING);
-        } elseif (!$log_handle = fopen($upload_log, "a")) {
+        } elseif (! $log_handle = fopen($upload_log, "a")) {
             trigger_error(_("Can't open the upload logfile."), E_USER_WARNING);
         } else {        // file size in KB; precision of 0.1
             $file_size = round(($userfile->getSize()) / 1024, 1);

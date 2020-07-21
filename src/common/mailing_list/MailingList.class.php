@@ -50,7 +50,7 @@ class MailingList
 
     protected function _getMailingListDao()
     {
-        if (!$this->_mailinglistdao) {
+        if (! $this->_mailinglistdao) {
             $this->_mailinglistdao = new MailingListDao(CodendiDataAccess::instance());
         }
         return $this->_ugroupdao;

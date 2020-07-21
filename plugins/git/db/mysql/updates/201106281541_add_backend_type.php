@@ -36,7 +36,7 @@ EOT;
 
     public function up()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
+        if (! $this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
             $sql = "ALTER TABLE plugin_git " .
                " ADD `repository_backend_type` varchar(16) DEFAULT 'gitshell'";
             $res = $this->db->dbh->exec($sql);
@@ -48,7 +48,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
+        if (! $this->db->columnNameExists('plugin_git', 'repository_backend_type')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_backend_type in table plugin_git is missing');
         }
     }

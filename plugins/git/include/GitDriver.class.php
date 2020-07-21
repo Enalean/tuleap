@@ -36,7 +36,7 @@ class GitDriver
 
     private function checkFileExist($file)
     {
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             throw new GitDriverSourceNotFoundException($file);
         }
     }
@@ -173,7 +173,7 @@ class GitDriver
             throw new GitDriverErrorException('Git setup failed on ' . $cmd . PHP_EOL . implode(PHP_EOL, $out));
         }
 
-        if (!$this->setDescription($path, 'Default description for this project' . PHP_EOL)) {
+        if (! $this->setDescription($path, 'Default description for this project' . PHP_EOL)) {
             throw new GitDriverErrorException('Git setup failed on description update');
         }
 
@@ -182,7 +182,7 @@ class GitDriver
 
     public function delete($path)
     {
-        if (empty($path) || !is_writable($path)) {
+        if (empty($path) || ! is_writable($path)) {
             throw new GitDriverErrorException('Empty path or permission denied ' . $path);
         }
         $rcode = 0;
@@ -203,17 +203,17 @@ class GitDriver
         }
 
         //older versions only requires +x for hook activation
-        if (!chmod($hook, 0755)) {
+        if (! chmod($hook, 0755)) {
             throw new GitDriverErrorException('Unable to make ' . $hook . ' executable');
         }
 
         if ($uid !== false) {
-            if (!chown($hook, $uid)) {
+            if (! chown($hook, $uid)) {
                  throw new GitDriverErrorException('Unable to change ' . $hook . ' owner to ' . $uid);
             }
         }
         if ($gid !== false) {
-            if (!chgrp($hook, $gid)) {
+            if (! chgrp($hook, $gid)) {
                  throw new GitDriverErrorException('Unable to change ' . $hook . ' group to ' . $gid);
             }
         }
@@ -311,7 +311,7 @@ class GitDriver
             throw new GitDriverErrorException($cmd . ' -> ' . $output);
         }
 
-        if (!chmod($path . DIRECTORY_SEPARATOR . 'HEAD', 0664)) {
+        if (! chmod($path . DIRECTORY_SEPARATOR . 'HEAD', 0664)) {
             throw new GitDriverErrorException('Unable to set permissions on HEAD');
         }
         return true;

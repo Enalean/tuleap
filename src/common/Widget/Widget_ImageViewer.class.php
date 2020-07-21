@@ -43,7 +43,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
 
     public function getContent()
     {
-        if (!$this->image_url) {
+        if (! $this->image_url) {
             return '';
         }
 
@@ -165,7 +165,7 @@ class Widget_ImageViewer extends Widget //phpcs:ignore PSR1.Classes.ClassDeclara
             $image = $request->get('image');
             $vTitle = new Valid_String('title');
             $vTitle->required();
-            if (!$request->validInArray('image', $vTitle)) {
+            if (! $request->validInArray('image', $vTitle)) {
                 $image['title'] = 'Image';
             }
             $sql = 'INSERT INTO widget_image (owner_id, owner_type, title, url) VALUES (' . db_ei($this->owner_id) . ", '" . db_es($this->owner_type) . "', '" . db_escape_string($image['title']) . "', '" . db_escape_string($image['url']) . "')";

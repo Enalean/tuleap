@@ -43,7 +43,7 @@ class Docman_VersionFactory
     public $dao;
     public function _getVersionDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Docman_VersionDao(CodendiDataAccess::instance());
         }
         return $this->dao;
@@ -69,7 +69,7 @@ class Docman_VersionFactory
         $dao = $this->_getVersionDao();
         $dar = $dao->searchByItemId($item->getId());
         $versions = false;
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $versions = array();
             while ($dar->valid()) {
                 $row = $dar->current();
@@ -99,7 +99,7 @@ class Docman_VersionFactory
         $dao = $this->_getVersionDao();
         $dar = $dao->searchByNumber($item->getId(), $number);
         $version = null;
-        if ($dar && !$dar->isError() && $dar->valid()) {
+        if ($dar && ! $dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());
         }
         return $version;
@@ -117,7 +117,7 @@ class Docman_VersionFactory
         $dao = $this->_getVersionDao();
         $dar = $dao->searchById($id, $table);
         $version = null;
-        if ($dar && !$dar->isError() && $dar->valid()) {
+        if ($dar && ! $dar->isError() && $dar->valid()) {
             $version = new Docman_Version($dar->current());
         }
         return $version;
@@ -166,7 +166,7 @@ class Docman_VersionFactory
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->listVersionsToPurge($time);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $version = new Docman_Version($row);
                 $this->purgeDeletedVersion($version);
@@ -226,9 +226,9 @@ class Docman_VersionFactory
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->searchDeletedVersion($version->getItemId(), $version->getNumber());
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
-            if (!$row['purge_date'] && file_exists($row['path'])) {
+            if (! $row['purge_date'] && file_exists($row['path'])) {
                 if ($dao->restore($version->getItemId(), $version->getNumber())) {
                     // Log the event
                     // Take into account deleted items because, when we restore a deleted item
@@ -295,7 +295,7 @@ class Docman_VersionFactory
     {
         $dao = $this->_getVersionDao();
         $dar = $dao->listVersionsToPurgeByItemId($item->getId());
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             $list = array();
             foreach ($dar as $row) {
                 $version = new Docman_Version($row);

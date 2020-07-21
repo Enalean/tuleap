@@ -85,7 +85,7 @@ class XmlParser
     {
         global $xml_parser_root, $xml_parser_current;
 
-        if (!empty($this->_parser)) {
+        if (! empty($this->_parser)) {
             xml_parser_free($this->_parser);
         }
         unset($this->_parser);
@@ -101,7 +101,7 @@ class XmlParser
     {
         $this->_tag = strtolower($name);
         $node = new XmlElement($this->_tag);
-        if (is_string($attrs) and !empty($attrs)) {
+        if (is_string($attrs) and ! empty($attrs)) {
             // lowercase attr names
             foreach (preg_split('/ /D', $attrs) as $pair) {
                 if (strstr($pair, "=")) {
@@ -114,14 +114,14 @@ class XmlParser
                     $node->_attr[$key] = $key;
                 }
             }
-        } elseif (!empty($attrs) and is_array($attrs)) {
+        } elseif (! empty($attrs) and is_array($attrs)) {
             foreach ($attrs as $key => $val) {
                 $key = strtolower(trim($key));
                 $val = str_replace(array('"',"'"), '', trim($val));
                 $node->_attr[$key] = $val;
             }
         }
-        if (!is_null($this->current)) {
+        if (! is_null($this->current)) {
             $this->current->_content[] = $node;    // copy or ref?
             $node->parent = $this->current;       // ref
         }
@@ -167,7 +167,7 @@ class XmlParser
     public function parse_url($file, $debug = false)
     {
         if (get_cfg_var('allow_url_fopen')) {
-            if (!($fp = fopen("$file", "r"))) {
+            if (! ($fp = fopen("$file", "r"))) {
                 trigger_error("Error parse url $file");
                 return;
             }

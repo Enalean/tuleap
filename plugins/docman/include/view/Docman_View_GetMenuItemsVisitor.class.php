@@ -60,7 +60,7 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
             $this->actions['canMove'] = true;
             $this->actions['canCut'] = true;
         }
-        if (!$this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
+        if (! $this->if->isRoot($item) && $this->dPm->userCanDelete($this->user, $item)) {
             $this->actions['canDelete'] = true;
         }
 
@@ -94,7 +94,7 @@ class Docman_View_GetMenuItemsVisitor implements ItemVisitor
             $this->actions['parents'] = $parents;
             if (
                 $this->if->getCopyPreference($this->user) !== false ||
-                $pasteItemId !== false && $pasteItemId != $item->getId() && !(isset($parents[$pasteItemId]) && $parents[$pasteItemId])
+                $pasteItemId !== false && $pasteItemId != $item->getId() && ! (isset($parents[$pasteItemId]) && $parents[$pasteItemId])
             ) {
                 $this->actions['canPaste'] = true;
             }

@@ -84,7 +84,7 @@ class PlotLine
 
     public function DoLegend($graph)
     {
-        if (!$this->hidelegend) {
+        if (! $this->hidelegend) {
             $this->Legend($graph);
         }
     }

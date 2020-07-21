@@ -105,7 +105,7 @@ class LinePlot extends Plot
     public function Legend($graph)
     {
         if ($this->legend != "") {
-            if ($this->filled && !$this->fillgrad) {
+            if ($this->filled && ! $this->fillgrad) {
                 $graph->legend->Add(
                     $this->legend,
                     $this->fill_color,
@@ -240,7 +240,7 @@ class LinePlot extends Plot
 
         // Find the first numeric data point
         $startpoint = 0;
-        while ($startpoint < $numpoints && !is_numeric($this->coords[0][$startpoint])) {
+        while ($startpoint < $numpoints && ! is_numeric($this->coords[0][$startpoint])) {
             ++$startpoint;
         }
 
@@ -364,7 +364,7 @@ class LinePlot extends Plot
                         $cord[$idx++] = $yt;
                     }
                 } else {
-                    if (is_numeric($tmp1)  && (is_numeric($prev) || $prev === '-' )) {
+                    if (is_numeric($tmp1) && (is_numeric($prev) || $prev === '-' )) {
                         $cord[$idx++] = $xt;
                         $cord[$idx++] = $yt;
                     }
@@ -410,7 +410,7 @@ class LinePlot extends Plot
             }
         }
 
-        if (!empty($this->filledAreas)) {
+        if (! empty($this->filledAreas)) {
             $minY = $yscale->Translate($yscale->GetMinVal());
             $factor = ($this->step_style ? 4 : 2);
 
@@ -465,8 +465,8 @@ class LinePlot extends Plot
             $yt = $yscale->Translate($this->coords[0][$pnts]);
 
             if (is_numeric($this->coords[0][$pnts])) {
-                if (!empty($this->csimtargets[$pnts])) {
-                    if (!empty($this->csimwintargets[$pnts])) {
+                if (! empty($this->csimtargets[$pnts])) {
+                    if (! empty($this->csimwintargets[$pnts])) {
                         $this->mark->SetCSIMTarget($this->csimtargets[$pnts], $this->csimwintargets[$pnts]);
                     } else {
                         $this->mark->SetCSIMTarget($this->csimtargets[$pnts]);

@@ -146,7 +146,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLink extends Tracker_Artifact_Chan
     public function nodiff($format = 'html')
     {
         $next = $this->getValue();
-        if (!empty($next)) {
+        if (! empty($next)) {
             $result = '';
             $added_arr = array();
             foreach ($next as $art_id => $added_element) {

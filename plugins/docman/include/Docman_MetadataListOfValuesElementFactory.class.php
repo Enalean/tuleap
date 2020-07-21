@@ -41,7 +41,7 @@ class Docman_MetadataListOfValuesElementFactory
     private function getDao()
     {
         static $_plugin_docman_metadata_love_dao_instance;
-        if (!$_plugin_docman_metadata_love_dao_instance) {
+        if (! $_plugin_docman_metadata_love_dao_instance) {
             $_plugin_docman_metadata_love_dao_instance = new Docman_MetadataListOfValuesElementDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_love_dao_instance;
@@ -161,7 +161,7 @@ class Docman_MetadataListOfValuesElementFactory
             default:
                 $dao = $this->getDao();
                 $dar = $dao->serachByValueId($id);
-                if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                     $e = $this->instanciateLove($dar->current());
                 }
         }
@@ -262,7 +262,7 @@ class Docman_MetadataListOfValuesElementFactory
 
         foreach ($reverseLoveArray as $srcLove) {
             if ($srcLove->getId() > PLUGIN_DOCMAN_ITEM_STATUS_NONE) {
-                if (!isset($loveMap[$srcLove->getId()])) {
+                if (! isset($loveMap[$srcLove->getId()])) {
                     $newLove = clone $srcLove;
                     $newLove->setRank('beg');
                     $dstLoveFactory->create($newLove);
@@ -359,7 +359,7 @@ class Docman_MetadataListOfValuesElementFactory
     private function _returnLoveIteratorFromDar($dar)
     {
         $ea = array();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $dar->rewind();
             while ($dar->valid()) {
                 $ea[] = $this->instanciateLove($dar->current());

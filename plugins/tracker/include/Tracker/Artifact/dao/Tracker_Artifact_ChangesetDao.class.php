@@ -96,7 +96,7 @@ class Tracker_Artifact_ChangesetDao extends DataAccessObject
     ) {
         $artifact_id  = $this->da->escapeInt($artifact_id);
         $submitted_by = $this->da->escapeInt($submitted_by);
-        if (!$submitted_by) {
+        if (! $submitted_by) {
             $submitted_by = 'NULL';
         }
         $submitted_on = $this->da->escapeInt($submitted_on);

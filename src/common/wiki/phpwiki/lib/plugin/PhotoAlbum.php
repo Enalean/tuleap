@@ -75,16 +75,16 @@ class ImageTile extends HtmlElement
         $el = new HTML('img');
         $tag = func_get_args();
         $params = "<img src='../ImageTile.php?url=" . $tag[0]['src'];
-        if (!@empty($tag[0]['width'])) {
+        if (! @empty($tag[0]['width'])) {
             $params .= "&width=" . $tag[0]['width'];
         }
-        if (!@empty($tag[0]['height'])) {
+        if (! @empty($tag[0]['height'])) {
             $params .= "&height=" . $tag[0]['height'];
         }
-        if (!@empty($tag[0]['width'])) {
+        if (! @empty($tag[0]['width'])) {
             $params .= "' width='" . $tag[0]['width'];
         }
-        if (!@empty($tag[0]['height'])) {
+        if (! @empty($tag[0]['height'])) {
             $params .= "' height='" . $tag[0]['height'];
         }
 
@@ -177,7 +177,7 @@ class WikiPlugin_PhotoAlbum extends WikiPlugin
         $count = 0;
         // check all parameters
         // what type do we have?
-        if (!$src) {
+        if (! $src) {
             $showdesc  = 'none';
             $src   = $request->getArg('pagename');
             $error = $this->fromLocation($src, $photos);
@@ -282,7 +282,7 @@ display_slides();"));
                             'alt'    => ($value["desc"] != "" and in_array("alt", $attributes))
                                     ? $value["desc"]
                                     : basename($value["name"]));
-            if (!@empty($value['location'])) {
+            if (! @empty($value['location'])) {
                 $params = array_merge($params, array("location" => $value['location']));
             }
             // check description
@@ -296,7 +296,7 @@ display_slides();"));
                 case 'desc':
                     break;
                 default: // 'both'
-                    if (!$value["desc"]) {
+                    if (! $value["desc"]) {
                         $value["desc"] = basename($value["name"]);
                     }
                     break;
@@ -305,9 +305,9 @@ display_slides();"));
             // FIXME: get getimagesize to work with names with spaces in it.
             // convert $value["name"] from webpath to local path
             $size = @getimagesize($value["name"]); // try " " => "\\ "
-            if (!$size and !empty($value["src"])) {
+            if (! $size and ! empty($value["src"])) {
                 $size = @getimagesize($value["src"]);
-                if (!$size) {
+                if (! $size) {
                     trigger_error(
                         "Unable to getimagesize(" . $value["name"] . ")",
                         E_USER_NOTICE
@@ -317,7 +317,7 @@ display_slides();"));
 
             $newwidth = $this->newSize($size[0], $width);
             if (($mode == 'thumbs' || $mode == 'tiles' || $mode == 'list')) {
-                if (!empty($size[0])) {
+                if (! empty($size[0])) {
                     $newheight = round(50 * $size[1] / $size[0]);
                 } else {
                     $newheight = '';
@@ -372,7 +372,7 @@ display_slides();"));
                 : basename($value["name"]);
             if (! $p) {
                 if ($mode == 'normal' || $mode == 'slide') {
-                    if (!@empty($params['location'])) {
+                    if (! @empty($params['location'])) {
                         $params['src'] = $params['location'];
                     }
                     unset($params['location'], $params['src_tile']);
@@ -382,7 +382,7 @@ display_slides();"));
                     ) :  HTML::img($params);
                 } else {
                     $keep = $params;
-                    if (!@empty($params['src_tile'])) {
+                    if (! @empty($params['src_tile'])) {
                         $params['src'] = $params['src_tile'];
                     }
                     unset($params['location'], $params['src_tile']);
@@ -397,7 +397,7 @@ display_slides();"));
                     unset($keep);
                 }
             } else {
-                if (!@empty($params['location'])) {
+                if (! @empty($params['location'])) {
                     $params['src'] = $params['location'];
                 }
                 unset($params['location'], $params['src_tile']);
@@ -505,10 +505,10 @@ display_slides();"));
                     ))
                 );
             } elseif ($mode == 'slide') {
-                if ($newwidth == 'auto' || !$newwidth) {
+                if ($newwidth == 'auto' || ! $newwidth) {
                     $newwidth = $this->newSize($size[0], $width);
                 }
-                if ($newwidth == 'auto' || !$newwidth) {
+                if ($newwidth == 'auto' || ! $newwidth) {
                     $newwidth = $size[0];
                 }
                 if ($newheight != 'auto') {
@@ -595,7 +595,7 @@ display_slides();"));
                                   "cellspacing" => 2,
                                   "width"       => $tablewidth);
 
-        if (!@empty($tableheight)) {
+        if (! @empty($tableheight)) {
             $table_attributes = array_merge(
                 $table_attributes,
                 array("height"  => $tableheight)
@@ -658,7 +658,7 @@ display_slides();"));
     {
         $src_bak = $src;
         //there has a big security hole... as loading config/config.ini !
-        if (!preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/', $src)) {
+        if (! preg_match('/(\.csv|\.jpg|\.jpeg|\.png|\.gif|\/)$/', $src)) {
             return $this->error(_("File extension for csv file has to be '.csv'"));
         }
         if (! IsSafeURL($src)) {
@@ -670,7 +670,7 @@ display_slides();"));
         } else {
             $web_location = 0;
         }
-        if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
+        if (! file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
             $src = PHPWIKI_DIR . "/$src";
         }
         // check if src is a directory
@@ -700,10 +700,10 @@ display_slides();"));
         // check if $src is an image
         foreach (array('jpeg','jpg','png','gif') as $ext) {
             if (preg_match("/\.$ext$/", $src)) {
-                if (!file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
+                if (! file_exists($src) and @file_exists(PHPWIKI_DIR . "/$src")) {
                     $src = PHPWIKI_DIR . "/$src";
                 }
-                if ($web_location == 1 and !empty($contents)) {
+                if ($web_location == 1 and ! empty($contents)) {
                     $photos[] = array ("src" => $src,
                                        "name" => $src,
                                        "name_tile" => $src,
@@ -711,7 +711,7 @@ display_slides();"));
                                        "desc" => "");
                     return;
                 }
-                if (!file_exists($src)) {
+                if (! file_exists($src)) {
                     return $this->error(fmt("Unable to find src='%s'", $src));
                 }
                 $photos[] = array ("src" => $src,
@@ -724,7 +724,7 @@ display_slides();"));
         }
         if ($web_location == 0) {
             $fp = @fopen($src, "r");
-            if (!$fp) {
+            if (! $fp) {
                 return $this->error(fmt("Unable to read src='%s'", $src));
             }
             while ($data = fgetcsv($fp, 1024, ';')) {

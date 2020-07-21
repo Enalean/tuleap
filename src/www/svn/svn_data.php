@@ -84,7 +84,7 @@ function svn_data_get_revision_detail($group_id, $commit_id, $rev_id = 0, $order
 
     $forbidden = svn_utils_get_forbidden_paths(user_getname(), $project->getSVNRootPath());
     $where_forbidden = "";
-    if (!empty($forbidden)) {
+    if (! empty($forbidden)) {
         foreach ($forbidden as $no_access => $value) {
             $where_forbidden .= " AND svn_dirs.dir not like '%" . db_es(substr($no_access, 1)) . "%' ";
         }

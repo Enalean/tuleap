@@ -113,6 +113,6 @@ class MinimalHudsonJobFactory // @codingStandardsIgnoreLine
         if (preg_match(Jenkins_Client::BUILD_WITH_PARAMETERS_REGEXP, $url, $matches)) {
              return $matches['job_url'] . self::API_XML;
         }
-        return  $url . self::API_XML;
+        return $url . self::API_XML;
     }
 }

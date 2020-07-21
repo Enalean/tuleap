@@ -37,10 +37,10 @@ EOT;
 
     public function up()
     {
-        if (!$this->db->columnNameExists('tracker_field', 'original_field_id')) {
+        if (! $this->db->columnNameExists('tracker_field', 'original_field_id')) {
             $this->updateFieldTable();
         }
-        if (!$this->db->columnNameExists('tracker_field_list_bind_static_value', 'original_value_id')) {
+        if (! $this->db->columnNameExists('tracker_field_list_bind_static_value', 'original_value_id')) {
             $this->updateFieldListBindStaticValueTable();
         }
     }
@@ -77,10 +77,10 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('tracker_field', 'original_field_id')) {
+        if (! $this->db->columnNameExists('tracker_field', 'original_field_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column original_field_id to tracker_field table');
         }
-        if (!$this->db->columnNameExists('tracker_field_list_bind_static_value', 'original_value_id')) {
+        if (! $this->db->columnNameExists('tracker_field_list_bind_static_value', 'original_value_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column original_field_id to tracker_field table');
         }
     }

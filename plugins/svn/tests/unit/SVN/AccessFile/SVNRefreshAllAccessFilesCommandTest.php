@@ -83,10 +83,10 @@ class SVNRefreshAllAccessFilesCommandTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (!$this->globals_svnaccess_set_initially) {
+        if (! $this->globals_svnaccess_set_initially) {
             unset($GLOBALS['SVNACCESS']);
         }
-        if (!$this->globals_svngroups_set_initially) {
+        if (! $this->globals_svngroups_set_initially) {
             unset($GLOBALS['SVNGROUPS']);
         }
     }

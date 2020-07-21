@@ -198,8 +198,8 @@ class ReferenceAdministrationViews extends Views
             if ($ref->getScope() === 'P') {
                 $scope = $GLOBALS['Language']->getText('project_reference', 'ref_scope_P');
             }
-            echo'<TD align="center">' . $purifier->purify($scope) . '</TD>';
-            echo'<TD align="center">' . $purifier->purify($ref->getServiceShortName()) . '</TD>';
+            echo '<TD align="center">' . $purifier->purify($scope) . '</TD>';
+            echo '<TD align="center">' . $purifier->purify($ref->getServiceShortName()) . '</TD>';
         }
 
         if ($can_be_deleted) {
@@ -276,7 +276,7 @@ class ReferenceAdministrationViews extends Views
         echo '
 <tr><td><a href="#" title="' . $GLOBALS['Language']->getText('project_reference', 'url') . '">' . $GLOBALS['Language']->getText('project_reference', 'r_link') . '</a>:&nbsp;<font color="red">*</font></td>
 <td><input type="text" name="link" size="70" maxlength="255"> ';
-            echo  help_button('project-admin.html#reference-pattern-configuration');
+            echo help_button('project-admin.html#reference-pattern-configuration');
             echo '</td></tr>';
         if (($group_id == 100) && ($su)) {
             echo '
@@ -343,7 +343,7 @@ class ReferenceAdministrationViews extends Views
         $ref = $referenceManager->loadReference($refid, $group_id);
 
         if (! $ref) {
-            echo  '<p class="alert alert-error"> ' . _('This reference does not exist') . '</p>';
+            echo '<p class="alert alert-error"> ' . _('This reference does not exist') . '</p>';
 
             return;
         }
@@ -434,7 +434,7 @@ class ReferenceAdministrationViews extends Views
             echo $purifier->purify($ref->getLink());
         } else {
             echo '<input type="text" name="link" size="70" maxlength="255" value="' . $purifier->purify($ref->getLink()) . '"> ';
-            echo  help_button('project-admin.html#creating-or-updating-a-reference-pattern');
+            echo help_button('project-admin.html#creating-or-updating-a-reference-pattern');
         }
         echo '</td></tr>';
         if ($group_id == 100) {
@@ -476,7 +476,7 @@ class ReferenceAdministrationViews extends Views
 
 <P><INPUT type="submit" name="Create" value="' . $GLOBALS['Language']->getText('global', 'btn_update') . '">
 </form>';
-        if (!$ro) {
+        if (! $ro) {
             echo '<p>' . $star . ': ' . $GLOBALS['Language']->getText('project_reference', 'fields_required') . '</p>';
         }
     }

@@ -6,18 +6,18 @@
 //
 //  Written for Codendi by Stephane Bouhet
 // Check if a user can submit a new without loggin
-if (!user_isloggedin() && !$ath->allowsAnon()) {
+if (! user_isloggedin() && ! $ath->allowsAnon()) {
     exit_not_logged_in();
     return;
 }
 
 // Check if this tracker is valid (not deleted)
-if (!$ath->isValid()) {
+if (! $ath->isValid()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
 }
 
 //  make sure this person has permission to add artifacts
-if (!$ath->userCanSubmit()) {
+if (! $ath->userCanSubmit()) {
     exit_permission_denied();
 }
 

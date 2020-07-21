@@ -83,7 +83,7 @@ class Tree extends FilesystemObject
     {
         parent::SetCommit($commit);
 
-        if ($this->contentsRead && !$this->contentsReferenced) {
+        if ($this->contentsRead && ! $this->contentsReferenced) {
             foreach ($this->contents as $obj) {
                 if (! $obj->isSubmodule()) {
                     $obj->SetCommit($commit);
@@ -102,7 +102,7 @@ class Tree extends FilesystemObject
      */
     public function GetContents() // @codingStandardsIgnoreLine
     {
-        if (!$this->contentsRead) {
+        if (! $this->contentsRead) {
             $this->ReadContents();
         }
 
@@ -149,7 +149,7 @@ class Tree extends FilesystemObject
 
             $octmode = octdec($mode);
 
-            if (!empty($this->path)) {
+            if (! empty($this->path)) {
                 $path = $this->path . '/' . $path;
             }
 
@@ -167,7 +167,7 @@ class Tree extends FilesystemObject
                 $obj = $this->GetProject()->GetBlob($hash);
             }
 
-            if (!$obj) {
+            if (! $obj) {
                 continue;
             }
 
@@ -189,18 +189,18 @@ class Tree extends FilesystemObject
      */
     private function DereferenceContents() // @codingStandardsIgnoreLine
     {
-        if (!$this->contentsReferenced) {
+        if (! $this->contentsReferenced) {
             return;
         }
 
-        if (!(isset($this->contents) && (count($this->contents) > 0))) {
+        if (! (isset($this->contents) && (count($this->contents) > 0))) {
             return;
         }
 
         foreach ($this->contents as $i => $data) {
             $obj = null;
 
-            if (!isset($data['hash']) || empty($data['hash'])) {
+            if (! isset($data['hash']) || empty($data['hash'])) {
                 continue;
             }
 
@@ -208,18 +208,18 @@ class Tree extends FilesystemObject
                 $obj = $this->GetProject()->GetTree($data['hash']);
             } elseif ($data['type'] == 'blob') {
                 $obj = $this->GetProject()->GetBlob($data['hash']);
-                if (isset($data['size']) && !empty($data['size'])) {
+                if (isset($data['size']) && ! empty($data['size'])) {
                     $obj->SetSize($data['size']);
                 }
             } else {
                 continue;
             }
 
-            if (isset($data['mode']) && !empty($data['mode'])) {
+            if (isset($data['mode']) && ! empty($data['mode'])) {
                 $obj->SetMode($data['mode']);
             }
 
-            if (isset($data['path']) && !empty($data['path'])) {
+            if (isset($data['path']) && ! empty($data['path'])) {
                 $obj->SetPath($data['path']);
             }
 

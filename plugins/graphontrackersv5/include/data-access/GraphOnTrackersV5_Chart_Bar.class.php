@@ -119,11 +119,11 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
     public function createDb($id)
     {
         $field_base = $this->getField_base();
-        if (!is_int($field_base) && !is_string($field_base) && $field_base) {
+        if (! is_int($field_base) && ! is_string($field_base) && $field_base) {
             $field_base = $field_base->getid();
         }
         $field_group = $this->getField_group();
-        if (!is_int($field_group) && !is_string($field_group) && $field_group) {
+        if (! is_int($field_group) && ! is_string($field_group) && $field_group) {
             $field_group = $field_group->getid();
         }
         return $this->getDao()->save($id, $field_base, $field_group);
@@ -156,7 +156,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart
         if ($artifact_field_base && $artifact_field_base->userCanRead()) {
             if ($this->field_group) {
                 $artifact_field_group = $ff->getFormElementById($this->field_group);
-                if (!$artifact_field_group || !$artifact_field_group->userCanRead()) {
+                if (! $artifact_field_group || ! $artifact_field_group->userCanRead()) {
                     return false;
                 }
             }

@@ -75,7 +75,7 @@ class ImmutableTagCreator
     public function saveWithoutHistory(Repository $repository, $immutable_tags_path, $immutable_tags_whitelist)
     {
         if (
-            !$this->dao->save(
+            ! $this->dao->save(
                 $repository,
                 $this->cleanImmutableTag($immutable_tags_path),
                 $this->cleanImmutableTag($immutable_tags_whitelist)

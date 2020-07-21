@@ -20,7 +20,7 @@ class _Diff3_Block
 
     public function merged()
     {
-        if (!isset($this->_merged)) {
+        if (! isset($this->_merged)) {
             if ($this->final1 === $this->final2) {
                 $this->_merged = &$this->final1;
             } elseif ($this->final1 === $this->orig) {
@@ -104,7 +104,7 @@ class _Diff3_BlockBuilder
 
     public function is_empty()
     {
-        return !$this->orig && !$this->final1 && !$this->final2;
+        return ! $this->orig && ! $this->final1 && ! $this->final2;
     }
 
     public function finish()

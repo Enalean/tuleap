@@ -241,17 +241,17 @@ class PackageResource extends AuthenticatedResource
     {
         $package = $this->package_factory->getFRSPackageFromDb($id);
 
-        if (!$package) {
+        if (! $package) {
             throw new RestException(404, "Package not found");
         }
 
         $user = $this->user_manager->getCurrentUser();
 
-        if (!$this->package_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $user->getId())) {
+        if (! $this->package_factory->userCanRead($package->getGroupID(), $package->getPackageID(), $user->getId())) {
             throw new RestException(403, "Access to package denied");
         }
 
-        if (!$package->isActive()) {
+        if (! $package->isActive()) {
             throw new RestException(403, "Package is not active");
         }
 

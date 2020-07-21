@@ -46,7 +46,7 @@ class GitRepositoryWithPermissions
 
     public function addUGroupForPermissionType($permission_type, $ugroup_id)
     {
-        if (!isset($this->permissions[$permission_type])) {
+        if (! isset($this->permissions[$permission_type])) {
             throw new RuntimeException('Invalid GIT permission type ' . $permission_type);
         }
         $this->permissions[$permission_type][] = $ugroup_id;

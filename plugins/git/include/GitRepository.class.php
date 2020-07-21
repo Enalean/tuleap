@@ -330,7 +330,7 @@ class GitRepository
         if ($project) {
             $projectId = $project->getID();
             $row = $this->getDao()->getProjectRepositoryByName($repositoryName, $projectId);
-            if ($row && !empty($row)) {
+            if ($row && ! empty($row)) {
                      $repoId = $row[GitDao::REPOSITORY_ID];
             }
         }
@@ -454,7 +454,7 @@ class GitRepository
 
     public function getCreatorId()
     {
-        if (!empty($this->creator)) {
+        if (! empty($this->creator)) {
             return $this->creator->getId();
         }
         return 0;
@@ -493,7 +493,7 @@ class GitRepository
      */
     public function getRootPath()
     {
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             $this->rootPath = $this->project->getUnixName();
         }
         return $this->rootPath;
@@ -562,7 +562,7 @@ class GitRepository
      */
     public function getPathWithoutLazyLoading()
     {
-        if (!$this->path) {
+        if (! $this->path) {
             $this->path = self::getPathFromProjectAndName($this->getProject(), $this->getName());
         }
         return $this->path;
@@ -818,7 +818,7 @@ class GitRepository
         foreach ($mails as $mail) {
             try {
                 $user = $um->getUserByEmail($mail);
-                if (!$user || !$user->isMember($this->getProjectId())) {
+                if (! $user || ! $user->isMember($this->getProjectId())) {
                     $mailsToDelete[] = $mail;
                 }
             } catch (Exception $e) {

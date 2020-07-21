@@ -111,7 +111,7 @@ class SystemEventManager
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -140,7 +140,7 @@ class SystemEventManager
 
     public function _getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new SystemEventDao(CodendiDataAccess::instance());
         }
         return $this->dao;
@@ -148,7 +148,7 @@ class SystemEventManager
 
     public function _getFollowersDao()
     {
-        if (!$this->followers_dao) {
+        if (! $this->followers_dao) {
             $this->followers_dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }
         return $this->followers_dao;
@@ -277,7 +277,7 @@ class SystemEventManager
                 break;
             case 'project_admin_ugroup_edition':
                 $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id', 'ugroup_name', 'ugroup_old_name'));
-                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
+                if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
                         $parameters,
@@ -291,7 +291,7 @@ class SystemEventManager
             case 'project_admin_ugroup_deletion':
             case 'project_admin_ugroup_bind_modified':
                 $parameters = $this->concatParameters($params, array('group_id', 'ugroup_id'));
-                if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
+                if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                     $this->createEvent(
                         SystemEvent::TYPE_UGROUP_MODIFY,
                         $parameters,
@@ -307,7 +307,7 @@ class SystemEventManager
                 foreach ($params['ugroups'] as $ugroup_id) {
                     $params['ugroup_id'] = $ugroup_id;
                     $parameters          = $this->concatParameters($params, array('group_id', 'ugroup_id'));
-                    if (!$this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
+                    if (! $this->areThereMultipleEventsQueuedMatchingFirstParameter(SystemEvent::TYPE_UGROUP_MODIFY, $parameters)) {
                         $this->createEvent(
                             SystemEvent::TYPE_UGROUP_MODIFY,
                             $parameters,
@@ -593,7 +593,7 @@ class SystemEventManager
             $row['end_date'],
             $row['log']
         );
-        if ($sysevent && !empty($klass_params)) {
+        if ($sysevent && ! empty($klass_params)) {
             call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
         }
         return $sysevent;
@@ -733,7 +733,7 @@ class SystemEventManager
             array($event_type),
             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
         );
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
         return false;
@@ -748,7 +748,7 @@ class SystemEventManager
             array(SystemEvent::STATUS_NEW)
         );
 
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
 
@@ -769,7 +769,7 @@ class SystemEventManager
             array($event_type),
             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
         );
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
         }
         return false;
@@ -785,7 +785,7 @@ class SystemEventManager
             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
         );
 
-        return $dar && !$dar->isError() && $dar->rowCount() > 0;
+        return $dar && ! $dar->isError() && $dar->rowCount() > 0;
     }
 
     /**
@@ -819,7 +819,7 @@ class SystemEventManager
     public function isUserNameAvailable($newName)
     {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 0) {
             return true;
         }
         return false;
@@ -834,7 +834,7 @@ class SystemEventManager
     public function isProjectNameAvailable($newName)
     {
         $dar = $this->_getDao()->searchWithParam('tail', $newName, array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 0) {
             return true;
         }
         return false;

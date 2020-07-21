@@ -252,7 +252,7 @@ class CustomMetadataRepresentationRetriever
             throw CustomMetadataException::listOnlyAcceptSingleValues($metadata_representation->short_name);
         }
 
-        if (!$metadata_representation->value) {
+        if (! $metadata_representation->value) {
             return;
         }
 

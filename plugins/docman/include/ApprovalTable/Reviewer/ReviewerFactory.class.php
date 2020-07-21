@@ -146,7 +146,7 @@ class Docman_ApprovalTableReviewerFactory
         $reviewer = null;
         $dao = $this->_getDao();
         $dar = $dao->getReviewerById($this->table->getId(), $userId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $reviewer = $this->createReviewerFromRow($row);
             $this->reviewerCache[$row['reviewer_id']] = true;
@@ -207,7 +207,7 @@ class Docman_ApprovalTableReviewerFactory
         $um = $this->_getUserManager();
         $user = $um->getUserById($userId);
         if ($dPm->userCanRead($user, $this->item->getId())) {
-            if (!$this->isReviewer($user->getId())) {
+            if (! $this->isReviewer($user->getId())) {
                 $dao = $this->_getDao();
                 $added = $dao->addUser($this->table->getId(), $user->getId());
                 if ($added) {
@@ -266,7 +266,7 @@ class Docman_ApprovalTableReviewerFactory
 
         $dao = $this->_getDao();
         $dar = $dao->getUgroupMembers($ugroupId, $this->item->getGroupId());
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $dar->rewind();
             while ($dar->valid()) {
                 $nbMembers++;

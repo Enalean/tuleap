@@ -60,7 +60,7 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM)
 
 function getMembers($groupName, $dbi, $START_DELIM = false)
 {
-    if (!$START_DELIM) {
+    if (! $START_DELIM) {
         $START_DELIM = _("Members:");
     }
     return getPageTextData($groupName, $dbi, $START_DELIM);
@@ -80,7 +80,7 @@ function getPageTextData($fromUser, $dbi, $START_DELIM)
     $p = -1;
     for ($i = 0; $i < count($pageArray); $i++) {
         if ($pageArray[$i] != "") {
-            if (!((strpos($pageArray[$i], $START_DELIM)) === false)) {
+            if (! ((strpos($pageArray[$i], $START_DELIM)) === false)) {
                 $p = $i;
                 break;
             }

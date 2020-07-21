@@ -40,25 +40,25 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
 
     public function parse(Workflow $workflow, array $json): PostAction
     {
-        if (!isset($json['field_id'])) {
+        if (! isset($json['field_id'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', 'Mandatory attribute field_id not found in action with type "set_field_value".')
             );
         }
-        if (!is_int($json['field_id'])) {
+        if (! is_int($json['field_id'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', "Bad field_id attribute format: int expected.")
             );
         }
-        if (!isset($json['value'])) {
+        if (! isset($json['value'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', 'Mandatory attribute value not found in with type "set_field_value".')
             );
         }
-        if (!is_string($json['value'])) {
+        if (! is_string($json['value'])) {
             throw new I18NRestException(
                 400,
                 dgettext('tuleap-tracker', "Bad value attribute format: string expected.")
@@ -66,7 +66,7 @@ class SetDateValueJsonParser implements PostActionUpdateJsonParser
         }
 
         $value = $json['value'];
-        if (!$this->isValidValue($value)) {
+        if (! $this->isValidValue($value)) {
             throw new I18NRestException(
                 400,
                 sprintf(

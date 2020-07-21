@@ -82,7 +82,7 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (!$args['pagename']) {
+        if (! $args['pagename']) {
             return $this->error(_("No pagename specified"));
         }
 
@@ -90,7 +90,7 @@ class WikiPlugin_AddComment extends WikiPlugin_WikiBlog
         $comment = $request->getArg("comment");
         $request->setArg('comment', false);
 
-        if ($request->isPost() and !empty($comment['addcomment'])) {
+        if ($request->isPost() and ! empty($comment['addcomment'])) {
             $this->add($request, $comment, 'comment'); // noreturn
         }
         if ($args['jshide'] and isBrowserIE() and browserDetect("Mac")) {
@@ -126,7 +126,7 @@ function togglecomments(a) {
             $div = HTML::div(array('id' => 'comments'));
         }
         foreach (explode(',', $args['mode']) as $show) {
-            if (!empty($seen[$show])) {
+            if (! empty($seen[$show])) {
                 continue;
             }
             $seen[$show] = 1;

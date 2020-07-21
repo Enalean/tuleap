@@ -175,7 +175,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
         $users = $this->notified_people_retriever->getNotifiedUsers($this->project, $id);
         while ($users->valid()) {
             $row  = $users->current();
-            if (!isset($this->_listeners[$row['user_id']])) {
+            if (! isset($this->_listeners[$row['user_id']])) {
                 $um   = $this->_getUserManager();
                 $user = $um->getUserById($row['user_id']);
                 if ($user && $dpm->userCanRead($user, $params['item']->getId()) && $dpm->userCanAccess($user, $params['item']->getParentId()) && $dpm->userCanAccess($user, $row['item_id'])) {
@@ -186,7 +186,7 @@ class Docman_NotificationsManager_Delete extends Docman_NotificationsManager
                 }
             }
             if (isset($this->_listeners[$row['user_id']])) {
-                if (!isset($this->_listeners[$row['user_id']]['items'][$params['item']->getId()])) {
+                if (! isset($this->_listeners[$row['user_id']]['items'][$params['item']->getId()])) {
                     $this->_listeners[$row['user_id']]['items'][$params['item']->getId()] = array(
                         'item'   => &$params['item'],
                         'events' => array()

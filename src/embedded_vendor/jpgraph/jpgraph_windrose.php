@@ -596,7 +596,7 @@ class WindrosePlot
     public function SetRadialGridStyle($aStyle)
     {
         $aStyle = strtolower($aStyle);
-        if (!in_array($aStyle, array('solid','dotted','dashed','longdashed'))) {
+        if (! in_array($aStyle, array('solid','dotted','dashed','longdashed'))) {
             JpGraphError::RaiseL(22005); //("Line style for radial lines must be on of ('solid','dotted','dashed','longdashed') ");
         }
         $this->iRadialGridStyle = $aStyle;
@@ -841,11 +841,11 @@ class WindrosePlot
             // This will much simplify the logic below
             for ($i = 0; $i < 16; ++$i) {
                 $dtxt = $this->iAllDirectionLabels[$i];
-                if (!empty($this->iData[$dtxt])) {
+                if (! empty($this->iData[$dtxt])) {
                     $data[$i] = $this->iData[$dtxt];
-                } elseif (!empty($this->iData[strtolower($dtxt)])) {
+                } elseif (! empty($this->iData[strtolower($dtxt)])) {
                     $data[$i] = $this->iData[strtolower($dtxt)];
-                } elseif (!empty($this->iData[$i])) {
+                } elseif (! empty($this->iData[$i])) {
                     $data[$i] = $this->iData[$i];
                 } else {
                     $data[$i] = array();
@@ -874,7 +874,7 @@ class WindrosePlot
         } else {
             $n = count($this->iData);
             foreach ($this->iData as $dir => $leg) {
-                if (!is_numeric($dir)) {
+                if (! is_numeric($dir)) {
                     $pos = array_search(strtoupper($dir), $this->iAllDirectionLabels);
                     if ($pos !== false) {
                         $dir = $pos * 22.5;
@@ -1067,7 +1067,7 @@ class WindrosePlot
 
             //$da = 360-$da;
 
-            if (!empty($this->iLabels[$keys[$i]])) {
+            if (! empty($this->iLabels[$keys[$i]])) {
                 $lbl = $this->iLabels[$keys[$i]];
             } else {
                 $lbl = sprintf($this->iLabelFormatString, $da);

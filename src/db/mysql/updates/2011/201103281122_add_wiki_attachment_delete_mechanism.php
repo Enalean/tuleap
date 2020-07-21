@@ -67,15 +67,15 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('wiki_attachment', 'filesystem_name')) {
+        if (! $this->db->columnNameExists('wiki_attachment', 'filesystem_name')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column filesystem_name not created in wiki_attachment');
         }
 
-        if (!$this->db->columnNameExists('wiki_attachment', 'delete_date')) {
+        if (! $this->db->columnNameExists('wiki_attachment', 'delete_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('delete_date not created in wiki_attachment');
         }
 
-        if (!$this->db->tableNameExists('wiki_attachment_deleted')) {
+        if (! $this->db->tableNameExists('wiki_attachment_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('wiki_attachment_deleted table is missing');
         }
     }

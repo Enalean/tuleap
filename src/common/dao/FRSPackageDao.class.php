@@ -270,7 +270,7 @@ class FRSPackageDao extends DataAccessObject
         }
         if ($package_id) {
             $dar = $this->searchById($package_id);
-            if (!$dar->isError() && $dar->valid()) {
+            if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
                 $set_array = array();
                 foreach ($data_array as $key => $value) {

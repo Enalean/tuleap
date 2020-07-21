@@ -65,7 +65,7 @@ function news_header($params)
         echo '
 			<H2>' . ForgeConfig::get('sys_name') . ' <A HREF="/news/">' . $Language->getText('news_index', 'news') . '</A></H2>';
     }
-    if (!isset($params['pv']) || !$params['pv']) {
+    if (! isset($params['pv']) || ! $params['pv']) {
         echo '<P><B>';
         // 'Admin' tab is only displayed if the user is News admin or project admin
         if ($group_id) {
@@ -99,7 +99,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     $sys_news_group = ForgeConfig::get('sys_news_group');
 
     $return  = "";
-    if (!$group_id) {
+    if (! $group_id) {
         $group_id = $sys_news_group;
     }
 
@@ -132,7 +132,7 @@ function news_show_latest($group_id = '', $limit = 10, $show_projectname = true,
     $result = db_query($sql);
     $rows   = db_numrows($result);
 
-    if (!$result || $rows < 1) {
+    if (! $result || $rows < 1) {
         $return .= '<b>' . $Language->getText('news_utils', 'no_news_item_found') . '</b>';
     } else {
         $news_item_displayed = false;
@@ -201,7 +201,7 @@ function news_fetch_a_news_summary_block($data, $group_id, $limit, $show_project
     }
 
     $forum_url = '/forum/forum.php?forum_id=' . urlencode($data['forum_id']);
-    if (!$limit) {
+    if (! $limit) {
         $html .= '<li><span class="news_summary"><a href="' . $purifier->purify($forum_url) . '">' . $purifier->purify($data['summary']) . '</a></span> ';
         $html .= '<small><span class="news_date">' . \DateHelper::timeAgoInWords($data['date'], false, true) . '</span></small></li>';
     } else {
@@ -242,7 +242,7 @@ function get_news_name($id)
     */
     $sql = "SELECT summary FROM news_bytes WHERE id=" . db_ei($id);
     $result = db_query($sql);
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
         return "Not Found";
     } else {
         return db_result($result, 0, 'summary');
@@ -256,7 +256,7 @@ function get_news_name_from_forum_id($id)
     */
     $sql = "SELECT summary FROM news_bytes WHERE forum_id=" . db_ei($id);
     $result = db_query($sql);
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
         return "Not Found";
     } else {
         return db_result($result, 0, 'summary');
@@ -276,7 +276,7 @@ function news_submit($group_id, $summary, $details, $private_news, $send_news_to
                  '$new_id', '" . db_es($summary) . "', '" . db_es($details) . "')";
     $result = db_query($sql);
 
-    if (!$result) {
+    if (! $result) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('news_submit', 'insert_err'));
     } else {
         // retrieve the id of the news
@@ -322,7 +322,7 @@ function news_check_permission($forum_id, $group_id)
         }
     }
     $user_id = UserManager::instance()->getCurrentUser()->getId();
-    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ', $forum_id, $user_id, $group_id))) || (!permission_exist('NEWS_READ', $forum_id))) {
+    if (((permission_exist('NEWS_READ', $forum_id)) && (permission_is_authorized('NEWS_READ', $forum_id, $user_id, $group_id))) || (! permission_exist('NEWS_READ', $forum_id))) {
         return true;
     } else {
         return false;

@@ -48,7 +48,7 @@ class PluginsAdministrationPlugin extends PluginWithLegacyInternalRouting
 
     public function &getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'PluginsAdministrationPluginInfo')) {
             require_once('PluginsAdministrationPluginInfo.class.php');
             $this->pluginInfo = new PluginsAdministrationPluginInfo($this);
         }

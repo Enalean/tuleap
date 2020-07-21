@@ -122,12 +122,12 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     */
 
         // Check permissions
-    if (!forum_utils_access_allowed($forum_id)) {
+    if (! forum_utils_access_allowed($forum_id)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
     }
 
     //If the forum is associated to a news, check permissions on this news
-    if (!forum_utils_news_access($forum_id)) {
+    if (! forum_utils_news_access($forum_id)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
     }
 
@@ -143,7 +143,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         if ($request->valid($vMonitor) && $request->valid($vThreadId)) {
             if (user_isloggedin()) {
                 $user_id = UserManager::instance()->getCurrentUser()->getId();
-                if (!user_monitor_forum($forum_id, $user_id)) {
+                if (! user_monitor_forum($forum_id, $user_id)) {
                     if (! forum_thread_add_monitor($forum_id, $request->get('thread_id'), $user_id)) {
                         $feedback .= $Language->getText('forum_forum_utils', 'insert_err');
                     }
@@ -279,7 +279,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
     //private forum check
         if (db_result($result, 0, 'is_public') != '1') {
-            if (!user_isloggedin() || !user_ismember($group_id)) {
+            if (! user_isloggedin() || ! user_ismember($group_id)) {
              /*
               If this is a private forum, kick 'em out
              */
@@ -310,7 +310,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         $total_rows = 0;
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
          //empty forum
             $ret_val .= $Language->getText('forum_forum', 'no_msg', $forum_name) . '<P>' . db_error();
         } else {
@@ -353,7 +353,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         //now show the popup boxes in a form
             $ret_val .= '<TABLE BORDER="0" WIDTH="50%">';
-            if (!isset($pv) || (!$pv)) {
+            if (! isset($pv) || (! $pv)) {
                 $ret_val .= '
 				<FORM ACTION="?" METHOD="POST">
 				<INPUT TYPE="HIDDEN" NAME="set" VALUE="custom">
@@ -495,7 +495,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
             $crossref_fact->DisplayCrossRefs();
         }
 
-        if (!isset($pv) || !$pv) {
+        if (! isset($pv) || ! $pv) {
             echo '<P>&nbsp;<P>';
 
             echo '<h3>' . $Language->getText('forum_forum', 'start_new_thread') . ':</H3><a name="start_new_thread"></a>';

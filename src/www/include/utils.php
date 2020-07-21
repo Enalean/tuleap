@@ -87,7 +87,7 @@ function util_get_user_preferences_export_datefmt()
 function util_importdatefmt_to_unixtime($date)
 {
     $time = 0;
-    if (!$date || $date == "") {
+    if (! $date || $date == "") {
         return array($time,false);
     }
 
@@ -157,7 +157,7 @@ function util_xlsdatefmt_explode($date)
 function util_date_to_unixtime($date)
 {
     $time = 0;
-    if (!$date || $date == "") {
+    if (! $date || $date == "") {
         return array($time,false);
     }
 
@@ -205,7 +205,7 @@ function util_date_explode($date)
 function util_sysdatefmt_to_unixtime($date)
 {
     $time = 0;
-    if (!$date || $date == "") {
+    if (! $date || $date == "") {
         return array($time,false);
     }
 
@@ -348,12 +348,12 @@ function util_wrap_find_space($string, $wrap)
     $try = 1;
     $found = false;
 
-    while (!$found) {
+    while (! $found) {
      //find the first space starting at $start
         $pos = @strpos($string, ' ', $start);
 
      //if that space is too far over, go back and start more to the left
-        if (($pos > ($wrap + 5)) || !$pos) {
+        if (($pos > ($wrap + 5)) || ! $pos) {
             $try++;
             $start = ($wrap - ($try * 5));
          //if we've gotten so far left , just truncate the line
@@ -414,7 +414,7 @@ function util_user_link($username)
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     if ($username == $Language->getText('global', 'none') || empty($username)) {
-        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
+        return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
     }
     return '<a href="/users/' . urlencode($username) . '">' . $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
 }
@@ -424,7 +424,7 @@ function util_user_nolink($username)
     global $Language;
     $hp = Codendi_HTMLPurifier::instance();
     if ($username == $Language->getText('global', 'none') || empty($username)) {
-        return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
+        return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
     }
     return $hp->purify(UserHelper::instance()->getDisplayNameFromUserName($username), CODENDI_PURIFIER_CONVERT_HTML);
 }
@@ -485,7 +485,7 @@ function util_double_diff_array($arr1, $arr2)
     }
     $added = [];
     foreach ($h2 as $k => $v) {
-        if (!isset($h1[$k])) {
+        if (! isset($h1[$k])) {
             $added[] = $k;
         }
     }
@@ -696,7 +696,7 @@ function util_user_finder($ident, $strict = true)
         // Neither Plugins nor Codendi found a valid user with this
         // identifier. If allowed, return the identifier as email address
         // if the identifier is a valid email address.
-        if (!$strict) {
+        if (! $strict) {
             if (validate_email($ident)) {
                 return $ident;
             }
@@ -824,7 +824,7 @@ function util_check_fileupload($filename)
     }
 
     /* This should be enough... */
-    if (!is_uploaded_file($filename)) {
+    if (! is_uploaded_file($filename)) {
       //echo "$filename is not uploaded file";
         return false;
     }
@@ -832,11 +832,11 @@ function util_check_fileupload($filename)
     if (strstr($filename, '..')) {
         return false;
     }
-    if (!is_file($filename)) {
+    if (! is_file($filename)) {
       //echo "$filename is not file";
         return false;
     }
-    if (!file_exists($filename)) {
+    if (! file_exists($filename)) {
       //echo "$filename does not exist";
         return false;
     }
@@ -878,7 +878,7 @@ function util_get_ids_from_aid($aid, &$art_group_id, &$atid, &$art_name)
 
         $result = db_query($sql);
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             return false;
         }
         $art_group_id = db_result($result, 0, 'group_id');
@@ -901,20 +901,20 @@ function util_get_group_from_commit_id($cid)
     $sql = "SELECT repositoryid FROM cvs_checkins WHERE commitid=" . db_ei($cid);
     $res = db_query($sql);
     $repository_id = db_result($res, 0, 'repositoryid');
-    if (!$repository_id) {
+    if (! $repository_id) {
         return 0;
     }
 
     $sql = "SELECT repository FROM cvs_repositories WHERE id=" . db_ei($repository_id);
     $res = db_query($sql);
     $repository = db_result($res, 0, 'repository');
-    if (!$repository) {
+    if (! $repository) {
         return 0;
     }
 
   // Remove ".*/cvsroot/" to get the project unix name
     $projname = preg_replace("/.*\/cvsroot\//i", "", $repository);
-    if (!$projname) {
+    if (! $projname) {
         return 0;
     }
 

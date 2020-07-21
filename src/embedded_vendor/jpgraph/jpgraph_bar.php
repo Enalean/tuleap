@@ -113,7 +113,7 @@ class BarPlot extends Plot
 
     public function Legend($graph)
     {
-        if ($this->grad && $this->legend != "" && !$this->fill) {
+        if ($this->grad && $this->legend != "" && ! $this->fill) {
             $color = array($this->grad_fromcolor,$this->grad_tocolor);
             // In order to differentiate between gradients and cooors specified as an RGB triple
             $graph->legend->Add(
@@ -475,7 +475,7 @@ class BarPlot extends Plot
                         $this->grad_style
                     );
                 }
-            } elseif (!empty($this->fill_color)) {
+            } elseif (! empty($this->fill_color)) {
                 if (is_array($this->fill_color)) {
                     $img->PushColor($this->fill_color[$i % count($this->fill_color)]);
                 } else {
@@ -490,7 +490,7 @@ class BarPlot extends Plot
             // Remember value of this bar
             $val = $this->coords[0][$i];
 
-            if (!empty($val) && !is_numeric($val)) {
+            if (! empty($val) && ! is_numeric($val)) {
                 JpGraphError::RaiseL(2004, $i, $val);
                 //'All values for a barplot must be numeric. You have specified value['.$i.'] == \''.$val.'\'');
             }
@@ -715,16 +715,16 @@ class BarPlot extends Plot
             for ($j = 1; $j < 4; ++$j) {
                 $csimcoord .= ", " . round($rpts[2 * $j]) . ", " . round($rpts[2 * $j + 1]);
             }
-            if (!empty($this->csimtargets[$i])) {
+            if (! empty($this->csimtargets[$i])) {
                 $this->csimareas .= '<area shape="poly" coords="' . $csimcoord . '" ';
                 $this->csimareas .= " href=\"" . htmlentities($this->csimtargets[$i]) . "\"";
 
-                if (!empty($this->csimwintargets[$i])) {
+                if (! empty($this->csimwintargets[$i])) {
                     $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
                 }
 
                 $sval = '';
-                if (!empty($this->csimalts[$i])) {
+                if (! empty($this->csimalts[$i])) {
                     $sval = sprintf($this->csimalts[$i], $this->coords[0][$i]);
                     $this->csimareas .= " title=\"$sval\" alt=\"$sval\" ";
                 }
@@ -754,7 +754,7 @@ class GroupBarPlot extends BarPlot
             JpGraphError::RaiseL(2007);//('Cannot create GroupBarPlot from empty plot array.');
         }
         for ($i = 0; $i < $this->nbrplots; ++$i) {
-            if (empty($this->plots[$i]) || !isset($this->plots[$i])) {
+            if (empty($this->plots[$i]) || ! isset($this->plots[$i])) {
                 JpGraphError::RaiseL(2008, $i);//("Group bar plot element nbr $i is undefined or empty.");
             }
         }
@@ -769,7 +769,7 @@ class GroupBarPlot extends BarPlot
         $n = count($this->plots);
         for ($i = 0; $i < $n; ++$i) {
             $c = get_class($this->plots[$i]);
-            if (!($this->plots[$i] instanceof BarPlot)) {
+            if (! ($this->plots[$i] instanceof BarPlot)) {
                 JpGraphError::RaiseL(2009, $c);
                 //('One of the objects submitted to GroupBar is not a BarPlot. Make sure that you create the Group Bar plot from an array of BarPlot or AccBarPlot objects. (Class = '.$c.')');
             }
@@ -852,14 +852,14 @@ class AccBarPlot extends BarPlot
             JpGraphError::RaiseL(2010);//('Cannot create AccBarPlot from empty plot array.');
         }
         for ($i = 0; $i < $this->nbrplots; ++$i) {
-            if (empty($this->plots[$i]) || !isset($this->plots[$i])) {
+            if (empty($this->plots[$i]) || ! isset($this->plots[$i])) {
                 JpGraphError::RaiseL(2011, $i);//("Acc bar plot element nbr $i is undefined or empty.");
             }
         }
 
         // We can only allow individual plost which do not have specified X-positions
         for ($i = 0; $i < $this->nbrplots; ++$i) {
-            if (!empty($this->plots[$i]->coords[1])) {
+            if (! empty($this->plots[$i]->coords[1])) {
                 JpGraphError::RaiseL(2015);
                 //'Individual bar plots in an AccBarPlot or GroupBarPlot can not have specified X-positions.');
             }
@@ -880,7 +880,7 @@ class AccBarPlot extends BarPlot
         $n = count($this->plots);
         for ($i = $n - 1; $i >= 0; --$i) {
             $c = get_class($this->plots[$i]);
-            if (!($this->plots[$i] instanceof BarPlot)) {
+            if (! ($this->plots[$i] instanceof BarPlot)) {
                 JpGraphError::RaiseL(2012, $c);
                 //('One of the objects submitted to AccBar is not a BarPlot. Make sure that you create the AccBar plot from an array of BarPlot objects.(Class='.$c.')');
             }
@@ -905,14 +905,14 @@ class AccBarPlot extends BarPlot
             // individual plots max y-value since that
             // would in most cases give to large y-value.
             $y = 0;
-            if (!isset($this->plots[0]->coords[0][$i])) {
+            if (! isset($this->plots[0]->coords[0][$i])) {
                 JpGraphError::RaiseL(2014);
             }
             if ($this->plots[0]->coords[0][$i] > 0) {
                 $y = $this->plots[0]->coords[0][$i];
             }
             for ($j = 1; $j < $this->nbrplots; $j++) {
-                if (!isset($this->plots[$j]->coords[0][$i])) {
+                if (! isset($this->plots[$j]->coords[0][$i])) {
                     JpGraphError::RaiseL(2014);
                 }
                 if ($this->plots[$j]->coords[0][$i] > 0) {
@@ -1178,7 +1178,7 @@ class AccBarPlot extends BarPlot
                         }
 
                         $sval = '';
-                        if (!empty($this->plots[$j]->csimalts[$i])) {
+                        if (! empty($this->plots[$j]->csimalts[$i])) {
                             $sval = sprintf($this->plots[$j]->csimalts[$i], $this->plots[$j]->coords[0][$i]);
                             $this->csimareas .= " title=\"$sval\" ";
                         }

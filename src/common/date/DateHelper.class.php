@@ -113,7 +113,7 @@ class DateHelper
     public static function getFormattedDistance($distance_in_minutes, $distance_in_seconds, $include_seconds)
     {
         if ($distance_in_minutes <= 1) {
-            if (!$include_seconds) {
+            if (! $include_seconds) {
                 if ($distance_in_minutes) {
                     return $GLOBALS['Language']->getText('include_utils', 'less_1_minute');
                 }

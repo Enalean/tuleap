@@ -47,7 +47,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_webhook_log')) {
+        if (! $this->db->tableNameExists('plugin_git_webhook_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_webhook_log table is missing');
         }
     }

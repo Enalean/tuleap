@@ -153,7 +153,7 @@ abstract class PluginController
      */
     public function addData($data)
     {
-        if (!empty($data) && is_array($data)) {
+        if (! empty($data) && is_array($data)) {
             $this->actionResultData = array_merge($this->actionResultData, $data);
         }
     }

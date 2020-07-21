@@ -189,7 +189,7 @@ class GitRepositoryFactory
     public function getFromFullPath($full_path)
     {
         $repo = $this->getByRepositoryRootMatch('gitolite/repositories', $full_path);
-        if (!$repo) {
+        if (! $repo) {
             $repo = $this->getByRepositoryRootMatch('gitroot', $full_path);
         }
         return $repo;

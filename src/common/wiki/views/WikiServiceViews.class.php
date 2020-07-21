@@ -41,7 +41,7 @@ class WikiServiceViews extends WikiViews
         $this->purifier = Codendi_HTMLPurifier::instance();
         parent::WikiView($controler, $id, $view);
         $pm = ProjectManager::instance();
-        if (isset($_REQUEST['pagename']) && !is_null($_REQUEST['pagename'])) {
+        if (isset($_REQUEST['pagename']) && ! is_null($_REQUEST['pagename'])) {
             $this->html_params['title']  = $GLOBALS['Language']->getText(
                 'wiki_views_wikiserviceviews',
                 'wiki_page_title',
@@ -78,7 +78,7 @@ class WikiServiceViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_documents', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_docu', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_browseWikiDocuments();
         }
     }
@@ -100,21 +100,21 @@ class WikiServiceViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_pages', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_browseProjectWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_browse_empty_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_empty', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_browseEmptyWikiPages();
         }
 
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_create_new_page', $this->gid);
         $hurl = '<a href="' . $this->wikiLink . '&view=browsePages&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wiki_subtit_create', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_newPageForm($this->wikiLink . '&view=browsePages');
         }
     }
@@ -128,7 +128,7 @@ class WikiServiceViews extends WikiViews
             $we = $wei->current();
 
             $href = $this->_buildPageLink($we->wikiPage, $we->getName());
-            if (!empty($href)) {
+            if (! empty($href)) {
                 $description = $this->purifier->purify($we->getDesc());
                 print $GLOBALS['Language']->getText('wiki_views_wikiserviceviews', 'wikientries', array($href, $description));
             }
@@ -173,7 +173,7 @@ class WikiServiceViews extends WikiViews
         foreach ($pageList as $pagename) {
             $wp = new WikiPage($this->gid, $pagename);
             $href = $this->_buildPageLink($wp);
-            if (!empty($href)) {
+            if (! empty($href)) {
                 print '<li>' . $href . '</li>';
             }
         }
@@ -373,7 +373,7 @@ class WikiServiceViews extends WikiViews
                 break;
 
             case 'doinstall':
-                if (!empty($view)) {
+                if (! empty($view)) {
                     $this->$view();
                 }
                 break;
@@ -381,7 +381,7 @@ class WikiServiceViews extends WikiViews
             case 'browse':
             default:
                 $this->header();
-                if (!empty($view)) {
+                if (! empty($view)) {
                     $this->$view();
                 }
                 $this->footer();
@@ -417,7 +417,7 @@ class WikiServiceViews extends WikiViews
         global $LANG;
         global $language_id;
         $language_id = $_REQUEST['language_id'];
-        if (!$language_id || !$GLOBALS['Language']->isLanguageSupported($language_id)) {
+        if (! $language_id || ! $GLOBALS['Language']->isLanguageSupported($language_id)) {
             $language_id = $GLOBALS['Language']->defaultLanguage;
         }
         // Initial Wiki document is now created within phpWiki main()

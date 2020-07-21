@@ -30,7 +30,7 @@ function svn_header(Project $project, $params)
     \Tuleap\Project\ServiceInstrumentation::increment('svncore');
 
     $service = $project->getService('svn');
-    if (!$service) {
+    if (! $service) {
         exit_error($Language->getText('global', 'error'), $Language->getText('svn_utils', 'svn_off'));
         return;
     }
@@ -65,13 +65,13 @@ function svn_header(Project $project, $params)
     if (user_ismember($group_id, 'A') || user_ismember($group_id, 'SVN_ADMIN')) {
         $toolbar[] = array('title' => $Language->getText('svn_utils', 'svn_admin'),
                            'url'   => '/svn/admin/?group_id=' . $group_id);
-        if (isset($params['path']) && !empty($params['path'])) {
+        if (isset($params['path']) && ! empty($params['path'])) {
             // TODO: Validate the path
             $toolbar[] = array('title' => $Language->getText('svn_utils', 'notif'),
                                'url'   => '/svn/admin/?group_id=' . $group_id . '&func=notification&path=' . $params['path']);
         }
     }
-    if (!isset($params['help']) || !$params['help']) {
+    if (! isset($params['help']) || ! $params['help']) {
         $params['help'] = "svn.html";
     }
     $toolbar[] = array('title' => $Language->getText('global', 'help'),
@@ -100,7 +100,7 @@ function svn_header_admin($params)
 
     $project = ProjectManager::instance()->getProject($group_id);
     $service = $project->getService('svn');
-    if (!$service) {
+    if (! $service) {
         exit_error($Language->getText('global', 'error'), $Language->getText('svn_utils', 'svn_off'));
         return;
     }
@@ -117,7 +117,7 @@ function svn_header_admin($params)
     $toolbar[] = array('title' => $Language->getText('svn_utils', 'notif'),
                        'url'   => '/svn/admin/?func=notification&group_id=' . $group_id);
 
-    if (!$params['help']) {
+    if (! $params['help']) {
         $params['help'] = "svn.html#subversion-administration-interface";
     }
     $toolbar[] = array('title' => $Language->getText('global', 'help'),
@@ -136,11 +136,11 @@ function svn_footer($params)
 function svn_utils_technician_box($group_id, $name = '_commiter', $checked = 'xzxz', $text_100 = 'None')
 {
     global $Language;
-    if (!$group_id) {
+    if (! $group_id) {
         return $Language->getText('svn_utils', 'g_id_err');
     } else {
         $result = svn_data_get_technicians($group_id);
-        if (!in_array($checked, util_result_column_to_array($result))) {
+        if (! in_array($checked, util_result_column_to_array($result))) {
             // Selected 'my commits' but never commited
             $checked = 'xzxz';
         }
@@ -312,7 +312,7 @@ function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
             list(,$mattr,$mdir) = $match;
             //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
             if ($mattr == $order) {
-                if (($mdir == '>') || (!isset($mdir))) {
+                if (($mdir == '>') || (! isset($mdir))) {
                     $arr[$i] = $order . '<';
                 } else {
                     $arr[$i] = $order . '>';
@@ -323,8 +323,8 @@ function svn_utils_add_sort_criteria($criteria_list, $order, $msort)
         }
     }
 
-    if (!$found) {
-        if (!$msort) {
+    if (! $found) {
+        if (! $msort) {
             unset($arr);
         }
         $arr[] = $order . '<';
@@ -478,7 +478,7 @@ function svn_utils_format_svn_history($group_id)
     $output = '';
     $res_svnfullhist = svn_data_get_svn_history($group_id);
 
-    if (!$res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
+    if (! $res_svnfullhist || db_numrows($res_svnfullhist) < 1) {
         print '<P>' . $Language->getText('svn_utils', 'no_hist');
     } else {
         $svnhist = array();
@@ -524,17 +524,17 @@ function svn_utils_read_svn_access_file($project_svnroot)
     $buffer = '';
 
     $fd = @fopen("$filename", "r");
-    if (!$fd) {
+    if (! $fd) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_utils', 'file_err', $filename));
         $buffer = false;
     } else {
         $in_settings = false;
-        while (!feof($fd)) {
+        while (! feof($fd)) {
             $line = fgets($fd, 4096);
             if (strpos($line, '# BEGIN CODENDI DEFAULT') !== false) {
                 $in_settings = true;
             }
-            if (!$in_settings) {
+            if (! $in_settings) {
                 $buffer .= $line;
             }
             if (strpos($line, '# END CODENDI DEFAULT') !== false) {
@@ -686,7 +686,7 @@ function svn_utils_get_forbidden_paths($username, $project_svnroot)
                                                          'project_svnroot' => $project_svnroot));
 
     $forbidden = array();
-    if (!user_is_super_user()) {   // super user have all the rights (no forbidden paths)
+    if (! user_is_super_user()) {   // super user have all the rights (no forbidden paths)
         if (array_key_exists('*', $SVNACCESS)) {
             foreach ($SVNACCESS['*'] as $path => $perm) {
                 if (strpos($perm, 'r') === false) {
@@ -779,7 +779,7 @@ function svn_utils_check_access($username, $project_svnroot, $svnpath)
 function svn_utils_is_there_specific_permission($project_svnroot)
 {
     $specifics = svn_utils_read_svn_access_file($project_svnroot);
-    return !$specifics || $specifics != '';
+    return ! $specifics || $specifics != '';
 }
 
 function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $_commiter = '', $_srch = '', $order_by = '', $pv = 0, $foundRows = true)
@@ -803,7 +803,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     $where = " WHERE svn_commits.group_id=" . db_ei($project->getGroupId());
 
     //check user access rights
-    if (!empty($forbidden)) {
+    if (! empty($forbidden)) {
         $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
         $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
         $where_forbidden = "";
@@ -820,7 +820,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     //if status selected, and more to where clause
     if ($_path != '') {
         $path_str = " AND svn_dirs.dir like '%" . db_es($_path) . "%'";
-        if (!isset($forbidden) || empty($forbidden)) {
+        if (! isset($forbidden) || empty($forbidden)) {
             $from .= " INNER JOIN svn_checkins ON (svn_checkins.commitid = svn_commits.id)";
             $from .= " INNER JOIN svn_dirs ON (svn_dirs.id = svn_checkins.dirid)";
             $group_by .= ' GROUP BY revision';
@@ -851,13 +851,13 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
 
     $where .= $commiter_str . $commit_str . $srch_str . $path_str;
 
-    if (!isset($pv) || !$pv) {
+    if (! isset($pv) || ! $pv) {
         $limit = " LIMIT " . db_ei($offset) . "," . db_ei($chunksz);
     }
 
     // SQLi Warning: no real possibility to escape $order_by here.
     // We rely on a proper filtering of user input by calling methods.
-    if (!isset($order_by) || $order_by == '') {
+    if (! isset($order_by) || $order_by == '') {
         $order_by = " ORDER BY revision DESC ";
     }
 
@@ -870,7 +870,7 @@ function svn_get_revisions(Project $project, $offset, $chunksz, $_rev_id = '', $
     if ($foundRows) {
         $sql1 = 'SELECT FOUND_ROWS() as nb';
         $result1 = db_query($sql1);
-        if ($result1 && !db_error($result1)) {
+        if ($result1 && ! db_error($result1)) {
             $row1 = db_fetch_array($result1);
             $totalrows = $row1['nb'];
         }

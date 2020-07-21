@@ -66,7 +66,7 @@ class hudson_Widget_MyMonitoredJobs extends HudsonOverviewWidget
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
-        if (!$request->exist('cancel')) {
+        if (! $request->exist('cancel')) {
             $monitored_jobs = $request->get('myhudsonjobs');
 
             $user = UserManager::instance()->getCurrentUser();

@@ -66,7 +66,7 @@ class LDAP_UserDao extends DataAccessObject
             ' AND login_confirmation_date = 0';
 
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return false;
         } else {
             return true;
@@ -104,7 +104,7 @@ class LDAP_UserDao extends DataAccessObject
             ' SET login_confirmation_date = ' . db_ei($date) .
             ' WHERE user_id = ' . db_ei($userId);
         $updated = $this->update($sql);
-        if (!$updated) {
+        if (! $updated) {
             // Try to insert
             $updated = $this->createLdapUser($userId, $date);
         }

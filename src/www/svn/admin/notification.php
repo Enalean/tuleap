@@ -53,14 +53,14 @@ if ($request->isPost() && $request->existAndNonEmpty('post_changes')) {
             $result      = util_cleanup_email_list($request->get('form_mailing_list'));
             $mailingList = join(', ', $result['clean']);
             $badList     = join(', ', $result['bad']);
-            if (!empty($mailingList) && !empty($formPath) && $request->valid($vPath)) {
+            if (! empty($mailingList) && ! empty($formPath) && $request->valid($vPath)) {
                 if ($svnNotification->setSvnMailingList($group_id, $mailingList, $formPath)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification', 'upd_email_success'));
                 }
             } else {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('svn_admin_notification', 'upd_email_fail'));
             }
-            if (!empty($badList)) {
+            if (! empty($badList)) {
                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('svn_admin_notification', 'upd_email_bad_adr', $badList));
             }
             break;
@@ -79,7 +79,7 @@ $project = $pm->getProject($group_id);
 $svn_mailing_header = $project->getSVNMailingHeader();
 
 // testing SVN tracking
-if (!$project->isSVNTracked()) {
+if (! $project->isSVNTracked()) {
     $GLOBALS['Response']->addFeedback('info', $Language->getText('svn_admin_notification', 'svn_tracking_comment'));
     $disabled = "disabled";
 }

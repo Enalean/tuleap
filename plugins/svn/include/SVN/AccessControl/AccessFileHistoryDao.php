@@ -39,7 +39,7 @@ class AccessFileHistoryDao extends DataAccessObject
                   VALUES ($version_number, $repository_id, $content, $version_date)";
 
         $id = $this->updateAndGetLastId($sql);
-        if (!$id) {
+        if (! $id) {
             $this->rollBack();
             return null;
         }
@@ -49,7 +49,7 @@ class AccessFileHistoryDao extends DataAccessObject
                 SET accessfile_id = $id
                 WHERE id = $repository_id";
 
-        if (!$this->update($sql)) {
+        if (! $this->update($sql)) {
             $this->rollBack();
             return null;
         }

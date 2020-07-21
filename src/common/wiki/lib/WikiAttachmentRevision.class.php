@@ -75,7 +75,7 @@ class WikiAttachmentRevision
     {
         static $_codendi_wikiattachmentrevisiondao_instance;
 
-        if (!$_codendi_wikiattachmentrevisiondao_instance) {
+        if (! $_codendi_wikiattachmentrevisiondao_instance) {
             $_codendi_wikiattachmentrevisiondao_instance = new WikiAttachmentRevisionDao(CodendiDataAccess::instance());
         }
 
@@ -115,7 +115,7 @@ class WikiAttachmentRevision
         $waIter = $this->getRevisionIterator();
         $this->revision = $waIter->count();
 
-        if (!move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {
+        if (! move_uploaded_file($userfile_tmpname, $file_dir . '/' . $this->revision)) {
             trigger_error(
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment_rev',

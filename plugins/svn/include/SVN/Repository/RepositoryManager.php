@@ -165,7 +165,7 @@ class RepositoryManager
     public function getRepositoryById($id)
     {
         $row = $this->dao->searchByRepositoryId($id);
-        if (!$row) {
+        if (! $row) {
             throw new CannotFindRepositoryException();
         }
 
@@ -227,7 +227,7 @@ class RepositoryManager
      */
     private function getRepositoryIfProjectIsValid(Project $project, $repository_name)
     {
-        if (!$project instanceof Project || $project->getID() == null || $project->isError()) {
+        if (! $project instanceof Project || $project->getID() == null || $project->isError()) {
             throw new CannotFindRepositoryException(dgettext('tuleap-svn', 'Repository not found'));
         }
 

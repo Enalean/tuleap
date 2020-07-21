@@ -63,7 +63,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         $params['tabtext'] = $this->getName();
 
         site_project_header($params);
-        if (!isset($params['pv']) || $params['pv'] == 0) {
+        if (! isset($params['pv']) || $params['pv'] == 0) {
             echo '<div id="tracker_toolbar_generic">' . $Language->getText('tracker_import_admin', 'tracker') . ' <a href="/tracker/?group_id=' . (int) $group_id . '&atid=' . (int) $this->getID() . '"><span id="tracker_toolbar_tracker_name">' . $hp->purify(SimpleSanitizer::unsanitize($this->getName()), CODENDI_PURIFIER_CONVERT_HTML) . '</span></a> | ';
 
             echo '<a href="/tracker/?func=add&group_id=' . (int) $group_id . '&atid=' . (int) $this->getID() . '">' . $Language->getText('tracker_include_type', 'submit_new', $hp->purify($this->getCapsItemName(), CODENDI_PURIFIER_CONVERT_HTML)) . '</a>';
@@ -184,7 +184,7 @@ class ArtifactTypeHtml extends ArtifactType // phpcs:ignore PSR1.Classes.ClassDe
         // Get the artfact type list
         $at_arr = $atf->getArtifactTypes();
 
-        if (!$at_arr || count($at_arr) < 1) {
+        if (! $at_arr || count($at_arr) < 1) {
             echo '<h2>' . $Language->getText('tracker_index', 'no_accessible_trackers_hdr') . '</h2>';
             echo '<p>' . $Language->getText('tracker_index', 'no_accessible_trackers_msg') . '</p>';
         } else {
@@ -407,7 +407,7 @@ EOS;
             $ugroups_permissions = array();
             foreach ($tablo as $key_field => $value_field) {
                 foreach ($value_field['ugroups'] as $key_ugroup => $value_ugroup) {
-                    if (!isset($ugroups_permissions[$key_ugroup])) {
+                    if (! isset($ugroups_permissions[$key_ugroup])) {
                         $ugroups_permissions[$key_ugroup] = array(
                                                                   'values'              => $value_ugroup['ugroup'],
                                                                   'related_parts'       => array(),
@@ -447,7 +447,7 @@ EOS;
 
 
         //header
-        if (($group_first && count($ugroups_permissions) < 1) || (!$group_first && count($ugroups_permissions[$key]['related_parts']) < 1)) {
+        if (($group_first && count($ugroups_permissions) < 1) || (! $group_first && count($ugroups_permissions[$key]['related_parts']) < 1)) {
             $html .= $GLOBALS['Language']->getText('tracker_admin_permissions', 'fields_no_ugroups');
         } else {
             //The permission form
@@ -516,7 +516,7 @@ EOS;
 
 
                 //The group
-                if (!$is_first) {
+                if (! $is_first) {
                     $html .= "\n<tr class='" . util_get_alt_row_color($i++) . "'>";
                 } else {
                     $is_first = false;
@@ -526,7 +526,7 @@ EOS;
                 $name = "<a href='" . $url_action_without_group_first . "&selected_id=" . (int) $second_part['id'] . "&group_first=" . ($group_first ? 0 : 1) . "'>";
                 $name .=  $hp->purify($second_part['name'], $group_first ? CODENDI_PURIFIER_DISABLED : CODENDI_PURIFIER_BASIC);
                 $name .= "</a>";
-                if (!$group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
+                if (! $group_first && isset($ugroup_permissions['tracker_permissions']) && count($ugroup_permissions['tracker_permissions']) === 0) {
                     $name = "<span >" . $name . " *</span>"; //TODO css
                     $a_star_is_displayed = true;
                 }
@@ -551,7 +551,7 @@ EOS;
                                                && $second_part['shortname'] !== "open_date"
                                                && $second_part['shortname'] !== "last_update_date")
                                               ||
-                                              (!$group_first
+                                              (! $group_first
                                                && $first_part['shortname'] !== "artifact_id"
                                                && $first_part['shortname'] !== "submitted_by"
                                                && $first_part['shortname'] !== "open_date"
@@ -559,9 +559,9 @@ EOS;
 
                     $can_submit = $can_submit_or_update; //(And add here those who can only be submitted)
 
-                    $can_update = $can_submit_or_update &&  (($group_first && $first_part['id'] > 2)
+                    $can_update = $can_submit_or_update && (($group_first && $first_part['id'] > 2)
                              ||
-                             (!$group_first && $second_part['id'] > 2));
+                             (! $group_first && $second_part['id'] > 2));
 
                     $html .= "<input type='checkbox' name=\"" . $name_of_variable . '[submit]"  ' .
                         (isset($permissions[$submit_permission]) ? "checked='checked'" : "") . " " . ($can_submit ? "" : "disabled='disabled'") . " /> ";
@@ -570,8 +570,8 @@ EOS;
 
                     //Other permissions (R/W)
                     $html .= "<select name='" . $name_of_variable . "[others]' >";
-                    $html .= "<option value='100' " . (!isset($permissions[$read_permission]) && !isset($permissions[$update_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_NONE') . "</option>";
-                    $html .= "<option value='0' " . (isset($permissions[$read_permission]) && !isset($permissions[$update_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_READ') . "</option>";
+                    $html .= "<option value='100' " . (! isset($permissions[$read_permission]) && ! isset($permissions[$update_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_NONE') . "</option>";
+                    $html .= "<option value='0' " . (isset($permissions[$read_permission]) && ! isset($permissions[$update_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_READ') . "</option>";
 
                 if ($can_update) {
                     $html .= "<option value='1' " . (isset($permissions[$update_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_FIELD_UPDATE') . "</option>";
@@ -662,8 +662,8 @@ EOS;
 
             //We don't show specific access permissions for anonymous users and registered
             if ($ugroup['id'] != $GLOBALS['UGROUP_ANONYMOUS'] && $ugroup['id'] != $GLOBALS['UGROUP_REGISTERED']) {
-                $html .= "<option value='1' " . (isset($permissions[$assignee_permission]) && !isset($permissions[$submitter_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_ASSIGNEE') . "</option>";
-                $html .= "<option value='2' " . (!isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_SUBMITTER') . "</option>";
+                $html .= "<option value='1' " . (isset($permissions[$assignee_permission]) && ! isset($permissions[$submitter_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_ASSIGNEE') . "</option>";
+                $html .= "<option value='2' " . (! isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_SUBMITTER') . "</option>";
                 $html .= "<option value='3' " . (isset($permissions[$assignee_permission]) && isset($permissions[$submitter_permission]) ? $attributes_for_selected : "") . " >" . $GLOBALS['Language']->getText('tracker_admin_permissions', 'TRACKER_ACCESS_ASSIGNEE_AND_TRACKER_ACCESS_SUBMITTER') . "</option>";
             }
             $html .= '</select></td>';
@@ -1179,7 +1179,7 @@ EOS;
         //be more conservative for semi-standard fields like assigned_to ...
         if (
             $field &&
-             !user_is_super_user() &&
+             ! user_is_super_user() &&
              ($field->isStandardField() ||
               $field->getName() == "assigned_to" ||
               $field->getName() == "multi_assigned_to")
@@ -1191,7 +1191,7 @@ EOS;
 
         echo '
 		  <p><b>' . $Language->getText('tracker_include_type', 'display_info') . ' </b>';
-        echo'
+        echo '
                                 <table width="100%" border="0" cellpadding="5" cellspacing="0">
 		    <tr>
 		      <td colspan="2">' . $Language->getText('tracker_include_type', 'display_size') . ':&nbsp;';
@@ -1226,7 +1226,7 @@ EOS;
 		    <tr>
 		      <td width="30%">' . $Language->getText('tracker_include_type', 'allow_empty') . ': ';
 
-        if ($field && $field->isStandardField() && !user_is_super_user()) {
+        if ($field && $field->isStandardField() && ! user_is_super_user()) {
             if ($empty_ok) {
                 echo $Language->getText('global', 'yes');
                 echo '<input type="hidden" name="empty_ok" value="1">';
@@ -1245,7 +1245,7 @@ EOS;
         echo '
 		        </td><td>' . $Language->getText('tracker_include_type', 'keep_change_history') . ': ';
 
-        if (!$this->userIsAdmin()) {
+        if (! $this->userIsAdmin()) {
             if ($keep_history) {
                 echo $Language->getText('global', 'yes');
                 echo '<input type="hidden" name="keep_history" value="1">';
@@ -1265,18 +1265,18 @@ EOS;
 		      </td></tr>';
 
         if ($show_use) {
-            echo  '
+            echo '
 		      <tr><td>';
             echo $Language->getText('tracker_include_type', 'use_field') . ': ';
             if ($use_it == 1) {
               //be more conservative for semi-special fields like assigned_to ...
-                if ($field && $field->isSpecial() && ($field->getName() != "comment_type_id") && !user_is_super_user()) {
+                if ($field && $field->isSpecial() && ($field->getName() != "comment_type_id") && ! user_is_super_user()) {
                     echo $Language->getText('global', 'yes') . '<input type="hidden" name="use_it" value="1">';
                 } else {
                     echo '<input type="checkbox" name="use_it" value="1" checked>';
                 }
             } else {
-                if ($field && $field->isSpecial() && ($field->getName() != "comment_type_id") && !user_is_super_user()) {
+                if ($field && $field->isSpecial() && ($field->getName() != "comment_type_id") && ! user_is_super_user()) {
                     echo $Language->getText('global', 'no') . '<input type="hidden" name="use_it" value="0">';
                 } else {
                     echo '<input type="checkbox" name="use_it" value="1">';
@@ -1285,7 +1285,7 @@ EOS;
                         echo '
                       </td><td><a href="/tracker/admin/?group_id=' . (int) $this->Group->getID() . '&atid=' . (int) $this->getID() . '&func=permissions&perm_type=fields&selected_id=' . (int) $field_id . '&group_first=0">' . $Language->getText('tracker_include_type', 'edit_field_perm') . '</a>';
 
-            echo  '
+            echo '
 		      </td></tr>';
         } else {
             echo '<input type="hidden" name="use_it" value="1">';
@@ -1347,7 +1347,7 @@ EOS;
               // Special case for special fields (excluded comment_type_id)
                 if (
                     (($field->getName() != "comment_type_id") && ($field->isSpecial())) ||
-                    (($field->getName() == "status_id") && !user_is_super_user())
+                    (($field->getName() == "status_id") && ! user_is_super_user())
                 ) {
                     continue;
                 }
@@ -1396,7 +1396,7 @@ EOS;
         } else {
             echo '<h3>' . $Language->getText('tracker_include_type', 'bind_to_list') . ' ';
         }
-        echo  '</h3>';
+        echo '</h3>';
 
 
         echo '
@@ -1638,14 +1638,14 @@ EOS;
         $hp = Codendi_HTMLPurifier::instance();
 
         $field = $art_field_fact->getFieldFromId($field_id);
-        if (!$field) {
+        if (! $field) {
             return;
         }
 
         $values = $field->getFieldValues($this->getID(), array('A','P'));
         $rows = db_numrows($values);
 
-        if (!$values || ($rows == 0)) {
+        if (! $values || ($rows == 0)) {
             echo "\n<H3>" . $Language->getText('tracker_include_type', 'no_values') . "</H3>";
             return;
         } else {
@@ -1697,7 +1697,7 @@ EOS;
 
             if (
                 ( $row['status'] == "P" || $field->getName() == "severity" )
-                            && (!user_is_super_user())
+                            && (! user_is_super_user())
             ) {
                 // Unable to delete Permanent values, except for values in the tracker templates (for Codendi admins)
                 $html .= "\n<td align =\"center\">-</td>";
@@ -1912,7 +1912,7 @@ EOS;
 
         if ($this->userIsAdmin()) {
             // To watch other users you must have at least admin rights on the tracker
-            echo'
+            echo '
 		<h4>' . $Language->getText('tracker_include_type', 'users_to_watch') . ' ' .
             '</h4>
 		<P>' . $Language->getText('tracker_include_type', 'backup_person') . '
@@ -2031,7 +2031,7 @@ EOS;
         global $ath,$art_field_fact,$Language;
         $hp = Codendi_HTMLPurifier::instance();
         $field = $art_field_fact->getFieldFromId($field_id);
-        if (!$field) {
+        if (! $field) {
             return;
         }
 
@@ -2077,15 +2077,15 @@ EOS;
     {
         global $ath,$art_field_fact,$Language;
 
-        if (!$text_any) {
+        if (! $text_any) {
             $text_any = $Language->getText('global', 'any');
         }
-        if (!$text_none) {
+        if (! $text_none) {
             $text_none = $Language->getText('global', 'none');
         }
 
         $field = $art_field_fact->getFieldFromId($field_id);
-        if (!$field) {
+        if (! $field) {
             return;
         }
 
@@ -2223,7 +2223,7 @@ EOS;
         $field_value = $Language->getText('global', 'unchanged');
 
             [$sz,] = explode("/", $field->getDisplaySize());
-            $label = $field_html->labelDisplay(false, false, !$ro);
+            $label = $field_html->labelDisplay(false, false, ! $ro);
             // original submission field must be displayed read-only
             $value = $field_html->display($this->getID(), $field_value, false, false, $ro, false, false, $Language->getText('global', 'none'), false, 'Any', true, $Language->getText('global', 'unchanged'));
 
@@ -2246,7 +2246,7 @@ EOS;
 
                     // if the field is a special field (except summary and details)
                     // then skip it.
-            if (!$field->isSpecial() && $field->getName() != 'summary' && $field->getName() != 'details') {
+            if (! $field->isSpecial() && $field->getName() != 'summary' && $field->getName() != 'details') {
                 // display the artifact field
                 // if field size is greatest than max_size chars then force it to
                 // appear alone on a new line or it won't fit in the page
@@ -2254,7 +2254,7 @@ EOS;
                 $field_value = $Language->getText('global', 'unchanged');
 
                 [$sz,] = explode("/", $field->getDisplaySize());
-                $label = $field_html->labelDisplay(false, false, !$ro);
+                $label = $field_html->labelDisplay(false, false, ! $ro);
                 $value = $field_html->display($this->getID(), $field_value, false, false, $ro, false, false, $Language->getText('global', 'none'), false, $Language->getText('global', 'any'), true, $Language->getText('global', 'unchanged'));
 
 
@@ -2323,7 +2323,7 @@ EOS;
                 <TR><TD colspan="2">
                 <h3>' . $Language->getText('tracker_include_artifact', 'cc_list') . '</h3>';
 
-        if (!$ro) {
+        if (! $ro) {
             echo '
                                 ' . $Language->getText('tracker_include_artifact', 'fill_cc_list_msg');
             echo $Language->getText('tracker_include_artifact', 'fill_cc_list_lbl');
@@ -2366,7 +2366,7 @@ EOS;
             echo '<h3>' . $Language->getText('tracker_include_artifact', 'dependencies') . '</h3>
                 <B>' . $Language->getText('tracker_include_artifact', 'dependent_on') . '</B><BR>
                 <P>';
-        if (!$ro) {
+        if (! $ro) {
                 echo '
                         <B>' . $Language->getText('tracker_include_artifact', 'aids') . '</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255">

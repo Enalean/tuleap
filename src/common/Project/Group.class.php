@@ -277,7 +277,7 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getMembersUserNames(?ProjectManager $pm = null)
     {
-        if (!$this->members_usernames_data_array) {
+        if (! $this->members_usernames_data_array) {
             if (is_null($pm)) {
                 $pm = ProjectManager::instance();
             }

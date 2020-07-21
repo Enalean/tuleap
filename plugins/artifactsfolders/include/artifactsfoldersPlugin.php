@@ -152,8 +152,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
     {
         $folder_usage_retriever = $this->getFolderUsageRetriever();
 
-        return
-            $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
+        return $folder_usage_retriever->projectUsesArtifactsFolders($project, $user)
             && $this->isViewAddableForArtifact($dao, $artifact);
     }
 

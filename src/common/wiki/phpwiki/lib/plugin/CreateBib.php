@@ -131,7 +131,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
             $page = new WikiPageName($pagename, $basepage);
             $pagename = $page->name;
         }
-        if (!$pagename) {
+        if (! $pagename) {
             return $this->error(_("no page specified"));
         }
 

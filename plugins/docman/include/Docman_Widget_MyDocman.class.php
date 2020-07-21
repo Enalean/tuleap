@@ -133,7 +133,7 @@ class Docman_Widget_MyDocman extends Widget
                     $i    = 0;
                 }
 
-                if (!$hideNow) {
+                if (! $hideNow) {
                     $html .= '<tr class="' . util_get_alt_row_color($i++) . '">';
                     // Document
                     $html .= '<td align="left">';
@@ -141,7 +141,7 @@ class Docman_Widget_MyDocman extends Widget
                     $html .= '</td>';
 
                     // For requester, precise the status
-                    if (!$reviewer) {
+                    if (! $reviewer) {
                         $html .= '<td align="right">';
                         $html .= $review['status'];
                         $html .= '</td>';

@@ -36,7 +36,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
 
     protected function initOptions()
     {
-        if (!$this->dsn) {
+        if (! $this->dsn) {
             $localInc = $this->getLocalInc();
             if (is_file($localInc)) {
                 include $localInc;
@@ -93,7 +93,7 @@ class ForgeUpgrade_Db_Driver extends ForgeUpgrade_Db_Driver_Abstract
      */
     public function getPdo()
     {
-        if (!$this->pdo) {
+        if (! $this->pdo) {
             $this->initOptions();
             $this->pdo = new PDO(
                 $this->dsn,

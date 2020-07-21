@@ -58,7 +58,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getBind()
     {
-        if (!$this->bind) {
+        if (! $this->bind) {
             $this->bind = null;
             //retrieve the type of the bind first...
             $dao = new Tracker_FormElement_Field_ListDao();
@@ -518,7 +518,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                           $size .
                           $multiple . '>';
         //Any value
-        $selected = count($criteria_value) && !in_array('', $criteria_value) ? '' : 'selected="selected"';
+        $selected = count($criteria_value) && ! in_array('', $criteria_value) ? '' : 'selected="selected"';
         $html .= '<option value="" ' . $selected . ' title="' . $GLOBALS['Language']->getText('global', 'any') . '">' . $GLOBALS['Language']->getText('global', 'any') . '</option>';
         //None value
         $selected = in_array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID, $criteria_value) ? 'selected="selected"' : '';
@@ -714,14 +714,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch ($format) {
             case 'html':
-                if (empty($value) || !$value->getListValues()) {
+                if (empty($value) || ! $value->getListValues()) {
                     return '-';
                 }
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
                 $tablo = array();
-                $selected_values = !empty($value) ? $value->getListValues() : array();
+                $selected_values = ! empty($value) ? $value->getListValues() : array();
                 foreach ($selected_values as $value) {
                     $tablo[] = $this->getBind()->formatMailArtifactValue($value->getId());
                 }
@@ -776,7 +776,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function fieldHasEnableWorkflow()
     {
         $workflow = $this->getWorkflow();
-        if (!empty($workflow) && $workflow->is_used) {
+        if (! empty($workflow) && $workflow->is_used) {
             return $workflow->field_id === $this->id;
         }
         return false;
@@ -790,7 +790,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function fieldHasDefineWorkflow()
     {
         $workflow = $this->getWorkflow();
-        if (!empty($workflow)) {
+        if (! empty($workflow)) {
             return $workflow->field_id === $this->id;
         }
         return false;
@@ -821,8 +821,8 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
             try {
                 $field_value_to = $this->getBind()->getValue($value);
-                if (!$last_changeset) {
-                    if (!$this->isTransitionValid(null, $field_value_to)) {
+                if (! $last_changeset) {
+                    if (! $this->isTransitionValid(null, $field_value_to)) {
                            $this->has_errors = true;
                            $valid = false;
                     }
@@ -830,14 +830,14 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                     if ($last_changeset->getValue($this) != null) {
                         foreach ($last_changeset->getValue($this)->getListValues() as $id => $value) {
                             if ($value != $field_value_to) {
-                                if (!$this->isTransitionValid($value, $field_value_to)) {
+                                if (! $this->isTransitionValid($value, $field_value_to)) {
                                     $this->has_errors = true;
                                     $valid = false;
                                 }
                             }
                         }
                     } else {
-                        if (!$this->isTransitionValid(null, $field_value_to)) {
+                        if (! $this->isTransitionValid(null, $field_value_to)) {
                             $this->has_errors = true;
                             $valid = false;
                         }
@@ -875,7 +875,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function isTransitionValid($field_value_from, $field_value_to)
     {
-        if (!$this->fieldHasEnableWorkflow()) {
+        if (! $this->fieldHasEnableWorkflow()) {
             return true;
         } else {
             $workflow = $this->getWorkflow();
@@ -995,18 +995,18 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= $this->fetchFieldContainerStart($id, $name);
 
         $from = $this->getSelectedValue($selected_values);
-        if ($from == null && !isset($submitted_values_for_this_list)) {
+        if ($from == null && ! isset($submitted_values_for_this_list)) {
             $none_is_selected = isset($selected_values[Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID]);
         } else {
             $none_is_selected = ($submitted_values_for_this_list == Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
         }
 
-        if (!$this->fieldHasEnableWorkflow()) {
+        if (! $this->fieldHasEnableWorkflow()) {
             $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue_None();
             $html .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
 
-        if (($submitted_values_for_this_list) && !is_array($submitted_values_for_this_list)) {
+        if (($submitted_values_for_this_list) && ! is_array($submitted_values_for_this_list)) {
             $submitted_values_array[]       = $submitted_values_for_this_list;
             $submitted_values_for_this_list = $submitted_values_array;
         }
@@ -1015,7 +1015,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
-                if (!empty($submitted_values_for_this_list)) {
+                if (! empty($submitted_values_for_this_list)) {
                     $is_selected = in_array($id, array_values($submitted_values_for_this_list));
                 } else {
                     $is_selected = isset($selected_values[$id]);
@@ -1098,7 +1098,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $html .= '<option value="' . Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID . '">' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
 
         foreach ($this->getBind()->getAllValues() as $id => $value) {
-            if (!$value->isHidden()) {
+            if (! $value->isHidden()) {
                 $styles  = $this->getBind()->getSelectOptionStyles($id);
 
                 $html .= '<option value="' . $id . '" title="' . $this->getBind()->formatArtifactValue($id) . '" style="' . $styles['inline-styles'] . '" classe="' . $styles['classes'] . '">';
@@ -1137,7 +1137,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
             $from_value = implode(', ', $values);
         }
 
-        if (!$from_value) {
+        if (! $from_value) {
             $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
             $html .= ' ' . dgettext('tuleap-tracker', 'changed from') . ' ' . $from_value . '  ' . dgettext('tuleap-tracker', 'to') . ' ';
@@ -1406,7 +1406,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function hasChanges(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $previous_changesetvalue, $new_value)
     {
-        if (!is_array($new_value)) {
+        if (! is_array($new_value)) {
             $new_value = array($new_value);
         }
         if (empty($new_value)) {
@@ -1456,7 +1456,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($transition_id) {
             $group_id = $this->getTracker()->getGroupId();
 
-            if (!$user) {
+            if (! $user) {
                 $user = $this->getCurrentUser();
             }
             return $this->permission_is_authorized('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition_id, $user->getId(), $group_id);

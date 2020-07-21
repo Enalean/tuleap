@@ -100,7 +100,7 @@ class GraphOnTrackersV5_Chart_Pie extends GraphOnTrackersV5_Chart
     public function createDb($id)
     {
         $field_base = $this->getField_base();
-        if (!is_string($field_base) && !is_int($field_base) && $field_base) {
+        if (! is_string($field_base) && ! is_int($field_base) && $field_base) {
             $field_base = $field_base->getid();
         }
         return $this->getDao()->save($id, $field_base);

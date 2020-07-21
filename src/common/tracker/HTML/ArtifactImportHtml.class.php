@@ -50,7 +50,7 @@ class ArtifactImportHtml extends ArtifactImport
     {
         global $Language;
 
-        if (!file_exists($csv_filename) || !is_readable($csv_filename)) {
+        if (! file_exists($csv_filename) || ! is_readable($csv_filename)) {
             exit_missing_param();
         }
         $is_tmp = false;
@@ -76,7 +76,7 @@ class ArtifactImportHtml extends ArtifactImport
         echo '<div id="tracker_toolbar_clear"></div>' . PHP_EOL;
 
         echo '<h2>' . $Language->getText('tracker_import', 'parse_report') . '</h2>';
-        if (!$ok) {
+        if (! $ok) {
             $this->showErrors();
         } else {
             echo $Language->getText('tracker_import', 'ready', array(($number_inserts + $number_updates),$number_inserts, $number_updates)) . "<br><br>\n";

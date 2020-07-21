@@ -40,7 +40,7 @@ class b201603111508_create_tracker_artifactlink_natures_allowed_projects_table e
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_tracker_artifactlink_natures_allowed_projects')) {
+        if (! $this->db->tableNameExists('plugin_tracker_artifactlink_natures_allowed_projects')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table plugin_tracker_artifactlink_natures_allowed_projects not created');
         }
     }

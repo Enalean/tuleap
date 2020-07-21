@@ -237,7 +237,7 @@ abstract class BaseLayout extends Response
 
         $is_anon = UserManager::instance()->getCurrentUser()->isAnonymous();
         $has_feedback = $GLOBALS['feedback'] || count($this->_feedback->logs);
-        if (($is_anon && (headers_sent() || $has_feedback)) || (!$is_anon && headers_sent())) {
+        if (($is_anon && (headers_sent() || $has_feedback)) || (! $is_anon && headers_sent())) {
             $this->header(array('title' => 'Redirection'));
             echo '<p>' . $GLOBALS['Language']->getText('global', 'return_to', array($url)) . '</p>';
             echo '<script type="text/javascript">';
@@ -251,7 +251,7 @@ abstract class BaseLayout extends Response
             echo '</script>';
             $this->footer(array());
         } else {
-            if (!$is_anon && !headers_sent() && $has_feedback) {
+            if (! $is_anon && ! headers_sent() && $has_feedback) {
                 $this->_serializeFeedback();
             }
 

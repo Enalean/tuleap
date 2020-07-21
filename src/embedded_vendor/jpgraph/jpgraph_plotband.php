@@ -94,7 +94,7 @@ class RectPattern
         }
         //(" No positions specified for pattern.");
 
-        if (!(is_numeric($this->iBackgroundColor) && $this->iBackgroundColor == -1)) {
+        if (! (is_numeric($this->iBackgroundColor) && $this->iBackgroundColor == -1)) {
             $aImg->SetColor($this->iBackgroundColor);
             $aImg->FilledRectangle($this->rect->x, $this->rect->y, $this->rect->xe, $this->rect->ye);
         }

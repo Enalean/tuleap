@@ -104,7 +104,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         if ($rIter !== null) {
             $html .= '<h3>' . dgettext('tuleap-docman', 'Approval table') . '</h3>';
 
-            if (!$this->table->isCustomizable()) {
+            if (! $this->table->isCustomizable()) {
                 $html .= '<p>' . dgettext('tuleap-docman', 'This table is linked to an old version of the document.') . '</p>';
             }
 
@@ -175,7 +175,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
                 $readOnly = true;
                 $_trClass = ' class="docman_approval_readonly"';
-                if (!$forceReadOnly && ($user->getId() == $reviewer->getId())) {
+                if (! $forceReadOnly && ($user->getId() == $reviewer->getId())) {
                     $_trClass = ' class="docman_approval_highlight"';
                     $readOnly = false;
                     $userIsInTable = true;
@@ -188,7 +188,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
                 // Review
                 $_reviewHtml = $this->atf->getReviewStateName($reviewer->getState());
-                if (!$readOnly) {
+                if (! $readOnly) {
                     $_reviewUrl = DocmanViewURLBuilder::buildActionUrl(
                         $this->item,
                         ['default_url' => $this->url],
@@ -281,7 +281,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html .= '<td>';
         if ($itemCurrentVersion !== null) {
             $html .= $this->_getItemVersionLink($itemCurrentVersion);
-            if (!$this->atf->userAccessedSinceLastUpdate($user)) {
+            if (! $this->atf->userAccessedSinceLastUpdate($user)) {
                 // Warn user if he didn't access the last version of document
                 $html .= '<span style="margin-left: 2em;">' . dgettext('tuleap-docman', 'You <strong>did not read this version</strong> of the document.') . '</span>';
             }
@@ -407,7 +407,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
         $html .= '</tr>';
 
         // Notification
-        $notifChecked  = !$user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
+        $notifChecked  = ! $user->isAnonymous() && $this->notificationsManager->userExists($user->getId(), $this->item->getId()) ? 'checked="checked"' : '';
         $html .= '<tr>';
         $html .= '<td>' . dgettext('tuleap-docman', 'Notification:') . '</td>';
         $html .= '<td>';
@@ -512,7 +512,7 @@ class Docman_View_ItemDetailsSectionApproval extends Docman_View_ItemDetailsSect
 
         $user = $this->_getCurrentUser();
         $dpm  = $this->_getPermissionsManager();
-        if (!$dpm->userCanRead($user, $this->item->getId())) {
+        if (! $dpm->userCanRead($user, $this->item->getId())) {
             return $html;
         }
 

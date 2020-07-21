@@ -122,7 +122,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $project_access_checker = new ProjectAccessChecker(
                 PermissionsOverrider_PermissionsOverriderManager::instance(),
                 new RestrictedUserCanAccessProjectVerifier(),
@@ -162,7 +162,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function _getDao() // phpcs:ignore PSR2.Methods.MethodDeclaration.Underscore
     {
-        if (!isset($this->_dao)) {
+        if (! isset($this->_dao)) {
             $this->_dao = new ProjectDao(CodendiDataAccess::instance());
         }
         return $this->_dao;
@@ -174,7 +174,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function getProject($group_id)
     {
-        if (!isset($this->_cached_projects[$group_id])) {
+        if (! isset($this->_cached_projects[$group_id])) {
             $p = $this->createProjectInstance($group_id);
             $this->_cached_projects[$group_id] = $p;
         }
@@ -363,7 +363,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             $dar = $dao->searchByCaseInsensitiveUnixGroupName($name);
         }
 
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return $this->getAndCacheProject($dar->getRow());
         }
         return false;
@@ -378,7 +378,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     protected function getAndCacheProject($row)
     {
-        if (!isset($this->_cached_projects[$row['group_id']])) {
+        if (! isset($this->_cached_projects[$row['group_id']])) {
             $p = $this->createProjectInstance($row);
             $this->_cached_projects[$row['group_id']] = $p;
         }
@@ -396,7 +396,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     {
         $p = null;
         $dar = $this->_getDao()->searchByUnixGroupName($name);
-        if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() === 1) {
             $p = $this->createProjectInstance($dar->getRow());
         }
         return $p;
@@ -405,7 +405,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function getProjectByCaseInsensitiveUnixName($name)
     {
         $dar = $this->_getDao()->searchByCaseInsensitiveUnixGroupName($name);
-        if ($dar && !$dar->isError() && $dar->rowCount() === 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() === 1) {
             return $this->createProjectInstance($dar->getRow());
         }
         return null;
@@ -714,7 +714,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
      */
     public function removeProjectMembers($project)
     {
-        if (!$project || !is_object($project) || $project->isError()) {
+        if (! $project || ! is_object($project) || $project->isError()) {
             exit_no_group();
         }
         $dao = new UserGroupDao(CodendiDataAccess::instance());
@@ -737,11 +737,11 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
         } else {
             $group = $this->getProject($groupId);
         }
-        if (!$group || !is_object($group)) {
+        if (! $group || ! is_object($group)) {
             throw new SoapFault('GET_GROUP_FAULT', $groupId . ' : ' . $GLOBALS['Language']->getText('include_group', 'g_not_found'), $method);
         } elseif ($group->isError()) {
             throw new SoapFault('GET_GROUP_FAULT', $group->getErrorMessage(), $method);
-        } elseif (!$group->isActive()) {
+        } elseif (! $group->isActive()) {
             $status = '';
             switch ($group->getStatus()) {
                 case Project::STATUS_DELETED:
@@ -759,7 +759,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
             }
             throw new SoapFault('GET_GROUP_FAULT', $group->getUnixName() . ' : ' . $status, $method);
         }
-        if (!$this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
+        if (! $this->checkRestrictedAccess($group, $this->_getUserManager()->getCurrentUser())) {
             throw new SoapFault('GET_GROUP_FAULT', 'Restricted user: permission denied.', $method);
         }
         return $group;
@@ -1106,7 +1106,7 @@ class ProjectManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamesp
     public function getProjectMembers($project_id)
     {
         $dar = $this->_getDao()->getProjectMembers($project_id);
-        if (!$dar) {
+        if (! $dar) {
             return array();
         }
 

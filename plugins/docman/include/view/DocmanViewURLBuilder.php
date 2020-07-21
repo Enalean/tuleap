@@ -77,7 +77,7 @@ final class DocmanViewURLBuilder
             $prefix = $params['default_url'];
         }
         if ($popup && isset($params['pv']) && $params['pv'] !== false) {
-            $url = self::buildUrl($prefix, $url_parameters, !$injs);
+            $url = self::buildUrl($prefix, $url_parameters, ! $injs);
             return self::buildPopupUrl($url, $injs);
         }
         if (isset($params['pv']) && $params['pv'] !== false) {
@@ -86,6 +86,6 @@ final class DocmanViewURLBuilder
         if (isset($params['report']) && $params['report'] !== false) {
             $url_parameters['report'] = $params['report'];
         }
-        return self::buildUrl($prefix, $url_parameters, !$injs);
+        return self::buildUrl($prefix, $url_parameters, ! $injs);
     }
 }

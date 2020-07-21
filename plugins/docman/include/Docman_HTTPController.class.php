@@ -31,7 +31,7 @@ class Docman_HTTPController extends Docman_Controller
 
     public function __construct(&$plugin, $pluginPath, $themePath, $request = null)
     {
-        if (!$request) {
+        if (! $request) {
             $request = HTTPRequest::instance();
         }
         parent::__construct($plugin, $pluginPath, $themePath, $request);

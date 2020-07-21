@@ -167,7 +167,7 @@ class Docman_ReportHtml
         $mdIter->rewind();
         while ($mdIter->valid()) {
             $md = $mdIter->current();
-            if (!in_array($md->getLabel(), $displayedFilters)) {
+            if (! in_array($md->getLabel(), $displayedFilters)) {
                 $html .= $this->getSelectOption($md->getLabel(), $md->getName(), '');
             }
             $mdIter->next();
@@ -177,8 +177,8 @@ class Docman_ReportHtml
         $gsmd = $this->report->getGlobalSearchMetadata();
         $itmd = $this->report->getItemTypeSearchMetadata();
 
-        $showGlobalSearch = !in_array($gsmd->getLabel(), $displayedFilters);
-        $showItemTypeSearch = !in_array($itmd->getLabel(), $displayedFilters);
+        $showGlobalSearch = ! in_array($gsmd->getLabel(), $displayedFilters);
+        $showItemTypeSearch = ! in_array($itmd->getLabel(), $displayedFilters);
         if ($showGlobalSearch || $showItemTypeSearch) {
             $html .= $this->getSelectOption('--', '--');
 

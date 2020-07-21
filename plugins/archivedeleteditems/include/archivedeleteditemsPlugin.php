@@ -54,7 +54,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
      */
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'ArchiveDeletedItemsPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'ArchiveDeletedItemsPluginInfo')) {
             require_once('ArchiveDeletedItemsPluginInfo.class.php');
             $this->pluginInfo = new ArchiveDeletedItemsPluginInfo($this);
         }
@@ -83,7 +83,7 @@ class ArchivedeleteditemsPlugin extends Plugin //phpcs:ignore PSR1.Classes.Class
         $archive_path = $this->getWellFormattedArchivePath();
 
         if (! empty($archive_path)) {
-            if (!is_dir($archive_path)) {
+            if (! is_dir($archive_path)) {
                 $logger->error('Non-existing archive path');
                 $event->setFailure();
                 return;

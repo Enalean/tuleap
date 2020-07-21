@@ -46,7 +46,7 @@ class WikiDao extends DataAccessObject
             $this->da->escapeInt($group_id)
         );
         $res = $this->retrieve($sql);
-        if ($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && ! $res->isError() && $res->rowCount() == 1) {
             $res->rewind();
             if ($res->valid()) {
                 $row = $res->current();
@@ -80,7 +80,7 @@ class WikiDao extends DataAccessObject
             $this->da->quoteSmart($pagename)
         );
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $version = $row['version'];
         }

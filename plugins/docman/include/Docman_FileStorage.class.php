@@ -114,7 +114,7 @@ class Docman_FileStorage
         $path = '';
         foreach ($path_elements as $elem) {
             $path .= $elem . '/';
-            if (!is_dir($path)) {
+            if (! is_dir($path)) {
                 mkdir($path, 0700);
                 chown($path, ForgeConfig::get('sys_http_user'));
                 chgrp($path, ForgeConfig::get('sys_http_user'));

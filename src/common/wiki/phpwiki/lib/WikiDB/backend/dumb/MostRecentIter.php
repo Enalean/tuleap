@@ -30,8 +30,8 @@ class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
             while ($revision = &$revs->next()) {
                 $vdata = &$revision['versiondata'];
                 assert(is_array($vdata));
-                if (!empty($vdata['is_minor_edit'])) {
-                    if (!$include_minor_revisions) {
+                if (! empty($vdata['is_minor_edit'])) {
+                    if (! $include_minor_revisions) {
                         continue;
                     }
                 } else {
@@ -39,13 +39,13 @@ class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
                         continue;
                     }
                 }
-                if (!empty($since) && $vdata['mtime'] < $since) {
+                if (! empty($since) && $vdata['mtime'] < $since) {
                     break;
                 }
 
                 $this->_revisions[] = $revision;
 
-                if (!$include_all_revisions) {
+                if (! $include_all_revisions) {
                     break;
                 }
             }
@@ -56,7 +56,7 @@ class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
         } else {
             usort($this->_revisions, 'WikiDB_backend_dumb_MostRecentIter_sortf');
         }
-        if (!empty($limit) && $limit < count($this->_revisions)) {
+        if (! empty($limit) && $limit < count($this->_revisions)) {
             array_splice($this->_revisions, $limit);
         }
     }

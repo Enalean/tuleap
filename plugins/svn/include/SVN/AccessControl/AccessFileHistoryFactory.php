@@ -51,7 +51,7 @@ class AccessFileHistoryFactory
     {
         $row = $this->dao->searchById($id, $repository->getId());
 
-        if (!$row) {
+        if (! $row) {
             throw new AccessFileHistoryNotFoundException();
         }
 
@@ -63,7 +63,7 @@ class AccessFileHistoryFactory
     {
         $row = $this->dao->searchByVersionNumber($id, $repository->getId());
 
-        if (!$row) {
+        if (! $row) {
             throw new AccessFileHistoryNotFoundException();
         }
 
@@ -75,7 +75,7 @@ class AccessFileHistoryFactory
     {
         $row = $this->dao->searchCurrentVersion($repository->getId());
 
-        if (!$row) {
+        if (! $row) {
             return new NullAccessFileHistory($repository);
         }
 
@@ -87,7 +87,7 @@ class AccessFileHistoryFactory
     {
         $row = $this->dao->searchLastVersion($repository->getId());
 
-        if (!$row) {
+        if (! $row) {
             return new NullAccessFileHistory($repository);
         }
 

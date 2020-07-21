@@ -40,7 +40,7 @@ class Docman_ApprovalTableReminder
         $dao = new Docman_ApprovalTableItemDao();
         $dar = $dao->getTablesForReminder();
         $tables = array();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 if ($row['item_id']) {
                     $table = new Docman_ApprovalTableItem();
@@ -116,11 +116,11 @@ class Docman_ApprovalTableReminder
     {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getFirstReviewerByStatus($table->getId(), PLUGIN_DOCMAN_APPROVAL_STATE_REJECTED);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
             $dar = $dao->getFirstReviewerByStatus($table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($table, $row['reviewer_id']);
             }
@@ -372,7 +372,7 @@ This is an automatic message. Please do not reply to this email.'), $docmanItem-
     {
         $dao = new Docman_ApprovalTableReviewerDao(CodendiDataAccess::instance());
         $dar = $dao->getReviewerList($table->getId());
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $reviewer = new Docman_ApprovalReviewer();
                 $reviewer->initFromRow($row);

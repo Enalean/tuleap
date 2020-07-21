@@ -56,7 +56,7 @@ class Docman_SOAPActions extends Docman_Actions
         $request  = $this->_controler->request;
         if ($request->exist('chunk_offset') && $request->exist('chunk_size')) {
             $path = $fs->store($request->get('upload_content'), $request->get('group_id'), $item->getId(), $item->getCurrentVersion()->getNumber(), $request->get('chunk_offset'), $request->get('chunk_size'));
-            if (!$path) {
+            if (! $path) {
                 $this->_controler->feedback->log(
                     'error',
                     dgettext('tuleap-docman', 'Error while appending file chunk.')
@@ -104,7 +104,7 @@ class Docman_SOAPActions extends Docman_Actions
                         } else {
                             $md5sum = $fs->getFileMD5sum($item->getCurrentVersion()->getPath());
                         }
-                        if (!$md5sum) {
+                        if (! $md5sum) {
                             $this->_controler->feedback->log('error', dgettext('tuleap-docman', 'Error while getting file checksum.'));
                         }
                     }

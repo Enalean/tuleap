@@ -155,7 +155,7 @@ class GanttActivityInfo
 
     public function Hide($aF = true)
     {
-        $this->iShow = !$aF;
+        $this->iShow = ! $aF;
     }
 
     public function Show($aF = true)
@@ -207,7 +207,7 @@ class GanttActivityInfo
     {
         $n = min(count($this->iTitles), count($aWidths));
         for ($i = 0; $i < $n; ++$i) {
-            if (!empty($aWidths[$i])) {
+            if (! empty($aWidths[$i])) {
                 if (empty($this->iWidth[$i])) {
                     $this->iWidth[$i] = $aWidths[$i];
                 } else {
@@ -227,7 +227,7 @@ class GanttActivityInfo
         for ($h = 0, $i = 0; $i < $n; ++$i) {
             $w += $this->iLeftColMargin;
             $txt->Set($this->iTitles[$i]);
-            if (!empty($this->iWidth[$i])) {
+            if (! empty($this->iWidth[$i])) {
                 $w1 = max($txt->GetWidth($aImg) + $rm, $this->iWidth[$i]);
             } else {
                 $w1 = $txt->GetWidth($aImg) + $rm;
@@ -259,7 +259,7 @@ class GanttActivityInfo
 
     public function Stroke($aImg, $aXLeft, $aYTop, $aXRight, $aYBottom, $aUseTextHeight = false)
     {
-        if (!$this->iShow) {
+        if (! $this->iShow) {
             return;
         }
 
@@ -483,11 +483,11 @@ class GanttGraph extends Graph
             $a->caption->Set($data[$i][$csimpos - 1]);
 
             // Check if this activity should have a CSIM target�?
-            if (!empty($data[$i][$csimpos])) {
+            if (! empty($data[$i][$csimpos])) {
                 $a->SetCSIMTarget($data[$i][$csimpos]);
                 $a->SetCSIMAlt($data[$i][$csimpos + 1]);
             }
-            if (!empty($data[$i][$csimpos + 2])) {
+            if (! empty($data[$i][$csimpos + 2])) {
                 $a->title->SetCSIMTarget($data[$i][$csimpos + 2]);
                 $a->title->SetCSIMAlt($data[$i][$csimpos + 3]);
             }
@@ -600,7 +600,7 @@ class GanttGraph extends Graph
             $marg = $this->scale->actinfo->iLeftColMargin + $this->scale->actinfo->iRightColMargin;
             $n = count($this->iObj);
             for ($i = 0; $i < $n; ++$i) {
-                if (!empty($this->iObj[$i]->title)) {
+                if (! empty($this->iObj[$i]->title)) {
                     if ($this->iObj[$i]->title->HasTabs()) {
                         list($tot,$w) = $this->iObj[$i]->title->GetWidth($this->img, true);
                         $m = max($m, $tot);
@@ -622,7 +622,7 @@ class GanttGraph extends Graph
             // We can not include the title of GnttVLine since that title is stroked at the bottom
             // of the Gantt bar and not in the activity title columns
             for ($i = 0; $i < $n; ++$i) {
-                if (!empty($this->iObj[$i]->title) && !($this->iObj[$i] instanceof GanttVLine)) {
+                if (! empty($this->iObj[$i]->title) && ! ($this->iObj[$i] instanceof GanttVLine)) {
                     $m = max($m, $this->iObj[$i]->title->GetHeight($this->img));
                 }
             }
@@ -906,8 +906,8 @@ class GanttGraph extends Graph
             }
 
             if (
-                !$this->scale->IsDisplayDay() && !$this->scale->IsDisplayHour() &&
-                !( ($this->scale->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
+                ! $this->scale->IsDisplayDay() && ! $this->scale->IsDisplayHour() &&
+                ! ( ($this->scale->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
                     $this->scale->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR) && $this->scale->IsDisplayWeek() )
             ) {
                 // If we don't display the individual days we can shrink the
@@ -917,7 +917,7 @@ class GanttGraph extends Graph
                 // b) what format do they use so we know how wide we need to
                 // make each scale text space at minimum.
                 $fw /= 2;
-                if (!$this->scale->IsDisplayWeek()) {
+                if (! $this->scale->IsDisplayWeek()) {
                     $fw /= 1.8;
                 }
             }
@@ -1003,7 +1003,7 @@ class GanttGraph extends Graph
 
         // Should we autoscale dates?
 
-        if (!$this->scale->IsRangeSet()) {
+        if (! $this->scale->IsRangeSet()) {
             list($min,$max) = $this->GetBarMinMax();
             $this->scale->SetRange($min, $max);
         }
@@ -1035,7 +1035,7 @@ class GanttGraph extends Graph
 
         $this->scale->SetLabelWidth($maxwidth + $this->scale->divider->iWeight);//*(1+$this->iLabelHMarginFactor));
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->StrokePlotArea();
             if ($this->iIconDepth == DEPTH_BACK) {
                 $this->StrokeIcons();
@@ -1044,7 +1044,7 @@ class GanttGraph extends Graph
 
         $this->scale->Stroke();
 
-        if (!$_csim) {
+        if (! $_csim) {
             // Due to a minor off by 1 bug we need to temporarily adjust the margin
             $this->img->right_margin--;
             $this->StrokePlotBox();
@@ -1062,7 +1062,7 @@ class GanttGraph extends Graph
 
         $this->StrokeTitles();
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->StrokeConstrains();
             $this->footer->Stroke($this->img);
 
@@ -1075,7 +1075,7 @@ class GanttGraph extends Graph
 
             // Should we do any final image transformation
             if ($this->iImgTrans) {
-                if (!class_exists('ImgTrans', false)) {
+                if (! class_exists('ImgTrans', false)) {
                     require_once('jpgraph_imgtrans.php');
                 }
 
@@ -1194,7 +1194,7 @@ class GanttGraph extends Graph
 
     public function GetCSIMAreas()
     {
-        if (!$this->iHasStroked) {
+        if (! $this->iHasStroked) {
             $this->Stroke(_CSIM_SPECIALFILE);
         }
 
@@ -1717,7 +1717,7 @@ class TextProperty
 
     public function SetColumnFonts($aFontArray)
     {
-        if (!is_array($aFontArray) || count($aFontArray[0]) != 3) {
+        if (! is_array($aFontArray) || count($aFontArray[0]) != 3) {
             JpGraphError::RaiseL(6033);
             // 'Array of fonts must contain arrays with 3 elements, i.e. (Family, Style, Size)'
         }
@@ -1742,7 +1742,7 @@ class TextProperty
                 return 0;
             }
             $tmp = preg_split('/\t/', $this->iText);
-            if (count($tmp) <= 1 || !$aUseTabs) {
+            if (count($tmp) <= 1 || ! $aUseTabs) {
                 $w = $aImg->GetTextWidth($this->iText);
                 return $w + 2 * $extra_margin;
             } else {
@@ -2260,7 +2260,7 @@ class GanttScale
     // of the week taking the specified week start day into account.
     public function AdjustStartEndDay()
     {
-        if (!($this->IsDisplayYear() || $this->IsDisplayMonth() || $this->IsDisplayWeek())) {
+        if (! ($this->IsDisplayYear() || $this->IsDisplayMonth() || $this->IsDisplayWeek())) {
             // Don't adjust
             return;
         }
@@ -2405,7 +2405,7 @@ class GanttScale
         // Is the year a leap year?
         //$year = 0+date("Y",$aDate);
         if ($aYear % 4 == 0) {
-            if (!($aYear % 100 == 0) || ($aYear % 400 == 0)) {
+            if (! ($aYear % 100 == 0) || ($aYear % 400 == 0)) {
                 return true;
             }
         }
@@ -2622,7 +2622,7 @@ class GanttScale
                         // this might sometimes be one pixel of so we fix this by not drawing it.
                         // The proper way to fix it would be to re-calculate the scale for each step and
                         // not using the additive term.
-                        if (!(($i == $n || $i == 0) && $this->hour->iShowLabels && $this->hour->grid->iShow)) {
+                        if (! (($i == $n || $i == 0) && $this->hour->iShowLabels && $this->hour->grid->iShow)) {
                             $img->SetColor($this->minute->grid->iColor);
                             $img->SetLineWeight($this->minute->grid->iWeight);
                             $img->Line($x, $yt, $x, $yb);
@@ -2668,7 +2668,7 @@ class GanttScale
             $n = ceil(24 * 60 / $minint);
             $datestamp = $this->iStartDate;
             $day = date('w', $this->iStartDate);
-            $doback = !$this->minute->iShowLabels;
+            $doback = ! $this->minute->iShowLabels;
             $width = $this->GetDayWidth() / $n;
             for ($j = 0; $j < $this->GetNumberOfDays(); ++$j, $day += 1,$day %= 7) {
                 for ($i = 0; $i < $n; ++$i, $x += $width) {
@@ -2755,7 +2755,7 @@ class GanttScale
             $day = date('w', $this->iStartDate);
             $datestamp = $this->iStartDate;
 
-            $doback = !($this->hour->iShowLabels || $this->minute->iShowLabels);
+            $doback = ! ($this->hour->iShowLabels || $this->minute->iShowLabels);
 
             setlocale(LC_TIME, $this->iDateLocale->iLocale);
 
@@ -2893,7 +2893,7 @@ class GanttScale
                 $img->SetTextAlign("center");
                 $txtOffset = $weekwidth / 2 + 1;
             } elseif (
-                $this->week->iStyle == WEEKSTYLE_FIRSTDAY  ||
+                $this->week->iStyle == WEEKSTYLE_FIRSTDAY ||
                     $this->week->iStyle == WEEKSTYLE_FIRSTDAY2 ||
                     $this->week->iStyle == WEEKSTYLE_FIRSTDAYWNBR ||
                     $this->week->iStyle == WEEKSTYLE_FIRSTDAY2WNBR
@@ -3178,7 +3178,7 @@ class GanttScale
     // Main entry point to stroke scale
     public function Stroke()
     {
-        if (!$this->IsRangeSet()) {
+        if (! $this->IsRangeSet()) {
             JpGraphError::RaiseL(6022);
             //("Gantt scale has not been specified.");
         }
@@ -3283,12 +3283,12 @@ class GanttPlotObject
 
     public function SetCSIMTarget($aTarget, $aAlt = '', $aWinTarget = '')
     {
-        if (!is_string($aTarget)) {
+        if (! is_string($aTarget)) {
             $tv = substr(var_export($aTarget, true), 0, 40);
             JpGraphError::RaiseL(6024, $tv);
             //('CSIM Target must be specified as a string.'."\nStart of target is:\n$tv");
         }
-        if (!is_string($aAlt)) {
+        if (! is_string($aAlt)) {
             $tv = substr(var_export($aAlt, true), 0, 40);
             JpGraphError::RaiseL(6025, $tv);
             //('CSIM Alt text must be specified as a string.'."\nStart of alt text is:\n$tv");
@@ -3301,7 +3301,7 @@ class GanttPlotObject
 
     public function SetCSIMAlt($aAlt)
     {
-        if (!is_string($aAlt)) {
+        if (! is_string($aAlt)) {
             $tv = substr(var_export($aAlt, true), 0, 40);
             JpGraphError::RaiseL(6025, $tv);
             //('CSIM Alt text must be specified as a string.'."\nStart of alt text is:\n$tv");
@@ -3693,7 +3693,7 @@ class GanttBar extends GanttPlotObject
             $coords = "$xt,$yt,$xb,$yt,$xb,$yb,$xt,$yb";
             $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtarget . "\"";
 
-            if (!empty($this->csimwintarget)) {
+            if (! empty($this->csimwintarget)) {
                 $this->csimarea .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
@@ -3828,10 +3828,10 @@ class MileStone extends GanttPlotObject
                 $title_xb = $title_xt + $colwidth[$i];
                 $coords = "$title_xt,$yt,$title_xb,$yt,$title_xb,$yb,$title_xt,$yb";
 
-                if (!empty($this->title->csimtarget[$i])) {
+                if (! empty($this->title->csimtarget[$i])) {
                     $this->csimarea .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->title->csimtarget[$i] . "\"";
 
-                    if (!empty($this->title->csimwintarget[$i])) {
+                    if (! empty($this->title->csimwintarget[$i])) {
                         $this->csimarea .= "target=\"" . $this->title->csimwintarget[$i] . "\"";
                     }
 

@@ -814,7 +814,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function checkPlanningTrackerIdIsStillAValidTracker(int $planning_tracker_id): void
     {
-        if (!$this->tracker_factory->getTrackerById($planning_tracker_id)) {
+        if (! $this->tracker_factory->getTrackerById($planning_tracker_id)) {
             throw new TrackerNotFoundException();
         }
     }

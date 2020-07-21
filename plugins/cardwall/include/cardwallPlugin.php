@@ -54,7 +54,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function getConfigFactory()
     {
-        if (!$this->config_factory) {
+        if (! $this->config_factory) {
             $tracker_factory  = TrackerFactory::instance();
             $element_factory  = Tracker_FormElementFactory::instance();
             $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
@@ -246,7 +246,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -457,7 +457,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $cardwall = $event->getRequest()->get('cardwall');
         $redirect = $event->getRedirect();
         if ($cardwall) {
-            if (!$redirect->stayInTracker()) {
+            if (! $redirect->stayInTracker()) {
                 $redirect_to     = key($cardwall);
                 $redirect_params = current($cardwall);
                 switch ($redirect_to) {

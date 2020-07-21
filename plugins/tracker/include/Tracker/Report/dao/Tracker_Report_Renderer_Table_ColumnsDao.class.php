@@ -39,7 +39,7 @@ class Tracker_Report_Renderer_Table_ColumnsDao extends DataAccessObject
         $width                 = $this->da->escapeInt($width);
         $artlink_nature        = is_null($artlink_nature) ? 'NULL' : $this->da->quoteSmart($artlink_nature);
         $artlink_nature_format = is_null($artlink_nature_format) ? 'NULL' : $this->da->quoteSmart($artlink_nature_format);
-        if (!isset($rank)) {
+        if (! isset($rank)) {
             $rank = (int) $this->prepareRanking('tracker_report_renderer_table_columns', 0, $renderer_id, 'end', 'field_id', 'renderer_id');
         } else {
             $rank = $this->da->escapeInt($rank);

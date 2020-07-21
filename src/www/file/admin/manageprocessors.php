@@ -43,7 +43,7 @@ $user            = UserManager::instance()->getCurrentUser();
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 
-if (!user_isloggedin()  || ! $permission_manager->isAdmin($project, $user)) {
+if (! user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
@@ -104,7 +104,7 @@ if ($request->isPost() && $request->existAndNonEmpty('update')) {
     if (
         $request->valid($vProcessName) &&
         $request->valid($vProcessRank) &&
-        $request->valid($vProcId)      &&
+        $request->valid($vProcId) &&
         $request->valid($vUpdate)
     ) {
         $proc_id     = $request->get('proc_id');

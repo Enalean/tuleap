@@ -133,7 +133,7 @@ class ForgeConfig
     public static function store()
     {
         array_unshift(self::$conf_stack, array());
-        if (!count(self::$conf_stack)) {
+        if (! count(self::$conf_stack)) {
             trigger_error('Config registry lost');
         }
     }

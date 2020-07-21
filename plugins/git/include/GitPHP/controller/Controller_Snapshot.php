@@ -147,7 +147,7 @@ class Controller_Snapshot extends ControllerBase // @codingStandardsIgnoreLine
     {
         $commit = null;
 
-        if (!isset($this->params['hash'])) {
+        if (! isset($this->params['hash'])) {
             $commit = $this->project->GetHeadCommit();
         } else {
             $commit = $this->project->GetCommit($this->params['hash']);

@@ -33,7 +33,7 @@ class Git_Ci
      */
     public function getDao()
     {
-        if (!isset($this->dao)) {
+        if (! isset($this->dao)) {
             $this->_dao = new Git_Ci_Dao();
         }
         return $this->_dao;
@@ -63,22 +63,22 @@ class Git_Ci
      */
     public function retrieveTriggers($params)
     {
-        if (isset($params['group_id']) && !empty($params['group_id'])) {
+        if (isset($params['group_id']) && ! empty($params['group_id'])) {
             $project = $this->getProjectManager()->getProject($params['group_id']);
             if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
                 $repositoryId = '';
                 $used         = array();
                 $checked      = '';
-                if (isset($params['job_id']) && !empty($params['job_id'])) {
+                if (isset($params['job_id']) && ! empty($params['job_id'])) {
                     $res = $this->getDao()->retrieveTrigger($params['job_id']);
-                    if ($res && !$res->isError() && $res->rowCount() == 1) {
+                    if ($res && ! $res->isError() && $res->rowCount() == 1) {
                         $row          = $res->getRow();
                         $repositoryId = $row['repository_id'];
                         $checked      = 'checked="checked"';
                     }
                 } else {
                     $res = $this->getDao()->retrieveTriggers($params['group_id']);
-                    if ($res && !$res->isError() && $res->rowCount() > 0) {
+                    if ($res && ! $res->isError() && $res->rowCount() > 0) {
                         foreach ($res as $row) {
                             $used[$row['job_id']] = true;
                         }
@@ -104,7 +104,7 @@ class Git_Ci
                 $selectBox    .= '<option>' . $GLOBALS['Language']->getText('global', 'none') . '</option>';
                 foreach ($repositories as $repository) {
                     $nameSpace = '';
-                    if (!empty($repository['repository_namespace'])) {
+                    if (! empty($repository['repository_namespace'])) {
                         $nameSpace = $repository['repository_namespace'] . "/";
                     }
                     $selectBox .= '<option value="' . $repository['repository_id'] . '" ';
@@ -156,7 +156,7 @@ class Git_Ci
     public function saveTrigger($jobId, $repositoryId)
     {
         $dar = $this->getDao()->checkRepository($jobId, $repositoryId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return $this->getDao()->saveTrigger($jobId, $repositoryId);
         } else {
             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git repository does not belong to the project'));

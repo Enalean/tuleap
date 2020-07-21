@@ -58,7 +58,7 @@ class Docman_View_Details extends Docman_View_Display
         $user_can_read_obsolete = false;
         if ($params['item']->isObsolete()) {
             // Restrict access to non docman admin.
-            if (!$this->_controller->userCanAdmin()) {
+            if (! $this->_controller->userCanAdmin()) {
                 $user_can_manage = false;
                 $user_can_write  = false;
                 // Save read value to let user (according to their rights) to see
@@ -84,7 +84,7 @@ class Docman_View_Details extends Docman_View_Display
             if ($view && $section == 'actions') {
                 $actions = $view;
             } else {
-                $actions = new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), !$item_factory->isRoot($params['item']), $this->_controller, $token);
+                $actions = new Docman_View_ItemDetailsSectionActions($params['item'], $params['default_url'], $item_factory->isMoveable($params['item']), ! $item_factory->isRoot($params['item']), $this->_controller);
             }
             $sections['actions'] = true;
             $details->addSection($actions);
@@ -110,7 +110,7 @@ class Docman_View_Details extends Docman_View_Display
             );
         }
 
-        if ($user_can_read && !is_a($params['item'], 'Docman_Empty')) {
+        if ($user_can_read && ! is_a($params['item'], 'Docman_Empty')) {
             if ($view && $section == 'approval') {
                 $approval = $view;
             } else {
@@ -138,9 +138,9 @@ class Docman_View_Details extends Docman_View_Display
 
         if ($section && isset($sections[$section])) {
             $details->setCurrentSection($section);
-        } elseif (isset($params['section']) &&  isset($sections[$params['section']])) {
+        } elseif (isset($params['section']) && isset($sections[$params['section']])) {
             $details->setCurrentSection($params['section']);
-        } elseif ($this->_controller->request->get('action') == 'permissions' &&  isset($sections['permissions'])) {
+        } elseif ($this->_controller->request->get('action') == 'permissions' && isset($sections['permissions'])) {
             $details->setCurrentSection('permissions');
         }
         $details->display();

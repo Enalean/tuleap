@@ -41,7 +41,7 @@ $event_manager   = EventManager::instance();
 $project_id      = $request->get('group_id');
 $project         = $project_manager->getProject($project_id);
 
-if (!$project || $project->isError()) {
+if (! $project || $project->isError()) {
     $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_groupedit', 'error_group'));
     $GLOBALS['Response']->redirect('/admin');
 }

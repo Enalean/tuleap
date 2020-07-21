@@ -38,7 +38,7 @@ class b201612091720_use_only_rank_for_artifact_priority extends ForgeUpgrade_Buc
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_artifact_priority_rank')) {
+        if (! $this->db->tableNameExists('tracker_artifact_priority_rank')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table tracker_artifact_priority_rank not created');
         }
     }

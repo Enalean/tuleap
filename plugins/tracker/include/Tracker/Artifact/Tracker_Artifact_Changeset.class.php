@@ -440,7 +440,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     protected function userCanDelete(?PFUser $user = null)
     {
-        if (!$user) {
+        if (! $user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
         // Only tracker admin can edit a comment
@@ -456,7 +456,7 @@ class Tracker_Artifact_Changeset extends Tracker_Artifact_Followup_Item
      */
     public function userCanEdit(?PFUser $user = null)
     {
-        if (!$user) {
+        if (! $user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
         // Only tracker admin and original submitter (minus anonymous) can edit a comment

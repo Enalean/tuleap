@@ -84,7 +84,7 @@ class WikiPlugin_AppendText extends WikiPlugin
         $page = $dbi->getPage($pagename);
         $message = HTML();
 
-        if (!$page->exists()) { // We might want to create it?
+        if (! $page->exists()) { // We might want to create it?
             $message->pushContent(sprintf(
                 _("Page could not be updated. %s doesn't exist!\n"),
                 $pagename
@@ -97,7 +97,7 @@ class WikiPlugin_AppendText extends WikiPlugin
         $text = $args['s'];
 
         // If a "before" or "after" is specified but not found, we simply append text to the end.
-        if (!empty($args['before'])) {
+        if (! empty($args['before'])) {
             $before = preg_quote($args['before'], "/");
             // Insert before
             $newtext = preg_match("/\n${before}/", $oldtext)
@@ -107,7 +107,7 @@ class WikiPlugin_AppendText extends WikiPlugin
                     $oldtext
                 )
                 : $this->_fallback($text, $oldtext, $args['before'], $message);
-        } elseif (!empty($args['after'])) {
+        } elseif (! empty($args['after'])) {
             // Insert after
             $after = preg_quote($args['after'], "/");
             $newtext = preg_match("/\n${after}/", $oldtext)

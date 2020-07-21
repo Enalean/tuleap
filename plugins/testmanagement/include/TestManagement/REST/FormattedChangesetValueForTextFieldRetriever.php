@@ -47,7 +47,7 @@ class FormattedChangesetValueForTextFieldRetriever
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);
-        if (!$field) {
+        if (! $field) {
             return null;
         }
 

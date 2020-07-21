@@ -12,7 +12,7 @@ $request = HTTPRequest::instance();
 $vId = new Valid_UInt('bookmark_id');
 $vId->setErrorMessage('bookmark_id is required');
 $vId->required();
-if (!$request->valid($vId)) {
+if (! $request->valid($vId)) {
     $GLOBALS['Response']->redirect('/my');
 } else {
     $bookmark_id = (int) $request->get('bookmark_id');

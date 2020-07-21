@@ -79,7 +79,7 @@ class Widget_MyLatestSvnCommits extends Widget
                 $html .= $hide_url;
 
                 $html .= '<strong>' . $hp->purify($project->getPublicName()) . '</strong>';
-                if (!$hide_now) {
+                if (! $hide_now) {
                     list($latest_revisions, $nb_revisions) = svn_get_revisions($project, 0, $this->_nb_svn_commits, '', $user->getUserName(), '', '', 0, false);
                     $revision_total += $nb_revisions;
                     if (db_numrows($latest_revisions) > 0) {
@@ -159,7 +159,7 @@ class Widget_MyLatestSvnCommits extends Widget
         $request->valid(new Valid_String('cancel'));
         $nbShow = new Valid_UInt('nb_svn_commits');
         $nbShow->required();
-        if (!$request->exist('cancel')) {
+        if (! $request->exist('cancel')) {
             if ($request->valid($nbShow)) {
                 $this->_nb_svn_commits = $request->get('nb_svn_commits');
             } else {

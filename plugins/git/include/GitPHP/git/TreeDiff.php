@@ -224,7 +224,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function rewind()
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -238,7 +238,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function current()
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -252,7 +252,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function key()
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -266,7 +266,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function next()
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -280,7 +280,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function valid()
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -297,7 +297,7 @@ class TreeDiff implements \Iterator, \Countable
      */
     public function Count() // @codingStandardsIgnoreLine
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 

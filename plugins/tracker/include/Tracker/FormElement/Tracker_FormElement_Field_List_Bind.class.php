@@ -465,7 +465,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
         $this->getDefaultValueDao()->save($this->field->getId(), $default);
 
-        if (!$no_redirect) {
+        if (! $no_redirect) {
             $tracker = $this->field->getTracker();
             if ($tracker === null) {
                 $GLOBALS['Response']->redirect('/');
@@ -510,7 +510,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     protected function getDefaultValueDao()
     {
-        if (!$this->default_value_dao) {
+        if (! $this->default_value_dao) {
             $this->default_value_dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         }
         return $this->default_value_dao;

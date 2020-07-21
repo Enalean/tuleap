@@ -52,7 +52,7 @@ function user_getname($user_id = 0)
 {
     global $USER_NAMES,$Language;
     // use current user if one is not passed in
-    if (!$user_id) {
+    if (! $user_id) {
         return UserManager::instance()->getCurrentUser()->getUserName();
     } else { // else must lookup name
         if (isset($USER_NAMES["user_$user_id"]) && $USER_NAMES["user_$user_id"]) {
@@ -131,7 +131,7 @@ function user_get_result_set($user_id)
     //so it doesn't have to be fetched each time
 
     global $USER_RES;
-    if (!isset($USER_RES["_" . $user_id . "_"]) || !$USER_RES["_" . $user_id . "_"]) {
+    if (! isset($USER_RES["_" . $user_id . "_"]) || ! $USER_RES["_" . $user_id . "_"]) {
         $USER_RES["_" . $user_id . "_"] = db_query("SELECT * FROM user WHERE user_id='" . db_es($user_id) . "'");
         return $USER_RES["_" . $user_id . "_"];
     } else {

@@ -70,30 +70,30 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
 {
     $data_access = CodendiDataAccess::instance();
     $filter      = '';
-    if (!empty($by)) {
+    if (! empty($by)) {
         $user_helper = UserHelper::instance();
         $filter     .= $user_helper->getUserFilter($by);
     }
-    if (!empty($startDate)) {
+    if (! empty($startDate)) {
         list($timestamp,) = util_date_to_unixtime($startDate);
         $filter .= " AND group_history.date > " . $data_access->escapeInt($timestamp);
     }
-    if (!empty($endDate)) {
+    if (! empty($endDate)) {
         list($timestamp,) = util_date_to_unixtime($endDate);
         // Add 23:59:59 to timestamp
         $timestamp = $timestamp + 86399;
         $filter .= " AND group_history.date < " . $data_access->escapeInt($timestamp);
     }
-    if (!empty($value)) {
+    if (! empty($value)) {
         //all_users need specific treatement
         if (stristr($value, $GLOBALS["Language"]->getText('project_ugroup', 'ugroup_anonymous_users_name_key'))) {
             $value =  'ugroup_anonymous_users_name_key';
         }
         $filter .= " AND group_history.old_value LIKE " . $data_access->quoteLikeValueSurround($value);
     }
-    if (!empty($event) && strcmp($event, 'any')) {
+    if (! empty($event) && strcmp($event, 'any')) {
         $filter .= " AND ( 0 ";
-        if (!empty($subEventsBox)) {
+        if (! empty($subEventsBox)) {
             foreach ($subEventsBox as $key => $value) {
                 $filter .= " OR group_history.field_name LIKE " . $data_access->quoteLikeValueSuffix($key);
             }
@@ -211,11 +211,11 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
             $arr_args = "";
         }
         $msg = $Language->getOverridableText('project_admin_utils', $msg_key, $arr_args);
-        if (!(strpos($msg, "*** Unkown msg") === false)) {
+        if (! (strpos($msg, "*** Unkown msg") === false)) {
             $msg = $field;
         }
 
-        if (!$export) {
+        if (! $export) {
             $html .= '<TR class="' . html_get_alt_row_color($i++) . '"><TD>' . $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id) . '</TD><TD>';
         }
         $val = $row['old_value'];

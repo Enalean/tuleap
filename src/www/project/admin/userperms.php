@@ -31,11 +31,11 @@ if (! isset($group_id)) {
     $group_id = 0;
 }
 $group = $pm->getProject($group_id);
-if (!$group || !is_object($group) || $group->isError()) {
+if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
 }
 $atf = new ArtifactTypeFactory($group);
-if (!$group || !is_object($group) || $group->isError()) {
+if (! $group || ! is_object($group) || $group->isError()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_index', 'not_get_atf'));
 }
 // Get the artfact type list
@@ -73,19 +73,19 @@ if ($request->exist('submit')) {
                     $atid = $at_arr[$j]->getID();
                     $perm_level = "tracker_user_$row_dev[user_id]_$atid";
                     if ($at_arr[$j]->existUser($row_dev['user_id'])) {
-                        if (!$at_arr[$j]->updateUser($row_dev['user_id'], $request->get($perm_level))) {
+                        if (! $at_arr[$j]->updateUser($row_dev['user_id'], $request->get($perm_level))) {
                             echo $at_arr[$j]->getErrorMessage();
                             $tracker_error = true;
                         }
                     } else {
-                        if (!$at_arr[$j]->addUser($row_dev['user_id'], $request->get($perm_level))) {
+                        if (! $at_arr[$j]->addUser($row_dev['user_id'], $request->get($perm_level))) {
                             $tracker_error = true;
                         }
                     }
                 }
             }
 
-            if (!$res || $tracker_error) {
+            if (! $res || $tracker_error) {
                 $nb_errors++;
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_userperms', 'perm_fail_for', $row_dev['user_id']) . ' ' . db_error());
             }
@@ -113,7 +113,7 @@ if ($request->valid($vPattern)) {
 }
 
 $offset = $request->getValidated('offset', 'uint', 0);
-if (!$offset) {
+if (! $offset) {
     $offset = 0;
 }
 $number_per_page = 25;
@@ -154,7 +154,7 @@ if ($project->usesTracker() && $at_arr) {
 }
 $res_dev = db_query($sql['select'] . $sql['from'] . $sql['where'] . $sql['filter'] . $sql['order'] . $sql['limit']);
 
-if (!$res_dev || db_numrows($res_dev) == 0 || $number_per_page < 1) {
+if (! $res_dev || db_numrows($res_dev) == 0 || $number_per_page < 1) {
     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_userperms', 'no_users_found'));
 }
 $sql = 'SELECT FOUND_ROWS() AS nb';

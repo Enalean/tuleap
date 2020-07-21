@@ -533,7 +533,7 @@ function searchDocmanItem($sessionKey, $group_id, $item_id, $criterias)
     $params = array('id' => $item_id);
     foreach ($criterias as $criteria) {
         $params[$criteria->field_name . '_value'] = $criteria->field_value;
-        if (!isValidOperator($criteria->operator)) {
+        if (! isValidOperator($criteria->operator)) {
             return new SoapFault(INVALID_OPERATOR, 'This operator is not valid. Only <, >, = are valid.', 'searchDocmanItem');
         }
         $params[$criteria->field_name . '_operator']  = operatorToValue($criteria->operator);

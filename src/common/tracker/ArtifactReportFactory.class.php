@@ -54,7 +54,7 @@ class ArtifactReportFactory
          "WHERE report_id=" . db_ei($report_id);
      //echo $sql.'<br>';
         $res = db_query($sql);
-        if (!$res || db_numrows($res) < 1) {
+        if (! $res || db_numrows($res) < 1) {
             return false;
         }
         return new ArtifactReportHtml($report_id, $atid);
@@ -89,7 +89,7 @@ class ArtifactReportFactory
               ',"' . db_es($report_array["name"]) . '","' . db_es($report_array["description"]) . '","' . db_es($report_array["scope"]) . '","' . db_es($report_array["is_default"]) . '")';
 
             $res_insert = db_query($sql_insert);
-            if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+            if (! $res_insert || db_affected_rows($res_insert) <= 0) {
                 $this->setError($Language->getText('tracker_common_reportfactory', 'ins_err', array($report_array["report_id"],$atid_dest,db_error())));
                 return false;
             }
@@ -118,7 +118,7 @@ class ArtifactReportFactory
 
              //echo $sql_insert;
                 $res_insert = db_query($sql_insert);
-                if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+                if (! $res_insert || db_affected_rows($res_insert) <= 0) {
                     $this->setError($Language->getText('tracker_common_reportfactory', 'f_ind_err', array($report_array["report_id"],$field_array["field_name"],db_error())));
                     return false;
                 }
@@ -181,7 +181,7 @@ class ArtifactReportFactory
     {
         $artifactreports = array();
         $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
-        if (!$user_id || ($user_id == 100)) {
+        if (! $user_id || ($user_id == 100)) {
             $sql .= "(group_artifact_id=" .  db_ei($group_artifact_id)  . " AND scope='P') OR scope='S' " .
             'ORDER BY report_id';
         } else {

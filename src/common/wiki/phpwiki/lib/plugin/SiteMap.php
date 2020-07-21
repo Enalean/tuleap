@@ -110,7 +110,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
             $linkpagename = $link->getName();
             if (
                 ($linkpagename != $startpagename)
-                and (!$this->ExcludedPages or !preg_match("/" . $this->ExcludedPages . "/", $linkpagename))
+                and (! $this->ExcludedPages or ! preg_match("/" . $this->ExcludedPages . "/", $linkpagename))
             ) {
                 $pagearr[$level . " [$linkpagename]"] = $link;
                 $pagearr = $this->recursivelyGetBackLinks(
@@ -149,9 +149,9 @@ class WikiPlugin_SiteMap extends WikiPlugin
             $linkpagename = $link->getName();
             if (
                 ($linkpagename != $startpagename) and
-                (!$this->ExcludedPages or !preg_match("/$this->ExcludedPages/", $linkpagename))
+                (! $this->ExcludedPages or ! preg_match("/$this->ExcludedPages/", $linkpagename))
             ) {
-                if (!$this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
+                if (! $this->excludeunknown or $this->dbi->isWikiPage($linkpagename)) {
                     $pagearr[$level . " [$linkpagename]"] = $link;
                     $pagearr = $this->recursivelyGetLinks(
                         $link,
@@ -172,7 +172,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
 
         $args = $this->getArgs($argstr, $request, false);
         extract($args);
-        if (!$page) {
+        if (! $page) {
             return '';
         }
         $this->_pagename = $page;
@@ -181,7 +181,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         if (empty($exclude)) {
             $exclude = array();
         }
-        if (!$include_self) {
+        if (! $include_self) {
             $exclude[] = $page;
         }
         $this->ExcludedPages = empty($exclude) ? "" : ("^(?:" . join("|", $exclude) . ")");
@@ -226,12 +226,12 @@ class WikiPlugin_SiteMap extends WikiPlugin
         }
 
         reset($pagearr);
-        if (!empty($includepages)) {
+        if (! empty($includepages)) {
             // disallow direct usage, only via child class IncludeSiteMap
-            if (!isa($this, "WikiPlugin_IncludeSiteMap")) {
+            if (! isa($this, "WikiPlugin_IncludeSiteMap")) {
                 $includepages = '';
             }
-            if (!is_string($includepages)) {
+            if (! is_string($includepages)) {
                 $includepages = ' '; // avoid plugin loader problems
             }
             $loader = new WikiPluginLoader();
@@ -240,7 +240,7 @@ class WikiPlugin_SiteMap extends WikiPlugin
         }
 
         foreach ($pagearr as $key => $link) {
-            if (!empty($includepages)) {
+            if (! empty($includepages)) {
                 $a = substr_count($key, '*');
                 $indenter = str_pad($nothing, $a);
                 //$request->setArg('IncludePage', 1);

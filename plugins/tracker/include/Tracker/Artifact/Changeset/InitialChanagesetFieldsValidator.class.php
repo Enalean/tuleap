@@ -28,7 +28,7 @@ class Tracker_Artifact_Changeset_InitialChangesetFieldsValidator extends Tracker
         Tracker_FormElement_Field $field
     ) {
         //we do not validate if the field is required and we can't submit the field
-        return !($field->isRequired() && !$field->userCanSubmit());
+        return ! ($field->isRequired() && ! $field->userCanSubmit());
     }
 
     protected function validateField(

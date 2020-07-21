@@ -110,7 +110,7 @@ class Blob extends FilesystemObject
      */
     public function GetData($explode = false) // @codingStandardsIgnoreLine
     {
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -195,7 +195,7 @@ class Blob extends FilesystemObject
             return $this->size;
         }
 
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
@@ -232,7 +232,7 @@ class Blob extends FilesystemObject
             $mime = $this->FileMime_Extension();
         }
 
-        if ((!empty($mime)) && $short) {
+        if ((! empty($mime)) && $short) {
             $mime = strtok($mime, '/');
         }
 
@@ -249,15 +249,15 @@ class Blob extends FilesystemObject
      */
     private function FileMime_Fileinfo() // @codingStandardsIgnoreLine
     {
-        if (!function_exists('finfo_buffer')) {
+        if (! function_exists('finfo_buffer')) {
             return '';
         }
 
-        if (!$this->dataRead) {
+        if (! $this->dataRead) {
             $this->ReadData();
         }
 
-        if (!$this->data) {
+        if (! $this->data) {
             return '';
         }
 
@@ -391,7 +391,7 @@ class Blob extends FilesystemObject
      */
     public function GetBlame() // @codingStandardsIgnoreLine
     {
-        if (!$this->blameRead) {
+        if (! $this->blameRead) {
             $this->ReadBlame();
         }
 
@@ -446,7 +446,7 @@ class Blob extends FilesystemObject
      */
     public function isBlob()
     {
-        return  true;
+        return true;
     }
 
     public function isSubmodule()

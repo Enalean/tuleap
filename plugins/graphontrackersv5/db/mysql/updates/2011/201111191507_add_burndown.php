@@ -47,7 +47,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_graphontrackersv5_scrum_burndown')) {
+        if (! $this->db->tableNameExists('plugin_graphontrackersv5_scrum_burndown')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_graphontrackersv5_scrum_burndown table is missing');
         }
     }

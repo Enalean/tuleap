@@ -77,7 +77,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_docman_item_deleted')) {
+        if (! $this->db->tableNameExists('plugin_docman_item_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_docman_item_deleted table is missing');
         }
     }

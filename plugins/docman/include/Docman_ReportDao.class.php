@@ -191,7 +191,7 @@ class Docman_ReportDao extends DataAccessObject
     {
         $sql = 'show variables like "ft_min_word_len"';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             $row = $dar->getRow();
             return $row['Value'];
         } else {

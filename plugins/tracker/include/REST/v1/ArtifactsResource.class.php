@@ -1204,13 +1204,13 @@ class ArtifactsResource extends AuthenticatedResource
         $from_artifact
     ) {
         $nb_sources_to_create_artifact = 0;
-        if (!empty($values)) {
+        if (! empty($values)) {
             $nb_sources_to_create_artifact++;
         }
-        if (!empty($values_by_field)) {
+        if (! empty($values_by_field)) {
             $nb_sources_to_create_artifact++;
         }
-        if (!empty($from_artifact)) {
+        if (! empty($from_artifact)) {
             $nb_sources_to_create_artifact++;
         }
         if ($nb_sources_to_create_artifact > 1) {

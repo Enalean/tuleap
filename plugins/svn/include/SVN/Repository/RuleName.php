@@ -43,7 +43,7 @@ class RuleName extends Rule
     public function isValid($val)
     {
         return preg_match('/^' . self::PATTERN_REPOSITORY_NAME . '\z/i', $val) &&
-            !$this->doesNameAlreadyExisting($val);
+            ! $this->doesNameAlreadyExisting($val);
     }
 
     private function doesNameAlreadyExisting($name_repository)

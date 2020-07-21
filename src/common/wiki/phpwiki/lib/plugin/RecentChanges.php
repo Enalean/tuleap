@@ -30,12 +30,12 @@ class _RecentChanges_Formatter
         $this->_args = $rc_args;
         $this->_diffargs = array('action' => 'diff');
 
-        if ($rc_args['show_minor'] || !$rc_args['show_major']) {
+        if ($rc_args['show_minor'] || ! $rc_args['show_major']) {
             $this->_diffargs['previous'] = 'minor';
         }
 
         // PageHistoryPlugin doesn't have a 'daylist' arg.
-        if (!isset($this->_args['daylist'])) {
+        if (! isset($this->_args['daylist'])) {
             $this->_args['daylist'] = false;
         }
     }
@@ -194,10 +194,10 @@ class _RecentChanges_HtmlFormatter extends _RecentChanges_Formatter
 
     public function summaryAsHTML($rev)
     {
-        if (!($summary = $this->summary($rev))) {
+        if (! ($summary = $this->summary($rev))) {
             return '';
         }
-        return  HTML::strong(
+        return HTML::strong(
             array('class' => 'wiki-summary'),
             "[",
             TransformLinks($summary, $rev->get('markup'), $rev->getPageName()),
@@ -536,7 +536,7 @@ class _RecentChanges_SideBarFormatter extends _RecentChanges_HtmlFormatter
     // main content window.
     public function summaryAsHTML($rev)
     {
-        if (!($summary = $this->summary($rev))) {
+        if (! ($summary = $this->summary($rev))) {
             return '';
         }
         return HTML::strong(
@@ -699,7 +699,7 @@ class _RecentChanges_RssFormatter extends _RecentChanges_Formatter
         global $WikiTheme;
 
         $img_url = AbsoluteURL($WikiTheme->getImageURL('logo'));
-        if (!$img_url) {
+        if (! $img_url) {
             return false;
         }
 
@@ -915,7 +915,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
 
     public function getArgs($argstr, $request, $defaults = false)
     {
-        if (!$defaults) {
+        if (! $defaults) {
             $defaults = $this->getDefaultArguments();
         }
         $args = WikiPlugin::getArgs($argstr, $request, $defaults);
@@ -944,8 +944,8 @@ class WikiPlugin_RecentChanges extends WikiPlugin
         extract($args);
 
         $params = array('include_minor_revisions' => $show_minor,
-                        'exclude_major_revisions' => !$show_major,
-                        'include_all_revisions' => !empty($show_all));
+                        'exclude_major_revisions' => ! $show_major,
+                        'include_all_revisions' => ! empty($show_all));
         if ($limit != 0) {
             $params['limit'] = $limit;
         }
@@ -968,8 +968,8 @@ class WikiPlugin_RecentChanges extends WikiPlugin
             $show_deleted = $args['show_minor'];
         }
 
-        if (!$show_deleted) {
-            $changes = new NonDeletedRevisionIterator($changes, !$args['show_all']);
+        if (! $show_deleted) {
+            $changes = new NonDeletedRevisionIterator($changes, ! $args['show_all']);
         }
 
         return $changes;
@@ -981,7 +981,7 @@ class WikiPlugin_RecentChanges extends WikiPlugin
         $format = $args['format'];
 
         $fmt_class = $WikiTheme->getFormatter('RecentChanges', $format);
-        if (!$fmt_class) {
+        if (! $fmt_class) {
             if ($format == 'rss') {
                 $fmt_class = '_RecentChanges_RssFormatter';
             } elseif ($format == 'rss2') {
@@ -1018,10 +1018,10 @@ class WikiPlugin_RecentChanges extends WikiPlugin
     // just a numbered list of limit pagenames, without date.
     public function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) {
+        if (! $request) {
             $request = $GLOBALS['request'];
         }
-        if (!isset($args['limit'])) {
+        if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
         $args['format'] = 'box';

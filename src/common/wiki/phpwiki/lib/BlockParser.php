@@ -95,7 +95,7 @@ class AnchoredRegexpSet
      */
     public function match($text)
     {
-        if (!is_string($text)) {
+        if (! is_string($text)) {
             return false;
         }
         if (! preg_match($this->_re, $text, $m)) {
@@ -132,7 +132,7 @@ class AnchoredRegexpSet
     {
         // Try to find match at same position.
         $regexps = array_slice($this->_regexps, $prevMatch->regexp_ind + 1);
-        if (!$regexps) {
+        if (! $regexps) {
             return false;
         }
 
@@ -161,7 +161,7 @@ class BlockParser_Input
         //
         // We want to ensure the only characters matching \s are ' ' and "\n".
         $text = preg_replace('/(?![ \n])\s/', ' ', $text);
-        assert(!preg_match('/(?![ \n])\s/', $text));
+        assert(! preg_match('/(?![ \n])\s/', $text));
 
         $this->_lines = preg_split('/[^\S\n]*\n/', $text);
         $this->_pos = 0;
@@ -397,7 +397,7 @@ class ParsedBlock extends Block_HtmlElement
         // better static or global?
         static $_regexpset, $_block_types;
 
-        if (!is_object($_regexpset)) {
+        if (! is_object($_regexpset)) {
             foreach (
                 array('oldlists', 'list', 'dl', 'table_dl',
                            'blockquote', 'heading', 'hr', 'pre', 'email_blockquote',
@@ -425,7 +425,7 @@ class ParsedBlock extends Block_HtmlElement
         if ($line === false or $line === '') { // allow $line === '0'
             return false;
         }
-        $tight_top = !$this->_atSpace;
+        $tight_top = ! $this->_atSpace;
         $re_set = &$this->_regexpset;
         //FIXME: php5 fails to advance here!
         for ($m = $re_set->match($line); $m; $m = $re_set->nextMatch($line, $m)) {
@@ -629,14 +629,14 @@ class Block_dl extends Block_list
 
     public function _match(&$input, $m)
     {
-        if (!($p = $this->_do_match($input, $m))) {
+        if (! ($p = $this->_do_match($input, $m))) {
             return false;
         }
         list ($term, $defn, $loose) = $p;
 
         $this->_content[] = new Block_HtmlElement('dt', false, $term);
         $this->_content[] = $defn;
-        $this->_tight_defn = !$loose;
+        $this->_tight_defn = ! $loose;
         return true;
     }
 
@@ -660,7 +660,7 @@ class Block_dl extends Block_list
         $loose = $input->skipSpace();
         $line = $input->currentLine();
 
-        if (!$line || !preg_match($pat, $line, $mm)) {
+        if (! $line || ! preg_match($pat, $line, $mm)) {
             $input->setPos($pos);
             return false;       // No body found.
         }
@@ -682,7 +682,7 @@ class Block_table_dl_defn extends XmlContent
     public function __construct($term, $defn)
     {
         parent::__construct();
-        if (!is_array($defn)) {
+        if (! is_array($defn)) {
             $defn = $defn->getContent();
         }
 
@@ -713,7 +713,7 @@ class Block_table_dl_defn extends XmlContent
         $first = &$this->firstTR();
         $last  = &$this->lastTR();
         $first->setInClass('top', $tight_top);
-        if (!empty($last)) {
+        if (! empty($last)) {
             $last->setInClass('bottom', $tight_bot);
         } else {
             trigger_error(sprintf("no lastTR: %s", AsXML($this->_content[0])), E_USER_WARNING);
@@ -733,7 +733,7 @@ class Block_table_dl_defn extends XmlContent
 
     public function _flushRow($tight_bottom = false)
     {
-        if (!empty($this->_accum)) {
+        if (! empty($this->_accum)) {
             $row = new Block_HtmlElement('tr', false, $this->_accum);
 
             $row->setTightness($this->_next_tight_top, $tight_bottom);
@@ -747,7 +747,7 @@ class Block_table_dl_defn extends XmlContent
 
     public function _addSubtable($table)
     {
-        if (!($table_rows = $table->getContent())) {
+        if (! ($table_rows = $table->getContent())) {
             return;
         }
 
@@ -837,7 +837,7 @@ class Block_table_dl_defn extends XmlContent
             } else {
                 $n = count($row->_content);
                 $lastcol = &$row->_content[$n - 1];
-                if (!empty($lastcol)) {
+                if (! empty($lastcol)) {
                     $lastcol->setAttr('colspan', $ncols - 1);
                 }
             }
@@ -856,7 +856,7 @@ class Block_table_dl extends Block_dl
 
     public function _match(&$input, $m)
     {
-        if (!($p = $this->_do_match($input, $m))) {
+        if (! ($p = $this->_do_match($input, $m))) {
             return false;
         }
         list ($term, $defn, $loose) = $p;
@@ -901,7 +901,7 @@ class Block_oldlists extends Block_list
     public function _match(&$input, $m)
     {
         // FIXME:
-        if (!preg_match('/[*#;]*$/A', $input->getPrefix())) {
+        if (! preg_match('/[*#;]*$/A', $input->getPrefix())) {
             return false;
         }
 
@@ -1039,7 +1039,7 @@ class Block_plugin extends Block_pre
     {
         $pos = $input->getPos();
         $pi = $m->match . $m->postmatch;
-        while (!preg_match('/(?<!' . ESCAPE_CHAR . ')\?>\s*$/', $pi)) {
+        while (! preg_match('/(?<!' . ESCAPE_CHAR . ')\?>\s*$/', $pi)) {
             if (($line = $input->nextLine()) === false) {
                 $input->setPos($pos);
                 return false;
@@ -1156,7 +1156,7 @@ function TransformTextPre($text, $markup = 2.0, $basepage = false)
         $markup = $rev->get('markup');
     }
     // NEW: default markup is new, to increase stability
-    if (!empty($markup) && $markup < 2.0) {
+    if (! empty($markup) && $markup < 2.0) {
         $text = ConvertOldMarkup($text);
     }
 

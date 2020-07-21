@@ -63,7 +63,7 @@ class WikiDB_SQL extends WikiDB
     public function isOpen()
     {
         global $request;
-        if (!$request->_dbi) {
+        if (! $request->_dbi) {
             return false;
         }
         return is_resource($this->_backend->connection());

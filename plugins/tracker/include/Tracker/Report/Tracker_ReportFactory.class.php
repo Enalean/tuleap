@@ -40,7 +40,7 @@ class Tracker_ReportFactory
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -193,7 +193,7 @@ class Tracker_ReportFactory
      */
     protected function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Tracker_ReportDao();
         }
         return $this->dao;

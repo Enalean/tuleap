@@ -184,13 +184,13 @@ class BackendSVN extends Backend
     private function createRepository($group_id, $system_path)
     {
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        if (! $project) {
             return false;
         }
 
-        if (!is_dir($system_path)) {
+        if (! is_dir($system_path)) {
             // Let's create a SVN repository for this group
-            if (!mkdir($system_path, 0775, true)) {
+            if (! mkdir($system_path, 0775, true)) {
                 $this->log("Can't create project SVN dir: $system_path", Backend::LOG_ERROR);
                 return false;
             }
@@ -205,7 +205,7 @@ class BackendSVN extends Backend
 
     private function createSVNAccessFile($group_id, $system_path)
     {
-        if (!$this->updateSVNAccess($group_id, $system_path)) {
+        if (! $this->updateSVNAccess($group_id, $system_path)) {
             $this->log("Can't update SVN access file", Backend::LOG_ERROR);
             return false;
         }
@@ -316,7 +316,7 @@ class BackendSVN extends Backend
                 $update_hook = true;
             } else {
                 $file_array = file($filename);
-                if (!in_array($this->block_marker_start, $file_array)) {
+                if (! in_array($this->block_marker_start, $file_array)) {
                     $update_hook = true;
                 }
             }
@@ -363,7 +363,7 @@ class BackendSVN extends Backend
             $update_hook = true;
         } else {
             $file_array = file($filename);
-            if (!in_array($this->block_marker_start, $file_array)) {
+            if (! in_array($this->block_marker_start, $file_array)) {
                 $update_hook = true;
             }
         }
@@ -502,7 +502,7 @@ class BackendSVN extends Backend
 
     private function updateSVNAccessFile($system_path, $custom_perms, Project $project)
     {
-        if (!$project) {
+        if (! $project) {
             return false;
         }
 
@@ -552,7 +552,7 @@ class BackendSVN extends Backend
     public function checkSVNAccessPresence($group_id)
     {
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        if (! $project) {
             return false;
         }
 
@@ -563,7 +563,7 @@ class BackendSVN extends Backend
 
         $svnaccess_file = $project->getSVNRootPath() . "/.SVNAccessFile";
 
-        if (!is_file($svnaccess_file)) {
+        if (! is_file($svnaccess_file)) {
             return $this->updateSVNAccess($group_id, $project->getSVNRootPath());
         }
         return true;
@@ -598,7 +598,7 @@ class BackendSVN extends Backend
         $list  = "";
         $first = true;
         foreach ($project->getMembersUserNames($this->getProjectManager()) as $member) {
-            if (!$first) {
+            if (! $first) {
                 $list .= ', ';
             }
             $first = false;
@@ -660,7 +660,7 @@ class BackendSVN extends Backend
     public function getSVNAccessRootPathDef($project)
     {
         $conf = "[/]\n";
-        if (!$project->isPublic() || $project->isSVNPrivate()) {
+        if (! $project->isPublic() || $project->isSVNPrivate()) {
             $conf .= "* = \n";
         } else {
             $conf .= "* = r\n";
@@ -789,7 +789,7 @@ class BackendSVN extends Backend
     public function archiveProjectSVN($group_id)
     {
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        if (! $project) {
             return false;
         }
         $mydir      = $project->getSVNRootPath();
@@ -832,7 +832,7 @@ class BackendSVN extends Backend
     public function checkSVNMode(Project $project)
     {
         $svnroot = $project->getSVNRootPath();
-        $is_private = !$project->isPublic() || $project->isSVNPrivate();
+        $is_private = ! $project->isPublic() || $project->isSVNPrivate();
         if ($is_private) {
             $perms = fileperms($svnroot);
             // 'others' should have no right on the repository
@@ -892,12 +892,12 @@ class BackendSVN extends Backend
      *
      * @param String $name
      *
-     * @return false if repository or file  or link already exists, true otherwise
+     * @return bool false if repository or file  or link already exists, true otherwise
      */
     public function isNameAvailable($name)
     {
         $path = ForgeConfig::get('svn_prefix') . "/" . $name;
-        return (!$this->fileExists($path));
+        return (! $this->fileExists($path));
     }
 
     /**

@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('user', 'has_avatar')) {
+        if (! $this->db->columnNameExists('user', 'has_avatar')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column has_avatar not created in user');
         }
     }

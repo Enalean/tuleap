@@ -67,7 +67,7 @@ class FRSLog
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -165,7 +165,7 @@ class FRSLog
      */
     public function _getFRSLogDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new FRSLogDao();
         }
         return $this->dao;

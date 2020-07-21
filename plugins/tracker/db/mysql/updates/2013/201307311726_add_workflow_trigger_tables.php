@@ -52,11 +52,11 @@ class b201307311726_add_workflow_trigger_tables extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_workflow_trigger_rule_static_value')) {
+        if (! $this->db->tableNameExists('tracker_workflow_trigger_rule_static_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_trigger_rule_static_value');
         }
 
-        if (!$this->db->tableNameExists('tracker_workflow_trigger_rule_trg_field_static_value')) {
+        if (! $this->db->tableNameExists('tracker_workflow_trigger_rule_trg_field_static_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_trigger_rule_trg_field_static_value');
         }
     }

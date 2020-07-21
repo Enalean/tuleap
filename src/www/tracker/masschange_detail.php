@@ -12,7 +12,7 @@
 
 // Printer version ?
 $ro = false;
-if (!$request->exist('pv')) {
+if (! $request->exist('pv')) {
     $pv = false;
     $ro = false;
 } else {
@@ -40,7 +40,7 @@ echo '<div id="tracker_toolbar_clear"></div>';
 $submit = $request->get('submit_btn');
 if (strstr($submit, $Language->getText('tracker_masschange_detail', 'selected_items'))) {
     $mass_change_ids = $request->get('mass_change_ids');
-    if (!$mass_change_ids) {
+    if (! $mass_change_ids) {
         $feedback = $Language->getText('tracker_masschange_detail', 'no_items_selected');
     } else {
         $ath->displayMassChange($ro, $mass_change_ids);
@@ -48,7 +48,7 @@ if (strstr($submit, $Language->getText('tracker_masschange_detail', 'selected_it
 } else {
   // If still not defined then force it to system 'Default' report
     $report_id = $request->get('report_id');
-    if (!$report_id) {
+    if (! $report_id) {
         $report_id = 100;
     }
   // Create factories

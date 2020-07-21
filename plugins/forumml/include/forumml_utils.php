@@ -158,7 +158,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset)
     $nbThreads = 0;
     $sql = 'SELECT FOUND_ROWS() as nb';
     $res = db_query($sql);
-    if ($res && !db_error($res)) {
+    if ($res && ! db_error($res)) {
         $row = db_fetch_array($res);
         $nbThreads = $row['nb'];
     }
@@ -290,7 +290,7 @@ function plugin_forumml_nb_children($parents, $list_id)
                 AND id_list = ' . $list_id;
         //echo $sql.'<br>';
         $result = db_query($sql);
-        if ($result && !db_error($result)) {
+        if ($result && ! db_error($result)) {
             $p = array();
             while (($row = db_fetch_array($result))) {
                 $p[] = $row['id_message'];
@@ -384,7 +384,7 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $lis
                 "AND m.id_list = " . db_ei($list_id);
         //echo $sql.'<br>';
         $result = db_query($sql);
-        if ($result && !db_error($result)) {
+        if ($result && ! db_error($result)) {
             $p = plugin_forumml_insert_msg_attach($thread, $result);
             plugin_forumml_build_flattened_thread_children($thread, $p, $list_id);
         }
@@ -449,7 +449,7 @@ function plugin_forumml_build_flattened_thread($topic, $list_id)
         ' WHERE m.id_message = ' . db_ei($topic);
     //echo $sql.'<br>';
     $result = db_query($sql);
-    if ($result && !db_error($result)) {
+    if ($result && ! db_error($result)) {
         $p = plugin_forumml_insert_msg_attach($thread, $result);
         plugin_forumml_build_flattened_thread_children($thread, $p, $list_id);
     }
@@ -476,7 +476,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
 
     // Is "ready to display" body already in cache or not
     $bodyIsCached = false;
-    if (!empty($msg['cached_html']) && !$purgeCache) {
+    if (! empty($msg['cached_html']) && ! $purgeCache) {
         $bodyIsCached = true;
     }
 
@@ -538,10 +538,10 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             if (preg_match('/.html$/i', $attachment['file_name'])) {
                 // By default, the first html attachment replaces the default body (text)
                 if ($first) {
-                    if (!$bodyIsCached && is_file($attachment['file_path'])) {
+                    if (! $bodyIsCached && is_file($attachment['file_path'])) {
                         $body = file_get_contents($attachment['file_path']);
                         // Make sure that the body is utf8
-                        if (!mb_detect_encoding($body, 'UTF-8', true)) {
+                        if (! mb_detect_encoding($body, 'UTF-8', true)) {
                             $body = mb_convert_encoding($body, 'UTF-8');
                         }
                         $is_html = true;
@@ -553,7 +553,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
             } else {
                 $flink = $attachment['file_name'];
             }
-            if (!$first) {
+            if (! $first) {
                 echo ',&nbsp;&nbsp;';
             }
 
@@ -568,7 +568,7 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, PFU
     $body = str_replace("\r\n", "\n", $body);
 
     // If there is no cached html of if user requested to regenerate the cache, do it, otherwise use cached HTML.
-    if (!$bodyIsCached) {
+    if (! $bodyIsCached) {
         // Purify message body, according to the content-type
         if ($is_html) {
             // Update attachment links
@@ -680,7 +680,7 @@ function plugin_forumml_reply($hp, $subject, $in_reply_to, $id_parent, $body, $a
             <input type='hidden' name='subject' value='" . $subject . "'/>
             <input type='hidden' name='list' value='" . $request->get('list') . "'/>
             <input type='hidden' name='group_id' value='" . $request->get('group_id') . "'/>";
-    echo   '<a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . dgettext('tuleap-forumml', 'Add cc') . ']</a>
+    echo '<a href="javascript:;" onclick="addHeader(\'\',\'\',1);">[' . dgettext('tuleap-forumml', 'Add cc') . ']</a>
                 - <a href="javascript:;" onclick="addHeader(\'\',\'\',2);">[' . dgettext('tuleap-forumml', 'Attach file') . ']</a>
                 <input type="hidden" value="0" id="header_val" />
                 <div id="mail_header"></div>';
@@ -696,7 +696,7 @@ function plugin_forumml_reply($hp, $subject, $in_reply_to, $id_parent, $body, $a
         }
     }
 
-    echo        "</textarea></p>
+    echo "</textarea></p>
                                 <p>
                 <input type='submit' name='send_reply' value='" . $GLOBALS['Language']->getText('global', 'btn_submit') . "'/>
                                 <input type='reset' value='" . dgettext('tuleap-forumml', 'Erase') . "'/>
@@ -774,7 +774,7 @@ function plugin_forumml_process_mail($reply = false)
         }
      // Checks sanity of CC List
         $err = '';
-        if (!util_validateCCList($cc_array, $err)) {
+        if (! util_validateCCList($cc_array, $err)) {
             $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-forumml', 'Submit failed. Invalid e-mail address in CC List.<br>\'%1$s\''), $err));
             $continue = false;
         } else {

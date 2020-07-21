@@ -157,7 +157,7 @@ class Tracker_DateReminderRenderer
         $selectedUgroups = '';
         $ugroups         = array();
         $roles           = array();
-        if (!empty($reminderId)) {
+        if (! empty($reminderId)) {
             $reminder = $this->dateReminderFactory->getReminder($reminderId);
             $ugroups  = $reminder->getUgroups(true);
             $roles    = $reminder->getRoles();
@@ -309,7 +309,7 @@ class Tracker_DateReminderRenderer
             $ugroupIds[] = intval($row['ugroup_id']);
         }
         $validUgroupIds  = array();
-        if (!empty($selectedUgroups)) {
+        if (! empty($selectedUgroups)) {
             foreach ($selectedUgroups as $ugroup) {
                 if (in_array($ugroup, $ugroupIds)) {
                     $validUgroupIds[] = $ugroup;
@@ -374,7 +374,7 @@ class Tracker_DateReminderRenderer
                     }
                 }
             }
-            if (!empty($ugroups) || !empty($roles)) {
+            if (! empty($ugroups) || ! empty($roles)) {
                 $notified[] = $ugroups;
                 $notified[] = $roles;
                 return $notified;
@@ -397,7 +397,7 @@ class Tracker_DateReminderRenderer
                                   dgettext('tuleap-tracker', 'Actions'));
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
-        if (!empty($trackerReminders)) {
+        if (! empty($trackerReminders)) {
             $purifier = Codendi_HTMLPurifier::instance();
             $output   = '';
             foreach ($trackerReminders as $reminder) {

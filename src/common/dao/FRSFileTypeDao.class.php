@@ -36,7 +36,7 @@ class FRSFileTypeDao extends DataAccessObject
             $this->da->quoteSmart((string) $name)
         );
         $filetype = $this->retrieve($sql);
-        if (!$filetype->valid()) {
+        if (! $filetype->valid()) {
             return null;
         }
         $current = $filetype->current();

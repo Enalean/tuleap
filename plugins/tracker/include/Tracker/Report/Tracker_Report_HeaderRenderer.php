@@ -116,7 +116,7 @@ class Tracker_Report_HeaderRenderer
 
     private function getSaveOrRevert(PFUser $current_user, Tracker_Report $report, array $options_params, $report_can_be_modified)
     {
-        if ($current_user->isAnonymous() || !$report_can_be_modified) {
+        if ($current_user->isAnonymous() || ! $report_can_be_modified) {
             return false;
         }
 
@@ -158,13 +158,13 @@ class Tracker_Report_HeaderRenderer
         $is_obsolete = $report->isObsolete();
 
         $classname_has_changed = '';
-        if ($report->report_session->hasChanged() && !$is_obsolete) {
+        if ($report->report_session->hasChanged() && ! $is_obsolete) {
             $classname_has_changed .= 'tracker_report_haschanged';
         }
         if ($report->report_session->hasChanged() && $is_obsolete) {
             $classname_has_changed .= 'tracker_report_haschanged_and_isobsolete';
         }
-        if (!$report->report_session->hasChanged() && $is_obsolete) {
+        if (! $report->report_session->hasChanged() && $is_obsolete) {
             $classname_has_changed .= 'tracker_report_isobsolete';
         }
 

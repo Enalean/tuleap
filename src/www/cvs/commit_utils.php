@@ -82,7 +82,7 @@ function commits_header($params)
         $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin'),
             'url'   => '/cvs/?func=admin&group_id=' . $group_id);
     }
-    if (!isset($params['help'])) {
+    if (! isset($params['help'])) {
         $params['help'] = "cvs.html";
     }
     $toolbar[] = array('title' => $GLOBALS['Language']->getText('global', 'help'),
@@ -108,7 +108,7 @@ function commits_footer($params)
 
 function commits_branches_box($group_id, $name = 'branch', $checked = 'xzxz', $text_100 = 'None')
 {
-    if (!$group_id) {
+    if (! $group_id) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
     } else {
         $sql = "SELECT unix_group_name from groups where group_id=" . db_ei($group_id);
@@ -142,11 +142,11 @@ function commits_data_get_technicians($projectname)
 
 function commits_technician_box($projectname, $name = '_commiter', $checked = 'xzxz', $text_100 = 'None')
 {
-    if (!$projectname) {
+    if (! $projectname) {
         return $GLOBALS['Language']->getText('cvs_commit_utils', 'error_nogid');
     } else {
         $result = commits_data_get_technicians($projectname);
-        if (!in_array($checked, util_result_column_to_array($result))) {
+        if (! in_array($checked, util_result_column_to_array($result))) {
             // Selected 'my commits' but never commited
             $checked = 'xzxz';
         }
@@ -299,7 +299,7 @@ function show_commitslist(
 
     for ($i = 0; $i < $rows; $i++) {
         $filename = db_result($result, $i, 'filename');
-        if (!$filename) {
+        if (! $filename) {
             $filename = '';
         }
         // $commits_url = '<A HREF="/commits/download.php/Commits'.$commit_id.'.txt?commit_id='.$id.'">'.$filename.'</a>';
@@ -368,7 +368,7 @@ function commit_add_sort_criteria($criteria_list, $order, $msort)
             list(,$mattr,$mdir) = $match;
             //echo "<br><pre>DBG \$mattr=$mattr,\$mdir=$mdir</pre>";
             if ($mattr == $order) {
-                if (($mdir == '>') || (!isset($mdir))) {
+                if (($mdir == '>') || (! isset($mdir))) {
                     $arr[$i] = $order . '<';
                 } else {
                     $arr[$i] = $order . '>';
@@ -525,7 +525,7 @@ function show_commit_details($group_id, $commit_id, $result)
             }
         }
 
-        if (!$filename) {
+        if (! $filename) {
             $filename = '';
         } else {
             if ($type == 'Remove') {
@@ -599,7 +599,7 @@ function format_cvs_history($group_id)
 {
     $res_cvsfullhist = get_cvs_history($group_id);
 
-    if (!$res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
+    if (! $res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
         $output = '<P>' . $GLOBALS['Language']->getText('cvs_intro', 'no_history');
     } else {
         $cvshist = array();
@@ -676,7 +676,7 @@ function check_cvs_access($username, $group_name, $cvspath)
   // if the file path exists as such then it's a directory
   // else add the ,v extension because it's a file
     $path = "/cvsroot/" . $group_name . '/' . $cvspath;
-    if (!is_dir($path)) {
+    if (! is_dir($path)) {
         $path = $path . ',v';
     }
     $mode = fileperms($path);
@@ -686,7 +686,7 @@ function check_cvs_access($username, $group_name, $cvspath)
 
   // A directory that is not world readable can only be viewed
   // through viewvc if the user is a project member
-    if ($project && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && !user_ismember($project->getID())) {
+    if ($project && (($mode_top & 0x0004) == 0 || ($mode & 0x0004) == 0) && ! user_ismember($project->getID())) {
         return false;
     } else {
         return true;
@@ -775,7 +775,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
         $limit = " LIMIT $offset,$chunksz";
     }
 
-    if (!$order_by) {
+    if (! $order_by) {
         $order_by = " ORDER BY id desc, f_when desc ";
     }
 

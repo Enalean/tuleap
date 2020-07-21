@@ -64,10 +64,10 @@ class CanvasGraph extends Graph
         // CSIM without storing an image to disk GetCSIM must call Stroke.
         $this->iHasStroked = true;
 
-        if (!$_csim) {
+        if (! $_csim) {
             // Should we do any final image transformation
             if ($this->iImgTrans) {
-                if (!class_exists('ImgTrans', false)) {
+                if (! class_exists('ImgTrans', false)) {
                     require_once('jpgraph_imgtrans.php');
                 }
 

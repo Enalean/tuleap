@@ -92,7 +92,7 @@ class Cardwall_OnTop_Config_ColumnFactory
         array $filter
     ) {
         if (count($filter) === 0) {
-            return  $field->getVisibleValuesPlusNoneIfAny();
+            return $field->getVisibleValuesPlusNoneIfAny();
         }
 
         $field_values = array();

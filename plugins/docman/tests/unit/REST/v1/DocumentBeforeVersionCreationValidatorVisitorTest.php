@@ -76,7 +76,7 @@ class DocumentBeforeVersionCreationValidatorVisitorTest extends TestCase
         $this->approval_retriever = Mockery::mock(ApprovalTableRetriever::class);
         $this->permission_manager = Mockery::mock(Docman_PermissionsManager::class);
         $this->docamn_factory     = Mockery::mock(Docman_ItemFactory::class);
-        $this->validator_visitor  = new  DocumentBeforeVersionCreationValidatorVisitor(
+        $this->validator_visitor  = new DocumentBeforeVersionCreationValidatorVisitor(
             $this->permission_manager,
             $this->approval_checker,
             $this->docamn_factory,

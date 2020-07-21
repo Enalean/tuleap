@@ -79,7 +79,7 @@ class WikiPlugin_AllPages extends WikiPlugin
         }
         $caption = _("All pages in this wiki (%d total):");
 
-        if (!empty($args['owner'])) {
+        if (! empty($args['owner'])) {
             $pages = PageList::allPagesByOwner(
                 $args['owner'],
                 $args['include_empty'],
@@ -98,7 +98,7 @@ class WikiPlugin_AllPages extends WikiPlugin
                     count($pages)
                 );
             }
-        } elseif (!empty($args['author'])) {
+        } elseif (! empty($args['author'])) {
             $pages = PageList::allPagesByAuthor(
                 $args['author'],
                 $args['include_empty'],
@@ -117,7 +117,7 @@ class WikiPlugin_AllPages extends WikiPlugin
                     count($pages)
                 );
             }
-        } elseif (!empty($args['creator'])) {
+        } elseif (! empty($args['creator'])) {
             $pages = PageList::allPagesByCreator(
                 $args['creator'],
                 $args['include_empty'],
@@ -145,11 +145,11 @@ class WikiPlugin_AllPages extends WikiPlugin
                 $args['count'] = $request->getArg('count');
             }
         }
-        if (empty($args['count']) and !empty($pages)) {
+        if (empty($args['count']) and ! empty($pages)) {
             $args['count'] = count($pages);
         }
         $pagelist = new PageList($args['info'], $args['exclude'], $args);
-        if (!$args['noheader']) {
+        if (! $args['noheader']) {
             $pagelist->setCaption($caption);
         }
 

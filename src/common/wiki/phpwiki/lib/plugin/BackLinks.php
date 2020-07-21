@@ -70,7 +70,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
         if (empty($exclude)) {
             $exclude = array();
         }
-        if (!$include_self) {
+        if (! $include_self) {
             $exclude[] = $page;
         }
         if ($info) {
@@ -80,7 +80,7 @@ class WikiPlugin_BackLinks extends WikiPlugin
                     new _PageList_Column_BackLinks_count('count', _("#"), 'center');
             }
         }
-        $args['dosort'] = !empty($args['sortby']); // override DB sort (??)
+        $args['dosort'] = ! empty($args['sortby']); // override DB sort (??)
         $pagelist = new PageList($info, $exclude, $args);
         $p = $dbi->getPage($page);
         $pagelist->addPages($p->getBackLinks(false, $sortby, $limit, $exclude));
@@ -91,10 +91,10 @@ class WikiPlugin_BackLinks extends WikiPlugin
         // strings together, but the grammar employed most by other
         // languages does not always end up with so subtle a
         // distinction as it does with English in this case. :)
-        if (!$noheader) {
+        if (! $noheader) {
             if (
                 $page == $request->getArg('pagename')
-                and !$dbi->isWikiPage($page)
+                and ! $dbi->isWikiPage($page)
             ) {
                     // BackLinks plugin is more than likely being called
                     // upon for an empty page on said page, while either

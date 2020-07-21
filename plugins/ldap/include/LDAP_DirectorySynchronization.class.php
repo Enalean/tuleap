@@ -61,7 +61,7 @@ class LDAP_DirectorySynchronization
         AND ldap_id <> ""';
 
         $res = db_query($sql);
-        if ($res && !db_error()) {
+        if ($res && ! db_error()) {
             $nbr_all_users         = db_numrows($res);
             $users_are_suspendable = $this->getLdapUserManager()->areUsersSupendable($nbr_all_users);
             while ($row = db_fetch_array($res)) {
@@ -176,7 +176,7 @@ class LDAP_DirectorySynchronization
 
     public function getLdapUserManager()
     {
-        if (!isset($this->lum)) {
+        if (! isset($this->lum)) {
             $this->lum = new LDAP_UserManager($this->ldap, LDAP_UserSync::instance());
         }
         return $this->lum;

@@ -76,7 +76,7 @@ class ByFieldGroupPermissions
 
     public function hasNoAccess(ByFieldUGroup $ugroup): bool
     {
-        return !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
+        return ! isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
     public function hasSubmitPermission(ByFieldUGroup $ugroup): bool
@@ -86,7 +86,7 @@ class ByFieldGroupPermissions
 
     public function hasReadOnlyPermission(ByFieldUGroup $ugroup): bool
     {
-        return isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
+        return isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->ugroups_permissions[$ugroup->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
     public function hasUpdatePermission(ByFieldUGroup $ugroup): bool

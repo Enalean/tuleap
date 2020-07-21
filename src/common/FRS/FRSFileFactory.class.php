@@ -82,7 +82,7 @@ class FRSFileFactory
         }
 
         $file = null;
-        if (!$dar->isError() && $dar->valid()) {
+        if (! $dar->isError() && $dar->valid()) {
             $data_array = $dar->current();
             $file = FRSFileFactory::getFRSFileFromArray($data_array);
         }
@@ -101,7 +101,7 @@ class FRSFileFactory
         $dar = $dao->searchByReleaseId($_id);
 
         $files = array();
-        if (!$dar->isError() && $dar->valid()) {
+        if (! $dar->isError() && $dar->valid()) {
             while ($dar->valid()) {
                 $data_array = $dar->current();
                 $files[] = FRSFileFactory::getFRSFileFromArray($data_array);
@@ -123,7 +123,7 @@ class FRSFileFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -146,7 +146,7 @@ class FRSFileFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         }
 
@@ -209,7 +209,7 @@ class FRSFileFactory
 
     public function &_getFRSFileDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
@@ -291,7 +291,7 @@ class FRSFileFactory
     {
         $this->logger->debug('createFile start');
         $rule = new Rule_FRSFileName();
-        if (!$rule->isValid($file->getFileName())) {
+        if (! $rule->isValid($file->getFileName())) {
             throw new FRSFileIllegalNameException($file);
         }
         $rel = $file->getRelease();
@@ -312,13 +312,13 @@ class FRSFileFactory
 
         clearstatcache();
         $filePath = $this->getSrcDir($rel->getProject()) . '/' . $file->getFileName();
-        if (!file_exists($filePath)) {
+        if (! file_exists($filePath)) {
             throw new FRSFileInvalidNameException($file);
         }
 
         if (0 != ($extraFlags & self::COMPUTE_MD5)) {
             $file->setComputedMd5(PHP_BigFile::getMd5Sum($filePath));
-            if (!$this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())) {
+            if (! $this->compareMd5Checksums($file->getComputedMd5(), $file->getReferenceMd5())) {
                 throw new FRSFileMD5SumException($file);
             }
         }
@@ -368,7 +368,7 @@ class FRSFileFactory
         // Remove last (empty) element
         array_pop($files);
         foreach ($files as $file) {
-            if (!preg_match('/^\./', $file[0])) {
+            if (! preg_match('/^\./', $file[0])) {
                 $uploaded_file_names[] = $file;
             }
         }
@@ -555,11 +555,11 @@ class FRSFileFactory
     {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchStagingCandidates();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $moveStatus = true;
             foreach ($dar as $row) {
                 $file = new FRSFile($row);
-                if (!$this->moveDeletedFileToStagingArea($file, $backend)) {
+                if (! $this->moveDeletedFileToStagingArea($file, $backend)) {
                     $moveStatus = false;
                 }
             }
@@ -587,7 +587,7 @@ class FRSFileFactory
         $stagingDir  = dirname($stagingPath);
         $moveStatus = true;
         $dao = $this->_getFRSFileDao();
-        if (!is_dir($stagingDir)) {
+        if (! is_dir($stagingDir)) {
             $moveStatus = mkdir($stagingDir, 0750, true);
         }
         $moveStatus = $dao->setFileInDeletedList($file->getFileId()) && $moveStatus;
@@ -598,10 +598,10 @@ class FRSFileFactory
             $backend->log("File " . $file->getFileLocation() . "(" . $file->getFileID() . ") doesn't exist. It cannot be moved to staging area. Marked as purged", Backend::LOG_WARNING);
             $moveStatus = false;
         }
-        if (!$moveStatus) {
+        if (! $moveStatus) {
             $backend->log("Error while moving file " . $file->getFileLocation() . "(" . $file->getFileID() . ") to staging area", Backend::LOG_ERROR);
         }
-        if (!$this->deleteEmptyReleaseDirectory($file, $backend)) {
+        if (! $this->deleteEmptyReleaseDirectory($file, $backend)) {
             $moveStatus = false;
         }
         return $moveStatus;
@@ -619,14 +619,14 @@ class FRSFileFactory
     {
         $deleteState = true;
         $frsrf = $this->_getFRSReleaseFactory();
-        if (!$frsrf->deleteProjectReleases($groupId)) {
+        if (! $frsrf->deleteProjectReleases($groupId)) {
             $deleteState = false;
         }
         $frspf = $frsrf->_getFRSPackageFactory();
-        if (!$frspf->deleteProjectPackages($groupId)) {
+        if (! $frspf->deleteProjectPackages($groupId)) {
             $deleteState = false;
         }
-        if (!$this->moveDeletedFilesToStagingArea($backend)) {
+        if (! $this->moveDeletedFilesToStagingArea($backend)) {
             $deleteState = false;
         }
         return $deleteState;
@@ -646,7 +646,7 @@ class FRSFileFactory
         try {
             $dir = new DirectoryIterator($directory);
             foreach ($dir as $f) {
-                if (!$f->isDot()) {
+                if (! $f->isDot()) {
                     $nbFiles++;
                 }
             }
@@ -692,7 +692,7 @@ class FRSFileFactory
     {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToPurge($time);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $purgeState = true;
             if ($dar->rowCount() > 0) {
                 foreach ($dar as $row) {
@@ -742,7 +742,7 @@ class FRSFileFactory
             $has_been_archived = $this->archiveBeforePurge($file, $backend);
             if ($has_been_archived) {
                 if (unlink($this->getStagingPath($file))) {
-                    if (!$dao->setPurgeDate($file->getFileID(), time())) {
+                    if (! $dao->setPurgeDate($file->getFileID(), time())) {
                         $backend->log("File " . $this->getStagingPath($file) . " not purged, Set purge date in DB fail", Backend::LOG_ERROR);
                         return false;
                     }
@@ -752,7 +752,7 @@ class FRSFileFactory
             $backend->log("File " . $this->getStagingPath($file) . " not purged, unlink failed", Backend::LOG_ERROR);
             return false;
         }
-        if (!$dao->setPurgeDate($file->getFileID(), time())) {
+        if (! $dao->setPurgeDate($file->getFileID(), time())) {
             $backend->log("File " . $this->getStagingPath($file) . " not found on file system and not purged, Set purge date in DB fail", Backend::LOG_ERROR);
             return false;
         }
@@ -777,17 +777,17 @@ class FRSFileFactory
                 $nbRel   = 0;
                 $relIter = new DirectoryIterator($prj->getPathname());
                 foreach ($relIter as $rel) {
-                    if (!$rel->isDot()) {
+                    if (! $rel->isDot()) {
                         // Files
                         $nbFiles  = 0;
                         $fileIter = new DirectoryIterator($rel->getPathname());
                         foreach ($fileIter as $file) {
-                            if (!$file->isDot()) {
+                            if (! $file->isDot()) {
                                 $nbFiles++;
                             }
                         }
                         if ($nbFiles === 0) {
-                            if (!rmdir($rel->getPathname())) {
+                            if (! rmdir($rel->getPathname())) {
                                 $backend->log("Error while removing " . $rel->getPathname() . "release folder", Backend::LOG_ERROR);
                                 return false;
                             }
@@ -797,7 +797,7 @@ class FRSFileFactory
                     }
                 }
                 if ($nbRel === 0) {
-                    if (!rmdir($prj->getPathname())) {
+                    if (! rmdir($prj->getPathname())) {
                         $backend->log("Error while removing " . $prj->getPathname() . " project folder", Backend::LOG_ERROR);
                         return false;
                     }
@@ -929,10 +929,10 @@ class FRSFileFactory
     {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $dao = $this->_getFRSFileDao();
-        if (!$release->isDeleted()) {
+        if (! $release->isDeleted()) {
             $stagingPath = $this->getStagingPath($file);
             if (file_exists($stagingPath)) {
-                if (!is_dir(dirname($file->getFileLocation()))) {
+                if (! is_dir(dirname($file->getFileLocation()))) {
                     mkdir(dirname($file->getFileLocation()), 0755, true);
                     $backend->chgrp(dirname($file->getFileLocation()), ForgeConfig::get('sys_http_user'));
                 }
@@ -966,12 +966,12 @@ class FRSFileFactory
     {
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchFilesToRestore();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             if ($dar->rowCount() > 0) {
                 $restoreState = true;
                 foreach ($dar as $row) {
                     $file = new FRSFile($row);
-                    if (!$this->restoreFile($file, $backend)) {
+                    if (! $this->restoreFile($file, $backend)) {
                         $restoreState = false;
                     }
                 }
@@ -992,7 +992,7 @@ class FRSFileFactory
     public function markFileToBeRestored($file)
     {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseID(), null, null, true);
-        if (!$release->isDeleted()) {
+        if (! $release->isDeleted()) {
             $dao = $this->_getFRSFileDao();
             return $dao->markFileToBeRestored($file->getFileID());
         }

@@ -67,7 +67,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('filemodule_monitor', 'anonymous')) {
+        if (! $this->db->columnNameExists('filemodule_monitor', 'anonymous')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column anonymous not created in filemodule_monitor');
         }
     }

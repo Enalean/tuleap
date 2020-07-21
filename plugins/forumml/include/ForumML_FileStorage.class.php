@@ -123,7 +123,7 @@ class ForumML_FileStorage
         $path = '';
         foreach ($path_elements as $elem) {
             $path .= $elem . '/';
-            if (!is_dir($path)) {
+            if (! is_dir($path)) {
                 mkdir($path, 0755);
             }
         }

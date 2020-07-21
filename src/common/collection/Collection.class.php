@@ -49,11 +49,11 @@ class Collection
     {
         $compare_with_equals = method_exists($wanted, 'equals');
         $found = false;
-        if (!$compare_with_equals) {
+        if (! $compare_with_equals) {
             return in_array($wanted, $this->elements);
         } else {
             $it = $this->iterator();
-            while (!$found && $it->valid()) {
+            while (! $found && $it->valid()) {
                 $element = $it->current();
                 if ($wanted->equals($element)) {
                     $found = true;
@@ -87,7 +87,7 @@ class Collection
             $is_identical = true;
             while ($it->valid() && $is_identical) {
                 $val = $it->current();
-                if (!($obj->contains($val))) {
+                if (! ($obj->contains($val))) {
                     $is_identical = false;
                 }
                 $it->next();
@@ -100,7 +100,7 @@ class Collection
                 $is_identical = true;
                 while ($it->valid() && $is_identical) {
                     $val = $it->current();
-                    if (!($this->contains($val))) {
+                    if (! ($this->contains($val))) {
                         $is_identical = false;
                     }
                     $it->next();
@@ -140,7 +140,7 @@ class Collection
         foreach ($this->elements as $key => $value) {
             if (
                 ($compare_with_equals && $wanted->equals($value))
-                || (!$compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))
+                || (! $compare_with_equals && ((method_exists($value, 'equals') && $value->equals($wanted)) || ($wanted === $value)))
             ) {
                 unset($this->elements[$key]);
                 return true;

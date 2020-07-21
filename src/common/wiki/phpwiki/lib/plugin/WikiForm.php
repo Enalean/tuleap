@@ -73,17 +73,17 @@ class WikiPlugin_WikiForm extends WikiPlugin
         switch ($action) {
             case 'loadfile':
                 $input['name'] = 'source';
-                if (!$default) {
+                if (! $default) {
                     $input['value'] = DEFAULT_DUMP_DIR;
                 }
-                if (!$buttontext) {
+                if (! $buttontext) {
                     $buttontext = _("Load File");
                 }
                 $class = false;
                 break;
             case 'login':
                 $input['name'] = 'source';
-                if (!$buttontext) {
+                if (! $buttontext) {
                     $buttontext = _("Login");
                 }
                 $class = 'wikiadmin';
@@ -95,7 +95,7 @@ class WikiPlugin_WikiForm extends WikiPlugin
                                                  'type'  => 'hidden')));
                 $input['name'] = 'file';
                 $input['type'] = 'file';
-                if (!$buttontext) {
+                if (! $buttontext) {
                     $buttontext = _("Upload");
                 }
                 $class = false; // local OS function, so use native OS button

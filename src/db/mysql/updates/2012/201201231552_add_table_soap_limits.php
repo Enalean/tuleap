@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('soap_call_counter')) {
+        if (! $this->db->tableNameExists('soap_call_counter')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('soap_call_counter table is missing');
         }
     }

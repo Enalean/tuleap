@@ -38,7 +38,7 @@ class Planning_ImportTemplateFormPresenter
 
     public function importTemplateHeader()
     {
-        return  dgettext('tuleap-agiledashboard', 'Import a configuration from a template file');
+        return dgettext('tuleap-agiledashboard', 'Import a configuration from a template file');
     }
 
     public function btnSubmit()

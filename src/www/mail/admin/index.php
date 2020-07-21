@@ -26,7 +26,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         if ($request->existAndNonEmpty('add_list')) {
             $list_password = sodium_bin2base64(random_bytes(12), SODIUM_BASE64_VARIANT_URLSAFE_NO_PADDING);
             $list_name = $request->getValidated('list_name', 'string', '');
-            if (!$list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
+            if (! $list_name || strlen($list_name) < ForgeConfig::get('sys_lists_name_min_length')) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('mail_admin_index', 'provide_correct_list_name'));
             }
             if (! preg_match('/(^([a-zA-Z\_0-9\.-]*))$/', $list_name)) {
@@ -65,7 +65,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $result = db_query($sql);
                     $group_list_id = db_insertid($result);
 
-                    if (!$result) {
+                    if (! $result) {
                         $feedback .= ' ' . $Language->getText('mail_admin_index', 'add_list_err') . ' ';
                         echo db_error();
                     } else {
@@ -106,7 +106,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     "description='" . db_es(htmlspecialchars($description)) . "' " .
                     "WHERE group_list_id='" . db_ei($group_list_id) . "' AND group_id='" . db_ei($group_id) . "'";
             $result = db_query($sql);
-            if (!$result || db_affected_rows($result) < 1) {
+            if (! $result || db_affected_rows($result) < 1) {
                 $feedback .= ' ' . $Language->getText('mail_admin_index', 'upate_status_err') . ' ';
                 echo db_error();
             } else {
@@ -172,7 +172,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
         $result = db_query($sql);
         $rows = db_numrows($result);
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             echo '
                 <H2>' . $Language->getText('mail_admin_index', 'no_list_found') . '</H2>
                 <P>
@@ -244,7 +244,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
     /*
       Not logged in or insufficient privileges
      */
-    if (!$group_id) {
+    if (! $group_id) {
         exit_no_group();
     } else {
         exit_permission_denied();

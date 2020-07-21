@@ -71,7 +71,7 @@ class Docman_MetadataFactory
     private function getDao()
     {
         static $_plugin_docman_metadata_dao_instance;
-        if (!$_plugin_docman_metadata_dao_instance) {
+        if (! $_plugin_docman_metadata_dao_instance) {
             $_plugin_docman_metadata_dao_instance = new Docman_MetadataDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_dao_instance;
@@ -345,7 +345,7 @@ class Docman_MetadataFactory
         } else {
             $dao = $this->getDao();
             $dar = $dao->searchValueById($md->getId(), $item->getId());
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $value = $this->_getMetadataValueFromRow($md, $dar->current());
             }
         }

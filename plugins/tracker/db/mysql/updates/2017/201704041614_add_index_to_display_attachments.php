@@ -57,7 +57,7 @@ class b201704041614_add_index_to_display_attachments extends ForgeUpgrade_Bucket
     private function addIndex($table_name, $index, $sql)
     {
         $this->log->info('Add index ' . $table_name);
-        if (!$this->indexNameExists($table_name, $index)) {
+        if (! $this->indexNameExists($table_name, $index)) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->db->dbh->errorInfo();

@@ -125,7 +125,7 @@ class ReferenceManager
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c();
         }
@@ -185,9 +185,9 @@ class ReferenceManager
     public function createReference(&$ref, $force = false)
     {
         $reference_dao = $this->_getReferenceDao();
-        if (!$force) {
+        if (! $force) {
             // Check if keyword is valid [a-z0-9_]
-            if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
+            if (! $this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
                 return false;
             }
             // Check that there is no system reference with the same keyword
@@ -230,11 +230,11 @@ class ReferenceManager
         $reference_dao = $this->_getReferenceDao();
 
         // Check if keyword is valid [a-z0-9_]
-        if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
+        if (! $this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
             return false;
         }
         // Check that it is a system reference
-        if (!$ref->isSystemReference()) {
+        if (! $ref->isSystemReference()) {
             return false;
         }
         if ($ref->getGroupId() != 100) {
@@ -264,14 +264,14 @@ class ReferenceManager
     {
         $reference_dao = $this->_getReferenceDao();
         // Check if keyword is valid [a-z0-9_]
-        if (!$this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
+        if (! $this->getReferenceValidator()->isValidKeyword($ref->getKeyword())) {
             return false;
         }
 
         // Check list of existing keywords
         $num_args = Reference::computeNumParam($ref->getLink());
         $refid = $this->_keywordAndNumArgsExists($ref->getKeyword(), $num_args, $ref->getGroupId());
-        if (!$force) {
+        if (! $force) {
             if ($refid) {
                 if ($refid != $ref->getId()) {
                     // The same keyword exists for another reference
@@ -616,7 +616,7 @@ class ReferenceManager
         $locale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
 
-        if (!preg_match('/[^\s]{5000,}/', $html)) {
+        if (! preg_match('/[^\s]{5000,}/', $html)) {
             $exp = $this->_getExpForRef();
 
             $html = $this->convertToUTF8($html);
@@ -624,7 +624,7 @@ class ReferenceManager
                 $exp,
                 function ($match) {
                     $ref_instance = $this->_getReferenceInstanceFromMatch($match);
-                    if (!$ref_instance) {
+                    if (! $ref_instance) {
                         return $match['key'] . " #" . $match['project_name'] . $match['value'] . $match['after_reference'];
                     }
                     return $this->buildLinkForReference($ref_instance) . $match['after_reference'];
@@ -1162,14 +1162,14 @@ class ReferenceManager
 
     public function _initProjectReferences($group_id)
     {
-        if (!isset($this->activeReferencesByProject[$group_id])) {
+        if (! isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
             $reference_dao = $this->_getReferenceDao();
             $dar = $reference_dao->searchActiveByGroupID($group_id);
             while ($row = $dar->getRow()) {
                 $ref = $this->_buildReference($row);
                 $num_args = $ref->getNumParam();
-                if (!isset($p[$ref->getKeyword()])) {
+                if (! isset($p[$ref->getKeyword()])) {
                     $p[$ref->getKeyword()] = array();
                 }
                 if (isset($p[$ref->getKeyword()][$num_args])) {
@@ -1190,7 +1190,7 @@ class ReferenceManager
         $lowercase_name = strtolower($name);
         if (! isset($this->groupIdByName[$lowercase_name])) {
             $project = ProjectManager::instance()->getProjectByCaseInsensitiveUnixName($name);
-            if ($project && !$project->isError()) {
+            if ($project && ! $project->isError()) {
                 $this->groupIdByName[$lowercase_name] = $project->getID();
             } else {
                 $this->groupIdByName[$lowercase_name] = '';
@@ -1252,7 +1252,7 @@ class ReferenceManager
      */
     public function _getReferenceDao()
     {
-        if (!is_a($this->referenceDao, 'ReferenceDao')) {
+        if (! is_a($this->referenceDao, 'ReferenceDao')) {
             $this->referenceDao = new ReferenceDao(CodendiDataAccess::instance());
         }
         return $this->referenceDao;
@@ -1260,7 +1260,7 @@ class ReferenceManager
 
     public function _getCrossReferenceDao()
     {
-        if (!is_a($this->cross_reference_dao, 'CrossReferenceDao')) {
+        if (! is_a($this->cross_reference_dao, 'CrossReferenceDao')) {
             $this->cross_reference_dao = new CrossReferenceDao();
         }
         return $this->cross_reference_dao;

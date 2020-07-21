@@ -41,7 +41,7 @@ class FileFinder
     public function __construct($path = false)
     {
         $this->_pathsep = $this->_get_syspath_separator();
-        if (!isset($this->_path) and $path === false) {
+        if (! isset($this->_path) and $path === false) {
             $path = $this->_get_include_path();
         }
         $this->_path = $path;
@@ -126,7 +126,7 @@ class FileFinder
             return $ret;
         }
 
-        if (!$this->_is_abs($file)) {
+        if (! $this->_is_abs($file)) {
             if (($dir = $this->_search_path($file)) && is_file($dir . $this->_pathsep . $file)) {
                 $this->_append_to_include_path($dir);
                 return include_once($file);
@@ -151,7 +151,7 @@ class FileFinder
      */
     public function _get_syspath_separator()
     {
-        if (!empty($this->_pathsep)) {
+        if (! empty($this->_pathsep)) {
             return $this->_pathsep;
         } elseif (isWindowsNT()) {
             return "/"; // we can safely use '/'
@@ -322,7 +322,7 @@ class FileFinder
     public function _append_to_include_path($dir)
     {
         $dir = $this->slashifyPath($dir);
-        if (!in_array($dir, $this->_path)) {
+        if (! in_array($dir, $this->_path)) {
             $this->_path[] = $dir;
         }
         /*
@@ -382,20 +382,20 @@ class FileFinder
      */
     public function _get_lang()
     {
-        if (!empty($GLOBALS['LANG'])) {
+        if (! empty($GLOBALS['LANG'])) {
             return $GLOBALS['LANG'];
         }
 
         foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES') as $var) {
             $lang = setlocale(constant($var), 0);
-            if (!empty($lang)) {
+            if (! empty($lang)) {
                 return $lang;
             }
         }
 
         foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES', 'LANG') as $var) {
             $lang = getenv($var);
-            if (!empty($lang)) {
+            if (! empty($lang)) {
                 return $lang;
             }
         }
@@ -470,7 +470,7 @@ class LocalizedFileFinder extends FileFinder
         $path = array();
 
         $lang = $this->_get_lang();
-        assert(!empty($lang));
+        assert(! empty($lang));
 
         if ($locales = $this->locale_versions($lang)) {
             foreach ($locales as $lang) {
@@ -507,8 +507,8 @@ class LocalizedButtonFinder extends FileFinder
         $path = array();
 
         $lang = $this->_get_lang();
-        assert(!empty($lang));
-        assert(!empty($WikiTheme));
+        assert(! empty($lang));
+        assert(! empty($WikiTheme));
 
         if (is_object($WikiTheme)) {
             $langs = $this->locale_versions($lang);
@@ -530,7 +530,7 @@ class LocalizedButtonFinder extends FileFinder
 function FindFile($file, $missing_okay = false, $slashify = false)
 {
     static $finder;
-    if (!isset($finder)) {
+    if (! isset($finder)) {
         $finder = new FileFinder();
         // remove "/lib" from dirname(__FILE__)
         $wikidir = preg_replace('/.lib$/', '', dirname(__FILE__));
@@ -538,7 +538,7 @@ function FindFile($file, $missing_okay = false, $slashify = false)
         $finder->_append_to_include_path(dirname(__FILE__) . "/pear");
         $finder->_prepend_to_include_path($wikidir);
         // Don't override existing INCLUDE_PATH config.
-        if (!defined("INCLUDE_PATH")) {
+        if (! defined("INCLUDE_PATH")) {
             define("INCLUDE_PATH", implode($finder->_get_ini_separator(), $finder->_path));
         }
     }
@@ -554,7 +554,7 @@ function FindFile($file, $missing_okay = false, $slashify = false)
 function FindLocalizedFile($file, $missing_okay = false, $re_init = false)
 {
     static $finder;
-    if ($re_init or !isset($finder)) {
+    if ($re_init or ! isset($finder)) {
         $finder = new LocalizedFileFinder();
     }
     return $finder->findFile($file, $missing_okay);
@@ -563,7 +563,7 @@ function FindLocalizedFile($file, $missing_okay = false, $re_init = false)
 function FindLocalizedButtonFile($file, $missing_okay = false, $re_init = false)
 {
     static $buttonfinder;
-    if ($re_init or !isset($buttonfinder)) {
+    if ($re_init or ! isset($buttonfinder)) {
         $buttonfinder = new LocalizedButtonFinder();
     }
     return $buttonfinder->findFile($file, $missing_okay);
@@ -581,7 +581,7 @@ function FindLocalizedButtonFile($file, $missing_okay = false, $re_init = false)
 function NormalizeLocalFileName($file)
 {
     static $finder;
-    if (!isset($finder)) {
+    if (! isset($finder)) {
         $finder = new FileFinder();
     }
     // remove "/lib" from dirname(__FILE__)
@@ -606,13 +606,13 @@ function NormalizeLocalFileName($file)
 function NormalizeWebFileName($file)
 {
     static $finder;
-    if (!isset($finder)) {
+    if (! isset($finder)) {
         $finder = new FileFinder();
     }
     if (defined("DATA_PATH")) {
         $wikipath = DATA_PATH;
         $wikipath = $finder->_strip_last_pathchar($wikipath);
-        if (!$file) {
+        if (! $file) {
             return $finder->forcePathSlashes($wikipath);
         } else {
             return $finder->forcePathSlashes($wikipath . '/' . $file);
@@ -639,7 +639,7 @@ function isWindows95()
     if (isset($win95)) {
         return $win95;
     }
-    $win95 = isWindows() and !isWindowsNT();
+    $win95 = isWindows() and ! isWindowsNT();
     return $win95;
 }
 

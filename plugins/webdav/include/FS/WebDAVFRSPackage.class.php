@@ -96,11 +96,11 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
         // Check for errors
 
         // Check if Release exists
-        if (!$release->exist()) {
+        if (! $release->exist()) {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'release_not_available'));
         }
 
-        if (!$release->userCanRead($this->getUser())) {
+        if (! $release->userCanRead($this->getUser())) {
             throw new Sabre_DAV_Exception_Forbidden($GLOBALS['Language']->getText('plugin_webdav_common', 'package_access_not_authorized'));
         }
 
@@ -238,7 +238,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
      */
     public function exist()
     {
-        return($this->getPackage() && !$this->getPackage()->isDeleted());
+        return($this->getPackage() && ! $this->getPackage()->isDeleted());
     }
 
     /**
@@ -314,7 +314,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
     {
         $utils = $this->getUtils();
         if ($this->userCanWrite()) {
-            if (!$utils->getPackageFactory()->isPackageNameExist($name, $this->getProject()->getGroupId())) {
+            if (! $utils->getPackageFactory()->isPackageNameExist($name, $this->getProject()->getGroupId())) {
                 $this->getPackage()->setName(htmlspecialchars($name));
                 $utils->getPackageFactory()->update($this->getPackage());
             } else {
@@ -363,7 +363,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory
     {
         if ($this->userCanWrite()) {
             $utils = $this->getUtils();
-            if (!$utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackageId())) {
+            if (! $utils->getReleaseFactory()->isReleaseNameExist($name, $this->getPackageId())) {
                 $releaseData['name'] = htmlspecialchars($name);
                 $releaseData['package_id'] = $this->getPackageId();
                 $releaseData['notes'] = '';

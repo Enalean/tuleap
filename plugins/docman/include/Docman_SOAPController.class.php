@@ -75,7 +75,7 @@ class Docman_SOAPController extends Docman_Controller
     {
         switch ($view) {
             case 'permissions':
-                if (!$this->userCanManage($item->getId())) {
+                if (! $this->userCanManage($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to set permissions for this item.'));
                 } else {
                     $this->action = $view;
@@ -85,7 +85,7 @@ class Docman_SOAPController extends Docman_Controller
             case 'appendFileChunk':
             case 'new_version':
             case 'update':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                 } else {
                     $this->action = $view;
@@ -98,7 +98,7 @@ class Docman_SOAPController extends Docman_Controller
             case 'getTreeInfo':
             case 'getFileContents':
             case 'getFileChunk':
-                if (!$this->userCanRead($item->getId())) {
+                if (! $this->userCanRead($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to view this item.'));
                 } else {
                     $this->action = $view;

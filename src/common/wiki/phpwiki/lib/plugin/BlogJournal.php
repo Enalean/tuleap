@@ -51,7 +51,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
     {
         if (is_array($argstr)) { // can do with array also.
             $args = $argstr;
-            if (!isset($args['order'])) {
+            if (! isset($args['order'])) {
                 $args['order'] = 'reverse';
             }
         } else {
@@ -65,7 +65,7 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
                 $args['user'] = '';
             }
         }
-        if (!$args['user'] or $args['user'] == ADMIN_USER) {
+        if (! $args['user'] or $args['user'] == ADMIN_USER) {
             if (BLOG_EMPTY_DEFAULT_PREFIX) {
                 $args['user'] = '';         // "Blogs/day" pages
             } else {
@@ -95,10 +95,10 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
         if ($args['user'] == $user->UserName()) {
             $html->pushContent(WikiLink(_("WikiBlog"), 'known', "New entry"));
         }
-        if (!$i) {
+        if (! $i) {
             return HTML(HTML::h3(_("No Blog Entries")), $html);
         }
-        if (!$args['noheader']) {
+        if (! $args['noheader']) {
             return HTML(
                 HTML::h3(sprintf(_("Blog Entries for %s:"), $this->_monthTitle($args['month']))),
                 $html

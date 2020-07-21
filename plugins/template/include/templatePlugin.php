@@ -33,7 +33,7 @@ class templatePlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\Template\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;

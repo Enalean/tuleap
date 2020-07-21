@@ -42,7 +42,7 @@ class Tracker_FormElement_Field_List_BindFactory
 
     private function getUgroupsValueDao()
     {
-        if (!$this->ugroups_value_dao) {
+        if (! $this->ugroups_value_dao) {
             $this->ugroups_value_dao = new Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao();
         }
         return $this->ugroups_value_dao;

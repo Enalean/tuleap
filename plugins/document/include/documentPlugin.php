@@ -89,7 +89,7 @@ class documentPlugin extends Plugin // phpcs:ignore
 
     public function getOldPluginInfo(): DocmanPluginInfo
     {
-        if (!$this->old_docman_plugin_info) {
+        if (! $this->old_docman_plugin_info) {
             $this->old_docman_plugin_info = new DocmanPluginInfo($this->getDocmanPlugin());
         }
         return $this->old_docman_plugin_info;

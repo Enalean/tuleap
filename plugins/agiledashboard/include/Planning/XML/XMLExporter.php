@@ -138,7 +138,7 @@ class XMLExporter
      */
     private function checkString($value, $value_denomination): void
     {
-        if (! $value ||  (is_string($value) && $value == '')) {
+        if (! $value || (is_string($value) && $value == '')) {
             throw new AgileDashboard_XMLExporterUnableToGetValueException('Unable to get value for attribute: ' . $value_denomination);
         }
     }

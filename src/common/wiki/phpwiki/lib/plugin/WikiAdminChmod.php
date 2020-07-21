@@ -110,7 +110,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
     public function run($dbi, $argstr, &$request, $basepage)
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
-        if (!DEBUG) {
+        if (! DEBUG) {
             return $this->disabled("WikiAdminChmod not yet enabled. Set DEBUG to try it.");
         }
 
@@ -119,21 +119,21 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) {
+        if (! $p) {
             $p = $this->_list;
         }
         $post_args = $request->getArg('admin_chmod');
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost()) {
+        if ($p && ! $request->isPost()) {
             $pages = $p;
         }
         if (
             $p && $request->isPost() &&
-            !empty($post_args['chmod']) && empty($post_args['cancel'])
+            ! empty($post_args['chmod']) && empty($post_args['cancel'])
         ) {
             // without individual PagePermissions:
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -148,7 +148,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
                 );
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['perm'])) {
+                if (! empty($post_args['perm'])) {
                     $next_action = 'verify';
                 }
                 foreach ($p as $name => $c) {
@@ -220,7 +220,7 @@ class WikiPlugin_WikiAdminChmod extends WikiPlugin_WikiAdminSelect
         $checkbox = HTML::input(array('type' => 'checkbox',
                                       'name' => 'admin_chmod[updatechildren]',
                                       'value' => 1));
-        if (!empty($post_args['updatechildren'])) {
+        if (! empty($post_args['updatechildren'])) {
             $checkbox->setAttr('checked', 'checked');
         }
         $header->pushContent(

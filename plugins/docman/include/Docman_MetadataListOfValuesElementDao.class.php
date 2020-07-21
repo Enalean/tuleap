@@ -256,13 +256,13 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
     {
         $updated = false;
         $id = false;
-        if (!isset($row['value_id'])) {
+        if (! isset($row['value_id'])) {
             return false;
         }
         $id = (int) $row['value_id'];
         if ($id) {
             $dar = $this->serachByValueId($id);
-            if (!$dar->isError() && $dar->valid()) {
+            if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
                 $set_array = array();
                 foreach ($row as $key => $value) {

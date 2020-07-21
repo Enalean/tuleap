@@ -77,7 +77,7 @@ class Docman_PermissionsManager
      */
     public static function instance($groupId)
     {
-        if (!isset(self::$instance[$groupId])) {
+        if (! isset(self::$instance[$groupId])) {
             $project = ProjectManager::instance()->getProject($groupId);
             self::$instance[$groupId] = new Docman_PermissionsManager(
                 $project,
@@ -151,7 +151,7 @@ class Docman_PermissionsManager
      */
     public function getLockFactory()
     {
-        if (!isset($this->lockFactory)) {
+        if (! isset($this->lockFactory)) {
             $this->lockFactory = new \Docman_LockFactory(new \Docman_LockDao(), new Docman_Log());
         }
         return $this->lockFactory;
@@ -166,7 +166,7 @@ class Docman_PermissionsManager
     */
     public function userCanAccess($user, $item_id)
     {
-        if (!isset($this->cache_access[$user->getId()][$item_id])) {
+        if (! isset($this->cache_access[$user->getId()][$item_id])) {
             $can_read = $this->userCanRead($user, $item_id);
             if ($can_read) {
                 $item_factory = $this->_getItemFactory();
@@ -200,7 +200,7 @@ class Docman_PermissionsManager
     */
     public function userCanRead($user, $item_id)
     {
-        if (!isset($this->cache_read[$user->getId()][$item_id])) {
+        if (! isset($this->cache_read[$user->getId()][$item_id])) {
             $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->_setCanRead($user->getId(), $item_id, $can_access_project);
@@ -233,7 +233,7 @@ class Docman_PermissionsManager
     */
     public function userCanWrite($user, $item_id)
     {
-        if (!isset($this->cache_write[$user->getId()][$item_id])) {
+        if (! isset($this->cache_write[$user->getId()][$item_id])) {
             $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->_setCanWrite($user->getId(), $item_id, $can_access_project);
@@ -245,7 +245,7 @@ class Docman_PermissionsManager
             $itemLocked = $this->_itemIsLockedForUser($user, (int) $item_id);
 
             $canWrite = false;
-            if (!$itemLocked) {
+            if (! $itemLocked) {
                 $canWrite = $hasWritePerm;
             }
 
@@ -334,7 +334,7 @@ class Docman_PermissionsManager
     */
     public function userCanManage($user, $item_id)
     {
-        if (!isset($this->cache_manage[$user->getId()][$item_id])) {
+        if (! isset($this->cache_manage[$user->getId()][$item_id])) {
             $can_access_project = $this->canUserAccessProject($user, $this->getProject());
             if (! $can_access_project) {
                 $this->cache_manage[$user->getId()][$item_id] = $can_access_project;
@@ -369,7 +369,7 @@ class Docman_PermissionsManager
             /** @psalm-suppress DeprecatedFunction */
             $res = permission_db_get_defaults($permission_type);
         }
-        while (!$has_permission && ($row = db_fetch_array($res))) {
+        while (! $has_permission && ($row = db_fetch_array($res))) {
             // should work even for anonymous users
             $has_permission = ugroup_user_is_member($user->getId(), $row['ugroup_id'], $this->getProject()->getID());
         }
@@ -539,7 +539,7 @@ class Docman_PermissionsManager
                 return;
             }
             foreach ($lock_rows as $row) {
-                if ($row['user_id'] != $userId && !$this->cache_manage[$userId][$row['item_id']]) {
+                if ($row['user_id'] != $userId && ! $this->cache_manage[$userId][$row['item_id']]) {
                     $this->cache_write[$userId][$row['item_id']] = false;
                 }
             }
@@ -614,7 +614,7 @@ class Docman_PermissionsManager
      */
     public function _revokeIfNotGranted(&$array, $userId, $objectId)
     {
-        if (!isset($array[$userId][$objectId])) {
+        if (! isset($array[$userId][$objectId])) {
             $array[$userId][$objectId] = false;
         }
     }

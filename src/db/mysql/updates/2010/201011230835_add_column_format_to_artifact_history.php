@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('artifact_history', 'format')) {
+        if (! $this->db->columnNameExists('artifact_history', 'format')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column format in table artifact_history is missing');
         }
     }

@@ -40,7 +40,7 @@ class b201409031059_add_display_time_option extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('tracker_field_date', 'display_time')) {
+        if (! $this->db->columnNameExists('tracker_field_date', 'display_time')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column display_time to tracker_field_date');
         }
     }

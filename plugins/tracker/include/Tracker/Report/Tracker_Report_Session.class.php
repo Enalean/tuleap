@@ -30,7 +30,7 @@ class Tracker_Report_Session extends Codendi_Session
         parent::__construct();
         $this->report_id         = $report_id;
         $this->report_namespace  = $report_id;
-        if (!isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed'])) {
+        if (! isset($this->session['trackers']['reports'][$this->report_namespace]['has_changed'])) {
             $this->session['trackers']['reports'][$this->report_namespace] = array(
                 'has_changed'   => false,
                 'checkout_date' => $_SERVER['REQUEST_TIME'],
@@ -123,7 +123,7 @@ class Tracker_Report_Session extends Codendi_Session
         if (isset($opts['is_advanced'])) {
             $this->set("criteria.{$field_id}.is_advanced", $opts['is_advanced']);
         }
-        if (!$this->get("criteria.$field_id.is_removed")) {
+        if (! $this->get("criteria.$field_id.is_removed")) {
             $this->set("criteria.$field_id.is_removed", 0);
         }
     }
@@ -141,7 +141,7 @@ class Tracker_Report_Session extends Codendi_Session
      */
     public function updateCriterion($field_id, $value, $opts = array())
     {
-        if (!empty($value) || is_array($value)) {
+        if (! empty($value) || is_array($value)) {
             $this->set("criteria.{$field_id}.value", $value);
         }
         if (isset($opts['is_advanced'])) {

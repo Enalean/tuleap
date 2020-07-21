@@ -137,7 +137,7 @@ class ArtifactFieldSetFactory
         $rows = db_numrows($result);
         $myArtifactFieldSets = array();
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
             return false;
         } else {
@@ -276,7 +276,7 @@ class ArtifactFieldSetFactory
                 VALUES (" . db_ei($this->ArtifactType->getID()) . ",'" . db_es($fieldset_name) . "','" . db_es($description) . "'," . db_ei($rank) . ")";
 
         $res_insert = db_query($sql);
-        if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+        if (! $res_insert || db_affected_rows($res_insert) <= 0) {
             $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
             return false;
         }
@@ -313,7 +313,7 @@ class ArtifactFieldSetFactory
             $sql = "DELETE FROM artifact_field_set
                     WHERE field_set_id=" .  db_ei($field_set_id);
             $result = db_query($sql);
-            if (!$result || db_affected_rows($result) <= 0) {
+            if (! $result || db_affected_rows($result) <= 0) {
                 $this->setError('Error: deleteArtifactFieldSet ' . db_error());
                 return false;
             }
@@ -335,7 +335,7 @@ class ArtifactFieldSetFactory
      //echo $sql;
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             return false;
         }
         return true;
@@ -368,7 +368,7 @@ class ArtifactFieldSetFactory
                 db_es($fieldset_source_array['description']) . "', " .
                 db_ei($fieldset_source_array['rank']) . ")";
             $res_insert_fieldset = db_query($sql_insert_fieldset);
-            if (!$res_insert_fieldset || db_affected_rows($res_insert_fieldset) <= 0) {
+            if (! $res_insert_fieldset || db_affected_rows($res_insert_fieldset) <= 0) {
                 $this->setError($Language->getText('tracker_common_fieldset_factory', 'ins_err', array($fieldset_source_array["field_set_id"],$atid_dest,db_error())));
                 return false;
             }

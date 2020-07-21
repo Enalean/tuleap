@@ -87,7 +87,7 @@ class MediaWikiXMLImporter
     public function import(ImportConfig $configuration, Project $project, PFUser $creator, SimpleXMLElement $xml_input, $extraction_path)
     {
         $xml_mediawiki = $xml_input->mediawiki;
-        if (!$xml_mediawiki) {
+        if (! $xml_mediawiki) {
             $this->logger->debug('No mediawiki node found into xml.');
             return true;
         }

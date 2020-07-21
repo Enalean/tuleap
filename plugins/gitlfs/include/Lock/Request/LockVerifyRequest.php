@@ -51,7 +51,7 @@ class LockVerifyRequest implements GitLfsHTTPOperation
     {
         $reference = null;
         if (isset($parameters->ref)) {
-            if (!isset($parameters->ref->name)) {
+            if (! isset($parameters->ref->name)) {
                 throw new IncorrectlyFormattedReferenceRequestException(
                     'ref value of the lock verify request is expected to be an object with a name'
                 );

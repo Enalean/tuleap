@@ -94,7 +94,7 @@ class SystemEventDao extends DataAccessObject
                     AND type IN ($types)
                     ORDER BY priority, create_date LIMIT 1";
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             // Mark event as 'RUNNING'
             if ($row = $dar->getRow()) {
                 $id = $row['id'];
