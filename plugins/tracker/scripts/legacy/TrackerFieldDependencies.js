@@ -176,6 +176,7 @@ tuleap.tracker.Field = function (id, name, label) {
                 }.bind(this)
             );
 
+            el.dispatchEvent(new Event("change"));
             //We've finished. Highlight the field to indicate to the user that it has changed (or not)
             this.highlight();
         },
