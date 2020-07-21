@@ -34,10 +34,6 @@ function ExecutionListFilter($filter) {
             ),
             all_results = [];
 
-        if (!hasAtLeastOneFilter(keyword_list, status_list)) {
-            return list;
-        }
-
         if (hasKeywords(keyword_list)) {
             all_results.push(keywordsMatcher(keyword_list, list));
         }
@@ -58,10 +54,6 @@ function ExecutionListFilter($filter) {
 
     function getSortByKey(execution) {
         return execution.definition.id;
-    }
-
-    function hasAtLeastOneFilter(keyword_list, status_list) {
-        return hasKeywords(keyword_list) || hasStatus(status_list);
     }
 
     function hasKeywords(keyword_list) {

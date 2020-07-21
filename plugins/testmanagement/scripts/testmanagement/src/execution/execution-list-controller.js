@@ -64,7 +64,7 @@ function ExecutionListCtrl(
         viewTestExecution,
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
-        shouldShowEmptyState: () => self.should_show_empty_state,
+        shouldShowEmptyState,
         isStatusHidden,
     });
 
@@ -158,12 +158,12 @@ function ExecutionListCtrl(
         $scope.search = "";
         $scope.loading = loading;
         $scope.status = {
-            passed: false,
-            failed: false,
-            blocked: false,
-            notrun: false,
+            passed: true,
+            failed: true,
+            blocked: true,
+            notrun: true,
         };
-        $scope.are_automated_tests_shown = true;
+        $scope.are_automated_tests_shown = false;
 
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
@@ -266,5 +266,19 @@ function ExecutionListCtrl(
 
     function isStatusHidden(status) {
         return $scope.status[status] === false;
+    }
+
+    function shouldShowEmptyState() {
+        const are_all_tests_filters_disabled =
+            $scope.status.passed === false &&
+            $scope.status.blocked === false &&
+            $scope.status.failed === false &&
+            $scope.status.notrun === false;
+
+        if (are_all_tests_filters_disabled) {
+            return true;
+        }
+
+        return self.should_show_empty_state;
     }
 }
