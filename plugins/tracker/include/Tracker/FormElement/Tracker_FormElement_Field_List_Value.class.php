@@ -40,6 +40,9 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
         $this->is_hidden = $is_hidden;
     }
 
+    /**
+     * @psalm-mutation-free
+    */
     public function getId()
     {
         return $this->id;
@@ -88,6 +91,9 @@ abstract class Tracker_FormElement_Field_List_Value implements Tracker_IProvideJ
 
     abstract public function __toString();
 
+    /**
+     * @psalm-mutation-free
+     */
     abstract public function getLabel();
 
     public function fetchFormatted()

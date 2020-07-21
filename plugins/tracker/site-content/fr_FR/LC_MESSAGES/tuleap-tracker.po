@@ -3804,6 +3804,9 @@ msgstr "Mappage des utilisateurs"
 msgid "Values"
 msgstr "Valeurs"
 
+msgid "Values added by users"
+msgstr "Valeurs ajoutées par des utilisateurs"
+
 msgid "Wait a minute..."
 msgstr "Attendez une minute..."
 

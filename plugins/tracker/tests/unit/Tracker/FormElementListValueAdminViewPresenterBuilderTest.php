@@ -25,6 +25,7 @@ use PHPUnit\Framework\TestCase;
 use Tracker_FormElement_Field;
 use Tracker_FormElement_Field_List_Bind_Static_ValueDao;
 use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_OpenValue;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenter;
 use Tuleap\Tracker\FormElement\FormElementListValueAdminViewPresenterBuilder;
@@ -72,7 +73,8 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
             "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=666",
             'Show/hide this value',
             'Show/hide this value',
-            ''
+            '',
+            false
         );
 
         $this->field->shouldReceive('getId')->andReturn(111);
@@ -80,7 +82,7 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
         $this->value_dao->shouldReceive('canValueBeHidden')->andReturn(true);
         $this->value_dao->shouldReceive('canValueBeDeleted')->andReturn(false);
 
-        $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator);
+        $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, false);
 
         $this->assertEquals($expected_result, $result);
     }
@@ -102,12 +104,41 @@ class FormElementListValueAdminViewPresenterBuilderTest extends TestCase
             "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100",
             "You can't hide this value since it is used in a semantic, in workflow or in field dependency",
             'cannot hide',
-            '--exclamation-hidden'
+            '--exclamation-hidden',
+            false
         );
 
         $this->field->shouldReceive('getId')->andReturn(111);
 
-        $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator);
+        $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, false);
+
+        $this->assertEquals($expected_result, $result);
+    }
+
+    public function testBuildPresenterWithCustomValue(): void
+    {
+        $value = \Mockery::mock(Tracker_FormElement_Field_List_OpenValue::class);
+        $value->shouldReceive('getId')->andReturn(100);
+        $value->shouldReceive('getLabel')->andReturn("label");
+        $value->shouldReceive('isHidden')->andReturn(false);
+
+        $decorator = \Mockery::mock(ColorpickerMountPointPresenter::class);
+
+        $expected_result = new FormElementListValueAdminViewPresenter(
+            $value,
+            $decorator,
+            true,
+            false,
+            "/plugins/tracker/?tracker=5&func=admin-formElement-update&formElement=111&bind-update=1&bind%5Bdelete%5D=100",
+            "Show/hide this value",
+            'Show/hide this value',
+            '',
+            true
+        );
+
+        $this->field->shouldReceive('getId')->andReturn(111);
+
+        $result = $this->presenter_builder->buildPresenter($this->field, $value, $decorator, true);
 
         $this->assertEquals($expected_result, $result);
     }

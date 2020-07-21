@@ -119,7 +119,7 @@ class TrackerFormElementTest extends TestCase
         $tracker_manager = Mockery::mock(TrackerManager::class);
         $user            = Mockery::mock(PFUser::class);
         $request         = Mockery::mock(HTTPRequest::class);
-        $request->shouldReceive('isAjax');
+        $request->shouldReceive('isAjax')->andReturn(false);
         ob_start();
         $formElement->displayAdminFormElement($tracker_manager, $request, $user);
         $content = ob_get_contents();

@@ -208,6 +208,7 @@ CREATE TABLE tracker_field_openlist_value(
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     field_id INT(11) UNSIGNED NOT NULL,
     label VARCHAR(255) NOT NULL DEFAULT '',
+    is_hidden BOOL DEFAULT FALSE,
     INDEX idx_search(field_id)
 ) ENGINE=InnoDB AUTO_INCREMENT=101;
 

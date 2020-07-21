@@ -260,7 +260,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             foreach ($this->getOpenValueDao()->searchByKeyword($this->getId(), $keyword, $limit - $nb) as $row) {
                 $matching_values[] = new Tracker_FormElement_Field_List_OpenValue(
                     $row['id'],
-                    $row['label']
+                    $row['label'],
+                    $row['is_hidden']
                 );
             }
         }
@@ -371,7 +372,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             if ($row = $this->getOpenValueDao()->searchById($this->getId(), $oid)->getRow()) {
                 $this->cache_openvalues[$oid] = new Tracker_FormElement_Field_List_OpenValue(
                     $row['id'],
-                    $row['label']
+                    $row['label'],
+                    $row['is_hidden']
                 );
             }
         }
@@ -521,7 +523,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             if ($row['openvalue_label']) {
                 $v = new Tracker_FormElement_Field_List_OpenValue(
                     $row['id'],
-                    $row['openvalue_label']
+                    $row['openvalue_label'],
+                    $row['openvalue_is_hidden']
                 );
             } else {
                 $v = $this->getBind()->getValueFromRow($row);
@@ -569,7 +572,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             if ($row['openvalue_label']) {
                 $v = new Tracker_FormElement_Field_List_OpenValue(
                     $row['id'],
-                    $row['openvalue_label']
+                    $row['openvalue_label'],
+                    $row['is_hidden']
                 );
             } else {
                 $v = $this->getBind()->getValueFromRow($row);

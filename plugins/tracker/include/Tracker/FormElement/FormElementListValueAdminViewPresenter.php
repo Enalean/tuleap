@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Tuleap\Tracker\FormElement;
 
-use Tracker_FormElement_Field_List_Bind_StaticValue;
+use Tracker_FormElement_Field_List_Value;
 use Tuleap\Tracker\Colorpicker\ColorpickerMountPointPresenter;
 
 /**
@@ -34,7 +34,7 @@ class FormElementListValueAdminViewPresenter
      */
     public $id;
     /**
-     * @var ColorpickerMountPointPresenter
+     * @var ColorpickerMountPointPresenter | null
      */
     public $decorator;
     /**
@@ -73,16 +73,21 @@ class FormElementListValueAdminViewPresenter
      * @var bool
      */
     public $is_none_value;
+    /**
+     * @var bool
+     */
+    public $is_custom_value;
 
     public function __construct(
-        Tracker_FormElement_Field_List_Bind_StaticValue $value,
-        ColorpickerMountPointPresenter $decorator,
+        Tracker_FormElement_Field_List_Value $value,
+        ?ColorpickerMountPointPresenter $decorator,
         bool $value_can_be_hidden,
         bool $value_can_be_deleted,
         ?string $delete_url,
         string $image_hidden_title,
         string $image_hidden_alt,
-        string $image_hidden_prefix
+        string $image_hidden_prefix,
+        bool $is_custom_value
     ) {
         $this->id                   = $value->getId();
         $this->label                = $value->getLabel();
@@ -95,5 +100,6 @@ class FormElementListValueAdminViewPresenter
         $this->image_hidden_prefix  = $image_hidden_prefix;
         $this->decorator            = $decorator;
         $this->is_none_value        = (int) $value->getId() === \Tracker_FormElement_Field_List::NONE_VALUE;
+        $this->is_custom_value      = $is_custom_value;
     }
 }

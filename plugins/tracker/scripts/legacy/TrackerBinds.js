@@ -74,7 +74,9 @@ codendi.tracker.bind.Editor = Class.create({
         $(element)
             .select('input[type=text][name^="bind[edit]"]')
             .each(this.editStaticValues.bind(this));
-        $(element).select(".tracker-admin-bindvalue_list").each(this.updateBind.bind(this));
+        $(element)
+            .select(".tracker-admin-bindvalue_list_sortable")
+            .each(this.updateBind.bind(this));
         this.accordionForBindTypes();
         this.addNew();
     },

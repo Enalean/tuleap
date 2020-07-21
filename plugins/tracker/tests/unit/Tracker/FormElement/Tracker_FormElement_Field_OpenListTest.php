@@ -58,8 +58,8 @@ final class Tracker_FormElement_Field_OpenListTest extends \PHPUnit\Framework\Te
         $open_value_dao = Mockery::mock(Tracker_FormElement_Field_Value_OpenListDao::class);
         $open_value_dao->shouldReceive('searchById')->andReturn(
             TestHelper::arrayToDar(
-                ['id' => '10', 'field_id' => '1', 'label' => 'Open_1'],
-                ['id' => '10', 'field_id' => '1', 'label' => 'Open_2']
+                ['id' => '10', 'field_id' => '1', 'label' => 'Open_1', 'is_hidden' => false],
+                ['id' => '10', 'field_id' => '1', 'label' => 'Open_2', 'is_hidden' => false]
             )
         );
 

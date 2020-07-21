@@ -454,6 +454,7 @@ select.tracker-report-expert-allowed-fields {
     > .tracker-admin-bindvalue_grip,
     > .tracker-admin-bindvalue_actions,
     > .tracker-admin-bindvalue_label,
+    > .tracker-admin-custom-value,
     > .tracker-admin-bindvalue_decorator > .dropdown > .dropdown-toggle {
         opacity: .35;
     }
@@ -461,6 +462,16 @@ select.tracker-report-expert-allowed-fields {
 
 .tracker-admin-none-spacing {
     margin: 0 20px 0 0;
+}
+
+.tracker-admin-bindvalue_label {
+    > .input-custom-value {
+        margin: 0;
+    }
+}
+
+.tracker-admin-custom-value {
+    display: inline;
 }
 
 .tracker_report_table_pager {
