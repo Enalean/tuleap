@@ -86,11 +86,14 @@
             <td class="document-tree-cell-owner">
                 <user-badge v-bind:user="item.owner" />
             </td>
-            <td
-                class="document-tree-cell-updatedate tlp-tooltip tlp-tooltip-left"
-                v-bind:data-tlp-tooltip="formatted_full_date"
-            >
-                {{ formatted_date }}
+            <td class="document-tree-cell-updatedate">
+                <tlp-relative-date
+                    v-bind:date="item.last_update_date"
+                    v-bind:absolute-date="formatted_full_date"
+                    v-bind:placement="relative_date_placement"
+                    v-bind:preference="relative_date_preference"
+                    v-bind:locale="user_locale"
+                />
             </td>
         </template>
     </tr>
@@ -99,10 +102,7 @@
 <script>
 import { mapState } from "vuex";
 import { TYPE_FILE, TYPE_FOLDER, TYPE_LINK, TYPE_WIKI, TYPE_EMBEDDED } from "../../constants.js";
-import {
-    formatDateUsingPreferredUserFormat,
-    getElapsedTimeFromNow,
-} from "../../helpers/date-formatter.js";
+import { formatDateUsingPreferredUserFormat } from "../../helpers/date-formatter.js";
 import {
     hasNoUploadingContent,
     isItemUploadingInQuickLookMode,
@@ -118,6 +118,10 @@ import LockProperty from "./Property/LockProperty.vue";
 import DocumentTitleLockInfo from "./LockInfo/DocumentTitleLockInfo.vue";
 import ApprovalTableBadge from "./ApprovalTables/ApprovalTableBadge.vue";
 import DropDownMenuTreeView from "./DropDown/DropDownMenuTreeView.vue";
+import {
+    relativeDatePlacement,
+    relativeDatePreference,
+} from "../../../../../../src/themes/tlp/src/js/custom-elements/relative-date/relative-date-helper";
 
 export default {
     name: "FolderContentRow",
@@ -136,10 +140,12 @@ export default {
         isQuickLookDisplayed: Boolean,
     },
     computed: {
-        ...mapState(["date_time_format", "folded_items_ids"]),
-        formatted_date() {
-            return getElapsedTimeFromNow(this.item.last_update_date);
-        },
+        ...mapState([
+            "date_time_format",
+            "folded_items_ids",
+            "relative_dates_display",
+            "user_locale",
+        ]),
         formatted_full_date() {
             return formatDateUsingPreferredUserFormat(
                 this.item.last_update_date,
@@ -224,6 +230,12 @@ export default {
         },
         is_not_uploading_and_is_not_in_quicklook() {
             return isItemInTreeViewWithoutUpload(this.item, this.isQuickLookDisplayed);
+        },
+        relative_date_preference() {
+            return relativeDatePreference(this.relative_dates_display);
+        },
+        relative_date_placement() {
+            return relativeDatePlacement(this.relative_dates_display, "top");
         },
     },
     mounted() {
