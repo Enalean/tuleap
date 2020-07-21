@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.3\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 msgid "1 test will be added"
@@ -58,6 +58,9 @@ msgstr "Une erreur est survenue pendant le chargement des tests. {{ error }}"
 
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
+
+msgid "Automated"
+msgstr "Automatisés"
 
 msgid "Blocked"
 msgstr "Bloqué"
@@ -270,7 +273,8 @@ msgid "You are not allowed to paste images here"
 msgstr "Vous n'êtes pas autorisé à coller des images ici"
 
 msgid "You are not allowed to upload images bigger than {{ max_size }}"
-msgstr "Vous n'êtes pas autorisé inserer des images plus lourdes que {{ max_size }}"
+msgstr ""
+"Vous n'êtes pas autorisé inserer des images plus lourdes que {{ max_size }}"
 
 msgid ""
 "You have just updated the test definition, so it has been reset. Please "

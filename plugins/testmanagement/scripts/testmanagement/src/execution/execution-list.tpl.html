@@ -39,6 +39,7 @@
                                 <i class="fa fa-times-circle test-status-icon failed" ng-class="{'filtered-status': isStatusHidden('failed')}"></i>
                                 <i class="fa fa-exclamation-circle test-status-icon blocked" ng-class="{'filtered-status': isStatusHidden('blocked')}"></i>
                                 <i class="fa fa-question-circle test-status-icon notrun" ng-class="{'filtered-status': isStatusHidden('notrun')}"></i>
+                                <i class="fa fa-tlp-robot test-status-icon test-status-icon notrun" ng-class="{'filtered-status': are_automated_tests_shown === false}"></i>
                             </div>
                             <div id="filters-dropdown-menu" class="tlp-dropdown-menu" role="menu">
                                 <div class="tests-filter-option">
@@ -81,6 +82,16 @@
                                         <label for="status-filter-notrun" class="tlp-switch-button" ng-click="toggleStatus('notrun')"></label>
                                     </div>
                                 </div>
+                                <div class="tests-filter-option">
+                                    <div class="tests-filter-option-title">
+                                        <i class="fa fa-fw fa-tlp-robot test-status-icon notrun"></i>
+                                        {{ 'Automated' | translate }}
+                                    </div>
+                                    <div class="tlp-switch tlp-switch-mini">
+                                        <input type="checkbox" id="status-filter-automated" class="tlp-switch-checkbox" checked>
+                                        <label for="status-filter-automated" class="tlp-switch-button" ng-click="toggleAutomatedTests()"></label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -102,6 +113,7 @@
                             ng-repeat="execution in category.executions
                                 | toArray:false
                                 | ExecutionListFilter:search:status
+                                | AutomatedTestsFilter:are_automated_tests_shown
                                 | orderBy:'definition.id'
                                 | unique:'definition.id'
                                 track by execution.definition.id"

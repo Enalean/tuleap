@@ -60,6 +60,7 @@ function ExecutionListCtrl(
     Object.assign($scope, {
         checkActiveClassOnExecution,
         toggleStatus,
+        toggleAutomatedTests,
         viewTestExecution,
         canCategoryBeDisplayed,
         hideDetailsForRemovedTestExecution,
@@ -76,6 +77,10 @@ function ExecutionListCtrl(
 
     function toggleStatus(executionStatus) {
         $scope.status[executionStatus] = !$scope.status[executionStatus];
+    }
+
+    function toggleAutomatedTests() {
+        $scope.are_automated_tests_shown = !$scope.are_automated_tests_shown;
     }
 
     function viewTestExecution(current_execution) {
@@ -158,6 +163,7 @@ function ExecutionListCtrl(
             blocked: false,
             notrun: false,
         };
+        $scope.are_automated_tests_shown = true;
 
         SharedPropertiesService.setCampaignId($scope.campaign_id);
 
