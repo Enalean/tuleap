@@ -9,6 +9,5 @@
     "video": true,
     "videoUploadOnPasses": false,
     "pluginsFile": false,
-    "pageLoadTimeout": 120000,
-    "experimentalFetchPolyfill": true
+    "pageLoadTimeout": 120000
 }

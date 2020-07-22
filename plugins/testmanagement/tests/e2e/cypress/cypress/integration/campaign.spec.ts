@@ -27,7 +27,6 @@ describe("TTM campaign", () => {
 
     beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-        cy.server();
 
         ttm_project_name = "test-ttm-" + now;
         ttm_project_public_name = "Test TTM " + now;
@@ -97,16 +96,6 @@ describe("TTM campaign", () => {
         });
 
         context("Within the campaign", () => {
-            beforeEach(() => {
-                cy.route(
-                    "PATCH",
-                    "/api/v1/testmanagement_campaigns/*/testmanagement_executions"
-                ).as("createCampaign");
-                cy.route("GET", "/api/v1/testmanagement_campaigns/*/testmanagement_executions*").as(
-                    "loadTestsOfCampaign"
-                );
-            });
-
             it("Adds a test", () => {
                 cy.get("[data-test=edit-campaign-button]").click();
 
@@ -120,42 +109,31 @@ describe("TTM campaign", () => {
                 cy.contains("1 test will be added");
 
                 cy.get("[data-test=edit-campaign-save-button]").click();
-                cy.wait("@createCampaign");
             });
 
             context("On the test", () => {
-                beforeEach(() => {
-                    cy.route("PUT", "/api/v1/testmanagement_executions/*").as("updateExecution");
-                    cy.route("GET", "/api/v1/testmanagement_definitions/*").as("loadDefinition");
-                });
-
                 it("Displays the test as notrun", () => {
-                    cy.wait("@loadTestsOfCampaign");
-                    cy.contains("My first test").click();
+                    cy.get("[data-test=test-title").contains("My first test").click();
                     cy.get("[data-test=current-test").should("have.class", "notrun");
                 });
 
                 it("Marks a test as passed", () => {
                     cy.get("[data-test=mark-test-as-passed]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "passed");
                 });
 
                 it("Marks a test as failed", () => {
                     cy.get("[data-test=mark-test-as-failed]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "failed");
                 });
 
                 it("Marks a test as blocked", () => {
                     cy.get("[data-test=mark-test-as-blocked]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "blocked");
                 });
 
                 it("Marks a test as notrun", () => {
                     cy.get("[data-test=mark-test-as-notrun]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "notrun");
                 });
 
@@ -171,7 +149,6 @@ describe("TTM campaign", () => {
                     });
 
                     cy.get("[data-test=mark-test-as-failed]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "failed");
                     cy.get("[data-test=view-details-button]").click();
                     cy.get("[data-test=view-details-modal]").within(() => {
@@ -186,7 +163,6 @@ describe("TTM campaign", () => {
                         "{selectall}My first test edited"
                     );
                     cy.get("[data-test=artifact-modal-save-button]").click();
-                    cy.wait(["@updateExecution", "@loadDefinition"]);
                     cy.get("[data-test=current-test]").should("have.class", "notrun");
                     cy.get("[data-test=current-test-header-title]").contains(
                         "My first test edited"
@@ -194,7 +170,6 @@ describe("TTM campaign", () => {
                 });
 
                 it("Paste an image on comment box", () => {
-                    cy.route("PATCH", "/uploads/tracker/file/*").as("uploadFile");
                     cy.get("[data-test=current-test-comment]")
                         .trigger("focus")
                         .then(($element) => {
@@ -221,10 +196,9 @@ describe("TTM campaign", () => {
                                     $element[0].dispatchEvent(paste_event);
                                 });
                         });
-                    cy.wait("@uploadFile");
+                    cy.contains("File successfully uploaded");
 
                     cy.get("[data-test=mark-test-as-failed]").click();
-                    cy.wait("@updateExecution");
                     cy.get("[data-test=current-test").should("have.class", "failed");
                     cy.get("[data-test=current-test-preview-latest-result]").contains(
                         "A screenshot has been attached"

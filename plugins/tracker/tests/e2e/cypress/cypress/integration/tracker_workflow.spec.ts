@@ -44,7 +44,6 @@ describe(`Tracker Workflow`, () => {
 
     beforeEach(function () {
         Cypress.Cookies.preserveOnce("__Host-TULEAP_PHPSESSID", "__Host-TULEAP_session_hash");
-        cy.server();
     });
 
     it(`has an empty state`, function () {
@@ -53,11 +52,6 @@ describe(`Tracker Workflow`, () => {
 
     context("Simple mode", () => {
         it(`can create and configure a workflow`, function () {
-            cy.route("POST", "/api/tracker_workflow_transitions").as("post_workflow_transition");
-            cy.route("DELETE", "/api/tracker_workflow_transitions/**").as(
-                "delete_workflow_transition"
-            );
-
             /* Create the workflow */
             cy.get("[data-test=tracker-workflow-first-configuration]").within(() => {
                 // With default view port, tabs are flickering and cause a shift of y button position
@@ -75,8 +69,9 @@ describe(`Tracker Workflow`, () => {
                     .within(() => {
                         cy.get("[data-test-action=create-transition]").each(($button) => {
                             cy.wrap($button).click();
-                            cy.wait("@post_workflow_transition");
                         });
+                        // Making sure the transition has been created by checking if we can delete it before continuing the test
+                        cy.get("[data-test-action=confirm-delete-transition]");
                     });
 
                 cy.get("[data-test=matrix-row]")
@@ -84,7 +79,6 @@ describe(`Tracker Workflow`, () => {
                     .parent("[data-test=matrix-row]")
                     .within(() => {
                         cy.get("[data-test-action=create-transition]").first().click();
-                        cy.wait("@post_workflow_transition");
                     });
                 cy.get("[data-test=configure-state]").first().click();
             });
@@ -119,7 +113,8 @@ describe(`Tracker Workflow`, () => {
                     .parent("[data-test=matrix-row]")
                     .within(() => {
                         cy.get("[data-test-action=delete-transition]").first().click();
-                        cy.wait("@delete_workflow_transition");
+                        // Making sure the transition deletion is visible in the UI (aka there is no more a delete button) before continuing
+                        cy.get("[data-test-action=confirm-delete-transition]").should("not.exist");
                     });
             });
             /* Delete the entire workflow */
