@@ -254,14 +254,18 @@ function ExecutionListCtrl(
     }
 
     function canCategoryBeDisplayed(category) {
-        var filtered_executions = $filter("ExecutionListFilter")(
+        const filtered_executions = $filter("ExecutionListFilter")(
             category.executions,
             $scope.search,
             $scope.status
         );
 
-        //eslint-disable-next-line you-dont-need-lodash-underscore/size
-        return _.size(filtered_executions) > 0;
+        const filtered_auto_tests = $filter("AutomatedTestsFilter")(
+            filtered_executions,
+            $scope.are_automated_tests_shown
+        );
+
+        return filtered_auto_tests.length > 0;
     }
 
     function isStatusHidden(status) {
