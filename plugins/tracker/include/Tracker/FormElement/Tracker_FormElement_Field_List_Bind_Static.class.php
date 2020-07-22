@@ -641,13 +641,14 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                             }
 
                             if ($new_label !== null || $new_description !== null || $new_is_hidden !== null) {
+                                $original_value = $this->value_dao->searchById($value_id)->getRow();
                                 //something has changed. we can save it
                                 $value_dao->save(
                                     $value_id,
                                     $this->field->getId(),
                                     isset($new_label)       ? $new_label       : $bind_static_value->getLabel(),
                                     isset($new_description) ? $new_description : $bind_static_value->getDescription(),
-                                    $bind_static_value->getRank(),
+                                    $original_value['rank'],
                                     isset($new_is_hidden)   ? $new_is_hidden   : $bind_static_value->isHidden()
                                 );
                                 unset($new_label, $new_description);
