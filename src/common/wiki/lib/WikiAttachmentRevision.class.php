@@ -237,7 +237,7 @@ class WikiAttachmentRevision
 
     public function setSize($s)
     {
-        global $sys_max_size_upload;
+        $sys_max_size_upload = (int) ForgeConfig::get('sys_max_size_upload');
 
         if ($s > $sys_max_size_upload) {
             trigger_error(
