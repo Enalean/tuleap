@@ -58,7 +58,6 @@ describe("Cross tracker search", function () {
     });
 
     it("User should be able to set trackers from widgets", function () {
-        cy.server();
         cy.visit("/my/");
 
         cy.get("[data-test=dashboard-configuration-button]").click();
@@ -67,20 +66,11 @@ describe("Cross tracker search", function () {
         cy.get("[data-test=dashboard-add-widget-button-submit]").click();
 
         // select some trackers
-        cy.getProjectId("cross-tracker-search").then((project_id) => {
-            cy.visit("/my/");
-
-            cy.route(
-                `/api/v1/projects/${project_id}/trackers?limit=*&representation=minimal&offset=*`
-            ).as("loadTrackers");
-        });
-
         cy.get("[data-test=cross-tracker-reading-mode]").click();
 
         //select project
         cy.get("[data-test=cross-tracker-selector-project]").select("Cross tracker search");
 
-        cy.wait("@loadTrackers", { timeout: 60000 });
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Bugs");
         cy.get("[data-test=cross-tracker-selector-tracker-button]").click();
         cy.get("[data-test=cross-tracker-selector-tracker]").select("Kanban Tasks");

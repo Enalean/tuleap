@@ -69,7 +69,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=selected-option-default-bug]").click({ force: true });
 
             cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type(" from cypress");
+            cy.get("[data-test=tracker-name-input]").type(Date.now() + " from cypress");
             cy.get("[data-test=button-create-my-tracker]").click();
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
         });
@@ -79,7 +79,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=selected-option-tracker_empty]").click({ force: true });
 
             cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type("From empty");
+            cy.get("[data-test=tracker-name-input]").type(Date.now() + " From empty");
             cy.get("[data-test=button-create-my-tracker]").click();
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
         });
@@ -92,7 +92,7 @@ describe("Tracker artifacts", function () {
             cy.get("[data-test=project-tracker-select]").select("Issues");
 
             cy.get("[data-test=button-next]").click();
-            cy.get("[data-test=tracker-name-input]").type("From an other project");
+            cy.get("[data-test=tracker-name-input]").type(Date.now() + " From an other project");
             cy.get("[data-test=button-create-my-tracker]").click();
             cy.get("[data-test=tracker-creation-modal-success]").contains("Congratulations");
         });
