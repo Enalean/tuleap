@@ -26,6 +26,9 @@ use Tuleap\REST\JsonCast;
 use Tuleap\Tracker\REST\TrackerReference;
 use Tuleap\User\REST\MinimalUserRepresentation;
 
+/**
+ * @psalm-immutable
+ */
 class CrossTrackerArtifactReportRepresentation
 {
     /**
@@ -39,12 +42,12 @@ class CrossTrackerArtifactReportRepresentation
     public $title;
 
     /**
-     * @var string
+     * @var string | null
      */
     public $status;
 
     /**
-     * @var int
+     * @var string
      */
     public $last_update_date;
 
@@ -73,35 +76,51 @@ class CrossTrackerArtifactReportRepresentation
      */
     public $project;
 
-    public function build(\Tracker_Artifact $artifact, \PFUser $user)
+    private function __construct(
+        int $id,
+        string $title,
+        ?string $status,
+        string $last_update_date,
+        ?MinimalUserRepresentation $submitted_by,
+        array $assigned_to,
+        TrackerReference $tracker,
+        array $badge,
+        ProjectReference $project
+    ) {
+        $this->id               = $id;
+        $this->title            = $title;
+        $this->status           = $status;
+        $this->last_update_date = $last_update_date;
+        $this->submitted_by     = $submitted_by;
+        $this->assigned_to      = $assigned_to;
+        $this->tracker          = $tracker;
+        $this->badge            = $badge;
+        $this->project          = $project;
+    }
+
+    public static function build(\Tracker_Artifact $artifact, \PFUser $user): self
     {
-        $this->id               = JsonCast::toInt($artifact->getId());
-        $this->title            = $artifact->getTitle() ?? '';
-        $this->badge            =
+        $assigned_to = [];
+        foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {
+            $assigned_to[] = MinimalUserRepresentation::build($user_assigned_to);
+        }
+
+        $tracker = $artifact->getTracker();
+
+        return new self(
+            JsonCast::toInt($artifact->getId()),
+            $artifact->getTitle() ?? '',
+            $artifact->getStatus(),
+            JsonCast::toDate($artifact->getLastUpdateDate()),
+            MinimalUserRepresentation::build($artifact->getSubmittedByUser()),
+            $assigned_to,
+            TrackerReference::build($tracker),
             [
                 "uri"       => $artifact->getUri(),
                 "color"     => $artifact->getTracker()->getColor()->getName(),
                 "cross_ref" => $artifact->getXRef()
-            ];
-        $this->status           = $artifact->getStatus();
-        $this->last_update_date = JsonCast::toDate($artifact->getLastUpdateDate());
-
-        $user_representation = MinimalUserRepresentation::build($artifact->getSubmittedByUser());
-        $this->submitted_by = $user_representation;
-
-        foreach ($artifact->getAssignedTo($user) as $user_assigned_to) {
-            $user_assigned_representation = MinimalUserRepresentation::build($user_assigned_to);
-
-            $this->assigned_to[] = $user_assigned_representation;
-        }
-
-        $tracker = $artifact->getTracker();
-        $tracker_representation = TrackerReference::build($tracker);
-
-        $this->tracker = $tracker_representation;
-
-        $project_reference = new ProjectReference($tracker->getProject());
-
-        $this->project = $project_reference;
+            ],
+            new ProjectReference($tracker->getProject()),
+        );
     }
 }

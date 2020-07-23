@@ -24,6 +24,9 @@ use Tuleap\REST\JsonCast;
 use Tuleap\CrossTracker\CrossTrackerReport;
 use Tuleap\Tracker\REST\TrackerReference;
 
+/**
+ * @psalm-immutable
+ */
 class CrossTrackerReportRepresentation
 {
     public const ROUTE = 'cross_tracker_reports';
@@ -42,32 +45,50 @@ class CrossTrackerReportRepresentation
     public $expert_query;
 
     /**
-     * @var array {@type Tuleap\Tracker\REST\TrackerReference}
+     * @var array {@type TrackerReference}
      */
     public $trackers = [];
 
     /**
-     * @var array {@type Tuleap\Tracker\REST\TrackerReference}
+     * @var array {@type TrackerReference}
      */
     public $invalid_trackers = [];
 
-    public function build(CrossTrackerReport $report)
+    /**
+     * @param TrackerReference[] $trackers
+     * @param TrackerReference[] $invalid_trackers
+     */
+    private function __construct(int $id, string $expert_query, array $trackers, array $invalid_trackers)
     {
-        $this->id           = JsonCast::toInt($report->getId());
-        $this->expert_query = $report->getExpertQuery();
+        $this->id               = $id;
+        $this->uri              = self::ROUTE . '/' . $this->id;
+        $this->expert_query     = $expert_query;
+        $this->trackers         = $trackers;
+        $this->invalid_trackers = $invalid_trackers;
+    }
+
+    public static function fromReport(CrossTrackerReport $report): self
+    {
+        $trackers         = [];
+        $invalid_trackers = [];
 
         foreach ($report->getTrackers() as $tracker) {
             $tracker_reference = TrackerReference::build($tracker);
 
-            $this->trackers[] = $tracker_reference;
+            $trackers[] = $tracker_reference;
         }
 
         foreach ($report->getInvalidTrackers() as $invalid_tracker) {
             $tracker_reference = TrackerReference::build($invalid_tracker);
 
-            $this->invalid_trackers[] = $tracker_reference;
+            $invalid_trackers[] = $tracker_reference;
         }
 
-        $this->uri = self::ROUTE . '/' . $this->id;
+        return new self(
+            JsonCast::toInt($report->getId()),
+            $report->getExpertQuery(),
+            $trackers,
+            $invalid_trackers
+        );
     }
 }
