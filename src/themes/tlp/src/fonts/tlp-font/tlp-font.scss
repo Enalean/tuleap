@@ -59,7 +59,8 @@ $tlp-fontawesome-icons: (
     zip-download: '\f028',
     robot: '\f029',
     robot-happy: '\f030',
-    robot-unhappy: '\f031'
+    robot-unhappy: '\f031',
+    go-to-user: '\f032'
 );
 
 @each $label, $unicode in $tlp-fontawesome-icons {
