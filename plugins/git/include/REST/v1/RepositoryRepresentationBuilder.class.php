@@ -133,31 +133,27 @@ class RepositoryRepresentationBuilder
         $additional_information = new AdditionalInformationRepresentationRetriever($repository);
         $this->event_manager->processEvent($additional_information);
 
-        $html_url = $this->url_manager->getRepositoryBaseUrl($repository);
+        $html_url         = $this->url_manager->getRepositoryBaseUrl($repository);
+        $last_update_date = $this->getLastUpdateDate($repository);
 
-        $repository_representation = new GitRepositoryRepresentation();
-        $last_update_date          = $this->getLastUpdateDate($repository);
-        $repository_representation->build(
-            $repository,
-            $html_url,
-            $server_representation,
-            $last_update_date,
-            $additional_information->getAdditionalInformation()
-        );
-
+        $permission_representation = null;
         if (
             $fields == GitRepositoryRepresentation::FIELDS_ALL && $this->permissions_manger->userIsGitAdmin(
                 $user,
                 $repository->getProject()
             )
         ) {
-            $permission_representation = new GitRepositoryPermissionRepresentation();
-            $permission_representation->build($repository);
-
-            $repository_representation->permissions = $permission_representation;
+            $permission_representation = GitRepositoryPermissionRepresentation::build($repository);
         }
 
-        return $repository_representation;
+        return GitRepositoryRepresentation::build(
+            $repository,
+            $html_url,
+            $server_representation,
+            $last_update_date,
+            $additional_information->getAdditionalInformation(),
+            $permission_representation
+        );
     }
 
     /**
@@ -171,17 +167,12 @@ class RepositoryRepresentationBuilder
 
         $remote_server_id = $repository->getRemoteServerId();
         if ($this->remote_server[$remote_server_id] !== null) {
-            $server_representation = new GerritServerRepresentation();
-            $server_representation->build($this->remote_server[$remote_server_id]);
-            return $server_representation;
+            return new GerritServerRepresentation($this->remote_server[$remote_server_id]);
         }
 
         try {
             $server = $this->gerrit_server_factory->getServerById($remote_server_id);
-            $server_representation = new GerritServerRepresentation();
-            $server_representation->build($server);
-
-            return $server_representation;
+            return new GerritServerRepresentation($server);
         } catch (Git_RemoteServer_NotFoundException $ex) {
             return null;
         }

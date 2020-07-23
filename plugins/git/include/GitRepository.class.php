@@ -540,7 +540,7 @@ class GitRepository
             if (empty($rootPath) || empty($name)) {
                 $this->path = '';
             } else {
-                $this->path = $this->getPathFromProjectAndName($this->project, $name);
+                $this->path = self::getPathFromProjectAndName($this->project, $name);
             }
         }
         return $this->path;
@@ -563,7 +563,7 @@ class GitRepository
     public function getPathWithoutLazyLoading()
     {
         if (!$this->path) {
-            $this->path = $this->getPathFromProjectAndName($this->getProject(), $this->getName());
+            $this->path = self::getPathFromProjectAndName($this->getProject(), $this->getName());
         }
         return $this->path;
     }
@@ -1001,6 +1001,8 @@ class GitRepository
 
     /**
      * @return string
+     *
+     * @psalm-mutation-free
      */
     public function getPathWithoutProject()
     {
@@ -1011,6 +1013,9 @@ class GitRepository
         return implode("/", $split_path);
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     public function getLabel()
     {
         return basename($this->getName());

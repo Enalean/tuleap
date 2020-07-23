@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2016. All Rights Reserved.
+ * Copyright (c) Enalean, 2016-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -20,6 +20,9 @@
 
 namespace Tuleap\PullRequest\REST\v1;
 
+/**
+ * @psalm-immutable
+ */
 class RepositoryPullRequestRepresentation
 {
 
@@ -29,7 +32,7 @@ class RepositoryPullRequestRepresentation
     /** @var int */
     public $total_size;
 
-    public function build(array $collection, $total_size)
+    public function __construct(array $collection, $total_size)
     {
         $this->total_size = (int) $total_size;
         $this->collection = $collection;

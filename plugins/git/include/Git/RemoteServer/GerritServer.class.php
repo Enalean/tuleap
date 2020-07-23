@@ -198,6 +198,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     /**
      * @return string The base url of the server. Eg: http://gerrit.example.com:8080/
+     *
+     * @psalm-mutation-free
      */
     public function getBaseUrl()
     {
@@ -208,6 +210,9 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $url;
     }
 
+    /**
+     * @psalm-mutation-free
+     */
     private function getHTTPProtocol()
     {
         if ($this->usesSSL()) {

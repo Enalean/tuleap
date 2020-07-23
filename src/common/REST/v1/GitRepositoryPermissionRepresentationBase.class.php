@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2014. All Rights Reserved.
+ * Copyright (c) Enalean, 2014-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,21 +21,23 @@
 
 namespace Tuleap\REST\v1;
 
+use Tuleap\Project\REST\MinimalUserGroupRepresentation;
+
 class GitRepositoryPermissionRepresentationBase
 {
 
     /**
-     * @var Tuleap\Project\REST\UserGroupRepresentation
+     * @var MinimalUserGroupRepresentation[]
      */
     public $read;
 
     /**
-     * @var Tuleap\Project\REST\UserGroupRepresentation
+     * @var MinimalUserGroupRepresentation[]
      */
     public $write;
 
     /**
-     * @var Tuleap\Project\REST\UserGroupRepresentation
+     * @var MinimalUserGroupRepresentation[]
      */
     public $rewind;
 }
