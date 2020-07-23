@@ -315,12 +315,7 @@ class UserSuspensionManager
     private function suspendUser(int $user_id)
     {
         $this->dao->suspendAccount($user_id);
-
-        if (! $this->dao->verifySuspension($user_id)) {
-            $this->logger->error("Error while suspending user #$user_id");
-        } else {
-            $this->logger->debug("User #$user_id is suspended");
-        }
+        $this->logger->debug("User #$user_id is suspended");
     }
 
     /**
