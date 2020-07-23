@@ -23,6 +23,8 @@ use Luracast\Restler\RestException;
 use PaginatedUserCollection;
 use PFUser;
 use Tuleap\Authentication\Scope\AggregateAuthenticationScopeBuilder;
+use Tuleap\Project\REST\UserGroupRepresentation;
+use Tuleap\Project\REST\UserGroupRetriever;
 use Tuleap\Project\UGroupLiteralizer;
 use Tuleap\REST\AuthenticatedResource;
 use Tuleap\REST\Header;
@@ -77,12 +79,18 @@ class UserResource extends AuthenticatedResource
     /** @var User_ForgeUserGroupPermissionsManager */
     private $forge_ugroup_permissions_manager;
 
+    /**
+     * @var UserGroupRetriever
+     */
+    private $user_group_retriever;
+
     public function __construct()
     {
-        $this->user_manager       = UserManager::instance();
-        $this->json_decoder       = new JsonDecoder();
-        $this->ugroup_literalizer = new UGroupLiteralizer();
-        $this->history_retriever  = new HistoryRetriever(\EventManager::instance());
+        $this->user_manager         = UserManager::instance();
+        $this->json_decoder         = new JsonDecoder();
+        $this->ugroup_literalizer   = new UGroupLiteralizer();
+        $this->history_retriever    = new HistoryRetriever(\EventManager::instance());
+        $this->user_group_retriever = new UserGroupRetriever(new \UGroupManager());
 
         $this->forge_ugroup_permissions_manager = new User_ForgeUserGroupPermissionsManager(
             new User_ForgeUserGroupPermissionsDao()
@@ -271,19 +279,44 @@ class UserResource extends AuthenticatedResource
      * ]
      * </pre>
      *
-     * @url GET {id}/membership
-     * @access protected
+     * If you choose the "full" format, which is only compatible with "project" scope
+     * you will get an array of group of user groups:
+     * <pre>
+     * [  <br/>
+     *    &nbsp; { <br/>
+     *  &nbsp;"id": "106_3",  <br/>
+     *   &nbsp;"uri": "user_groups/106_3",  <br/>
+     *  &nbsp;"label": "Project members",  <br/>
+     *  &nbsp;"users_uri": "user_groups/106_3/users",  <br/>
+     *  &nbsp;"short_name": "project_members",  <br/>
+     *  &nbsp;"key": "ugroup_project_members_name_key",  <br/>
+     *  &nbsp;"project": {  <br/>
+     *   &nbsp; &nbsp;"id": 114,  <br/>
+     *     &nbsp; &nbsp; "uri": "projects/114",  <br/>
+     *    &nbsp; &nbsp;"label": "test",  <br/>
+     *    &nbsp; &nbsp; "shortname": "test",  <br/>
+     *     &nbsp; &nbsp; "status": "active",  <br/>
+     *     &nbsp; &nbsp; "access": "public",  <br/>
+     *     &nbsp; &nbsp; "is_template": false  <br/>
+     *      &nbsp; &nbsp; }  <br/>
+     *     &nbsp; },  <br/>
+     * ... <br/>
+     * ]
+     * </pre>
+     *
+     * @url          GET {id}/membership
+     * @access       protected
      * @oauth2-scope read:user_membership
      *
-     * @param string $id Id of the desired user
-     * @param string | null $scope Scope to project permissions or platform permissions {@from path} {@choice project}
-     * @param string | null $format Special format to display the groups, only works with project scope {@from path} {@choice id}
+     * @param string        $id     Id of the desired user
+     * @param string | null $scope  Scope to project permissions or platform permissions {@from path} {@choice project}
+     * @param string | null $format Special format to display the groups, only works with project scope {@from path} {@choice id,full}
      *
-     * @throws RestException 400
+     * @return array {@type UserGroupRepresentation | string}
      * @throws RestException 403
      * @throws RestException 404
      *
-     * @return array {@type string}
+     * @throws RestException 400
      */
     public function getMembership(
         $id,
@@ -300,12 +333,14 @@ class UserResource extends AuthenticatedResource
             if ($scope === "project") {
                 if ($format === "id") {
                     return $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($watchee);
+                } elseif ($format === "full") {
+                    return $this->getUserGroupsRepresentation($watchee);
                 }
                 return $this->ugroup_literalizer->getProjectUserGroupsForUser($watchee);
             }
 
-            if ($format === "id") {
-                throw new RestException(400, "format=id is only supported for project scope");
+            if ($format === "id" || $format === 'full') {
+                throw new RestException(400, "format=id or format=full are only supported for project scope");
             }
 
             return $this->ugroup_literalizer->getUserGroupsForUser($watchee);
@@ -314,7 +349,24 @@ class UserResource extends AuthenticatedResource
     }
 
     /**
-     * @url OPTIONS {id}/preferences
+     * @return UserGroupRepresentation[]
+     * @throws RestException
+     */
+    private function getUserGroupsRepresentation(PFUser $watchee): array
+    {
+        $ugroup_ids  = $this->ugroup_literalizer->getProjectUserGroupsIdsForUser($watchee);
+        $user_groups = [];
+        foreach ($ugroup_ids as $id) {
+            $ugroup                    = $this->user_group_retriever->getExistingUserGroup($id);
+            $project                   = $ugroup->getProject();
+            $user_group_representation = new UserGroupRepresentation($project, $ugroup);
+            $user_groups[] = $user_group_representation;
+        }
+        return $user_groups;
+    }
+
+    /**
+     * @url    OPTIONS {id}/preferences
      *
      * @param int $id Id of the user
      *

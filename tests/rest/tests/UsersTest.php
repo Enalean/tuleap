@@ -147,6 +147,43 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertContains('102', $json);
     }
 
+    public function testGetMembershipWithProjectScopeAndFullFormatReturnsUserGroups(): void
+    {
+        $response = $this->getResponseByName(
+            REST_TestDataBuilder::TEST_USER_2_NAME,
+            $this->client->get('users/self/membership?scope=project&format=full')
+        );
+        $json     = $response->json();
+
+        $expected_ugroup_id = $this->project_private_member_id . "_3";
+        $this->assertEquals($expected_ugroup_id, $json[0]['id']);
+        $this->assertEquals('user_groups/' . $expected_ugroup_id, $json[0]['uri']);
+        $this->assertEquals('Project members', $json[0]['label']);
+        $this->assertEquals('user_groups/' . $expected_ugroup_id . '/users', $json[0]['users_uri']);
+        $this->assertEquals(TestDataBuilder::DYNAMIC_UGROUP_PROJECT_MEMBERS_KEY, $json[0]['key']);
+        $this->assertEquals('project_members', $json[0]['short_name']);
+        $this->assertProject101($json[0]['project']);
+
+        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['id']);
+        $this->assertEquals('user_groups/' . TestDataBuilder::STATIC_UGROUP_2_ID, $json[1]['uri']);
+        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['label']);
+        $this->assertEquals('user_groups/' . TestDataBuilder::STATIC_UGROUP_2_ID . '/users', $json[1]['users_uri']);
+        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['key']);
+        $this->assertEquals(TestDataBuilder::STATIC_UGROUP_2_LABEL, $json[1]['short_name']);
+        $this->assertProject101($json[1]['project']);
+    }
+
+    private function assertProject101(array $project): void
+    {
+        $this->assertEquals($project['id'], '101');
+        $this->assertEquals($project['uri'], 'projects/101');
+        $this->assertEquals($project['label'], TestDataBuilder::PROJECT_PRIVATE_MEMBER_LABEL);
+        $this->assertEquals($project['shortname'], TestDataBuilder::PROJECT_PRIVATE_MEMBER_SHORTNAME);
+        $this->assertEquals($project['status'], 'active');
+        $this->assertEquals($project['access'], 'private');
+        $this->assertEquals($project['is_template'], false);
+    }
+
     public function testGETMembershipWithIdFormatWithoutProjectScopeShouldReturn400(): void
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->get('users/self/membership?format=id'));
