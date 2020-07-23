@@ -24,6 +24,9 @@ use Tuleap\REST\ResourceReference;
 use Tuleap\REST\JsonCast;
 use Tracker_Artifact;
 
+/**
+ * @psalm-immutable
+ */
 class BacklogItemParentReference
 {
     /**
@@ -39,19 +42,26 @@ class BacklogItemParentReference
     /**
      * @var string URI of backlog item
      */
-    public $uri;
+    public $uri = ResourceReference::NO_ROUTE;
 
     /**
      * @var \Tuleap\Tracker\REST\TrackerReference
      */
     public $tracker;
 
-    public function build(Tracker_Artifact $backlog_item)
+    private function __construct(int $id, string $label, TrackerReference $tracker)
     {
-        $this->id    = JsonCast::toInt($backlog_item->getId());
-        $this->label = $backlog_item->getTitle() ?? '';
-        $this->uri   = ResourceReference::NO_ROUTE;
+        $this->id      = $id;
+        $this->label   = $label;
+        $this->tracker = $tracker;
+    }
 
-        $this->tracker = TrackerReference::build($backlog_item->getTracker());
+    public static function build(Tracker_Artifact $backlog_item): self
+    {
+        return new self(
+            JsonCast::toInt($backlog_item->getId()),
+            $backlog_item->getTitle() ?? '',
+            TrackerReference::build($backlog_item->getTracker())
+        );
     }
 }

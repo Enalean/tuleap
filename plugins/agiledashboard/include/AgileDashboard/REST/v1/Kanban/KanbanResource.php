@@ -1271,8 +1271,7 @@ class KanbanResource extends AuthenticatedResource
             $user_can_edit_label = false;
         }
 
-        $column_representation = new KanbanColumnRepresentation();
-        $column_representation->build($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
+        $column_representation = new KanbanColumnRepresentation($new_column, $add_in_place, $user_can_remove_column, $user_can_edit_label);
 
         if (isset($_SERVER[self::HTTP_CLIENT_UUID]) && $_SERVER[self::HTTP_CLIENT_UUID]) {
             $tracker = $this->tracker_factory->getTrackerById($kanban->getTrackerId());

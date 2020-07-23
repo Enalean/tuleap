@@ -79,8 +79,7 @@ class KanbanRepresentationBuilder
             $user_can_reorder_columns = false;
         }
 
-        $kanban_representation = new KanbanRepresentation();
-        $kanban_representation->build(
+        return KanbanRepresentation::build(
             $kanban,
             $this->kanban_column_factory,
             $this->user_preferences,
@@ -90,7 +89,5 @@ class KanbanRepresentationBuilder
             $user_can_add_in_place,
             $user
         );
-
-        return $kanban_representation;
     }
 }

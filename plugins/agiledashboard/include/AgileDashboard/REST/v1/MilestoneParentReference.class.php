@@ -23,6 +23,9 @@ use Tuleap\Tracker\REST\TrackerReference;
 use Planning_Milestone;
 use Tuleap\REST\JsonCast;
 
+/**
+ * @psalm-immutable
+ */
 class MilestoneParentReference
 {
     /**
@@ -40,11 +43,18 @@ class MilestoneParentReference
      */
     public $tracker;
 
-    public function build(Planning_Milestone $milestone)
+    private function __construct(int $id, TrackerReference $tracker)
     {
-        $this->id  = JsonCast::toInt($milestone->getArtifactId());
-        $this->uri = MilestoneRepresentation::ROUTE . '/' . $this->id;
+        $this->id      = $id;
+        $this->uri     = MilestoneRepresentation::ROUTE . '/' . $id;
+        $this->tracker = $tracker;
+    }
 
-        $this->tracker = TrackerReference::build($milestone->getArtifact()->getTracker());
+    public static function build(Planning_Milestone $milestone): self
+    {
+        return new self(
+            JsonCast::toInt($milestone->getArtifactId()),
+            TrackerReference::build($milestone->getArtifact()->getTracker())
+        );
     }
 }

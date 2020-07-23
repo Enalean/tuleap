@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -132,8 +132,7 @@ class OrderedColumnRepresentationsBuilder
         foreach ($reversed_columns as $column) {
             $values = $open_column_representations_item_counts[$column->getId()];
 
-            $column_representation = new DiagramColumnRepresentation();
-            $column_representation->build(
+            $column_representation = new DiagramColumnRepresentation(
                 $column->getId(),
                 $column->getLabel(),
                 $values
@@ -154,13 +153,11 @@ class OrderedColumnRepresentationsBuilder
      */
     private function buildBacklogColumnRepresentation(array $open_column_representations_item_counts)
     {
-        $backlog_representation = new DiagramColumnRepresentation();
-        $backlog_representation->build(
+        return new DiagramColumnRepresentation(
             ColumnIdentifier::BACKLOG_COLUMN,
             'Backlog',
             $open_column_representations_item_counts[self::BACKLOG_BINDVALUE_ID]
         );
-        return $backlog_representation;
     }
 
     /**
@@ -178,13 +175,10 @@ class OrderedColumnRepresentationsBuilder
             $archive_representation_item_counts[] = $diagram_representation;
         }
 
-        $archive_representation = new DiagramColumnRepresentation();
-        $archive_representation->build(
+        return new DiagramColumnRepresentation(
             ColumnIdentifier::ARCHIVE_COLUMN,
             'Archive',
             $archive_representation_item_counts
         );
-
-        return $archive_representation;
     }
 }

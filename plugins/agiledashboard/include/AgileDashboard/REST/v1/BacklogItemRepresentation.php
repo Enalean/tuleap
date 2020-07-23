@@ -126,8 +126,7 @@ class BacklogItemRepresentation
 
         $this->parent = null;
         if ($backlog_item->getParent()) {
-            $this->parent = new BacklogItemParentReference();
-            $this->parent->build($backlog_item->getParent());
+            $this->parent = BacklogItemParentReference::build($backlog_item->getParent());
         }
 
         $this->has_children = $backlog_item->hasChildren();

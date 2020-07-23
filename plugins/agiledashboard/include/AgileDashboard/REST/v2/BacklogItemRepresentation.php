@@ -19,11 +19,15 @@
 
 namespace Tuleap\AgileDashboard\REST\v2;
 
+use Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference;
 use Tuleap\REST\JsonCast;
 use Tuleap\Project\REST\ProjectReference;
 use Tuleap\Tracker\REST\Artifact\ArtifactReference;
 use Tuleap\Tracker\REST\TrackerReference;
 
+/**
+ * @psalm-immutable
+ */
 class BacklogItemRepresentation
 {
 
@@ -58,7 +62,7 @@ class BacklogItemRepresentation
     public $color;
 
     /**
-     * @var Float
+     * @var float | null
      */
     public $initial_effort;
 
@@ -68,7 +72,7 @@ class BacklogItemRepresentation
     public $artifact;
 
     /**
-     * @var \Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference
+     * @var \Tuleap\AgileDashboard\REST\v1\BacklogItemParentReference | null
      */
     public $parent;
 
@@ -92,44 +96,71 @@ class BacklogItemRepresentation
      */
     public $card_fields = [];
 
-    public function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields)
-    {
-        $this->id             = JsonCast::toInt($backlog_item->id());
-        $this->label          = $backlog_item->title();
-        $this->status         = $backlog_item->status();
-        $this->type           = $backlog_item->type();
-        $this->short_type     = $backlog_item->getShortType();
-        $this->initial_effort = JsonCast::toFloat($backlog_item->getInitialEffort());
-        $this->color          = $backlog_item->color();
-
-        $this->artifact = ArtifactReference::build($backlog_item->getArtifact());
-
-        $this->project = new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject());
-
-        $this->parent = null;
-        if ($backlog_item->getParent()) {
-            $this->parent = new BacklogItemParentReference();
-            $this->parent->build($backlog_item->getParent());
-        }
-
-        $this->has_children = $backlog_item->hasChildren();
-
-        $this->addAllowedSubItemTypes($backlog_item);
-
-        if ($card_fields) {
-            $this->card_fields = $card_fields;
-        }
+    public function __construct(
+        int $id,
+        string $label,
+        string $status,
+        string $type,
+        string $short_type,
+        ?float $initial_effort,
+        string $color,
+        ArtifactReference $artifact,
+        ProjectReference $project,
+        ?BacklogItemParentReference $parent,
+        bool $has_children,
+        array $accept,
+        array $card_fields
+    ) {
+        $this->id             = $id;
+        $this->label          = $label;
+        $this->status         = $status;
+        $this->type           = $type;
+        $this->short_type     = $short_type;
+        $this->initial_effort = $initial_effort;
+        $this->color          = $color;
+        $this->artifact       = $artifact;
+        $this->project        = $project;
+        $this->parent         = $parent;
+        $this->has_children   = $has_children;
+        $this->accept         = $accept;
+        $this->card_fields    = $card_fields;
     }
 
-    private function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item)
+    public static function build(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item, array $card_fields): self
+    {
+        $parent = null;
+        if ($backlog_item->getParent()) {
+            $parent = BacklogItemParentReference::build($backlog_item->getParent());
+        }
+
+        return new self(
+            JsonCast::toInt($backlog_item->id()),
+            $backlog_item->title(),
+            $backlog_item->getStatus(),
+            $backlog_item->type(),
+            $backlog_item->getShortType(),
+            JsonCast::toFloat($backlog_item->getInitialEffort()),
+            $backlog_item->color(),
+            ArtifactReference::build($backlog_item->getArtifact()),
+            new ProjectReference($backlog_item->getArtifact()->getTracker()->getProject()),
+            $parent,
+            $backlog_item->hasChildren(),
+            self::addAllowedSubItemTypes($backlog_item),
+            $card_fields
+        );
+    }
+
+    private static function addAllowedSubItemTypes(\AgileDashboard_Milestone_Backlog_IBacklogItem $backlog_item): array
     {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
-        $this->accept = array('trackers' => array());
+        $accept = array('trackers' => array());
         foreach ($child_trackers as $child_tracker) {
             $reference = TrackerReference::build($child_tracker);
 
-            $this->accept['trackers'][] = $reference;
+            $accept['trackers'][] = $reference;
         }
+
+        return $accept;
     }
 }

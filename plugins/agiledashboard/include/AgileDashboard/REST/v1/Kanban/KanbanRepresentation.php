@@ -29,6 +29,9 @@ use Exception;
 use AgileDashboard_KanbanUserPreferences;
 use AgileDashboard_KanbanActionsChecker;
 
+/**
+ * @psalm-immutable
+ */
 class KanbanRepresentation
 {
 
@@ -42,12 +45,17 @@ class KanbanRepresentation
     public $id;
 
     /**
+     * @var int
+     */
+    public $tracker_id;
+
+    /**
      * @var \Tuleap\Tracker\REST\TrackerReference
      */
     public $tracker;
 
     /**
-     * @var int
+     * @var string
      */
     public $uri;
 
@@ -61,18 +69,18 @@ class KanbanRepresentation
      */
     public $columns;
 
-    /*
+    /**
      * @var array
      */
     public $resources;
 
     /**
-     * @var Tuleap\AgileDashboard\REST\v1\Kanban\KanbanBacklogInfoRepresentation
+     * @var KanbanBacklogInfoRepresentation
      */
     public $backlog;
 
     /**
-     * @var Tuleap\AgileDashboard\REST\v1\Kanban\KanbanArchiveInfoRepresentation
+     * @var KanbanArchiveInfoRepresentation
      */
     public $archive;
 
@@ -86,7 +94,33 @@ class KanbanRepresentation
      */
     public $user_can_reorder_columns;
 
-    public function build(
+    private function __construct(
+        int $id,
+        int $tracker_id,
+        TrackerReference $tracker,
+        string $uri,
+        string $label,
+        array $columns,
+        array $resources,
+        KanbanBacklogInfoRepresentation $backlog,
+        KanbanArchiveInfoRepresentation $archive,
+        bool $user_can_add_columns,
+        bool $user_can_reorder_columns
+    ) {
+        $this->id                       = $id;
+        $this->tracker_id               = $tracker_id;
+        $this->tracker                  = $tracker;
+        $this->uri                      = $uri;
+        $this->label                    = $label;
+        $this->columns                  = $columns;
+        $this->resources                = $resources;
+        $this->backlog                  = $backlog;
+        $this->archive                  = $archive;
+        $this->user_can_add_columns     = $user_can_add_columns;
+        $this->user_can_reorder_columns = $user_can_reorder_columns;
+    }
+
+    public static function build(
         AgileDashboard_Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanUserPreferences $user_preferences,
@@ -95,43 +129,44 @@ class KanbanRepresentation
         $user_can_reorder_columns,
         $user_can_add_in_place,
         PFUser $user
-    ) {
-        $this->id                       = JsonCast::toInt($kanban->getId());
-        $this->tracker_id               = JsonCast::toInt($kanban->getTrackerId());
-        $this->uri                      = self::ROUTE . '/' . $this->id;
-        $this->label                    = $kanban->getName();
-        $this->columns                  = array();
-        $this->user_can_add_columns     = $user_can_add_columns;
-        $this->user_can_reorder_columns = $user_can_reorder_columns;
+    ): self {
+        $kanban_id  = $kanban->getId();
+        $kanban_uri = self::ROUTE . '/' . $kanban_id;
 
-        $this->backlog = new KanbanBacklogInfoRepresentation();
-        $this->backlog->build('Backlog', $user_preferences->isBacklogOpen($kanban, $user), $user_can_add_in_place);
-
-        $this->archive = new KanbanArchiveInfoRepresentation();
-        $this->archive->build('Archive', $user_preferences->isArchiveOpen($kanban, $user));
-
-        $this->tracker = TrackerReference::build($this->getTracker($kanban));
-
-        $this->setColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user);
-
-        $this->resources = array(
-            'backlog' => array(
-                'uri' => $this->uri . '/' . self::BACKLOG_ROUTE
-            ),
-            'items' => array(
-                'uri' => $this->uri . '/' . self::ITEMS_ROUTE
-            )
+        return new self(
+            JsonCast::toInt($kanban_id),
+            JsonCast::toInt($kanban->getTrackerId()),
+            TrackerReference::build(self::getTracker($kanban)),
+            $kanban_uri,
+            $kanban->getName(),
+            self::getColumns($kanban, $column_factory, $kanban_actions_checker, $user_can_add_in_place, $user),
+            [
+                'backlog' => [
+                    'uri' => $kanban_uri . '/' . self::BACKLOG_ROUTE
+                ],
+                'items' => [
+                    'uri' => $kanban_uri . '/' . self::ITEMS_ROUTE
+                ]
+            ],
+            new KanbanBacklogInfoRepresentation('Backlog', $user_preferences->isBacklogOpen($kanban, $user), $user_can_add_in_place),
+            new KanbanArchiveInfoRepresentation('Archive', $user_preferences->isArchiveOpen($kanban, $user)),
+            $user_can_add_columns,
+            $user_can_reorder_columns,
         );
     }
 
-    private function setColumns(
+    /**
+     * @return KanbanColumnRepresentation[]
+     */
+    private static function getColumns(
         AgileDashboard_Kanban $kanban,
         AgileDashboard_KanbanColumnFactory $column_factory,
         AgileDashboard_KanbanActionsChecker $kanban_actions_checker,
-        $user_can_add_in_place,
+        bool $user_can_add_in_place,
         PFUser $user
-    ) {
-        $columns = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
+    ): array {
+        $column_representations = [];
+        $columns                = $column_factory->getAllKanbanColumnsForAKanban($kanban, $user);
 
         foreach ($columns as $column) {
             try {
@@ -148,15 +183,24 @@ class KanbanRepresentation
                 $user_can_edit_label = false;
             }
 
-            $column_representation = new KanbanColumnRepresentation();
-            $column_representation->build($column, $user_can_add_in_place, $user_can_remove_column, $user_can_edit_label);
+            $column_representation = new KanbanColumnRepresentation($column, $user_can_add_in_place, $user_can_remove_column, $user_can_edit_label);
 
-            $this->columns[] = $column_representation;
+            $column_representations[] = $column_representation;
         }
+        return $column_representations;
     }
 
-    private function getTracker(AgileDashboard_Kanban $kanban)
+    private static function getTracker(AgileDashboard_Kanban $kanban): \Tracker
     {
-        return TrackerFactory::instance()->getTrackerById($kanban->getTrackerId());
+        $tracker_id = $kanban->getTrackerId();
+        $tracker    = TrackerFactory::instance()->getTrackerById($tracker_id);
+
+        if ($tracker === null) {
+            throw new \RuntimeException(
+                sprintf("Cannot find the tracker #%d associated with the kanban #%d", $tracker_id, $kanban->getId())
+            );
+        }
+
+        return $tracker;
     }
 }

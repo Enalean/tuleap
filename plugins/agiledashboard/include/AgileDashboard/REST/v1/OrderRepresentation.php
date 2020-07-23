@@ -21,6 +21,9 @@ namespace Tuleap\AgileDashboard\REST\v1;
 
 use Luracast\Restler\RestException;
 
+/**
+ * @psalm-immutable
+ */
 class OrderRepresentation
 {
     public const AFTER  = 'after';

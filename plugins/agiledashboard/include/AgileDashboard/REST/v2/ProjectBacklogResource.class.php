@@ -165,7 +165,6 @@ class ProjectBacklogResource
         $this->sendAllowHeaders();
         $this->sendPaginationHeaders($limit, $offset, count($backlog_items));
 
-        $backlog  = new BacklogRepresentation();
         $contents = array_slice($backlog_item_representations, $offset, $limit);
 
         $accepted_trackers                   = $this->getAcceptedTrackers($user, $project);
@@ -173,7 +172,7 @@ class ProjectBacklogResource
 
         $parent_trackers = $this->parent_tracker_retriever->getCreatableParentTrackers($top_milestone, $user, $accepted_trackers);
 
-        return $backlog->build($contents, $accepted_trackers, $parent_trackers, $has_user_priority_change_permission);
+        return BacklogRepresentation::build($contents, $accepted_trackers, $parent_trackers, $has_user_priority_change_permission);
     }
 
     private function hasUserPriorityChangePermission(PFUser $user, Project $project)

@@ -81,8 +81,7 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
         );
         EventManager::instance()->processEvent($pane_info_collector);
 
-        $milestone_representation = new MilestoneRepresentation();
-        $milestone_representation->build(
+        $milestone_representation = MilestoneRepresentation::build(
             $milestone,
             $status_count,
             $backlog_trackers,
@@ -93,17 +92,26 @@ class AgileDashboard_Milestone_MilestoneRepresentationBuilder
             $pane_info_collector
         );
 
+        $milestone_representation_reference_holder = new class
+        {
+            /**
+             * @var MilestoneRepresentation
+             */
+            public $milestone_representation;
+        };
+        $milestone_representation_reference_holder->milestone_representation = $milestone_representation;
+
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_MILESTONE,
             array(
-                'version'                  => 'v1',
-                'user'                     => $user,
-                'milestone'                => $milestone,
-                'milestone_representation' => &$milestone_representation,
+                'version'                                   => 'v1',
+                'user'                                      => $user,
+                'milestone'                                 => $milestone,
+                'milestone_representation_reference_holder' => &$milestone_representation_reference_holder,
             )
         );
 
-        return $milestone_representation;
+        return $milestone_representation_reference_holder->milestone_representation;
     }
 
     public function getPaginatedSubMilestonesRepresentations(

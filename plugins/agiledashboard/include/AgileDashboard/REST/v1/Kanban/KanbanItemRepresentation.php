@@ -23,6 +23,9 @@ use Tuleap\Cardwall\BackgroundColor\BackgroundColor;
 use Tuleap\REST\JsonCast;
 use Tracker_Artifact;
 
+/**
+ * @psalm-immutable
+ */
 class KanbanItemRepresentation
 {
 
@@ -66,20 +69,48 @@ class KanbanItemRepresentation
      */
     public $background_color_name;
 
-    public function build(
+    /**
+     * @param string|int $in_column
+     */
+    private function __construct(
+        int $id,
+        string $item_name,
+        string $label,
+        string $color,
+        array $card_fields,
+        array $timeinfo,
+        $in_column,
+        string $background_color_name
+    ) {
+        $this->id                    = $id;
+        $this->item_name             = $item_name;
+        $this->label                 = $label;
+        $this->color                 = $color;
+        $this->card_fields           = $card_fields;
+        $this->timeinfo              = $timeinfo;
+        $this->in_column             = $in_column;
+        $this->background_color_name = $background_color_name;
+    }
+
+    /**
+     * @param string|int $in_column
+     */
+    public static function build(
         Tracker_Artifact $artifact,
         $timeinfo,
         $in_column,
         array $card_fields,
         BackgroundColor $background_color
-    ) {
-        $this->id                    = JsonCast::toInt($artifact->getId());
-        $this->item_name             = $artifact->getTracker()->getItemName();
-        $this->label                 = $artifact->getTitle() ?? '';
-        $this->color                 = $artifact->getTracker()->getColor()->getName();
-        $this->timeinfo              = $timeinfo;
-        $this->in_column             = $in_column;
-        $this->card_fields           = $card_fields;
-        $this->background_color_name = $background_color->getBackgroundColorName();
+    ): self {
+        return new self(
+            JsonCast::toInt($artifact->getId()),
+            $artifact->getTracker()->getItemName(),
+            $artifact->getTitle() ?? '',
+            $artifact->getTracker()->getColor()->getName(),
+            $card_fields,
+            $timeinfo,
+            $in_column,
+            $background_color->getBackgroundColorName(),
+        );
     }
 }
