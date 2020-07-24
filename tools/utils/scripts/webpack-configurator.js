@@ -71,8 +71,14 @@ function getVueLoaderPlugin() {
 
 function getTypescriptCheckerPlugin(use_vue) {
     return new ForkTsCheckerWebpackPlugin({
-        vue: use_vue,
-        reportFiles: ["**", "!**/*.test.ts"],
+        typescript: {
+            configOverwrite: {
+                exclude: ["**/*.test.ts"],
+            },
+            extensions: {
+                vue: use_vue,
+            },
+        },
     });
 }
 
