@@ -24,6 +24,7 @@ import ExecutionListHeader from "./execution-list-header/execution-list-header-c
 import ExecutionDetailJustUpdated from "./execution-detail-just-updated-component.js";
 import ExecutionWithSteps from "./execution-with-steps/execution-with-steps-component.js";
 import Step from "./execution-with-steps/step/step-component.js";
+import RobotSvgDisplayer from "./svg/robot-svg-displayer-component.js";
 
 export default angular
     .module("execution", [
@@ -47,5 +48,6 @@ export default angular
     .component("executionListHeader", ExecutionListHeader)
     .component("executionWithSteps", ExecutionWithSteps)
     .component("step", Step)
+    .component("robotSvgDisplayer", RobotSvgDisplayer)
     .filter("ExecutionListFilter", ExecutionListFilter)
     .filter("AutomatedTestsFilter", AutomatedTestsFilter).name;
