@@ -37,12 +37,6 @@ describe("administration", () => {
             form_element_switch_to_explicit_backlog.value = "1";
             form_element_switch_to_explicit_backlog.checked = true;
 
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            let click_event: MouseEvent | null;
-            form_element_switch_to_explicit_backlog.addEventListener("click", (event) => {
-                click_event = event;
-            });
-
             const section_switch_to_explicit_backlog = document.createElement("section");
 
             const submit_without_modal = document.createElement("button");
@@ -139,12 +133,6 @@ describe("administration", () => {
             const submit_with_modal = document.createElement("button");
             submit_with_modal.setAttribute("id", "scrum-configuration-edit-options-button");
             submit_with_modal.dataset.targetModalId = modal_id;
-
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            let submit_click_event;
-            submit_with_modal.addEventListener("click", (event) => {
-                submit_click_event = event;
-            });
 
             modal.appendChild(modal_legacy_text);
             modal.appendChild(modal_explicit_text);

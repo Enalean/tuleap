@@ -22,7 +22,6 @@ var codendi = codendi || {};
 (function ($, codendi) {
     $(document).ready(function () {
         var embedded_content = $("#embedded_content"),
-            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             rte = null,
             options = null;
 
@@ -34,6 +33,7 @@ var codendi = codendi || {};
                 default_in_html: true,
             };
 
+            //eslint-disable-next-line @typescript-eslint/no-unused-vars
             rte = new codendi.RTE(embedded_content.attr("id"), options);
         }
     });
