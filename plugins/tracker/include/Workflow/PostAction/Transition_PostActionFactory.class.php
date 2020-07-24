@@ -203,7 +203,7 @@ class Transition_PostActionFactory
     /** @return Transition_PostAction_FieldFactory */
     private function getFieldFactory()
     {
-        if (!$this->postaction_field_factory) {
+        if (! $this->postaction_field_factory) {
             $this->postaction_field_factory = new Transition_PostAction_FieldFactory(
                 Tracker_FormElementFactory::instance(),
                 new Transition_PostAction_Field_DateDao(),
@@ -217,7 +217,7 @@ class Transition_PostActionFactory
     /** @return Transition_PostAction_CIBuildFactory */
     private function getCIBuildFactory()
     {
-        if (!$this->postaction_cibuild_factory) {
+        if (! $this->postaction_cibuild_factory) {
             $this->postaction_cibuild_factory = new Transition_PostAction_CIBuildFactory(
                 new Transition_PostAction_CIBuildDao()
             );

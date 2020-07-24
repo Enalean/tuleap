@@ -96,7 +96,7 @@ class Docman_Filter
     public function initOnUrlMatch($request)
     {
         if ($this->md !== null) {
-            if (!$this->_urlMatchDelete($request)) {
+            if (! $this->_urlMatchDelete($request)) {
                 if ($this->_urlMatchUpdate($request)) {
                     return true;
                 } else {
@@ -316,7 +316,7 @@ class Docman_FilterDateAdvanced extends Docman_FilterDate
         }
 
         // If no values found, try to get values from simple search
-        if (!$startValue && !$endValue) {
+        if (! $startValue && ! $endValue) {
             if (
                 $request->exist($this->getFieldOperatorName())
                 && $request->exist($this->getFieldValueName())
@@ -433,7 +433,7 @@ class Docman_FilterListAdvanced extends Docman_FilterList
     public function _urlMatchUpdate($request)
     {
         if (Docman_Filter::_urlMatchUpdate($request)) {
-            if (!is_array($this->getValue())) {
+            if (! is_array($this->getValue())) {
                 if ($this->getValue() !== null && $this->getValue() != '') {
                     // Convert simple value to advanced
                     $this->setValue(array($this->getValue()));

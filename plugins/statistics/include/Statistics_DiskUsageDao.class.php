@@ -43,7 +43,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
 
         $dar = $this->retrieve($sql);
 
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row['date'];
         }
@@ -61,7 +61,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
 
         $dar = $this->retrieve($sql);
 
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row['date'];
         }
@@ -77,7 +77,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
                ' ORDER BY date ASC LIMIT 1';
         //echo $sql.'<br>';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return 'date = "' . $row['date'] . '"';
         }
@@ -92,7 +92,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
                ' ORDER BY date DESC LIMIT 1';
         //echo $sql.'<br>';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return 'date = "' . $row['date'] . '"';
         }
@@ -130,7 +130,7 @@ class Statistics_DiskUsageDao extends DataAccessObject
     {
         $sql = 'SELECT max(date) as date FROM plugin_statistics_diskusage_site';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->current();
             return $row['date'];
         }

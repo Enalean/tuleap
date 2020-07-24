@@ -23,7 +23,7 @@ if ($request->valid($vFunc) && $request->get('func') === 'detailrevision' && use
 
     require('./detail_revision.php');
 } elseif (
-    user_isloggedin() &&                                                             //We'll browse
+    user_isloggedin() && //We'll browse
             (
              ($request->valid($vFunc) && $request->get('func') === 'browse')     //if user ask for it
              || $request->existAndNonEmpty('rev_id')     //or if user set rev_id

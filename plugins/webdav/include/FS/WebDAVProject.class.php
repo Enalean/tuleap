@@ -178,7 +178,7 @@ class WebDAVProject extends Sabre_DAV_Directory
     public function exist()
     {
         // D refers to deleted
-        return !$this->getProject()->isError() && $this->getProject()->getStatus() != 'D';
+        return ! $this->getProject()->isError() && $this->getProject()->getStatus() != 'D';
     }
 
     /**

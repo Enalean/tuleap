@@ -105,7 +105,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
                         $children[$index] = 'duplicate';
                     }
                 }
-                if (!isset($children[$index])) {
+                if (! isset($children[$index])) {
                     $children[$index] = call_user_func(array($this,$method), $node);
                 }
             }
@@ -146,7 +146,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
         $name = $this->getUtils()->retrieveName($name);
         $children = $this->getChildList();
 
-        if (!isset($children[$name])) {
+        if (! isset($children[$name])) {
             throw new Sabre_DAV_Exception_FileNotFound($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_not_available'));
         } elseif ($children[$name] === 'duplicate') {
             throw new Sabre_DAV_Exception_Conflict($GLOBALS['Language']->getText('plugin_webdav_common', 'docman_item_duplicated'));
@@ -231,7 +231,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function isDocmanRoot()
     {
-        return !$this->getItem()->getParentId();
+        return ! $this->getItem()->getParentId();
     }
 
     /**

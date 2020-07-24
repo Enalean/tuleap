@@ -494,7 +494,7 @@ class Tracker_Artifact_XMLImport
                 if ($count === 0) {
                     $this->logger->debug("initial changeset");
                     $res = $this->importFirstChangeset($artifact, $xml_changeset, $fields_data_builder, $url_mapping, $changeset_id_mapping, $tracker_import_config);
-                    if (!$res) {
+                    if (! $res) {
                         $this->importFakeFirstChangeset($artifact, $xml_changeset, $url_mapping, $changeset_id_mapping, $tracker_import_config);
                     }
                 } else {

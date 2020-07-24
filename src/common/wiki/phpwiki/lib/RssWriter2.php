@@ -52,12 +52,12 @@ class RssWriter2 extends RssWriter
     public function cloud($properties)
     {
         // soap or http-post
-        if (!isset($properties['port'])) {
-            $properties['port'] = !SERVER_PORT
+        if (! isset($properties['port'])) {
+            $properties['port'] = ! SERVER_PORT
                 ? '80'
                 : (SERVER_PROTOCOL == 'https' ? '443' : '80');
         }
-        if (!isset($properties['domain'])) {
+        if (! isset($properties['domain'])) {
             $properties['domain'] = SERVER_NAME;
         }
         $this->_cloud = $this->node('cloud', $properties);

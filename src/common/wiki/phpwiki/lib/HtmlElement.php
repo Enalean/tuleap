@@ -5,7 +5,7 @@
  *
  * This code is now php5 compatible. --2004-04-19 23:51:43 rurban
  */
-if (!class_exists("XmlElement")) {
+if (! class_exists("XmlElement")) {
     require_once(dirname(__FILE__) . "/XmlElement.php");
 }
 if (class_exists("HtmlElement")) {
@@ -28,7 +28,7 @@ class HtmlElement extends XmlElement
     public function _init($args)
     {
         $initial_args = func_get_args();
-        if (!is_array($args)) {
+        if (! is_array($args)) {
             $args = $initial_args;
         }
 

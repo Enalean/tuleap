@@ -78,7 +78,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new HudsonSvnPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -191,14 +191,14 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
 
     private function isJobValid($job_id)
     {
-        return isset($job_id) && !empty($job_id);
+        return isset($job_id) && ! empty($job_id);
     }
 
     private function isRequestWellFormed(array $params)
     {
         return $this->isJobValid($params['job_id']) &&
                isset($params['request']) &&
-               !empty($params['request']);
+               ! empty($params['request']);
     }
 
     private function isPluginConcerned(array $params)

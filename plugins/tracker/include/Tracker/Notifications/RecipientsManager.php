@@ -98,7 +98,7 @@ class RecipientsManager
 
         // 3 Get from the global notif
         foreach ($changeset->getTracker()->getRecipients() as $r) {
-            if ($r['on_updates'] == 1 || !$is_update) {
+            if ($r['on_updates'] == 1 || ! $is_update) {
                 foreach ($r['recipients'] as $recipient) {
                     $tablo[$recipient] = $r['check_permissions'];
                 }

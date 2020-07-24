@@ -11,7 +11,7 @@ require_once __DIR__ . '/commit_utils.php';
 $request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');
 
-if (!$group_id) {
+if (! $group_id) {
     exit_no_group(); // need a group_id !!!
 }
 

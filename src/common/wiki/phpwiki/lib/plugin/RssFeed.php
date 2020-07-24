@@ -63,22 +63,22 @@ class WikiPlugin_RssFeed extends WikiPlugin
         extract($this->getArgs($argstr, $request));
 
         $rss_parser = new RSSParser();
-        if (!empty($url)) {
+        if (! empty($url)) {
             $rss_parser->parse_url($url, $debug);
         }
 
-        if (!empty($rss_parser->channel['title'])) {
+        if (! empty($rss_parser->channel['title'])) {
             $feed = $rss_parser->channel['title'];
         }
-        if (!empty($rss_parser->channel['link'])) {
+        if (! empty($rss_parser->channel['link'])) {
             $url  = $rss_parser->channel['link'];
         }
-        if (!empty($rss_parser->channel['description'])) {
+        if (! empty($rss_parser->channel['description'])) {
             $description = $rss_parser->channel['description'];
         }
 
-        if (!empty($feed)) {
-            if (!empty($url)) {
+        if (! empty($feed)) {
+            if (! empty($url)) {
                 $titre = HTML::span(HTML::a(
                     array('href' => $rss_parser->channel['link']),
                     $rss_parser->channel['title']
@@ -87,7 +87,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
                 $titre = HTML::span($rss_parser->channel['title']);
             }
             $th = HTML::div(array('class' => 'feed'), $titre);
-            if (!empty($description)) {
+            if (! empty($description)) {
                 $th->pushContent(HTML::p(
                     array('class' => 'chandesc'),
                     HTML::raw($description)
@@ -97,7 +97,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
             $th = HTML();
         }
 
-        if (!empty($rss_parser->channel['date'])) {
+        if (! empty($rss_parser->channel['date'])) {
             $th->pushContent(HTML::raw("<!--" . $rss_parser->channel['date'] . "-->"));
         }
         $html = HTML::div(array('class' => 'rss'), $th);
@@ -119,7 +119,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
                     )
                 );
                 $cell->pushContent($cell_title);
-                if (!empty($item['description'])) {
+                if (! empty($item['description'])) {
                     $cell->pushContent(HTML::div(
                         array('class' => 'itemdesc'),
                         HTML::raw($item['description'])
@@ -135,7 +135,7 @@ class WikiPlugin_RssFeed extends WikiPlugin
 
     public function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) {
+        if (! $request) {
             $request = $GLOBALS['request'];
         }
         extract($args);

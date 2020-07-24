@@ -39,7 +39,7 @@ class LDAP_ProjectManager
      */
     public function hasSVNLDAPAuth($groupId)
     {
-        if (!isset($this->cacheSVNLDAP[$groupId])) {
+        if (! isset($this->cacheSVNLDAP[$groupId])) {
             $this->cacheSVNLDAP[$groupId] = $this->getDao()->hasLdapSvn($groupId);
         }
         return $this->cacheSVNLDAP[$groupId];

@@ -60,7 +60,7 @@ class ArtifactFieldFactory
     {
         global $Language;
 
-        if (!$ArtifactType || !is_object($ArtifactType)) {
+        if (! $ArtifactType || ! is_object($ArtifactType)) {
             $this->setError($Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
@@ -197,7 +197,7 @@ class ArtifactFieldFactory
                 //prefix from the key
                 if ($prefix != null) {
                     $pos = strpos($key, $prefix);
-                    if (!is_bool($pos) && $pos == 0) {
+                    if (! is_bool($pos) && $pos == 0) {
                         $postfix =  substr($key, strlen($prefix));
                         if (isset($this->USAGE_BY_NAME[$postfix])) {
                             $vfl[$postfix] = $request->get($key);
@@ -267,7 +267,7 @@ class ArtifactFieldFactory
                     ($request->get('func') == 'postadd' && $field->userCanSubmit($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
                     || ($request->get('func') == 'postmod' && $field->userCanUpdate($this->ArtifactType->getGroupId(), $this->ArtifactType->getID(), $user->getId()))
                 ) {
-                    if (!isset($vfl[$field->field_name])) {
+                    if (! isset($vfl[$field->field_name])) {
                            $vfl[$field->field_name] = '';
                     }
                 }
@@ -301,7 +301,7 @@ class ArtifactFieldFactory
                     } else {
                         $is_empty = ( ($field->isSelectBox()) ? ($val == 100) : ($val == ''));
                     }
-                    if ($is_empty && !$field->isEmptyOk()) {
+                    if ($is_empty && ! $field->isEmptyOk()) {
                         $bad_fields[] = $field->getLabel();
                     }
                 }
@@ -336,7 +336,7 @@ class ArtifactFieldFactory
         foreach ($this->USAGE_BY_NAME as $key => $field) {
             if (
                 $field->getUseIt() == 1 &&
-                !$field->userCanSubmit($this->ArtifactType->Group->getID(), $this->ArtifactType->getID())
+                ! $field->userCanSubmit($this->ArtifactType->Group->getID(), $this->ArtifactType->getID())
             ) {
                   $result_fields[$key] = $field->getDefaultValue();
             }
@@ -412,7 +412,7 @@ class ArtifactFieldFactory
             $dest_val_func = array();
 
          //go through all group binds
-            if (!empty($val_function)) {
+            if (! empty($val_function)) {
                 foreach ($val_function as $val_func) {
                        $ug = $field->isUgroupValueFunction($val_func);
                     if ($ug !== false) {
@@ -456,7 +456,7 @@ class ArtifactFieldFactory
 
             $res_insert = db_query($sql_insert);
          //echo $sql_insert;
-            if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+            if (! $res_insert || db_affected_rows($res_insert) <= 0) {
                 $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', array($field_array["field_id"],$atid_dest,db_error())));
                 return false;
             }
@@ -468,7 +468,7 @@ class ArtifactFieldFactory
 
          //echo $sql_insert;
             $res_insert = db_query($sql_insert);
-            if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+            if (! $res_insert || db_affected_rows($res_insert) <= 0) {
                 $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', array($field->getID(),$atid_dest,db_error())));
                 return false;
             }
@@ -490,7 +490,7 @@ class ArtifactFieldFactory
 
       //echo $sql_insert;
             $res_insert = db_query($sql_insert);
-            if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+            if (! $res_insert || db_affected_rows($res_insert) <= 0) {
                 $this->setError($Language->getText('tracker_common_field_factory', 'vl_ins_err', array($field_array["field_id"],$atid_dest,db_error())));
                 return false;
             }
@@ -686,7 +686,7 @@ class ArtifactFieldFactory
         db_es($label) . "','" . db_es($description) . "','',0," . db_ei($empty_ok) . "," . db_ei($keep_history) . "," . db_ei($special) . ",'','" . db_es($default_value) . "')";
 
         $res_insert = db_query($sql);
-        if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+        if (! $res_insert || db_affected_rows($res_insert) <= 0) {
             $this->setError($Language->getText('tracker_common_field_factory', 'ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
             return false;
         }
@@ -697,7 +697,7 @@ class ArtifactFieldFactory
         db_ei($rank_on_screen) . "')";
 
         $res_insert = db_query($sql);
-        if (!$res_insert || db_affected_rows($res_insert) <= 0) {
+        if (! $res_insert || db_affected_rows($res_insert) <= 0) {
             $this->setError($Language->getText('tracker_common_field_factory', 'use_ins_err', array($field_id,$this->ArtifactType->getID(),db_error())));
             return false;
         }

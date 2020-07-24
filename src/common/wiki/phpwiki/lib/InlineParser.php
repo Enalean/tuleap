@@ -88,7 +88,7 @@ class RegexpSet
     {
         assert($regexps);
         $this->_regexps = array_unique($regexps);
-        if (!defined('_INLINE_OPTIMIZATION')) {
+        if (! defined('_INLINE_OPTIMIZATION')) {
             define('_INLINE_OPTIMIZATION', 0);
         }
     }
@@ -159,7 +159,7 @@ class RegexpSet
             $matched = array();
             $matched_ind = array();
             for ($i = 0; $i < count($regexps); $i++) {
-                if (!trim($regexps[$i])) {
+                if (! trim($regexps[$i])) {
                     trigger_error("empty regexp $i", E_USER_WARNING);
                     continue;
                 }
@@ -181,10 +181,10 @@ class RegexpSet
 
         // Optimization: if the matches are only "$" and another, then omit "$"
         if (! _INLINE_OPTIMIZATION or count($matched) > 2) {
-            assert(!empty($repeat));
-            assert(!empty($regexps));
+            assert(! empty($repeat));
+            assert(! empty($regexps));
             for ($i = 0; $i < count($regexps); $i++) {
-                if (!trim($regexps[$i])) {
+                if (! trim($regexps[$i])) {
                     trigger_error("empty regexp $i", E_USER_WARNING);
                     $regexps[$i] = '\Wxxxx\w\W\w\W\w\W\w\W\w\W\w'; // some placeholder
                 }
@@ -331,7 +331,7 @@ class Markup_escape extends SimpleMarkup
  */
 function isImageLink($link)
 {
-    if (!$link) {
+    if (! $link) {
         return false;
     }
     assert(defined('INLINE_IMAGES'));
@@ -444,7 +444,7 @@ function LinkBracketLink($bracketlink)
             list(,$rawlink,$anchor) = $m;
             $pagename = UnWikiEscape($rawlink);
             $anchor = UnWikiEscape($anchor);
-            if (!$label) {
+            if (! $label) {
                 $label = $link;
             }
         } else {
@@ -502,7 +502,7 @@ class Markup_wikiword extends SimpleMarkup
     public function getMatchRegexp()
     {
         global $WikiNameRegexp;
-        if (!trim($WikiNameRegexp)) {
+        if (! trim($WikiNameRegexp)) {
             return " " . WIKI_NAME_REGEXP;
         }
         return " $WikiNameRegexp";
@@ -510,7 +510,7 @@ class Markup_wikiword extends SimpleMarkup
 
     public function markup($match)
     {
-        if (!$match) {
+        if (! $match) {
             return false;
         }
         if ($this->_isWikiUserPage($match)) {
@@ -575,7 +575,7 @@ class Markup_nestled_emphasis extends BalancedMarkup
     {
         static $start_regexp = false;
 
-        if (!$start_regexp) {
+        if (! $start_regexp) {
             // The three possible delimiters
             // (none of which can be followed by itself.)
             $i = "_ (?! _)";
@@ -669,7 +669,7 @@ class Markup_html_abbr extends BalancedMarkup
             $tag = 'acronym';
         }
         $rest = substr($match, 1 + strlen($tag), -1);
-        if (!empty($rest)) {
+        if (! empty($rest)) {
             list($key,$val) = explode("=", $rest);
             $args = array($key => $val);
         } else {
@@ -802,7 +802,7 @@ class InlineTransformer
 
     public function __construct($markup_types = false)
     {
-        if (!$markup_types) {
+        if (! $markup_types) {
             $non_default = false;
             $markup_types = array('escape', 'bracketlink', 'url',
                                   'interwiki', 'wikiword', 'linebreak',
@@ -817,10 +817,10 @@ class InlineTransformer
             $class = "Markup_$mtype";
             $this->_addMarkup(new $class());
         }
-        if (ENABLE_MARKUP_COLOR and !$non_default) {
+        if (ENABLE_MARKUP_COLOR and ! $non_default) {
             $this->_addMarkup(new Markup_color());
         }
-        if (ENABLE_MARKUP_TEMPLATE and !$non_default) {
+        if (ENABLE_MARKUP_TEMPLATE and ! $non_default) {
             $this->_addMarkup(new Markup_template_plugin());
         }
     }
@@ -833,7 +833,7 @@ class InlineTransformer
             $regexp = $markup->getStartRegexp();
         }
 
-        assert(!isset($this->_markup[$regexp]));
+        assert(! isset($this->_markup[$regexp]));
         $this->_regexps[] = $regexp;
         $this->_markup[] = $markup;
     }
@@ -867,7 +867,7 @@ class InlineTransformer
 
             $markup = $this->_markup[$match->regexp_ind - 1];
             $body = $this->_parse_markup_body($markup, $match->match, $match->postmatch, $end_regexps);
-            if (!$body) {
+            if (! $body) {
                 // Couldn't match balanced expression.
                 // Ignore and look for next matching start regexp.
                 $match = $regexps->nextMatch($input, $match);
@@ -901,7 +901,7 @@ class InlineTransformer
             return true;        // Done. SimpleMarkup is simple.
         }
 
-        if (!is_object($markup)) {
+        if (! is_object($markup)) {
             return false; // Some error: Should assert
         }
         array_unshift($end_regexps, $markup->getEndRegexp($match));
@@ -911,7 +911,7 @@ class InlineTransformer
         // e.g. when text is "*lots *of *start *delims *with
         // *no *matching *end *delims".
         $ends_pat = "/(?:" . join(").*(?:", $end_regexps) . ")/xs";
-        if (!preg_match($ends_pat, $text)) {
+        if (! preg_match($ends_pat, $text)) {
             return false;
         }
         return $this->parse($text, $end_regexps);

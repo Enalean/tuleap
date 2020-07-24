@@ -68,7 +68,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_ldap_suspended_user')) {
+        if (! $this->db->tableNameExists('plugin_ldap_suspended_user')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The table plugin_ldap_suspended_user still not created');
         }
     }

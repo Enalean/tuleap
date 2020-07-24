@@ -86,7 +86,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
             $href = '';
-            if (!$this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
+            if (! $this->item->isObsolete() || ($this->item->isObsolete() && $dpm->userCanAdmin($user))) {
                 $url = DocmanViewURLBuilder::buildActionUrl(
                     $this->item,
                     ['default_url' => $this->url],
@@ -222,7 +222,7 @@ class Docman_View_ItemDetailsSectionProperties extends Docman_View_ItemDetailsSe
             $lockDate = format_date($GLOBALS['Language']->getText('system', 'datefmt'), $lockInfos['lock_date']);
             $html .= '<p>';
             $html .= sprintf(dgettext('tuleap-docman', '%1$s <strong>locked</strong> this document on %2$s.'), $locker, $lockDate);
-            if (!$this->user_can_write) {
+            if (! $this->user_can_write) {
                 $html .= dgettext('tuleap-docman', 'You cannot modify it until the lock owner or a document manager release the lock.');
             }
             $html .= '</p>';

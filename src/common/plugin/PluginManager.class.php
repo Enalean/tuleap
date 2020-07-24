@@ -136,7 +136,7 @@ class PluginManager
     {
         $plugin = false;
         if ($this->isNameValid($name)) {
-            if (!$this->plugin_factory->isPluginInstalled($name)) {
+            if (! $this->plugin_factory->isPluginInstalled($name)) {
                 $this->executeSqlStatements('install', $name);
                 $plugin = $this->plugin_factory->createPlugin($name);
                 if ($plugin instanceof Plugin) {
@@ -251,11 +251,11 @@ class PluginManager
 
     public function _createEtc($name)
     {
-        if (!is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name)) {
+        if (! is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name)) {
             mkdir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name, 0700);
         }
         if (is_dir(ForgeConfig::get('sys_pluginsroot') . '/' . $name . '/etc')) {
-            if (!is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc')) {
+            if (! is_dir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc')) {
                 mkdir(ForgeConfig::get('sys_custompluginsroot') . '/' . $name . '/etc', 0700);
             }
             $etcs = glob(ForgeConfig::get('sys_pluginsroot') . '/' . $name . '/etc/*');
@@ -320,10 +320,10 @@ class PluginManager
     public $plugins_name;
     public function getNameForPlugin($plugin)
     {
-        if (!$this->plugins_name) {
+        if (! $this->plugins_name) {
             $this->plugins_name = array();
         }
-        if (!isset($this->plugins_name[$plugin->getId()])) {
+        if (! isset($this->plugins_name[$plugin->getId()])) {
             $this->plugins_name[$plugin->getId()] = $this->plugin_factory->getNameForPlugin($plugin);
         }
         return $this->plugins_name[$plugin->getId()];
@@ -418,8 +418,8 @@ class PluginManager
 
     private function copyDirectory($source, $destination)
     {
-        if (!is_dir($destination)) {
-            if (!mkdir($destination)) {
+        if (! is_dir($destination)) {
+            if (! mkdir($destination)) {
                 return false;
             }
         }
@@ -428,7 +428,7 @@ class PluginManager
         foreach ($iterator as $file) {
             if ($file->isFile()) {
                 copy($file->getRealPath(), "$destination/" . $file->getFilename());
-            } elseif (!$file->isDot() && $file->isDir()) {
+            } elseif (! $file->isDot() && $file->isDir()) {
                 $this->copyDirectory($file->getRealPath(), "$destination/$file");
             }
         }

@@ -49,7 +49,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_widget_renderer')) {
+        if (! $this->db->tableNameExists('tracker_widget_renderer')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_widget_renderer table is missing');
         }
     }

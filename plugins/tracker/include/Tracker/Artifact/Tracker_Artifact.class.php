@@ -252,7 +252,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public function userCanUpdate(PFUser $user): bool
     {
-        if ($user->isAnonymous() || !$this->userCanView($user)) {
+        if ($user->isAnonymous() || ! $this->userCanView($user)) {
             return false;
         }
         return true;
@@ -383,7 +383,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html = '';
         if ($this->userCanView($user)) {
             $fields = $tooltip->getFields();
-            if (!empty($fields)) {
+            if (! empty($fields)) {
                 $html .= '<table>';
                 foreach ($fields as $f) {
                     //TODO: check field permissions
@@ -810,7 +810,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     break;
                 }
 
-                if (!$this->linkArtifact($linked_artifact_id, $current_user)) {
+                if (! $this->linkArtifact($linked_artifact_id, $current_user)) {
                     $GLOBALS['Response']->sendStatusCode(400);
                 } else {
                     $this->summonArtifactAssociators($request, $current_user, $linked_artifact_id);
@@ -1186,7 +1186,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getTracker()
     {
-        if (!isset($this->tracker)) {
+        if (! isset($this->tracker)) {
             $tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
             if ($tracker === null) {
                 throw new RuntimeException('Tracker does not exist');
@@ -1521,7 +1521,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getValue(Tracker_FormElement_Field $field, ?Tracker_Artifact_Changeset $changeset = null): ?Tracker_Artifact_ChangesetValue
     {
-        if (!$changeset) {
+        if (! $changeset) {
             $changeset = $this->getLastChangeset();
         }
         if ($changeset) {
@@ -1849,7 +1849,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function getAllAncestors(PFUser $user)
     {
-        if (!isset($this->ancestors)) {
+        if (! isset($this->ancestors)) {
             $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
         }
         return $this->ancestors;

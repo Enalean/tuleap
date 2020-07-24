@@ -30,7 +30,7 @@ require_once('lib/Template.php');
 // We might use a HTML PageType, which is contra wiki, but some people might prefer HTML markup.
 // TODO: Change from constant to user preference variable (checkbox setting),
 //       when HtmlParser is finished.
-if (!defined('USE_HTMLAREA')) {
+if (! defined('USE_HTMLAREA')) {
     define('USE_HTMLAREA', false);
 }
 if (USE_HTMLAREA) {
@@ -89,7 +89,7 @@ class PageEditor
                 $this->_redirect_to = $request->getArg('save_and_redirect_to');
             }
         }
-        if (!headers_sent()) {
+        if (! headers_sent()) {
             header("Content-Type: text/html; charset=" . $GLOBALS['charset']);
         }
     }
@@ -225,7 +225,7 @@ class PageEditor
             return false;       // Not changed.
         }
 
-        if (!$this->user->isAdmin()) {
+        if (! $this->user->isAdmin()) {
             // FIXME: some sort of message
             return false;         // not allowed.
         }
@@ -278,7 +278,7 @@ class PageEditor
             // force new?
             $meta
         );
-        if (!isa($newrevision, 'WikiDB_PageRevision')) {
+        if (! isa($newrevision, 'WikiDB_PageRevision')) {
             // Save failed.  (Concurrent updates).
             return false;
         } else {
@@ -354,7 +354,7 @@ class PageEditor
 
     public function canEdit()
     {
-        return !$this->page->get('locked') || $this->user->isAdmin();
+        return ! $this->page->get('locked') || $this->user->isAdmin();
     }
 
     public function isInitialEdit()
@@ -403,13 +403,12 @@ class PageEditor
 
     public function getLockedMessage()
     {
-        return
-            HTML(
-                HTML::h2(_("Page Locked")),
-                HTML::p(_("This page has been locked by the administrator so your changes can not be saved.")),
-                HTML::p(_("(Copy your changes to the clipboard. You can try editing a different page or save your text in a text editor.)")),
-                HTML::p(_("Sorry for the inconvenience."))
-            );
+        return HTML(
+            HTML::h2(_("Page Locked")),
+            HTML::p(_("This page has been locked by the administrator so your changes can not be saved.")),
+            HTML::p(_("(Copy your changes to the clipboard. You can try editing a different page or save your text in a text editor.)")),
+            HTML::p(_("Sorry for the inconvenience."))
+        );
     }
 
     public function getConflictMessage($unresolved = false)
@@ -438,13 +437,12 @@ class PageEditor
           HTML::li(_("Make changes to the file again. Paste your additions from the clipboard (or text editor).")),
           HTML::li(_("Save your updated changes.")));
         */
-        return
-            HTML(
-                HTML::h2(_("Conflicting Edits!")),
-                HTML::p(_("In the time since you started editing this page, another user has saved a new version of it.")),
-                HTML::p(_("Your changes can not be saved as they are, since doing so would overwrite the other author's changes. So, your changes and those of the other author have been combined. The result is shown below.")),
-                $message
-            );
+        return HTML(
+            HTML::h2(_("Conflicting Edits!")),
+            HTML::p(_("In the time since you started editing this page, another user has saved a new version of it.")),
+            HTML::p(_("Your changes can not be saved as they are, since doing so would overwrite the other author's changes. So, your changes and those of the other author have been combined. The result is shown below.")),
+            $message
+        );
     }
 
 
@@ -515,7 +513,7 @@ class PageEditor
             = HTML::input(array('type' => 'checkbox',
                                 'name' => 'edit[locked]',
                                 'id'   => 'edit[locked]',
-                                'disabled' => (bool) !$this->user->isadmin(),
+                                'disabled' => (bool) ! $this->user->isadmin(),
                                 'checked'  => (bool) $this->locked));
 
         $el['PREVIEW_B'] = Button(
@@ -574,13 +572,13 @@ class PageEditor
         $request->setArg('edit', false);
 
         if (
-            !$posted || !$request->isPost()
+            ! $posted || ! $request->isPost()
             || $request->getArg('action') != 'edit'
         ) {
             return false;
         }
 
-        if (!isset($posted['content']) || !is_string($posted['content'])) {
+        if (! isset($posted['content']) || ! is_string($posted['content'])) {
             return false;
         }
         $this->_content = preg_replace(
@@ -599,20 +597,20 @@ class PageEditor
             return false;       // FIXME: some kind of warning?
         }
 
-        $is_old_markup = !empty($posted['markup']) && $posted['markup'] == 'old';
+        $is_old_markup = ! empty($posted['markup']) && $posted['markup'] == 'old';
         $meta['markup'] = $is_old_markup ? false : 2.0;
         $meta['summary'] = trim(substr($posted['summary'], 0, 256));
-        $meta['is_minor_edit'] = !empty($posted['minor_edit']);
-        $meta['pagetype'] = !empty($posted['pagetype']) ? $posted['pagetype'] : false;
+        $meta['is_minor_edit'] = ! empty($posted['minor_edit']);
+        $meta['pagetype'] = ! empty($posted['pagetype']) ? $posted['pagetype'] : false;
 
         $this->meta = array_merge($this->meta, $meta);
-        $this->locked = !empty($posted['locked']);
+        $this->locked = ! empty($posted['locked']);
 
-        if (!empty($posted['preview'])) {
+        if (! empty($posted['preview'])) {
             $this->editaction = 'preview';
-        } elseif (!empty($posted['save'])) {
+        } elseif (! empty($posted['save'])) {
             $this->editaction = 'save';
-        } elseif (!empty($posted['edit_convert'])) {
+        } elseif (! empty($posted['edit_convert'])) {
             $this->editaction = 'edit_convert';
         } else {
             $this->editaction = 'edit';
@@ -628,7 +626,7 @@ class PageEditor
         $selected = &$this->selected;
         $user = &$this->user;
 
-        if (!$selected) {
+        if (! $selected) {
             NoSuchRevision($request, $this->page, $this->version); // noreturn
         }
 
@@ -667,7 +665,7 @@ class LoadFileConflictPageEditor extends PageEditor
     {
         $tokens = &$this->tokens;
 
-        if (!$this->canEdit()) {
+        if (! $this->canEdit()) {
             if ($this->isInitialEdit()) {
                 return $this->viewSource();
             }

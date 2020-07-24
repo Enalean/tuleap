@@ -49,7 +49,7 @@ class tuleap_synchroPlugin extends Plugin  // @codingStandardsIgnoreLine
 
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new \Tuleap\TuleapSynchro\Plugin\PluginInfo($this);
         }
 

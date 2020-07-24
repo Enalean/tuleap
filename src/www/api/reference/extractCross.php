@@ -52,7 +52,7 @@ if ($request->existAndNonEmpty('group_id')) {
     }
 }
 
-if (!$request->get('text') || !$request->get('login') || !$request->get('type') || !$request->get('rev_id')) {
+if (! $request->get('text') || ! $request->get('login') || ! $request->get('type') || ! $request->get('rev_id')) {
     echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err') . "\n";
     echo $GLOBALS['Language']->getText('project_reference', 'extract_syntax');
     exit;

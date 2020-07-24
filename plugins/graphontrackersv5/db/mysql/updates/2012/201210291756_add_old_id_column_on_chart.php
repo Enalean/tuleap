@@ -37,7 +37,7 @@ EOT;
 
     public function up()
     {
-        if (!$this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
+        if (! $this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
             $sql = "ALTER TABLE plugin_graphontrackersv5_chart 
                     ADD old_id INT NULL AFTER id";
             $res = $this->db->dbh->exec($sql);
@@ -49,7 +49,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
+        if (! $this->db->columnNameExists('plugin_graphontrackersv5_chart', 'old_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column old_id to plugin_graphontrackersv5_chart');
         }
     }

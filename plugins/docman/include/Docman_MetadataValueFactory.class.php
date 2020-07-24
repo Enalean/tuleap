@@ -58,7 +58,7 @@ class Docman_MetadataValueFactory
     public function getDao()
     {
         static $_plugin_docman_metadata_value_dao_instance;
-        if (!$_plugin_docman_metadata_value_dao_instance) {
+        if (! $_plugin_docman_metadata_value_dao_instance) {
             $_plugin_docman_metadata_value_dao_instance = new Docman_MetadataValueDao(CodendiDataAccess::instance());
         }
         return $_plugin_docman_metadata_value_dao_instance;
@@ -201,7 +201,7 @@ class Docman_MetadataValueFactory
         $exist = false;
         $dao   = $this->getDao();
         $dar   = $dao->exist($itemId, $fieldId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             if ($row['nb'] > 0) {
                 $exist = true;

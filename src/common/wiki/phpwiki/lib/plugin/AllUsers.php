@@ -88,14 +88,14 @@ class WikiPlugin_AllUsers extends WikiPlugin
         $args['count'] = count($allusers);
         // deleted pages show up as version 0.
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader) {
+        if (! $noheader) {
             $pagelist->setCaption(_("Authenticated users on this wiki (%d total):"));
         }
         if ($include_empty and empty($info)) {
             $pagelist->_addColumn('version');
         }
         list($offset, $pagesize) = $pagelist->limit($args['limit']);
-        if (!$pagesize) {
+        if (! $pagesize) {
             $pagelist->addPageList($allusers);
         } else {
             for ($i = $offset; $i < $offset + $pagesize - 1; $i++) {

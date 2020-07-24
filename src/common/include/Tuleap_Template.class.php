@@ -72,10 +72,10 @@ class Tuleap_Template
      */
     public function fetch($file = null)
     {
-        if (!$file) {
+        if (! $file) {
             $file = $this->file;
         }
-        if (!$file) {
+        if (! $file) {
             throw new Exception('A template file name is required');
         }
 

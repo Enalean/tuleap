@@ -47,7 +47,7 @@ class Docman_FilterFactory
         $metadataFactory = new Docman_MetadataFactory($report->getGroupId());
         $dao = $this->getDao();
         $dar = $dao->searchByReportId($report->getId());
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             while ($dar->valid()) {
                 $row = $dar->current();
                 if ($row['label'] == $gsMd->getLabel()) {

@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('groups', 'svn_can_change_log')) {
+        if (! $this->db->columnNameExists('groups', 'svn_can_change_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column owner not created in system_event');
         }
     }

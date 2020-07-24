@@ -316,7 +316,7 @@ class FRSFileDao extends DataAccessObject
         }
         if ($file_id) {
             $dar = $this->searchById($file_id);
-            if (!$dar->isError() && $dar->valid()) {
+            if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
                 $set_array = array();
                 foreach ($data_array as $key => $value) {
@@ -381,7 +381,7 @@ class FRSFileDao extends DataAccessObject
                ' AND time >= ' . $time .
                ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        return ($dar && !$dar->isError() && $dar->rowCount() !== 0);
+        return ($dar && ! $dar->isError() && $dar->rowCount() !== 0);
     }
 
     /**
@@ -540,7 +540,7 @@ class FRSFileDao extends DataAccessObject
                ' AND purge_date IS NULL ' .
                ' AND filename =' . $this->da->quoteSmart($filename);
         $res = $this->retrieve($sql);
-        return ($res && !$res->isError() && $res->rowCount() > 0);
+        return ($res && ! $res->isError() && $res->rowCount() > 0);
     }
 
     /**

@@ -206,7 +206,7 @@ class PolarAxis extends Axis
     public function HideTicks($aFlg = true, $aAngleFlg = true)
     {
         parent::HideTicks($aFlg, $aFlg);
-        $this->show_angle_tick = !$aAngleFlg;
+        $this->show_angle_tick = ! $aAngleFlg;
     }
 
     public function ShowAngleLabel($aFlg = true)
@@ -353,7 +353,7 @@ class PolarAxis extends Axis
 
     public function StrokeAngleLabels($pos, $type)
     {
-        if (!$this->show_angle_label) {
+        if (! $this->show_angle_label) {
             return;
         }
 
@@ -538,7 +538,7 @@ class PolarAxis extends Axis
         $this->img->SetLineWeight($this->weight);
         $this->img->SetColor($this->color);
         $this->img->SetFont($this->font_family, $this->font_style, $this->font_size);
-        if (!$this->hide_line) {
+        if (! $this->hide_line) {
             $this->img->FilledRectangle(
                 $this->img->left_margin,
                 $pos,
@@ -563,7 +563,7 @@ class PolarAxis extends Axis
             //('Unknown alignment specified for X-axis title. ('.$this->title_adjust.')');
         }
 
-        if (!$this->hide_labels) {
+        if (! $this->hide_labels) {
             $this->StrokeLabels($pos, false);
         }
         $this->img->SetColor($this->radius_tick_color);
@@ -621,7 +621,7 @@ class PolarAxis extends Axis
                 ++$i;
             }
         }
-        if (!$this->hide_labels) {
+        if (! $this->hide_labels) {
             $this->StrokeLabels($pos, false);
         }
         $this->title->Stroke($this->img);
@@ -821,7 +821,7 @@ class PolarGraph extends Graph
         $this->iHasStroked = true;
 
         //Check if we should autoscale axis
-        if (!$this->scale->IsSpecified() && count($this->plots) > 0) {
+        if (! $this->scale->IsSpecified() && count($this->plots) > 0) {
             $max = $this->GetPlotsMax();
             $t1 = $this->img->plotwidth;
             $this->img->plotwidth /= 2;
@@ -863,7 +863,7 @@ class PolarGraph extends Graph
             $pos = $this->img->plotheight / 2 + $this->img->top_margin;
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->StrokePlotArea();
         }
 
@@ -873,7 +873,7 @@ class PolarGraph extends Graph
             $oldimage = $this->img->CloneCanvasH();
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->axis->StrokeGrid($pos);
         }
 
@@ -917,12 +917,12 @@ class PolarGraph extends Graph
             $this->img->SetCanvasH($oldimage);
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->axis->Stroke($pos);
             $this->axis->StrokeAngleLabels($pos, $this->iType);
         }
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->StrokePlotBox();
             $this->footer->Stroke($this->img);
 
@@ -938,7 +938,7 @@ class PolarGraph extends Graph
 
         $this->legend->Stroke($this->img);
 
-        if (!$_csim) {
+        if (! $_csim) {
             $this->StrokeTexts();
             $this->img->SetAngle($aa);
 

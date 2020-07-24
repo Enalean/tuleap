@@ -90,9 +90,9 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     {
         $html = '';
         $this->initiateSession();
-        $readonly = !$report_can_be_modified || $user->isAnonymous();
+        $readonly = ! $report_can_be_modified || $user->isAnonymous();
 
-        if (!$readonly && $this->chart_to_edit) {
+        if (! $readonly && $this->chart_to_edit) {
             $html .= $this->getAssets()->getHTMLSnippet('dependencies.js');
 
             $url = '?' . http_build_query(array(
@@ -151,7 +151,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     {
         $html = '';
 
-        if (!$readonly) {
+        if (! $readonly) {
             $html .= '<div id="tracker_report_renderer_view_controls">';
             $html .= '<div class="btn-group">';
             $html .= '<a href="#" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">';
@@ -191,7 +191,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
         $html .= '</div>';
 
-        if (!$readonly) {
+        if (! $readonly) {
             $html .= '</form>';
         }
 
@@ -289,7 +289,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
 
     public function afterProcessRequest($engine, $request, $current_user)
     {
-        if (!$this->chart_to_edit) {
+        if (! $this->chart_to_edit) {
             parent::afterProcessRequest($engine, $request, $current_user);
         }
     }
@@ -316,7 +316,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
         $child = $root->addChild('charts');
         foreach ($this->getChartFactory()->getCharts($this) as $chart) {
             if ($chart instanceof GraphOnTrackersV5_Chart_CumulativeFlow) {
-                if (!$this->form_element_factory->getUsedFormElementById($chart->getFieldId())) {
+                if (! $this->form_element_factory->getUsedFormElementById($chart->getFieldId())) {
                     return;
                 }
                 $grandchild = $child->addChild('chart');
@@ -347,7 +347,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer
     */
     public function setSession($renderer_id = null)
     {
-        if (!$renderer_id) {
+        if (! $renderer_id) {
             $renderer_id = $this->id;
         }
         $this->report_session->set("{$this->id}.name", $this->name);

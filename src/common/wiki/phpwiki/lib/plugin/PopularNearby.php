@@ -138,7 +138,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
                 }
                 // just the number of hits
                 $hits = $page->get('hits');
-                if (!$hits) {
+                if (! $hits) {
                     continue;
                 }
                 $links[] = array('hits' => $hits,
@@ -149,9 +149,9 @@ class WikiPlugin_PopularNearby extends WikiPlugin
             while ($page = $pages->next()) {
                 // different score algorithm:
                 //   the number of links to/from the page
-                $l = $page->getLinks(!$direction);
+                $l = $page->getLinks(! $direction);
                 $score = $l->count();
-                if (!$score) {
+                if (! $score) {
                     continue;
                 }
                 $name = $page->_pagename;
@@ -169,7 +169,7 @@ class WikiPlugin_PopularNearby extends WikiPlugin
 
     public function sortByHits($links)
     {
-        if (!$links) {
+        if (! $links) {
             return array();
         }
         usort($links, 'cmp_by_hits'); // php-4.0.6 cannot use methods

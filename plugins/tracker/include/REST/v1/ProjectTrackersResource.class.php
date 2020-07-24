@@ -145,7 +145,7 @@ class ProjectTrackersResource extends AuthenticatedResource
             return false;
         }
 
-        if (!$json_decoder->looksLikeJson($query)) {
+        if (! $json_decoder->looksLikeJson($query)) {
             throw new RestException(400, 'Query must be in Json');
         }
         $event_manager = EventManager::instance();

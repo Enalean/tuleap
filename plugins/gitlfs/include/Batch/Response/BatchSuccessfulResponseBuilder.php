@@ -149,7 +149,7 @@ class BatchSuccessfulResponseBuilder
 
         $response_objects = [];
         foreach ($request_objects as $request_object) {
-            if (!in_array($request_object, $existing_objects, true)) {
+            if (! in_array($request_object, $existing_objects, true)) {
                 $this->checkFileMaxSize($request_object, $max_file_size);
 
                 $upload_action_content = $this->buildSuccessActionContent(

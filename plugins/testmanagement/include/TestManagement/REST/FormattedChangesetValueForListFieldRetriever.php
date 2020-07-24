@@ -50,7 +50,7 @@ class FormattedChangesetValueForListFieldRetriever
         PFUser $user
     ): ?ArtifactValuesRepresentation {
         $field = $this->form_element_factory->getUsedFieldByNameForUser($artifact->getTrackerId(), $field_name, $user);
-        if (!$field) {
+        if (! $field) {
             return null;
         }
 
@@ -60,7 +60,7 @@ class FormattedChangesetValueForListFieldRetriever
             $binds = $field->getBind()->getValuesByKeyword($value);
         }
         $bind = array_pop($binds);
-        if (!$bind) {
+        if (! $bind) {
             throw new RestException(400, 'Invalid status value');
         }
 

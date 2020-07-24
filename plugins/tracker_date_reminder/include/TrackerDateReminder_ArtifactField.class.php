@@ -99,7 +99,7 @@ class TrackerDateReminder_ArtifactField
     public function updateDateFieldReminderSettings(ArtifactType $at, ArtifactField $field, $group_artifact_id, $start, $notif_type, $frequency, $recurse, $people_notified)
     {
         $res = $this->getDateFieldReminderSettings($field->getID(), $group_artifact_id);
-        if ($res && !db_error($res)) {
+        if ($res && ! db_error($res)) {
             $notified_users = implode(",", $people_notified);
             if (db_numrows($res) == 0) {
                 // No reminder, create it

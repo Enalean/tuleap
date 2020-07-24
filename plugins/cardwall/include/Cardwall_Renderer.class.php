@@ -110,7 +110,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer
     private function fetchCards($matching_ids, PFUser $user, $form = null)
     {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
-        if (!$total_rows) {
+        if (! $total_rows) {
             return '<p>' . dgettext('tuleap-tracker', 'No artifact found.') . '</p>';
         }
 

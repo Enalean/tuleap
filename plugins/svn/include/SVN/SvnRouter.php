@@ -118,7 +118,7 @@ class SvnRouter implements DispatchableWithRequest
 
             $this->useAViewVcRoadIfRootValid($request, $variables);
 
-            if (!$request->get('action')) {
+            if (! $request->get('action')) {
                 $this->useDefaultRoute($request);
 
                 return;
@@ -166,7 +166,7 @@ class SvnRouter implements DispatchableWithRequest
                     $this->admin_controller->deleteRepository($request);
                     break;
                 case 'restore':
-                    if (!$request->getCurrentUser()->isSuperUser()) {
+                    if (! $request->getCurrentUser()->isSuperUser()) {
                         throw new UserCannotAdministrateRepositoryException();
                     }
                     $this->restore_controller->restoreRepository($request);
@@ -206,7 +206,7 @@ class SvnRouter implements DispatchableWithRequest
                     );
                     break;
                 case 'permission-per-group':
-                    if (!$request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
+                    if (! $request->getCurrentUser()->isAdmin($request->getProject()->getID())) {
                         $GLOBALS['Response']->send400JSONErrors(
                             array(
                                 'error' => dgettext(
@@ -236,7 +236,7 @@ class SvnRouter implements DispatchableWithRequest
 
     private function checkUserCanAdministrateARepository(HTTPRequest $request)
     {
-        if (!$this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {
+        if (! $this->permissions_manager->isAdmin($request->getProject(), $request->getCurrentUser())) {
             throw new UserCannotAdministrateRepositoryException();
         }
     }

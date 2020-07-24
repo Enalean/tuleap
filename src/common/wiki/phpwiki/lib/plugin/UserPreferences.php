@@ -78,9 +78,9 @@ class WikiPlugin_UserPreferences extends WikiPlugin
             return '';
         }
         if (
-            (!$request->isActionPage($request->getArg('pagename'))
-             and (!isset($user->_prefs->_method)
-                  or !in_array($user->_prefs->_method, array('ADODB','SQL'))))
+            (! $request->isActionPage($request->getArg('pagename'))
+             and (! isset($user->_prefs->_method)
+                  or ! in_array($user->_prefs->_method, array('ADODB','SQL'))))
             or (in_array($request->getArg('action'), array('zip','ziphtml')))
             or (isa($user, '_ForbiddenUser'))
         ) {
@@ -96,7 +96,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
         $userid = $user->UserName();
         if (
 // ((defined('ALLOW_BOGO_LOGIN') && ALLOW_BOGO_LOGIN && $user->isSignedIn()) ||
-             $user->isAuthenticated() and !empty($userid)
+             $user->isAuthenticated() and ! empty($userid)
         ) {
             $pref = &$request->_prefs;
             $args['isForm'] = true;
@@ -119,7 +119,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                     );
                     $alert->show();
                     return;
-                } elseif ($delete and !$request->getArg('verify')) {
+                } elseif ($delete and ! $request->getArg('verify')) {
                     return HTML::form(
                         array('action' => $request->getPostURL(),
                                             'method' => 'post'),
@@ -134,7 +134,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                     );
                 } elseif ($rp = $request->getArg('pref')) {
                     // replace only changed prefs in $pref with those from request
-                    if (!empty($rp['passwd']) and ($rp['passwd2'] != $rp['passwd'])) {
+                    if (! empty($rp['passwd']) and ($rp['passwd2'] != $rp['passwd'])) {
                         $errmsg = _("Wrong password. Try again.");
                     } else {
                         //trigger_error("DEBUG: reading prefs from request".print_r($rp));
@@ -150,13 +150,13 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                             $rp['lang']  = '';
                         }
                         $num = $user->setPreferences($rp);
-                        if (!empty($rp['passwd'])) {
+                        if (! empty($rp['passwd'])) {
                             $passchanged = false;
                             if ($user->mayChangePass()) {
                                 if (method_exists($user, 'storePass')) {
                                     $passchanged = $user->storePass($rp['passwd']);
                                 }
-                                if (!$passchanged and method_exists($user, 'changePass')) {
+                                if (! $passchanged and method_exists($user, 'changePass')) {
                                     $passchanged = $user->changePass($rp['passwd']);
                                 }
                                 if ($passchanged) {
@@ -168,7 +168,7 @@ class WikiPlugin_UserPreferences extends WikiPlugin
                                 $errmsg = _("Password cannot be changed.");
                             }
                         }
-                        if (!$num) {
+                        if (! $num) {
                             $errmsg .= " " . _("No changes.");
                         } else {
                             $request->_setUser($user);

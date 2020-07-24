@@ -194,7 +194,7 @@ class Docman_VersionDao extends DataAccessObject
                ' (SELECT MAX(number) AS v_max FROM plugin_docman_version WHERE item_id = ' . $this->da->escapeInt($itemId) . ') AS v,' .
                ' (SELECT MAX(number) AS d_max FROM plugin_docman_version_deleted WHERE item_id = ' . $this->da->escapeInt($itemId) . ') AS d';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             if ($row['v_max'] === null && $row['d_max'] === null) {
                 return false;
@@ -228,7 +228,7 @@ class Docman_VersionDao extends DataAccessObject
     }
     public function createFromRow(array $row)
     {
-        if (!isset($row['date']) || $row['date'] == '') {
+        if (! isset($row['date']) || $row['date'] == '') {
             $row['date'] = time();
         }
         $arg    = array();
@@ -354,7 +354,7 @@ class Docman_VersionDao extends DataAccessObject
              ' LIMIT ' . db_ei($offset) . ', ' . db_ei($limit);
 
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             $pendings = array();
             foreach ($dar as $row) {
                 $pendings[] = $row;

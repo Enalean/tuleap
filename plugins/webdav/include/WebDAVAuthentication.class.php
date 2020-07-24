@@ -46,7 +46,7 @@ class WebDAVAuthentication
     public function authenticate()
     {
         // test if username field is empty
-        if (!$this->issetUsername()) {
+        if (! $this->issetUsername()) {
             $this->setHeader();
         } else {
             $username = $this->getUsername();

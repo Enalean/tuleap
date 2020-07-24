@@ -59,7 +59,7 @@ class PluginsAdministrationActions extends Actions
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
-            if (!$plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
+            if (! $plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
                 $plugin_manager->availablePlugin($plugin_data['plugin']);
                 $GLOBALS['Response']->addFeedback('info', sprintf(dgettext('tuleap-pluginsadministration', '%1$s is now available.'), $plugin_data['name']));
             }
@@ -128,7 +128,7 @@ class PluginsAdministrationActions extends Actions
         if ($plugin && $this->plugin_disabler_verifier->canPluginBeDisabled($plugin['plugin'])) {
             $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
-            if (!$uninstalled) {
+            if (! $uninstalled) {
                  $GLOBALS['Response']->addFeedback(Feedback::ERROR, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin "%1$s" have not been uninstalled.'), $plugin['name']));
             } else {
                  $GLOBALS['Response']->addFeedback(Feedback::INFO, sprintf(dgettext('tuleap-pluginsadministration', 'Plugin "%1$s" have been uninstalled.'), $plugin['name']));

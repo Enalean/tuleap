@@ -44,7 +44,7 @@ class GraphOnTrackersV5_ChartFactory
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self();
         }
         return self::$_instance;
@@ -52,7 +52,7 @@ class GraphOnTrackersV5_ChartFactory
 
     public function getCharts($renderer, $store_in_session = true)
     {
-        if (!isset($this->charts[$renderer->id])) {
+        if (! isset($this->charts[$renderer->id])) {
             $charts_data = array();
             $this->charts[$renderer->id] = array();
             if ($store_in_session) {
@@ -241,7 +241,7 @@ class GraphOnTrackersV5_ChartFactory
         }
 
         if ($chart_data) {
-            if (!$renderer) {
+            if (! $renderer) {
                 $report = null; //We don't know the report
                 $renderer = Tracker_Report_RendererFactory::instance()->getReportRendererById($chart_data['report_graphic_id'], $report, $store_in_session);
             }
@@ -263,7 +263,7 @@ class GraphOnTrackersV5_ChartFactory
         $dao = new GraphOnTrackersV5_ChartDao(CodendiDataAccess::instance());
         $chart_data = $dao->searchById($id)->getRow();
         if ($chart_data) {
-            if (!$renderer) {
+            if (! $renderer) {
                 $report = null; //We don't know the report
                 $renderer = Tracker_Report_RendererFactory::instance()->getReportRendererById($chart_data['report_graphic_id'], $report);
             }

@@ -524,7 +524,7 @@ class ASCIIMathPHP
             } elseif ($node_0 !== false) {
                 $node_arr[$node_0->getId()] = $node_0;
             }
-        } while (!isset($sym['right_bracket']) && $sym !== false && $sym['output'] != '');
+        } while (! isset($sym['right_bracket']) && $sym !== false && $sym['output'] != '');
 
      //var_dump($sym);
      // Possibly to deal with matrices
@@ -631,7 +631,7 @@ class ASCIIMathPHP
 
                             for ($i = 0; $i < $node_cnt; $i += 2) {
                                     $tmp_key_node_arr = array_keys($node_arr);
-                                if (!($tmp_node = $node_arr[$tmp_key_node_arr[0]])) {
+                                if (! ($tmp_node = $node_arr[$tmp_key_node_arr[0]])) {
                                     break;
                                 }
                                 $num_child = $tmp_node->getNumChild();
@@ -702,7 +702,7 @@ class ASCIIMathPHP
             }
 
             $this->chopExpr($sym['symlen']);
-            if (!isset($sym['invisible'])) {
+            if (! isset($sym['invisible'])) {
                 $node_7 = $this->createNode();
                 $node_7->setName('mo');
                 $node_7->setContent($sym['output']);
@@ -717,7 +717,7 @@ class ASCIIMathPHP
     {
         $sym = $this->getSymbol();
 
-        if (!$sym || isset($sym['right_bracket'])) {
+        if (! $sym || isset($sym['right_bracket'])) {
             return(false);
         }
 
@@ -925,14 +925,14 @@ class ASCIIMathPHP
 
          // Reading string for numeric values
             if (is_numeric($sym_0)) {
-                if (!is_numeric($sym_1)) {
+                if (! is_numeric($sym_1)) {
                     $chop_flg ? $this->chopExpr($i) : 0;
                     return(array('input' => $sym_0, 'tag' => 'mn', 'output' => $sym_0, 'symlen' => $i));
                 } elseif (is_numeric($sym_1) && $i == ($chr_cnt - 1)) {
                     $chop_flg ? $this->chopExpr($i + 1) : 0;
                     return(array('input' => $sym_1, 'tag' => 'mn', 'output' => $sym_1, 'symlen' => ($i + 1)));
                 }
-            } elseif (isset($this->_symbol_arr[$sym_0]) && !isset($this->_symbol_arr[$sym_1])) {
+            } elseif (isset($this->_symbol_arr[$sym_0]) && ! isset($this->_symbol_arr[$sym_1])) {
                 $chop_flg ? $this->chopExpr($i) : 0;
                 $sym_arr = $this->_symbol_arr[$sym_0];
                 $sym_arr['symlen'] = $i;

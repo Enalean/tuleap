@@ -44,7 +44,7 @@ class b201410081156_add_burndown_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_field_burndown')) {
+        if (! $this->db->tableNameExists('tracker_field_burndown')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('table tracker_field_burndown not created');
         }
     }

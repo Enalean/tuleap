@@ -50,7 +50,7 @@ class Response
                 $dao->delete($session_id);
             }
         }
-        if (!$this->_feedback) {
+        if (! $this->_feedback) {
             $this->clearFeedback();
         }
     }

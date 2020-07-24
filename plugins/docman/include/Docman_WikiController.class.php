@@ -103,7 +103,7 @@ class Docman_WikiController extends Docman_Controller
 
         $can_access = true;
         foreach ($references as $key => $item) {
-            if (!$dPM->userCanAccess($uM->getCurrentUser(), $item->getId())) {
+            if (! $dPM->userCanAccess($uM->getCurrentUser(), $item->getId())) {
                 $can_access = false;
                 break; //No need to continue the loop as we found at least one non-accessible reference
             }
@@ -181,10 +181,10 @@ class Docman_WikiController extends Docman_Controller
         if (count($referers) > 0) {
             foreach ($referers as $item) {
                 //Check if some of referers has locked this wiki page. (should be done through new LockFactory).
-                if (!$dPM->userCanWrite($user, $item->getId())) {
+                if (! $dPM->userCanWrite($user, $item->getId())) {
                     $canWrite = false;
                     if ($dPM->getLockFactory()->itemIsLocked($item) === true) {
-                        if (!$dPM->getLockFactory()->userIsLocker($item, $user)) {
+                        if (! $dPM->getLockFactory()->userIsLocker($item, $user)) {
                             $lockInfos = $dPM->getLockFactory()->getLockInfoForItem($item);
                             if ($lockInfos) {
                                 $uH = UserHelper::instance();
@@ -443,7 +443,7 @@ class Docman_WikiController extends Docman_Controller
     public $item_factory;
     public function getItemFactory()
     {
-        if (!$this->item_factory) {
+        if (! $this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
@@ -452,7 +452,7 @@ class Docman_WikiController extends Docman_Controller
     public $dao;
     private function _getItemDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Docman_ItemDao(CodendiDataAccess::instance());
         }
         return $this->dao;

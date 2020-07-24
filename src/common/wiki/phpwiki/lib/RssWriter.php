@@ -4,7 +4,7 @@
  */
 
 // Encoding for RSS output.
-if (!defined('RSS_ENCODING')) {
+if (! defined('RSS_ENCODING')) {
     define('RSS_ENCODING', $GLOBALS['charset']);
 }
 
@@ -47,7 +47,7 @@ class RssWriter extends XmlElement
 
     public function registerModule($alias, $uri)
     {
-        assert(!isset($this->_modules[$alias]));
+        assert(! isset($this->_modules[$alias]));
         $this->_modules[$alias] = $uri;
     }
 
@@ -159,10 +159,10 @@ class RssWriter extends XmlElement
      */
     private function uniquify_uri($uri)
     {
-        if (!$uri || isset($this->_uris_seen[$uri])) {
+        if (! $uri || isset($this->_uris_seen[$uri])) {
             $n = count($this->_uris_seen);
             $uri = $this->_channel->getAttr('rdf:about') . "#uri$n";
-            assert(!isset($this->_uris_seen[$uri]));
+            assert(! isset($this->_uris_seen[$uri]));
         }
         $this->_uris_seen[$uri] = true;
         return $uri;
@@ -189,7 +189,7 @@ class RssWriter extends XmlElement
         if (preg_match('/^([^:]+):[^:]/', $name, $m)) {
             $ns = $m[1];
             if (! $this->getAttr("xmlns:$ns")) {
-                if (!isset($this->_modules[$ns])) {
+                if (! isset($this->_modules[$ns])) {
                     die("$name: unknown namespace ($ns)");
                 }
                 $this->setAttr("xmlns:$ns", $this->_modules[$ns]);

@@ -95,7 +95,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                 // Strip surrounding []
                 // FIXME: parse [ name | link ]
                 $text = preg_replace("/^\[\s*(\S.+)\s*\]$/", "\\1", $text);
-                if (!empty($text)) {
+                if (! empty($text)) {
                     $result[] = $text;
                 }
             }
@@ -130,12 +130,12 @@ class WikiPlugin_PageGroup extends WikiPlugin
 
         global $WikiTheme;
         $sep = $WikiTheme->getButtonSeparator();
-        if (!$sep) {
+        if (! $sep) {
             $sep = " | "; // force some kind of separator
         }
 
         // default label
-        if (!$label) {
+        if (! $label) {
             $label = $WikiTheme->makeLinkButton($parent);
         }
 
@@ -145,7 +145,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
         $p = $dbi->getPage($parent);
         if ($rev) {
             $r = $p->getRevision($rev);
-            if (!$r) {
+            if (! $r) {
                 $this->error(sprintf(
                     _("%s(%d): no such revision"),
                     $parent,

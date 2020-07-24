@@ -76,7 +76,7 @@ class TmpDir
      */
     public static function GetInstance() // @codingStandardsIgnoreLine
     {
-        if (!self::$instance) {
+        if (! self::$instance) {
             self::$instance = new TmpDir();
         }
         return self::$instance;
@@ -119,13 +119,13 @@ class TmpDir
 
         if (file_exists($this->dir)) {
             if (is_dir($this->dir)) {
-                if (!is_writeable($this->dir)) {
+                if (! is_writeable($this->dir)) {
                     throw new \Exception(sprintf(dgettext("gitphp", 'Specified tmpdir %1$s is not writable'), $this->dir));
                 }
             } else {
                 throw new \Exception(sprintf(dgettext("gitphp", 'Specified tmpdir %1$s is not a directory'), $this->dir));
             }
-        } elseif (!mkdir($this->dir, 0700)) {
+        } elseif (! mkdir($this->dir, 0700)) {
             throw new \Exception(sprintf(dgettext("gitphp", 'Could not create tmpdir %1$s'), $this->dir));
         }
     }
@@ -183,7 +183,7 @@ class TmpDir
 
         file_put_contents($this->dir . $filename, $content);
 
-        if (!in_array($filename, $this->files)) {
+        if (! in_array($filename, $this->files)) {
             $this->files[] = $filename;
         }
     }
@@ -216,7 +216,7 @@ class TmpDir
      */
     public function Cleanup() // @codingStandardsIgnoreLine
     {
-        if (!empty($this->dir) && (count($this->files) > 0)) {
+        if (! empty($this->dir) && (count($this->files) > 0)) {
             foreach ($this->files as $file) {
                 $this->RemoveFile($file);
             }

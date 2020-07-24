@@ -374,7 +374,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'GitPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'GitPluginInfo')) {
             $this->pluginInfo = new GitPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -1033,7 +1033,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['name']) {
+        if (! $params['name']) {
             switch ($params['permission_type']) {
                 case 'PLUGIN_GIT_READ':
                     $params['name'] = dgettext('tuleap-git', 'Read');
@@ -1051,7 +1051,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
     public function permission_get_object_type($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['object_type']) {
+        if (! $params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $params['object_type'] = 'git_repository';
             }
@@ -1059,7 +1059,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     }
     public function permission_get_object_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['object_name']) {
+        if (! $params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
@@ -1076,7 +1076,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
     public $_cached_permission_user_allowed_to_change; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public function permission_user_allowed_to_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['allowed']) {
+        if (! $params['allowed']) {
             $user = $this->getCurrentUser();
             $project = $this->getProjectManager()->getProject($params['group_id']);
 
@@ -1151,7 +1151,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function project_is_deleted($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!empty($params['group_id'])) {
+        if (! empty($params['group_id'])) {
             $project = ProjectManager::instance()->getProject($params['group_id']);
             if ($project) {
                 $repository_manager = $this->getRepositoryManager();
@@ -1183,7 +1183,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function statistics_collector($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!empty($params['formatter'])) {
+        if (! empty($params['formatter'])) {
             include_once('GitBackend.class.php');
             $formatter  = $params['formatter'];
             $gitBackend = Backend::instance('Git', 'GitBackend', array($this->getGitRepositoryUrlManager()));
@@ -1216,7 +1216,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function save_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
+        if (isset($params['job_id']) && ! empty($params['job_id']) && isset($params['request']) && ! empty($params['request'])) {
             if ($params['request']->get('hudson_use_plugin_git_trigger_checkbox')) {
                 $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
                 if ($repositoryId) {
@@ -1224,7 +1224,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
                         $ci = new Git_Ci();
-                        if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
+                        if (! $ci->saveTrigger($params['job_id'], $repositoryId)) {
                             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not saved'));
                         }
                     } else {
@@ -1244,7 +1244,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function update_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (isset($params['request']) && !empty($params['request'])) {
+        if (isset($params['request']) && ! empty($params['request'])) {
             $jobId        = $params['request']->get('job_id');
             $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
             if ($jobId) {
@@ -1255,11 +1255,11 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
                     $vRepoId = new Valid_UInt('hudson_use_plugin_git_trigger');
                     $vRepoId->required();
                     if ($params['request']->valid($vRepoId)) {
-                        if (!$ci->saveTrigger($jobId, $repositoryId)) {
+                        if (! $ci->saveTrigger($jobId, $repositoryId)) {
                             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not saved'));
                         }
                     } else {
-                        if (!$ci->deleteTrigger($jobId)) {
+                        if (! $ci->deleteTrigger($jobId)) {
                             $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not deleted'));
                         }
                     }
@@ -1279,9 +1279,9 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function delete_ci_triggers($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (isset($params['job_id']) && !empty($params['job_id'])) {
+        if (isset($params['job_id']) && ! empty($params['job_id'])) {
             $ci = new Git_Ci();
-            if (!$ci->deleteTrigger($params['job_id'])) {
+            if (! $ci->deleteTrigger($params['job_id'])) {
                 $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-git', 'Git trigger not deleted'));
             }
         }
@@ -1873,7 +1873,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
      */
     public function getLogger()
     {
-        if (!$this->logger) {
+        if (! $this->logger) {
             $this->logger = \BackendLogger::getDefaultLogger(self::LOG_IDENTIFIER);
         }
 
@@ -2734,7 +2734,7 @@ class GitPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     private function getBigObjectAuthorizationManager()
     {
-        return  new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
+        return new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationManager(
             new \Tuleap\Git\BigObjectAuthorization\BigObjectAuthorizationDao(),
             $this->getProjectManager()
         );

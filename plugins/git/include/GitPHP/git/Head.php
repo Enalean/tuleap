@@ -71,7 +71,7 @@ class Head extends Ref
      */
     public function GetCommit() // @codingStandardsIgnoreLine
     {
-        if (!$this->commit) {
+        if (! $this->commit) {
             $this->commit = $this->project->GetCommit($this->GetHash());
         }
 

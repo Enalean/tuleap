@@ -49,11 +49,11 @@ class ArtifactCanned
         global $Language;
 
      //was ArtifactType legit?
-        if (!$ArtifactType) {
+        if (! $ArtifactType) {
             $this->setError('ArtifactCanned: No ArtifactType');
             return false;
         }
-        if (!is_object($ArtifactType)) {
+        if (! is_object($ArtifactType)) {
             $this->setError('ArtifactCanned: ' . $Language->getText('tracker_common_canned', 'not_valid'));
             return false;
         }
@@ -70,7 +70,7 @@ class ArtifactCanned
                 $this->data_array = $data;
                 return true;
             } else {
-                if (!$this->fetchData($data)) {
+                if (! $this->fetchData($data)) {
                     return false;
                 } else {
                     return true;
@@ -91,11 +91,11 @@ class ArtifactCanned
         global $Language;
 
      //    data validation
-        if (!$title || !$body) {
+        if (! $title || ! $body) {
             $this->setError('ArtifactCanned: ' . $Language->getText('tracker_common_canned', 'name_requ'));
             return false;
         }
-        if (!$this->ArtifactType->userIsAdmin()) {
+        if (! $this->ArtifactType->userIsAdmin()) {
             $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
@@ -135,7 +135,7 @@ class ArtifactCanned
         global $Language;
 
         $res = db_query("SELECT * FROM artifact_canned_responses WHERE artifact_canned_id='" . db_ei($id) . "' AND group_artifact_id='" . db_ei($this->atid) . "'");
-        if (!$res || db_numrows($res) < 1) {
+        if (! $res || db_numrows($res) < 1) {
             $this->setError('ArtifactCanned: ' . $Language->getText('tracker_common_canned', 'invalid_id'));
             return false;
         }
@@ -195,7 +195,7 @@ class ArtifactCanned
     {
         global $Language;
 
-        if (!$this->ArtifactType->userIsAdmin()) {
+        if (! $this->ArtifactType->userIsAdmin()) {
             $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
@@ -206,7 +206,7 @@ class ArtifactCanned
 
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             $this->setError(db_error());
             return false;
         } else {
@@ -225,11 +225,11 @@ class ArtifactCanned
     {
         global $Language;
 
-        if (!$this->ArtifactType->userIsAdmin()) {
+        if (! $this->ArtifactType->userIsAdmin()) {
             $this->setError($Language->getText('tracker_common_canned', 'perm_denied'));
             return false;
         }
-        if (!$title || !$body) {
+        if (! $title || ! $body) {
             $this->setError($Language->getText('tracker_common_canned', 'missing_param'));
             return false;
         }

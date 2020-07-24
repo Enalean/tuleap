@@ -67,7 +67,7 @@ class Docman_MetadataHtmlFactory
         foreach ($mdIter as $md) {
             if (
                 ($whitelist && isset($mdla[$md->getLabel()]))
-                || (!$whitelist && !isset($mdla[$md->getLabel()]))
+                || (! $whitelist && ! isset($mdla[$md->getLabel()]))
             ) {
                 $fields[$md->getLabel()] = $this->getFromMetadata($md, $formParams);
             }
@@ -195,7 +195,7 @@ class Docman_MetadataHtml
         } else {
             $html .= $this->hp->purify($this->md->getName()) . ":";
         }
-        if ($show_mandatory_information && $this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
+        if ($show_mandatory_information && $this->md->canChangeValue() && ! $this->md->isEmptyAllowed()) {
             $html .= '&nbsp;';
             $html .= '<span class="highlight">*</span>';
         }
@@ -252,7 +252,7 @@ class Docman_MetadataHtml
     public function &getValidator()
     {
         $validator = null;
-        if (/*$show_mandatory_information && */$this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
+        if (/*$show_mandatory_information && */$this->md->canChangeValue() && ! $this->md->isEmptyAllowed()) {
             $validator = new Docman_ValidateMetadataIsNotEmpty($this->md);
         }
         return $validator;
@@ -369,7 +369,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
         $name = '';
         switch ($e->getId()) {
             case 100:
-                if (!$hideNone) {
+                if (! $hideNone) {
                     $name = dgettext('tuleap-docman', 'None');
                 }
                 break;
@@ -404,7 +404,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
         while ($vIter->valid()) {
             $e = $vIter->current();
 
-            if (!$first) {
+            if (! $first) {
                 $html .= '<br>';
             }
             $html .= $this->_getElementName($e, $hideNone);
@@ -472,7 +472,7 @@ class Docman_MetadataHtmlList extends Docman_MetadataHtml
     public function &getValidator()
     {
         $validator = null;
-        if (/*$show_mandatory_information && */$this->md->canChangeValue() && !$this->md->isEmptyAllowed()) {
+        if (/*$show_mandatory_information && */$this->md->canChangeValue() && ! $this->md->isEmptyAllowed()) {
             $validator = new Docman_ValidateMetadataListIsNotEmpty($this->md);
         }
         return $validator;

@@ -89,7 +89,7 @@ class GTextTableCell
 
     public function SetImageConstrain($aType, $aVal)
     {
-        if (!in_array($aType, array(TIMG_WIDTH, TIMG_HEIGHT))) {
+        if (! in_array($aType, array(TIMG_WIDTH, TIMG_HEIGHT))) {
             JpGraphError::RaiseL(27015);
         }
         $this->iIconConstrain = array($aType,$aVal);
@@ -281,7 +281,7 @@ class GTextTableCell
         $aHorAlign = strtolower($aHorAlign);
         $aVertAlign = strtolower($aVertAlign);
         $chk = array('left','right','center','bottom','top','middle');
-        if (!in_array($aHorAlign, $chk) || !in_array($aVertAlign, $chk)) {
+        if (! in_array($aHorAlign, $chk) || ! in_array($aVertAlign, $chk)) {
             JpGraphError::RaiseL(27011, $aHorAlign, $aVertAlign);
         }
         $this->iVertAlign = $aVertAlign;
@@ -1110,7 +1110,7 @@ class GTextTable
             $aC2 = $this->iSize[1] - 1;
             $aC1 = 0;
         }
-        if (!is_string($aArg)) {
+        if (! is_string($aArg)) {
             JpGraphError::RaiseL(27013); // argument must be a string
         }
         for ($i = $aArgR1; $i <= $aR2; ++$i) {
@@ -1123,7 +1123,7 @@ class GTextTable
     public function SetRowNumberFormat($aRow, $aF)
     {
         $this->_chkR($aRow);
-        if (!is_string($aF)) {
+        if (! is_string($aF)) {
             JpGraphError::RaiseL(27013); // argument must be a string
         }
         for ($j = 0; $j < $this->iSize[1]; ++$j) {
@@ -1134,7 +1134,7 @@ class GTextTable
     public function SetColNumberFormat($aCol, $aF)
     {
         $this->_chkC($aCol);
-        if (!is_string($aF)) {
+        if (! is_string($aF)) {
             JpGraphError::RaiseL(27013); // argument must be a string
         }
         for ($i = 0; $i < $this->iSize[0]; ++$i) {
@@ -1146,7 +1146,7 @@ class GTextTable
     {
         $this->_chkR($aRow);
         $this->_chkC($aCol);
-        if (!is_string($aF)) {
+        if (! is_string($aF)) {
             JpGraphError::RaiseL(27013); // argument must be a string
         }
         $this->iCells[$aRow][$aCol]->SetNumberFormat($aF);

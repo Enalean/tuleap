@@ -55,7 +55,7 @@ class Codendi_DiffOp_Copy extends Codendi_DiffOp
 
     public function __construct($orig, $fin = false)
     {
-        if (!is_array($fin)) {
+        if (! is_array($fin)) {
             $fin = $orig;
         }
         $this->orig = $orig;
@@ -222,7 +222,7 @@ class Codendi_DiffEngine
             $copy = array();
             while (
                 $xi < $n_from && $yi < $n_to
-                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]
+                    && ! $this->xchanged[$xi] && ! $this->ychanged[$yi]
             ) {
                 $copy[] = $from_lines[$xi++];
                 ++$yi;
@@ -1096,7 +1096,7 @@ class Codendi_HtmlUnifiedDiffFormatter extends Codendi_UnifiedDiffFormatter
 
     public function _lines($lines, $class = '', $prefix = false, $elem = false)
     {
-        if (!$prefix) {
+        if (! $prefix) {
             $prefix = '&nbsp;';
         }
         $this->_html .= '<div class="difftext">';
@@ -1153,7 +1153,7 @@ class Codendi_WordLevelDiff extends Codendi_MappedDiff
     {
         // FIXME: fix POSIX char class.
         if (
-            !preg_match_all(
+            ! preg_match_all(
                 '/ ( [^\S\n]+ | [[:alnum:]]+ | . ) (?: (?!< \n) [^\S\n])? /xs',
                 implode("\n", $lines),
                 $m
@@ -1211,7 +1211,7 @@ class Codendi_HWLDF_WordAccumulator
     public function _flushGroup($new_tag)
     {
         if ($this->_group !== false) {
-            if (!$this->_line) {
+            if (! $this->_line) {
                 $this->_line = "";
             }
             if ($this->_tag) {
@@ -1251,7 +1251,7 @@ class Codendi_HWLDF_WordAccumulator
                 $this->_flushLine($tag);
                 $word = substr($word, 1);
             }
-            assert(!strstr($word, "\n"));
+            assert(! strstr($word, "\n"));
             $this->_group .= $word;
         }
     }

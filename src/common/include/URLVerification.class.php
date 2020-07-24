@@ -272,7 +272,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
         $user = $this->getCurrentUser();
         if ($user->isRestricted()) {
             $url = $this->getUrl();
-            if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], null)) {
+            if (! $this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], null)) {
                 $this->displayRestrictedUserError($user);
             }
         }
@@ -378,7 +378,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function assertValidUrl($server, HTTPRequest $request, ?Project $project = null)
     {
-        if (!$this->isException($server)) {
+        if (! $this->isException($server)) {
             $this->verifyProtocol($request);
             $this->verifyRequest($server);
             $chunks = $this->getUrlChunks();

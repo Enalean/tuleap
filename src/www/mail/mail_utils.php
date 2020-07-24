@@ -16,7 +16,7 @@ function mail_header($params)
     $pm = ProjectManager::instance();
     $project = $pm->getProject($group_id);
 
-    if (!$project->usesMail()) {
+    if (! $project->usesMail()) {
         exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
     }
 
@@ -43,7 +43,7 @@ function mail_header_admin($params)
     $pm = ProjectManager::instance();
     $project = $pm->getProject($group_id);
 
-    if (!$project->usesMail()) {
+    if (! $project->usesMail()) {
         exit_error($Language->getText('global', 'error'), $Language->getText('mail_utils', 'mail_turned_off'));
     }
 

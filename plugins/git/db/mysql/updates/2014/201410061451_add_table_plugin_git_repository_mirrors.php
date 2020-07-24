@@ -48,7 +48,7 @@ EOT;
                 );';
         $this->db->createTable('plugin_git_repository_mirrors', $sql);
 
-        if (!$this->db->tableNameExists('plugin_git_repository_mirrors')) {
+        if (! $this->db->tableNameExists('plugin_git_repository_mirrors')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_repository_mirrors table is missing');
         }
     }

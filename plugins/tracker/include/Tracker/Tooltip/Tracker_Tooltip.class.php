@@ -143,7 +143,7 @@ class Tracker_Tooltip extends Tracker_Semantic
 
         $html   = '';
         $fields = $this->getFields();
-        if (!count($fields)) {
+        if (! count($fields)) {
             $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
         } else {
             $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');
@@ -204,7 +204,7 @@ class Tracker_Tooltip extends Tracker_Semantic
         $hp     = Codendi_HTMLPurifier::instance();
         $fields = $this->getFields();
         $html .= '<p>';
-        if (!count($fields)) {
+        if (! count($fields)) {
             $html .= dgettext('tuleap-tracker', 'There isn\'t any fields in the tooltip yet.');
         } else {
             $html .= dgettext('tuleap-tracker', 'The following fields will be displayed in the tooltip:');

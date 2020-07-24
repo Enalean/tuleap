@@ -96,7 +96,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $formelement_factory = Tracker_FormElementFactory::instance();
             $logger = new WorkflowBackendLogger(BackendLogger::getDefaultLogger(), ForgeConfig::get('sys_logger_level'));
 
@@ -264,7 +264,7 @@ class WorkflowFactory // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
      */
     public function getWorkflowByTrackerId(int $tracker_id)
     {
-        if (!isset($this->cache_workflowfield[$tracker_id])) {
+        if (! isset($this->cache_workflowfield[$tracker_id])) {
             $this->cache_workflowfield[$tracker_id] = array(null);
             // only one field per workflow
             if ($row = $this->getDao()->searchByTrackerId($tracker_id)->getRow()) {

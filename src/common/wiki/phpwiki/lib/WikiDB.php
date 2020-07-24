@@ -33,7 +33,7 @@ require_once('lib/WikiNotification.php');
  * Force the creation of a new revision.
  * @see WikiDB_Page::createRevision()
  */
-if (!defined('WIKIDB_FORCE_CREATE')) {
+if (! defined('WIKIDB_FORCE_CREATE')) {
     define('WIKIDB_FORCE_CREATE', -1);
 }
 
@@ -87,7 +87,7 @@ class WikiDB
         $this->_backend = &$backend;
 
         $this->_cache = new WikiDB_cache($backend);
-        if (!empty($GLOBALS['request'])) {
+        if (! empty($GLOBALS['request'])) {
             $GLOBALS['request']->_dbi = $this;
         }
 
@@ -199,9 +199,9 @@ class WikiDB
         }
 
         /* Generate notification emails? */
-        if (! $this->isWikiPage($pagename) and !isa($GLOBALS['request'], 'MockRequest')) {
+        if (! $this->isWikiPage($pagename) and ! isa($GLOBALS['request'], 'MockRequest')) {
             $notify = $this->get('notify');
-            if (!empty($notify) and is_array($notify)) {
+            if (! empty($notify) and is_array($notify)) {
                 global $request;
                 //TODO: deferr it (quite a massive load if you remove some pages).
                 //TODO: notification class which catches all changes,
@@ -210,7 +210,7 @@ class WikiDB
                 // could be used for PageModeration and RSS2 Cloud xml-rpc also.
                 $page = new WikiDB_Page($this, $pagename);
                 list($emails, $userids) = $page->getPageChangeEmails($notify);
-                if (!empty($emails)) {
+                if (! empty($emails)) {
                     // Codendi specific
                     $user              = UserManager::instance()->getCurrentUser();
                     $subject           = sprintf(_("Page removed %s"), $pagename);
@@ -472,7 +472,7 @@ class WikiDB
                     $meta['summary'] = sprintf(_("renamed from %s"), $from);
                     $page->save($current->getPackedContent(), $version + 1, $meta);
                 }
-            } elseif (!$oldpage->getCurrentRevision(false) and !$newpage->exists()) {
+            } elseif (! $oldpage->getCurrentRevision(false) and ! $newpage->exists()) {
                 // if a version 0 exists try it also.
                 $result = $this->_backend->rename_page($from, $to);
             }
@@ -480,11 +480,11 @@ class WikiDB
             trigger_error(_("WikiDB::renamePage() not yet implemented for this backend"), E_USER_WARNING);
         }
         /* Generate notification emails? */
-        if ($result and !isa($GLOBALS['request'], 'MockRequest')) {
+        if ($result and ! isa($GLOBALS['request'], 'MockRequest')) {
             $notify = $this->get('notify');
-            if (!empty($notify) and is_array($notify)) {
+            if (! empty($notify) and is_array($notify)) {
                 list($emails, $userids) = $oldpage->getPageChangeEmails($notify);
-                if (!empty($emails)) {
+                if (! empty($emails)) {
                     $oldpage->sendPageRenameNotification($to, $meta, $emails, $userids);
                 }
             }
@@ -539,7 +539,7 @@ class WikiDB
      */
     public function get($key)
     {
-        if (!$key || $key[0] == '%') {
+        if (! $key || $key[0] == '%') {
             return false;
         }
         /*
@@ -570,7 +570,7 @@ class WikiDB
      */
     public function set($key, $newval)
     {
-        if (!$key || $key[0] == '%') {
+        if (! $key || $key[0] == '%') {
             return;
         }
 
@@ -623,7 +623,7 @@ class WikiDB
     public function isOpen()
     {
         global $request;
-        if (!$request->_dbi) {
+        if (! $request->_dbi) {
             return false;
         } else {
             return false; /* so far only needed for sql so false it. later we have to check dba also */
@@ -672,7 +672,7 @@ class WikiDB_Page
         $this->_wikidb = &$wikidb;
         $this->_pagename = $pagename;
         if (DEBUG) {
-            if (!(is_string($pagename) and $pagename != '')) {
+            if (! (is_string($pagename) and $pagename != '')) {
                 trigger_error("empty pagename", E_USER_WARNING);
                 return;
             }
@@ -702,7 +702,7 @@ class WikiDB_Page
             return true;
         }
         $current = $this->getCurrentRevision(false);
-        if (!$current) {
+        if (! $current) {
             return false;
         }
         return ! $current->hasDefaultContents();
@@ -789,7 +789,7 @@ class WikiDB_Page
         }
 
         $versiondata = $cache->get_versiondata($pagename, $version, true);
-        if (!$versiondata) {
+        if (! $versiondata) {
             // Not there? ... we're done!
             $backend->unlock(array('version'));
             return;
@@ -864,7 +864,7 @@ class WikiDB_Page
             }
         }
 
-        assert(!empty($data['author']));
+        assert(! empty($data['author']));
         if (empty($data['author_id'])) {
             @$data['author_id'] = $data['author'];
         }
@@ -925,7 +925,7 @@ class WikiDB_Page
 
         $backend = &$this->_wikidb->_backend;
         $newrevision = $this->createRevision($version, $wikitext, $meta, $links);
-        if ($newrevision and !WIKIDB_NOCACHE_MARKUP) {
+        if ($newrevision and ! WIKIDB_NOCACHE_MARKUP) {
             $this->set('_cached_html', $formatted->pack());
         }
 
@@ -933,9 +933,9 @@ class WikiDB_Page
         if (ENABLE_EMAIL_NOTIFIFICATION && isa($newrevision, 'WikiDB_PageRevision')) {
             // Save didn't fail because of concurrent updates.
             $notify = $this->_wikidb->get('notify');
-            if (!empty($notify) and is_array($notify) and !isa($GLOBALS['request'], 'MockRequest')) {
+            if (! empty($notify) and is_array($notify) and ! isa($GLOBALS['request'], 'MockRequest')) {
                 list($emails, $userids) = $this->getPageChangeEmails($notify);
-                if (!empty($emails)) {
+                if (! empty($emails)) {
                     $this->sendPageChangeNotification($wikitext, $version, $meta, $emails, $userids);
                 }
             }
@@ -972,7 +972,7 @@ class WikiDB_Page
                         $wiki->isAutorized($dbUser->getId()) &&
                         $wp->isAutorized($dbUser->getId())
                     ) {
-                        if (!$user) { // handle the case for ModeratePage: no prefs, just userid's.
+                        if (! $user) { // handle the case for ModeratePage: no prefs, just userid's.
                             global $request;
                             $u = $request->getUser();
                             if ($u->UserName() == $userid) {
@@ -991,10 +991,10 @@ class WikiDB_Page
                             $emails[] = user_getemail_from_unix($userid);
                             $userids[] = $userid;
                         } else {
-                            if (!empty($user['verified']) and !empty($user['email'])) {
+                            if (! empty($user['verified']) and ! empty($user['email'])) {
                                 $emails[]  = user_getemail_from_unix($userid);
                                 $userids[] = $userid;
-                            } elseif (!empty($user['email'])) {
+                            } elseif (! empty($user['email'])) {
                                 global $request;
                                 // do a dynamic emailVerified check update
                                 $u = $request->getUser();
@@ -1057,7 +1057,7 @@ class WikiDB_Page
         //$backend = &$request->_dbi->_backend;
         $subject = _("Page change") . ' ' . $this->_pagename;
         $previous = $backend->get_previous_version($this->_pagename, $version);
-        if (!isset($meta['mtime'])) {
+        if (! isset($meta['mtime'])) {
             $meta['mtime'] = time();
         }
         if ($previous) {
@@ -1346,12 +1346,12 @@ class WikiDB_Page
     {
         $cache = &$this->_wikidb->_cache;
         $backend = &$this->_wikidb->_backend;
-        if (!$key || $key[0] == '%') {
+        if (! $key || $key[0] == '%') {
             return false;
         }
         // several new SQL backends optimize this.
         if (
-            !WIKIDB_NOCACHE_MARKUP
+            ! WIKIDB_NOCACHE_MARKUP
             and $key == '_cached_html'
             and method_exists($backend, 'get_cached_html')
         ) {
@@ -1398,7 +1398,7 @@ class WikiDB_Page
 
         // several new SQL backends optimize this.
         if (
-            !WIKIDB_NOCACHE_MARKUP
+            ! WIKIDB_NOCACHE_MARKUP
             and $key == '_cached_html'
             and method_exists($backend, 'set_cached_html')
         ) {
@@ -1407,8 +1407,8 @@ class WikiDB_Page
 
         $data = $cache->get_pagedata($pagename);
 
-        if (!empty($newval)) {
-            if (!empty($data[$key]) && $data[$key] == $newval) {
+        if (! empty($newval)) {
+            if (! empty($data[$key]) && $data[$key] == $newval) {
                 return;         // values identical, skip update.
             }
         } else {
@@ -1488,7 +1488,7 @@ class WikiDB_Page
 
     public function isUserPage($include_empty = true)
     {
-        if (!$include_empty and !$this->exists()) {
+        if (! $include_empty and ! $this->exists()) {
             return false;
         }
         return $this->get('pref') ? true : false;
@@ -1635,7 +1635,7 @@ class WikiDB_PageRevision
      */
     public function isCurrent()
     {
-        if (!isset($this->_iscurrent)) {
+        if (! isset($this->_iscurrent)) {
             $page = $this->getPage();
             $current = $page->getCurrentRevision(false);
             $this->_iscurrent = $this->getVersion() == $current->getVersion();
@@ -1675,14 +1675,14 @@ class WikiDB_PageRevision
 
         $possibly_cache_results = true;
 
-        if (!USECACHE or WIKIDB_NOCACHE_MARKUP) {
+        if (! USECACHE or WIKIDB_NOCACHE_MARKUP) {
             if (WIKIDB_NOCACHE_MARKUP == 'purge') {
                 // flush cache for this page.
                 $page = $this->getPage();
                 $page->set('_cached_html', ''); // ignored with !USECACHE
             }
             $possibly_cache_results = false;
-        } elseif (USECACHE and !$this->_transformedContent) {
+        } elseif (USECACHE and ! $this->_transformedContent) {
             //$backend->lock();
             if ($this->isCurrent()) {
                 $page = $this->getPage();
@@ -1693,14 +1693,14 @@ class WikiDB_PageRevision
             //$backend->unlock();
         }
 
-        if (!$this->_transformedContent) {
+        if (! $this->_transformedContent) {
             $this->_transformedContent = new TransformedText(
                 $this->getPage(),
                 $this->getPackedContent(),
                 $this->getMetaData()
             );
 
-            if ($possibly_cache_results and !WIKIDB_NOCACHE_MARKUP) {
+            if ($possibly_cache_results and ! WIKIDB_NOCACHE_MARKUP) {
                 // If we're still the current version, cache the transfomed page.
                 //$backend->lock();
                 if ($this->isCurrent()) {
@@ -1751,7 +1751,7 @@ class WikiDB_PageRevision
         // There is (non-default) content.
         assert($this->_version > 0);
 
-        if (!is_string($data['%content'])) {
+        if (! is_string($data['%content'])) {
             // Content was not provided to us at init time.
             // (This is allowed because for some backends, fetching
             // the content may be expensive, and often is not wanted
@@ -1908,10 +1908,10 @@ class WikiDB_PageIterator
         }
 
         $pagename = &$next['pagename'];
-        if (!is_string($pagename)) { // Bug #1327912 fixed by Joachim Lous
+        if (! is_string($pagename)) { // Bug #1327912 fixed by Joachim Lous
             $pagename = strval($pagename);
         }
-        if (!$pagename) {
+        if (! $pagename) {
             trigger_error('empty pagename in WikiDB_PageIterator::next()', E_USER_WARNING);
             var_dump($next);
             return false;
@@ -1924,7 +1924,7 @@ class WikiDB_PageIterator
         // and need them later for LinkExistingWord
         } elseif (
             $this->_options and array_key_exists('include_empty', $this->_options)
-                  and !$this->_options['include_empty'] and isset($next['id'])
+                  and ! $this->_options['include_empty'] and isset($next['id'])
         ) {
             $this->_wikidb->_cache->_id_cache[$next['pagename']] = $next['id'];
         }
@@ -1966,7 +1966,7 @@ class WikiDB_PageIterator
      */
     public function applyFilters($options = false)
     {
-        if (!$options) {
+        if (! $options) {
             $options = $this->_options;
         }
         if (isset($options['sortby'])) {
@@ -1990,14 +1990,14 @@ class WikiDB_PageIterator
         if (isset($options['exclude'])) {
             $exclude = $options['exclude'];
         }
-        if (is_string($exclude) and !is_array($exclude)) {
+        if (is_string($exclude) and ! is_array($exclude)) {
             $exclude = PageList::explodePageList($exclude, false, false, $limit);
         }
         foreach ($array as $pagename) {
             if ($limit and $i++ > $limit) {
                 return new WikiDB_Array_PageIterator($pagenames);
             }
-            if (!empty($exclude) and !in_array($pagename, $exclude)) {
+            if (! empty($exclude) and ! in_array($pagename, $exclude)) {
                 $pagenames[] = $pagename;
             } elseif (empty($exclude)) {
                 $pagenames[] = $pagename;
@@ -2057,7 +2057,7 @@ class WikiDB_PageRevisionIterator
         $version = $next['version'];
         $versiondata = $next['versiondata'];
         if (DEBUG) {
-            if (!(is_string($pagename) and $pagename != '')) {
+            if (! (is_string($pagename) and $pagename != '')) {
                 trigger_error("empty pagename", E_USER_WARNING);
                 return false;
             }
@@ -2065,7 +2065,7 @@ class WikiDB_PageRevisionIterator
             assert(is_string($pagename) and $pagename != '');
         }
         if (DEBUG) {
-            if (!is_array($versiondata)) {
+            if (! is_array($versiondata)) {
                 trigger_error("empty versiondata", E_USER_WARNING);
                 return false;
             }
@@ -2073,7 +2073,7 @@ class WikiDB_PageRevisionIterator
             assert(is_array($versiondata));
         }
         if (DEBUG) {
-            if (!($version > 0)) {
+            if (! ($version > 0)) {
                 trigger_error("invalid version", E_USER_WARNING);
                 return false;
             }
@@ -2174,7 +2174,7 @@ class WikiDB_Array_generic_iter
     }
     public function asArray()
     {
-        if (!empty($this->_array)) {
+        if (! empty($this->_array)) {
             reset($this->_array);
         }
         return $this->_array;
@@ -2216,7 +2216,7 @@ class WikiDB_cache
         assert(is_string($pagename) && $pagename != '');
         if (USECACHE) {
             $cache = &$this->_pagedata_cache;
-            if (!isset($cache[$pagename]) || !is_array($cache[$pagename])) {
+            if (! isset($cache[$pagename]) || ! is_array($cache[$pagename])) {
                 $cache[$pagename] = $this->_backend->get_pagedata($pagename);
                 if (empty($cache[$pagename])) {
                     $cache[$pagename] = array();
@@ -2289,8 +2289,8 @@ class WikiDB_cache
             $cache = &$this->_versiondata_cache;
             if (
                 ! isset($cache[$pagename][$version][$nc])
-                || !(is_array($cache[$pagename]))
-                || !(is_array($cache[$pagename][$version]))
+                || ! (is_array($cache[$pagename]))
+                || ! (is_array($cache[$pagename][$version]))
             ) {
                        $cache[$pagename][$version][$nc] =
                        $this->_backend->get_versiondata($pagename, $version, $need_content);
@@ -2306,7 +2306,7 @@ class WikiDB_cache
             $vdata = $this->_backend->get_versiondata($pagename, $version, $need_content);
             $readdata = true;
         }
-        if ($readdata && $vdata && !empty($vdata['%pagedata'])) {
+        if ($readdata && $vdata && ! empty($vdata['%pagedata'])) {
             $this->_pagedata_cache[$pagename] = $vdata['%pagedata'];
         }
         return $vdata;
@@ -2352,7 +2352,7 @@ class WikiDB_cache
         if (USECACHE) {
             assert(is_string($pagename) && $pagename != '');
             $cache = &$this->_glv_cache;
-            if (!isset($cache[$pagename])) {
+            if (! isset($cache[$pagename])) {
                 $cache[$pagename] = $this->_backend->get_latest_version($pagename);
                 if (empty($cache[$pagename])) {
                     $cache[$pagename] = 0;
@@ -2369,7 +2369,7 @@ function _sql_debuglog($msg, $newline = true, $shutdown = false)
 {
     static $fp = false;
     static $i = 0;
-    if (!$fp) {
+    if (! $fp) {
         $stamp = strftime("%y%m%d-%H%M%S");
         $fp = fopen("/tmp/sql-$stamp.log", "a");
         register_shutdown_function("_sql_debuglog_shutdown_function");

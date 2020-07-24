@@ -126,13 +126,13 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         $form->pushContent(HTML::input(array('type' => 'hidden',
                                              'name'  => 'url',
                                              'value' => $this->_url)));
-        if (!empty($args["useimage"])) {
+        if (! empty($args["useimage"])) {
             //FIXME: This does not work with Gecko
             $button = HTML::img(array('src' => $useimage, 'alt' => 'imagebutton'));
-            if (!empty($width)) {
+            if (! empty($width)) {
                 $button->setAttr('width', $width);
             }
-            if (!empty($height)) {
+            if (! empty($height)) {
                 $button->setAttr('height', $height);
             }
             $form->pushContent(HTML::button(

@@ -9,7 +9,7 @@ require_once __DIR__ . '/Template.php';
  */
 function GleanKeywords($page)
 {
-    if (!defined('KEYWORDS')) {
+    if (! defined('KEYWORDS')) {
         return '';
     }
     include_once("lib/TextSearchQuery.php");
@@ -99,7 +99,7 @@ function displayPage(&$request, $template = false)
     $page = $request->getPage();
     if ($version) {
         $revision = $page->getRevision($version);
-        if (!$revision) {
+        if (! $revision) {
             NoSuchRevision($request, $page, $version);
         }
     } else {
@@ -215,7 +215,7 @@ function displayPage(&$request, $template = false)
     // FIXME: move that to the transformer?
     // OR: add the searchhightplugin line to the content?
     if ($result = isExternalReferrer($request)) {
-        if (DEBUG and !empty($result['query'])) {
+        if (DEBUG and ! empty($result['query'])) {
             //$GLOBALS['SearchHighlightQuery'] = $result['query'];
             /* simply add the SearchHighlight plugin to the top of the page.
                This just parses the wikitext, and doesn't highlight the markup */
@@ -269,13 +269,13 @@ function displayPage(&$request, $template = false)
     $toks['TITLE'] = $pagetitle;   // <title> tag
     $toks['HEADER'] = $pageheader; // h1 with backlink
     $toks['revision'] = $revision;
-    if (!empty($redirect_message)) {
+    if (! empty($redirect_message)) {
         $toks['redirected'] = $redirect_message;
     }
     $toks['ROBOTS_META'] = 'index,follow';
     $toks['PAGE_DESCRIPTION'] = $page_content->getDescription();
     $toks['PAGE_KEYWORDS'] = GleanKeywords($page);
-    if (!$template) {
+    if (! $template) {
         $template = new Template('html', $request);
     }
 

@@ -54,7 +54,7 @@ class ArtifactReportHtml extends ArtifactReport
         global $Language,$group_id;
             $html_result = "";
 
-        if (!$masschange) {
+        if (! $masschange) {
             $html_result .= '<table width="100%"><tr><td align="left" width="50%">';
         }
 
@@ -65,7 +65,7 @@ class ArtifactReportHtml extends ArtifactReport
         }
             $html_result .=  '</TR></TABLE>';
 
-        if ((!$masschange) && ($pv == 0)) {
+        if ((! $masschange) && ($pv == 0)) {
             $html_result .= '</td><td align="right" width="50%">';
             $html_result .= '
                           <FORM ACTION="" METHOD="POST" NAME="artifact_export_form">
@@ -107,7 +107,7 @@ class ArtifactReportHtml extends ArtifactReport
                 list(,$mattr,$mdir) = $match;
             //echo "<br>DBG \$mattr=$mattr,\$mdir=$mdir";
                 if ($mattr == $order) {
-                    if (($mdir == '>') || (!isset($mdir))) {
+                    if (($mdir == '>') || (! isset($mdir))) {
                         $arr[$i] = $order . '<';
                     } else {
                         $arr[$i] = $order . '>';
@@ -118,8 +118,8 @@ class ArtifactReportHtml extends ArtifactReport
             }
         }
 
-        if (!$found) {
-            if (!$msort) {
+        if (! $found) {
+            if (! $msort) {
                 unset($arr);
             }
             if (($order == 'severity') || ($order == 'hours')) {
@@ -685,7 +685,7 @@ class ArtifactReportHtml extends ArtifactReport
             $html_result .= '<fieldset class="tracker-search"><legend>';
             $onclick = '';
             $onclick .= "if ($('artifacts_query').empty()) { return true }";
-            if (!$current_user->isAnonymous()) {
+            if (! $current_user->isAnonymous()) {
                 $onclick .= "else { new Ajax.Request(this.href); }";
             }
             $onclick .= "if ($('artifacts_query').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
@@ -701,7 +701,7 @@ class ArtifactReportHtml extends ArtifactReport
             $html_result .= '</a>';
             $html_result .= $Language->getText('tracker_include_report', 'query') . '</legend>';
             $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
-            if (!$user_dont_want_to_see_query) {
+            if (! $user_dont_want_to_see_query) {
                 $html_result .= $this->displayQueryFields($prefs, $advsrch, $pv);
                 $html_result .= '<div style="text-align:left"><br><input class="btn" type="submit" value="' . $Language->getText('global', 'btn_submit') . '" /></div>';
             }
@@ -727,7 +727,7 @@ class ArtifactReportHtml extends ArtifactReport
                 if ($pv == 0) {
                     $onclick = '';
                     $onclick .= "if ($('artifacts_result').empty()) { return true }";
-                    if (!$current_user->isAnonymous()) {
+                    if (! $current_user->isAnonymous()) {
                         $onclick .= "else { new Ajax.Request(this.href); }";
                     }
                     $onclick .= "if ($('artifacts_result').visible()) { this.firstChild.src.replace(/minus.png/, 'plus.png'); } else {this.firstChild.src.replace(/plus.png/, 'minus.png');}";
@@ -745,7 +745,7 @@ class ArtifactReportHtml extends ArtifactReport
                 $html_result .= (int) $totalrows . ' ' . $Language->getText('tracker_include_report', 'matching') . ' ' . $order_statement . '</legend>';
                 $html_result .= '<div id="artifacts_result" style="padding-left:16px;">';
             }
-            if ($pv != 2 && !$user_dont_want_to_see_results) {
+            if ($pv != 2 && ! $user_dont_want_to_see_results) {
                 if ($pv == 0) {
                         $html_result .= '<p> ' . $Language->getText('global', 'btn_browse') .
                             ' <input TYPE="text" class="input-mini" name="chunksz" size="3" MAXLENGTH="5" ' .
@@ -778,11 +778,11 @@ class ArtifactReportHtml extends ArtifactReport
             if ($pv != 0) {
                 $chunksz = 100000;
             }
-            if ($pv == 2 || !$user_dont_want_to_see_results) {
+            if ($pv == 2 || ! $user_dont_want_to_see_results) {
                 $html_result .= $this->showResult($group_id, $prefs, $offset, $totalrows, $url, ($pv == 1 ? true : false), $chunksz, $morder, $advsrch, $aids, $masschange, $pv);
             }
             $html_result .= '</form>';
-            if ($pv != 2 && !$user_dont_want_to_see_results) {
+            if ($pv != 2 && ! $user_dont_want_to_see_results) {
                 // priority colors are not displayed in table-only view
                 $html_result .= $this->showPriorityColorsKey($Language->getText('tracker_include_report', 'sev_colors'), $aids, $masschange, $pv);
             }
@@ -887,7 +887,7 @@ class ArtifactReportHtml extends ArtifactReport
             while ($arr = db_fetch_array($reports)) {
                   echo '<TR class="' . util_get_alt_row_color($i) . '"><TD>';
 
-                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
+                if ($arr['scope'] == 'S' || (! $ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
                     echo (int) $arr['report_id'];
                 } else {
                             echo '<A HREF="/tracker/admin/?func=report&group_id=' . (int) $group_id .
@@ -905,7 +905,7 @@ class ArtifactReportHtml extends ArtifactReport
                     echo "\n<td align=\"center\">" . $this->getDefaultLink($arr['is_default'], $arr['scope'], $arr['report_id']) . '</td>';
                 }
                     echo "\n<td align=\"center\">";
-                if ($arr['scope'] == 'S' || (!$ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
+                if ($arr['scope'] == 'S' || (! $ath->userIsAdmin() && ($arr['scope'] == 'P'))) {
                       echo '-';
                 } else {
                     echo '<A HREF="/tracker/admin/?func=report&group_id=' . (int) $group_id .
@@ -954,7 +954,7 @@ class ArtifactReportHtml extends ArtifactReport
         $title_arr[] = $Language->getText('tracker_include_report', 'rank_repo');
         $title_arr[] = $Language->getText('tracker_include_report', 'col_width');
 
-        echo'
+        echo '
                 <FORM ACTION="/tracker/admin/" METHOD="POST">
                    <INPUT TYPE="HIDDEN" NAME="func" VALUE="report">
                    <INPUT TYPE="HIDDEN" NAME="create_report" VALUE="y">
@@ -995,7 +995,7 @@ class ArtifactReportHtml extends ArtifactReport
                 echo '</TR>';
             foreach ($used_fields as $field) {
              // Do not show fields not used by the project
-                if (!$field->isUsed()) {
+                if (! $field->isUsed()) {
                     continue;
                 }
 
@@ -1010,7 +1010,7 @@ class ArtifactReportHtml extends ArtifactReport
                 }
 
                     //Do not show unreadable fields
-                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
+                if (! $ath->userIsAdmin() && ! $field->userCanRead($group_id, $this->group_artifact_id)) {
                     continue;
                 }
 
@@ -1113,7 +1113,7 @@ class ArtifactReportHtml extends ArtifactReport
                 echo '</TR>';
             foreach ($used_fields as $field) {
              // Do not show fields not used by the project
-                if (!$field->isUsed()) {
+                if (! $field->isUsed()) {
                     continue;
                 }
 
@@ -1128,7 +1128,7 @@ class ArtifactReportHtml extends ArtifactReport
                 }
 
                     //Do not show unreadable fields
-                if (!$ath->userIsAdmin() && !$field->userCanRead($group_id, $this->group_artifact_id)) {
+                if (! $ath->userIsAdmin() && ! $field->userCanRead($group_id, $this->group_artifact_id)) {
                     continue;
                 }
                     $cb_search = 'CBSRCH_' . $field->getName();
@@ -1141,7 +1141,7 @@ class ArtifactReportHtml extends ArtifactReport
                 if (isset($this->fields[$field->getName()])) {
                         $rep_field = $this->fields[$field->getName()];
                 }
-                if (!$rep_field) {
+                if (! $rep_field) {
                     $rep_field = new ArtifactReportField();
                 }
 

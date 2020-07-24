@@ -281,7 +281,7 @@ class MediaWikiInstantiater
                 } else {
                     $dollarquote = true;
                 }
-            } elseif (!$dollarquote) {
+            } elseif (! $dollarquote) {
                 if (';' == $line[$sl] && ($sl < 2 || ';' != $line[$sl - 1])) {
                     $done = true;
                     $line = substr($line, 0, $sl);

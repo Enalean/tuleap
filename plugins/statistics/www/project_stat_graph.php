@@ -103,7 +103,7 @@ if ($duration <= 0) {
 }
 
 // Display graph
-if (!$error) {
+if (! $error) {
     $graph = new Statistics_DiskUsageGraph($duMgr);
     $graph->displayProjectGraph($groupId, $services, $groupBy, $startDate, $endDate, true, true, false);
 }

@@ -60,7 +60,7 @@ class HardcodedMetdataObsolescenceDateChecker
             return;
         }
 
-        if (!$this->isObsolescenceMetadataUsed()) {
+        if (! $this->isObsolescenceMetadataUsed()) {
             throw HardCodedMetadataException::obsolescenceDateMetadataIsDisabled();
         }
     }

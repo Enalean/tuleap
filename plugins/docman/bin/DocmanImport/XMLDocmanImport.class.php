@@ -144,12 +144,12 @@ class XMLDocmanImport
 
         // DTD validation
         $dom = new DOMDocument();
-        if (!$dom->load($rootPath . '/' . $archiveName . '.xml')) {
+        if (! $dom->load($rootPath . '/' . $archiveName . '.xml')) {
             $this->logger->error("Failed to load XML document.");
             throw new Exception("Unable to load the following XML document : " . $rootPath . "/" . $archiveName . ".xml");
         }
 
-        if (!@$dom->validate()) {
+        if (! @$dom->validate()) {
             $this->logger->warning("DTD Validation failed.");
         }
 
@@ -160,7 +160,7 @@ class XMLDocmanImport
 
         // Import message metadata checks
         if ($this->importMessageMetadata != '') {
-            if (!array_key_exists($this->importMessageMetadata, $this->metadataMap)) {
+            if (! array_key_exists($this->importMessageMetadata, $this->metadataMap)) {
                 throw new Exception("You specified an incorrect import message metadata: " . $this->importMessageMetadata);
             } else {
                 $type = $this->metadataMap[$this->importMessageMetadata]['type'];
@@ -298,7 +298,7 @@ class XMLDocmanImport
                                 }
                             }
                         }
-                    } elseif (!$metadata->isEmptyAllowed) {
+                    } elseif (! $metadata->isEmptyAllowed) {
                         $missingProp[] = $metadata->name;
                     }
                 }
@@ -384,7 +384,7 @@ class XMLDocmanImport
         $appendText = "Import information: $message";
 
         if ($this->importMessageMetadata == '') {
-            if (!isset($item->properties->description)) {
+            if (! isset($item->properties->description)) {
                 $item->properties->addChild('description');
             }
             $node = $item->properties->description;
@@ -426,11 +426,11 @@ class XMLDocmanImport
 
     private function checkHardCodedMetadataUsage()
     {
-        if ($this->doc->xpath('//item/properties/obsolescence_date') != null && !in_array('obsolescence_date', $this->hardCodedMetadata)) {
+        if ($this->doc->xpath('//item/properties/obsolescence_date') != null && ! in_array('obsolescence_date', $this->hardCodedMetadata)) {
             throw new Exception("The Obsolescence Date property is not used on the target project.");
         }
 
-        if ($this->doc->xpath('//item/properties/status') != null && !in_array('status', $this->hardCodedMetadata)) {
+        if ($this->doc->xpath('//item/properties/status') != null && ! in_array('status', $this->hardCodedMetadata)) {
             throw new Exception("The Status property is not used on the target project.");
         }
     }
@@ -457,15 +457,15 @@ class XMLDocmanImport
 
                         // Check if the defined values exist
                         foreach ($values as $value) {
-                            if (!isset($metadataDef['values'][(string) $value])) {
+                            if (! isset($metadataDef['values'][(string) $value])) {
                                 throw new Exception("Item '$item_name':\tThe list property '$title' is set to an incorrect value: '$value'");
                             }
                         }
 
                         // Check that just one value is given to a list that allow only one value
-                        if (count($values) > 1 && !$metadataDef['isMultipleValuesAllowed']) {
+                        if (count($values) > 1 && ! $metadataDef['isMultipleValuesAllowed']) {
                             throw new Exception("Item '$item_name':\tThe list property '$title' allows only one value, but " . count($values) . " values are given.");
-                        } elseif (count($values) == 0 && !$metadataDef['isEmptyAllowed']) { // Check if no value is given to a list that require a value
+                        } elseif (count($values) == 0 && ! $metadataDef['isEmptyAllowed']) { // Check if no value is given to a list that require a value
                             throw new Exception("Item '$item_name':\tThe list property '$title' is required, but no <value> element is found.");
                         }
                 }
@@ -480,7 +480,7 @@ class XMLDocmanImport
         // Build the list of all required properties
         $requiredProperties = array();
         foreach ($this->metadataMap as $metadataName => $metadataDef) {
-            if (!$metadataDef['isEmptyAllowed']) {
+            if (! $metadataDef['isEmptyAllowed']) {
                 $requiredProperties[] = $metadataName;
             }
         }
@@ -510,7 +510,7 @@ class XMLDocmanImport
         foreach ($permissions as $permission) {
             $ugroup_id = (string) $permission['ugroup'];
 
-            if (!isset($this->ugroupMap[$ugroup_id])) {
+            if (! isset($this->ugroupMap[$ugroup_id])) {
                 $item_nodes = $permission->xpath('../..');
                 $item_name  = $item_nodes[0]->properties->title;
                 throw new Exception("Item '$item_name':\tThe permission references an undefined group: '$ugroup_id'");
@@ -535,13 +535,13 @@ class XMLDocmanImport
                 foreach ($ugroup->member as $member) {
                     $user_name = (string) $member;
                     $members[] = $user_name;
-                    if (!isset($this->ugroupMap[$ugroup_id]['members'][$user_name])) {
+                    if (! isset($this->ugroupMap[$ugroup_id]['members'][$user_name])) {
                         $this->logger->warning("The user '$user_name' is not a member of the ugroup '$ugroup_name' on the target project.");
                     }
                 }
 
                 foreach ($this->ugroupMap[$ugroup_id]['members'] as $user_name => $member) {
-                    if (!in_array($user_name, $members)) {
+                    if (! in_array($user_name, $members)) {
                         $this->logger->warning("The user '$user_name' is a member of the ugroup '$ugroup_name' on the target project, but he's not inside the ugroup definition in the XML document.");
                     }
                 }
@@ -603,7 +603,7 @@ class XMLDocmanImport
                 // Check if the metadata value can be empty
                 $empty = (string) $propdef['empty'];
                 // 'true' is the default value if nothing is specified
-                if (($empty == 'true' || $empty == null) && !$this->metadataMap[$name]['isEmptyAllowed']) {
+                if (($empty == 'true' || $empty == null) && ! $this->metadataMap[$name]['isEmptyAllowed']) {
                     throw new Exception("The property '$name' doesn't allow empty values in the target project. Please set the \"empty\" attribute to \"false\" to the corresponding propdef element.");
                 } elseif ($empty == 'false' && $this->metadataMap[$name]['isEmptyAllowed']) {
                     throw new Exception("The property '$name' allows empty values in the target project. Please set the \"empty\" attribute to \"true\", or remove this attribute (\"true\" is implicit).");
@@ -615,7 +615,7 @@ class XMLDocmanImport
                     // 'false' is the default value if nothing is specified
                     if (($multival == 'false' || $multival == null) && $this->metadataMap[$name]['isMultipleValuesAllowed']) {
                         throw new Exception("The property '$name' allows multiple values. Please set the attribute multivalue to \"true\" to the corresponding propdef element.");
-                    } elseif ($multival == 'true' && !$this->metadataMap[$name]['isMultipleValuesAllowed']) {
+                    } elseif ($multival == 'true' && ! $this->metadataMap[$name]['isMultipleValuesAllowed']) {
                         throw new Exception("The property '$name' doesn't allow multiple values. Please set the attribute empty to \"false\", or remove this attribute (\"false\" is implicit).");
                     }
                 }
@@ -710,7 +710,7 @@ class XMLDocmanImport
      */
     private function userNodeToUsername($userNode)
     {
-        if ((string) $userNode == '' || !isset($this->userMap[self::userNodeToIdentifier($userNode)])) {
+        if ((string) $userNode == '' || ! isset($this->userMap[self::userNodeToIdentifier($userNode)])) {
             return null;
         } else {
             return $this->userMap[self::userNodeToIdentifier($userNode)];

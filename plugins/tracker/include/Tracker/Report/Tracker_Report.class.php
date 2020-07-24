@@ -185,7 +185,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     protected function getProjectId()
     {
-        if (!$this->group_id) {
+        if (! $this->group_id) {
             $this->group_id = $this->tracker->getGroupId();
         }
         return $this->group_id;
@@ -226,7 +226,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         } elseif ($form_element_factory->getType($form_element) === 'float' && preg_match($zero_float_pattern, $raw_value)) {
             return 0;
         } else {
-            return !empty($raw_value) ? $raw_value : '';
+            return ! empty($raw_value) ? $raw_value : '';
         }
     }
 
@@ -337,7 +337,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     protected $current_user;
     protected function getCurrentUser()
     {
-        if (!$this->current_user) {
+        if (! $this->current_user) {
             $this->current_user = UserManager::instance()->getCurrentUser();
         }
         return $this->current_user;
@@ -346,7 +346,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     protected $permissions_manager;
     private function getPermissionsManager()
     {
-        if (!$this->permissions_manager) {
+        if (! $this->permissions_manager) {
             $this->permissions_manager = PermissionsManager::instance();
         }
         return $this->permissions_manager;
@@ -799,7 +799,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user)
     {
         $link_artifact_id       = (int) $request->get('link-artifact-id');
-        $report_can_be_modified = !$link_artifact_id;
+        $report_can_be_modified = ! $link_artifact_id;
 
         $hp = Codendi_HTMLPurifier::instance();
         $current_user = UserManager::instance()->getCurrentUser();
@@ -821,18 +821,18 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 $current_renderer = $renderers[$renderer_id];
             }
         }
-        if (!$current_renderer) {
+        if (! $current_renderer) {
             foreach ($renderers as $r) {
                 if (
-                    !$current_renderer || ($request->get('renderer') == $r->id)
-                                       || (!$request->get('renderer') && $r->id == $this->current_renderer_id)
-                                       || (!$request->get('renderer') && $r->id == $current_user->getPreference($renderer_preference_key))
+                    ! $current_renderer || ($request->get('renderer') == $r->id)
+                                       || (! $request->get('renderer') && $r->id == $this->current_renderer_id)
+                                       || (! $request->get('renderer') && $r->id == $current_user->getPreference($renderer_preference_key))
                 ) {
                     $current_renderer = $r;
                 }
             }
         }
-        if (!$current_renderer) {
+        if (! $current_renderer) {
             $current_renderer = current($renderers);
         }
         if ($current_renderer && $current_user->getPreference($renderer_preference_key) != $current_renderer->id) {
@@ -840,7 +840,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         }
 
         // We need an ArtifactLinkable renderer for ArtifactLink
-        if ($link_artifact_id && !is_a($current_renderer, 'Tracker_Report_Renderer_ArtifactLinkable')) {
+        if ($link_artifact_id && ! is_a($current_renderer, 'Tracker_Report_Renderer_ArtifactLinkable')) {
             foreach ($renderers as $r) {
                 if (is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
                     $current_renderer = $r;
@@ -861,10 +861,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             $session_criteria = $this->report_session->getCriteria();
             if ($session_criteria) {
                 foreach ($session_criteria as $key => $session_criterion) {
-                    if (!empty($session_criterion['is_removed'])) {
+                    if (! empty($session_criterion['is_removed'])) {
                         continue;
                     }
-                    if (!empty($this->criteria[$key])) {
+                    if (! empty($this->criteria[$key])) {
                         $registered_criteria[] = $this->criteria[$key];
                     }
                 }
@@ -880,7 +880,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
             foreach ($renderers as $r) {
                 $active = $r->id == $current_renderer->id ? 'tracker_report_renderers-current active dropdown' : '';
-                if ($active || !$link_artifact_id || is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
+                if ($active || ! $link_artifact_id || is_a($r, 'Tracker_Report_Renderer_ArtifactLinkable')) {
                     $parameters = array(
                         'report'   => $this->id,
                         'renderer' => $r->id
@@ -1084,7 +1084,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     protected $tracker;
     public function getTracker()
     {
-        if (!$this->tracker) {
+        if (! $this->tracker) {
             $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
         }
         if ($this->tracker === null) {
@@ -1104,7 +1104,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      */
     public function toggleQueryDisplay()
     {
-        $this->is_query_displayed = !$this->is_query_displayed;
+        $this->is_query_displayed = ! $this->is_query_displayed;
         return $this;
     }
 
@@ -1150,7 +1150,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $advanced = 1;
         $session_criterion = $this->report_session->getCriterion($formElement_id);
-        if (!empty($session_criterion['is_advanced'])) {
+        if (! empty($session_criterion['is_advanced'])) {
             $advanced = 0;
         }
         $this->report_session->updateCriterion($formElement_id, '', array('is_advanced' => $advanced));
@@ -1204,7 +1204,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function deleteRenderer($renderer)
     {
         $rrf = Tracker_Report_RendererFactory::instance();
-        if (!is_a($renderer, 'Tracker_Report_Renderer')) {
+        if (! is_a($renderer, 'Tracker_Report_Renderer')) {
             $renderer_id = (int) $renderer;
             $renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id);
         }
@@ -1225,7 +1225,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     public function moveRenderer($renderer, $position)
     {
         $rrf = Tracker_Report_RendererFactory::instance();
-        if (!is_a($renderer, 'Tracker_Report_Renderer')) {
+        if (! is_a($renderer, 'Tracker_Report_Renderer')) {
             $renderer_id = (int) $renderer;
             $renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id);
         }
@@ -1281,9 +1281,9 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                     $masschange_aids = array();
                     $renderer_table  =  $request->get('renderer_table');
 
-                    if (!empty($renderer_table['masschange_checked'])) {
+                    if (! empty($renderer_table['masschange_checked'])) {
                         $masschange_aids = $request->get('masschange_aids');
-                    } elseif (!empty($renderer_table['masschange_all'])) {
+                    } elseif (! empty($renderer_table['masschange_all'])) {
                         $masschange_aids_all = $this->getMatchingIds($request);
                         if ($masschange_aids_all) {
                             $masschange_aids = explode(',', $masschange_aids_all['id']);
@@ -1456,13 +1456,13 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
                 )));
                 break;
             case self::ACTION_SCOPE:
-                if ($this->getTracker()->userIsAdmin($current_user) && (!$this->user_id || $this->user_id == $current_user->getId())) {
+                if ($this->getTracker()->userIsAdmin($current_user) && (! $this->user_id || $this->user_id == $current_user->getId())) {
                     if ($request->exist('report_scope_public')) {
                         $is_scope_public = $request->get('report_scope_public');
                         $old_user_id = $this->user_id;
                         if ($is_scope_public && $this->user_id == $current_user->getId()) {
                             $this->user_id = null;
-                        } elseif (! $is_scope_public && !$this->user_id) {
+                        } elseif (! $is_scope_public && ! $this->user_id) {
                             $this->user_id = $current_user->getId();
                         }
                         if ($this->user_id != $old_user_id) {
@@ -1515,12 +1515,12 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
             default:
                 if ($request->exist('tracker_query_submit')) {
                     $criteria_values = $request->get('criteria');
-                    if (!empty($criteria_values)) {
+                    if (! empty($criteria_values)) {
                         $this->updateCriteriaValues($criteria_values);
                     }
 
                     $additional_criteria_values = $request->get('additional_criteria');
-                    if (!empty($additional_criteria_values)) {
+                    if (! empty($additional_criteria_values)) {
                         $this->updateAdditionalCriteriaValues($additional_criteria_values);
                     }
 
@@ -1596,7 +1596,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
         $session_criteria = $this->report_session->getCriteria();
         if (is_array($session_criteria)) {
             foreach ($session_criteria as $key => $session_criterion) {
-                if (!empty($session_criterion['is_removed'])) {
+                if (! empty($session_criterion['is_removed'])) {
                     continue;
                 }
 
@@ -1717,10 +1717,10 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
     {
         $root = $roott->addChild('report');
         // only add if different from default values
-        if (!$this->is_default) {
+        if (! $this->is_default) {
             $root->addAttribute('is_default', $this->is_default);
         }
-        if (!$this->is_query_displayed) {
+        if (! $this->is_query_displayed) {
             $root->addAttribute('is_query_displayed', $this->is_query_displayed);
         }
         if ($this->is_in_expert_mode) {
@@ -1756,7 +1756,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
      */
     public function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Tracker_ReportDao();
         }
         return $this->dao;
@@ -1924,7 +1924,7 @@ class Tracker_Report implements Tracker_Dispatchable_Interface
 
     private function getMatchingIdsFromCriteria($request, $use_data_from_db)
     {
-        if (!$this->matching_ids) {
+        if (! $this->matching_ids) {
             $user = $this->getCurrentUser();
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();

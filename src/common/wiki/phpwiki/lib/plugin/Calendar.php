@@ -21,7 +21,7 @@ rcs_id('$Id: Calendar.php,v 1.30 2005/04/02 03:05:44 uckelman Exp $');
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-if (!defined('SECONDS_PER_DAY')) {
+if (! defined('SECONDS_PER_DAY')) {
     define('SECONDS_PER_DAY', 24 * 3600);
 }
 
@@ -180,7 +180,7 @@ class WikiPlugin_Calendar extends WikiPlugin
 
         $now = localtime(time() + 3600 * $request->getPref('timeOffset'), 1);
         foreach (array('month' => $now['tm_mon'] + 1, 'year'  => $now['tm_year'] + 1900) as $param => $dflt) {
-            if (!($args[$param] = intval($args[$param]))) {
+            if (! ($args[$param] = intval($args[$param]))) {
                 $args[$param] = $dflt;
             }
         }
@@ -219,7 +219,7 @@ class WikiPlugin_Calendar extends WikiPlugin
         }
         $done = false;
 
-        while (!$done) {
+        while (! $done) {
             $row->pushContent($this->date($dbi, $time));
 
             if (++$col % 7 == 0) {

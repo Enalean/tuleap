@@ -54,7 +54,7 @@ final class HTTPUserAccessKeyAuthenticatorTest extends TestCase
         $this->access_key_identifier_unserializer = \Mockery::mock(SplitTokenIdentifierTranslator::class);
         $this->access_key_verifier                = \Mockery::mock(AccessKeyVerifier::class);
 
-        $this->authenticator = new  HTTPUserAccessKeyAuthenticator(
+        $this->authenticator = new HTTPUserAccessKeyAuthenticator(
             $this->access_key_identifier_unserializer,
             $this->access_key_verifier,
             new \Psr\Log\NullLogger()

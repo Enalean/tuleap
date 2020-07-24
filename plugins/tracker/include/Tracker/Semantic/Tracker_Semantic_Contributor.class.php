@@ -157,7 +157,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
             $submit_btn  = '<button type="submit" class="btn btn-primary" name="update">';
             $submit_btn .= $purifier->purify($GLOBALS['Language']->getText('global', 'save_change')) . '</button>';
 
-            if (!$this->getFieldId()) {
+            if (! $this->getFieldId()) {
                 $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>contributor/assignee</em> yet.</p>');
                 $html .= '<p>' . $purifier->purify(dgettext('tuleap-tracker', 'Feel free to choose one:'));
                 $html .= $select . ' <br> ' . $submit_btn;
@@ -254,7 +254,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
      */
     public static function load(Tracker $tracker): self
     {
-        if (!isset(self::$instances[$tracker->getId()])) {
+        if (! isset(self::$instances[$tracker->getId()])) {
             $field_id = null;
             $dao      = new Tracker_Semantic_ContributorDao();
             if ($row = $dao->searchByTrackerId($tracker->getId())->getRow()) {

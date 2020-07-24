@@ -136,7 +136,7 @@ class Planning_Presenter_HomePresenter extends Planning_Presenter_BaseHomePresen
 
     public function now_active()
     {
-        if (! $this->past_active() && !$this->future_active()) {
+        if (! $this->past_active() && ! $this->future_active()) {
             return 'active';
         }
 

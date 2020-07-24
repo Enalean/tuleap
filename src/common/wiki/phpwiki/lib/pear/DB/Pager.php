@@ -204,7 +204,7 @@ class DB_Pager extends PEAR
                 $data['current'] = $i;
             }
         }
-        if (!isset($data['current'])) {
+        if (! isset($data['current'])) {
             return PEAR::raiseError(
                 null,
                 'wrong "from" param',

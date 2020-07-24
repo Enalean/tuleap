@@ -62,7 +62,7 @@ function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
     }
 
   // If no given value for hide, keep the old one
-    if (!isset($hide)) {
+    if (! isset($hide)) {
         $hide = $old_hide;
     }
 

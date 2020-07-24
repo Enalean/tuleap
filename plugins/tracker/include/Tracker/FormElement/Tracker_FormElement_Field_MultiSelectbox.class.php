@@ -120,7 +120,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
             return;
         }
 
-        if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
+        if ((! isset($fields_data[$this->getId()]) || ! is_array($fields_data[$this->getId()])) && ! $this->isRequired() && $this->userCanUpdate()) {
             $fields_data[$this->getId()] = array('100');
         }
     }

@@ -129,19 +129,19 @@ class ArtifactStaticMultiListFieldXMLExporter extends ArtifactFieldXMLExporter
     private function valueCannotBeParsed($value, $number_of_values, $field_name, array $all_labels)
     {
         return $this->valueIsNotAnExistingLabel($value, $field_name, $all_labels) ||
-               $this->valueIsSystemValueAny($value)                               ||
+               $this->valueIsSystemValueAny($value) ||
                is_numeric($value) && $number_of_values === 1;
     }
 
     private function valueIsSystemValueAny($value)
     {
-        return $value === self::SYS_VALUE_ANY_EN  ||
+        return $value === self::SYS_VALUE_ANY_EN ||
                $value === self::SYS_VALUE_ANY_FR;
     }
 
     private function valueIsSystemValueNone($value)
     {
-        return $value === self::SYS_VALUE_NONE_EN  ||
+        return $value === self::SYS_VALUE_NONE_EN ||
                $value === self::SYS_VALUE_NONE_FR;
     }
 

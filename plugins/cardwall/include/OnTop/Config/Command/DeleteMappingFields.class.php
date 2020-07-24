@@ -79,7 +79,7 @@ class Cardwall_OnTop_Config_Command_DeleteMappingFields extends Cardwall_OnTop_C
      */
     private function canDelete($is_custom, ?Tracker $mapping_tracker = null)
     {
-        return !$is_custom
+        return ! $is_custom
             && $mapping_tracker
             && $this->mappingExists($mapping_tracker->getId());
     }

@@ -235,7 +235,7 @@ class GitViews extends PluginViews
             echo dgettext('tuleap-git', '<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>');
         }
         echo dgettext('tuleap-git', '<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>');
-        if (!empty($params['repository_list'])) {
+        if (! empty($params['repository_list'])) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="' . (int) $this->groupId . '" />';
             echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
@@ -455,7 +455,7 @@ class GitViews extends PluginViews
 
         $repositories = explode(',', $params['repos']);
         $repository   = $this->getGitRepositoryFactory()->getRepositoryById($repositories[0]);
-        if (!empty($repository)) {
+        if (! empty($repository)) {
             $forkPermissionsManager = new GitForkPermissionsManager(
                 $repository,
                 $this->getAccessRightsPresenterOptionsBuilder(),

@@ -56,7 +56,7 @@ class SvnNotificationDao extends DataAccessObject
     public function getSvnMailingList($groupId, $path = null)
     {
         $condition = '';
-        if (!empty($path)) {
+        if (! empty($path)) {
             $condition = 'AND path = ' . $this->da->quoteSmart($path);
         }
         $sql = ' SELECT svn_events_mailing_list, path

@@ -93,7 +93,7 @@ switch ($func) {
 }
 
 $focus = $request->get('focus');
-if (!$focus) {
+if (! $focus) {
     $focus = 'frs_file';
 }
 

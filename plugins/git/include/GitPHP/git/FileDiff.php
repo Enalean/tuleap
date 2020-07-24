@@ -215,7 +215,7 @@ class FileDiff
             return;
         }
 
-        if (!(preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
+        if (! (preg_match('/^[0-9a-fA-F]{40}$/', $fromHash) && preg_match('/^[0-9a-fA-F]{40}$/', $toHash))) {
             throw new \Exception('Invalid parameters for FileDiff');
         }
 
@@ -303,7 +303,7 @@ class FileDiff
      */
     public function GetFromMode() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -321,7 +321,7 @@ class FileDiff
      */
     public function GetFromModeShort() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -339,7 +339,7 @@ class FileDiff
      */
     public function GetToMode() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -357,7 +357,7 @@ class FileDiff
      */
     public function GetToModeShort() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -434,7 +434,7 @@ class FileDiff
      */
     public function GetStatus() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -451,7 +451,7 @@ class FileDiff
      */
     public function GetSimilarity() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -468,7 +468,7 @@ class FileDiff
      */
     public function GetFromFile() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -485,7 +485,7 @@ class FileDiff
      */
     public function GetToFile() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -503,7 +503,7 @@ class FileDiff
      */
     public function GetFromFileType($local = false) // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -521,7 +521,7 @@ class FileDiff
      */
     public function GetToFileType($local = false) // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -538,7 +538,7 @@ class FileDiff
      */
     public function FileTypeChanged() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -555,7 +555,7 @@ class FileDiff
      */
     public function FileModeChanged() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -572,7 +572,7 @@ class FileDiff
      */
     public function FromFileIsRegular() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -589,7 +589,7 @@ class FileDiff
      */
     public function ToFileIsRegular() // @codingStandardsIgnoreLine
     {
-        if (!$this->diffInfoRead) {
+        if (! $this->diffInfoRead) {
             $this->ReadDiffInfo();
         }
 
@@ -615,14 +615,14 @@ class FileDiff
             }
         }
 
-        if ((!$this->diffInfoRead) && $readFileData) {
+        if ((! $this->diffInfoRead) && $readFileData) {
             $this->ReadDiffInfo();
         }
 
         $this->diffDataName = $file;
         $this->diffDataRead = true;
 
-        if ((!empty($this->status)) && ($this->status != 'A') && ($this->status != 'D') && ($this->status != 'M')) {
+        if ((! empty($this->status)) && ($this->status != 'A') && ($this->status != 'D') && ($this->status != 'M')) {
             $this->diffData = '';
             return;
         }
@@ -646,9 +646,9 @@ class FileDiff
                 $tmpdir->AddFile($fromTmpFile, $fromBlob->GetData());
 
                 $fromName = 'a/';
-                if (!empty($file)) {
+                if (! empty($file)) {
                     $fromName .= $file;
-                } elseif (!empty($this->fromFile)) {
+                } elseif (! empty($this->fromFile)) {
                     $fromName .= $this->fromFile;
                 } else {
                     $fromName .= $this->fromHash;
@@ -661,9 +661,9 @@ class FileDiff
                 $tmpdir->AddFile($toTmpFile, $toBlob->GetData());
 
                 $toName = 'b/';
-                if (!empty($file)) {
+                if (! empty($file)) {
                     $toName .= $file;
-                } elseif (!empty($this->toFile)) {
+                } elseif (! empty($this->toFile)) {
                     $toName .= $this->toFile;
                 } else {
                     $toName .= $this->toHash;
@@ -672,11 +672,11 @@ class FileDiff
 
             $this->diffData = DiffExe::Diff((empty($fromTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $fromTmpFile)), $fromName === null ? null : escapeshellarg($fromName), (empty($toTmpFile) ? null : escapeshellarg($tmpdir->GetDir() . $toTmpFile)), $toName);
 
-            if (!empty($fromTmpFile)) {
+            if (! empty($fromTmpFile)) {
                 $tmpdir->RemoveFile($fromTmpFile);
             }
 
-            if (!empty($toTmpFile)) {
+            if (! empty($toTmpFile)) {
                 $tmpdir->RemoveFile($toTmpFile);
             }
         }
@@ -823,7 +823,7 @@ class FileDiff
      */
     private function GetXDiff($context = 3, $header = true, $file = null) // @codingStandardsIgnoreLine
     {
-        if (!function_exists('xdiff_string_diff')) {
+        if (! function_exists('xdiff_string_diff')) {
             return '';
         }
 
@@ -837,9 +837,9 @@ class FileDiff
             $fromData = $fromBlob->GetData(false);
             $isBinary = BinaryDetector::isBinary($fromData);
             $fromName = 'a/';
-            if (!empty($file)) {
+            if (! empty($file)) {
                 $fromName .= $file;
-            } elseif (!empty($this->fromFile)) {
+            } elseif (! empty($this->fromFile)) {
                 $fromName .= $this->fromFile;
             } else {
                 $fromName .= $this->fromHash;
@@ -850,9 +850,9 @@ class FileDiff
             $toData = $toBlob->GetData(false);
             $isBinary = $isBinary || BinaryDetector::isBinary($toData);
             $toName = 'b/';
-            if (!empty($file)) {
+            if (! empty($file)) {
                 $toName .= $file;
-            } elseif (!empty($this->toFile)) {
+            } elseif (! empty($this->toFile)) {
                 $toName .= $this->toFile;
             } else {
                 $toName .= $this->toHash;

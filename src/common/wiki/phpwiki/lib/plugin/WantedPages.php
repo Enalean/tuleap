@@ -69,7 +69,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (!empty($args['exclude_from'])) {
+        if (! empty($args['exclude_from'])) {
             $args['exclude_from'] = is_string($args['exclude_from'])
                 ? explodePageList($args['exclude_from'])
                 : $args['exclude_from']; // <! plugin-list !>
@@ -84,7 +84,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
         // done.
         // TODO: Move this to backend/dumb/WantedPagesIter.php
 
-        if (!$page) {
+        if (! $page) {
             $GLOBALS['WikiTheme']->addPageListColumn(
                 array('wanted' => array('_PageList_Column_WantedPages_wanted', 'custom:wanted', _("Wanted From"), 'left'))
             );
@@ -92,7 +92,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
         $pagelist = new PageList($page ? '' : 'pagename,wanted', $exclude, $args); // search button?
         $pagelist->_wpagelist = array();
 
-        if (!$page) {
+        if (! $page) {
             list($offset, $maxcount) = $pagelist->limit($limit);
             $wanted_iter = $dbi->wantedPages($exclude_from, $exclude, $sortby, $limit);
             while ($row = $wanted_iter->next()) {
@@ -124,7 +124,7 @@ class WikiPlugin_WantedPages extends WikiPlugin
             ksort($this->_wpagelist);
             arsort($this->_wpagelist);
         }*/
-        if (!$noheader) {
+        if (! $noheader) {
             if ($page) {
                 $pagelist->setCaption(sprintf(_("Wanted Pages for %s:"), $page));
             } else {

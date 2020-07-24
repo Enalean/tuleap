@@ -73,7 +73,7 @@ class projectmilestonesPlugin extends Plugin // phpcs:ignore
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\ProjectMilestones\Plugin\PluginInfo($this);
         }
 

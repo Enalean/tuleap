@@ -50,7 +50,7 @@ class Feedback
 
     public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
-        if (!is_array($msg)) {
+        if (! is_array($msg)) {
             $msg = array($msg);
         }
         foreach ($msg as $m) {

@@ -39,7 +39,7 @@ class Tracker_Report_CriteriaFactory
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }

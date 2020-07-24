@@ -263,7 +263,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function permission_get_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['name']) {
+        if (! $params['name']) {
             switch ($params['permission_type']) {
                 case 'PLUGIN_DOCMAN_READ':
                     $params['name'] = dgettext('tuleap-docman', 'Document Reader');
@@ -284,7 +284,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
     public function permission_get_object_type($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['object_type']) {
+        if (! $params['object_type']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
@@ -297,7 +297,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
     public function permission_get_object_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['object_name']) {
+        if (! $params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                 require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
@@ -312,8 +312,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public $_cached_permission_user_allowed_to_change; //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     public function permission_user_allowed_to_change($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['allowed']) {
-            if (!$this->_cached_permission_user_allowed_to_change) {
+        if (! $params['allowed']) {
+            if (! $this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
                     $docman = $this->getHTTPController();
                     switch ($params['permission_type']) {
@@ -333,7 +333,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     }
     public function &getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'DocmanPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'DocmanPluginInfo')) {
             $this->pluginInfo = new DocmanPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -699,7 +699,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         $groupId = $params['project']->getId();
         if ($params['project']->usesService('docman')) {
-            if (!isset($this->rootItems[$groupId])) {
+            if (! isset($this->rootItems[$groupId])) {
                 include_once 'Docman_ItemFactory.class.php';
                 $docmanItemFactory = new Docman_ItemFactory();
                 $this->rootItems[$groupId] = $docmanItemFactory->getRoot($groupId);
@@ -766,7 +766,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         //return all pending versions for given group id
         $offsetVers = $request->getValidated('offsetVers', 'uint', 0);
-        if (!$offsetVers || $offsetVers < 0) {
+        if (! $offsetVers || $offsetVers < 0) {
             $offsetVers = 0;
         }
 
@@ -810,7 +810,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
         //return all pending items for given group id
         $offsetItem = $request->getValidated('offsetItem', 'uint', 0);
-        if (!$offsetItem || $offsetItem < 0) {
+        if (! $offsetItem || $offsetItem < 0) {
             $offsetItem = 0;
         }
         require_once('Docman_ItemFactory.class.php');
@@ -1115,7 +1115,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     protected function getController($controller, $request)
     {
-        if (!isset($this->controller[$controller])) {
+        if (! isset($this->controller[$controller])) {
             include_once $controller . '.class.php';
             $this->controller[$controller] = new $controller($this, $this->getPluginPath(), $this->getThemePath(), $request);
         } else {

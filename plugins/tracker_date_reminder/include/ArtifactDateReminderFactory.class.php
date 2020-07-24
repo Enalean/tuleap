@@ -459,7 +459,7 @@ class ArtifactDateReminderFactory
      */
     public function updateNotificationSent($adjust = 0)
     {
-        if (!$adjust) {
+        if (! $adjust) {
             $upd = $this->getNotificationSent() + 1;
         } else {
             $upd = $adjust;
@@ -537,7 +537,7 @@ class ArtifactDateReminderFactory
         $logger->info("notify: " . implode(', ', $allNotified));
         foreach ($allNotified as $notified) {
             $mail->setTo($notified);
-            if (!$mail->send()) {
+            if (! $mail->send()) {
                 $logger->error("faild to notify $notified");
                 $sent = false;
             }

@@ -35,11 +35,11 @@ if ($request->valid($vGroupId) && $request->valid($vFileId)) {
   $frspf = new FRSPackageFactory();
   // Must have a group_id and file_id otherwise
   // we cannot do much
-if (!$file_id || !$group_id) {
+if (! $file_id || ! $group_id) {
     exit_missing_param();
 }
 
-if (!ForgeConfig::get('sys_frs_license_mandatory')) {
+if (! ForgeConfig::get('sys_frs_license_mandatory')) {
     // Display license popup
     // This is useful when using a 'file #123' reference, that points to this script
     $res = $frspf->getFRSPackageByFileIdFromDb($file_id);
@@ -101,7 +101,7 @@ echo $Language->getText('file_confirm_download', 'download_explain', array(Forge
       <div align="center"><a href="javascript:<?php echo "$cancelscript"?>;"><b><?php echo $Language->getText('file_confirm_download', 'decline'); ?></b></a></div>
     </td>
   </tr>
-<?php if (!$request->exist('popup')) {
+<?php if (! $request->exist('popup')) {
     echo '<p>  <tr><td colspan="2" class="small"><a href="javascript:history.back();">' . $Language->getText('file_confirm_download', 'back') . '</a></td></tr>';
 } ?>
 </table>

@@ -494,7 +494,7 @@ class RGB
             // 8: adjust value prefixed with : if supplied
             // 9: adjust value with : stripped
             $regex = '/(#([0-9a-fA-F]{1,2})([0-9a-fA-F]{1,2})([0-9a-fA-F]{1,2}))?([\w]+)?(@([\d\.,]+))?(:([\d\.,]+))?/';
-            if (!preg_match($regex, $aColor, $matches)) {
+            if (! preg_match($regex, $aColor, $matches)) {
                 JpGraphError::RaiseL(25078, $aColor);//(" Unknown color: $aColor");
             }
             if (empty($matches[5])) {
@@ -505,7 +505,7 @@ class RGB
                 $g = hexdec($g);
                 $b = hexdec($b);
             } else {
-                if (!isset($this->rgb_table[$matches[5]])) {
+                if (! isset($this->rgb_table[$matches[5]])) {
                     JpGraphError::RaiseL(25078, $aColor);//(" Unknown color: $aColor");
                 }
                 $r = $this->rgb_table[$matches[5]][0];
@@ -532,7 +532,7 @@ class RGB
                 return array(max(0, $r + $m), max(0, $g + $m), max(0, $b + $m),$alpha);
             }
         } elseif (is_array($aColor)) {
-            if (!isset($aColor[3])) {
+            if (! isset($aColor[3])) {
                 $aColor[3] = 0;
             }
             return $aColor;

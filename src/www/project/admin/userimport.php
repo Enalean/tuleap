@@ -55,7 +55,7 @@ $import        = new UserImport(
 );
 $user_filename = $_FILES['user_filename']['tmp_name'];
 
-if (!file_exists($user_filename) || !is_readable($user_filename)) {
+if (! file_exists($user_filename) || ! is_readable($user_filename)) {
     return $GLOBALS['Response']->send400JSONErrors(array('error' => _('You should provide a file in entry.')));
 }
 

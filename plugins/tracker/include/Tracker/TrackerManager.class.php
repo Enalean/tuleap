@@ -49,7 +49,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
 
         header("HTTP/1.0 404 Not Found");
-        if (!$request->isAjax()) {
+        if (! $request->isAjax()) {
             $GLOBALS['Response']->addFeedback('error', "The project doesn't use the 'tracker v5' service");
             $GLOBALS['HTML']->redirect('/projects/' . $project->getUnixName() . '/');
         }
@@ -723,7 +723,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
                     break;
                 }
             }
-            if (!$found) {
+            if (! $found) {
                 $projects[] = array(
                     'group_id'   => $include_project->getGroupId(),
                     'group_name' => $include_project->getPublicName(),
@@ -739,7 +739,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         }
         $html .= '</strong>' . $separator;
         $html .= '<select id="tracker_select_tracker">';
-        if (!$current_tracker) {
+        if (! $current_tracker) {
             $html .= '<option selected="selected">--</option>';
         }
         $factory = TrackerFactory::instance();
@@ -795,7 +795,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $refMgr     = $this->getReferenceManager();
         $references = $refMgr->getReferencesByGroupId($from_project_id);
         foreach ($references as $reference) {
-            if (!isset($trackers[$reference->getKeyword()])) {
+            if (! isset($trackers[$reference->getKeyword()])) {
                 $refMgr->createReference($reference);
             }
         }
@@ -850,7 +850,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
      */
     public function userCanCreateTracker($group_id, $user = false)
     {
-        if (!($user instanceof PFUser)) {
+        if (! ($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -899,9 +899,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
     {
         $delete_status = true;
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($group_id);
-        if (!empty($trackers)) {
+        if (! empty($trackers)) {
             foreach ($trackers as $tracker) {
-                if (!$this->getTrackerFactory()->markAsDeleted($tracker->getId())) {
+                if (! $this->getTrackerFactory()->markAsDeleted($tracker->getId())) {
                     $delete_status = false;
                 }
             }
@@ -919,7 +919,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher
         $trackers = array();
         $dao = new Tracker_DateReminderDao();
         $dar = $dao->getTrackersHavingDateReminders();
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
             }

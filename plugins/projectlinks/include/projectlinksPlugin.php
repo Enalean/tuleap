@@ -54,7 +54,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
     //========================================================================
     public function getPluginInfo()
     {
-        if (!($this->pluginInfo instanceof ProjectLinksPluginInfo)) {
+        if (! ($this->pluginInfo instanceof ProjectLinksPluginInfo)) {
             require_once('ProjectLinksPluginInfo.class.php');
             $this->pluginInfo = new ProjectLinksPluginInfo($this);
         }
@@ -96,7 +96,7 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         $project = ProjectManager::instance()->getProject($group_id);
         $user    = UserManager::instance()->getCurrentUser();
 
-        if (!$project) {
+        if (! $project) {
             exit_error(
                 $Language->getText('project_admin_index', 'invalid_p'),
                 $Language->getText('project_admin_index', 'p_not_found')
@@ -104,12 +104,12 @@ class ProjectLinksPlugin extends \Tuleap\Plugin\PluginWithLegacyInternalRouting
         }
 
         //if project isn't active, user must be a member of super-admin group
-        if (!$project->isActive() && !$user->isSuperUser()) {
+        if (! $project->isActive() && ! $user->isSuperUser()) {
             return;
         }
 
         // must be a project admin
-        if (!$user->isMember($group_id, 'A')) {
+        if (! $user->isMember($group_id, 'A')) {
             return;
         }
 

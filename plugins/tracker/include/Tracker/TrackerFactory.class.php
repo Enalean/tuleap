@@ -58,7 +58,7 @@ class TrackerFactory
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -95,7 +95,7 @@ class TrackerFactory
      */
     public function getTrackerById($tracker_id)
     {
-        if (!isset($this->trackers[$tracker_id])) {
+        if (! isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = null;
             if ($row = $this->getDao()->searchById($tracker_id)->getRow()) {
                 $this->getCachedInstanceFromRow($row);
@@ -219,7 +219,7 @@ class TrackerFactory
      */
     protected function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new TrackerDao();
         }
         return $this->dao;
@@ -233,7 +233,7 @@ class TrackerFactory
     private function getCachedInstanceFromRow($row)
     {
         $tracker_id = $row['id'];
-        if (!isset($this->trackers[$tracker_id])) {
+        if (! isset($this->trackers[$tracker_id])) {
             $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
         }
         return $this->trackers[$tracker_id];
@@ -638,7 +638,7 @@ class TrackerFactory
      */
     public function getHierarchyFactory()
     {
-        if (!$this->hierarchy_factory) {
+        if (! $this->hierarchy_factory) {
             $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
         return $this->hierarchy_factory;
@@ -661,7 +661,7 @@ class TrackerFactory
     public function saveTrackerDefaultPermission($tracker_id)
     {
         $pm = PermissionsManager::instance();
-        if (!$pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
+        if (! $pm->addPermission(Tracker::PERMISSION_FULL, $tracker_id, ProjectUGroup::ANONYMOUS)) {
             return false;
         }
         return true;
@@ -826,6 +826,6 @@ class TrackerFactory
 
     protected function getTransactionExecutor(): DBTransactionExecutorWithConnection
     {
-        return  new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
+        return new DBTransactionExecutorWithConnection(DBFactory::getMainTuleapDBConnection());
     }
 }

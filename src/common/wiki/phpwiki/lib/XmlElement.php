@@ -167,7 +167,7 @@ class XmlContent
             return true;
         }
         foreach ($this->_content as $x) {
-            if (is_string($x) ? strlen($x) : !empty($x)) {
+            if (is_string($x) ? strlen($x) : ! empty($x)) {
                 return false;
             }
         }
@@ -176,7 +176,7 @@ class XmlContent
 
     public function _quote($string)
     {
-        if (!$string) {
+        if (! $string) {
             return $string;
         }
         if (isset($GLOBALS['charset'])) {
@@ -246,7 +246,7 @@ class XmlElement extends XmlContent
 
     public function hasChildren()
     {
-        return !empty($this->_children);
+        return ! empty($this->_children);
     }
     /* End XmlParser Methods
      */
@@ -298,7 +298,7 @@ class XmlElement extends XmlContent
 
     public function _getClasses()
     {
-        if (!isset($this->_classes)) {
+        if (! isset($this->_classes)) {
             $this->_classes = array();
             if (isset($this->_attr['class'])) {
                 $classes = explode(' ', (string) $this->_attr['class']);
@@ -368,7 +368,7 @@ class XmlElement extends XmlContent
         $this->_setClasses();
         foreach ($this->_attr as $attr => $val) {
             if (is_bool($val)) {
-                if (!$val) {
+                if (! $val) {
                     continue;
                 }
                 $val = $attr;
@@ -399,13 +399,13 @@ class XmlElement extends XmlContent
         } else {
             echo $this->startTag();
             // FIXME: The next two lines could be removed for efficiency
-            if (!$this->hasInlineContent()) {
+            if (! $this->hasInlineContent()) {
                 echo "\n";
             }
             XmlContent::printXML();
             echo "</$this->_tag>";
         }
-        if (!$this->isInlineElement()) {
+        if (! $this->isInlineElement()) {
             echo "\n";
         }
     }
@@ -417,13 +417,13 @@ class XmlElement extends XmlContent
         } else {
             $xml = $this->startTag();
             // FIXME: The next two lines could be removed for efficiency
-            if (!$this->hasInlineContent()) {
+            if (! $this->hasInlineContent()) {
                 $xml .= "\n";
             }
             $xml .= XmlContent::asXML();
             $xml .= "</$this->_tag>";
         }
-        if (!$this->isInlineElement()) {
+        if (! $this->isInlineElement()) {
             $xml .= "\n";
         }
         return $xml;
@@ -565,7 +565,7 @@ class FormattedText
  */
 function XmlContent_quote($string)
 {
-    if (!$string) {
+    if (! $string) {
         return $string;
     }
     if (isset($GLOBALS['charset'])) {

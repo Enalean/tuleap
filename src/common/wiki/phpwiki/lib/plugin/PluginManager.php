@@ -132,7 +132,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
             $temppluginclass = "<? plugin $pluginName ?>"; // hackish
             $p = $w->getPlugin($pluginName, false); // second arg?
             // trap php files which aren't WikiPlugin~s
-            if (!strtolower(substr(get_parent_class($p), 0, 10)) == 'wikiplugin') {
+            if (! strtolower(substr(get_parent_class($p), 0, 10)) == 'wikiplugin') {
                 // Security: Hide names of extraneous files within
                 // plugin dir from non-admins.
                 if ($request->_user->isAdmin()) {

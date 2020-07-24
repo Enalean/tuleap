@@ -45,7 +45,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_cardwall_on_top', 'use_freestyle_columns')) {
+        if (! $this->db->columnNameExists('plugin_cardwall_on_top', 'use_freestyle_columns')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('use_freestyle_columns field is missing in plugin_cardwall_on_top table table');
         }
     }

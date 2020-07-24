@@ -181,7 +181,7 @@ final class GitJenkinsServersResource extends AuthenticatedResource
      */
     private function checkUserIsGitAdministrator(Project $project, PFUser $user): void
     {
-        if (!$this->git_permission_manager->userIsGitAdmin($user, $project)) {
+        if (! $this->git_permission_manager->userIsGitAdmin($user, $project)) {
             throw new RestException(401);
         }
     }

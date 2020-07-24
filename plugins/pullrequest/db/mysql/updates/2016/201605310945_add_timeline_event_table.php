@@ -48,7 +48,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_pullrequest_timeline_event')) {
+        if (! $this->db->tableNameExists('plugin_pullrequest_timeline_event')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_pullrequest_timeline_event');
         }
     }

@@ -36,18 +36,18 @@ $atid     = $request->getValidated('atid', 'uint');
 
 $hp = Codendi_HTMLPurifier::instance();
 
-if ($group_id && !$atid) {
+if ($group_id && ! $atid) {
     // Manage trackers: create and delete
 
     //    get the Group object
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-    if (!$group || !is_object($group) || $group->isError()) {
+    if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
     }
     //    Create the ArtifactType object
     $ath = new ArtifactTypeHtml($group);
-    if (!$ath || !is_object($ath)) {
+    if (! $ath || ! is_object($ath)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_at'));
     }
     if ($ath->isError()) {
@@ -63,24 +63,24 @@ if ($group_id && !$atid) {
     //    get the Group object
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-    if (!$group || !is_object($group) || $group->isError()) {
+    if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
     }
     //    Create the ArtifactType object
     $ath = new ArtifactTypeHtml($group, $atid);
-    if (!$ath || !is_object($ath)) {
+    if (! $ath || ! is_object($ath)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_index', 'not_create_at'));
     }
     if ($ath->isError()) {
         exit_error($Language->getText('global', 'error'), $ath->getErrorMessage());
     }
     // Check if this tracker is valid (not deleted)
-    if (!$ath->isValid()) {
+    if (! $ath->isValid()) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
     }
 
     $ach = new ArtifactCannedHtml($ath);
-    if (!$ach || !is_object($ach)) {
+    if (! $ach || ! is_object($ach)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_create_canned'));
     }
     if ($ach->isError()) {
@@ -99,7 +99,7 @@ if ($group_id && !$atid) {
     $func = $request->getValidated('func', 'string', '');
     switch ($func) {
         case 'report':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
@@ -108,7 +108,7 @@ if ($group_id && !$atid) {
 
             $rid = isset($report_id) ? $report_id : 0;
             $arh = new ArtifactReportHtml($rid, $atid);
-            if (!$arh) {
+            if (! $arh) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_retrieved_report', $arh->getErrorMessage()));
             }
 
@@ -131,7 +131,7 @@ if ($group_id && !$atid) {
                         $rep_default = 0;
                     }
                     $updated = $arh->recreate($user_id, $rep_name, $rep_desc, $rep_scope, $rep_default);
-                    if (!$updated) {
+                    if (! $updated) {
                         if ($arh->isError()) {
                             exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_updated_report') . ': ' . $arh->getErrorMessage());
                         }
@@ -145,7 +145,7 @@ if ($group_id && !$atid) {
                         $rep_default = 0;
                     }
                     $report_id = $arh->create($user_id, $rep_name, $rep_desc, $rep_scope, $rep_default);
-                    if (!$report_id) {
+                    if (! $report_id) {
                         if ($arh->isError()) {
                             exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_created_report') . ': ' . $arh->getErrorMessage());
                         }
@@ -179,7 +179,7 @@ if ($group_id && !$atid) {
             } elseif ($request->getValidated('delete_report')) {
                 if (
                     ($arh->scope == 'P') &&
-                    !$ath->userIsAdmin()
+                    ! $ath->userIsAdmin()
                 ) {
                     exit_permission_denied();
                 }
@@ -198,13 +198,13 @@ if ($group_id && !$atid) {
             } elseif ($request->getValidated('show_report')) {
                 if (
                     ($arh->scope == 'P') &&
-                    !$ath->userIsAdmin()
+                    ! $ath->userIsAdmin()
                 ) {
                        exit_permission_denied();
                 }
                 if (
                     ($arh->scope == 'S') &&
-                    !user_is_super_user()
+                    ! user_is_super_user()
                 ) {
                        exit_permission_denied();
                 }
@@ -218,12 +218,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'canned':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -234,15 +234,15 @@ if ($group_id && !$atid) {
                    $body = $request->getValidated('body', 'text', '');
                 if ($request->getValidated('create_canned')) {
                     $aci = $ach->create($title, $body);
-                    if (!$aci) {
+                    if (! $aci) {
                         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_create_canneditem'));
                     }
                 } elseif ($request->getValidated('update_canned')) {
                     $aci = $ach->fetchData($artifact_canned_id);
-                    if (!$aci) {
+                    if (! $aci) {
                                  exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_found_canneditem', (int) $artifact_canned_id));
                     }
-                    if (!$ach->update($title, $body)) {
+                    if (! $ach->update($title, $body)) {
                         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_update_canneditem', (int) $artifact_canned_id));
                     }
                     if ($ach->isError()) {
@@ -251,7 +251,7 @@ if ($group_id && !$atid) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'updated_cannedresponse'));
                 }
             } elseif ($request->getValidated('delete_canned')) {
-                if (!$ach->delete($artifact_canned_id)) {
+                if (! $ach->delete($artifact_canned_id)) {
                     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_delete_canneditem', (int) $artifact_canned_id));
                 }
                 if ($ach->isError()) {
@@ -260,11 +260,11 @@ if ($group_id && !$atid) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'deleted_cannedresponse'));
             } // End of post_changes
         // Display the UI Form
-            if ($request->getValidated('update_canned') && !$request->getValidated('post_changes')) {
+            if ($request->getValidated('update_canned') && ! $request->getValidated('post_changes')) {
                       $ath->adminHeader(array ('title' => $Language->getText('tracker_admin_index', 'modify_cannedresponse'),
                 'help' => 'tracker-v3.html#canned-responses'));
                 $aci = $ach->fetchData($artifact_canned_id);
-                if (!$aci) {
+                if (! $aci) {
                               exit_error($Language->getText('global', 'error'), $Language->getText('tracker_admin_index', 'not_found_canneditem', (int) $artifact_canned_id));
                 }
                 $ach->displayUpdateForm();
@@ -279,7 +279,7 @@ if ($group_id && !$atid) {
             break;
 
         case 'notification':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
@@ -294,7 +294,7 @@ if ($group_id && !$atid) {
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_deleted'));
                             $ok = true;
                             //Add a default if needed
-                            if (!count($agnf->getGlobalNotificationsForTracker($atid))) {
+                            if (! count($agnf->getGlobalNotificationsForTracker($atid))) {
                                 if ($agnf->addGlobalNotificationForTracker($atid)) {
                                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('tracker_include_type', 'info_gn_default_added'));
                                 } else {
@@ -310,7 +310,7 @@ if ($group_id && !$atid) {
                     break;
                 case 'add_global':
                     $agnf = new ArtifactGlobalNotificationFactory();
-                    if (!($ok = $agnf->addGlobalNotificationForTracker($atid))) {
+                    if (! ($ok = $agnf->addGlobalNotificationForTracker($atid))) {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('tracker_include_type', 'error_gn_not_added'));
                     }
                     break;
@@ -407,12 +407,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'editoptions':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -427,7 +427,7 @@ if ($group_id && !$atid) {
                 $instantiate_for_new_projects = $ath->Group->isTemplate() && $request->getValidated('instantiate_for_new_projects') ? 1 : 0;
 
                 if (
-                    !$ath->update(
+                    ! $ath->update(
                         $name,
                         $description,
                         $itemname,
@@ -456,12 +456,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'update_binding':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -469,7 +469,7 @@ if ($group_id && !$atid) {
             $field_id = $request->getValidated('field_id', 'uint', 0);
             $field = $art_field_fact->getFieldFromId($field_id);
             if ($field && is_array($request->get('value_function'))) {
-                if (!$field->updateValueFunction($atid, $request->get('value_function'))) {
+                if (! $field->updateValueFunction($atid, $request->get('value_function'))) {
                     exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
                 } else {
                      $arm = new ArtifactRulesManager();
@@ -481,12 +481,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'update_default_value':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -501,12 +501,12 @@ if ($group_id && !$atid) {
                 }
 
                 if (
-                    (!$field->isDateField() && $request->valid(new Valid_String('default_value')))
+                    (! $field->isDateField() && $request->valid(new Valid_String('default_value')))
                     || ($field->isMultiSelectBox())
                     || ($request->valid(new Valid_String('default_value')))
                     || ($field->isTextArea() && $request->valid(new Valid_Text('default_value')))
                 ) {
-                    if (!$field->updateDefaultValue($atid, $request->get('default_value'), $computed_value)) {
+                    if (! $field->updateDefaultValue($atid, $request->get('default_value'), $computed_value)) {
                         exit_error($Language->getText('global', 'error'), $art_field_fact->getErrorMessage());
                     } else {
                         $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'values_updated'));
@@ -517,12 +517,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'display_field_values':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -535,12 +535,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'display_field_value':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -562,12 +562,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'value_create':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -578,7 +578,7 @@ if ($group_id && !$atid) {
                 $value       = $sanitizer->sanitize($request->getValidated('value', 'string', ''));
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
                 $order_id    = $request->getValidated('order_id', 'uint');
-                if (!$field->createValueList($atid, $value, $description, $order_id)) {
+                if (! $field->createValueList($atid, $value, $description, $order_id)) {
                     exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                 } else {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'value_created'));
@@ -588,12 +588,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'value_update':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -606,7 +606,7 @@ if ($group_id && !$atid) {
                 $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
                 $order_id    = $request->getValidated('order_id', 'uint');
                 $status      = $request->get('status');
-                if (!$field->updateValueList($atid, $value_id, $value, $description, $order_id, $status)) {
+                if (! $field->updateValueList($atid, $value_id, $value, $description, $order_id, $status)) {
                     exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                 } else {
                     if ($status == $ath->FIELD_VALUE_STATUS_HIDDEN) {
@@ -620,12 +620,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'value_delete':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -634,7 +634,7 @@ if ($group_id && !$atid) {
             $field = $art_field_fact->getFieldFromId($field_id);
             if ($field) {
                 $value_id    = $request->getValidated('value_id', 'uint');
-                if (!$field->deleteValueList($atid, $value_id)) {
+                if (! $field->deleteValueList($atid, $value_id)) {
                     exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                 } else {
                      $arm = new ArtifactRulesManager();
@@ -650,12 +650,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'field_create':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -678,7 +678,7 @@ if ($group_id && !$atid) {
                        $field_set_id = $request->getValidated('field_set_id', 'uint');
 
                 if (
-                    !$art_field_fact->createField(
+                    ! $art_field_fact->createField(
                         $description,
                         $label,
                         $data_type,
@@ -705,12 +705,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'field_update':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -736,7 +736,7 @@ if ($group_id && !$atid) {
                      $use_it         = $request->getValidated('use_it', new Valid_WhiteList('', array(1)), 0);
                      $field_set_id = $request->getValidated('field_set_id', 'uint');
                     if (
-                        !$field->update(
+                        ! $field->update(
                             $atid,
                             $field_name,
                             $description,
@@ -754,7 +754,7 @@ if ($group_id && !$atid) {
                     ) {
                                exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                     } else {
-                        if (!(isset($use_it) && $use_it)) {
+                        if (! (isset($use_it) && $use_it)) {
                             $arm = new ArtifactRulesManager();
                             $arm->deleteRulesByFieldId($atid, $field_id);
                         }
@@ -771,12 +771,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'field_delete':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -790,7 +790,7 @@ if ($group_id && !$atid) {
           //clear permissions
                 permission_clear_all_fields_tracker($group_id, $atid, $field->getID());
 
-                if (!$field->delete($atid)) {
+                if (! $field->delete($atid)) {
                     exit_error($Language->getText('global', 'error'), $field->getErrorMessage());
                 } else {
                      $arm = new ArtifactRulesManager();
@@ -808,12 +808,12 @@ if ($group_id && !$atid) {
             break;
 
         case 'display_field_update':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -849,19 +849,19 @@ if ($group_id && !$atid) {
             break;
 
         case 'delete_tracker':
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
 
-            if (!user_ismember($group_id, 'A')) {
+            if (! user_ismember($group_id, 'A')) {
                 exit_permission_denied();
                 return;
             }
 
             $ath->adminTrackersHeader(array('title' => $ath->getName() . ' ' . $Language->getText('tracker_admin_field_usage', 'tracker_admin'),
                     'help' => 'tracker-v3.html#tracker-administration'));
-            if (!$ath->preDelete()) {
+            if (! $ath->preDelete()) {
                       $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_admin_index', 'deletion_failed', $hp->purify(SimpleSanitizer::unsanitize($ath->getName()), CODENDI_PURIFIER_CONVERT_HTML)));
             } else {
                  //@see  preDeleteArtifactType @common/tracker/ArtifactTypeFactory.class.php
@@ -885,12 +885,12 @@ if ($group_id && !$atid) {
             require('./tracker_permissions.php');
             break;
         case 'field_dependencies':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -915,19 +915,19 @@ if ($group_id && !$atid) {
             require('./field_sets.php');
             break;
         case 'fieldset_create':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
             $name        = $sanitizer->sanitize($request->getValidated('name', 'string', ''));
             $description = $sanitizer->sanitize($request->getValidated('description', 'text', ''));
             $rank        = $request->getValidated('rank', 'uint', 0);
-            if (!$art_fieldset_fact->createFieldSet($name, $description, $rank)) {
+            if (! $art_fieldset_fact->createFieldSet($name, $description, $rank)) {
                 exit_error($Language->getText('global', 'error'), $art_fieldset_fact->getErrorMessage());
             } else {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('tracker_admin_index', 'fieldset_created'));
@@ -935,12 +935,12 @@ if ($group_id && !$atid) {
             require('./field_sets.php');
             break;
         case 'display_fieldset_update':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -965,12 +965,12 @@ if ($group_id && !$atid) {
             }
             break;
         case 'fieldset_update':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -994,7 +994,7 @@ if ($group_id && !$atid) {
                     $description = $fieldset->getDescription();
                 }
 
-                if (!$fieldset->update($name, $description, $rank)) {
+                if (! $fieldset->update($name, $description, $rank)) {
                     exit_error($Language->getText('global', 'error'), $fieldset->getErrorMessage());
                 } else {
                 // Reload the field factory
@@ -1006,12 +1006,12 @@ if ($group_id && !$atid) {
             require('./field_sets.php');
             break;
         case 'fieldset_delete':
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }
 
-            if (!$ath->userIsAdmin()) {
+            if (! $ath->userIsAdmin()) {
                 exit_permission_denied();
                 return;
             }
@@ -1019,7 +1019,7 @@ if ($group_id && !$atid) {
             $fieldset_id = $request->getValidated('fieldset_id', 'uint', 0);
             $fieldset = $art_fieldset_fact->getFieldSetById($fieldset_id);
             if ($fieldset) {
-                if (!$art_fieldset_fact->deleteFieldSet($fieldset_id)) {
+                if (! $art_fieldset_fact->deleteFieldSet($fieldset_id)) {
                     exit_error($Language->getText('global', 'error'), $art_fieldset_fact->getErrorMessage());
                 } else {
                 // Reload the fieldset factory
@@ -1031,7 +1031,7 @@ if ($group_id && !$atid) {
             require('./field_sets.php');
             break;
         default:
-            if (!user_isloggedin()) {
+            if (! user_isloggedin()) {
                 exit_not_logged_in();
                 return;
             }

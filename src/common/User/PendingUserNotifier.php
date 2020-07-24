@@ -26,7 +26,7 @@ class User_PendingUserNotifier
     {
         $user_name  = $user->getUserName();
         $to         = ForgeConfig::get('sys_email_admin');
-        if (!send_new_user_email_notification($to, $user_name)) {
+        if (! send_new_user_email_notification($to, $user_name)) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
                 $GLOBALS['Language']->getText('global', 'mail_failed', $to)

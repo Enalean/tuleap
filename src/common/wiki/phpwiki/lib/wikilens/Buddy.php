@@ -69,7 +69,7 @@ function CoAgreement($dbi, $page, $users, $active_userid)
             $agree = 1;
         } elseif ($agreePos && $buddy_rating >= $MIDDLE_RATING) {
             $agree = 1;
-        } elseif (!$agreePos && $buddy_rating < $MIDDLE_RATING) {
+        } elseif (! $agreePos && $buddy_rating < $MIDDLE_RATING) {
             $agree = 1;
         } else {
             $agree = 0;
@@ -78,7 +78,7 @@ function CoAgreement($dbi, $page, $users, $active_userid)
     }
     if ($agree && $agreePos) {
         return 1;
-    } elseif ($agree && !$agreePos) {
+    } elseif ($agree && ! $agreePos) {
         return -1;
     } else {
         return 0;

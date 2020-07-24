@@ -301,7 +301,7 @@ class Git_Gitolite_ConfigPermissionsSerializer
      */
     public function fetchConfigPermissions($project, $repository, $permission_type)
     {
-        if (!isset(self::$permissions_types[$permission_type])) {
+        if (! isset(self::$permissions_types[$permission_type])) {
             return '';
         }
         $ugroup_literalizer = new UGroupLiteralizer();

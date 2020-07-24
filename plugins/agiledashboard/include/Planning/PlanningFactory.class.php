@@ -718,7 +718,7 @@ class PlanningFactory
         foreach ($this->getPlannings($user, $group_id) as $planning) {
             $planning   = $this->getPlanning($planning->getId());
             $tracker_id = $planning->getPlanningTrackerId();
-            if (!isset($trackers[$tracker_id])) {
+            if (! isset($trackers[$tracker_id])) {
                 if ($tracker = $this->tracker_factory->getTrackerById($tracker_id)) {
                     $trackers[$tracker_id] = $tracker;
                 }

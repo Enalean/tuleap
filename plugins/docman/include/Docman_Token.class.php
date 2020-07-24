@@ -49,7 +49,7 @@ class Docman_Token
                         $args['action'] == 'details'
                         &&
                         (
-                            !isset($args['section']) //Properties
+                            ! isset($args['section']) //Properties
                             ||
                             $args['section'] == 'history' //History
                         )

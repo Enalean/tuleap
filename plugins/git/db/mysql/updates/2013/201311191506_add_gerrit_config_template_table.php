@@ -66,7 +66,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_gerrit_config_template')) {
+        if (! $this->db->tableNameExists('plugin_git_gerrit_config_template')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_gerrit_config_template table is missing');
         }
     }

@@ -209,7 +209,7 @@ class FlamingParrot_NavBarPresenter
         if ($toptab === $this->selected_top_tab) {
             return 'active';
         } else {
-            if (!is_array($pathsToDetect)) {
+            if (! is_array($pathsToDetect)) {
                 $pathsToDetect = array($pathsToDetect);
             }
             foreach ($pathsToDetect as $path) {

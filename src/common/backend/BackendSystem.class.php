@@ -163,7 +163,7 @@ class BackendSystem extends Backend
 
         $homedir = $user->getUnixHomeDir();
 
-        if (!is_dir($homedir)) {
+        if (! is_dir($homedir)) {
             if (mkdir($homedir, 0751)) {
                 // copy the contents of the $codendi_shell_skel dir into homedir
                 if (is_dir(ForgeConfig::get('codendi_shell_skel'))) {
@@ -261,7 +261,7 @@ class BackendSystem extends Backend
         $ht_dir          = $projdir . "/htdocs";
         $private_dir     = $projdir . '/private';
 
-        if (!is_dir($projdir)) {
+        if (! is_dir($projdir)) {
             // Lets create the group's homedir.
             // (put the SGID sticky bit on all dir so that all files
             // in there are owned by the project group and not
@@ -293,14 +293,14 @@ class BackendSystem extends Backend
         $lcProjectDir = ForgeConfig::get('grpdir_prefix') . "/" . $project->getUnixName(true);
         if ($projdir != $lcProjectDir) {
             $lcprojlnk = $lcProjectDir;
-            if (!is_link($lcprojlnk)) {
-                if (!symlink($projdir, $lcprojlnk)) {
+            if (! is_link($lcprojlnk)) {
+                if (! symlink($projdir, $lcprojlnk)) {
                     $this->log("Can't create project link: $lcprojlnk", Backend::LOG_ERROR);
                 }
             }
         }
 
-        if (!is_dir($ht_dir)) {
+        if (! is_dir($ht_dir)) {
             // Project web site directory
             if (mkdir($ht_dir, 0775)) {
                 $this->chown($ht_dir, "dummy");
@@ -329,7 +329,7 @@ class BackendSystem extends Backend
             }
         }
 
-        if (!is_dir($private_dir)) {
+        if (! is_dir($private_dir)) {
             if (mkdir($private_dir, 0770)) {
                 $this->chmod($private_dir, 02770);
                 $this->chown($private_dir, "dummy");
@@ -369,7 +369,7 @@ class BackendSystem extends Backend
         $ftp_anon_dir    = ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $unix_group_name;
 
         if (is_dir(ForgeConfig::get('ftp_anon_dir_prefix'))) {
-            if (!is_dir($ftp_anon_dir)) {
+            if (! is_dir($ftp_anon_dir)) {
                 // Now lets create the group's ftp homedir for anonymous ftp space
                 // This one must be owned by the project gid so that all project
                 // admins can work on it (upload, delete, etc...)
@@ -394,7 +394,7 @@ class BackendSystem extends Backend
         $ftp_frs_dir     = ForgeConfig::get('ftp_frs_dir_prefix') . "/" . $unix_group_name;
 
         if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix'))) {
-            if (!is_dir($ftp_frs_dir)) {
+            if (! is_dir($ftp_frs_dir)) {
                 // Now lets create the group's ftp homedir for anonymous ftp space
                 // This one must be owned by the project gid so that all project
                 // admins can work on it (upload, delete, etc...)
@@ -428,7 +428,7 @@ class BackendSystem extends Backend
         }
 
         $user = $this->getUserManager()->getUserById($user_id);
-        if (!$user) {
+        if (! $user) {
             return false;
         }
         $homedir = ForgeConfig::get('homedir_prefix') . "/" . $user->getUserName();
@@ -459,7 +459,7 @@ class BackendSystem extends Backend
         }
 
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        if (! $project) {
             return false;
         }
         $mydir = ForgeConfig::get('grpdir_prefix') . "/" . $project->getUnixName(false);
@@ -498,7 +498,7 @@ class BackendSystem extends Backend
         }
 
         $project = $this->getProjectManager()->getProject($group_id);
-        if (!$project) {
+        if (! $project) {
             return false;
         }
         $anonymousFTP = ForgeConfig::get('ftp_anon_dir_prefix') . "/" . $project->getUnixName(false);
@@ -641,7 +641,7 @@ class BackendSystem extends Backend
             return true;
         }
         $path = ForgeConfig::get('homedir_prefix') . "/" . $name;
-        return (!$this->fileExists($path));
+        return (! $this->fileExists($path));
     }
 
 

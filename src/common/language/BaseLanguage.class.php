@@ -230,7 +230,7 @@ class BaseLanguage
         $ary = @file($fname, 1);
         for ($i = 0; $i < sizeof($ary); $i++) {
             if (
-                substr($ary[$i], 0, 1) == '#' ||  //ignore comments...
+                substr($ary[$i], 0, 1) == '#' || //ignore comments...
                 strlen(trim($ary[$i])) == 0
             ) {    //...or empty lines
                 continue;
@@ -241,11 +241,11 @@ class BaseLanguage
                 $text_array[$line[0]][$line[1]] = chop(str_replace('\n', "\n", ($line[2])));
             } else {
                 echo '* Error in ' . $fname . ' line ' . $i . ' string "' . trim($ary[$i]) . '" (length: ' . strlen(trim($ary[$i])) . ') : ';
-                if (!isset($line[0])) {
+                if (! isset($line[0])) {
                     echo "no index 0: empty line ? ";
-                } elseif (!isset($line[1])) {
+                } elseif (! isset($line[1])) {
                     echo "no index 1: did you use tabs to separate elements ? ";
-                } elseif (!isset($line[2])) {
+                } elseif (! isset($line[2])) {
                     echo "no index 2: keys present but string is missing ";
                 }
                 echo "<br>" . PHP_EOL;
@@ -316,7 +316,7 @@ class BaseLanguage
                     $tstring = preg_replace($pattern, '', $this->text_array[$pagename][$category]);
                     //$tstring = $this->text_array[$pagename][$category];
         }
-        if (!$tstring) {
+        if (! $tstring) {
             $tstring = "*** Unkown msg $pagename - $category ***";
         }
         return "$tstring";
@@ -345,7 +345,7 @@ class BaseLanguage
     public function getContent($file, $lang_code = null, $plugin_name = null, $ext = '.txt')
     {
         // Language for current user unless it is specified in the param list
-        if (!isset($lang_code)) {
+        if (! isset($lang_code)) {
             $lang_code = $this->lang;
         }
 

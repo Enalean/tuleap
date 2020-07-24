@@ -153,8 +153,8 @@ class Archive
     public function SetFormat($format) // @codingStandardsIgnoreLine
     {
         if (
-            (($format == self::COMPRESS_BZ2) && (!function_exists('bzcompress'))) ||
-            (($format == self::COMPRESS_GZ) && (!function_exists('gzencode')))
+            (($format == self::COMPRESS_BZ2) && (! function_exists('bzcompress'))) ||
+            (($format == self::COMPRESS_GZ) && (! function_exists('gzencode')))
         ) {
             /*
              * Trying to set a format but doesn't have the appropriate
@@ -190,7 +190,7 @@ class Archive
     public function SetObject($object) // @codingStandardsIgnoreLine
     {
         // Archive only works for commits and trees
-        if (($object != null) && (!(($object instanceof Commit) || ($object instanceof Tree)))) {
+        if (($object != null) && (! (($object instanceof Commit) || ($object instanceof Tree)))) {
             throw new \Exception('Invalid source object for archive');
         }
 
@@ -254,13 +254,13 @@ class Archive
      */
     public function GetFilename() // @codingStandardsIgnoreLine
     {
-        if (!empty($this->fileName)) {
+        if (! empty($this->fileName)) {
             return $this->fileName;
         }
 
         $fname = $this->GetProject()->GetSlug();
 
-        if (!empty($this->path)) {
+        if (! empty($this->path)) {
             $fname .= '-' . Util::MakeSlug($this->path);
         }
 
@@ -318,13 +318,13 @@ class Archive
      */
     public function GetPrefix() // @codingStandardsIgnoreLine
     {
-        if (!empty($this->prefix)) {
+        if (! empty($this->prefix)) {
             return $this->prefix;
         }
 
         $pfx = $this->GetProject()->GetSlug() . '/';
 
-        if (!empty($this->path)) {
+        if (! empty($this->path)) {
             $pfx .= $this->path . '/';
         }
 
@@ -363,7 +363,7 @@ class Archive
      */
     public function Open() // @codingStandardsIgnoreLine
     {
-        if (!$this->gitObject) {
+        if (! $this->gitObject) {
             throw new \Exception('Invalid object for archive');
         }
 
@@ -408,7 +408,7 @@ class Archive
 
             $temphandle = gzopen($this->tempfile, $mode);
             if ($temphandle) {
-                while (!feof($this->handle)) {
+                while (! feof($this->handle)) {
                     gzwrite($temphandle, fread($this->handle, 1048576));
                 }
                 gzclose($temphandle);
@@ -435,13 +435,13 @@ class Archive
      */
     public function Close() // @codingStandardsIgnoreLine
     {
-        if (!$this->handle) {
+        if (! $this->handle) {
             return true;
         }
 
         if ($this->format === self::COMPRESS_GZ) {
             fclose($this->handle);
-            if (!empty($this->tempfile)) {
+            if (! empty($this->tempfile)) {
                 unlink($this->tempfile);
                 $this->tempfile = '';
             }
@@ -465,7 +465,7 @@ class Archive
      */
     public function Read($size = 1048576) // @codingStandardsIgnoreLine
     {
-        if (!$this->handle) {
+        if (! $this->handle) {
             return false;
         }
 

@@ -78,7 +78,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
             $userfile_name = basename($userfile_name);
             $userfile_tmpname = $userfile->getTmpName();
 
-            if (!preg_match("/(\.html|\.htm)$/i", $userfile_name)) {
+            if (! preg_match("/(\.html|\.htm)$/i", $userfile_name)) {
                 $message->pushContent(_("Only files with extension HTML are allowed"), HTML::br(), HTML::br());
             } else {
                 $message->pushContent(_("Processed $userfile_name"), HTML::br(), HTML::br());

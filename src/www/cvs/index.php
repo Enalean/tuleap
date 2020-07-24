@@ -49,7 +49,7 @@ switch ($func) {
         if (trim($mailing_list) == '') {
             $mailing_list = 'NULL';
         } else {
-            if (!validate_emails($mailing_list)) {
+            if (! validate_emails($mailing_list)) {
                   $mailing_list = 'NULL';
                   $status = $GLOBALS['Language']->getText('cvs_index', 'partial_success');
             }

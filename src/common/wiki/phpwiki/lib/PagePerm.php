@@ -129,7 +129,7 @@ function pagePermissionsSimpleFormat($perm_tree, $owner, $group = false)
 function pagePermissionsAcl($type, $perm_tree)
 {
     $perm = $perm_tree[1];
-    while (!is_object($perm)) {
+    while (! is_object($perm)) {
         $perm_tree = pagePermissionsAcl($type, $perm);
         $perm = $perm_tree[1];
     }
@@ -189,7 +189,7 @@ function action2access($action)
             return 'edit';
         case 'create':
             $page = $request->getPage();
-            if (!$page->exists()) {
+            if (! $page->exists()) {
                 return 'create';
             } else {
                 return 'view';
@@ -329,7 +329,7 @@ function array_diff_assoc_recursive($array1, $array2)
 {
     foreach ($array1 as $key => $value) {
         if (is_array($value)) {
-            if (!is_array($array2[$key])) {
+            if (! is_array($array2[$key])) {
                 $difference[$key] = $value;
             } else {
                 $new_diff = array_diff_assoc_recursive($value, $array2[$key]);
@@ -337,11 +337,11 @@ function array_diff_assoc_recursive($array1, $array2)
                     $difference[$key] = $new_diff;
                 }
             }
-        } elseif (!isset($array2[$key]) || $array2[$key] != $value) {
+        } elseif (! isset($array2[$key]) || $array2[$key] != $value) {
             $difference[$key] = $value;
         }
     }
-    return !isset($difference) ? 0 : $difference;
+    return ! isset($difference) ? 0 : $difference;
 }
 
 /**
@@ -361,7 +361,7 @@ class PagePermission
     public function __construct($hash = array())
     {
         $this->_group = &$GLOBALS['request']->getGroup();
-        if (is_array($hash) and !empty($hash)) {
+        if (is_array($hash) and ! empty($hash)) {
             $accessTypes = $this->accessTypes();
             foreach ($hash as $access => $requires) {
                 if (in_array($access, $accessTypes)) {
@@ -387,7 +387,7 @@ class PagePermission
      */
     public function isAuthorized($access, $user)
     {
-        if (!empty($this->perm[$access])) {
+        if (! empty($this->perm[$access])) {
             foreach ($this->perm[$access] as $group => $bool) {
                 if ($this->isMember($user, $group)) {
                     return $bool;
@@ -407,7 +407,7 @@ class PagePermission
         if ($group === ACL_EVERY) {
             return true;
         }
-        if (!isset($this->_group)) {
+        if (! isset($this->_group)) {
             $member = $request->getGroup();
         } else {
             $member = $this->_group;
@@ -439,7 +439,7 @@ class PagePermission
             return $user->isAuthenticated();
         }
         if ($group === ACL_OWNER) {
-            if (!$user->isAuthenticated()) {
+            if (! $user->isAuthenticated()) {
                 return false;
             }
             $page = $request->getPage();
@@ -448,7 +448,7 @@ class PagePermission
                     or $member->isMember($owner));
         }
         if ($group === ACL_CREATOR) {
-            if (!$user->isAuthenticated()) {
+            if (! $user->isAuthenticated()) {
                 return false;
             }
             $page = $request->getPage();
@@ -490,8 +490,8 @@ class PagePermission
             $perm['edit'] = array(ACL_SIGNED => true);
         }
         // view:
-        if (!ALLOW_ANON_USER) {
-            if (!ALLOW_USER_PASSWORDS) {
+        if (! ALLOW_ANON_USER) {
+            if (! ALLOW_USER_PASSWORDS) {
                 $perm['view'] = array(ACL_SIGNED => true);
             } else {
                 $perm['view'] = array(ACL_AUTHENTICATED => true);
@@ -499,8 +499,8 @@ class PagePermission
             $perm['view'][ACL_BOGOUSER] = ALLOW_BOGO_LOGIN ? true : false;
         }
         // edit:
-        if (!ALLOW_ANON_EDIT) {
-            if (!ALLOW_USER_PASSWORDS) {
+        if (! ALLOW_ANON_EDIT) {
+            if (! ALLOW_USER_PASSWORDS) {
                 $perm['edit'] = array(ACL_SIGNED => true);
             } else {
                 $perm['edit'] = array(ACL_AUTHENTICATED => true);
@@ -618,7 +618,7 @@ class PagePermission
     public function asEditableTable($type)
     {
         global $WikiTheme;
-        if (!isset($this->_group)) {
+        if (! isset($this->_group)) {
             $this->_group = $GLOBALS['request']->getGroup();
         }
         $table = HTML::table();
@@ -638,7 +638,7 @@ class PagePermission
 
         $allGroups = $this->_group->_specialGroups();
         foreach ($this->_group->getAllGroupsIn() as $group) {
-            if (!in_array($group, $this->_group->specialGroups())) {
+            if (! in_array($group, $this->_group->specialGroups())) {
                 $allGroups[] = $group;
             }
         }
@@ -662,7 +662,7 @@ class PagePermission
                                            'style' => 'text-align: right;',
                                            'size' => 1));
             foreach ($allGroups as $groupname) {
-                if (!isset($groups[$groupname])) {
+                if (! isset($groups[$groupname])) {
                     $newgroup->pushContent(HTML::option(
                         array('value' => $groupname),
                         $this->groupName($groupname)
@@ -733,7 +733,7 @@ class PagePermission
                     );
                 }
             }
-            if (!empty($groups)) {
+            if (! empty($groups)) {
                 $table->pushContent(
                     HTML::tr(
                         array('valign' => 'top'),
@@ -811,7 +811,7 @@ class PagePermission
         ) {
             $s[2] = 'x';
         }
-        if (!empty($group)) {
+        if (! empty($group)) {
             if (
                 isset($perm['view'][$group]) or
                 (isset($perm['view'][ACL_AUTHENTICATED]) and $request->_user->isAuthenticated())

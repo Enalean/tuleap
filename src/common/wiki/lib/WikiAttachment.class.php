@@ -95,7 +95,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         static $_codendi_wikiattachmentdao_instance;
 
-        if (!$_codendi_wikiattachmentdao_instance) {
+        if (! $_codendi_wikiattachmentdao_instance) {
             $_codendi_wikiattachmentdao_instance = new WikiAttachmentDao(CodendiDataAccess::instance());
         }
 
@@ -164,7 +164,7 @@ class WikiAttachment /* implements UGroupPermission */
         $j = 0; // count viewable attch for offset
         $waArray = array();
         $stop = false;
-        while (($row = $dar->getRow()) && !$stop) {
+        while (($row = $dar->getRow()) && ! $stop) {
             if ($max !== null && $i >= $max) {
                 $stop = true;
                 break;
@@ -359,7 +359,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         $dao = WikiAttachment::getDao();
         $dar = $dao->read($this->id);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return ($row['delete_date'] == null);
         }
@@ -371,7 +371,7 @@ class WikiAttachment /* implements UGroupPermission */
         $dao = WikiAttachment::getDao();
         $created = $dao->create($this->gid, $this->getFilename(), $this->getFilesystemName());
 
-        if (!$created) {
+        if (! $created) {
             trigger_error(
                 $GLOBALS['Language']->getText(
                     'wiki_lib_attachment',
@@ -388,18 +388,18 @@ class WikiAttachment /* implements UGroupPermission */
     public function create()
     {
         // Create wiki attachment directory for current project
-        if (!is_dir($this->basedir)) {
+        if (! is_dir($this->basedir)) {
             $res = mkdir($this->basedir, 0700);
-            if (!$res) {
+            if (! $res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_upload_dir'), E_USER_ERROR);
                 return false;
             }
         }
 
         // Create directory where file revison will be stored
-        if (!is_dir($this->basedir . '/' . $this->getFilesystemName())) {
+        if (! is_dir($this->basedir . '/' . $this->getFilesystemName())) {
             $res = mkdir($this->basedir . '/' . $this->getFilesystemName(), 0700);
-            if (!$res) {
+            if (! $res) {
                 trigger_error($GLOBALS['Language']->getText('wiki_lib_attachment', 'err_create_file_dir'), E_USER_ERROR);
                 return false;
             }
@@ -410,7 +410,7 @@ class WikiAttachment /* implements UGroupPermission */
 
     public function getId()
     {
-        if (!is_numeric($this->id)) {
+        if (! is_numeric($this->id)) {
             $dao = WikiAttachment::getDao();
             $dar = $dao->getIdFromFilename($this->gid, $this->getFilename());
 
@@ -434,18 +434,18 @@ class WikiAttachment /* implements UGroupPermission */
      */
     public function createRevision($userfile_name, $userfile_size, $userfile_type, $userfile_tmpname)
     {
-        if (!$this->setFilename(urldecode($userfile_name))) {
+        if (! $this->setFilename(urldecode($userfile_name))) {
             return -1;
         }
 
         if ($this->getId()) {
             $this->initWithId($this->getId());
-        } elseif (!$this->initFilesystemName()) {
+        } elseif (! $this->initFilesystemName()) {
             return -1;
         }
 
-        if (!$this->exist()) {
-            if (!$this->create()) {
+        if (! $this->exist()) {
+            if (! $this->create()) {
                 return -1;
             }
         }
@@ -458,11 +458,11 @@ class WikiAttachment /* implements UGroupPermission */
         $att_rev->setMimeType($userfile_type);
         $att_rev->setDate(time());
 
-        if (!$att_rev->setSize($userfile_size)) {
+        if (! $att_rev->setSize($userfile_size)) {
             return -1;
         }
 
-        if (!$att_rev->create($userfile_tmpname)) {
+        if (! $att_rev->create($userfile_tmpname)) {
             return -1;
         }
 
@@ -500,12 +500,12 @@ class WikiAttachment /* implements UGroupPermission */
         // Validate Group id
         $pm = ProjectManager::instance();
         $go = $pm->getProject($this->gid);
-        if (!$go) {
+        if (! $go) {
             exit_no_group();
         }
 
         // Validate filename
-        if (!is_dir($this->basedir . '/' . $this->getFilesystemName())) {
+        if (! is_dir($this->basedir . '/' . $this->getFilesystemName())) {
             return false;
             //      print "error ".$this->basedir.'/'.$this->filename;
         }
@@ -646,7 +646,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         $dao = $this->getDao();
         $dar = $dao->searchAttachmentToPurge($time);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $purgeState = true;
             if ($dar->rowCount() > 0) {
                 foreach ($dar as $row) {
@@ -672,18 +672,18 @@ class WikiAttachment /* implements UGroupPermission */
             $attachmentPath = $this->basedir . '/' . $this->getFilesystemName();
             $dirAttachment = new DirectoryIterator($attachmentPath);
             foreach ($dirAttachment as $version) {
-                if (!$version->isDot()) {
-                    if (!unlink($version->getPathname())) {
+                if (! $version->isDot()) {
+                    if (! unlink($version->getPathname())) {
                         return false;
                     }
                 }
             }
-            if (!rmdir($attachmentPath)) {
+            if (! rmdir($attachmentPath)) {
                 return false;
             }
         }
         $dao = $this->getDao();
-        if (!$dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
+        if (! $dao->setPurgeDate($this->id, $_SERVER['REQUEST_TIME'])) {
             return false;
         }
         return true;
@@ -700,7 +700,7 @@ class WikiAttachment /* implements UGroupPermission */
     {
         $dao = $this->getDao();
         $this->initWithId($id);
-        if ($this->exist() && !$this->isActive()) {
+        if ($this->exist() && ! $this->isActive()) {
             return $dao->restoreAttachment($id);
         }
 

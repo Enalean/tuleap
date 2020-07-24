@@ -104,7 +104,7 @@ class Toggler
         if ($current_user->isLoggedIn()) {
             $done = false;
             EventManager::instance()->processEvent(Event::TOGGLE, array('id' => $id, 'user' => $current_user, 'done' => &$done));
-            if (!$done) {
+            if (! $done) {
                 if (strpos($id, 'tracker_report_query_') === 0) {
                     $report_id = (int) substr($id, strlen('tracker_report_query_'));
                     $report_factory = ArtifactReportFactory::instance();

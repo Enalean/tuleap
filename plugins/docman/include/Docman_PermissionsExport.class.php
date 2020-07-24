@@ -186,7 +186,7 @@ class Docman_PermissionsExport
             dgettext('tuleap-docman', 'Sample value'),
             dgettext('tuleap-docman', 'Description')
         );
-        echo  html_build_list_table_top($title_arr);
+        echo html_build_list_table_top($title_arr);
         $i = 0;
 
         echo "<tr class='" . util_get_alt_row_color($i++) . "'>";

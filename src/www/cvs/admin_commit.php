@@ -8,7 +8,7 @@ require_once __DIR__ . '/commit_utils.php';
 $request  = HTTPRequest::instance();
 $group_id = $request->get('group_id');
 
-if (!$group_id) {
+if (! $group_id) {
     exit_no_group(); // need a group_id !!!
 }
 
@@ -43,7 +43,7 @@ if ($cvs_mailing_header == 'NULL') {
 }
 
 $project = ProjectManager::instance()->getProject($group_id);
-$checked  = $project->isPublic() && !$cvs_is_private ? '' : 'checked="true"';
+$checked  = $project->isPublic() && ! $cvs_is_private ? '' : 'checked="true"';
 $readonly = $project->isPublic() ? '' : 'readonly="true" disabled="true"';
 
 echo "<h2>" . $GLOBALS['Language']->getText('cvs_admin_commit', 'title') . "</h2>";
@@ -56,7 +56,7 @@ echo '<FORM ACTION="?" METHOD="GET">
     <label class="checkbox" for="cvs_private"><input type="hidden" name="private" ' . $checked . ' ' . $readonly . ' value="0" />
     <input type="checkbox" name="private" ' . $checked . ' ' . $readonly . ' value="1" id="cvs_private" />
     ' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_lbl') . '</label>';
-if (!$project->isPublic()) {
+if (! $project->isPublic()) {
     echo '<br /><em>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'private_private_msg') . '</em>';
 }
     echo '</p>

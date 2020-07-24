@@ -94,7 +94,7 @@ class Tracker_RulesManager
      */
     public function getAllListRulesByTrackerWithOrder($tracker_id)
     {
-        if (!isset($this->rules_by_tracker_id[$tracker_id])) {
+        if (! isset($this->rules_by_tracker_id[$tracker_id])) {
             $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
                     ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
@@ -323,7 +323,7 @@ class Tracker_RulesManager
         $targets     = array();
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
         foreach ($used_fields as $field) {
-            if (!$source_id || !$this->fieldIsAForbiddenTarget($this->tracker->id, $field->getId(), $source_id)) {
+            if (! $source_id || ! $this->fieldIsAForbiddenTarget($this->tracker->id, $field->getId(), $source_id)) {
                 $targets[$field->getId()] = $field;
             }
         }
@@ -354,11 +354,11 @@ class Tracker_RulesManager
 
     public function process($engine, $request, $current_user)
     {
-        if ($request->get('source_field') && !$request->get('target_field')) {
+        if ($request->get('source_field') && ! $request->get('target_field')) {
             $source_field = $request->get('source_field');
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, $source_field);
         } elseif ($request->get('source_field') && $request->get('target_field')) {
-            if (!$request->isPost() || !$request->get('create_field_dependencies')) {
+            if (! $request->isPost() || ! $request->get('create_field_dependencies')) {
                 $source_field = $request->get('source_field');
                 $target_field = $request->get('target_field');
                 $tracker_id = $this->tracker->id;
@@ -424,7 +424,7 @@ class Tracker_RulesManager
 
         //source
         $source_field = $this->form_element_factory->getFormElementById($source_field_id);
-        if (!$source_field) {
+        if (! $source_field) {
             echo '<select name="source_field" onchange="this.form.submit()">';
             echo '<option value="0">' . dgettext('tuleap-tracker', '-- Choose source field') . '</option>';
             $sources = $this->getAllSourceFields();
@@ -443,7 +443,7 @@ class Tracker_RulesManager
 
         //target
         $disabled = '';
-        if (!$source_field) {
+        if (! $source_field) {
             $disabled = 'disabled="disabled" readonly="readonly"';
         }
         echo '<select name="target_field" ' . $disabled . '>';

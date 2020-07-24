@@ -65,7 +65,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         } else {
             $user = WikiUser($userid);
         }
-        if (!$user->isAdmin() and ! (DEBUG && _DEBUG_LOGIN)) {
+        if (! $user->isAdmin() and ! (DEBUG && _DEBUG_LOGIN)) {
             $request->_notAuthorized(WIKIAUTH_ADMIN);
             $this->disabled("! user->isAdmin");
         }
@@ -109,7 +109,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         $table->pushContent($this->_showhash("USER_AUTH_POLICY", array("USER_AUTH_POLICY" => USER_AUTH_POLICY)));
         $html->pushContent($table);
         $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
-        if (!$user) {
+        if (! $user) {
             $html->pushContent(HTML::p(fmt("No userid")));
         } else {
             $table = HTML::table(array('border' => 1,
@@ -161,7 +161,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         if (is_object($hash)) {
             $hash = obj2hash($hash);
         }
-        if (!empty($hash)) {
+        if (! empty($hash)) {
             ksort($hash);
             foreach ($hash as $key => $val) {
                 if (is_object($val)) {
@@ -172,7 +172,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                         $val = $heading;
                     } elseif (substr($heading, 0, 13) == "Object of db_") {
                         $val = $heading;
-                    } elseif (!isset($seen[$heading])) {
+                    } elseif (! isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
                             array('border' => 1,
@@ -187,7 +187,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                     $heading = $key . "[]";
                     if ($depth > 3) {
                         $val = $heading;
-                    } elseif (!isset($seen[$heading])) {
+                    } elseif (! isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
                             array('border' => 1,

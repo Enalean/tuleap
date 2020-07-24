@@ -64,7 +64,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $userManager = self::class;
             self::$_instance = new $userManager(
                 new User_PendingUserNotifier()
@@ -113,7 +113,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getUserById($user_id)
     {
-        if (!isset($this->_users[$user_id])) {
+        if (! isset($this->_users[$user_id])) {
             if (is_numeric($user_id)) {
                 if ($user_id == 0) {
                     $this->_users[$user_id] = $this->getUserInstanceFromRow(array('user_id' => 0));
@@ -171,7 +171,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getUserByUserName($user_name)
     {
-        if (!isset($this->_userid_bynames[$user_name])) {
+        if (! isset($this->_userid_bynames[$user_name])) {
             $dar = $this->getDao()->searchByUserName($user_name);
             if ($row = $dar->getRow()) {
                 $u = $this->getUserInstanceFromRow($row);
@@ -215,7 +215,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($ldapId == null) {
             return null;
         }
-        if (!isset($this->_userid_byldapid[$ldapId])) {
+        if (! isset($this->_userid_byldapid[$ldapId])) {
             $dar = $this->getDao()->searchByLdapId($ldapId);
             if ($row = $dar->getRow()) {
                 $u = $this->getUserInstanceFromRow($row);
@@ -249,7 +249,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         $eParams = array('ident' => $ident,
                          'user'  => &$user);
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
-        if (!$user) {
+        if (! $user) {
             // No valid user found, try an internal lookup for username
             if (preg_match('/^(.*) \((.*)\)$/', $ident, $matches)) {
                 if (trim($matches[2]) != '') {
@@ -380,7 +380,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                         'tokenFound' => &$tokenFoundInPlugins);
         $em->processEvent('user_manager_get_user_by_identifier', $params);
 
-        if (!$tokenFoundInPlugins) {
+        if (! $tokenFoundInPlugins) {
             // Guess identifier type
             $separatorPosition = strpos($identifier, ':');
             if ($separatorPosition === false) {
@@ -441,7 +441,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getCurrentUser($session_hash = false)
     {
-        if (!isset($this->_currentuser) || $session_hash !== false) {
+        if (! isset($this->_currentuser) || $session_hash !== false) {
             if ($session_hash === false) {
                 $session_hash = $this->getCookieManager()->getCookie('session_hash');
             }
@@ -692,7 +692,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         }
 
         $user_login_as = $this->findUser($name);
-        if (!$user_login_as) {
+        if (! $user_login_as) {
             throw new UserNotExistException();
         }
         $status_manager = new User_UserStatusManager();
@@ -716,7 +716,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function openSessionForUser(PFUser $user)
     {
-        if (!$user) {
+        if (! $user) {
             throw new UserNotExistException();
         }
         try {
@@ -744,7 +744,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function forceLogin($name)
     {
-        if (!IS_SCRIPT) {
+        if (! IS_SCRIPT) {
             throw new Exception("Can't log in the user when not is script");
         }
 
@@ -826,7 +826,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function updateDb(PFUser $user)
     {
-        if (!$user->isAnonymous()) {
+        if (! $user->isAnonymous()) {
             $old_user = $this->getUserByIdWithoutCache($user->getId());
             $userRow = $user->toRow();
             $user_password = $user->getPassword();
@@ -970,7 +970,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             $user->getExpiryDate(),
             $_SERVER['REQUEST_TIME']
         );
-        if (!$user_id) {
+        if (! $user_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_exit', 'error'));
             return 0;
         } else {

@@ -188,7 +188,7 @@ class ItemRepresentationBuilder
     {
         $lock_infos = $this->lock_factory->getLockInfoForItem($item);
 
-        if (!$lock_infos) {
+        if (! $lock_infos) {
             return null;
         }
 

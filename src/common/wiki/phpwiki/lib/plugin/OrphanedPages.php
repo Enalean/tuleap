@@ -80,16 +80,16 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
             // only by itself, it is still an orphan
             $parent = $links_iter->next();
             if (
-                !$parent               // page has no parents
+                ! $parent               // page has no parents
                 or (($parent->getName() == $page->getName())
-                    and !$links_iter->next())
+                    and ! $links_iter->next())
             ) { // or page has only itself as a parent
                 $pages[] = $page;
             }
         }
         $args['count'] = count($pages);
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader) {
+        if (! $noheader) {
             $pagelist->setCaption(_("Orphaned Pages in this wiki (%d total):"));
         }
         // deleted pages show up as version 0.
@@ -97,7 +97,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
             $pagelist->_addColumn('version');
         }
         list($offset,$pagesize) = $pagelist->limit($args['limit']);
-        if (!$pagesize) {
+        if (! $pagesize) {
             $pagelist->addPageList($pages);
         } else {
             for ($i = $offset; $i < $offset + $pagesize - 1; $i++) {

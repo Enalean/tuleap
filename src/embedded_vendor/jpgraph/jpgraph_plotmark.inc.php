@@ -123,7 +123,7 @@ class PlotMark
 
     public function Hide($aHide = true)
     {
-        $this->show = !$aHide;
+        $this->show = ! $aHide;
     }
 
     public function Show($aShow = true)
@@ -161,14 +161,14 @@ class PlotMark
             $coords .= ", " . round($aPts[2 * $i]) . ", " . round($aPts[2 * $i + 1]);
         }
         $this->csimareas = "";
-        if (!empty($this->csimtarget)) {
+        if (! empty($this->csimtarget)) {
             $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . htmlentities($this->csimtarget) . "\"";
 
-            if (!empty($this->csimwintarget)) {
+            if (! empty($this->csimwintarget)) {
                 $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
-            if (!empty($this->csimalt)) {
+            if (! empty($this->csimalt)) {
                 $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\"";
             }
@@ -182,14 +182,14 @@ class PlotMark
         $y = round($y);
         $r = round($r);
         $this->csimareas = "";
-        if (!empty($this->csimtarget)) {
+        if (! empty($this->csimtarget)) {
             $this->csimareas .= "<area shape=\"circle\" coords=\"$x,$y,$r\" href=\"" . htmlentities($this->csimtarget) . "\"";
 
-            if (!empty($this->csimwintarget)) {
+            if (! empty($this->csimwintarget)) {
                 $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
             }
 
-            if (!empty($this->csimalt)) {
+            if (! empty($this->csimalt)) {
                 $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                 $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
             }
@@ -199,7 +199,7 @@ class PlotMark
 
     public function Stroke($img, $x, $y)
     {
-        if (!$this->show) {
+        if (! $this->show) {
             return;
         }
 
@@ -258,7 +258,7 @@ class PlotMark
                     // Load an image and use that as a marker
                     // Small optimization, if we have already read an image don't
                     // waste time reading it again.
-                    if ($this->markimg == '' || !($this->oldfilename === $filename)) {
+                    if ($this->markimg == '' || ! ($this->oldfilename === $filename)) {
                         $this->markimg = Graph::LoadBkgImage('', $filename);
                         $this->oldfilename = $filename;
                     }
@@ -339,16 +339,16 @@ class PlotMark
             $this->width = max($dx, $dy);
 
             $img->Copy($this->markimg, $dx, $dy, 0, 0, $dw, $dh, $w, $h);
-            if (!empty($this->csimtarget)) {
+            if (! empty($this->csimtarget)) {
                 $this->csimareas = "<area shape=\"rect\" coords=\"" .
                 $dx . ',' . $dy . ',' . round($dx + $dw) . ',' . round($dy + $dh) . '" ' .
                 "href=\"" . htmlentities($this->csimtarget) . "\"";
 
-                if (!empty($this->csimwintarget)) {
+                if (! empty($this->csimwintarget)) {
                     $this->csimareas .= " target=\"" . $this->csimwintarget . "\" ";
                 }
 
-                if (!empty($this->csimalt)) {
+                if (! empty($this->csimalt)) {
                     $tmp = sprintf($this->csimalt, $this->yvalue, $this->xvalue);
                     $this->csimareas .= " title=\"$tmp\" alt=\"$tmp\" ";
                 }
@@ -534,12 +534,12 @@ class ImgData
     {
         $n = $this->an[$aMark];
         if (is_string($aIdx)) {
-            if (!in_array($aIdx, $this->colors)) {
+            if (! in_array($aIdx, $this->colors)) {
                 JpGraphError::RaiseL(23001, $this->name, $aIdx);//('This marker "'.($this->name).'" does not exist in color: '.$aIdx);
             }
             $idx = $this->index[$aIdx];
         } elseif (
-            !is_integer($aIdx) ||
+            ! is_integer($aIdx) ||
             (is_integer($aIdx) && $aIdx > $this->maxidx )
         ) {
             JpGraphError::RaiseL(23002, $this->name);//('Mark color index too large for marker "'.($this->name).'"');

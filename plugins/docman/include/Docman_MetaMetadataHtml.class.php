@@ -137,7 +137,7 @@ class Docman_MetaMetadataHtml
 
         $mdContent .= '<td>' . dgettext('tuleap-docman', 'Use this property:') . '</td>';
         $mdContent .= '<td>';
-        if (!$this->md->isRequired()) {
+        if (! $this->md->isRequired()) {
             $sthCanChange = true;
             $selected = '';
             if ($this->md->isUsed()) {

@@ -44,7 +44,7 @@ class b201606021408_create_tracker_changeset_value_computed_table extends ForgeU
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_changeset_value_computedfield_manual_value')) {
+        if (! $this->db->tableNameExists('tracker_changeset_value_computedfield_manual_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Table tracker_changeset_value_computedfield_manual_value not created');
         }
     }

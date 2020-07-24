@@ -185,7 +185,7 @@ class PluginFileInfo extends PluginInfo
                 case T_DNUMBER:
                 case T_LNUMBER:
                 case T_NUM_STRING:
-                    if (T_STRING == $token[0] && (!strcasecmp($token[1], "false") || !strcasecmp($token[1], "true"))) {
+                    if (T_STRING == $token[0] && (! strcasecmp($token[1], "false") || ! strcasecmp($token[1], "true"))) {
                         $val = (bool) strcasecmp($token[1], "false");
                         if (isset($variables[$current])) {
                             $variables[$current]['value'] = $val;

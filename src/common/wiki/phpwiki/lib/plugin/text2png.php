@@ -102,8 +102,8 @@ class WikiPlugin_text2png extends WikiPlugin
         } //english=C
         $filepath = getcwd() . "/images/$l";
 
-        if (!file_exists($filepath . "/" . $filename)) {
-            if (!file_exists($filepath)) {
+        if (! file_exists($filepath . "/" . $filename)) {
+            if (! file_exists($filepath)) {
                 $oldumask = umask(0);
                 // permissions affected by user the www server is running as
                 mkdir($filepath, 0777);

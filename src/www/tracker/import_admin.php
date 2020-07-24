@@ -23,11 +23,11 @@ if ($group_id && $mode == "admin") {
   //  get the Group object
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-    if (!$group || !is_object($group) || $group->isError()) {
+    if (! $group || ! is_object($group) || $group->isError()) {
         exit_no_group();
     }
     $atf = new ArtifactTypeFactory($group);
-    if (!$group || !is_object($group) || $group->isError()) {
+    if (! $group || ! is_object($group) || $group->isError()) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_import_admin', 'not_get_atf'));
     }
 

@@ -46,7 +46,7 @@ class b201206221459_add_postaction_field_float_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_field_float')) {
+        if (! $this->db->tableNameExists('tracker_workflow_transition_postactions_field_float')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_field_float table is missing');
         }
     }

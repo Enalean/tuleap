@@ -98,7 +98,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
             return $this->disabled("(method != 'GET')");
         }
 
-        if (!$src and $page) {
+        if (! $src and $page) {
             if ($page == $request->get('pagename')) {
                 return $this->error(sprintf(
                     _("recursive inclusion of page %s"),
@@ -107,7 +107,7 @@ class WikiPlugin_FrameInclude extends WikiPlugin
             }
             $src = WikiURL($page);
         }
-        if (!$src) {
+        if (! $src) {
             return $this->error(sprintf(
                 _("%s or %s parameter missing"),
                 'src',

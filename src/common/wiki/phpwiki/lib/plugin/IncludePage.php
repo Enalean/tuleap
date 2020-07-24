@@ -69,7 +69,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             // Expand relative page names.
             $page = new WikiPageName($page, $basepage);
         }
-        if (!isset($page) or !$page or !$page->name) {
+        if (! isset($page) or ! $page or ! $page->name) {
             return false;
         }
         return array($page->name);
@@ -83,7 +83,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
             $page = new WikiPageName($page, $basepage);
             $page = $page->name;
         }
-        if (!$page) {
+        if (! $page) {
             return $this->error(_("no page specified"));
         }
 
@@ -100,7 +100,7 @@ class WikiPlugin_IncludePage extends WikiPlugin
         $p = $dbi->getPage($page);
         if ($rev) {
             $r = $p->getRevision($rev);
-            if (!$r) {
+            if (! $r) {
                 return $this->error(sprintf(
                     _("%s(%d): no such revision"),
                     $page,

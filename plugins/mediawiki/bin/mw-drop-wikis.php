@@ -37,7 +37,7 @@ foreach ($argv as $project) {
 
     $project_dir = "$projects_path/$project";
     echo "  Deleting project subdir $project_dir.\n";
-    if (!is_dir($project_dir)) {
+    if (! is_dir($project_dir)) {
         echo "$project_dir does not exist!\n";
     } else {
         system("rm -rf $project_dir");
@@ -47,11 +47,11 @@ foreach ($argv as $project) {
     strtr($schema, "-", "_");
     echo "  Dropping database schema $schema.\n";
     $res = db_query_params("DROP SCHEMA $schema CASCADE", array());
-    if (!$res) {
+    if (! $res) {
         echo db_error();
     }
     $res = db_query_params('DELETE FROM plugin_mediawiki_interwiki WHERE iw_prefix=$1', array($project));
-    if (!$res) {
+    if (! $res) {
         echo db_error();
     }
 }

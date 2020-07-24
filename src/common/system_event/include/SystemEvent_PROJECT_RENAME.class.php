@@ -38,7 +38,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
      */
     public function setLog($log)
     {
-        if (!isset($this->log) || $this->log == '') {
+        if (! isset($this->log) || $this->log == '') {
             $this->log = $log;
         } else {
             $this->log .= PHP_EOL . $log;
@@ -78,7 +78,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             $backendSVN = $this->getBackend('SVN');
             if ($backendSVN->repositoryExists($project)) {
                 if ($backendSVN->isNameAvailable($new_name)) {
-                    if (!$backendSVN->renameSVNRepository($project, $new_name)) {
+                    if (! $backendSVN->renameSVNRepository($project, $new_name)) {
                         $this->error('Could not rename SVN repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
                         $renameState = $renameState & false;
                     } else {
@@ -94,7 +94,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             $backendCVS = $this->getBackend('CVS');
             if ($backendCVS->repositoryExists($project)) {
                 if ($backendCVS->isNameAvailable($new_name)) {
-                    if (!$backendCVS->renameCVSRepository($project, $new_name)) {
+                    if (! $backendCVS->renameCVSRepository($project, $new_name)) {
                         $this->error('Could not rename CVS repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
                         $renameState = $renameState & false;
                     } else {
@@ -111,7 +111,7 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
                 if ($backendSystem->projectHomeExists($project)) {
                     if ($backendSystem->isProjectNameAvailable($new_name)) {
-                        if (!$backendSystem->renameProjectHomeDirectory($project, $new_name)) {
+                        if (! $backendSystem->renameProjectHomeDirectory($project, $new_name)) {
                             $this->error("Could not rename project home");
                             $renameState = $renameState & false;
                         } else {
@@ -125,20 +125,20 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
                 }
 
                 // Rename system FTP pub
-                if (!$backendSystem->renameAnonFtpDirectory($project, $new_name)) {
+                if (! $backendSystem->renameAnonFtpDirectory($project, $new_name)) {
                     $this->error('Could not rename FTP repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
                     $renameState = $renameState & false;
                 }
             }
 
             // Rename system FRS
-            if (!$backendSystem->renameFileReleasedDirectory($project, $new_name)) {
+            if (! $backendSystem->renameFileReleasedDirectory($project, $new_name)) {
                 $this->error('Could not rename FRS repository (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
                 $renameState = $renameState & false;
             }
 
             // Update DB
-            if (!$this->updateDB($project, $new_name)) {
+            if (! $this->updateDB($project, $new_name)) {
                 $this->error('Could not update Project (id:' . $project->getId() . ') from "' . $project->getUnixName() . '" to "' . $new_name . '"');
                 $renameState = $renameState & false;
             }

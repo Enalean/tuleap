@@ -62,7 +62,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
-        if (!$request->getCurrentUser()->isSuperUser()) {
+        if (! $request->getCurrentUser()->isSuperUser()) {
             throw new ForbiddenException();
         }
 
@@ -71,7 +71,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
         $customisations = array_filter(
             $this->getCustomisations(),
             static function ($custo): bool {
-                return !empty($custo);
+                return ! empty($custo);
             }
         );
         $this->template_renderer->renderToPage(
@@ -79,7 +79,7 @@ class SiteContentCustomisationController implements DispatchableWithRequest
             [
                 'title' => $title,
                 'customisations' => array_values($customisations),
-                'has_customisations' => !empty($customisations['en_US']) || !empty($customisations['fr_FR']),
+                'has_customisations' => ! empty($customisations['en_US']) || ! empty($customisations['fr_FR']),
                 'json_encoded_customisations' => json_encode($customisations)
             ]
         );
@@ -127,12 +127,12 @@ class SiteContentCustomisationController implements DispatchableWithRequest
         $language = $this->base_language_factory->getBaseLanguage($locale);
         foreach (new DirectoryIterator(\ForgeConfig::get('sys_custompluginsroot')) as $plugin_folder) {
             assert($plugin_folder instanceof DirectoryIterator);
-            if ($plugin_folder->isDot() || !$plugin_folder->isDir()) {
+            if ($plugin_folder->isDot() || ! $plugin_folder->isDir()) {
                 continue;
             }
 
             $sitecontent_path = $plugin_folder->getPathname() . '/site-content/' . $locale;
-            if (!is_dir($sitecontent_path)) {
+            if (! is_dir($sitecontent_path)) {
                 continue;
             }
 

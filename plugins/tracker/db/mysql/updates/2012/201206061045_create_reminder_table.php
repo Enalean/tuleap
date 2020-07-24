@@ -69,7 +69,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_reminder')) {
+        if (! $this->db->tableNameExists('tracker_reminder')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_reminder table is missing');
         }
     }

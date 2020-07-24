@@ -215,7 +215,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         $this->appendChild($vNode, 'content', $fileName);
         if (is_dir($this->dataPath)) {
             $res = copy($version->getPath(), $this->dataPath . '/' . $fileName);
-            if (!$res) {
+            if (! $res) {
                 echo $version->getPath() . " not copied to " . $this->dataPath . '/' . $fileName . "<br>";
                 $this->logger->warning($version->getPath() . " not copied to [" . $this->dataPath . "]");
             } else {
@@ -227,7 +227,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
 
     protected function getNormalizedLogin($userId)
     {
-        if (!isset($this->userCache[$userId])) {
+        if (! isset($this->userCache[$userId])) {
             $um = UserManager::instance();
             $user = $um->getUserById($userId);
             if ($user !== null) {

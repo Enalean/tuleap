@@ -59,7 +59,7 @@ class UserHelper
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -234,7 +234,7 @@ class UserHelper
             $user = $um->getUserById($user_id);
             $display = $this->getDisplayNameFromUser($user);
         } else {
-            if (!isset($this->_cache_by_id[$user_id])) {
+            if (! isset($this->_cache_by_id[$user_id])) {
                 $this->_cache_by_id[$user_id] = $GLOBALS['Language']->getText('global', 'none');
                 $dar = $this->_userdao->searchByUserId($user_id);
                 if ($row = $dar->getRow()) {
@@ -265,7 +265,7 @@ class UserHelper
                 $user = $um->getUserByUserName($user_name);
                 $display = $this->getDisplayNameFromUser($user);
             } else {
-                if (!isset($this->_cache_by_username[$user_name])) {
+                if (! isset($this->_cache_by_username[$user_name])) {
                     $dar = $this->_userdao->searchByUserName($user_name);
                     if ($row = $dar->getRow()) {
                         $this->_cache_by_id[$row['user_id']] = $this->getDisplayName($row['user_name'], $row['realname']);
@@ -302,11 +302,11 @@ class UserHelper
     public function getLinkOnUser(PFUser $user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        if ($user && !$user->isNone()) {
+        if ($user && ! $user->isNone()) {
             return '<a href="' . $this->getUserUrl($user) . '">' . $hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML) . '</a>';
         } else {
             $username = $user ? $user->getName() : '';
-            return  $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
+            return $hp->purify($username, CODENDI_PURIFIER_CONVERT_HTML);
         }
     }
 

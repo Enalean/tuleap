@@ -50,7 +50,7 @@ class Widget_MyArtifacts extends Widget
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
         $vShow->required();
-        if (!$request->exist('cancel')) {
+        if (! $request->exist('cancel')) {
             if ($request->valid($vShow)) {
                 switch ($request->get('show')) {
                     case 'A':
@@ -186,14 +186,14 @@ class Widget_MyArtifacts extends Widget
             // {{{ check permissions
             //create group
             $group = $pm->getProject($group_id);
-            if (!$group || !is_object($group) || $group->isError()) {
+            if (! $group || ! is_object($group) || $group->isError()) {
                     exit_no_group();
             }
             //Create the ArtifactType object
-            if (!isset($artifact_types[$group_id])) {
+            if (! isset($artifact_types[$group_id])) {
                 $artifact_types[$group_id] = array();
             }
-            if (!isset($artifact_types[$group_id][$atid])) {
+            if (! isset($artifact_types[$group_id][$atid])) {
                 $artifact_types[$group_id][$atid] = array();
                 $artifact_types[$group_id][$atid]['at'] = new ArtifactType($group, $atid);
                 $artifact_types[$group_id][$atid]['user_can_view_at']             = $artifact_types[$group_id][$atid]['at']->userCanView();
@@ -204,7 +204,7 @@ class Widget_MyArtifacts extends Widget
                 if (is_null($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'])) {
                     $at = $artifact_types[$group_id][$atid]['at'];
                     //Create ArtifactFieldFactory object
-                    if (!isset($artifact_types[$group_id][$atid]['aff'])) {
+                    if (! isset($artifact_types[$group_id][$atid]['aff'])) {
                         $artifact_types[$group_id][$atid]['aff'] = new ArtifactFieldFactory($at);
                     }
                     $aff = $artifact_types[$group_id][$atid]['aff'];
@@ -258,7 +258,7 @@ class Widget_MyArtifacts extends Widget
                         $count_aids++;
                     }
 
-                    if (!$hide_now && $aid != $aid_old) {
+                    if (! $hide_now && $aid != $aid_old) {
                         // Form the 'Submitted by/Assigned to flag' for marking
                         $AS_flag = my_format_as_flag2($trackers_array['assignee'], $trackers_array['submitter']);
 

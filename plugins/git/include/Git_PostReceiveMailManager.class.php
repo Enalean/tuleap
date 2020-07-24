@@ -113,10 +113,10 @@ class Git_PostReceiveMailManager
      */
     public function _getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Git_PostReceiveMailDao();
         }
-        return  $this->dao;
+        return $this->dao;
     }
 
     /**

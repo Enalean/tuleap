@@ -449,7 +449,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     global $Language;
 
     // Sanity check
-    if (!$ugroup_name) {
+    if (! $ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
     if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
@@ -466,7 +466,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     $sql = "INSERT INTO ugroup (name,description,group_id) VALUES ('" . db_es($ugroup_name) . "', '" . db_es($ugroup_description) . "'," . db_ei($group_id) . ")";
     $result = db_query($sql);
 
-    if (!$result) {
+    if (! $result) {
         throw new CannotCreateUGroupException(_('An error occurred when saving user group.'));
     } else {
         $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_create_success'));
@@ -474,11 +474,11 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
     // Now get the corresponding ugroup_id
     $sql = "SELECT ugroup_id FROM ugroup WHERE group_id=" . db_ei($group_id) . " AND name='" . db_es($ugroup_name) . "'";
     $result = db_query($sql);
-    if (!$result) {
+    if (! $result) {
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
     $ugroup_id = db_result($result, 0, 0);
-    if (!$ugroup_id) {
+    if (! $ugroup_id) {
         throw new CannotCreateUGroupException(_('User group created but cannot get Id.'));
     }
 
@@ -507,7 +507,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         $countuser = 0;
         while ($row = db_fetch_array($res)) {
             $sql = "INSERT INTO ugroup_user (ugroup_id,user_id) VALUES (" . db_ei($ugroup_id) . "," . db_ei($row['user_id']) . ")";
-            if (!db_query($sql)) {
+            if (! db_query($sql)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', array($row['user_id'],$ugroup_id,db_error())));
             }
             $countuser++;
@@ -536,19 +536,19 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $purifier = Codendi_HTMLPurifier::instance();
 
     // Sanity check
-    if (!$ugroup_name) {
+    if (! $ugroup_name) {
         throw new CannotCreateUGroupException(_('The group name is missing'));
     }
     if (! preg_match("/^[a-zA-Z0-9_\-]+$/i", $ugroup_name)) {
         throw new CannotCreateUGroupException(sprintf(_('Invalid group name: %s. Please use only alphanumerical characters.'), $ugroup_name));
     }
-    if (!$ugroup_id) {
+    if (! $ugroup_id) {
         throw new CannotCreateUGroupException(_('The group id is missing'));
     }
     // Retrieve ugroup old name before updating
     $sql = "SELECT name FROM ugroup WHERE group_id='" . db_ei($group_id) . "' AND ugroup_id ='" . db_ei($ugroup_id) . "'";
     $result = db_query($sql);
-    if ($result && !db_error($result)) {
+    if ($result && ! db_error($result)) {
         $row = db_fetch_array($result);
         $ugroup_old_name = $row['name'];
     }
@@ -564,7 +564,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     $sql = "UPDATE ugroup SET name='" . db_es($ugroup_name) . "', description='" . db_es($ugroup_description) . "' WHERE ugroup_id=" . db_ei($ugroup_id);
     $result = db_query($sql);
 
-    if (!$result) {
+    if (! $result) {
         throw new CannotCreateUGroupException(_('Cannot update users group.'));
     }
 
@@ -600,7 +600,7 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
     WHERE ugroup_id = " . db_ei($ugroup_id) . "
       AND user_id = " . db_ei($user_id);
     $res = db_query($sql);
-    if (!$res) {
+    if (! $res) {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
     }
     if ($rows = db_affected_rows($res)) {
@@ -628,10 +628,10 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
 }
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
 {
-    if (!ugroup_user_is_member($user_id, $ugroup_id, $group_id)) {
+    if (! ugroup_user_is_member($user_id, $ugroup_id, $group_id)) {
         $sql = "INSERT INTO ugroup_user (ugroup_id, user_id) VALUES(" . db_ei($ugroup_id) . ", " . db_ei($user_id) . ")";
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'cant_update_ug', db_error()));
         }
         if ($rows = db_affected_rows($res)) {
@@ -661,7 +661,7 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
 function ugroup_delete($group_id, $ugroup_id)
 {
     global $Language;
-    if (!$ugroup_id) {
+    if (! $ugroup_id) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'ug_not_given'));
         return false;
     }
@@ -678,7 +678,7 @@ function ugroup_delete($group_id, $ugroup_id)
 
     $sql = "DELETE FROM ugroup WHERE group_id=" . db_ei($group_id) . " AND ugroup_id=" . db_ei($ugroup_id);
     $result = db_query($sql);
-    if (!$result || db_affected_rows($result) < 1) {
+    if (! $result || db_affected_rows($result) < 1) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo', 'upd_fail', (db_error() ? db_error() : ' ' )));
          return false;
     }
@@ -687,7 +687,7 @@ function ugroup_delete($group_id, $ugroup_id)
     $sql = "DELETE FROM ugroup_user WHERE ugroup_id=" . db_ei($ugroup_id);
 
     $result = db_query($sql);
-    if (!$result) {
+    if (! $result) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'cant_remove_u', db_error()));
         return false;
     }
@@ -703,7 +703,7 @@ function ugroup_delete($group_id, $ugroup_id)
 
     // Last, remove permissions for this group
     $perm_cleared = permission_clear_ugroup($group_id, $ugroup_id);
-    if (!($perm_cleared)) {
+    if (! ($perm_cleared)) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils', 'cant_remove_perm', db_error()));
         return false;
     } elseif ($perm_cleared > 1) {

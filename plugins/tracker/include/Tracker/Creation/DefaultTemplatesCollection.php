@@ -60,7 +60,7 @@ class DefaultTemplatesCollection
 
     public function getXmlFile(string $name): string
     {
-        if (!isset($this->default_templates[$name])) {
+        if (! isset($this->default_templates[$name])) {
             throw new \OutOfBoundsException("Unable to find default template $name");
         }
 

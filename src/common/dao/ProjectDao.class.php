@@ -508,14 +508,14 @@ class ProjectDao extends DataAccessObject
     public function setMembershipRequestNotificationUGroup($groupId, $ugroups)
     {
         $sql = ' DELETE FROM groups_notif_delegation WHERE group_id =' . $this->da->quoteSmart($groupId);
-        if (!$this->update($sql)) {
+        if (! $this->update($sql)) {
             return false;
         }
         foreach ($ugroups as $ugroupId) {
             $sql = ' INSERT INTO groups_notif_delegation (group_id, ugroup_id)
                  VALUE (' . $this->da->quoteSmart($groupId) . ', ' . $this->da->quoteSmart($ugroupId) . ')
                  ON DUPLICATE KEY UPDATE ugroup_id = ' . $this->da->quoteSmart($ugroupId);
-            if (!$this->update($sql)) {
+            if (! $this->update($sql)) {
                 return false;
             }
         }

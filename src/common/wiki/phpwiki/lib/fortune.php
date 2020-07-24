@@ -109,7 +109,7 @@ class Fortune
         do {
             $res = $res . $line;
             $line = fgets($fd, 1024) . "<br>";
-        } while (($line[0] != "%") && (!feof($fd)));
+        } while (($line[0] != "%") && (! feof($fd)));
 
         return $res;
     }
@@ -153,7 +153,7 @@ class Fortune
         $longest = 0;
         $shortest = 100000;
         $indices[0] = 0;
-        while (!feof($fd)) {
+        while (! feof($fd)) {
             $line = fgets($fd);
             if ($line == "%\n") {
                 $indices[$i] = ftell($fd);

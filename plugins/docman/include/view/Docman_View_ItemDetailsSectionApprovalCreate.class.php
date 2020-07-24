@@ -177,7 +177,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
         $html .= '<h3>' . dgettext('tuleap-docman', 'Notification') . '</h3>';
         $html .= '<div id="docman_approval_table_create_notification">';
-        if (!$this->table->isClosed()) {
+        if (! $this->table->isClosed()) {
             $html .= '<div class="docman_help">' . sprintf(dgettext('tuleap-docman', '%1$s can notify approval members in two ways:<ul><li><strong>All at once:</strong> notify all reviewers who did not commit themselves yet.</li><li><strong>Sequential:</strong> notify reviewers (who did not commit themselves) one after another. If someone reject the document, the sequence stops.</li></ul>After an approver is notified by the approval table, it is informed of any later modification done on the document.'), ForgeConfig::get('sys_name')) . '</div>';
         }
         $html .= '<table>';
@@ -190,7 +190,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                       dgettext('tuleap-docman', 'All at once'),
                       dgettext('tuleap-docman', 'Sequential'));
         $html .= '<td>';
-        if (!$this->table->isClosed()) {
+        if (! $this->table->isClosed()) {
             $html .= html_build_select_box_from_arrays($vals, $txts, 'notification', $this->table->getNotification(), false);
         } else {
             switch ($this->table->getNotification()) {
@@ -208,7 +208,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html .= '</td>';
         $html .= '</tr>';
 
-        if (!$this->table->isClosed()) {
+        if (! $this->table->isClosed()) {
             if ($this->table->getNotification() != PLUGIN_DOCMAN_APPROVAL_NOTIF_DISABLED) {
                 if ($this->table->isEnabled()) {
                     $html .= '<tr>';
@@ -272,7 +272,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $uh    = UserHelper::instance();
         $html .= '<h3>' . dgettext('tuleap-docman', 'Approval table') . '</h3>';
         $html .= '<div id="docman_approval_table_create_table">';
-        if (!$this->table->isClosed()) {
+        if (! $this->table->isClosed()) {
             $html .= '<div class="docman_help">' . dgettext('tuleap-docman', 'Following table aims to organize the approval cycle:<ul><li>With <strong>Select</strong> you choose the reviewers on which you want to apply <strong>Actions</strong> (see below for available actions)</li><li>With <strong>Rank</strong> you select the order the emails will be sent to notify people (only in <em>Sequential</em> notification)</li><li>With <strong>Actions</strong> you can (with selected reviewers) either:<ul><li><strong>Remove from table</strong>. No history kept.</li><li>or <strong>Force notification</strong> to send the notification email regardless of their review state of the notififcation type.</li></ul></li></ul>') . '</div>';
         }
         $rIter = $this->table->getReviewerIterator();
@@ -301,7 +301,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 $html .= '<tr class="' . html_get_alt_row_color($i + 1) . '">';
 
                 // Select
-                if (!$this->table->isClosed()) {
+                if (! $this->table->isClosed()) {
                     $checkbox = '<input type="checkbox" name="sel_user[]" value="' . $reviewer->getId() . '" />';
                 } else {
                     $checkbox = '&nbsp;';
@@ -315,13 +315,13 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                 $html .= '<td>' . $this->atf->getReviewStateName($reviewer->getState()) . '</td>';
 
                 // Rank
-                if (!$this->table->isClosed()) {
+                if (! $this->table->isClosed()) {
                     $rank = $reviewer->getRank();
                     $baseUrl  = '?group_id=' . $this->item->getGroupId() . '&action=approval_upd_user&id=' . $this->item->getId() . '&user_id=' . $reviewer->getId() . '&rank=';
 
                     $begLink = '';
                     $upLink  = '';
-                    if (!$isFirst) {
+                    if (! $isFirst) {
                         $begIcon = '<img src="' . $docmanIcons->getIcon('move-beginning.png') . '" alt="Beginning" />';
                         $begLink = '<a href="' . $baseUrl . 'beginning">' . $begIcon . '</a>';
                         $upIcon  = '<img src="' . $docmanIcons->getIcon('move-up.png') . '" alt="Up" />';
@@ -329,7 +329,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
                     }
                     $endLink  = '';
                     $downLink = '';
-                    if (!$isLast) {
+                    if (! $isLast) {
                         $endIcon  = '<img src="' . $docmanIcons->getIcon('move-end.png') . '" alt="End" />';
                         $endLink  = '<a href="' . $baseUrl . 'end">' . $endIcon . '</a>';
                         $downIcon = '<img src="' . $docmanIcons->getIcon('move-down.png') . '" alt="Down" />';
@@ -350,7 +350,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
             $html .= '</table>';
 
             // Action with selected reviewers
-            if (!$this->table->isClosed()) {
+            if (! $this->table->isClosed()) {
                 $html .= '<p>';
                 $html .= dgettext('tuleap-docman', '<strong>Actions</strong> with selected reviewers:');
                 $vals = array('del',
@@ -370,7 +370,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
         $html = '';
 
         if (
-            ($this->table !== null && !$this->table->isClosed())
+            ($this->table !== null && ! $this->table->isClosed())
             || $this->table === null
         ) {
             $atrf = new Docman_ApprovalTableReviewerFactory($this->table, $this->item);
@@ -488,7 +488,7 @@ class Docman_View_ItemDetailsSectionApprovalCreate extends Docman_View_ItemDetai
 
         $user = $this->_getCurrentUser();
         $dpm  = $this->_getPermissionsManager();
-        if (!$dpm->userCanWrite($user, $this->item->getId())) {
+        if (! $dpm->userCanWrite($user, $this->item->getId())) {
             return $html;
         }
 

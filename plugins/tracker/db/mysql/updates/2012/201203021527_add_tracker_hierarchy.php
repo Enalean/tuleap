@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_hierarchy')) {
+        if (! $this->db->tableNameExists('tracker_hierarchy')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_hierarchy table is missing');
         }
     }

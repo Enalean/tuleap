@@ -34,7 +34,7 @@ use Tuleap\Project\UGroupLiteralizer;
 
 require_once __DIR__ . '/../../../src/www/include/pre.php';
 
-if (!isset($argv[1])) {
+if (! isset($argv[1])) {
     echo "Usage: " . $argv[0] . " username" . PHP_EOL;
     exit(1);
 }

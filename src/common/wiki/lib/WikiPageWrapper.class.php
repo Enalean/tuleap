@@ -81,7 +81,7 @@ class WikiPageWrapper
         $links = $pagehandle->getPageLinks(true);
         $allPages = array();
         while ($link_handle = $links->next()) {
-            if (!$dbi->isWikiPage($linkname = $link_handle->getName())) {
+            if (! $dbi->isWikiPage($linkname = $link_handle->getName())) {
                 $allPages[] = $link_handle->getName();
             }
         }
@@ -200,7 +200,7 @@ Upload:num_rev/filename
     public function install()
     {
         if ($this->gid == 1) {
-            if (!user_is_super_user()) {
+            if (! user_is_super_user()) {
                 exit_error(
                     $GLOBALS['Language']->getText('global', 'error'),
                     $GLOBALS['Language']->getText(

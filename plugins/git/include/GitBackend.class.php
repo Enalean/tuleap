@@ -216,8 +216,8 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $gitRootPath    = $this->getGitRootPath();
         //create the gitroot directory
-        if (!is_dir($gitRootPath)) {
-            if (!mkdir($gitRootPath, 0755)) {
+        if (! is_dir($gitRootPath)) {
+            if (! mkdir($gitRootPath, 0755)) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while creating root for Git repositories (Contact the site admin)') . ' -> ' . $gitRootPath);
             }
         }
@@ -229,12 +229,12 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     {
         $gitProjectPath = $this->getGitRootPath() . DIRECTORY_SEPARATOR . $repository->getRootPath();
         $groupName      = $repository->getProject()->getUnixName();
-        if (!is_dir($gitProjectPath)) {
-            if (!mkdir($gitProjectPath, 0775, true)) {
+        if (! is_dir($gitProjectPath)) {
+            if (! mkdir($gitProjectPath, 0775, true)) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while creating project root for Git repository (Contact the site admin)') . ' -> ' . $gitProjectPath);
             }
 
-            if (!$this->chgrp($gitProjectPath, $groupName)) {
+            if (! $this->chgrp($gitProjectPath, $groupName)) {
                 throw new GitBackendException(dgettext('tuleap-git', 'Error while setting project root permissions (Contact the site admin)') . $gitProjectPath . ' group=' . $groupName);
             }
         }
@@ -256,7 +256,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
         if ($rcode != 0) {
             throw new GitBackendException($cmd . ' -> ' . $output);
         }
-        if (!empty($this->gitBackupDir) && is_dir($this->gitBackupDir)) {
+        if (! empty($this->gitBackupDir) && is_dir($this->gitBackupDir)) {
             $this->system('mv ' . $this->getGitRootPath() . '/' . $archiveName . ' ' . $this->gitBackupDir . '/' . $archiveName);
         }
         return true;
@@ -299,7 +299,7 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
             if ($user->isRestricted() && $user->isMember($repository->getProjectId())) {
                 return true;
             }
-            if (!$user->isAnonymous()) {
+            if (! $user->isAnonymous()) {
                 return true;
             }
         }

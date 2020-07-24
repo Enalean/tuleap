@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_mirrors')) {
+        if (! $this->db->tableNameExists('plugin_git_mirrors')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_git_mirrors table is missing');
         }
     }

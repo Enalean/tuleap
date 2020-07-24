@@ -28,7 +28,7 @@ class ForumML_Attachment
     {
         $attach = null;
         $dar    = $this->getDao()->getById($id);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $attch = $dar->current();
             $attch['type'] = $this->getType($attch);
         }
@@ -87,7 +87,7 @@ class ForumML_Attachment
 
     public function getDao()
     {
-        if (!isset($this->_dao)) {
+        if (! isset($this->_dao)) {
             $this->_dao = new ForumML_AttachmentDao(CodendiDataAccess::instance());
         }
         return $this->_dao;

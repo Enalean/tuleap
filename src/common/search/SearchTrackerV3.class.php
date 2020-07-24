@@ -48,14 +48,14 @@ class Search_SearchTrackerV3
         ob_start();
         //      Create the ArtifactType object
         $ath = new ArtifactTypeHtml($project, $atid);
-        if (!$ath || !is_object($ath)) {
+        if (! $ath || ! is_object($ath)) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }
         if ($ath->isError()) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $ath->getErrorMessage());
         }
         // Check if this tracker is valid (not deleted)
-        if (!$ath->isValid()) {
+        if (! $ath->isValid()) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'error'));
         }
 

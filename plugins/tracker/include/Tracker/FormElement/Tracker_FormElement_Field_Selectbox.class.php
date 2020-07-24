@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         $html   = parent::fetchArtifactAdditionnalInfo($value, $submitted_values);
         $values = array();
         if (isset($submitted_values[$this->id])) {
-            if (!is_array($submitted_values[$this->id])) {
+            if (! is_array($submitted_values[$this->id])) {
                 $submitted_values_array[] = $submitted_values[$this->id];
                 $values = $submitted_values_array;
             } else {
@@ -146,7 +146,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
         if (in_array($type, array('msb', 'cb'))) {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
-            return !$wf->isWorkflowField($this);
+            return ! $wf->isWorkflowField($this);
         } elseif ($type === 'rb') {
             return true;
         }

@@ -73,7 +73,7 @@ class TextSearchQuery
      */
     public function __construct($search_query, $case_exact = false, $regex = 'auto')
     {
-        if ($regex == 'none' or !$regex) {
+        if ($regex == 'none' or ! $regex) {
             $this->_regex = 0;
         } elseif (defined("TSQ_REGEX_" . strtoupper($regex))) {
             $this->_regex = constant("TSQ_REGEX_" . strtoupper($regex));
@@ -98,7 +98,7 @@ class TextSearchQuery
      */
     public function asRegexp()
     {
-        if (!isset($this->_regexp)) {
+        if (! isset($this->_regexp)) {
             if ($this->_regex) {
                 $this->_regexp =  '/' . $this->_tree->regexp() . '/' . ($this->_case_exact ? '' : 'i') . 'sS';
             } else {
@@ -130,9 +130,9 @@ class TextSearchQuery
      */
     public function getHighlightRegexp()
     {
-        if (!isset($this->_hilight_regexp)) {
+        if (! isset($this->_hilight_regexp)) {
             $words = array_unique($this->_tree->highlight_words());
-            if (!$words) {
+            if (! $words) {
                 $this->_hilight_regexp = false;
             } else {
                 foreach ($words as $key => $word) {
@@ -506,7 +506,7 @@ class TextSearchQuery_node_not extends TextSearchQuery_node
 
     public function highlight_words($negated = false)
     {
-        return $this->leaves[0]->highlight_words(!$negated);
+        return $this->leaves[0]->highlight_words(! $negated);
     }
 }
 
@@ -539,7 +539,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
     public function optimize()
     {
         $this->_flatten();
-        assert(!empty($this->leaves));
+        assert(! empty($this->leaves));
         if (count($this->leaves) == 1) {
             return $this->leaves[0]; // (AND x) -> x
         }
@@ -591,7 +591,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
             array_unshift($this->leaves, $node->optimize());
         }
 
-        assert(!empty($this->leaves));
+        assert(! empty($this->leaves));
         if (count($this->leaves) == 1) {
             return $this->leaves[0];  // (AND x) -> x
         }
@@ -750,7 +750,7 @@ class TextSearchQuery_Parser
             $list[] = $expr;
         }
 
-        if (!$list) {
+        if (! $list) {
             if ($is_toplevel) {
                 return new TextSearchQuery_node();
             } else {
@@ -762,7 +762,7 @@ class TextSearchQuery_Parser
 
     public function get_expr()
     {
-        if (!($expr = $this->get_atom())) {
+        if (! ($expr = $this->get_atom())) {
             return false;
         }
 
@@ -854,7 +854,7 @@ class TextSearchQuery_Lexer
     {
         $tokens = array();
         $buf = $case_exact ? ltrim($string) : strtolower(ltrim($string));
-        while (!empty($buf)) {
+        while (! empty($buf)) {
             if (preg_match('/^(and|or)\b\s*/i', $buf, $m)) {
                 $val = strtolower($m[1]);
                 $type = TSQ_TOK_BINOP;

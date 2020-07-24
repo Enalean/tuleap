@@ -462,7 +462,7 @@ class Tracker_NotificationsManager
         $addresses = array();
         $notifs = $this->getGlobalNotifications();
         foreach ($notifs as $key => $nop) {
-            if (!$update || $notifs[$key]->isAllUpdates()) {
+            if (! $update || $notifs[$key]->isAllUpdates()) {
                 foreach (preg_split('/[,;]/', $notifs[$key]->getAddresses()) as $address) {
                     $addresses[] = array('address' => $address, 'check_permissions' => $notifs[$key]->isCheckPermissions());
                 }
@@ -517,7 +517,7 @@ class Tracker_NotificationsManager
     public static function isMailingList($email_address)
     {
         $r = preg_match_all('/\S+\@lists\.\S+/', $subject, $matches);
-        if (!empty($r)) {
+        if (! empty($r)) {
             return true;
         }
         return false;

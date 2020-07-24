@@ -31,7 +31,7 @@ class Tracker_FormElement_View_Admin_Field_Selectbox extends Tracker_FormElement
 
            //do not change from SB to MSB if the field is used to define the workflow
         $wf = WorkflowFactory::instance();
-        if (!$wf->isWorkflowField($this->formElement)) {
+        if (! $wf->isWorkflowField($this->formElement)) {
             $html .= ' (' . dgettext('tuleap-tracker', 'Switch to:') . ' ';
 
             $change_links = array();

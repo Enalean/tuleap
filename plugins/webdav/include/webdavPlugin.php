@@ -51,7 +51,7 @@ class WebDAVPlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo instanceof WebDAVPluginInfo) {
+        if (! $this->pluginInfo instanceof WebDAVPluginInfo) {
             $this->pluginInfo = new WebDAVPluginInfo($this);
         }
         return $this->pluginInfo;

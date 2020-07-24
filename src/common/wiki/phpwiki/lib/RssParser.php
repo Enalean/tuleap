@@ -79,7 +79,7 @@ class RSSParser extends XmlParser
             if (empty($this->items)) {
                 $this->items = array();
                 $GLOBALS['rss_parser_items'] = $this->items;
-            } elseif (!empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
+            } elseif (! empty($this->items[0]['link']) and $this->items[0]['title'] == '') {
                 // override the initial <items> list with detailed <item>'s
                 $this->items = array();
                 $GLOBALS['rss_parser_items'] = $this->items;

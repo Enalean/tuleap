@@ -73,7 +73,7 @@ class BaseLanguageFactory
         if (strpos($this->supported_languages, $locale) === false) {
             $locale = $this->default_language;
         }
-        if (!isset($this->languages[$locale])) {
+        if (! isset($this->languages[$locale])) {
             $this->cacheBaseLanguage($this->createBaseLanguage($locale));
         }
         assert(isset($this->languages[$locale]));

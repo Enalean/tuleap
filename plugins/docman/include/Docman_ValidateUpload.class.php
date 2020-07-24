@@ -24,7 +24,7 @@ class Docman_ValidateUpload extends Docman_Validator
 {
     public function __construct(Codendi_Request $request)
     {
-        if (!$request->exist('upload_content')) {
+        if (! $request->exist('upload_content')) {
             $ok = false;
             if (isset($_FILES['file'])) {
                 switch ($_FILES['file']['error']) {
@@ -63,7 +63,7 @@ class Docman_ValidateUpload extends Docman_Validator
                 $ok = false;
                 $this->addError(sprintf(dgettext('tuleap-docman', 'File upload error(%1$s). The uploaded file exceeds the maximum allowed file size.'), $_FILES['file']['name'] ?? ''));
             }
-            if (!isset($_FILES['file']) || ($ok && $_FILES['file']['name'] == '')) {
+            if (! isset($_FILES['file']) || ($ok && $_FILES['file']['name'] == '')) {
                 $this->addError(dgettext('tuleap-docman', 'File upload error. Please try again.'));
             }
         }

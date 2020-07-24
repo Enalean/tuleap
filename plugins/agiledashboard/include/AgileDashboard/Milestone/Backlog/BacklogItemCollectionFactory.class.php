@@ -495,7 +495,7 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
         $redirect_to_self
     ) {
         $artifact_id = $artifact->getId();
-        if (!isset($semantics[$artifact_id])) {
+        if (! isset($semantics[$artifact_id])) {
             return;
         }
 
@@ -733,8 +733,8 @@ class AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory
             $artifact_id = $artifact->getId();
 
             if (
-                !isset($semantics[$artifact_id])
-                || !isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])
+                ! isset($semantics[$artifact_id])
+                || ! isset($semantics[$artifact_id][Tracker_Semantic_Status::NAME])
                 || $semantics[$artifact_id][Tracker_Semantic_Status::NAME] != AgileDashboard_BacklogItemDao::STATUS_OPEN
             ) {
                 continue;

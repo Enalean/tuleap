@@ -48,7 +48,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     {
         $this->da     = $da;
         $this->result = $result;
-        if (!is_bool($result)) {
+        if (! is_bool($result)) {
             $this->_current = -1;
             $this->_row     = false;
             $this->rewind();
@@ -114,7 +114,7 @@ class DataAccessResult implements LegacyDataAccessResultInterface
     public function isError()
     {
         $error = $this->daIsError();
-        if (!empty($error)) {
+        if (! empty($error)) {
             return $error;
         } else {
             return false;

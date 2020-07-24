@@ -47,7 +47,7 @@ if (isset($available_queues[$request_queue])) {
     $selected_queue_name = $request_queue;
 }
 
-$offset          = $request->get('offset') && !$request->exist('filter') ? (int) $request->get('offset') : 0;
+$offset          = $request->get('offset') && ! $request->exist('filter') ? (int) $request->get('offset') : 0;
 $limit           = 25;
 $full            = true;
 $selected_status = $request->get('filter_status');

@@ -123,7 +123,7 @@ class Tracker_Action_CreateArtifact
 
     private function isFromOverlay(Codendi_Request $request)
     {
-        if ($request->existAndNonEmpty('link-artifact-id') && !$request->exist('immediate')) {
+        if ($request->existAndNonEmpty('link-artifact-id') && ! $request->exist('immediate')) {
             return true;
         }
         return false;

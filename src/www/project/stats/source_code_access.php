@@ -27,7 +27,7 @@ require __DIR__ . '/../export/access_logs_export.php';
 // Only for project administrators
 session_require(array('group' => $group_id,'admin_flags' => 'A'));
 
-if (!$group_id) {
+if (! $group_id) {
     exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
 }
 $project = ProjectManager::instance()->getProject($group_id);
@@ -107,7 +107,7 @@ print '
 <td> 
 <SELECT NAME="span">
 <OPTION VALUE="4" ' . (($span == 4) ? "SELECTED" : "") . '>4</OPTION>
-<OPTION VALUE="7" ' . (($span == 7 || !isset($span) ) ? "SELECTED" : "") . '>7</OPTION>
+<OPTION VALUE="7" ' . (($span == 7 || ! isset($span) ) ? "SELECTED" : "") . '>7</OPTION>
 <OPTION VALUE="12" ' . (($span == 12) ? "SELECTED" : "") . '>12</OPTION>
 <OPTION VALUE="14" ' . (($span == 14) ? "SELECTED" : "") . '>14</OPTION>
 <OPTION VALUE="30" ' . (($span == 30) ? "SELECTED" : "") . '>30</OPTION>
@@ -117,7 +117,7 @@ print '
 <SELECT NAME="view">
 <OPTION VALUE="monthly" ' . (($view == "monthly") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'months') . '</OPTION>
 <OPTION VALUE="weekly" ' . (($view == "weekly") ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'weeks') . '</OPTION>
-<OPTION VALUE="daily" ' . (($view == "daily" || !isset($view)) ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'days') . '</OPTION>
+<OPTION VALUE="daily" ' . (($view == "daily" || ! isset($view)) ? "SELECTED" : "") . '>' . $Language->getText('project_stats_index', 'days') . '</OPTION>
 </SELECT>
 </td>
 <td>

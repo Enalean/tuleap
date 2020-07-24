@@ -41,7 +41,7 @@ class b201801181115_remove_invalid_tuleap_timezones extends ForgeUpgrade_Bucket 
     {
         $sql = 'UPDATE user SET timezone="Asia/Riyadh" WHERE timezone LIKE "%Riyadh%"';
 
-        if (!$this->db->dbh->query($sql)) {
+        if (! $this->db->dbh->query($sql)) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
                 'The migration of Asia/Riyadh and Mideast/Riyadh timezones has failed'
             );
@@ -52,7 +52,7 @@ class b201801181115_remove_invalid_tuleap_timezones extends ForgeUpgrade_Bucket 
     {
         $sql = 'UPDATE user SET timezone="GMT" WHERE timezone = "Factory"';
 
-        if (!$this->db->dbh->query($sql)) {
+        if (! $this->db->dbh->query($sql)) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
                 'The migration of the Factory timezone to GMT timezone has failed'
             );
@@ -63,7 +63,7 @@ class b201801181115_remove_invalid_tuleap_timezones extends ForgeUpgrade_Bucket 
     {
         $sql = 'UPDATE user SET timezone="America/Regina" WHERE timezone = "Canada/East-Saskatchewan"';
 
-        if (!$this->db->dbh->query($sql)) {
+        if (! $this->db->dbh->query($sql)) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
                 'The migration of the Canada/East-Saskatchewan timezone to America/Regina timezone has failed'
             );

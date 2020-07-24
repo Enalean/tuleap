@@ -57,7 +57,7 @@ class b201704051759_add_index_on_tracker_changeset_value_artifactlink extends Fo
     private function addIndex($table_name, $index, $sql)
     {
         $this->log->info('Add index ' . $table_name);
-        if (!$this->indexNameExists($table_name, $index)) {
+        if (! $this->indexNameExists($table_name, $index)) {
             $res = $this->db->dbh->exec($sql);
             if ($res === false) {
                 $info = $this->db->dbh->errorInfo();

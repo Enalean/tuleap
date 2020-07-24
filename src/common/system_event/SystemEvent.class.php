@@ -402,13 +402,13 @@ abstract class SystemEvent
      */
     protected function getProject($group_id)
     {
-        if (!$group_id) {
+        if (! $group_id) {
             return $this->setErrorBadParam();
         }
 
         $project = ProjectManager::instance()->getProject($group_id);
 
-        if (!$project) {
+        if (! $project) {
             $this->error("Could not create/initialize project object");
         }
 
@@ -422,13 +422,13 @@ abstract class SystemEvent
      */
     protected function getUser($user_id)
     {
-        if (!$user_id) {
+        if (! $user_id) {
             return $this->setErrorBadParam();
         }
 
         $user = UserManager::instance()->getUserById($user_id);
 
-        if (!$user) {
+        if (! $user) {
             $this->error("Could not create/initialize user object");
         }
 

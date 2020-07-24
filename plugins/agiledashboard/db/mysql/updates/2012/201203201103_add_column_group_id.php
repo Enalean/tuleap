@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_agiledashboard_planning', 'group_id')) {
+        if (! $this->db->columnNameExists('plugin_agiledashboard_planning', 'group_id')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding column group_id to plugin_agiledashboard_planning');
         }
     }

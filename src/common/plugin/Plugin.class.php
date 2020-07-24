@@ -86,7 +86,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function isAllowed($group_id)
     {
-        if (!isset($this->allowedForProject[$group_id])) {
+        if (! isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
         }
         return $this->allowedForProject[$group_id];
@@ -132,7 +132,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'PluginInfo')) {
+        if (! is_a($this->pluginInfo, 'PluginInfo')) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -281,7 +281,7 @@ class Plugin implements PFO_Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
      */
     public function getFilesystemPath()
     {
-        if (!$this->filesystem_path) {
+        if (! $this->filesystem_path) {
             $pm = $this->_getPluginManager();
             if ($pm->pluginIsCustom($this)) {
                 $path = ForgeConfig::get('sys_custompluginsroot');

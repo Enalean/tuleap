@@ -61,7 +61,7 @@ class Views
     public function display($view = '')
     {
         $this->header();
-        if (!empty($view)) {
+        if (! empty($view)) {
             $this->$view();
         }
         $this->footer();

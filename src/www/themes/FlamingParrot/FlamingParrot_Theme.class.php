@@ -92,7 +92,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
     public function header(array $params)
     {
         $title = ForgeConfig::get('sys_name');
-        if (!empty($params['title'])) {
+        if (! empty($params['title'])) {
             $title = $params['title'] . ' - ' . $title;
         }
 
@@ -216,7 +216,7 @@ class FlamingParrot_Theme extends Layout // phpcs:ignore PSR1.Classes.ClassDecla
         $url_redirect          = new URLRedirect(EventManager::instance());
 
         $banner = null;
-        if (!empty($params['group'])) {
+        if (! empty($params['group'])) {
             $project = $project_manager->getProject($params['group']);
             $banner  = $this->getProjectBanner($project, $current_user, 'project/project-banner-fp.js');
         }

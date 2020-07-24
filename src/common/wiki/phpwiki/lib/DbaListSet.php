@@ -29,15 +29,15 @@ class DbaListSet
     {
         $dbh = &$this->_dbh;
 
-        if (!$dbh->exists('max_key')) {
+        if (! $dbh->exists('max_key')) {
             // echo "initializing DbaListSet";
             // FIXME: check to see if it's really empty?
             $dbh->insert('max_key', 0);
         }
 
         $key = "s" . urlencode($seq);
-        assert(intval($key) == 0 && !strstr($key, ':'));
-        if (!$dbh->exists($key)) {
+        assert(intval($key) == 0 && ! strstr($key, ':'));
+        if (! $dbh->exists($key)) {
             $dbh->insert($key, "$key:$key:");
         }
     }

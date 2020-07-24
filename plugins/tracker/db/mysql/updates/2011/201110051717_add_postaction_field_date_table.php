@@ -48,7 +48,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_field_date')) {
+        if (! $this->db->tableNameExists('tracker_workflow_transition_postactions_field_date')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_field_date table is missing');
         }
     }

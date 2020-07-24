@@ -68,12 +68,12 @@ class DataBuilderV5
         $result['field2'] = array();
         $result['c'] = array();
 
-        if (!is_null($this->field_Y)) {
+        if (! is_null($this->field_Y)) {
             $ff = Tracker_FormElementFactory::instance();
             $af_y = $ff->getFormElementById($this->field_Y);
         }
 
-        if ($af_x->isUsed() && (!isset($af_y) || $af_y->isUsed())) {
+        if ($af_x->isUsed() && (! isset($af_y) || $af_y->isUsed())) {
             $select   = "SELECT STRAIGHT_JOIN ";
             $from     = "FROM ";
             $where    = "WHERE ";
@@ -88,7 +88,7 @@ class DataBuilderV5
             $from     .= "artifact a ";
             $where    .= "a.artifact_id IN (" . implode(',', $this->artifacts) . ") ";
 
-            if ($af_x->isStandardField() && (!$af_x->isUsername())) {
+            if ($af_x->isStandardField() && (! $af_x->isUsername())) {
                 //echo "1";
                 $field     = "afvl.value";
                 $select   .= "afvl.value AS field1 ";
@@ -100,7 +100,7 @@ class DataBuilderV5
                 $select   .= "u.realName AS field1, u.user_id AS id1 ";
                 $from     .= "INNER JOIN user u";
                 $from     .= " ON (u.user_id=a." . db_es($this->field_X) . ") ";
-            } elseif (!$af_x->isStandardField() && (!$af_x->isUsername())) {
+            } elseif (! $af_x->isStandardField() && (! $af_x->isUsername())) {
                 //echo "3";
                 $field     = "afvl.value_id";
                 $select   .= "afvl.value AS field1 ";
@@ -121,10 +121,10 @@ class DataBuilderV5
             $order_by .= $field . " ASC";
 
             // now if the second field exist
-            if (!is_null($this->field_Y)) {
+            if (! is_null($this->field_Y)) {
                 $af_y = new Tracker_Field();
                 $af_y->fetchData($this->atid, $this->field_Y);
-                if ($af_y->isStandardField() && (!$af_y->isUsername())) {
+                if ($af_y->isStandardField() && (! $af_y->isUsername())) {
                     //echo " : 1<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
@@ -136,7 +136,7 @@ class DataBuilderV5
                     $select   .= ",u1.realName AS field2, u1.user_id AS id2 ";
                     $from     .= "INNER JOIN user u1";
                     $from     .= " ON (u1.user_id=a." . db_es($this->field_Y) . ") ";
-                } elseif (!$af_y->isStandardField() && (!$af_y->isUsername())) {
+                } elseif (! $af_y->isStandardField() && (! $af_y->isUsername())) {
                     //echo " : 3<br>";
                     $field     = "afvl1.value_id";
                     $select   .= ",afvl1.value AS field2 ";
@@ -193,7 +193,7 @@ class DataBuilderV5
                 if ($r[$i]['id1'] == 100) {
                     $result['field1'][$i] = $GLOBALS['Language']->getText('global', 'none');
                 }
-                if (!is_null($this->field_Y)) {
+                if (! is_null($this->field_Y)) {
                     $result['field2'][$i] = $r[$i]['field2'];
                     if ($r[$i]['id2'] == 100) {
                         $result['field2'][$i] = $GLOBALS['Language']->getText('global', 'none');
@@ -210,7 +210,7 @@ class DataBuilderV5
             }
         }
 
-        if (!is_null($this->field_Y)) {
+        if (! is_null($this->field_Y)) {
             for ($i = 0; $i < count($result['field2']); $i++) {
                 $y = array_search($result['field2'][$i], $this->y_values);
                 if ($y === false) {
@@ -221,7 +221,7 @@ class DataBuilderV5
 
         // data initialisation
         for ($i = 0; $i < count($this->x_values); $i++) {
-            if (!is_null($this->field_Y)) {
+            if (! is_null($this->field_Y)) {
                 for ($j = 0; $j < count($this->y_values); $j++) {
                     $this->data[$i][$j] = 0;
                 }
@@ -232,7 +232,7 @@ class DataBuilderV5
 
         for ($i = 0; $i < count($result['c']); $i++) {
             $x = array_search($result['field1'][$i], $this->x_values);
-            if (!is_null($this->field_Y)) {
+            if (! is_null($this->field_Y)) {
                 $y = array_search($result['field2'][$i], $this->y_values);
                 if ($x !== false && $y !== false) {
                     $this->data[$x][$y] = $result['c'][$i];

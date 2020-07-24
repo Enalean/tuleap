@@ -50,7 +50,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('frs_log')) {
+        if (! $this->db->tableNameExists('frs_log')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_log table is missing');
         }
     }

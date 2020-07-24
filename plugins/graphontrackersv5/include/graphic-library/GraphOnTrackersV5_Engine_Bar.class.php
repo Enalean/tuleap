@@ -42,7 +42,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     public function buildGraph()
     {
         if ($this->width == 0) {
-            if (!is_null($this->xaxis)) {
+            if (! is_null($this->xaxis)) {
                 $this->width = (count($this->data) * count($this->data[0]) * 25) + (2 * 150);
             } else {
                 $this->width = (count($this->data) * 100) + (2 * 150);
@@ -64,7 +64,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 
         $this->graph->xaxis->title->setMargin(60, 20, 20, 20);
 
-        if (!is_null($this->xaxis)) {
+        if (! is_null($this->xaxis)) {
             ksort($this->xaxis);
             $this->graph->xaxis->SetTickLabels(array_values($this->xaxis));
         } else {
@@ -88,7 +88,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
             sort($this->keys);
             foreach ($this->data as $group => $data) {
                 foreach ($this->keys as $key) {
-                    if (!isset($data[$key])) {
+                    if (! isset($data[$key])) {
                         $this->data[$group][$key] = 0;
                     }
                 }

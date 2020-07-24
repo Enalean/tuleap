@@ -43,7 +43,7 @@ EOT;
         $res = $sth->fetchAll();
 
         //If index already exists, delete it.
-        if (!empty($res)) {
+        if (! empty($res)) {
             $sql = 'DROP INDEX idx_reviewer ON plugin_docman_approval_user';
             $res = $this->db->dbh->exec($sql);
         }

@@ -61,7 +61,7 @@ class SystemEvent_MEMBERSHIP_CREATE extends SystemEvent
 
             // CVS writers
             if ($project->usesCVS()) {
-                if (!Backend::instance('CVS')->updateCVSwriters($group_id)) {
+                if (! Backend::instance('CVS')->updateCVSwriters($group_id)) {
                     $this->error("Could not update CVS writers for group $group_id");
                     return false;
                 }

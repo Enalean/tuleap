@@ -112,7 +112,7 @@ class Tracker_HierarchyFactory
      */
     public function getChildren($tracker_id)
     {
-        if (!isset($this->cache_children_of_tracker[$tracker_id])) {
+        if (! isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = array();
             foreach ($this->hierarchy_dao->searchChildTrackerIds($tracker_id) as $row) {
                 $tracker = $this->tracker_factory->getTrackerById($row['id']);
@@ -136,7 +136,7 @@ class Tracker_HierarchyFactory
         $hierarchy             = new Tracker_Hierarchy();
         $search_tracker_ids    = $tracker_ids;
         $processed_tracker_ids = array();
-        while (!empty($search_tracker_ids)) {
+        while (! empty($search_tracker_ids)) {
             $this->getHierarchyFromTrackers($hierarchy, $search_tracker_ids, $processed_tracker_ids);
         }
         return $this->fixSingleHierarchy($tracker_ids, $hierarchy);
@@ -151,7 +151,7 @@ class Tracker_HierarchyFactory
      */
     private function fixSingleHierarchy(array $tracker_ids, Tracker_Hierarchy $hierarchy)
     {
-        if (count($tracker_ids) == 1 && !$hierarchy->flatten()) {
+        if (count($tracker_ids) == 1 && ! $hierarchy->flatten()) {
             $hierarchy->addRelationship($tracker_ids[0], 0);
         }
         return $hierarchy;
@@ -262,7 +262,7 @@ class Tracker_HierarchyFactory
      */
     public function getAllAncestors(PFUser $user, Tracker_Artifact $child, array &$stack = array())
     {
-        if (!isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
+        if (! isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
             $parent = $this->getParentArtifact($user, $child);
             if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
                 $this->cache_ancestors[$user->getId()][$child->getId()] = array();

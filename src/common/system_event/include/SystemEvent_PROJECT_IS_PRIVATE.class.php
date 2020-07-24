@@ -79,7 +79,7 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
         $this->cleanRestrictedUsersIfNecessary($project);
 
         if ($project->usesCVS()) {
-            if (!Backend::instance('CVS')->setCVSPrivacy($project, $project_is_private)) {
+            if (! Backend::instance('CVS')->setCVSPrivacy($project, $project_is_private)) {
                 $this->error("Could not set cvs privacy for project $group_id");
                 return false;
             }
@@ -87,11 +87,11 @@ class SystemEvent_PROJECT_IS_PRIVATE extends SystemEvent
 
         if ($project->usesSVN()) {
             $backendSVN    = Backend::instance('SVN');
-            if (!$backendSVN->setSVNPrivacy($project, $project_is_private)) {
+            if (! $backendSVN->setSVNPrivacy($project, $project_is_private)) {
                 $this->error("Could not set svn privacy for project $group_id");
                 return false;
             }
-            if (!$backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath())) {
+            if (! $backendSVN->updateSVNAccess($group_id, $project->getSVNRootPath())) {
                 $this->error("Could not update svn access file for project $group_id");
                 return false;
             }

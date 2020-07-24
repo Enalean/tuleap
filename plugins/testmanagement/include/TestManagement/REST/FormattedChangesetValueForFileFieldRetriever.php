@@ -56,7 +56,7 @@ class FormattedChangesetValueForFileFieldRetriever
             $user
         );
 
-        if (!$field_upload_data) {
+        if (! $field_upload_data) {
             throw new RestException(
                 400,
                 "There is no file field that you can update in your tracker. You can't add an image."

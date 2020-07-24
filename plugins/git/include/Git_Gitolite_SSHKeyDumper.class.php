@@ -120,8 +120,8 @@ class Git_Gitolite_SSHKeyDumper implements Dumper
     private function createKeydir()
     {
         clearstatcache();
-        if (!is_dir($this->getKeyDirPath())) {
-            if (!mkdir($this->getKeyDirPath())) {
+        if (! is_dir($this->getKeyDirPath())) {
+            if (! mkdir($this->getKeyDirPath())) {
                 throw new Exception('Unable to create "' . $this->getKeyDirPath() . '" directory in ');
             }
         }

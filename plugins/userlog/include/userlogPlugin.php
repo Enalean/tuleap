@@ -53,7 +53,7 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
 
     public function &getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'UserLogPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'UserLogPluginInfo')) {
             require_once('UserLogPluginInfo.class.php');
             $this->pluginInfo = new UserLogPluginInfo($this);
         }

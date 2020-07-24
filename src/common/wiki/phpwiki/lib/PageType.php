@@ -83,7 +83,7 @@ class PageType
      */
     public function GetPageType($name = false)
     {
-        if (!$name) {
+        if (! $name) {
             $name = 'wikitext';
         }
         $class = "PageType_" . (string) $name;
@@ -104,7 +104,7 @@ class PageType
      */
     public function getName()
     {
-        if (!preg_match('/^PageType_(.+)$/i', static::class, $m)) {
+        if (! preg_match('/^PageType_(.+)$/i', static::class, $m)) {
             trigger_error("Bad class name for formatter(?)", E_USER_ERROR);
         }
         return $m[1];
@@ -157,7 +157,7 @@ class PageType_interwikimap extends PageType
 {
     public function __construct($pagetext = false)
     {
-        if (!$pagetext) {
+        if (! $pagetext) {
             $dbi = $GLOBALS['request']->getDbh();
             $page = $dbi->getPage(_("InterWikiMap"));
             if ($page->get('locked')) {
@@ -173,7 +173,7 @@ class PageType_interwikimap extends PageType
         } else {
             $intermap = $this->_getMapFromWikiText($pagetext);
         }
-        if (!$intermap && defined('INTERWIKI_MAP_FILE')) {
+        if (! $intermap && defined('INTERWIKI_MAP_FILE')) {
             $intermap = $this->_getMapFromFile(INTERWIKI_MAP_FILE);
         }
 
@@ -201,7 +201,7 @@ class PageType_interwikimap extends PageType
     {
         list ($moniker, $page) = preg_split("/:/D", $link, 2);
 
-        if (!isset($this->_map[$moniker])) {
+        if (! isset($this->_map[$moniker])) {
             return HTML::span(
                 array('class' => 'bad-interwiki'),
                 $linktext ? $linktext : $link
@@ -230,7 +230,7 @@ class PageType_interwikimap extends PageType
 
         $link = HTML::a(array('href' => $url));
 
-        if (!$linktext) {
+        if (! $linktext) {
             $link->pushContent(
                 PossiblyGlueIconToText('interwiki', "$moniker:"),
                 HTML::span(array('class' => 'wikipage'), $page)
@@ -248,7 +248,7 @@ class PageType_interwikimap extends PageType
     public function _parseMap($text)
     {
         if (
-            !preg_match_all(
+            ! preg_match_all(
                 "/^\s*(\S+)\s+(.+)$/m",
                 $text,
                 $matches,
@@ -344,7 +344,7 @@ class PageType_interwikimap extends PageType
             );
             trigger_error($error_html, E_USER_NOTICE);
         }
-        if (!file_exists($filename)) {
+        if (! file_exists($filename)) {
             $finder = new FileFinder();
             $filename = $finder->findFile(INTERWIKI_MAP_FILE);
         }
@@ -357,7 +357,7 @@ class PageType_interwikimap extends PageType
 
     public function _getRegexp()
     {
-        if (!$this->_map) {
+        if (! $this->_map) {
             return '(?:(?!a)a)'; //  Never matches.
         }
 
@@ -382,7 +382,7 @@ class PageFormatter
     {
         $this->_page = $page;
         $this->_meta = $meta;
-        if (!empty($meta['markup'])) {
+        if (! empty($meta['markup'])) {
             $this->_markup = $meta['markup'];
         } else {
             $this->_markup = 2; // dump used old-markup as empty.
@@ -450,7 +450,7 @@ class PageFormatter_interwikimap extends PageFormatter
     public function _formatMap($pagetext)
     {
         $map = $this->_getMap($pagetext);
-        if (!$map) {
+        if (! $map) {
             return HTML::p("<No interwiki map found>"); // Shouldn't happen.
         }
 

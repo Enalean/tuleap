@@ -125,14 +125,14 @@ class PiePlot3D extends PiePlot
         $coords .= ", $xp, $yp";
         $alt = '';
 
-        if (!empty($this->csimtargets[$i])) {
+        if (! empty($this->csimtargets[$i])) {
             $this->csimareas .= "<area shape=\"poly\" coords=\"$coords\" href=\"" . $this->csimtargets[$i] . "\"";
 
-            if (!empty($this->csimwintargets[$i])) {
+            if (! empty($this->csimwintargets[$i])) {
                 $this->csimareas .= " target=\"" . $this->csimwintargets[$i] . "\" ";
             }
 
-            if (!empty($this->csimalts[$i])) {
+            if (! empty($this->csimalts[$i])) {
                 $tmp = sprintf($this->csimalts[$i], $this->data[$i]);
                 $this->csimareas .= "alt=\"$tmp\" title=\"$tmp\" ";
             }
@@ -496,7 +496,7 @@ class PiePlot3D extends PiePlot
                 $split = -1; // no split
                 if (
                     ($da <= 90 && ($a <= 90 && $ne > 90)) ||
-                    (($da <= 180 && $da > 90)  && (($a < 90 || $a >= 270) && $ne > 90))
+                    (($da <= 180 && $da > 90) && (($a < 90 || $a >= 270) && $ne > 90))
                 ) {
                     $split = 90;
                 } elseif (
@@ -604,7 +604,7 @@ class PiePlot3D extends PiePlot
         // First stroke all the slices between 90 and 270 (left half circle)
         // counterclockwise
 
-        while ($angles[$j][0] < 270  && $aaoption !== 2) {
+        while ($angles[$j][0] < 270 && $aaoption !== 2) {
             list($x,$y) = $adjexplode[$j];
 
             $this->Pie3DSlice(
@@ -642,7 +642,7 @@ class PiePlot3D extends PiePlot
 
         // The stroke all slices from 90 to -90 (right half circle)
         // clockwise
-        while ($cnt < $slice_left  && $aaoption !== 2) {
+        while ($cnt < $slice_left && $aaoption !== 2) {
             list($x,$y) = $adjexplode[$j];
 
             $this->Pie3DSlice(
@@ -808,7 +808,7 @@ class PiePlot3D extends PiePlot
         // Doing the full, proper 3D hidden lines stiff is actually quite
         // tricky. So for exploded pies we only draw the top edge. Not perfect
         // but the "real" solution is much more complicated.
-        if ($fulledge && !( $sa > 0 && $sa < M_PI && $ea < M_PI)) {
+        if ($fulledge && ! ( $sa > 0 && $sa < M_PI && $ea < M_PI)) {
             if ($sa < M_PI && $ea > M_PI) {
                 $sa = M_PI;
             }

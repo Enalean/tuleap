@@ -179,7 +179,7 @@ class LDAP_UserGroupManager extends LDAP_GroupManager
     public function synchronizeUgroups()
     {
         $dar = $this->getSynchronizedUgroups();
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $this->setId($row['ugroup_id']);
                 $this->setGroupDn($row['ldap_group_dn']);

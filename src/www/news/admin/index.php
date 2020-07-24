@@ -73,7 +73,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
                 "details='" . db_es($request->get('details')) . "' WHERE id=" . db_ei($id) . " AND group_id=" . db_ei($group_id);
             $result = db_query($sql);
 
-            if (!$result) {
+            if (! $result) {
                 $GLOBALS['Response']->addFeedback('error', $Language->getText('news_admin_index', 'group_update_err'));
             } else {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('news_admin_index', 'project_newsbyte_updated'));
@@ -109,7 +109,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
 
     $purifier = Codendi_HTMLPurifier::instance();
 
-    if (!$request->get('post_changes') && $request->get('approve')) {
+    if (! $request->get('post_changes') && $request->get('approve')) {
      /*
       Show the submit form
      */

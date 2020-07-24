@@ -118,7 +118,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
                 $tableCreated = $this->newTableEmpty($userId);
             }
             // Close source table
-            if ($srcTable !== null && !$srcTable->isClosed()) {
+            if ($srcTable !== null && ! $srcTable->isClosed()) {
                 $srcTable->setStatus(PLUGIN_DOCMAN_APPROVAL_TABLE_CLOSED);
                 $this->_updateTable($srcTable);
             }
@@ -138,7 +138,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $table = null;
         $dao = $this->_getDao();
         $dar = $dao->getLatestTableByItemId($this->item->getId());
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             $table = $this->createTableFromRow($row);
         }
@@ -153,7 +153,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
         $tableArray = array();
         $dao = $this->_getDao();
         $dar = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             while ($row = $dar->getRow()) {
                 $tableArray[] = $this->createTableFromRow($row);
             }

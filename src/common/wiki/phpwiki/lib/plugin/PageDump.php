@@ -65,10 +65,10 @@ class WikiPlugin_PageDump extends WikiPlugin
     {
         extract($this->getArgs($argstr, $request));
         // allow plugin-form
-        if (!empty($s)) {
+        if (! empty($s)) {
             $page = $s;
         }
-        if (!$page) {
+        if (! $page) {
             return '';
         }
         if (! $dbi->isWikiPage($page)) {
@@ -112,7 +112,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             // Inconsequential at the moment, since loadsave.php
             // always generates headers
             $charset = $p->get('charset');
-            if (!$charset) {
+            if (! $charset) {
                 $charset = $GLOBALS['charset'];
             }
             // We generate 3 Content-Type headers! first in loadsave,
@@ -165,7 +165,7 @@ class WikiPlugin_PageDump extends WikiPlugin
             WikiLink($page, 'auto')
         ));
         global $WikiTheme;
-        if (!$Sep = $WikiTheme->getButtonSeparator()) {
+        if (! $Sep = $WikiTheme->getButtonSeparator()) {
             $Sep = " ";
         }
 

@@ -44,7 +44,7 @@ class b201501191123_create_tracker_artifact_priority_history_table extends Forge
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_artifact_priority_history')) {
+        if (! $this->db->tableNameExists('tracker_artifact_priority_history')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('table tracker_artifact_priority_history not created');
         }
     }

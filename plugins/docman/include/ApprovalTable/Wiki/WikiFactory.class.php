@@ -117,7 +117,7 @@ class Docman_ApprovalTableWikiFactory extends Docman_ApprovalTableVersionnedFact
         if ($version !== null) {
             $dao = $this->_getDao();
             $dar = $dao->getTableById($itemId, $version);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 $table = $this->createTableFromRow($row);
             }

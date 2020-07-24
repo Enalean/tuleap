@@ -43,7 +43,7 @@ $user            = UserManager::instance()->getCurrentUser();
 $project_manager = ProjectManager::instance();
 $project         = $project_manager->getProject($group_id);
 
-if (!user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
+if (! user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 

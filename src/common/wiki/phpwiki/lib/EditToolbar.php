@@ -292,7 +292,7 @@ function undo_save() {
             while ($p = $pages->next()) {
                 $categories[] = $p->getName();
             }
-            if (!$categories) {
+            if (! $categories) {
                 return '';
             }
             $more_buttons = HTML::img(array('class' => "toolbar",
@@ -322,7 +322,7 @@ function undo_save() {
         $plugins = $pd->getFiles();
         unset($pd);
         sort($plugins);
-        if (!empty($plugins)) {
+        if (! empty($plugins)) {
             $plugin_js = '';
             require_once("lib/WikiPlugin.php");
             $w = new WikiPluginLoader();
@@ -401,7 +401,7 @@ function undo_save() {
                 $pages_js .= ",['" . $p->getName() . "','_nl$toinsert']";
             }
             $pages_js = substr($pages_js, 1);
-            if (!empty($pages_js)) {
+            if (! empty($pages_js)) {
                 return HTML("\n", HTML::img(array('class' => "toolbar",
                                    'src'  => $WikiTheme->getImageURL("ed_template.png"),
                                    'title' => _("AddTemplate"),

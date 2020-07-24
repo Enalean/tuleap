@@ -130,7 +130,7 @@ abstract class HudsonJobWidget extends HudsonWidget
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
-        if (!$request->exist('cancel')) {
+        if (! $request->exist('cancel')) {
             $job_id = $request->get($this->widget_id . '_job_id');
             $db = \Tuleap\DB\DBFactory::getMainTuleapDBConnection()->getDB();
             $db->run(

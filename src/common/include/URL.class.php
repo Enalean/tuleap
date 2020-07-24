@@ -58,7 +58,7 @@ class URL
                 break;
             }
         }
-        if (!isset($parts)) {
+        if (! isset($parts)) {
             return false;
         }
         $group = explode('=', $parts);

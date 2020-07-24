@@ -36,12 +36,12 @@ function RemovePage(&$request)
 
     $current = $page->getCurrentRevision();
 
-    if (!$current or !($version = $current->getVersion())) {
+    if (! $current or ! ($version = $current->getVersion())) {
         $html = HTML(
             HTML::h2(_("Already deleted")),
             HTML::p(_("Sorry, this page is not in the database."))
         );
-    } elseif (!$request->isPost() || !$request->getArg('verify')) {
+    } elseif (! $request->isPost() || ! $request->getArg('verify')) {
         $removeB = Button('submit:verify', _("Remove Page"), 'wikiadmin');
         $cancelB = Button('submit:cancel', _("Cancel"), 'button'); // use generic wiki button look
 

@@ -28,7 +28,7 @@ class SvnNotification
      */
     public function _getDao()
     {
-        if (!isset($this->_dao)) {
+        if (! isset($this->_dao)) {
             $this->_dao = new SvnNotificationDao(CodendiDataAccess::instance());
         }
         return $this->_dao;
@@ -61,7 +61,7 @@ class SvnNotification
     {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId, $path);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->current();
             return $row['svn_events_mailing_list'];
         } else {
@@ -80,7 +80,7 @@ class SvnNotification
     {
         $dao = $this->_getDao();
         $dar = $dao->getSvnMailingList($projectId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return $dar;
         } else {
             return null;
@@ -97,7 +97,7 @@ class SvnNotification
      */
     public function removeSvnNotification($projectId, $selectedPaths)
     {
-        if (is_array($selectedPaths) && !empty($selectedPaths)) {
+        if (is_array($selectedPaths) && ! empty($selectedPaths)) {
             $dao = $this->_getDao();
             $paths = array();
             foreach ($selectedPaths as $pathToDelete) {
@@ -107,7 +107,7 @@ class SvnNotification
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_fail'));
                 }
             }
-            if (!empty($paths)) {
+            if (! empty($paths)) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('svn_admin_notification', 'delete_path_success', array(implode(',', $paths))));
             }
         } else {

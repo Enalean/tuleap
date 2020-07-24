@@ -107,7 +107,7 @@ class MessageArchiver
             ' WHERE id_header = 1' .
             ' AND value = "' . db_es($messageIdHeader) . '"';
         $result = db_query($qry);
-        if ($result && !db_error()) {
+        if ($result && ! db_error()) {
             $row = db_fetch_array($result);
             return $row['id_message'];
         }
@@ -119,7 +119,7 @@ class MessageArchiver
         if ($messageId != 0) {
             $sql = 'SELECT id_parent, last_thread_update FROM plugin_forumml_message WHERE id_message = ' . db_ei($messageId);
             $dar = db_query($sql);
-            if ($dar && !db_error()) {
+            if ($dar && ! db_error()) {
                 $row = db_fetch_array($dar);
                 if ($date > $row['last_thread_update']) {
                     $sql = 'UPDATE plugin_forumml_message' .

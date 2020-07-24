@@ -169,10 +169,10 @@ class LanguageConv
             }
             return $unistring;
         } elseif (LANGUAGE_CYRILLIC) {
-            if (CYRILLIC_FROM_WINDOWS && (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'windows-1251'))) {
+            if (CYRILLIC_FROM_WINDOWS && (! defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'windows-1251'))) {
                 $aTxt = mb_convert_encoding($aTxt, 'KOI8-R', 'Windows-1251');
             }
-            if (!defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
+            if (! defined('LANGUAGE_CHARSET') || stristr(LANGUAGE_CHARSET, 'koi8-r') || stristr(LANGUAGE_CHARSET, 'windows-1251')) {
                 $isostring = mb_convert_encoding($aTxt, 'ISO-8859-5', 'KOI8-R');
                 $unistring = LanguageConv::iso2uni($isostring);
             } else {
@@ -463,14 +463,14 @@ class TTF
     public function File($family, $style = FS_NORMAL)
     {
         $fam = @$this->font_files[$family];
-        if (!$fam) {
+        if (! $fam) {
             JpGraphError::RaiseL(25046, $family);//("Specified TTF font family (id=$family) is unknown or does not exist. Please note that TTF fonts are not distributed with JpGraph for copyright reasons. You can find the MS TTF WEB-fonts (arial, courier etc) for download at http://corefonts.sourceforge.net/");
         }
         $ff = @$fam[$style];
 
         // There are several optional file names. They are tried in order
         // and the first one found is used
-        if (!is_array($ff)) {
+        if (! is_array($ff)) {
             $ff = array($ff);
         }
 
@@ -482,7 +482,7 @@ class TTF
             if ($font_file === '') {
                     JpGraphError::RaiseL(25047, $this->style_names[$style], $this->font_files[$family][FS_NORMAL]);//('Style "'.$this->style_names[$style].'" is not available for font family '.$this->font_files[$family][FS_NORMAL].'.');
             }
-            if (!$font_file) {
+            if (! $font_file) {
                 JpGraphError::RaiseL(25048, $fam);//("Unknown font style specification [$fam].");
             }
 
@@ -504,7 +504,7 @@ class TTF
             }
         }
 
-        if (!file_exists($font_file)) {
+        if (! file_exists($font_file)) {
             JpGraphError::RaiseL(25049, $font_file);//("Font file \"$font_file\" is not readable or does not exist.");
         }
 
@@ -613,7 +613,7 @@ class SymChar
         $i = 0;
         $found = false;
         $aSymb = strtolower($aSymb);
-        while ($i < $n && !$found) {
+        while ($i < $n && ! $found) {
             $found = $aSymb === $iSymbols[$i++][0];
         }
         if ($found) {

@@ -177,7 +177,7 @@ class Git_LastPushesGraph
                 $color  = $colors[$i++ % $nbColors];
                 $b2plot->SetColor($color . ':0.7');
                 $b2plot->setFillColor($color);
-                if (!empty($this->legend)) {
+                if (! empty($this->legend)) {
                     $b2plot->SetLegend($this->legend);
                 }
                 $bplot[] = $b2plot;

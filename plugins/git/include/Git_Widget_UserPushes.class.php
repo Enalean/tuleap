@@ -176,7 +176,7 @@ class Git_Widget_UserPushes extends Widget
         $vOffset->required();
         $vDays   = new Valid_UInt('plugin_git_user_pushes_past_days');
         $vDays->required();
-        if (!$request->exist('cancel')) {
+        if (! $request->exist('cancel')) {
             if ($request->valid($vOffset)) {
                 $this->offset = $request->get('plugin_git_user_pushes_offset');
             } else {

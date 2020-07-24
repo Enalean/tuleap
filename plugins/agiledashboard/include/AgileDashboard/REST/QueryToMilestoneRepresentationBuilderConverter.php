@@ -75,7 +75,7 @@ class QueryToMilestoneRepresentationBuilderConverter
             );
         }
 
-        if (!isset($query_object->period) && !isset($query_object->status)) {
+        if (! isset($query_object->period) && ! isset($query_object->status)) {
             throw MalformedQueryParameterException::invalidQueryParameter();
         }
 

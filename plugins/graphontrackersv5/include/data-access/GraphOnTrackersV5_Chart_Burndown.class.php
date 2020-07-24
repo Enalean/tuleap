@@ -235,7 +235,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     public function createDb($id)
     {
         $field_id   = $this->getFieldId();
-        if (!is_int($field_id) && !is_string($field_id) && $field_id) {
+        if (! is_int($field_id) && ! is_string($field_id) && $field_id) {
             $field_id = $field_id->getid();
         }
         $start_date = $this->getStartDate();

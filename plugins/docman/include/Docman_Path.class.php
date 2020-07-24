@@ -28,7 +28,7 @@ class Docman_Path
     }
     public function get(&$item)
     {
-        if (!isset($this->path[$item->getId()])) {
+        if (! isset($this->path[$item->getId()])) {
             $this->path[$item->getId()] = '';
             if ($item->getParentId()) {
                 $if = $this->_getItemFactory();
@@ -44,7 +44,7 @@ class Docman_Path
     public $item_factory;
     private function _getItemFactory()
     {
-        if (!$this->item_factory) {
+        if (! $this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;

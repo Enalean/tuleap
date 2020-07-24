@@ -146,7 +146,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     private function createReleaseDir($release_name, $dir_name)
     {
         // Create temp file in a fake release
-        if (!is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . "/$release_name/$dir_name")) {
+        if (! is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . "/$release_name/$dir_name")) {
             mkdir(ForgeConfig::get('ftp_frs_dir_prefix') . "/$release_name/$dir_name", 0750, true);
         }
     }
@@ -422,7 +422,7 @@ class FRSFileFactoryTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     private function createDeletedReleaseDir($release_name, $dir_name)
     {
         // Create temp file in a fake release
-        if (!is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/' . $release_name . '/' . $dir_name)) {
+        if (! is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/' . $release_name . '/' . $dir_name)) {
             mkdir(ForgeConfig::get('ftp_frs_dir_prefix') . '/DELETED/' . $release_name . '/' . $dir_name, 0750, true);
         }
     }

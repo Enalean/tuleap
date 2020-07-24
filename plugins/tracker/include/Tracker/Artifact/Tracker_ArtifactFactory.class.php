@@ -55,7 +55,7 @@ class Tracker_ArtifactFactory
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $c = self::class;
             self::setInstance(new $c());
         }
@@ -90,7 +90,7 @@ class Tracker_ArtifactFactory
      */
     public function getArtifactById($id)
     {
-        if (!isset($this->artifacts[$id])) {
+        if (! isset($this->artifacts[$id])) {
             $this->artifacts[$id] = null;
             $row = $this->getDao()->searchById($id)->getRow();
             if ($row) {
@@ -333,7 +333,7 @@ class Tracker_ArtifactFactory
      */
     public function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Tracker_ArtifactDao();
         }
         return $this->dao;

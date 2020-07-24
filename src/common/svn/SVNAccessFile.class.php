@@ -72,7 +72,7 @@ class SVNAccessFile
     public function isGroupDefined($groups, $line, $verbose = false)
     {
         preg_match($this->getGroupMatcher(self::GROUPNAME_PATTERN), $line, $matches);
-        if (!empty($matches)) {
+        if (! empty($matches)) {
             $match = $matches[1];
             if ($match == 'members') {
                 return true;
@@ -120,7 +120,7 @@ class SVNAccessFile
     public function validateUGroupLine($groups, $line, $verbose = null)
     {
         $trimmedLine = ltrim($line);
-        if (!empty($this->ugroupNewName) && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
+        if (! empty($this->ugroupNewName) && preg_match($this->getGroupMatcher($this->ugroupOldName), $trimmedLine)) {
             return $this->renameGroup($groups, $line);
         } else {
             return $this->commentInvalidLine($groups, $line, $verbose);
@@ -164,7 +164,7 @@ class SVNAccessFile
     public function commentInvalidLine($groups, $line, $verbose = false)
     {
         $trimmedLine = ltrim($line);
-        if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && !$this->isGroupDefined($groups, $trimmedLine, $verbose)) {
+        if ($trimmedLine && substr($trimmedLine, 0, 1) == '@' && ! $this->isGroupDefined($groups, $trimmedLine, $verbose)) {
             return "# " . $line;
         } else {
             return $line;
@@ -236,8 +236,8 @@ class SVNAccessFile
         $trimmedLine = ltrim($line);
         if ($trimmedLine != '') {
             preg_match('/^' . self::GROUPNAME_PATTERN . '\s*=/', $trimmedLine, $matches);
-            if (!empty($matches)) {
-                if (!$defaultSection) {
+            if (! empty($matches)) {
+                if (! $defaultSection) {
                     $groups[$matches[1]] = self::UGROUP_REDEFINED;
                 } else {
                     $groups[$matches[1]] = self::UGROUP_DEFAULT;
@@ -301,7 +301,7 @@ class SVNAccessFile
      */
     protected function getPlatformBlock($project_svnroot)
     {
-        if (!$this->platformBlock) {
+        if (! $this->platformBlock) {
             $this->platformBlock = svn_utils_read_svn_access_file_defaults($project_svnroot, true);
         }
         return $this->platformBlock;

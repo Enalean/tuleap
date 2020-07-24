@@ -14,14 +14,14 @@ $vGroupId = new Valid_GroupId();
 $vGroupId->required();
 
 // need a group_id !!!
-if (!$request->valid($vGroupId)) {
+if (! $request->valid($vGroupId)) {
     exit_no_group();
 } else {
     $group_id = $request->get('group_id');
 }
 
 // Must be at least Project Admin to configure this
-if (!user_ismember($group_id, 'A') && !user_ismember($group_id, 'SVN_ADMIN')) {
+if (! user_ismember($group_id, 'A') && ! user_ismember($group_id, 'SVN_ADMIN')) {
     exit_permission_denied();
 }
 
@@ -65,7 +65,7 @@ if ($request->valid($vFunc)) {
    // get project object
     $pm = ProjectManager::instance();
     $project = $pm->getProject($group_id);
-    if (!$project || !is_object($project) || $project->isError()) {
+    if (! $project || ! is_object($project) || $project->isError()) {
         exit_no_group();
     }
 

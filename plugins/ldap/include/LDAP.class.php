@@ -112,7 +112,7 @@ class LDAP
      */
     public function connect()
     {
-        if (!$this->ds) {
+        if (! $this->ds) {
             foreach (preg_split('/[,;]/', $this->ldapParams['server']) as $ldap_server) {
                 $this->ds = ldap_connect($ldap_server);
                 if ($this->ds) {
@@ -185,12 +185,12 @@ class LDAP
      */
     public function bind($binddn = null, ?ConcealedString $bindpw = null)
     {
-        if (!$this->bound) {
-            if (!$binddn) {
+        if (! $this->bound) {
+            if (! $binddn) {
                 $binddn = isset($this->ldapParams['bind_dn']) ? $this->ldapParams['bind_dn'] : null;
                 $bindpw = isset($this->ldapParams['bind_passwd']) ? new ConcealedString((string) $this->ldapParams['bind_passwd']) : null;
             }
-            if ($binddn && (!$bindpw)) {
+            if ($binddn && (! $bindpw)) {
                 // Prevent successful binding if a username is given and the server
                 // accepts anonymous connections
                 //$this->setError($Language->getText('ldap_class','err_bind_nopasswd',$binddn));
@@ -234,11 +234,11 @@ class LDAP
      */
     public function _connectAndBind()
     {
-        if (!$this->connect()) {
+        if (! $this->connect()) {
             //$this->setError($Language->getText('ldap_class','err_cant_connect'));
             return false;
         }
-        if (!$this->bind()) {
+        if (! $this->bind()) {
             //$this->setError($Language->getText('ldap_class','err_cant_bind'));
             return false;
         }

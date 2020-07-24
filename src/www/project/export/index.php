@@ -33,12 +33,12 @@ $em       = EventManager::instance();
 $request  = HTTPRequest::instance();
 $export   = $request->get('export');
 $group_id = $request->get('group_id');
-if (!isset($export)) {
+if (! isset($export)) {
     $export = "";
 }
 
 // Group ID must be defined and must be a project admin
-if (!$group_id) {
+if (! $group_id) {
     exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
 }
 
@@ -47,11 +47,11 @@ session_require(array('group' => $group_id,'admin_flags' => 'A'));
 //  get the Group object
 $pm = ProjectManager::instance();
 $group = $pm->getProject($group_id);
-if (!$group || !is_object($group) || $group->isError()) {
+if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
 }
 $atf = new ArtifactTypeFactory($group);
-if (!$group || !is_object($group) || $group->isError()) {
+if (! $group || ! is_object($group) || $group->isError()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_index', 'not_get_atf'));
 }
 

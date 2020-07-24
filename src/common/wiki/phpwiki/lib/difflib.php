@@ -38,7 +38,7 @@ class _DiffOp_Copy extends _DiffOp
 
     public function __construct($orig, $final = false)
     {
-        if (!is_array($final)) {
+        if (! is_array($final)) {
             $final = $orig;
         }
         $this->orig = $orig;
@@ -190,7 +190,7 @@ class _DiffEngine
             $copy = array();
             while (
                 $xi < $n_from && $yi < $n_to
-                    && !$this->xchanged[$xi] && !$this->ychanged[$yi]
+                    && ! $this->xchanged[$xi] && ! $this->ychanged[$yi]
             ) {
                 $copy[] = $from_lines[$xi++];
                 ++$yi;

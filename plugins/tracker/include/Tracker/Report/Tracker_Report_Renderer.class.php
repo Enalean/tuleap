@@ -144,7 +144,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
 
     public function afterProcessRequest(TrackerManager $tracker_manager, $request, $current_user)
     {
-        if (!$request->isAjax()) {
+        if (! $request->isAjax()) {
             $params = array(
                 'report'   => $this->report->id,
                 'renderer' => $this->id
@@ -217,7 +217,7 @@ abstract class Tracker_Report_Renderer implements WidgetWithAssetDependencies
     private function canAddToDashboard($user)
     {
         return $this->id > 0
-            && (!isset($this->report_session) || !$this->report_session->hasChanged())
+            && (! isset($this->report_session) || ! $this->report_session->hasChanged())
             && $user->isLoggedIn();
     }
 

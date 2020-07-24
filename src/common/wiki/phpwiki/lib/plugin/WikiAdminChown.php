@@ -75,7 +75,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
                 ($owner = $page->getOwner()) and
                  $newowner != $owner
             ) {
-                if (!mayAccessPage('change', $name)) {
+                if (! mayAccessPage('change', $name)) {
                     $ul->pushContent(HTML::li(fmt(
                         "Access denied to change page '%s'.",
                         WikiLink($name)
@@ -114,7 +114,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
     {
         return $this->disabled("This action is blocked by administrator. Sorry for the inconvenience !");
         if ($request->getArg('action') != 'browse') {
-            if (!$request->getArg('action') == _("PhpWikiAdministration/Chown")) {
+            if (! $request->getArg('action') == _("PhpWikiAdministration/Chown")) {
                 return $this->disabled("(action != 'browse')");
             }
         }
@@ -131,24 +131,24 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) {
+        if (! $p) {
             $p = $this->_list;
         }
         $post_args = $request->getArg('admin_chown');
-        if (!$request->isPost() and empty($post_args['user'])) {
+        if (! $request->isPost() and empty($post_args['user'])) {
             $post_args['user'] = $args['user'];
         }
         $next_action = 'select';
         $pages = array();
-        if ($p && !$request->isPost()) {
+        if ($p && ! $request->isPost()) {
             $pages = $p;
         }
         if (
             $p && $request->isPost() &&
-            !empty($post_args['chown']) && empty($post_args['cancel'])
+            ! empty($post_args['chown']) && empty($post_args['cancel'])
         ) {
             // without individual PagePermissions:
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -163,7 +163,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
                 );
             }
             if ($post_args['action'] == 'select') {
-                if (!empty($post_args['user'])) {
+                if (! empty($post_args['user'])) {
                     $next_action = 'verify';
                 }
                 foreach ($p as $name => $c) {

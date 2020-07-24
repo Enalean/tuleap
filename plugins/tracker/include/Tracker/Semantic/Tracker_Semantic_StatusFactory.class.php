@@ -35,7 +35,7 @@ class Tracker_Semantic_StatusFactory implements IBuildSemanticFromXML, IDuplicat
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c();
         }

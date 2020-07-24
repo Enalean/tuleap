@@ -1509,7 +1509,7 @@ class GB2312toUTF8
 
     public function gb2utf8($gb)
     {
-        if (!trim($gb)) {
+        if (! trim($gb)) {
             return $gb;
         }
         $utf8 = '';

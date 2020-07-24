@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('system_event', 'owner')) {
+        if (! $this->db->columnNameExists('system_event', 'owner')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column owner not created in system_event');
         }
     }

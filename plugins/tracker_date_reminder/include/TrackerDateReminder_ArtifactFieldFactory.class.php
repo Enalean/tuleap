@@ -46,7 +46,7 @@ class TrackerDateReminder_ArtifactFieldFactory
                ' FROM artifact_date_reminder_settings' .
                ' WHERE group_artifact_id = ' . db_ei($group_artifact_id);
         $res = db_query($sql);
-        if ($res && !db_error($res)) {
+        if ($res && ! db_error($res)) {
             while (($row = db_fetch_array($res))) {
                 $this->fieldsWithNotification[$row['field_id']] = true;
             }

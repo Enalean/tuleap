@@ -45,7 +45,7 @@ class Widget_MyBookmarks extends Widget
         $result = db_query("SELECT bookmark_url, bookmark_title, bookmark_id from user_bookmarks where " .
             "user_id='" . db_ei(UserManager::instance()->getCurrentUser()->getId()) . "' ORDER BY bookmark_title");
         $rows = db_numrows($result);
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $html_my_bookmarks .= $GLOBALS['Language']->getText('my_index', 'no_bookmark');
             $html_my_bookmarks .= db_error();
         } else {

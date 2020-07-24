@@ -147,7 +147,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     protected function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new GitDao();
         }
         return $this->dao;
@@ -470,7 +470,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     public function getPermissionsManager()
     {
-        if (!$this->permissionsManager) {
+        if (! $this->permissionsManager) {
             $this->permissionsManager = PermissionsManager::instance();
         }
         return $this->permissionsManager;
@@ -518,7 +518,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
 
     protected function getGitPlugin()
     {
-        if (!$this->gitPlugin) {
+        if (! $this->gitPlugin) {
             $plugin_manager  = PluginManager::instance();
             $this->gitPlugin = $plugin_manager->getPluginByName('git');
         }

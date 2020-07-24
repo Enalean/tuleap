@@ -36,7 +36,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
         $backend = $this->_backend;
         $pagename = $page['pagename'];
 
-        if (!isset($page['versiondata'])) {
+        if (! isset($page['versiondata'])) {
             $version = $backend->get_latest_version($pagename);
             $page['versiondata'] = $backend->get_versiondata($pagename, $version, true);
         }

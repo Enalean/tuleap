@@ -35,7 +35,7 @@ class LogScale extends LinearScale
     // Translate between world and screen
     public function Translate($a)
     {
-        if (!is_numeric($a)) {
+        if (! is_numeric($a)) {
             if ($a != '' && $a != '-' && $a != 'x') {
                 JpGraphError::RaiseL(11001);
                 // ('Your data contains non-numeric values.');
@@ -58,7 +58,7 @@ class LogScale extends LinearScale
     // to know the relative position (in pixels) on the axis
     public function RelTranslate($a)
     {
-        if (!is_numeric($a)) {
+        if (! is_numeric($a)) {
             if ($a != '' && $a != '-' && $a != 'x') {
                 JpGraphError::RaiseL(11001);
                 //('Your data contains non-numeric values.');
@@ -206,7 +206,7 @@ class LogTicks extends Ticks
                 $this->ticks_pos[] = $ys;
                 $this->ticklabels_pos[] = $ys;
                 if ($count % 10 == 0) {
-                    if (!$this->supress_tickmarks) {
+                    if (! $this->supress_tickmarks) {
                         if ($this->majcolor != "") {
                             $img->PushColor($this->majcolor);
                             $img->Line($pos, $ys, $a2, $ys);
@@ -232,7 +232,7 @@ class LogTicks extends Ticks
                     $step *= 10;
                     $count = 1;
                 } else {
-                    if (!$this->supress_tickmarks && !$this->supress_minor_tickmarks) {
+                    if (! $this->supress_tickmarks && ! $this->supress_minor_tickmarks) {
                         if ($this->mincolor != "") {
                             $img->PushColor($this->mincolor);
                         }
@@ -267,7 +267,7 @@ class LogTicks extends Ticks
                 $this->ticks_pos[] = $xs;
                 $this->ticklabels_pos[] = $xs;
                 if ($count % 10 == 0) {
-                    if (!$this->supress_tickmarks) {
+                    if (! $this->supress_tickmarks) {
                         $img->Line($xs, $pos, $xs, $a2);
                     }
                     $this->maj_ticks_pos[$i] = $xs;
@@ -286,7 +286,7 @@ class LogTicks extends Ticks
                     $step *= 10;
                     $count = 1;
                 } else {
-                    if (!$this->supress_tickmarks && !$this->supress_minor_tickmarks) {
+                    if (! $this->supress_tickmarks && ! $this->supress_minor_tickmarks) {
                         $img->Line($xs, $pos, $xs, $a);
                     }
                 }

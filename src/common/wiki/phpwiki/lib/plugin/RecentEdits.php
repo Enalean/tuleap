@@ -32,10 +32,10 @@ class WikiPlugin_RecentEdits extends WikiPlugin_RecentChanges
     // just a numbered list of limit pagenames, without date.
     public function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) {
+        if (! $request) {
             $request = $GLOBALS['request'];
         }
-        if (!isset($args['limit'])) {
+        if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
         $args['format'] = 'box';

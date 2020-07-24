@@ -540,7 +540,7 @@ class Rule_UserName extends Rule
     public function getPendingUserRename($val)
     {
         $sm = $this->_getSystemEventManager();
-        if (!$sm->isUserNameAvailable($val)) {
+        if (! $sm->isUserNameAvailable($val)) {
             $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
             return false;
         }
@@ -556,11 +556,11 @@ class Rule_UserName extends Rule
     public function isValid($val)
     {
         return $this->isUnixValid($val)
-            && !$this->isReservedName($val)
-            && !$this->isCvsAccount($val)
-            && !$this->isAlreadyUserName($val)
-            && !$this->isAlreadyProjectName($val)
-            && !$this->isSystemName($val)
+            && ! $this->isReservedName($val)
+            && ! $this->isCvsAccount($val)
+            && ! $this->isAlreadyUserName($val)
+            && ! $this->isAlreadyProjectName($val)
+            && ! $this->isSystemName($val)
             && $this->getPendingUserRename($val);
     }
 
@@ -571,9 +571,9 @@ class Rule_UserName extends Rule
     {
         return $this->noSpaces($val)
             && $this->atLeastOneChar($val)
-            && !$this->lessThanMin($val)
-            && !$this->greaterThanMax($val)
-            && !$this->containsIllegalChars($val);
+            && ! $this->lessThanMin($val)
+            && ! $this->greaterThanMax($val)
+            && ! $this->containsIllegalChars($val);
     }
 
     /**
@@ -691,17 +691,17 @@ class Rule_ProjectName extends Rule_UserName
     public function isNameAvailable($val)
     {
         $backendSVN = $this->_getBackend('SVN');
-        if (!$backendSVN->isNameAvailable($val)) {
+        if (! $backendSVN->isNameAvailable($val)) {
             $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_svn');
             return false;
         } else {
             $backendCVS = $this->_getBackend('CVS');
-            if (!$backendCVS->isNameAvailable($val)) {
+            if (! $backendCVS->isNameAvailable($val)) {
                 $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_cvs');
                 return false;
             } else {
                 $backendSystem = $this->_getBackend('System');
-                if (!$backendSystem->isProjectNameAvailable($val)) {
+                if (! $backendSystem->isProjectNameAvailable($val)) {
                     $this->error = $GLOBALS['Language']->getText('include_account', 'used_by_sys');
                     return false;
                 } else {
@@ -733,7 +733,7 @@ class Rule_ProjectName extends Rule_UserName
     public function getPendingProjectRename($val)
     {
         $sm = $this->_getSystemEventManager();
-        if (!$sm->isProjectNameAvailable($val)) {
+        if (! $sm->isProjectNameAvailable($val)) {
             $this->error = $GLOBALS['Language']->getText('rule_user_name', 'error_event_reserved', array($val));
             return false;
         }
@@ -759,7 +759,7 @@ class Rule_ProjectName extends Rule_UserName
      */
     public function isValid($val)
     {
-        return $this->isDNSCompliant($val) && parent::isValid($val)  && $this->isNameAvailable($val)
+        return $this->isDNSCompliant($val) && parent::isValid($val) && $this->isNameAvailable($val)
                    && $this->getPendingProjectRename($val);
     }
 
@@ -792,7 +792,7 @@ class Rule_ProjectFullName extends Rule_UserName
     public function isValid($val)
     {
         $val = trim($val);
-        return !$this->lessThanMin($val) && !$this->greaterThanMax($val, 40);
+        return ! $this->lessThanMin($val) && ! $this->greaterThanMax($val, 40);
     }
 
     /**

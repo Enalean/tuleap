@@ -36,7 +36,7 @@ if (user_isloggedin()) {
         $forum_id = $request->get('forum_id');
 
             // Check permissions
-        if (!forum_utils_access_allowed($forum_id)) {
+        if (! forum_utils_access_allowed($forum_id)) {
             exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
         }
 
@@ -46,7 +46,7 @@ if (user_isloggedin()) {
         $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
         $res = db_query($qry);
         if (db_numrows($res) > 0) {
-            if (!forum_utils_news_access($forum_id) && !user_monitor_forum($forum_id, $user_id)) {
+            if (! forum_utils_news_access($forum_id) && ! user_monitor_forum($forum_id, $user_id)) {
                 exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
             }
         }
@@ -57,7 +57,7 @@ if (user_isloggedin()) {
             forum_delete_monitor($forum_id, $user_id);
         } else {
             // Not yet monitored so add it
-            $forum_monitor_error = !forum_add_monitor($forum_id, $user_id);
+            $forum_monitor_error = ! forum_add_monitor($forum_id, $user_id);
         }
 
      /*

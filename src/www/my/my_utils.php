@@ -91,7 +91,7 @@ function my_hide($svc, $db_item_id, $item_id, $hide)
     }
 
     if ($item_id == $db_item_id) {
-        if (!isset($hide)) {
+        if (! isset($hide)) {
             $hide = $old_hide;
         }
     } else {

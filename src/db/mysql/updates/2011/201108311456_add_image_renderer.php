@@ -49,7 +49,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('widget_image')) {
+        if (! $this->db->tableNameExists('widget_image')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('widget_image table is missing');
         }
     }

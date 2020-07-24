@@ -46,7 +46,7 @@ if (user_isloggedin()) {
             "<P><A HREF=\"/my/\">[" . $Language->getText('global', 'back_home') . "]</A>";
         } else {
             // Not yet monitored so add it
-            $forum_monitor_error = !forum_add_monitor($forum_id, $user_id);
+            $forum_monitor_error = ! forum_add_monitor($forum_id, $user_id);
         }
     } else {
         forum_header(array('title' => $Language->getText('forum_monitor', 'choose_forum_first')));

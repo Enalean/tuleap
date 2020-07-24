@@ -67,13 +67,13 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_cardwall_on_top_column')) {
+        if (! $this->db->tableNameExists('plugin_cardwall_on_top_column')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top_column table is missing');
         }
-        if (!$this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field')) {
+        if (! $this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top_column_mapping_field table is missing');
         }
-        if (!$this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field_value')) {
+        if (! $this->db->tableNameExists('plugin_cardwall_on_top_column_mapping_field_value')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top_column_mapping_field_value table is missing');
         }
     }

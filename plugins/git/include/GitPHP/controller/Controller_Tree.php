@@ -34,7 +34,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
     public function __construct()
     {
         parent::__construct();
-        if (!$this->project) {
+        if (! $this->project) {
             throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
@@ -88,7 +88,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             $this->params['hashbase'] = $_GET['hb'];
         }
 
-        if (!(isset($this->params['hashbase']) || isset($this->params['hash']))) {
+        if (! (isset($this->params['hashbase']) || isset($this->params['hash']))) {
             $this->params['hashbase'] = 'HEAD';
         }
     }
@@ -102,7 +102,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function LoadData() // @codingStandardsIgnoreLine
     {
-        if (!isset($this->params['hashbase'])) {
+        if (! isset($this->params['hashbase'])) {
             // TODO: write a lookup for hash (tree) -> hashbase (commithash) and remove this
             throw new \Exception('Hashbase is required');
         }
@@ -133,7 +133,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             return;
         }
 
-        if (!isset($this->params['hash'])) {
+        if (! isset($this->params['hash'])) {
             if (isset($this->params['file'])) {
                 $this->params['hash'] = $commit->PathToHash($this->params['file']);
             } else {
@@ -165,7 +165,7 @@ class Controller_Tree extends ControllerBase // @codingStandardsIgnoreLine
             );
         }
 
-        if (!$tree->GetCommit()) {
+        if (! $tree->GetCommit()) {
             $tree->SetCommit($commit);
         }
         if (isset($this->params['file'])) {

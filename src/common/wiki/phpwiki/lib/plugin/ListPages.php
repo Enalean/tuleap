@@ -95,7 +95,7 @@ class WikiPlugin_ListPages extends WikiPlugin
             $active_userid = $active_user->_userid;
 
             // if userids is null or empty, fill it with just the active user
-            if (!isset($userids) || !is_array($userids) || !count($userids)) {
+            if (! isset($userids) || ! is_array($userids) || ! count($userids)) {
                 // TKL: moved getBuddies call inside if statement because it was
                 // causing the userids[] parameter to be ignored
                 if (

@@ -73,7 +73,7 @@ function forum_header($params)
             }
 
             echo '<TABLE><TR><TD VALIGN="TOP">';
-            if (!$result || db_numrows($result) < 1) {
+            if (! $result || db_numrows($result) < 1) {
                 echo '
 					<h3>' . $Language->getText('forum_forum_utils', 'news_not_found') . '</h3>';
             } else {
@@ -113,11 +113,11 @@ function forum_header($params)
         echo '<P><H3>' . $Language->getText('forum_forum_utils', 'discuss_forum') . ': <A HREF="/forum/forum.php?forum_id=' . $forum_id . '">' . $forum_name . '</A></H3>';
     }
 
-    if (!isset($params['pv']) || (isset($params['pv']) && !$params['pv'])) {
+    if (! isset($params['pv']) || (isset($params['pv']) && ! $params['pv'])) {
         echo '<P><B>';
 
         $request = HTTPRequest::instance();
-        if ($forum_id && user_isloggedin() && !$request->exist('delete')) {
+        if ($forum_id && user_isloggedin() && ! $request->exist('delete')) {
             if (user_monitor_forum($forum_id, UserManager::instance()->getCurrentUser()->getId())) {
                 $msg = $Language->getText('forum_forum_utils', 'stop_monitor');
             } else {
@@ -129,9 +129,9 @@ function forum_header($params)
             echo '<A HREF="/forum/monitor_thread.php?forum_id=' . $forum_id . '"> ' . html_image("ic/monitor_thread.png", array()) . $Language->getText('forum_forum_utils', 'monitor_thread') . '</A> | ';
 
             echo '<A HREF="/forum/save.php?forum_id=' . $forum_id . '">';
-            echo  html_image("ic/save.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'save_place') . '</A> | ';
+            echo html_image("ic/save.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'save_place') . '</A> | ';
             print ' <a href="forum.php?forum_id=' . $forum_id . '#start_new_thread">';
-            echo  html_image("ic/thread.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
+            echo html_image("ic/thread.png", array()) . ' ' . $Language->getText('forum_forum_utils', 'start_thread') . '</A> | ';
             if (isset($msg_id) && $msg_id) {
                 echo "<A HREF='?msg_id=$msg_id&pv=1'><img src='" . util_get_image_theme("msg.png") . "' border='0'>&nbsp;" . $Language->getText('global', 'printer_version') . "</A> | ";
             } else {
@@ -208,7 +208,7 @@ function forum_add_monitor($forum_id, $user_id)
         $sql = "INSERT INTO forum_monitored_forums (forum_id,user_id) VALUES (" . db_ei($forum_id) . "," . db_ei($user_id) . ")";
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             $feedback .= $Language->getText('forum_forum_utils', 'insert_err');
             return false;
         }
@@ -237,7 +237,7 @@ function forum_create_forum($group_id, $forum_name, $is_public = 1, $create_defa
     "VALUES (" . db_ei($group_id) . ",'" . db_es(htmlspecialchars($forum_name)) . "'," . db_ei($is_public) . ",'" . db_es(htmlspecialchars($description)) . "')";
 
     $result = db_query($sql);
-    if (!$result) {
+    if (! $result) {
         if ($need_feedback) {
             $feedback .= ' ' . $GLOBALS['Language']->getText('forum_forum_utils', 'add_err', array($forum_name)) . ' ';
         }
@@ -277,7 +277,7 @@ function get_forum_name($id)
     */
     $sql = "SELECT forum_name FROM forum_group_list WHERE group_forum_id=" . db_ei($id);
     $result = db_query($sql);
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
         return $Language->getText('forum_forum_utils', 'not_found');
     } else {
         return db_result($result, 0, "forum_name");
@@ -291,7 +291,7 @@ function get_forum_group_id($id)
     */
     $sql = "SELECT group_id FROM forum_group_list WHERE group_forum_id=" . db_ei($id);
     $result = db_query($sql);
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
         return null;
     } else {
         return db_result($result, 0, "group_id");
@@ -317,7 +317,7 @@ function show_thread($thread_id, $et = 0)
 
     $total_rows = 0;
 
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
         return $Language->getText('forum_forum_utils', 'broken_thread');
     } else {
         $title_arr = array();
@@ -450,7 +450,7 @@ function get_next_thread_id()
     */
     $result = db_query("INSERT INTO forum_thread_id VALUES ('')");
 
-    if (!$result) {
+    if (! $result) {
         echo '<H1>' . $Language->getText('global', 'error') . '!</H1>';
         echo db_error();
         exit;
@@ -488,10 +488,10 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
     global $feedback,$Language;
     if (user_isloggedin()) {
         $request = HTTPRequest::instance();
-        if (!$group_forum_id) {
+        if (! $group_forum_id) {
             exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'post_without_id'));
         }
-        if (!$body || !$subject) {
+        if (! $body || ! $subject) {
             exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum_utils', 'include_body_and_subject'));
         }
 
@@ -512,7 +512,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
             echo db_error();
         }
 
-        if (!$thread_id) {
+        if (! $thread_id) {
             $thread_id = get_next_thread_id();
             $is_followup_to = 0;
         } else {
@@ -540,7 +540,7 @@ function post_message($thread_id, $is_followup_to, $subject, $body, $group_forum
 
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             echo $Language->getText('forum_forum_utils', 'insert_fail');
             echo db_error();
             $feedback .= ' ' . $Language->getText('forum_forum_utils', 'post_failed') . ' ';
@@ -759,7 +759,7 @@ function forum_utils_access_allowed($forum_id)
 
     if (db_result($result, 0, 'is_public') != '1') {
         $forum_group_id = db_result($result, 0, 'group_id');
-        if (!user_isloggedin() || !user_ismember($forum_group_id)) {
+        if (! user_isloggedin() || ! user_ismember($forum_group_id)) {
             // If this is a private forum, kick 'em out
             return false;
         }

@@ -58,8 +58,8 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
         if ($show_deleted == 'sometimes') {
             $show_deleted = $args['show_minor'];
         }
-        if (!$show_deleted) {
-            $changes = new NonDeletedRevisionIterator($changes, !$args['show_all']);
+        if (! $show_deleted) {
+            $changes = new NonDeletedRevisionIterator($changes, ! $args['show_all']);
         }
 
         // sort out pages not linked from our page
@@ -71,10 +71,10 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
     // just a numbered list of limit pagenames, without date.
     public function box($args = false, $request = false, $basepage = false)
     {
-        if (!$request) {
+        if (! $request) {
             $request = $GLOBALS['request'];
         }
-        if (!isset($args['limit'])) {
+        if (! isset($args['limit'])) {
             $args['limit'] = 15;
         }
         $args['format'] = 'box';
@@ -95,7 +95,7 @@ class WikiPlugin_RelatedChanges extends WikiPlugin_RecentChanges
         $format = $args['format'];
 
         $fmt_class = $WikiTheme->getFormatter('RelatedChanges', $format);
-        if (!$fmt_class) {
+        if (! $fmt_class) {
             if ($format == 'rss') {
                 $fmt_class = '_RecentChanges_RssFormatter';
             } elseif ($format == 'rss2') {

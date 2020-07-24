@@ -26,7 +26,7 @@ $request = HTTPRequest::instance();
 // Valid group id
 $vGroupId = new Valid_GroupId();
 $vGroupId->required();
-if (!$request->valid($vGroupId)) {
+if (! $request->valid($vGroupId)) {
     exit_error($Language->getText('project_admin_index', 'invalid_p'), $Language->getText('project_admin_index', 'p_not_found'));
 }
 $group_id = $request->get('group_id');
@@ -37,7 +37,7 @@ session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 //  get the Project
 $pm    = ProjectManager::instance();
 $project = $pm->getProject($group_id);
-if (!$project || !is_object($project) || $project->isError()) {
+if (! $project || ! is_object($project) || $project->isError()) {
     exit_no_group();
 }
 
@@ -69,7 +69,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 } else {
                     // If some selected ugroups are not valid display them to the user.
                     $diff = array_diff($ugroups, $validUgroups);
-                    if (!empty($diff)) {
+                    if (! empty($diff)) {
                         $deletedUgroups = array();
                         foreach ($diff as $ugroupId) {
                             $deletedUgroups[] = ugroup_get_name_from_id($ugroupId);
@@ -86,7 +86,7 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
                 if ($pm->setMembershipRequestNotificationUGroup($group_id, $validUgroups)) {
                     $oldUgroups = array();
-                    if ($darUgroups && !$darUgroups->isError() && $darUgroups->rowCount() > 0) {
+                    if ($darUgroups && ! $darUgroups->isError() && $darUgroups->rowCount() > 0) {
                         foreach ($darUgroups as $row) {
                             $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
                         }
@@ -119,13 +119,13 @@ if ($request->isPost() && $request->valid($vFunc)) {
             $vMessage->required();
             $message = trim($request->get('text'));
             $dar = $pm->getMessageToRequesterForAccessProject($group_id);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
-                if (!strcmp($row['msg_to_requester'], $message)) {
+                if (! strcmp($row['msg_to_requester'], $message)) {
                     $updatedMessage = false;
                 }
             }
-            if ($request->valid($vMessage) & !empty($message) & $updatedMessage) {
+            if ($request->valid($vMessage) & ! empty($message) & $updatedMessage) {
                 if ($pm->setMessageToRequesterForAccessProject($group_id, $message)) {
                     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_index', 'member_request_delegation_msg_info'));
                 }
@@ -153,7 +153,7 @@ echo '
 
 echo '<table>';
 echo '<tr><td colspan="2"><p>';
-if (!$project->isPublic()) {
+if (! $project->isPublic()) {
     echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_private_group');
 } else {
     echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_restricted_user');
@@ -175,7 +175,7 @@ echo '</p></td></tr>';
 
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
-if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
     $selectedUgroup = array();
     foreach ($dar as $row) {
         $selectedUgroup[] = $row['ugroup_id'];
@@ -207,7 +207,7 @@ echo '</p></td></tr>';
 
 $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
 $dar = $pm->getMessageToRequesterForAccessProject($group_id);
-if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
     $row = $dar->current();
     if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
         $message = $row['msg_to_requester'];

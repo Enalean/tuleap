@@ -128,7 +128,7 @@ class FRSXMLImporter
         $this->logger->debug("Start import");
 
         $xml_frs = $xml->frs;
-        if (!$xml_frs) {
+        if (! $xml_frs) {
             return true;
         }
 
@@ -314,7 +314,7 @@ class FRSXMLImporter
         $this->logger->debug('metadata gathered for file ' . $name);
 
         $type_id = null;
-        if (isset($attrs['filetype']) && !empty($attrs['filetype'])) {
+        if (isset($attrs['filetype']) && ! empty($attrs['filetype'])) {
             $type_id = $this->getFileTypeDao()->searchTypeId($attrs['filetype']);
             if (is_null($type_id)) {
                 throw new Exception("Invalid filetype '{$attrs['filetype']}'");
@@ -322,7 +322,7 @@ class FRSXMLImporter
         }
 
         $proc_id = null;
-        if (isset($attrs['arch']) && !empty($attrs['arch'])) {
+        if (isset($attrs['arch']) && ! empty($attrs['arch'])) {
             $proc_id = $this->getProcessorDao()->searchProcessorId($project->getID(), $attrs['arch']);
             if (is_null($proc_id)) {
                 throw new Exception("Invalid architecture '{$attrs['arch']}'");
@@ -349,7 +349,7 @@ class FRSXMLImporter
         $this->logger->debug('Copy file to incoming dir');
         $dirPath = $this->file_factory->getSrcDir($project);
         $dest = "$dirPath/$name";
-        if (!copy($src, $dest)) {
+        if (! copy($src, $dest)) {
             throw new Exception("Could not copy $src to $dest");
         }
         $this->logger->debug('Copy done');

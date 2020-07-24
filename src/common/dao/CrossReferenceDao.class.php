@@ -80,7 +80,7 @@ class CrossReferenceDao extends DataAccessObject
                 $this->da->quoteSmart((int) $cross_ref->refTargetGid) . ")";
 
         $res = $this->da->query($sql);
-        return (bool) ($res && !$res->isError());
+        return (bool) ($res && ! $res->isError());
     }
 
     public function existInDb($cross_ref)
@@ -93,7 +93,7 @@ class CrossReferenceDao extends DataAccessObject
               "source_type='" . db_es($cross_ref->insertSourceType) . "' AND " .
               "target_type='" . db_es($cross_ref->insertTargetType) . "'";
         $res = $this->da->query($sql);
-        return (bool) ($res && !$res->isError() && $res->rowCount() >= 1);
+        return (bool) ($res && ! $res->isError() && $res->rowCount() >= 1);
     }
 
     public function fullReferenceExistInDb($cross_ref)

@@ -146,6 +146,6 @@ class Repository
 
     public function isDeleted()
     {
-        return !empty($this->deletion_date);
+        return ! empty($this->deletion_date);
     }
 }

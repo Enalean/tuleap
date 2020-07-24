@@ -110,7 +110,7 @@ class Trees
 
         if ($array2 != null && isset($array2['children'])) {
             foreach ($array2['children'] as $name2 => $node2) {
-                if (!isset($res['children'][$name2])) {
+                if (! isset($res['children'][$name2])) {
                     $res['children'][$name2] = $node2;
                     self::tagTree($res['children'][$name2], 'IN_SECOND');
                 }

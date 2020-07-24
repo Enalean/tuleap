@@ -30,7 +30,7 @@ class FRSValidator
 
     public function addError($error)
     {
-        if (!$this->_errors) {
+        if (! $this->_errors) {
             $this->_errors = array ();
         }
         $this->_errors[] = $error;
@@ -46,7 +46,7 @@ class FRSValidator
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
-            if (! isset($release['name']) || !$release['name'] || $release['name'] == '') {
+            if (! isset($release['name']) || ! $release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project
@@ -57,7 +57,7 @@ class FRSValidator
                 } else {
                     //check if release name exists already
                     $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
-                    if (!$release_exists || count($release_exists) < 1) {
+                    if (! $release_exists || count($release_exists) < 1) {
                         //now check the date
                         if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));
@@ -79,7 +79,7 @@ class FRSValidator
         $frspf = new FRSPackageFactory();
         $frsrf = new FRSReleaseFactory();
         if (isset($release['package_id']) && $release['package_id'] != 'null') {
-            if (!isset($release['name']) || !$release['name'] || $release['name'] == '') {
+            if (! isset($release['name']) || ! $release['name'] || $release['name'] == '') {
                 $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'rel_name_empty'));
             } else {
                 //see if this package belongs to this project
@@ -90,7 +90,7 @@ class FRSValidator
                     if ($release['package_id'] != $res1->getPackageID()) {
                         //changing to a different package for this release
                         $res2 = $frspf->getFRSPackageFromDb($release['package_id'], $group_id);
-                        if (!$res2 || count($res2) < 1) {
+                        if (! $res2 || count($res2) < 1) {
                             //new package_id isn't theirs
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'p_not_yours'));
                         }
@@ -99,7 +99,7 @@ class FRSValidator
                     if (($res1->getPackageID() != $release['package_id']) || ($res1->getPackageID() == $release['package_id'] && $res1->getName() != $release['name'])) {
                         $release_exists = $frsrf->getReleaseIdByName($release['name'], $release['package_id']);
                     }
-                    if (!isset($release_exists) || count($release_exists) < 1) {
+                    if (! isset($release_exists) || count($release_exists) < 1) {
                         //now check the date
                         if (! preg_match("/[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}/", $release['date'])) {
                             $this->addError($GLOBALS['Language']->getText('file_admin_editreleases', 'data_not_parsed'));

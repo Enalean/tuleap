@@ -148,7 +148,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         }
 
         $args = $this->getArgs($argstr, $request);
-        if (!is_numeric($args['min_age'])) {
+        if (! is_numeric($args['min_age'])) {
             $args['min_age'] = -1;
         }
         $this->_args = $args;
@@ -159,7 +159,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $this->preSelectS($args, $request);
 
         $p = $request->getArg('p');
-        if (!$p) {
+        if (! $p) {
             $p = $this->_list;
         }
         $post_args = $request->getArg('admin_remove');
@@ -168,10 +168,10 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
         $pages = array();
         if (
             $p && $request->isPost() &&
-            !empty($post_args['remove']) && empty($post_args['cancel'])
+            ! empty($post_args['remove']) && empty($post_args['cancel'])
         ) {
             // check individual PagePermissions
-            if (!ENABLE_PAGEPERM and !$request->_user->isAdmin()) {
+            if (! ENABLE_PAGEPERM and ! $request->_user->isAdmin()) {
                 $request->_notAuthorized(WIKIAUTH_ADMIN);
                 $this->disabled("! user->isAdmin");
             }
@@ -187,7 +187,7 @@ class WikiPlugin_WikiAdminRemove extends WikiPlugin_WikiAdminSelect
                     $pages[$name] = $c;
                 }
             }
-        } elseif ($p && is_array($p) && !$request->isPost()) { // from WikiAdminSelect
+        } elseif ($p && is_array($p) && ! $request->isPost()) { // from WikiAdminSelect
             $next_action = 'verify';
             foreach ($p as $name => $c) {
                 $name = str_replace(array('%5B','%5D'), array('[',']'), $name);

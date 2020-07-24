@@ -82,7 +82,7 @@ class WikiServiceAdminViews extends WikiViews
 
         $selectedPage = $purifier->purify($page);
         $upageValue   = '';
-        if (!in_array($page, $allPages)) {
+        if (! in_array($page, $allPages)) {
             $selectedPage = '';
             $upageValue   = $purifier->purify($page);
         }
@@ -186,7 +186,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_createdoc', $this->gid);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiDocuments&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_create', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_createWikiDocument();
         }
 
@@ -194,7 +194,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_browsedoc', $this->gid);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiDocuments&' . $hideUrl . '">' . $hideImg . '</a>';
         print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wikidocs_docs', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             $this->_browseWikiDocument();
         }
 
@@ -321,7 +321,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_project_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiPages&' . $hideUrl . '">' . $hideImg . '</a>';
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_project', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_pj_all');
             $allUserPages = WikiPage::getAllUserPages();
             $this->_browsePages($allUserPages);
@@ -330,7 +330,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_empty_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiPages&' . $hideUrl . '">' . $hideImg . '</a>';
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_empty', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_emp_all');
             $wpw = new WikiPageWrapper($this->gid);
             $allEmptyPages = $wpw->getProjectEmptyLinks();
@@ -340,7 +340,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_admin_pages', $this->gid);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiPages&' . $hideUrl . '">' . $hideImg . '</a>';
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_admin', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_adm_all');
             $allAdminPages = WikiPage::getAllAdminPages();
             $this->_browsePages($allAdminPages);
@@ -349,7 +349,7 @@ class WikiServiceAdminViews extends WikiViews
         list($hideFlag, $hideUrl, $hideImg) = hide_url('wiki_internal_pages', $this->gid, true);
         $hurl = '<a href="' . $this->wikiAdminLink . '&view=wikiPages&' . $hideUrl . '">' . $hideImg . '</a>';
         echo $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_intern', array($hurl));
-        if (!$hideFlag) {
+        if (! $hideFlag) {
             print $GLOBALS['Language']->getText('wiki_views_wkserviews', 'wkpage_int_all');
             $allInternalsPages = WikiPage::getAllInternalPages();
             $this->_browsePages($allInternalsPages);
@@ -463,7 +463,7 @@ class WikiServiceAdminViews extends WikiViews
 
             $wai->next();
         }
-        print'<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . '"></td></tr>';
+        print '<td align="right" colspan="4" style="padding-right:50px; "><input type="submit" value="' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'attachment_delete') . '"></td></tr>';
         print '</table>';
         print '<hr/><p><a href="' . $this->wikiAdminLink . '">' . $GLOBALS['Language']->getText('wiki_views_wkserviews', 'back_admin') . '</a></p>' . "\n";
         print '</form>';

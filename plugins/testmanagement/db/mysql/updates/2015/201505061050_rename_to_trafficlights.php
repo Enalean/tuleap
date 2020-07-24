@@ -53,7 +53,7 @@ EOT;
         )";
         $this->db->createTable('plugin_trafficlights', $sql);
 
-        if (!$this->db->tableNameExists('plugin_trafficlights')) {
+        if (! $this->db->tableNameExists('plugin_trafficlights')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_trafficlights table is missing');
         }
     }

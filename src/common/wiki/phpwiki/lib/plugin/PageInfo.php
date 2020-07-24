@@ -72,8 +72,8 @@ class WikiPlugin_PageInfo extends WikiPlugin
             );
         }
 
-        if (!empty($version)) {
-            if (!($revision = $page->getRevision($version))) {
+        if (! empty($version)) {
+            if (! ($revision = $page->getRevision($version))) {
                 NoSuchRevision($request, $page, $version);
             }
         } else {

@@ -65,7 +65,7 @@ class Tracker_DateReminderFactory
         } else {
             $dar = $reminderDao->getDateReminders($this->getTracker()->getId());
         }
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $reminders[] = $this->getInstanceFromRow($row);
             }
@@ -82,7 +82,7 @@ class Tracker_DateReminderFactory
             $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
             $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
-            if (!empty($ugroups)) {
+            if (! empty($ugroups)) {
                 $ugroups          = join(",", $ugroups);
             } else {
                 $ugroups = "";
@@ -119,7 +119,7 @@ class Tracker_DateReminderFactory
     protected function checkDuplicatedReminders($fieldId, $notificationType, $distance, $reminderId = 0)
     {
         $dupilcatedReminders = $this->getDao()->findReminders($this->getTracker()->getId(), $fieldId, $notificationType, $distance, $reminderId);
-        if ($dupilcatedReminders && !$dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
+        if ($dupilcatedReminders && ! $dupilcatedReminders->isError() && $dupilcatedReminders->rowCount() > 0) {
             $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_duplicated');
             throw new Tracker_DateReminderException($errorMessage);
         }
@@ -163,7 +163,7 @@ class Tracker_DateReminderFactory
             $notified         = $this->date_reminder_renderer->scindReminderNotifiedPeople($request);
             $ugroups          = $this->date_reminder_renderer->validateReminderUgroups($notified[0]);
             $roles            = $this->date_reminder_renderer->validateReminderRoles($notified[1]);
-            if (!empty($ugroups)) {
+            if (! empty($ugroups)) {
                 $ugroups      = join(",", $ugroups);
             } else {
                 $ugroups = "";
@@ -201,7 +201,7 @@ class Tracker_DateReminderFactory
     {
         $roles = array();
         $dar = $this->getDao()->getRolesByReminderId($row['reminder_id']);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $da) {
                 switch ($da['role_id']) {
                     case "1":

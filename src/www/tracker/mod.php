@@ -11,7 +11,7 @@
   */
 
 // Check if this tracker is valid (not deleted)
-if (!$ath->isValid()) {
+if (! $ath->isValid()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
 }
 
@@ -20,7 +20,7 @@ $art_field_fact = new ArtifactFieldFactory($ath);
 
 // Printer version ?
 $ro = false;
-if (!$request->exist('pv')) {
+if (! $request->exist('pv')) {
     $pv = false;
     $ro = false;
 } else {

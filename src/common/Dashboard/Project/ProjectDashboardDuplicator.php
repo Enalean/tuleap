@@ -141,7 +141,7 @@ class ProjectDashboardDuplicator
         foreach ($template_column->getWidgets() as $template_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($template_widget->getName());
 
-            if (!$widget || $this->disabled_project_widgets_checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE)) {
+            if (! $widget || $this->disabled_project_widgets_checker->isWidgetDisabled($widget, ProjectDashboardController::DASHBOARD_TYPE)) {
                 continue;
             }
 

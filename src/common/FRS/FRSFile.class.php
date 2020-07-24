@@ -417,7 +417,7 @@ class FRSFile
 
     public function &_getFRSFileDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new FRSFileDao(CodendiDataAccess::instance());
         }
         return $this->dao;
@@ -508,7 +508,7 @@ class FRSFile
         }
         $time = $_SERVER['REQUEST_TIME'] - 3600;
         $dao  = $this->_getFrsFileDao();
-        if (!$dao->existsDownloadLogSince($this->getFileID(), $user_id, $time)) {
+        if (! $dao->existsDownloadLogSince($this->getFileID(), $user_id, $time)) {
             return $dao->logDownload($this, $user_id);
         }
         return true;

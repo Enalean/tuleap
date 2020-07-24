@@ -35,7 +35,7 @@ rcs_id('$Id: HelloWorld.php,v 1.13 2004/02/17 12:11:36 rurban Exp $');
  */
 
 // Constants are defined before the class.
-if (!defined('THE_END')) {
+if (! defined('THE_END')) {
     define('THE_END', "!");
 }
 

@@ -54,16 +54,16 @@ class Docman_MetadataComparator
     public function checkMdDifferences($srcMd, $dstMd, $loveMap)
     {
         $diffArray = array();
-        if (!$dstMd->sameDescription($srcMd)) {
+        if (! $dstMd->sameDescription($srcMd)) {
             $diffArray[] = dgettext('tuleap-docman', 'Description: <strong><em>new text</em></strong>');
         }
-        if (!$dstMd->sameIsEmptyAllowed($srcMd)) {
+        if (! $dstMd->sameIsEmptyAllowed($srcMd)) {
             $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow empty value: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getIsEmptyAllowed()));
         }
-        if (!$dstMd->sameIsMultipleValuesAllowed($srcMd)) {
+        if (! $dstMd->sameIsMultipleValuesAllowed($srcMd)) {
             $diffArray[] = sprintf(dgettext('tuleap-docman', 'Allow multiple selection: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getIsMultipleValuesAllowed()));
         }
-        if (!$dstMd->sameUseIt($srcMd)) {
+        if (! $dstMd->sameUseIt($srcMd)) {
             $diffArray[] = sprintf(dgettext('tuleap-docman', 'Usage: <strong>%1$s</strong>'), $this->getEnabledDisabledText($srcMd->getUseIt()));
         }
         return $diffArray;
@@ -160,7 +160,7 @@ class Docman_MetadataComparator
         // Append to the table the list of values elements in the dst project
         // that where not present in the src project.
         foreach ($dstLoveArray as $love) {
-            if (!isset($matchingLove[$love->getId()])) {
+            if (! isset($matchingLove[$love->getId()])) {
                 $html .= "<tr>\n";
                 // Name
                 $html .= "<td>&nbsp;</td>\n";
@@ -340,7 +340,7 @@ class Docman_MetadataComparator
         // Append to the table the metadata in the dst project that where not
         // present in the src project.
         foreach ($dstMdArray as $md) {
-            if (!isset($matchingMd[$md->getLabel()])) {
+            if (! isset($matchingMd[$md->getLabel()])) {
                 $html .= "<tr>\n";
 
                 // Name

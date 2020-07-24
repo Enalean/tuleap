@@ -161,7 +161,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             true
         );
 
-        if (!$ro) {
+        if (! $ro) {
             echo '<div style="text-align:center"><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('tracker_include_artifact', 'submit') . '"></div>';
         }
         // Followups comments
@@ -184,7 +184,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             }";
         $html .= '</script>';
         $html .= '<div>';
-        if (!$ro) {
+        if (! $ro) {
             if (db_numrows($this->ArtifactType->getCannedResponses())) {
                 $html .= '<p><b>' . $Language->getText('tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
                 $html .= $this->ArtifactType->cannedResponseBox();
@@ -207,7 +207,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $html .= '<TEXTAREA NAME="comment" id="tracker_artifact_comment" ROWS="10" style="width:700px" WRAP="SOFT"></TEXTAREA>';
             }
         }
-        if (!user_isloggedin() && ($pv == 0)) {
+        if (! user_isloggedin() && ($pv == 0)) {
             $html .= $Language->getText('tracker_include_artifact', 'not_logged_in', '/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
             $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
         }
@@ -272,7 +272,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         // Artifact dependencies
         $html = '<B>' . $Language->getText('tracker_include_artifact', 'depend_on') . '</B><BR><P>';
-        if (!$ro) {
+        if (! $ro) {
                 $html .= '
                     <B>' . $Language->getText('tracker_include_artifact', 'aids') . '</B>&nbsp;
                     <input type="text" name="artifact_id_dependent" size="20" maxlength="255">
@@ -347,7 +347,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             'artifact_section_history',
             $Language->getText('tracker_include_artifact', 'change_history'),
             $this->showHistory($group_id, $group_artifact_id),
-            !$is_there_history
+            ! $is_there_history
         );
 
         // Final submit button
@@ -406,7 +406,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             });
             $('" . $id . "_alternate').update('" . addslashes($alternate_text) . "');
             ";
-        if (!$is_open) {
+        if (! $is_open) {
             $html .= "Element.show($('" . $id . "_alternate'));";
         }
         $html .= '</script>';
@@ -424,7 +424,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
     {
         $html = false;
         if ($field->userCanRead($group_id, $group_artifact_id, $user_id)) {
-            $read_only =  $force_read_only || !$field->userCanUpdate($group_id, $group_artifact_id, $user_id);
+            $read_only =  $force_read_only || ! $field->userCanUpdate($group_id, $group_artifact_id, $user_id);
 
             // For multi select box, we need to retrieve all the values
             if ($field->isMultiSelectBox()) {
@@ -434,7 +434,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             }
 
             $field_html  = new ArtifactFieldHtml($field);
-            $label       = $field_html->labelDisplay(false, false, !$read_only);
+            $label       = $field_html->labelDisplay(false, false, ! $read_only);
             $label      .= ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
 
             // original submission field must be displayed read-only,
@@ -489,7 +489,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         // Display submit informations if any
         if ($this->ArtifactType->getSubmitInstructions()) {
-            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODENDI_PURIFIER_FULL);
+            echo $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODENDI_PURIFIER_FULL);
         }
 
         // Beginning of the submission form with fixed fields
@@ -529,7 +529,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
                 // if the field is a special field (except summary and details)
                 // then skip it.
-                if ($field->userCanSubmit($group_id, $group_artifact_id) && (!$field->isSpecial() || $field->getName() == 'summary' || $field->getName() == 'details' )) {
+                if ($field->userCanSubmit($group_id, $group_artifact_id) && (! $field->isSpecial() || $field->getName() == 'summary' || $field->getName() == 'details' )) {
                     // display the artifact field
                     // if field size is greatest than max_size chars then force it to
                     // appear alone on a new line or it won't fit in the page
@@ -548,7 +548,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     }
 
                     list($sz,) = explode("/", $field->getDisplaySize());
-                    $label = $field_html->labelDisplay(false, false, !$ro);
+                    $label = $field_html->labelDisplay(false, false, ! $ro);
                     $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $ro);
 
                     $star = ($field->isEmptyOk() ? '' : '<span class="highlight"><big>*</big></b></span>');
@@ -591,7 +591,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         // Followups comments
         $html = '';
         $html .= '<div>';
-        if (!$ro) {
+        if (! $ro) {
             if (db_numrows($this->ArtifactType->getCannedResponses())) {
                 $html .= '<p><b>' . $Language->getText('tracker_include_artifact', 'use_canned') . '</b>&nbsp;';
                 $html .= $this->ArtifactType->cannedResponseBox();
@@ -615,7 +615,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">' . $hp->purify($Language->getText('tracker_include_artifact', 'is_copy', array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName() . ' #' . $this->getID())), CODENDI_PURIFIER_CONVERT_HTML) . '</TEXTAREA>';
             }
         }
-        if (!user_isloggedin() && ($pv == 0)) {
+        if (! user_isloggedin() && ($pv == 0)) {
             $html .= $Language->getText('tracker_include_artifact', 'not_logged_in', '/account/login.php?return_to=' . urlencode($_SERVER['REQUEST_URI']));
             $html .= '<br><input type="text" name="email" maxsize="100" size="50"/><p>';
         }
@@ -665,7 +665,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $html = '
         <P><B>' . $Language->getText('tracker_include_artifact', 'dependent_on') . '</B><BR>
         <P>';
-        if (!$ro) {
+        if (! $ro) {
             $html .= '
                         <B>' . $Language->getText('tracker_include_artifact', 'aids') . '</B>&nbsp;
                         <input type="text" name="artifact_id_dependent" size="20" maxlength="255" value="' . (int) $this->getID() . '">
@@ -877,7 +877,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         // Display submit informations if any
         if ($this->ArtifactType->getSubmitInstructions()) {
-            echo  $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODENDI_PURIFIER_FULL);
+            echo $hp->purify(util_unconvert_htmlspecialchars($this->ArtifactType->getSubmitInstructions()), CODENDI_PURIFIER_FULL);
         }
 
         // Beginning of the submission form with fixed fields
@@ -912,7 +912,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 // if the field is a special field (except summary and original description)
                 // or if not used by this project  then skip it.
                 // Plus only show fields allowed on the artifact submit_form
-                if ((!$field->isSpecial() || $field->getName() == 'summary' || $field->getName() == 'details')) {
+                if ((! $field->isSpecial() || $field->getName() == 'summary' || $field->getName() == 'details')) {
                     if ($field->userCanSubmit($group_id, $group_artifact_id, $user_id)) {
                         // display the artifact field with its default value
                         // if field size is greatest than max_size chars then force it to

@@ -305,7 +305,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             // submit button
             $submit = '<input type="submit" name="update" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
 
-            if (!$this->getFieldId()) {
+            if (! $this->getFieldId()) {
                 $html .= dgettext('tuleap-tracker', '<p>The artifacts of this tracker does not have any <em>status</em> yet.</p>');
                 $html .= '<p>' . dgettext('tuleap-tracker', 'Feel free to choose one:') . $select . ' ' . $submit . '</p>';
             } else {
@@ -499,7 +499,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
             $open_values[] = (int) $row['open_value_id'];
         }
 
-        if (!$open_values) {
+        if (! $open_values) {
             $open_values[] = 100;
         }
 

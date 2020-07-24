@@ -299,7 +299,7 @@ class DataAccessObject
             $additional_where_statement
         );
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 0) {
             // No items: nice, just set the first one to 0.
             $newRank = 0;
         } else {
@@ -312,7 +312,7 @@ class DataAccessObject
                         (int) $id
                     );
                     $dar = $this->retrieve($sql);
-                    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         $newRank = $row[$rank_key];
                     }
@@ -329,7 +329,7 @@ class DataAccessObject
                         $additional_where_statement
                     );
                     $dar = $this->retrieve($sql);
-                    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         $newRank = $row[$rank_key];
                     }
@@ -379,7 +379,7 @@ class DataAccessObject
                         $order
                     );
                     $dar = $this->retrieve($sql);
-                    if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                    if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                         $row = $dar->current();
                         // This query exchange the two values.
                         // Warning: the order is very important, please check that
@@ -410,7 +410,7 @@ class DataAccessObject
                         $additional_where_statement
                     );
                     $dar = $this->retrieve($sql);
-                    if ($dar && !$dar->isError()) {
+                    if ($dar && ! $dar->isError()) {
                         $row = $dar->current();
                         $rank = $row[$rank_key];
                     }
@@ -450,7 +450,7 @@ class DataAccessObject
     {
         $sql = "SELECT FOUND_ROWS() as nb";
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row['nb'];
         } else {

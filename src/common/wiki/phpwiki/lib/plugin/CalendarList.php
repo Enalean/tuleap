@@ -23,19 +23,19 @@ rcs_id('$Id: CalendarList.php,v 1.9 2006/05/14 17:40:31 rurban Exp $');
  */
 
 // if not defined in config.ini
-if (!defined('PLUGIN_CALENDARLIST_ORDER')) {
+if (! defined('PLUGIN_CALENDARLIST_ORDER')) {
     define('PLUGIN_CALENDARLIST_ORDER', 'normal');
 }
-if (!defined('PLUGIN_CALENDARLIST_NEXT_N_DAYS')) {
+if (! defined('PLUGIN_CALENDARLIST_NEXT_N_DAYS')) {
     define('PLUGIN_CALENDARLIST_NEXT_N_DAYS', '');
 }
-if (!defined('PLUGIN_CALENDARLIST_NEXT_N')) {
+if (! defined('PLUGIN_CALENDARLIST_NEXT_N')) {
     define('PLUGIN_CALENDARLIST_NEXT_N', '');
 }
-if (!defined('PLUGIN_CALENDARLIST_LAST_N_DAYS')) {
+if (! defined('PLUGIN_CALENDARLIST_LAST_N_DAYS')) {
     define('PLUGIN_CALENDARLIST_LAST_N_DAYS', '');
 }
-if (!defined('PLUGIN_CALENDARLIST_LAST_N')) {
+if (! defined('PLUGIN_CALENDARLIST_LAST_N')) {
     define('PLUGIN_CALENDARLIST_LAST_N', '');
 }
 
@@ -167,7 +167,7 @@ class WikiPlugin_CalendarList extends WikiPlugin
         // default to this month
         $now = localtime(time() + 3600 * $request->getPref('timeOffset'), 1);
         foreach (array('month' => $now['tm_mon'] + 1, 'year'  => $now['tm_year'] + 1900) as $param => $dflt) {
-            if (!($args[$param] = intval($args[$param]))) {
+            if (! ($args[$param] = intval($args[$param]))) {
                 $args[$param] = $dflt;
             }
         }

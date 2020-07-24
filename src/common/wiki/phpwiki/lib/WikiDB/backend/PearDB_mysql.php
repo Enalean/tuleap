@@ -16,12 +16,12 @@ class WikiDB_backend_PearDB_mysql extends WikiDB_backend_PearDB
         $dbh = &$this->_dbh;
         $version_tbl = $this->_table_names['version_tbl'];
 
-        $minor_edit = (int) !empty($data['is_minor_edit']);
+        $minor_edit = (int) ! empty($data['is_minor_edit']);
         unset($data['is_minor_edit']);
 
         $mtime = (int) $data['mtime'];
         unset($data['mtime']);
-        assert(!empty($mtime));
+        assert(! empty($mtime));
 
         @$content = (string) $data['%content'];
         unset($data['%content']);

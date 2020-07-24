@@ -50,7 +50,7 @@ if ($request->valid($vMsg)) {
     $forum_name = db_result($result, 0, 'forum_name');
 
         // Check permissions
-    if (!forum_utils_access_allowed($forum_id)) {
+    if (! forum_utils_access_allowed($forum_id)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('forum_forum', 'forum_restricted'));
     }
 
@@ -58,7 +58,7 @@ if ($request->valid($vMsg)) {
     $qry = "SELECT * FROM news_bytes WHERE forum_id=" . db_ei($forum_id);
     $res = db_query($qry);
     if (db_numrows($res) > 0) {
-        if (!forum_utils_news_access($forum_id)) {
+        if (! forum_utils_news_access($forum_id)) {
             exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
         }
     }
@@ -74,7 +74,7 @@ if ($request->valid($vMsg)) {
 
     $result = db_query($sql);
 
-    if (!$result || db_numrows($result) < 1) {
+    if (! $result || db_numrows($result) < 1) {
      /*
       Message not found
      */

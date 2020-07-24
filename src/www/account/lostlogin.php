@@ -67,7 +67,7 @@ if (
     $request->isPost()
     && $request->exist('Update')
     && $request->existAndNonEmpty('form_pw')
-    && !strcmp($request->get('form_pw'), $request->get('form_pw2'))
+    && ! strcmp($request->get('form_pw'), $request->get('form_pw2'))
 ) {
     $password_changer = new PasswordChanger(
         $user_manager,

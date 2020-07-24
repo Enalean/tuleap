@@ -62,7 +62,7 @@ class ReferencesImporter
 
             if (! $configuration->isForce('references')) {
                 $row = $this->dao->getRef($source)->getRow();
-                if (!empty($row)) {
+                if (! empty($row)) {
                     $this->logger->warning("The source $source already exists in the database. It will not be imported.");
                     continue;
                 }

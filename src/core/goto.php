@@ -44,7 +44,7 @@ $vKey = new Valid_String('key');
 $vKey->required();
 $vVal = new Valid_String('val');
 $vVal->required();
-if ((!$request->valid($vKey)) || (!$request->valid($vVal))) {
+if ((! $request->valid($vKey)) || (! $request->valid($vVal))) {
     $GLOBALS['Response']->sendStatusCode(400);
     exit_error(
         $GLOBALS['Language']->getText('global', 'error'),
@@ -141,7 +141,7 @@ if ($request->isAjax()) {
 
                 $at = new ArtifactType($project, $atid);
                 $values = null;
-                if (!$at->isError() && $at->isValid()) {
+                if (! $at->isError() && $at->isValid()) {
                     $art_field_fact = new ArtifactFieldFactory($at);
                     $ah = new ArtifactHtml($at, $aid);
                     $uh = new UserHelper();

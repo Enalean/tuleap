@@ -97,7 +97,7 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
     public function cachestats()
     {
         global $request;
-        if (! defined('USECACHE') or !USECACHE) {
+        if (! defined('USECACHE') or ! USECACHE) {
             return _("no cache used");
         }
         $dbi = $this->_dbi;
@@ -322,13 +322,13 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
 
     public function call($arg, &$availableargs)
     {
-        if (!empty($availableargs[$arg])) {
+        if (! empty($availableargs[$arg])) {
             return $availableargs[$arg]();
         } elseif (method_exists($this, $arg)) { // any defined SystemInfo->method()
             return call_user_func_array(array(&$this, $arg), '');
         } elseif (
             defined($arg) && // any defined constant
-                !in_array($arg, array('ADMIN_PASSWD','DBAUTH_AUTH_DSN'))
+                ! in_array($arg, array('ADMIN_PASSWD','DBAUTH_AUTH_DSN'))
         ) {
             return constant($arg);
         } else {
@@ -397,10 +397,10 @@ class WikiPlugin_SystemInfo extends WikiPluginCached
             $table = HTML::table(array('border' => 1,'cellspacing' => 3,
                                        'cellpadding' => 3));
             foreach ($allargs as $arg => $desc) {
-                if (!$arg) {
+                if (! $arg) {
                     continue;
                 }
-                if (!$desc) {
+                if (! $desc) {
                     $desc = _($arg);
                 }
                 $table->pushContent(HTML::tr(
@@ -453,7 +453,7 @@ function rsum($a, $b)
 function mean(&$hits, $total = false)
 {
     $n = count($hits);
-    if (!$total) {
+    if (! $total) {
         $total = array_reduce($hits, 'rsum');
     }
     return (float) $total / ($n * 1.0);
@@ -470,7 +470,7 @@ function gensym($prefix = "_gensym")
 function stddev(&$hits, $total = false)
 {
     $n = count($hits);
-    if (!$total) {
+    if (! $total) {
         $total = array_reduce($hits, 'rsum');
     }
     $mean = $total / $n;

@@ -46,7 +46,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_statistics_disk_quota_exception')) {
+        if (! $this->db->tableNameExists('plugin_statistics_disk_quota_exception')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_statistics_disk_quota_exception table is missing');
         }
     }

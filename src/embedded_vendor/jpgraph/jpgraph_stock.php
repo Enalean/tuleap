@@ -50,7 +50,7 @@ class StockPlot extends Plot
 
     public function HideEndLines($aHide = true)
     {
-        $this->iEndLines = !$aHide;
+        $this->iEndLines = ! $aHide;
     }
 
     // Gets called before any axis are stroked
@@ -156,12 +156,12 @@ class StockPlot extends Plot
             $this->ModBox($img, $xscale, $yscale, $i, $xl, $xr, $neg);
 
             // Setup image maps
-            if (!empty($this->csimtargets[$i])) {
+            if (! empty($this->csimtargets[$i])) {
                 $this->csimareas .= '<area shape="rect" coords="' .
                 round($xl) . ',' . round($ytop) . ',' .
                 round($xr) . ',' . round($ybottom) . '" ';
                 $this->csimareas .= ' href="' . $this->csimtargets[$i] . '"';
-                if (!empty($this->csimalts[$i])) {
+                if (! empty($this->csimalts[$i])) {
                     $sval = $this->csimalts[$i];
                     $this->csimareas .= " title=\"$sval\" alt=\"$sval\" ";
                 }

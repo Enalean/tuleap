@@ -278,7 +278,7 @@ class AdminController extends TestManagementController
      */
     private function checkIdProvidedValidity(?string $submited_id): void
     {
-        if (!$submited_id || $this->int_validator->validate($submited_id)) {
+        if (! $submited_id || $this->int_validator->validate($submited_id)) {
             return;
         }
         throw new InvalidTrackerIdProvidedException();

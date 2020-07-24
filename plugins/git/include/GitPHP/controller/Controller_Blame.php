@@ -33,7 +33,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
     public function __construct()
     {
         parent::__construct();
-        if (!$this->project) {
+        if (! $this->project) {
             throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
@@ -108,7 +108,7 @@ class Controller_Blame extends ControllerBase // @codingStandardsIgnoreLine
         $commit = $this->project->GetCommit($this->params['hashbase']);
         $this->tpl->assign('commit', $commit);
 
-        if ((!isset($this->params['hash'])) && (isset($this->params['file']))) {
+        if ((! isset($this->params['hash'])) && (isset($this->params['file']))) {
             $this->params['hash'] = $commit->PathToHash($this->params['file']);
         }
 

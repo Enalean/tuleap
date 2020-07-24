@@ -74,10 +74,10 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $status  = true;
         $pm = ProjectManager::instance();
         $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
-        if ($res && !$res->isError()) {
+        if ($res && ! $res->isError()) {
             if ($res->rowCount() == 0) {
                 $dar = $pm->returnProjectAdminsByGroupId($project->getId());
-                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                     foreach ($dar as $row) {
                         $admins[] = $row['email'];
                     }
@@ -93,7 +93,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
                         $dar = $pm->returnProjectAdminsByGroupId($project->getId());
-                        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                             $dars[] = $dar;
                         }
                     } else {
@@ -102,7 +102,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
                 }
                 if (count($ugroups) > 0) {
                     $dar = $this->getUGroup()->returnProjectAdminsByStaticUGroupId($project->getId(), $ugroups);
-                    if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                    if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                         $dars[] = $dar;
                     }
                 }
@@ -117,7 +117,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
             if (count($admins) == 0) {
                 $status = false;
                 $dar = $pm->returnProjectAdminsByGroupId($project->getId());
-                if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+                if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                     foreach ($dar as $row) {
                         $admins[] = $row['email'];
                     }
@@ -182,7 +182,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         }
         $mail->setBodyText($body);
 
-        if (!$mail->send()) {
+        if (! $mail->send()) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))));
         }
 

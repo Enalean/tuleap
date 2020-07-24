@@ -161,7 +161,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getField()
     {
-        if (!$this->field) {
+        if (! $this->field) {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
         return $this->field;
@@ -174,7 +174,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getAllFieldValues()
     {
-        if (!$this->field_values) {
+        if (! $this->field_values) {
             $this->field_values = $this->getField()->getBind()->getAllValues();
         }
         return $this->field_values;

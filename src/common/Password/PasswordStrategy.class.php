@@ -55,7 +55,7 @@ class PasswordStrategy // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingName
     {
         $valid = true;
         foreach ($this->validators as $key => $nop) {
-            if (!$this->validators[$key]->validate($pwd)) {
+            if (! $this->validators[$key]->validate($pwd)) {
                 $valid = false;
                 $this->errors[$key] = $this->validators[$key]->description();
             }

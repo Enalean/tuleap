@@ -47,7 +47,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_artifact_priority')) {
+        if (! $this->db->tableNameExists('tracker_artifact_priority')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact_priority table is missing');
         }
     }

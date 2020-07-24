@@ -196,7 +196,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     {
         if ($this->formElements != null) {
             foreach ($this->formElements as $form) {
-                if (!$form->testImport()) {
+                if (! $form->testImport()) {
                     return false;
                 }
             }
@@ -358,7 +358,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         TrackerXmlImportFeedbackCollector $feedback_collector
     ): void {
         $tracker = $this->getTracker();
-        if (!$tracker) {
+        if (! $tracker) {
             return;
         }
         foreach ($elements as $elem) {

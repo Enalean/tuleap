@@ -55,7 +55,7 @@ class UGroupLiteralizer
     public function getUserGroupsForUserName($user_name)
     {
         $user = UserManager::instance()->getUserByUserName($user_name);
-        if (!$user) {
+        if (! $user) {
             return array();
         }
         return $this->getUserGroupsForUser($user);
@@ -69,7 +69,7 @@ class UGroupLiteralizer
      */
     public function getUserGroupsForUser(PFUser $user)
     {
-        if (!$this->isValidUser($user)) {
+        if (! $this->isValidUser($user)) {
             return array();
         }
         return array_merge(
@@ -80,7 +80,7 @@ class UGroupLiteralizer
 
     public function getProjectUserGroupsForUser(PFUser $user): array
     {
-        if (!$this->isValidUser($user)) {
+        if (! $this->isValidUser($user)) {
             return array();
         }
 

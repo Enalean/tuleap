@@ -41,7 +41,7 @@ class b201501201037_add_show_priority_changes_in_tracker_table extends ForgeUpgr
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('tracker', 'show_priority_changes')) {
+        if (! $this->db->columnNameExists('tracker', 'show_priority_changes')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column show_priority_changes to tracker');
         }
     }

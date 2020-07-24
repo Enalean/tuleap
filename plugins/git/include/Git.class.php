@@ -550,7 +550,7 @@ class Git extends PluginController
         $this->definePermittedActions($repository, $user);
 
         //check permissions
-        if (empty($this->permittedActions) || !$this->isAPermittedAction($this->action)) {
+        if (empty($this->permittedActions) || ! $this->isAPermittedAction($this->action)) {
             $this->addError(dgettext('tuleap-git', 'You are not allowed to access this page'));
             $this->redirect('/plugins/git/' . urlencode($this->project->getUnixNameLowerCase()) . '/');
             return;
@@ -844,7 +844,7 @@ class Git extends PluginController
                 if ($this->request->valid($valid_url)) {
                     $scope = $this->request->get('choose_destination');
                 }
-                if (!empty($repos)) {
+                if (! empty($repos)) {
                     $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
                     $this->addView('forkRepositoriesPermissions');
                 } else {
@@ -1260,7 +1260,7 @@ class Git extends PluginController
 
         foreach ($validators as $validator) {
             $validator->required();
-            if (!$request->valid($validator)) {
+            if (! $request->valid($validator)) {
                 if ($validator->key === 'to_project') {
                     $this->addError(dgettext('tuleap-git', 'No project selected for the fork'));
                 } elseif ($validator->key === 'repos') {

@@ -153,10 +153,10 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
             $child_id  = $relationship['child_id'];
             $children[] = $child_id;
 
-            if (!isset($hierarchy_map[$child_id])) {
+            if (! isset($hierarchy_map[$child_id])) {
                 $hierarchy_map[$child_id] = array();
             }
-            if (!isset($hierarchy_map[$parent_id])) {
+            if (! isset($hierarchy_map[$parent_id])) {
                 $hierarchy_map[$parent_id] = array($child_id);
             } else {
                 $hierarchy_map[$parent_id][] = $child_id;

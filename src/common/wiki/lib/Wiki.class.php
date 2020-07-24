@@ -184,7 +184,7 @@ class Wiki
     public function getLanguage_id()
     {
         // The language of the wiki is the language of all its wiki documents.
-        if (!$this->language_id) {
+        if (! $this->language_id) {
             // We only support one language for all the wiki documents of a project.
             $entry = new WikiEntry();
             $wei   = $entry->getEntryIterator($this->gid);

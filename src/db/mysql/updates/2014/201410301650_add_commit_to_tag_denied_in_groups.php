@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('groups', 'svn_commit_to_tag_denied')) {
+        if (! $this->db->columnNameExists('groups', 'svn_commit_to_tag_denied')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column svn_commit_to_tag_denied not created in system_event');
         }
     }

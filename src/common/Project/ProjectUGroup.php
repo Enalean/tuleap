@@ -139,7 +139,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     protected function getUGroupDao()
     {
-        if (!$this->ugroup_dao) {
+        if (! $this->ugroup_dao) {
             $this->ugroup_dao = new UGroupDao();
         }
         return $this->ugroup_dao;
@@ -152,7 +152,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     protected function getUGroupUserDao()
     {
-        if (!$this->ugroup_user_dao) {
+        if (! $this->ugroup_user_dao) {
             $this->ugroup_user_dao = new UGroupUserDao();
         }
         return $this->ugroup_user_dao;
@@ -222,7 +222,7 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
 
     public function getProject()
     {
-        if (!$this->project) {
+        if (! $this->project) {
             $this->project = ProjectManager::instance()->getProject($this->group_id);
         }
         return $this->project;
@@ -455,10 +455,10 @@ class ProjectUGroup implements User_UGroup // phpcs:ignore PSR1.Classes.ClassDec
      */
     private function assertProjectUGroupAndUserValidity($user)
     {
-        if (!$this->group_id) {
+        if (! $this->group_id) {
             throw new Exception('Invalid group_id');
         }
-        if (!$this->id) {
+        if (! $this->id) {
             throw new UGroup_Invalid_Exception();
         }
         if ($user->isAnonymous()) {

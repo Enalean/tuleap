@@ -4,14 +4,14 @@
 // http://sourceforge.net
 function bookmark_add($bookmark_url, $bookmark_title = "")
 {
-    if (!$bookmark_title) {
+    if (! $bookmark_title) {
         $bookmark_title = $bookmark_url;
     }
     $db_escaped_user_id = db_ei(UserManager::instance()->getCurrentUser()->getId());
     $result = db_query("INSERT into user_bookmarks (user_id, bookmark_url, "
     . "bookmark_title) values ('" . $db_escaped_user_id . "', '" . db_es($bookmark_url) . "', "
     . "'" . db_es($bookmark_title) . "');");
-    if (!$result) {
+    if (! $result) {
         echo db_error();
     }
         // Return bookmark ID

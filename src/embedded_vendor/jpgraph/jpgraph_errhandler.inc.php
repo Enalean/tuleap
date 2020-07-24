@@ -10,11 +10,11 @@
 // Copyright 2006 (c) Aditus Consulting. All rights reserved.
 //========================================================================
 
-if (!defined('DEFAULT_ERR_LOCALE')) {
+if (! defined('DEFAULT_ERR_LOCALE')) {
     define('DEFAULT_ERR_LOCALE', 'en');
 }
 
-if (!defined('USE_IMAGE_ERROR_HANDLER')) {
+if (! defined('USE_IMAGE_ERROR_HANDLER')) {
     define('USE_IMAGE_ERROR_HANDLER', true);
 }
 
@@ -30,12 +30,12 @@ class ErrMsgText
         $file = 'lang/' . $__jpg_err_locale . '.inc.php';
 
         // If the chosen locale doesn't exist try english
-        if (!file_exists(dirname(__FILE__) . '/' . $file)) {
+        if (! file_exists(dirname(__FILE__) . '/' . $file)) {
             $__jpg_err_locale = 'en';
         }
 
         $file = 'lang/' . $__jpg_err_locale . '.inc.php';
-        if (!file_exists(dirname(__FILE__) . '/' . $file)) {
+        if (! file_exists(dirname(__FILE__) . '/' . $file)) {
             die('Chosen locale file ("' . $file . '") for error messages does not exist or is not readable for the PHP process. Please make sure that the file exists and that the file permissions are such that the PHP process is allowed to read this file.');
         }
         require($file);
@@ -45,7 +45,7 @@ class ErrMsgText
     public function Get($errnbr, $a1 = null, $a2 = null, $a3 = null, $a4 = null, $a5 = null)
     {
         global $__jpg_err_locale;
-        if (!isset($this->lt[$errnbr])) {
+        if (! isset($this->lt[$errnbr])) {
             return 'Internal error: The specified error message (' . $errnbr . ') does not exist in the chosen locale (' . $__jpg_err_locale . ')';
         }
         $ea = $this->lt[$errnbr];
@@ -293,11 +293,11 @@ class JpGraphErrObjectImg extends JpGraphErrObject
             $supported = 0;
         }
 
-        if (!function_exists('imagecreatefromstring')) {
+        if (! function_exists('imagecreatefromstring')) {
             $supported = 0;
         }
 
-        if (ob_get_length() || headers_sent() || !($supported & IMG_PNG)) {
+        if (ob_get_length() || headers_sent() || ! ($supported & IMG_PNG)) {
             // Special case for headers already sent or that the installation doesn't support
             // the PNG format (which the error icon is encoded in).
             // Dont return an image since it can't be displayed

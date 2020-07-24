@@ -156,7 +156,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                         $value = $loader->expandPI($plugin_str, $GLOBALS['request'], $markup, $basepage);
                         if (isa($value, 'PageList')) {
                             $value = $value->_pages;
-                        } elseif (!is_array($value)) {
+                        } elseif (! is_array($value)) {
                             trigger_error(
                                 sprintf("Invalid argument %s ignored", htmlentities($arg_array[$i])),
                                 E_USER_WARNING
@@ -208,7 +208,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                             $inputtype . "[][name]"
                         ));
                     }
-                    if (!isset($input['text'])) {
+                    if (! isset($input['text'])) {
                         $input['text'] = gettext($input['name']);
                     }
                     $text = $input['text'];
@@ -235,7 +235,7 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                                     }
                                 }
                                 $div->pushContent(HTML::input($input), $nbsp, $val, $nbsp, "\n");
-                                if (!$nobr) {
+                                if (! $nobr) {
                                     $div->pushContent(HTML::br());
                                 }
                             }
@@ -358,10 +358,10 @@ class WikiPlugin_WikiFormRich extends WikiPlugin
                                       'value' =>  $request->getArg('start_debug'),
             'type'  => 'hidden')));
         }
-        if (!USE_PATH_INFO) {
+        if (! USE_PATH_INFO) {
             $form->pushContent(HiddenInputs(array('pagename' => $basepage)));
         }
-        if (!$already_submit) {
+        if (! $already_submit) {
             if (empty($buttontext)) {
                 $buttontext = $action;
             }

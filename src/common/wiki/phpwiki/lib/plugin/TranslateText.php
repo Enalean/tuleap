@@ -61,8 +61,7 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
 
     public function getDefaultArguments()
     {
-        return
-            array( 'lang'      => false,
+        return array( 'lang'      => false,
                    'pagename'  => '[pagename]',
                    'translate' => false,
                  );
@@ -71,7 +70,7 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
     public function run($dbi, $argstr, &$request, $basepage)
     {
         extract($this->getArgs($argstr, $request));
-        if (!$lang) {
+        if (! $lang) {
             return $this->error(
                 _("This internal action page cannot viewed.") . "\n" .
                 _("You can only use it via the _WikiTranslation plugin.")
@@ -80,7 +79,7 @@ class WikiPlugin_TranslateText extends WikiPlugin__WikiTranslation
 
         $this->lang = $lang;
         //action=save
-        if (!empty($translate) and isset($translate['submit']) and $request->isPost()) {
+        if (! empty($translate) and isset($translate['submit']) and $request->isPost()) {
             $trans = $translate["content"];
             if (empty($trans) or $trans == $pagename) {
                 $header = HTML(

@@ -41,12 +41,12 @@
 // $pv = printable version (=1)
 //
 //  make sure this person has permission to view artifacts
-if (!$ath->userCanView()) {
+if (! $ath->userCanView()) {
     exit_permission_denied();
 }
 
 // Check if this tracker is valid (not deleted)
-if (!$ath->isValid()) {
+if (! $ath->isValid()) {
     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_add', 'invalid'));
 }
 
@@ -54,7 +54,7 @@ if (!$ath->isValid()) {
 //  If it is set then update the user preference.  Also initialize the
 //  artifact report structures.
 if (user_isloggedin()) {
-    if (!$request->exist('report_id')) {
+    if (! $request->exist('report_id')) {
         $report_id = user_get_preference('artifact_browse_report' . $atid);
         if ($report_id == "") {
             // Default value
@@ -74,7 +74,7 @@ if (user_isloggedin()) {
         }
     }
 } else {
-    if (!$request->exist('report_id')) {
+    if (! $request->exist('report_id')) {
             $arf = new ArtifactReportFactory();
             $report_id = $arf->getDefaultReport($atid);
     } else {
@@ -85,14 +85,14 @@ if (user_isloggedin()) {
 // Number of artifacts displayed on screen in one chunk.
 // Default 50
 $chunksz = (int) $request->get('chunksz');
-if (!$chunksz) {
+if (! $chunksz) {
     $chunksz = 50;
 }
 
 // Make sure offset values, search and multisort flags are defined
 // and have a correct value
 $offset = $request->get('offset');
-if (!$offset || $offset < 0) {
+if (! $offset || $offset < 0) {
     $offset = 0;
 }
 $advsrch = $request->get('advsrch');
@@ -104,7 +104,7 @@ if ($msort != 1) {
     $msort = 0;
 }
 $pv = $request->get('pv');
-if (!$pv) {
+if (! $pv) {
     $pv = 0;
 }
 
@@ -114,7 +114,7 @@ if (!$pv) {
   tracker report structures.
   ================================================== */
 if (user_isloggedin()) {
-    if (!isset($report_id)) {
+    if (! isset($report_id)) {
         $report_id = user_get_preference('artifact_browse_report' . $atid);
     } else {
         if ($report_id != user_get_preference('artifact_browse_report' . $atid)) {
@@ -124,7 +124,7 @@ if (user_isloggedin()) {
 }
 
 // If still not defined then force it to system 'Default' report
-if (!isset($report_id) || !$report_id) {
+if (! isset($report_id) || ! $report_id) {
     $report_id = 100;
 }
 
@@ -138,7 +138,7 @@ $prefs = $art_field_fact->extractFieldList(false);
 // Create the HTML report object
 $art_report_html = $report_fact->getArtifactReportHtml($report_id, $atid);
 // {{{ (SR #832) If it does not exist, use default report instead.
-if (!$art_report_html) {
+if (! $art_report_html) {
     $report_id = 100;
     if (user_isloggedin()) {
         user_set_preference('artifact_browse_report' . $atid, $report_id);
@@ -156,7 +156,7 @@ if (!$art_report_html) {
 $all_prefs = array();
 foreach ($prefs as $field => $value_id) {
     $field_object = $art_field_fact->getFieldFromName($field);
-    if (!is_array($value_id)) {
+    if (! is_array($value_id)) {
         unset($prefs[$field]);
         $all_prefs[$field][] = ($field_object && $field_object->isDateField()) ? $value_id : htmlspecialchars($value_id);
         //echo '<br> DBG Setting $prefs['.$field.'] [] = '.$value_id;
@@ -168,7 +168,7 @@ foreach ($prefs as $field => $value_id) {
     if (($field_object) && ($field_object->isDateField())) {
         if ($advsrch) {
             $field_end = $field . '_end';
-            if (!is_array($request->get($field_end))) {
+            if (! is_array($request->get($field_end))) {
                 $all_prefs[$field_end] = array($request->get($field_end));
             } else {
                 $all_prefs[$field_end] = $request->get($field_end);
@@ -176,7 +176,7 @@ foreach ($prefs as $field => $value_id) {
             //echo 'DBG Setting $prefs['.$field.'_end]= '.$prefs[$field.'_end'].'<br>';
         } else {
             $field_op = $field . '_op';
-            if (!$request->get($field_op)) {
+            if (! $request->get($field_op)) {
                 $all_prefs[$field_op] = array('>');
             } else {
                 $all_prefs[$field_op] = array($request->get($field_op));
@@ -198,7 +198,7 @@ $prefs = $all_prefs;
 //   if morder not defined then reuse the one in preferences
 $morder = '';
 if (user_isloggedin()) {
-    if (!$request->exist('morder')) {
+    if (! $request->exist('morder')) {
         $morder = user_get_preference('artifact_browse_order' . $atid);
     } else {
         $morder = $request->get('morder');
@@ -238,7 +238,7 @@ if (isset($morder)) {
     - if no preference and not logged in the use 'open' set
      (Prefs is a string of the form  &field1[]=value_id1&field2[]=value_id2&.... )
   ================================================== */
-if (!$request->exist('set')) {
+if (! $request->exist('set')) {
     if (user_isloggedin()) {
         $custom_pref = user_get_preference('artifact_brow_cust' . $atid);
 
@@ -301,7 +301,7 @@ if ($set == 'my') {
     foreach ($prefs as $field => $arr_val) {
         while ($value_id = current($arr_val)) {
             next($arr_val);
-            if (!is_array($value_id)) {
+            if (! is_array($value_id)) {
                 // Don't add [] for date operator (not really a field)
                 if (substr($field, 0 - strlen('_op')) == '_op') {
                     $pref_stg .= '&' . $field . '=' . urlencode($value_id);

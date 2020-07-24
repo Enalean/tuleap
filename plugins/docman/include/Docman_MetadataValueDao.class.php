@@ -221,7 +221,7 @@ class Docman_MetadataValueDao extends DataAccessObject
      */
     public function delete($fieldId, $itemId)
     {
-        if (!is_array($itemId)) {
+        if (! is_array($itemId)) {
             $itemId = array($itemId);
         }
         $sql = sprintf(

@@ -88,7 +88,7 @@ if ($request->validArray($vServices)) {
     $selectedServices = array_keys($disk_usage_manager->getProjectServices(false));
 }
 
-if ($project && !$project->isError()) {
+if ($project && ! $project->isError()) {
     // Prepare params
     $serviceParam    = '';
     $first    = true;
@@ -103,7 +103,7 @@ if ($project && !$project->isError()) {
     //Get dates for start and end period to watch statistics
     $info = $p->getPluginInfo();
     $statPeriod = $info->getPropertyValueForName('statistics_period');
-    if (!$statPeriod) {
+    if (! $statPeriod) {
         $statPeriod = 3;
     }
 
@@ -145,7 +145,7 @@ if ($project && !$project->isError()) {
     } else {
         echo '<LABEL><b>';
         echo dgettext('tuleap-statistics', 'Total project size:');
-        echo'</b></LABEL>';
+        echo '</b></LABEL>';
         echo $duHtml->sizeReadable($usedProportion);
     }
 

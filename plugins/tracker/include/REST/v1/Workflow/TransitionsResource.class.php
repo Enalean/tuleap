@@ -186,7 +186,7 @@ class TransitionsResource extends AuthenticatedResource
         $this->sendAllowHeaderForTransition();
 
         $transition = $this->getTransitionFactory()->getTransition($id);
-        if (!$transition) {
+        if (! $transition) {
             throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
         }
 
@@ -227,7 +227,7 @@ class TransitionsResource extends AuthenticatedResource
         $this->sendAllowHeaderForTransition();
 
         $transition = $this->getTransitionFactory()->getTransition($id);
-        if (!$transition) {
+        if (! $transition) {
             throw new I18NRestException(404, dgettext('tuleap-tracker', 'Transition not found.'));
         }
 

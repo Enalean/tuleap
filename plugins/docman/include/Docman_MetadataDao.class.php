@@ -86,13 +86,13 @@ class Docman_MetadataDao extends DataAccessObject
     {
         $updated = false;
         $id = false;
-        if (!isset($row['field_id'])) {
+        if (! isset($row['field_id'])) {
             return false;
         }
         $id = (int) $row['field_id'];
         if ($id) {
             $dar = $this->searchById($id);
-            if (!$dar->isError() && $dar->valid()) {
+            if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
                 $set_array = array();
                 foreach ($row as $key => $value) {
@@ -149,7 +149,7 @@ class Docman_MetadataDao extends DataAccessObject
             $row = array('field_id' => $mdId,
                          'label'    => 'field_' . $mdId);
             $updated = $this->updateFromRow($row);
-            if (!$updated) {
+            if (! $updated) {
                 return false;
             } else {
                 return $mdId;

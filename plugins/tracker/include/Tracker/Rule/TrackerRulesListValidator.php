@@ -70,15 +70,15 @@ class TrackerRulesListValidator
                 );
             }
         }
-        return !$error_occured;
+        return ! $error_occured;
     }
 
     private function getDependencies(Tracker_Rule_List $rule, array $dependencies): array
     {
-        if (!isset($dependencies[$rule->source_field])) {
+        if (! isset($dependencies[$rule->source_field])) {
             $dependencies[$rule->source_field] = [];
         }
-        if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
+        if (! isset($dependencies[$rule->source_field][$rule->target_field])) {
             $dependencies[$rule->source_field][$rule->target_field] = [];
         }
         $dependencies[$rule->source_field][$rule->target_field][] = $rule;
@@ -120,7 +120,7 @@ class TrackerRulesListValidator
 
             $valid = $this->areRulesValid($tracker, $source_values, $target_value, $dependencies, $source, $target);
 
-            if (!$valid) {
+            if (! $valid) {
                 $error_occured = true;
                 $this->dealDependencesProblems($source, $target, $values, $target_value, $value_field_list);
             }
@@ -164,7 +164,7 @@ class TrackerRulesListValidator
             if ($value_field_list[$source] === null) {
                 $pb_source_values = [];
             } else {
-                if (!is_array($value_field_list[$source])) {
+                if (! is_array($value_field_list[$source])) {
                     $value_field_list[$source] = [$value_field_list[$source]];
                 }
 
@@ -176,7 +176,7 @@ class TrackerRulesListValidator
             $target_field = $this->form_element_factory->getFormElementListById($target);
 
             if ($target_field !== null) {
-                if ($target_value !== null && !is_array($target_value)) {
+                if ($target_value !== null && ! is_array($target_value)) {
                     $target_value = [$target_value];
                 }
 

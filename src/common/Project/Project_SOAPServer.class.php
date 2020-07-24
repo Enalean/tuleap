@@ -637,7 +637,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private function getProjectMember(Project $project, $userLogin)
     {
         $user = $this->userManager->getUserByUserName($userLogin);
-        if (!$user) {
+        if (! $user) {
             throw new SoapFault('3202', "Invalid user login");
         }
         if ($user->isMember($project->getID())) {
@@ -657,7 +657,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     private function getProjectIfUserIsAdmin($groupId, $sessionKey)
     {
         $project   = $this->projectManager->getProject($groupId);
-        if ($project && !$project->isError()) {
+        if ($project && ! $project->isError()) {
             if ($this->isRequesterAdmin($sessionKey, $project->getID())) {
                 return $project;
             }
@@ -683,7 +683,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     private function returnFeedbackToSoapFault($result)
     {
-        if (!$result) {
+        if (! $result) {
             $this->feedbackToSoapFault();
         }
         return $result;

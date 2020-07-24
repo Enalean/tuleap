@@ -42,7 +42,7 @@ class Tracker_Artifact_Changeset_NewChangesetFieldsValidator extends Tracker_Art
         $last_changeset = $artifact->getLastChangeset();
 
         //we do not validate if we are in submission mode, the field is required and we can't submit the field
-        return !(!$last_changeset && $field->isRequired() && !$field->userCanSubmit());
+        return ! (! $last_changeset && $field->isRequired() && ! $field->userCanSubmit());
     }
 
     protected function validateField(

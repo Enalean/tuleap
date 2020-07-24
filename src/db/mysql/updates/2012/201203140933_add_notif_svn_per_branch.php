@@ -63,7 +63,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('svn_notification')) {
+        if (! $this->db->tableNameExists('svn_notification')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('svn_notification table is missing');
         }
         if ($this->db->columnNameExists('groups', 'svn_events_mailing_list')) {

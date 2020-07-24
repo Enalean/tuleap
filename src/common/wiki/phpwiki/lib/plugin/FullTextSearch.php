@@ -86,7 +86,7 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
 
         if ($quiet) { // see how easy it is with PageList...
             $list = new PageList(false, $exclude, $args);
-            while ($page = $pages->next() and (!$limit or ($count < $limit))) {
+            while ($page = $pages->next() and (! $limit or ($count < $limit))) {
                 $list->addPage($page);
             }
             return $list;
@@ -96,14 +96,14 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         // But the new column types must have a callback then. (showhits)
         // See e.g. WikiAdminSearchReplace for custom pagelist columns
         $list = HTML::dl();
-        if (!$limit or !is_int($limit)) {
+        if (! $limit or ! is_int($limit)) {
             $limit = 0;
         }
         // expand all page wildcards to a list of pages which should be ignored
         if ($exclude) {
             $exclude = explodePageList($exclude);
         }
-        while ($page = $pages->next() and (!$limit or ($count < $limit))) {
+        while ($page = $pages->next() and (! $limit or ($count < $limit))) {
             $name = $page->getName();
             if ($exclude and in_array($name, $exclude)) {
                 continue;
@@ -118,11 +118,11 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         if ($limit and $count >= $limit) { //todo: pager link to list of next matches
             $list->pushContent(HTML::dd(fmt("only %d pages displayed", $limit)));
         }
-        if (!$list->getContent()) {
+        if (! $list->getContent()) {
             $list->pushContent(HTML::dd(_("<no matches>")));
         }
 
-        if (!empty($pages->stoplisted)) {
+        if (! empty($pages->stoplisted)) {
             $list = HTML(
                 HTML::p(fmt(
                     _("Ignored stoplist words '%s'"),

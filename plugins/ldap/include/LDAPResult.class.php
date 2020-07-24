@@ -116,7 +116,7 @@ class LDAPResultIterator implements SeekableIterator, Countable
      */
     public function exist()
     {
-        return !$this->isEmpty();
+        return ! $this->isEmpty();
     }
 
 
@@ -324,7 +324,7 @@ class LDAPResult implements Iterator, Countable
 
     public function exist()
     {
-        return !$this->isEmpty();
+        return ! $this->isEmpty();
     }
 
     public function count()

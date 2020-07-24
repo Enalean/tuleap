@@ -63,21 +63,21 @@ class ArtifactReportFieldDao extends DataAccessObject
             $where = '';
             $i = 0;
             foreach ($new_sizes as $field_name => $col_width) {
-                if (!$sql) {
+                if (! $sql) {
                     $sql .= " UPDATE ";
                 } else {
                     $sql .= ", ";
                 }
                 $sql .= $this->table_name . " AS R_$i ";
 
-                if (!$set) {
+                if (! $set) {
                     $set .= " SET ";
                 } else {
                     $set .= ", ";
                 }
                 $set .= " R_$i.col_width = " . $this->da->escapeInt($col_width);
 
-                if (!$where) {
+                if (! $where) {
                     $where .= " WHERE ";
                 } else {
                     $where .= " AND ";

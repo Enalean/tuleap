@@ -352,7 +352,7 @@ class TrackerDao extends DataAccessObject
 
     private function restrict($restriction_clause, $excluded_tracker_ids)
     {
-        if (!$excluded_tracker_ids) {
+        if (! $excluded_tracker_ids) {
             return "";
         }
         $id_enumeration = implode(',', $excluded_tracker_ids);

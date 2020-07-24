@@ -58,7 +58,7 @@ class WikiService extends Controler
 
         $pm = ProjectManager::instance();
         $go = $pm->getProject($this->gid);
-        if (!$go) {
+        if (! $go) {
             exit_no_group();
         }
 
@@ -68,8 +68,8 @@ class WikiService extends Controler
         $this->checkPermissions();
 
       // If Wiki for project doesn't exist, propose creation ... if user is project admin or wiki admin
-        if (!$this->wiki->exist()) {
-            if ((!user_ismember($this->gid, 'W2')) && (!user_ismember($this->gid, 'A'))) {
+        if (! $this->wiki->exist()) {
+            if ((! user_ismember($this->gid, 'W2')) && (! user_ismember($this->gid, 'A'))) {
                 exit_wiki_empty();
             }
         }
@@ -92,7 +92,7 @@ class WikiService extends Controler
     public function checkPermissions()
     {
       // Check if user can access to whole wiki
-        if (!$this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
+        if (! $this->wiki->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
             $GLOBALS['Response']->addFeedback(
                 'error',
                 $GLOBALS['Language']->getText(
@@ -106,9 +106,9 @@ class WikiService extends Controler
         }
 
       // Check if user can access to selected page
-        if (!empty($_REQUEST['pagename'])) {
+        if (! empty($_REQUEST['pagename'])) {
             $wp = new WikiPage($this->gid, $_REQUEST['pagename']);
-            if (!$wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
+            if (! $wp->isAutorized(UserManager::instance()->getCurrentUser()->getId())) {
                 $GLOBALS['Response']->addFeedback(
                     'error',
                     $GLOBALS['Language']->getText(
@@ -128,11 +128,11 @@ class WikiService extends Controler
    */
     public function request()
     {
-        if (!isset($this->view)) {
+        if (! isset($this->view)) {
             $this->view = 'browse';
         }
 
-        if (!empty($_REQUEST['pagename'])) {
+        if (! empty($_REQUEST['pagename'])) {
             $this->view = 'empty';
         }
 
@@ -173,7 +173,7 @@ class WikiService extends Controler
         }
 
       // If Wiki for project doesn't exist, propose creation...
-        if (!$this->wiki->exist()) {
+        if (! $this->wiki->exist()) {
             if (! isset($_REQUEST['view']) || $_REQUEST['view'] != 'doinstall') {
                 $this->view = 'install';
             } else {

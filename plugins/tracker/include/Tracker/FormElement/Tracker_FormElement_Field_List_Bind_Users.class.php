@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         parent::__construct($field, $default_values, $decorators);
 
-        if (!empty($value_function)) {
+        if (! empty($value_function)) {
             $this->value_function = explode(',', $value_function);
         }
         $this->userManager = UserManager::instance();
@@ -336,7 +336,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     protected function getAdditionnalValue($value_id)
     {
-        if (!isset($this->additionnal_values[$value_id])) {
+        if (! isset($this->additionnal_values[$value_id])) {
             $this->additionnal_values[$value_id] = null;
             if ($user = $this->userManager->getUserById($value_id)) {
                 $this->additionnal_values[$value_id] = new Tracker_FormElement_Field_List_Bind_UsersValue($user->getId());
@@ -693,7 +693,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                     if (is_array($value) && $this->value_function != $value) {
                         if ($this->getDao()->save($this->field->getId(), $value)) {
                             $this->value_function = $value;
-                            if (!$no_redirect) {
+                            if (! $no_redirect) {
                                 $GLOBALS['Response']->addFeedback('info', 'Values updated');
                             }
                         }
@@ -741,12 +741,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     {
         if (parent::testImport()) {
             if (static::class == 'Tracker_FormElement_Field_Text') {
-                if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
+                if (! (isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
                     var_dump($this, 'Properties must be "rows" and "cols"');
                     return false;
                 }
             } elseif (static::class == 'Tracker_FormElement_Field_String') {
-                if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
+                if (! (isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
                     var_dump($this, 'Properties must be "maxchars" and "size"');
                     return false;
                 }
@@ -858,9 +858,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 if (stripos($v, '!') !== false) {
                     //we check the string is an email
                     $rule = new Rule_Email();
-                    if (!$rule->isValid($v)) {
+                    if (! $rule->isValid($v)) {
                         //we check the string correspond to a username
-                        if (!$this->userManager->getUserByIdentifier(substr($v, 1))) {
+                        if (! $this->userManager->getUserByIdentifier(substr($v, 1))) {
                             return false;
                         }
                     }

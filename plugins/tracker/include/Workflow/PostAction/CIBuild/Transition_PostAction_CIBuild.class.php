@@ -86,7 +86,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction
     /** @return bool */
     public function isDefined()
     {
-        return !empty($this->job_url);
+        return ! empty($this->job_url);
     }
 
     /**

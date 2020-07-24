@@ -444,7 +444,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $this->initWikiModuleFromTemplate($group_id, $template_group->getID());
 
         //Create project specific references if template is not default site template
-        if (!$template_group->isSystem()) {
+        if (! $template_group->isSystem()) {
             $this->reference_manager->addProjectReferences($template_group->getID(), $group_id);
         }
 
@@ -514,7 +514,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
         $sql = 'INSERT INTO groups(' . implode(', ', array_keys($insert_data)) . ') VALUES (' . implode(', ', array_values($insert_data)) . ')';
         $result = db_query($sql);
 
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'upd_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
             return false;
         } else {
@@ -543,7 +543,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function initFileModule($group_id)
     {
         $result = db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','" . $this->project_manager->getProject($group_id)->getUnixName() . "')");
-        if (!$result) {
+        if (! $result) {
             [$host, $port] = explode(':', ForgeConfig::get('sys_default_domain'));
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'ins_file_fail', array($host,db_error())));
         }
@@ -568,7 +568,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
             . "2," // wiki_flags
             . "2," // svn_flags
             . "2)"); // news_flags
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'set_owner_fail', array(ForgeConfig::get('sys_email_admin'),db_error())));
         }
 
@@ -583,13 +583,13 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function setMessageToRequesterFromTemplate($group_id, $template_id)
     {
         $dar = $this->project_manager->getMessageToRequesterForAccessProject($template_id);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             $result = $this->project_manager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
         } else {
             $result = $this->project_manager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_msg_to_requester'));
         }
     }
@@ -632,7 +632,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                   WHERE group_id = '$group_id'";
 
         $result = db_query($query);
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_cvs_infos'));
         }
     }
@@ -648,7 +648,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 VALUES (1, $group_id, $current_timestamp)";
 
         $result = db_query($sql);
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
 
@@ -665,7 +665,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                       AND groups.group_id = svn_accessfile_history.group_id";
 
         $result = db_query($query);
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_svn_infos'));
         }
     }
@@ -738,7 +738,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 $ath_temp = new ArtifactType($template_group, $arr_template['group_artifact_id']);
                 $report_mapping_for_this_tracker = array();
                 $new_at_id = $atf->create($group_id, $template_group->getID(), $ath_temp->getID(), db_escape_string($ath_temp->getName()), db_escape_string($ath_temp->getDescription()), $ath_temp->getItemName(), $ugroup_mapping, $report_mapping_for_this_tracker);
-                if (!$new_at_id) {
+                if (! $new_at_id) {
                     $GLOBALS['Response']->addFeedback('error', $atf->getErrorMessage());
                 } else {
                     $report_mapping = $report_mapping + $report_mapping_for_this_tracker;
@@ -804,7 +804,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
                 WHERE g1.group_id = " . db_ei($group_id);
 
         $result = db_query($sql);
-        if (!$result) {
+        if (! $result) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('register_confirmation', 'cant_copy_truncated_emails'));
         }
     }
@@ -834,11 +834,11 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
      */
     private function checkProjectCreationData(ProjectCreationData $data): void
     {
-        if (!$this->rule_short_name->isValid($data->getUnixName())) {
+        if (! $this->rule_short_name->isValid($data->getUnixName())) {
             throw new Project_InvalidShortName_Exception($this->rule_short_name->getErrorMessage());
         }
 
-        if (!$this->rule_full_name->isValid($data->getFullName())) {
+        if (! $this->rule_full_name->isValid($data->getFullName())) {
             throw new Project_InvalidFullName_Exception($this->rule_full_name->getErrorMessage());
         }
 
@@ -856,7 +856,7 @@ class ProjectCreator //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespa
     protected function processProjectCreation(ProjectCreationData $data): Project
     {
         $id = $this->createProject($data);
-        if (!$id) {
+        if (! $id) {
             throw new Project_Creation_Exception();
         }
 

@@ -171,7 +171,7 @@ class NaturePresenterFactory
         }
 
         $row = $this->dao->getFromShortname($shortname);
-        if (!$row) {
+        if (! $row) {
             return null;
         }
         return $this->instantiateFromRow($row);

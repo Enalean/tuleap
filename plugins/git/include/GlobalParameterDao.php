@@ -33,7 +33,7 @@ class GlobalParameterDao extends DataAccessObject
 
         $row = $this->getDB()->row($sql);
 
-        return !empty($row);
+        return ! empty($row);
     }
 
     /**

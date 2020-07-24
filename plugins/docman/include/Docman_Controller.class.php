@@ -395,7 +395,7 @@ class Docman_Controller extends Controler
             }
             exit;
         }
-        if (!$this->request->exist('group_id')) {
+        if (! $this->request->exist('group_id')) {
             $this->feedback->log('error', 'Project is missing.');
             $this->_setView('Error');
         } else {
@@ -449,7 +449,7 @@ class Docman_Controller extends Controler
 
             $item_factory = $this->getItemFactory();
             $root         = $item_factory->getRoot($this->request->get('group_id'));
-            if (!$root) {
+            if (! $root) {
                 // Install
                 $_gid = (int) $this->request->get('group_id');
 
@@ -457,14 +457,14 @@ class Docman_Controller extends Controler
                 $project = $pm->getProject($_gid);
                 $tmplGroupId = (int) $project->getTemplate();
                 $this->_cloneDocman($tmplGroupId, $project, false);
-                if (!$item_factory->getRoot($_gid)) {
+                if (! $item_factory->getRoot($_gid)) {
                     $item_factory->createRoot($_gid, 'roottitle_lbl_key');
                 }
                 $this->_viewParams['redirect_to'] = $_SERVER['REQUEST_URI'];
                 $this->view = 'Redirect';
             } else {
                 $id = $this->request->get('id');
-                if (!$id && $this->request->exist('item')) {
+                if (! $id && $this->request->exist('item')) {
                     $i = $this->request->get('item');
                     if (isset($i['id'])) {
                         $id = $i['id'];
@@ -473,7 +473,7 @@ class Docman_Controller extends Controler
                 if ($id) {
                     $item = $item_factory->getItemFromDb($id);
 
-                    if (!$item) {
+                    if (! $item) {
                         $this->feedback->log('error', dgettext('tuleap-docman', 'Unable to retrieve item. Perhaps it was removed.'));
                         $this->_setView('DocmanError');
                     }
@@ -493,7 +493,7 @@ class Docman_Controller extends Controler
                         $reportItem = $item_factory->getItemFromDb($this->_viewParams['filter']->getItemId());
                         // If item defined in the report exists, use it
                         // otherwise raise an error
-                        if (!$reportItem) {
+                        if (! $reportItem) {
                             $this->feedback->log('warning', dgettext('tuleap-docman', 'The folder associated to this report no longer exists.'));
                         } else {
                             unset($item);
@@ -513,7 +513,7 @@ class Docman_Controller extends Controler
                         $dpm = $this->_getPermissionsManager();
                         $can_read = $dpm->userCanAccess($user, $item->getId());
                         $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
-                        if (!$can_read) {
+                        if (! $can_read) {
                             if ($this->request->get('action') == 'ajax_reference_tooltip') {
                                 $this->_setView('AjaxReferenceTooltipError');
                             } else {
@@ -526,7 +526,7 @@ class Docman_Controller extends Controler
 
                             $get_show_view             = new Docman_View_GetShowViewVisitor();
                             $this->_viewParams['item'] = $item;
-                            if (strpos($view, 'admin') === 0 && !$this->userCanAdmin()) {
+                            if (strpos($view, 'admin') === 0 && ! $this->userCanAdmin()) {
                                 $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to administrate the document manager.'));
                                 $this->view = $item->accept($get_show_view, $this->request->get('report'));
                             } else {
@@ -552,7 +552,7 @@ class Docman_Controller extends Controler
         switch ($view) {
             case 'show':
                 if ($item->isObsolete()) {
-                    if (!$this->userCanAdmin($item->getId())) {
+                    if (! $this->userCanAdmin($item->getId())) {
                         // redirect to details view
                         $this->view = 'Details';
                         break;
@@ -612,7 +612,7 @@ class Docman_Controller extends Controler
                 $mdFactory = new Docman_MetadataFactory($this->_viewParams['group_id']);
                 $valid = $this->validateMetadata($_mdLabel, $md);
 
-                if (!$valid) {
+                if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'Invalid property'));
                     $this->view = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -660,7 +660,7 @@ class Docman_Controller extends Controler
                 $md = null;
                 $vld = $this->validateMetadata($_mdLabel, $md);
                 if ($vld) {
-                    if (!$mdFactory->isHardCodedMetadata($md->getLabel())) {
+                    if (! $mdFactory->isHardCodedMetadata($md->getLabel())) {
                         $valid = true;
                     } else {
                         $logmsg = dgettext('tuleap-docman', 'You are not allowed to delete system properties.');
@@ -669,7 +669,7 @@ class Docman_Controller extends Controler
                     $logmsg = dgettext('tuleap-docman', 'Invalid property');
                 }
 
-                if (!$valid) {
+                if (! $valid) {
                     if ($logmsg != '') {
                         $this->feedback->log('error', $logmsg);
                     }
@@ -721,7 +721,7 @@ class Docman_Controller extends Controler
                     $valid = $this->validateLove($_loveId, $md, $love);
                 }
 
-                if (!$valid) {
+                if (! $valid) {
                     $this->view = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
                 } else {
@@ -759,7 +759,7 @@ class Docman_Controller extends Controler
                     $valid = $this->validateLove($_loveId, $md, $love);
                 }
 
-                if (!$valid) {
+                if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'There is an error in parameters. Back to previous screen.'));
                     $this->view = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
@@ -781,13 +781,13 @@ class Docman_Controller extends Controler
                 if ($this->request->existAndNonEmpty('plugin_docman_metadata_import_group')) {
                     $pm = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('plugin_docman_metadata_import_group'));
-                    if ($srcGroup && !$srcGroup->isError()) {
+                    if ($srcGroup && ! $srcGroup->isError()) {
                         $this->_viewParams['sSrcGroupId'] = $srcGroup->getGroupId();
                         $this->view = 'Admin_MetadataImport';
                         $ok = true;
                     }
                 }
-                if (!$ok) {
+                if (! $ok) {
                     $this->view = 'RedirectAfterCrud';
                     $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
                 }
@@ -823,7 +823,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'move':
-                if (!$this->userCanWrite($item->getId()) || !$this->userCanWrite($item->getParentId())) {
+                if (! $this->userCanWrite($item->getId()) || ! $this->userCanWrite($item->getParentId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to move this item.'));
                     $this->view = 'Details';
                 } else {
@@ -850,7 +850,7 @@ class Docman_Controller extends Controler
                 if ($this->request->exist('cancel')) {
                     $this->_set_redirectView();
                 } else {
-                    if (!$this->userCanWrite($item->getId())) {
+                    if (! $this->userCanWrite($item->getId())) {
                         $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to create something in this folder.'));
                         $this->view = 'Details';
                     } else {
@@ -898,27 +898,27 @@ class Docman_Controller extends Controler
                 . $item->groupId . '&id=' . $item->id . '&action=details&section=notifications';
                 break;
             case 'move_here':
-                if (!$this->request->exist('item_to_move')) {
+                if (! $this->request->exist('item_to_move')) {
                     $this->feedback->log('error', 'Missing parameter.');
                     $this->view = 'DocmanError';
                 } else {
                     $item_to_move = $item_factory->getItemFromDb($this->request->get('item_to_move'));
                     $this->view   = null;
                     if ($this->request->exist('confirm')) {
-                        if (!$item_to_move || !($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
+                        if (! $item_to_move || ! ($this->userCanWrite($item->getId()) && $this->userCanWrite($item_to_move->getId()) && $this->userCanWrite($item_to_move->getParentId()))) {
                             $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to move this item.'));
                             $this->_set_moveView_errorPerms();
                         } else {
                             $this->action = 'move';
                         }
                     }
-                    if (!$this->view) {
+                    if (! $this->view) {
                         $this->_set_redirectView();
                     }
                 }
                 break;
             case 'permissions':
-                if (!$this->userCanManage($item->getId())) {
+                if (! $this->userCanManage($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to set permissions for this item.'));
                     $this->view = 'Details';
                 } else {
@@ -935,7 +935,7 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'action_new_version':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -947,7 +947,7 @@ class Docman_Controller extends Controler
                 }
                 break;
             case 'action_update':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -962,7 +962,7 @@ class Docman_Controller extends Controler
                 $this->_actionParams['item'] = $item;
 
                 $this->action = $view;
-                if (!$this->request->exist('ajax_copy')) {
+                if (! $this->request->exist('ajax_copy')) {
                     $this->_viewParams['default_url_params'] = array('action'  => $_action,
                                                                  'id'      => $_id);
                     $this->view = 'RedirectAfterCrud';
@@ -975,7 +975,7 @@ class Docman_Controller extends Controler
                 $this->_actionParams['item'] = $item;
 
                 $this->action = $view;
-                if (!$this->request->exist('ajax_cut')) {
+                if (! $this->request->exist('ajax_cut')) {
                     $this->_viewParams['default_url_params'] = array('action'  => $_action,
                                                                  'id'      => $_id);
                     $this->view = 'RedirectAfterCrud';
@@ -986,7 +986,7 @@ class Docman_Controller extends Controler
                 $itemToPaste = null;
                 $mode        = null;
                 $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
-                if (!$allowed) {
+                if (! $allowed) {
                     $this->view = 'Details';
                 } else {
                     $this->_viewParams['itemToPaste'] = $itemToPaste;
@@ -1009,7 +1009,7 @@ class Docman_Controller extends Controler
                     $itemToPaste = null;
                     $mode        = null;
                     $allowed = $this->checkPasteIsAllowed($item, $itemToPaste, $mode);
-                    if (!$allowed) {
+                    if (! $allowed) {
                         $this->view = 'Details';
                     } else {
                         $this->_viewParams['importMd'] = false;
@@ -1040,7 +1040,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_create':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1049,7 +1049,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_delete':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1075,7 +1075,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_update':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1151,7 +1151,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_upd_user':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1167,7 +1167,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_del_user':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1186,9 +1186,9 @@ class Docman_Controller extends Controler
                 $table = $atf->getTable();
                 $atrf  = new Docman_ApprovalTableReviewerFactory($table, $item);
                 if (
-                    !$this->userCanRead($item->getId())
-                    || !$atrf->isReviewer($user->getId())
-                    || !$table->isEnabled()
+                    ! $this->userCanRead($item->getId())
+                    || ! $atrf->isReviewer($user->getId())
+                    || ! $table->isEnabled()
                 ) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
@@ -1233,7 +1233,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'approval_notif_resend':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1247,7 +1247,7 @@ class Docman_Controller extends Controler
                 break;
 
             case 'edit':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1287,12 +1287,12 @@ class Docman_Controller extends Controler
                     $this->_set_redirectView();
                 } else {
                     $i = $this->request->get('item');
-                    if (!$i || !isset($i['parent_id'])) {
+                    if (! $i || ! isset($i['parent_id'])) {
                         $this->feedback->log('error', 'Missing parameter.');
                         $this->view = 'DocmanError';
                     } else {
                         $parent = $item_factory->getItemFromDb($i['parent_id']);
-                        if (!$parent || $parent->getGroupId() != $this->getGroupId() || !$this->userCanWrite($parent->getId())) {
+                        if (! $parent || $parent->getGroupId() != $this->getGroupId() || ! $this->userCanWrite($parent->getId())) {
                             $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to create something in this folder.'));
                             $this->_set_createItemView_errorParentDoesNotExist($item, $get_show_view);
                         } else {
@@ -1312,11 +1312,11 @@ class Docman_Controller extends Controler
                                 if ($news) {
                                     $is_news_details = isset($news['details']) && trim($news['details']);
                                     $is_news_summary = isset($news['summary']) && trim($news['summary']);
-                                    if ($is_news_details && !$is_news_summary) {
+                                    if ($is_news_details && ! $is_news_summary) {
                                         $this->feedback->log('error', dgettext('tuleap-docman', 'Error while creating news. Check that subject field is not empty.'));
                                         $valid = false;
                                     }
-                                    if (!$is_news_details && $is_news_summary) {
+                                    if (! $is_news_details && $is_news_summary) {
                                         $this->feedback->log('error', dgettext('tuleap-docman', 'Error while creating news. Check that details field is not empty.'));
                                         $valid = false;
                                     }
@@ -1369,7 +1369,7 @@ class Docman_Controller extends Controler
                 // Fall-through code dealing with new versions creation and update is the same
             case 'update_wl':
             case 'new_version':
-                if (!$this->userCanWrite($item->getId())) {
+                if (! $this->userCanWrite($item->getId())) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
                     $this->view = 'Details';
                 } else {
@@ -1378,10 +1378,10 @@ class Docman_Controller extends Controler
                     if (
                         $view == 'update' &&
                         $this->request->exist('recurse') &&
-                        !$this->request->exist('cancel')
+                        ! $this->request->exist('cancel')
                     ) {
                         $this->_viewParams['recurse'] = $this->request->get('recurse');
-                        if (!$this->request->exist('validate_recurse')) {
+                        if (! $this->request->exist('validate_recurse')) {
                             $updateConfirmed = false;
                         } elseif ($this->request->get('validate_recurse') != 'true') {
                             $updateConfirmed = false;
@@ -1510,7 +1510,7 @@ class Docman_Controller extends Controler
                 if ($this->request->exist('import_search_report_from_group')) {
                     $pm = ProjectManager::instance();
                     $srcGroup = $pm->getProjectFromAutocompleter($this->request->get('import_search_report_from_group'));
-                    if ($srcGroup && !$srcGroup->isError()) {
+                    if ($srcGroup && ! $srcGroup->isError()) {
                         $this->_actionParams['sGroupId']       = $this->_viewParams['group_id'];
                         $this->_actionParams['sImportGroupId'] = $srcGroup->getGroupId();
                         $this->_actionParams['sImportReportId'] = null;
@@ -1554,7 +1554,7 @@ class Docman_Controller extends Controler
     public $item_factory;
     public function getItemFactory()
     {
-        if (!$this->item_factory) {
+        if (! $this->item_factory) {
             $this->item_factory = new Docman_ItemFactory();
         }
         return $this->item_factory;
@@ -1563,7 +1563,7 @@ class Docman_Controller extends Controler
     public $metadataFactory;
     private function _getMetadataFactory($groupId)
     {
-        if (!isset($metadataFactory[$groupId])) {
+        if (! isset($metadataFactory[$groupId])) {
             $metadataFactory[$groupId] = new Docman_MetadataFactory($groupId);
         }
         return $metadataFactory[$groupId];
@@ -1580,7 +1580,7 @@ class Docman_Controller extends Controler
         if ($atf && $atf->tableExistsForItem()) {
             $vAppTable = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
             $vAppTable->required();
-            if (!$request->valid($vAppTable)) {
+            if (! $request->valid($vAppTable)) {
                 $this->feedback->log('error', dgettext('tuleap-docman', 'Please choose option for creating approval table'));
                 return false;
             }
@@ -1596,7 +1596,7 @@ class Docman_Controller extends Controler
             if (is_a($field, 'Docman_MetadataHtml')) {
                 $fv = $field->getValidator($this->request);
                 if ($fv !== null) {
-                    if (!is_array($fv)) {
+                    if (! is_array($fv)) {
                         $validatorList = array($fv);
                     } else {
                         $validatorList = $fv;
@@ -1604,7 +1604,7 @@ class Docman_Controller extends Controler
                 }
             } else {
                 if (isset($field['validator'])) {
-                    if (!is_array($field['validator'])) {
+                    if (! is_array($field['validator'])) {
                         $validatorList = array($field['validator']);
                     } else {
                         $validatorList = $field['validator'];
@@ -1614,7 +1614,7 @@ class Docman_Controller extends Controler
 
             if ($validatorList !== null) {
                 foreach ($validatorList as $v) {
-                    if (!$v->isValid()) {
+                    if (! $v->isValid()) {
                         $valid = false;
                         foreach ($v->getErrors() as $error) {
                             $this->feedback->log('error', $error);
@@ -1726,7 +1726,7 @@ class Docman_Controller extends Controler
         $type = $itemFactory->getItemTypeForItem($item);
         if (PLUGIN_DOCMAN_ITEM_TYPE_FOLDER != $type) {
             $this->feedback->log('error', dgettext('tuleap-docman', 'You cannot paste something into a document.'));
-        } elseif (!$this->userCanWrite($item->getId())) {
+        } elseif (! $this->userCanWrite($item->getId())) {
             $this->feedback->log('error', dgettext('tuleap-docman', 'You do not have sufficient access rights to edit this item.'));
         } else {
             $copiedItemId = $itemFactory->getCopyPreference($user);
@@ -1806,7 +1806,7 @@ class Docman_Controller extends Controler
 
     private function getItemHierarchy($rootItem)
     {
-        if (!isset($this->hierarchy[$rootItem->getId()])) {
+        if (! isset($this->hierarchy[$rootItem->getId()])) {
             $itemFactory = new Docman_ItemFactory($rootItem->getGroupId());
             $user = $this->getUser();
             $this->hierarchy[$rootItem->getId()] = $itemFactory->getItemTree($rootItem, $user, false, true);

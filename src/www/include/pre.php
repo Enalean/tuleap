@@ -49,7 +49,7 @@ $xml_security = new XML_Security();
 $xml_security->disableExternalLoadOfEntities();
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
-if (!defined('IS_SCRIPT')) {
+if (! defined('IS_SCRIPT')) {
     if (php_sapi_name() == "cli") {
         // Backend scripts should never ends because of lack of time or memory
         ini_set('max_execution_time', 0);
@@ -66,7 +66,7 @@ while (count($_REQUEST)) {
     array_pop($_REQUEST);
 }
 
-if (!ini_get('variables_order')) {
+if (! ini_get('variables_order')) {
         $_REQUEST = array_merge($_GET, $_POST);
 } else {
     $g_pos = strpos(strtolower(ini_get('variables_order')), 'g');
@@ -103,7 +103,7 @@ foreach (
 //}}}
 
 //{{{ define undefined variables
-if (!isset($GLOBALS['feedback'])) {
+if (! isset($GLOBALS['feedback'])) {
     $GLOBALS['feedback'] = "";  //By default the feedbak is empty
 }
 
@@ -129,7 +129,7 @@ $cookie_manager = new CookieManager();
 $loader_scheduler = new LoaderScheduler($cookie_manager, $plugin_loader);
 $loader_scheduler->loadPluginsThenStartSession(IS_SCRIPT);
 
-if (!IS_SCRIPT) {
+if (! IS_SCRIPT) {
     header('X-UA-Compatible: IE=Edge');
     header('Referrer-Policy: no-referrer-when-downgrade, strict-origin, same-origin');
 
@@ -202,7 +202,7 @@ if (! defined('FRONT_ROUTER')) {
 
 // Check URL for valid hostname and valid protocol
 
-if (!IS_SCRIPT) {
+if (! IS_SCRIPT) {
     if (! defined('FRONT_ROUTER')) {
         $urlVerifFactory = new URLVerificationFactory($event_manager);
         $global_server   = $_SERVER ?? [];
@@ -218,7 +218,7 @@ if (!IS_SCRIPT) {
 }
 
 //Check post max size
-if ($request->exist('postExpected') && !$request->exist('postReceived')) {
+if ($request->exist('postExpected') && ! $request->exist('postReceived')) {
     $e = 'You tried to upload a file that is larger than the Codendi post_max_size setting.';
     exit_error('Error', $e);
 }

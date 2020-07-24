@@ -136,7 +136,7 @@ class FileImporter
         $project_name = $this->getProjectUnixName($entry);
         if ($project_name) {
             $project = $this->project_manager->getProjectByUnixName($project_name);
-            if ($project && !$project->isError()) {
+            if ($project && ! $project->isError()) {
                 return $project->getId();
             }
         }

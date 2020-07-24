@@ -339,22 +339,22 @@ class GraphOnTrackersV5_Engine_Gantt extends GraphOnTrackersV5_Engine
         $fin   = null;
         foreach (array('start', 'due', 'finish') as $date) {
             if ($data[$date]) {
-                if (!$debut) {
+                if (! $debut) {
                     $debut = $data[$date];
                 } else {
                     $debut = min($debut, $data[$date]);
                 }
             }
-            if (!$fin) {
+            if (! $fin) {
                 $fin = $data[$date];
             } else {
                 $fin = max($fin, $data[$date]);
             }
         }
-        if (!$debut) {
+        if (! $debut) {
             $debut = date($format, strtotime('now'));
         }
-        if (!$fin) {
+        if (! $fin) {
             $fin = $debut;
         }
 

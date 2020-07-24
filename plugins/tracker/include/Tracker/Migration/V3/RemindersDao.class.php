@@ -37,7 +37,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
         foreach ($this->retrieve($sql) as $old_date_reminder) {
             $ugroups = $this->extractUgroups($old_date_reminder['notified_people']);
             $roles = $this->extractTrackerRoles($old_date_reminder['notified_people']);
-            if (! $ugroups && !$roles) {
+            if (! $ugroups && ! $roles) {
                 continue;
             }
 
@@ -87,7 +87,7 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject
         $sql = "INSERT INTO tracker_reminder (tracker_id, field_id, ugroups, notification_type, distance, status)
                 VALUES ($tv5_id, $field_id, $ugroups,  $notification_type, $distance, $status)";
         $reminderId = $this->updateAndGetLastId($sql);
-        if ($reminderId && !empty($roles)) {
+        if ($reminderId && ! empty($roles)) {
             $values = array();
             foreach ($roles as $role) {
                 $role = (int) $this->da->escapeInt($role);

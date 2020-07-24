@@ -80,7 +80,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
-        if (!$args['pagename']) {
+        if (! $args['pagename']) {
             return $this->error(_("No pagename specified"));
         }
 
@@ -88,7 +88,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
         $forum = $request->getArg('forum');
         $request->setArg('forum', false);
 
-        if ($request->isPost() and !empty($forum['add'])) {
+        if ($request->isPost() and ! empty($forum['add'])) {
             return $this->add($request, $forum, 'wikiforum');
         }
 
@@ -96,7 +96,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
         // for new comments
         $html = HTML();
         foreach (explode(',', $args['mode']) as $show) {
-            if (!empty($seen[$show])) {
+            if (! empty($seen[$show])) {
                 continue;
             }
             $seen[$show] = 1;

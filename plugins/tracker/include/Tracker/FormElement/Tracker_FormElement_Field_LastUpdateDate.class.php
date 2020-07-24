@@ -200,7 +200,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        if (!$value) {
+        if (! $value) {
             // TODO use $changeset instead of $artifact->getLastChangeset()
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
@@ -267,7 +267,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
     protected function fetchTooltipValue(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
         $html = '';
-        if (!$value) {
+        if (! $value) {
             // TODO use $changeset instead of $artifact->getLastChangeset()
             // see @todo in the comment
             $value = $this->getChangesetValue($artifact->getLastChangeset(), null, false);
@@ -375,7 +375,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
         $artifacts = array();
         $dao = new Tracker_Artifact_ChangesetDao();
         $dar = $dao->getArtifactsByFieldAndLastUpdateDate($trackerId, $date);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {
                 $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);

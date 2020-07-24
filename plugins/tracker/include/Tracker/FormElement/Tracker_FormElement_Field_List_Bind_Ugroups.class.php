@@ -451,7 +451,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
     private static function getSelectedUgroupIds($value)
     {
-        if (!$value->isHidden()) {
+        if (! $value->isHidden()) {
             return $value->getUgroupId();
         }
     }

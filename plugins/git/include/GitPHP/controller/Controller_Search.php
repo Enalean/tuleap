@@ -45,7 +45,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
 
         parent::__construct();
 
-        if (!$this->project) {
+        if (! $this->project) {
             throw new MessageException(dgettext("gitphp", 'Project is required'), true);
         }
     }
@@ -89,12 +89,12 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
      */
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
-        if (!isset($this->params['searchtype'])) {
+        if (! isset($this->params['searchtype'])) {
             $this->params['searchtype'] = self::SEARCH_COMMIT;
         }
 
-        if ((!isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
-            throw new  MessageException(sprintf(dngettext("gitphp", 'You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
+        if ((! isset($this->params['search'])) || (strlen($this->params['search']) < 2)) {
+            throw new MessageException(sprintf(dngettext("gitphp", 'You must enter search text of at least %1$d character', 'You must enter search text of at least %1$d characters', 2), 2), true);
         }
 
         if (isset($_GET['hb'])) {

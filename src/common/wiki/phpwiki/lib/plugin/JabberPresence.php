@@ -13,7 +13,7 @@ rcs_id('$Id: JabberPresence.php,v 1.3 2004/11/21 11:59:26 rurban Exp $');
  * @author: Arnaud Fontaine
  */
 
-if (!defined('MY_JABBER_ID')) {
+if (! defined('MY_JABBER_ID')) {
     define('MY_JABBER_ID', $GLOBALS['request']->_user->UserName() . "@jabber.com"); // or "@netflint.net"
 }
 

@@ -48,7 +48,7 @@ class ForumML_HTMLPurifier extends Codendi_HTMLPurifier
     public static function instance()
     {
      //static $purifier;
-        if (!isset(self::$ForumML_HTMLPurifier_instance)) {
+        if (! isset(self::$ForumML_HTMLPurifier_instance)) {
             $c = self::class;
             self::$ForumML_HTMLPurifier_instance = new $c();
         }

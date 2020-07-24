@@ -41,7 +41,7 @@ class LDAP_UserGroupDao extends DataAccessObject
         $sql = 'SELECT * FROM plugin_ldap_ugroup' .
             ' WHERE ugroup_id = ' . db_ei($ugroupId);
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return $dar->getRow();
         } else {
             return false;
@@ -129,7 +129,7 @@ class LDAP_UserGroupDao extends DataAccessObject
         $ret = array();
         $sql = ugroup_db_get_members($id);
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $ret[$row['user_id']] = $row['user_id'];
             }
@@ -169,7 +169,7 @@ class LDAP_UserGroupDao extends DataAccessObject
         $sql = "SELECT * FROM plugin_ldap_ugroup
                 WHERE ugroup_id = " . $ugroup_id . " and synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs  = $this->retrieve($sql);
-        if (!empty($rs) && $rs->rowCount() == 1) {
+        if (! empty($rs) && $rs->rowCount() == 1) {
             return true;
         }
         return false;
@@ -188,7 +188,7 @@ class LDAP_UserGroupDao extends DataAccessObject
         $sql = 'SELECT * FROM plugin_ldap_ugroup
                 WHERE ugroup_id = ' . $ugroup_id . ' and bind_option = ' . $this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
         $rs  = $this->retrieve($sql);
-        if (!empty($rs) && $rs->rowCount() == 1) {
+        if (! empty($rs) && $rs->rowCount() == 1) {
             return true;
         }
         return false;
@@ -209,7 +209,7 @@ class LDAP_UserGroupDao extends DataAccessObject
                         AND bind_option = " . $this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION) . "
                         AND synchro_policy = " . $this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
         $rs  = $this->retrieve($sql);
-        if (!empty($rs) && $rs->rowCount() == 1) {
+        if (! empty($rs) && $rs->rowCount() == 1) {
             return false;
         }
         return true;

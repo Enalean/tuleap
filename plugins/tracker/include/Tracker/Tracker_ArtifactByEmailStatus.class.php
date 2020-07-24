@@ -94,7 +94,7 @@ class Tracker_ArtifactByEmailStatus
      */
     public function isSemanticConfigured(Tracker $tracker)
     {
-        return !$this->isCreationEnabled($tracker) || $this->isSemanticDefined($tracker);
+        return ! $this->isCreationEnabled($tracker) || $this->isSemanticDefined($tracker);
     }
 
     /**
@@ -102,7 +102,7 @@ class Tracker_ArtifactByEmailStatus
      */
     public function isRequiredFieldsConfigured(Tracker $tracker)
     {
-        return !$this->isCreationEnabled($tracker) || !$this->isSemanticDefined($tracker) || $this->isRequiredFieldsPossible($tracker);
+        return ! $this->isCreationEnabled($tracker) || ! $this->isSemanticDefined($tracker) || $this->isRequiredFieldsPossible($tracker);
     }
 
     /**

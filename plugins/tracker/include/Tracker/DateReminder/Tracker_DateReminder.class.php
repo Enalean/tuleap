@@ -115,7 +115,7 @@ class Tracker_DateReminder
      */
     public function getField()
     {
-        if (!$this->field) {
+        if (! $this->field) {
             $this->field = Tracker_FormElementFactory::instance()->getUsedFormElementById($this->getFieldId());
         }
         return $this->field;
@@ -248,11 +248,11 @@ class Tracker_DateReminder
         $recipients    = array();
         $ugroups       = $this->getUgroups(true);
         $roles         = $this->getRoles();
-        if (!empty($ugroups)) {
+        if (! empty($ugroups)) {
             $recipients = array_merge($recipients, $this->getRecipientsFromUgroups());
         }
 
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             $recipients = array_merge($recipients, $this->getRecipientsFromRoles($artifact));
         }
 
@@ -344,7 +344,7 @@ class Tracker_DateReminder
         $ugroupsLabel   = '';
         $ugroupManager  = $this->getUGroupManager();
         $ugroups        = explode(',', $this->ugroups);
-        if (!empty($ugroups)) {
+        if (! empty($ugroups)) {
             foreach ($ugroups as $ugroup) {
                 $ugroupsLabel  .= ' "' . \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroupManager->getById($ugroup)->getName()) . ' "';
             }

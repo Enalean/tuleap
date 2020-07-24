@@ -89,14 +89,14 @@ function random_good_password($minlength = 5, $maxlength = 8)
   * for easier coding.
   */
 foreach (array('SERVER','GET','POST','ENV') as $k) {
-    if (!isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
+    if (! isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
         $GLOBALS['HTTP_' . $k . '_VARS'] = $GLOBALS['_' . $k];
     }
 }
 unset($k);
 
 $posted = $_POST;
-if (!empty($posted['create'])) {
+if (! empty($posted['create'])) {
     $new_password = random_good_password();
     echo "<p>The newly created random password is:<br />\n<br />&nbsp;&nbsp;&nbsp;\n<tt><strong>",
          htmlentities($new_password),"</strong></tt></p>\n";

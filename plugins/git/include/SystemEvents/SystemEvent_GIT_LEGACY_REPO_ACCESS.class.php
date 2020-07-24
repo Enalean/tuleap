@@ -28,7 +28,7 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS extends SystemEvent
         $parameters  = $this->getParametersAsArray();
         //repo id
         $repositoryId = '';
-        if (!empty($parameters[0])) {
+        if (! empty($parameters[0])) {
             $repositoryId = $parameters[0];
         } else {
             $this->error('Missing argument repository id');
@@ -36,7 +36,7 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS extends SystemEvent
         }
         //repo access
         $repositoryAccess = '';
-        if (!empty($parameters[1])) {
+        if (! empty($parameters[1])) {
             $repositoryAccess = $parameters[1];
         } else {
             $this->error('Missing argument repository access');
@@ -59,6 +59,6 @@ class SystemEvent_GIT_LEGACY_REPO_ACCESS extends SystemEvent
 
     public function verbalizeParameters($with_link)
     {
-        return  $this->parameters;
+        return $this->parameters;
     }
 }

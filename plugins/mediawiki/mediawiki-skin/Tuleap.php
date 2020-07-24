@@ -10,7 +10,7 @@
  * @ingroup Skins
  */
 
-if (!defined('MEDIAWIKI')) {
+if (! defined('MEDIAWIKI')) {
     die(-1);
 }
 
@@ -149,7 +149,7 @@ class TuleapTemplate extends BaseTemplate
         <?php
         $ul_shown = false;
         foreach ($this->getPersonalTools() as $key => $item) {
-            if (!$ul_shown) {
+            if (! $ul_shown) {
                 ?>
             <ul<?php $this->html('userlangattributes') ?>>
                 <?php
@@ -213,13 +213,13 @@ class TuleapTemplate extends BaseTemplate
 
     protected function renderPortals($sidebar)
     {
-        if (!isset($sidebar['SEARCH'])) {
+        if (! isset($sidebar['SEARCH'])) {
             $sidebar['SEARCH'] = true;
         }
-        if (!isset($sidebar['TOOLBOX'])) {
+        if (! isset($sidebar['TOOLBOX'])) {
             $sidebar['TOOLBOX'] = true;
         }
-        if (!isset($sidebar['LANGUAGES'])) {
+        if (! isset($sidebar['LANGUAGES'])) {
             $sidebar['LANGUAGES'] = true;
         }
 

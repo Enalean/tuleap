@@ -40,7 +40,7 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
                ' WHERE user_id = ' . $this->da->escapeInt($userId) .
                ' AND service_id = ' . $this->da->escapeInt($serviceId);
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -66,7 +66,7 @@ class AdminDelegation_UserServiceDao extends DataAccessObject
                ' WHERE user_id = ' . $this->da->escapeInt($userId) .
                ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return true;
         } else {
             return false;

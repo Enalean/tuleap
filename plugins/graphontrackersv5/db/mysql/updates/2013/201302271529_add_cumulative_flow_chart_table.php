@@ -37,7 +37,7 @@ EOT;
 
     public function up()
     {
-        if (!$this->db->tableNameExists('plugin_graphontrackersv5_cumulative_flow_chart')) {
+        if (! $this->db->tableNameExists('plugin_graphontrackersv5_cumulative_flow_chart')) {
             $sql = "CREATE TABLE plugin_graphontrackersv5_cumulative_flow_chart(
   id int(11)  NOT NULL PRIMARY KEY ,
   field_id int(11),
@@ -54,7 +54,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_graphontrackersv5_cumulative_flow_chart')) {
+        if (! $this->db->tableNameExists('plugin_graphontrackersv5_cumulative_flow_chart')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('An error occured while adding table plugin_graphontrackersv5_cumulative_flow_chart');
         }
     }

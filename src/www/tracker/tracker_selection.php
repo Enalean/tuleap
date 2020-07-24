@@ -50,7 +50,7 @@ function doSelection(form) {
     $group_id = $request->getValidated('group_id', 'GroupId');
     $pm = ProjectManager::instance();
     $group = $pm->getProject($group_id);
-if (!$group || !is_object($group) || $group->isError()) {
+if (! $group || ! is_object($group) || $group->isError()) {
     exit_no_group();
 }
 

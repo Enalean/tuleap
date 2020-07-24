@@ -285,7 +285,7 @@ class hudsonViews extends Views
             if ($project->usesCVS()) {
                 echo '  <th>' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'header_table_cvs_trigger')) . '</th>';
             }
-            if (!empty($services)) {
+            if (! empty($services)) {
                 foreach ($services as $service) {
                     echo '  <th>' . $purifier->purify($service['title']) . '</th>';
                 }
@@ -358,7 +358,7 @@ class hudsonViews extends Views
                             echo '  <td>&nbsp;</td>';
                         }
                     }
-                    if (!empty($services)) {
+                    if (! empty($services)) {
                         foreach ($services as $service) {
                             if (isset($service['used'][$job_id]) && $service['used'][$job_id] == true) {
                                 echo '  <td align="center"><img src="' . $purifier->purify(hudsonPlugin::ICONS_PATH) . 'server_lightning.png" alt="' . $purifier->purify($service['title']) . '" title="' . $purifier->purify($service['title']) . '"></td>';
@@ -477,7 +477,7 @@ class hudsonViews extends Views
                         </div>
                     </div>';
         }
-        if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
+        if ($project->usesSVN() || $project->usesCVS() || ! empty($services)) {
             echo '  <div class="control-group">
                         <label class="control-label" for="hudson_job_url">' . $GLOBALS['Language']->getText('plugin_hudson', 'form_job_use_trigger') . '</label>
                             <div class="controls">';

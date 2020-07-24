@@ -69,29 +69,29 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
         $deleteState = true;
 
         if ($project = $this->getProject($groupId)) {
-            if (!$this->removeProjectMembers($project)) {
+            if (! $this->removeProjectMembers($project)) {
                 $this->error("Could not remove project users");
                 $deleteState = false;
             }
 
-            if (!$this->deleteMembershipRequestNotificationEntries($groupId)) {
+            if (! $this->deleteMembershipRequestNotificationEntries($groupId)) {
                 $this->error("Could not remove membership request notification ugroups or message");
                 $deleteState = false;
             }
 
-            if (!$this->cleanupProjectUgroupsBinding($groupId)) {
+            if (! $this->cleanupProjectUgroupsBinding($groupId)) {
                 $this->error("Could not remove ugroups binding");
                 $deleteState = false;
             }
 
-            if (!$this->cleanupProjectFRS($groupId)) {
+            if (! $this->cleanupProjectFRS($groupId)) {
                 $this->error("Could not remove FRS items");
                 $deleteState = false;
             }
 
             // Mark all project trackers as deleted
             $atf = $this->getArtifactTypeFactory($project);
-            if (!$atf->preDeleteAllProjectArtifactTypes()) {
+            if (! $atf->preDeleteAllProjectArtifactTypes()) {
                 $this->error("Could not mark all trackers as deleted");
                     $deleteState = false;
             }
@@ -99,7 +99,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
             if (ForgeConfig::areUnixGroupsAvailableOnSystem()) {
                 $backendSystem = $this->getBackend('System');
                 if ($backendSystem->projectHomeExists($project)) {
-                    if (!$backendSystem->archiveProjectHome($groupId)) {
+                    if (! $backendSystem->archiveProjectHome($groupId)) {
                         $this->error("Could not archive project home");
                         $deleteState = false;
                     } else {
@@ -109,7 +109,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
                 }
 
                 // Archive public ftp
-                if (!$backendSystem->archiveProjectFtp($groupId)) {
+                if (! $backendSystem->archiveProjectFtp($groupId)) {
                     $this->error("Could not archive project public ftp");
                     $deleteState = false;
                 }
@@ -117,14 +117,14 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
 
             // Mark Wiki attachments as deleted
             $wa = $this->getWikiAttachment($groupId);
-            if (!$wa->deleteProjectAttachments()) {
+            if (! $wa->deleteProjectAttachments()) {
                 $this->error("Could not mark all wiki attachments as deleted");
                 $deleteState = false;
             }
 
             $backendCVS = $this->getBackend('CVS');
             if ($backendCVS->repositoryExists($project)) {
-                if (!$backendCVS->archiveProjectCVS($groupId)) {
+                if (! $backendCVS->archiveProjectCVS($groupId)) {
                     $this->error("Could not archive project CVS repository");
                     $deleteState = false;
                 } else {
@@ -134,7 +134,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
 
             $backendSVN = $this->getBackend('SVN');
             if ($backendSVN->repositoryExists($project)) {
-                if (!$backendSVN->archiveProjectSVN($groupId)) {
+                if (! $backendSVN->archiveProjectSVN($groupId)) {
                     $this->error("Could not archive project SVN repository");
                     $deleteState = false;
                 } else {
@@ -145,7 +145,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent
 
             // Delete Mailing lists
             $backendMailinList = $this->getBackend('MailingList');
-            if (!$backendMailinList->deleteProjectMailingLists($groupId)) {
+            if (! $backendMailinList->deleteProjectMailingLists($groupId)) {
                 $this->error("Could not archive project mailing lists");
                 $deleteState = false;
             } else {

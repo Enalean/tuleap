@@ -44,7 +44,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_enabled')) {
+        if (! $this->db->tableNameExists('plugin_git_repository_fine_grained_permissions_enabled')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('plugin_git_repository_fine_grained_permissions_enabled table is missing');
         }
     }

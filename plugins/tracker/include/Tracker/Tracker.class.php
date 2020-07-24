@@ -248,7 +248,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getProject()
     {
-        if (!$this->project) {
+        if (! $this->project) {
             $this->project = ProjectManager::instance()->getProject($this->group_id);
         }
         return $this->project;
@@ -995,18 +995,18 @@ class Tracker implements Tracker_Dispatchable_Interface
         }
 
         $link_artifact_id = (int) $request->get('link-artifact-id');
-        if ($link_artifact_id && !$request->get('report-only')) {
+        if ($link_artifact_id && ! $request->get('report-only')) {
             $linked_artifact = Tracker_ArtifactFactory::instance()->getArtifactById($link_artifact_id);
 
-            if (!$linked_artifact) {
+            if (! $linked_artifact) {
                 $err = "Linked artifact not found or doesn't exist";
-                if (!$request->isAjax()) {
+                if (! $request->isAjax()) {
                     $GLOBALS['Response']->addFeedback('error', $err);
                     $GLOBALS['Response']->redirect('/');
                 }
                 die($err);
             }
-            if (!$request->isAjax()) {
+            if (! $request->isAjax()) {
                 //screwed up
                 $GLOBALS['Response']->addFeedback('error', 'Something is wrong with your request');
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?aid=' . $linked_artifact->getId());
@@ -1089,7 +1089,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
         if ($report) {
             $report->process($layout, $request, $current_user);
-        } elseif (!$link_artifact_id) {
+        } elseif (! $link_artifact_id) {
             $this->displayHeader($layout, $this->name, array(), $this->getDefaultToolbar());
             echo dgettext('tuleap-tracker', 'No reports available');
 
@@ -1107,7 +1107,7 @@ class Tracker implements Tracker_Dispatchable_Interface
             $this->displayFooter($layout);
         }
 
-        if ($link_artifact_id && !$request->get('report-only')) {
+        if ($link_artifact_id && ! $request->get('report-only')) {
             if ($report) {
                 echo '</div></div></td>'; //end of slow
             }
@@ -1162,7 +1162,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $pm = ProjectManager::instance();
         $group_id = $request->get('group_id');
         $group = $pm->getProject($group_id);
-        if (!$group || !is_object($group) || $group->isError()) {
+        if (! $group || ! is_object($group) || $group->isError()) {
             exit_no_group();
         }
 
@@ -1251,7 +1251,7 @@ class Tracker implements Tracker_Dispatchable_Interface
 
 
         // Search result pagination
-        if (!$no_rows && ( ($rows_returned > $nb_artifacts) || ($offset != 0) )) {
+        if (! $no_rows && ( ($rows_returned > $nb_artifacts) || ($offset != 0) )) {
             $html .= '<br />';
             $url_params = array(
                 'exact' => $request->get('exact') === '1' ? 1 : 0,
@@ -1778,7 +1778,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function isActive()
     {
-        return !$this->isDeleted();
+        return ! $this->isDeleted();
     }
 
     /**
@@ -1940,7 +1940,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         $user_manager = $this->getUserManager();
 
         if (! $user instanceof PFUser) {
-            if (!$user) {
+            if (! $user) {
                 $user = $user_manager->getCurrentUser();
             } else {
                 $user = $user_manager->getUserById((int) $user);
@@ -2157,7 +2157,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function userCanDeleteTracker($user = false)
     {
-        if (!($user instanceof PFUser)) {
+        if (! ($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2189,7 +2189,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function userHasFullAccess($user = false)
     {
-        if (!($user instanceof PFUser)) {
+        if (! ($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2686,7 +2686,7 @@ class Tracker implements Tracker_Dispatchable_Interface
         if ($aid_key !== false) {
             foreach ($lines as $line) {
                 if ($line[$aid_key] != '') {
-                    if (!$this->aidExists($line[$aid_key])) {
+                    if (! $this->aidExists($line[$aid_key])) {
                         $GLOBALS['Response']->addFeedback('error', sprintf(dgettext('tuleap-tracker', 'Artifact Id %1$s does not exist'), $line[$aid_key]));
                         $has_unknown = true;
                     }
@@ -2739,7 +2739,7 @@ class Tracker implements Tracker_Dispatchable_Interface
                             $unknown_fields[$field_name] = $field_name;
                         }
                         $has_blocking_error = true;
-                    } elseif ($field && !is_array($field_name)) {
+                    } elseif ($field && ! is_array($field_name)) {
                         // check if value is ok
                         if ($aid_key !== false && $this->aidExists($line[$aid_key])) {
                             $artifact_id = $line[$aid_key];
@@ -3024,7 +3024,7 @@ class Tracker implements Tracker_Dispatchable_Interface
     public function testImport()
     {
         foreach ($this->formElements as $form) {
-            if (! $form || !$form->testImport()) {
+            if (! $form || ! $form->testImport()) {
                 return false;
             }
         }
@@ -3078,7 +3078,7 @@ class Tracker implements Tracker_Dispatchable_Interface
      */
     public function getStats()
     {
-        if (!isset($this->cache_stats)) {
+        if (! isset($this->cache_stats)) {
             $dao = new Tracker_ArtifactDao();
             $this->cache_stats = $dao->searchStatsForTracker($this->id)->getRow();
         }

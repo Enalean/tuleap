@@ -238,7 +238,7 @@ class ProjectDetailsController
             return false;
         }
 
-        if (ProjectDescriptionUsageRetriever::isDescriptionMandatory()  && ! $form_shortdesc) {
+        if (ProjectDescriptionUsageRetriever::isDescriptionMandatory() && ! $form_shortdesc) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, _('Missing Information. PLEASE fill in all required information.'));
 
             return false;
@@ -246,7 +246,7 @@ class ProjectDetailsController
 
         $rule = new Rule_ProjectFullName();
 
-        if (!$rule->isValid($form_group_name)) {
+        if (! $rule->isValid($form_group_name)) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, $rule->getErrorMessage());
 
             return false;
@@ -416,7 +416,7 @@ class ProjectDetailsController
         $parent_project_info['url']    = $url;
 
         $parent_project_info['is_active']    = $parent->isActive();
-        if (!  $parent->isActive()) {
+        if (! $parent->isActive()) {
             switch ($parent->getStatus()) {
                 case Project::STATUS_SUSPENDED:
                     $parent_project_info['status_label'] = $GLOBALS['Language']->getText('admin_projectlist', 'suspended');

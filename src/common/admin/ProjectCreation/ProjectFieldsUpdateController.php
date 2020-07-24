@@ -63,14 +63,14 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
             $sql    = "DELETE FROM group_desc where group_desc_id='" . db_ei($delete_desc_id) . "'";
             $result = db_query($sql);
 
-            if (!$result) {
+            if (! $result) {
                 $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail'));
             }
 
             $sql    = "DELETE FROM group_desc_value where group_desc_id='" . db_ei($delete_desc_id) . "'";
             $result = db_query($sql);
 
-            if (!$result) {
+            if (! $result) {
                 $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'del_desc_field_fail'));
             } else {
                 $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'remove_success'));
@@ -94,12 +94,12 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
         if (($add_desc || $update)) {
             //data validation
             $valid_data = 1;
-            if (!trim($desc_name)) {
+            if (! trim($desc_name)) {
                 $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'info_missed'));
                 $valid_data = 0;
             }
 
-            if (!is_numeric($desc_rank)) {
+            if (! is_numeric($desc_rank)) {
                 $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'info_rank_noint'));
                 $valid_data = 0;
             }
@@ -111,7 +111,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
                     $sql .= db_escape_string($desc_rank) . "','" . db_es($desc_type) . "','" . db_ei($desc_required) . "')";
                     $result = db_query($sql);
 
-                    if (!$result) {
+                    if (! $result) {
                         list($host, $port) = explode(':', \ForgeConfig::get('sys_default_domain'));
                         $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'ins_desc_field_fail', array($host, db_error())));
                     } else {
@@ -128,7 +128,7 @@ class ProjectFieldsUpdateController implements DispatchableWithRequest
 
                     $result = db_query($sql);
 
-                    if (!$result || db_affected_rows($result) < 1) {
+                    if (! $result || db_affected_rows($result) < 1) {
                         $layout->addFeedback(Feedback::ERROR, $GLOBALS['Language']->getText('admin_desc_fields', 'update_desc_field_fail', (db_error() ? db_error() : ' ')));
                     } else {
                         $layout->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('admin_desc_fields', 'update_success'));

@@ -38,7 +38,7 @@ class ArtifactFileHtml extends ArtifactFile // phpcs:ignore PSR1.Classes.ClassDe
             global $Language;
         $sys_max_size_attachment = ForgeConfig::get('sys_max_size_attachment', self::MAX_SIZE_DEFAULT);
 
-        if (!util_check_fileupload($input_file)) {
+        if (! util_check_fileupload($input_file)) {
             $this->setError($Language->getText('tracker_include_artifactfile', 'invalid_name'));
             return false;
         }

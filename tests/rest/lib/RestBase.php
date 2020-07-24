@@ -123,24 +123,24 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
         $this->initialize();
 
         $this->project_ids = $this->cache->getProjectIds();
-        if (!$this->project_ids) {
+        if (! $this->project_ids) {
             $this->initProjectIds();
         }
 
         $this->tracker_ids = $this->cache->getTrackerIds();
-        if (!$this->tracker_ids) {
+        if (! $this->tracker_ids) {
             $this->initTrackerIds();
         }
 
         $this->tracker_representations = $this->cache->getTrackerRepresentations();
 
         $this->user_ids = $this->cache->getUserIds();
-        if (!$this->user_ids) {
+        if (! $this->user_ids) {
             $this->initUserIds();
         }
 
         $this->user_groups_ids = $this->cache->getUserGroupIds();
-        if (!$this->user_groups_ids) {
+        if (! $this->user_groups_ids) {
             $this->initUserGroupsId();
         }
 
@@ -357,7 +357,7 @@ class RestBase extends TestCase // phpcs:ignore PSR1.Classes.ClassDeclaration.Mi
     protected function getArtifacts($tracker_id): array
     {
         $artifacts = $this->cache->getArtifacts($tracker_id);
-        if (!$artifacts) {
+        if (! $artifacts) {
             $query = http_build_query(
                 array('order' => 'asc')
             );

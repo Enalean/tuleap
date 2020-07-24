@@ -84,7 +84,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function __construct(Project $project, array $data)
     {
-        if (!$this->isAllowed($project)) {
+        if (! $this->isAllowed($project)) {
             throw new ServiceNotAllowedForProjectException();
         }
         $this->project = $project;
@@ -205,7 +205,7 @@ class Service // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function displayDuplicateInheritanceWarning(): void
     {
-        if ($this->project->isTemplate() && !$this->isInheritedOnDuplicate()) {
+        if ($this->project->isTemplate() && ! $this->isInheritedOnDuplicate()) {
             $GLOBALS['HTML']->addFeedback('warning', $GLOBALS['Language']->getText('global', 'service_conf_not_inherited'));
         }
     }

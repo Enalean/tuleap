@@ -46,14 +46,14 @@ class UserGroupQueryParameterParser
         }
 
         $json_query = $this->json_decoder->decodeAsAnArray('query', $query);
-        if (!isset($json_query[self::WITH_SYSTEM_USER_GROUPS_PARAMETER])) {
+        if (! isset($json_query[self::WITH_SYSTEM_USER_GROUPS_PARAMETER])) {
             throw new I18NRestException(400, sprintf(
                 dgettext('tuleap-core', 'parameter "query" syntax error: "%s" property not found'),
                 self::WITH_SYSTEM_USER_GROUPS_PARAMETER
             ));
         }
 
-        if (!is_bool($json_query[self::WITH_SYSTEM_USER_GROUPS_PARAMETER])) {
+        if (! is_bool($json_query[self::WITH_SYSTEM_USER_GROUPS_PARAMETER])) {
             throw new I18NRestException(400, sprintf(
                 dgettext('tuleap-core', 'parameter "query", property "%s" invalid type: boolean expected'),
                 self::WITH_SYSTEM_USER_GROUPS_PARAMETER

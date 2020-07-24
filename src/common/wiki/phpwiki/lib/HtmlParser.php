@@ -99,7 +99,7 @@ class HtmlParser extends XmlParser
                     $output .= $this->wikify($n, $node);
                 }
                 $output = $conv[0] . $output . $conv[count($conv) - 1];
-            } elseif (!empty($conv)) {
+            } elseif (! empty($conv)) {
                 $output = $conv;
                 foreach ($node->getContent() as $n) {
                     $output .= $this->wikify($n, $node);
@@ -191,7 +191,7 @@ class HtmlParser extends XmlParser
     public function _elem_is_image_div($node)
     {
         // Return false if node is undefined or isn't a DIV at all
-        if (!$node or !in_array($node->_tag, array("div","p"))) {
+        if (! $node or ! in_array($node->_tag, array("div","p"))) {
             return false;
         }
         $contents = $node->getContent();
@@ -363,23 +363,23 @@ class HtmlParser_PhpWiki2 extends HtmlParser
         $alignment = $node->getAttr('align');
         $this->log("Processing IMG tag for SRC: " . $image_url . "...");
         // Grab attributes to be added to the [ Image ] markup (since 1.3.10)
-        if (!$alignment) {
+        if (! $alignment) {
             if ($this->_elem_is_image_div($node->parent)) {
                 $image_div = $node->parent;
             } elseif (isset($node->parent) and $this->_elem_is_image_div($node->parent->parent)) {
                 $image_div = $node->parent->parent;
             }
         }
-        if (!$alignment and $image_div) {
+        if (! $alignment and $image_div) {
             $css_style = $image_div->getAttr('style');
             $css_class = $image_div->getAttr('class');
 
             // float => align: Check for float attribute; if it's there,
             //                 then we'll add it to the [Image] syntax
-            if (!$alignment and preg_match("/float\:\s*(right|left)/i", $css_style, $m)) {
+            if (! $alignment and preg_match("/float\:\s*(right|left)/i", $css_style, $m)) {
                 $alignment = $m[1];
             }
-            if (!$alignment and preg_match("/float(right|left)/i", $css_class, $m)) {
+            if (! $alignment and preg_match("/float(right|left)/i", $css_class, $m)) {
             }
                 $alignment = $m[1];
             if ($alignment) {

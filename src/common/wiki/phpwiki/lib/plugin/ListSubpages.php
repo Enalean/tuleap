@@ -101,7 +101,7 @@ class WikiPlugin_ListSubpages extends WikiPlugin
             }
         }
         $pagelist = new PageList($info, $exclude, $args);
-        if (!$noheader) {
+        if (! $noheader) {
             $pagelist->setCaption($descrip);
         }
 

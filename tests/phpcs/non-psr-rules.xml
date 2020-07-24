@@ -23,6 +23,20 @@
     <rule ref="SlevomatCodingStandard.Arrays.SingleLineArrayWhitespace"/>
     <!-- Forbid blank line after function opening brace -->
     <rule ref="Squiz.WhiteSpace.FunctionOpeningBraceSpace"/>
+    <!-- Force space after ! -->
+    <rule ref="Generic.Formatting.SpaceAfterNot"/>
+    <!-- Force space after language constructs -->
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <!-- Force space around logical operators -->
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <!-- Force space after a type cast -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+    <!-- Forbid space between increment/decrement operator and its operand -->
+    <rule ref="Generic.WhiteSpace.IncrementDecrementSpacing"/>
+    <!-- Forbid spaces in type casts -->
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+    <!-- Forbid spaces before semicolon `;` -->
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
     <!-- Forbid spaces around `->` operator -->
     <rule ref="Squiz.WhiteSpace.ObjectOperatorSpacing">
         <properties>

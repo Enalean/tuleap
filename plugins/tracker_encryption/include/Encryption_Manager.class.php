@@ -52,7 +52,7 @@ class Encryption_Manager
 
     private function loadRSAKey(Tracker_Key $tracker_key)
     {
-        if (!$this->rsa->loadKey($tracker_key->getKey())) {
+        if (! $this->rsa->loadKey($tracker_key->getKey())) {
             throw new Tracker_EncryptionException($GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_encryption', 'Unable to encrypt data. Please add a valid public RSA key in the tracker administration to be able to encrypt data.')));
         }
     }

@@ -104,7 +104,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
 
         if ($seg == 0 || $seg == 2) {
             $i = $seg;
-            if (!($start > $i * M_PI / 2 && $x > $xStart)) {
+            if (! ($start > $i * M_PI / 2 && $x > $xStart)) {
                 if ($i == 0) {
                     $xp = +1;
                     $yp = -1;
@@ -149,7 +149,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
 
         if ($seg == 1 || $seg == 3) {
             $i = $seg;
-            if (!($stop < ($i + 1) * M_PI / 2 && $x > $xStop)) {
+            if (! ($stop < ($i + 1) * M_PI / 2 && $x > $xStop)) {
                 if ($i == 1) {
                     $xp = -1;
                     $yp = -1;
@@ -225,7 +225,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
 
         if ($seg == 0 || $seg == 2) {
             $i = $seg;
-            if (!($start > $i * M_PI / 2 && $y > $yStop)) {
+            if (! ($start > $i * M_PI / 2 && $y > $yStop)) {
                 if ($i == 0) {
                     $xp = +1;
                     $yp = -1;
@@ -240,14 +240,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                 if ($stop < ($i + 1) * (M_PI / 2) && $y <= $yStop) {
                     $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
                     $x1 = $_x1;
-                    if (!$aaStopX) {
+                    if (! $aaStopX) {
                         imageSetPixel($img, $cx + $xp * ($x1 - 1) + $xa, $cy + $yp * ($y) + $ya, $diffColor1);
                     }
                 }
                 if ($start > $i * M_PI / 2 && $y < $yStart) {
                     $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
                     $x2 = $_x2;
-                    if (!$aaStartX) {
+                    if (! $aaStartX) {
                         imageSetPixel($img, $cx + $xp * ($x2 + 1) + $xa, $cy + $yp * ($y) + $ya, $diffColor2);
                     }
                 } else {
@@ -265,7 +265,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
 
         if ($seg == 1 || $seg == 3) {
             $i = $seg;
-            if (!($stop < ($i + 1) * M_PI / 2 && $y > $yStart)) {
+            if (! ($stop < ($i + 1) * M_PI / 2 && $y > $yStart)) {
                 if ($i == 1) {
                     $xp = -1;
                     $yp = -1;
@@ -280,14 +280,14 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                 if ($start > $i * M_PI / 2 && $y < $yStart) {
                     $diffColor2 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error2);
                     $x1 = $_x2;
-                    if (!$aaStartX) {
+                    if (! $aaStartX) {
                         imageSetPixel($img, $cx + $xp * ($x1 - 1) + $xa, $cy + $yp * $y + $ya, $diffColor2);
                     }
                 }
                 if ($stop < ($i + 1) * M_PI / 2 && $y <= $yStop) {
                     $diffColor1 = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error1);
                     $x2 = $_x1;
-                    if (!$aaStopX) {
+                    if (! $aaStopX) {
                         imageSetPixel($img, $cx + $xp * ($x2 + 1) + $xa, $cy + $yp * $y + $ya, $diffColor1);
                     }
                 } else {
@@ -296,7 +296,7 @@ function imageSmoothArcDrawSegment(&$img, $cx, $cy, $a, $b, $aaAngleX, $aaAngleY
                     $x = (int) ($x);
                     $diffColor = imageColorExactAlpha($img, $color[0], $color[1], $color[2], 127 - (127 - $color[3]) * $error);
                     $x1 = $x;
-                    if ($y < $aaAngleY  && $y < $yStart) {
+                    if ($y < $aaAngleY && $y < $yStart) {
                         imageSetPixel($img, $cx + $xp * ($x1 + 1) + $xa, $cy + $yp * $y + $ya, $diffColor);
                     }
                 }

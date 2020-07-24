@@ -100,7 +100,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('user_access')) {
+        if (! $this->db->tableNameExists('user_access')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('user_access table is missing');
         }
         if ($this->db->columnNameExists('user', 'last_access_date')) {

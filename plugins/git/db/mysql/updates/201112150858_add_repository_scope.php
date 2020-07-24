@@ -72,7 +72,7 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'repository_scope')) {
+        if (! $this->db->columnNameExists('plugin_git', 'repository_scope')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_scope in table plugin_git is missing');
         }
     }

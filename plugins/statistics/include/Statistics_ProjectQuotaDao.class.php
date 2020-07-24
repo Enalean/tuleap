@@ -82,7 +82,7 @@ class Statistics_ProjectQuotaDao extends DataAccessObject
         $limit     = '';
         $list      = $this->da->escapeIntImplode($list);
 
-        if (!empty($list)) {
+        if (! empty($list)) {
             $condition = "WHERE " . self::GROUP_ID . " IN ($list)";
         }
 

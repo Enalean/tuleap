@@ -39,18 +39,18 @@ function html_image($src, $args, $display = 1)
     }
 
     // ## insert a border tag if there isn't one
-    if (!isset($args['border']) || !$args['border']) {
+    if (! isset($args['border']) || ! $args['border']) {
         $return .= (" border=0");
     }
 
     // ## if no height AND no width tag, insert em both
     if (
-        (!isset($args['height']) || !$args['height']) &&
-            (!isset($args['width'])  || !$args['width'])
+        (! isset($args['height']) || ! $args['height']) &&
+            (! isset($args['width']) || ! $args['width'])
     ) {
      /* Check to see if we've already fetched the image data */
         if ($img_size) {
-            if ((!isset($img_size[$src]) || !$img_size[$src]) && is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
+            if ((! isset($img_size[$src]) || ! $img_size[$src]) && is_file(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src)) {
                 $img_size[$src] = @getimagesize(ForgeConfig::get('sys_urlroot') . util_get_dir_image_theme() . $src);
             }
         } else {
@@ -62,7 +62,7 @@ function html_image($src, $args, $display = 1)
     }
 
     // ## insert alt tag if there isn't one
-    if (!isset($args['alt']) || !$args['alt']) {
+    if (! isset($args['alt']) || ! $args['alt']) {
         $return .= ' alt="' . $purifier->purify($src) . '"';
     }
 
@@ -328,8 +328,8 @@ function html_build_select_box_from_arrays(
         //  if it was shown above, otherwise do show it
         if (
             (($vals[$i] != '100') && ($vals[$i] != '0')) ||
-            ($vals[$i] == '100' && !$show_100) ||
-            ($vals[$i] == '0' && !$show_any)
+            ($vals[$i] == '100' && ! $show_100) ||
+            ($vals[$i] == '0' && ! $show_any)
         ) {
             $return .= '
 				<OPTION VALUE="' . $hp->purify($vals[$i]) . '"';
@@ -622,7 +622,7 @@ function site_project_header($params)
     }
 
     //for dead projects must be member of admin project
-    if (!$project->isActive()) {
+    if (! $project->isActive()) {
         HTTPRequest::instance()->checkUserIsSuperUser();
     }
 
@@ -659,10 +659,10 @@ function html_display_boolean($value, $true_value = 'Yes', $false_value = 'No')
     global $Language;
 
     // Position default values for special menu items
-    if (!isset($true_value)) {
+    if (! isset($true_value)) {
         $true_value = $Language->getText('global', 'yes');
     }
-    if (!isset($false_value)) {
+    if (! isset($false_value)) {
         $false_value = $Language->getText('global', 'no');
     }
     if (($value == 1) || ($value == true)) {

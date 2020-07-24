@@ -355,7 +355,7 @@ class DB
     public function errorMessage($value)
     {
         static $errorMessages;
-        if (!isset($errorMessages)) {
+        if (! isset($errorMessages)) {
             $errorMessages = array(
                 DB_ERROR                    => 'unknown error',
                 DB_ERROR_ALREADY_EXISTS     => 'already exists',

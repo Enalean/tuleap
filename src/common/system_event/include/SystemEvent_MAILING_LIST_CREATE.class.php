@@ -56,7 +56,7 @@ class SystemEvent_MAILING_LIST_CREATE extends SystemEvent
             return $this->setErrorBadParam();
         }
 
-        if (!Backend::instance('MailingList')->createList($group_list_id)) {
+        if (! Backend::instance('MailingList')->createList($group_list_id)) {
             $this->error("Could not create mailing list $group_list_id");
             return false;
         }

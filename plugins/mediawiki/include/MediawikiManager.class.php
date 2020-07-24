@@ -244,7 +244,7 @@ class MediawikiManager
             $user->getUgroups($project->getID(), array())
         );
 
-        return !empty($common_ugroups_ids);
+        return ! empty($common_ugroups_ids);
     }
 
     /**
@@ -265,7 +265,7 @@ class MediawikiManager
             $user->getUgroups($project->getID(), array())
         );
 
-        return !empty($common_ugroups_ids);
+        return ! empty($common_ugroups_ids);
     }
 
     private function userIsRestrictedAndNotProjectMember(PFUser $user, Project $project)

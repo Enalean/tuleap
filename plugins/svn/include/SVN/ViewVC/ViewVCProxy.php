@@ -153,7 +153,7 @@ class ViewVCProxy
         // parameter, used when browsing a directory at a certain revision number)
         $location_found = false;
 
-        while ($location_line && !$location_found && strlen($location_line) > 1) {
+        while ($location_line && ! $location_found && strlen($location_line) > 1) {
             $matches = array();
 
             if (preg_match('/^Location:(.*)$/', $location_line, $matches)) {

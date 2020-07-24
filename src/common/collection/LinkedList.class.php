@@ -55,14 +55,14 @@ class LinkedList extends Collection
             while ($it1->valid() && $is_identical) {
                 $val1 = $it1->current();
                 $val2 = $it2->current();
-                if (!(version_compare(phpversion(), '5', '>=') && is_object($val1))) {
+                if (! (version_compare(phpversion(), '5', '>=') && is_object($val1))) {
                     $temp = $val1;
                     $val1 = 'test' . bin2hex(random_bytes(7));
                 }
                 if ($val1 !== $val2) {
                     $is_identical = false;
                 }
-                if (!(version_compare(phpversion(), '5', '>=') && is_object($val1))) {
+                if (! (version_compare(phpversion(), '5', '>=') && is_object($val1))) {
                     $val1 = $temp;
                 }
                 $it1->next();

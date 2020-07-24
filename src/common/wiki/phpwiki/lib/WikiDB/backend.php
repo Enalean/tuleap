@@ -248,7 +248,7 @@ class WikiDB_backend
     public function update_versiondata($pagename, $version, $newdata)
     {
         $data = $this->get_versiondata($pagename, $version, true);
-        if (!$data) {
+        if (! $data) {
             assert($data);
             return;
         }
@@ -494,7 +494,7 @@ class WikiDB_backend
     public function _parse_searchwords($search)
     {
         $search = strtolower(trim($search));
-        if (!$search) {
+        if (! $search) {
             return array(array(),array());
         }
 
@@ -574,12 +574,12 @@ class WikiDB_backend
             $this->_sortby[$column] = $order;
             return $order . $column;
         } elseif ($action == 'check') {
-            return (!empty($this->_sortby[$column]) or
+            return (! empty($this->_sortby[$column]) or
                     ($GLOBALS['request']->getArg('sortby') and
                      strstr($GLOBALS['request']->getArg('sortby'), $column)));
         } elseif ($action == 'db') {
             // native sort possible?
-            if (!empty($this) and !$sortable_columns) {
+            if (! empty($this) and ! $sortable_columns) {
                 $sortable_columns = $this->sortable_columns();
             }
             if (in_array($column, $sortable_columns)) {

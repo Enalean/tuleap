@@ -104,7 +104,7 @@ if ($group_id) {
         $rows = db_numrows($result);
 
 
-        if (!$result || $rows < 1) {
+        if (! $result || $rows < 1) {
             $pm = ProjectManager::instance();
             echo '
                 <H1>' . $Language->getText('mail_index', 'no_list_found_for') . $hp->purify($pm->getProject($group_id)->getPublicName()) . '</H1>';

@@ -140,7 +140,7 @@ class CardwallConfigXmlExport
             }
         }
 
-        if ($bg_red !== null && $bg_green !== null  && $bg_blue !== null) {
+        if ($bg_red !== null && $bg_green !== null && $bg_blue !== null) {
             $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_RED, $bg_red);
             $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_GREEN, $bg_green);
             $column_node->addAttribute(CardwallConfigXml::ATTRIBUTE_COLUMN_BG_BLUE, $bg_blue);

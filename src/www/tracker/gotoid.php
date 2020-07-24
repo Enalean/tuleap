@@ -57,7 +57,7 @@ $atn = strtolower($request->get('atn'));
 
 // If group_name given as argument then infer group_id first
 $group_name = $request->get('group_name');
-if ($group_name && !$group_id) {
+if ($group_name && ! $group_id) {
     $grp = group_get_object_by_name($group_name);
     $group_id = $grp->getGroupId();
 }
@@ -92,18 +92,18 @@ if ($atn == 'commit') {
 
 
 // Should we remove this one?
-if (!$group_id) {
+if (! $group_id) {
     // group_id is necessary for legacy trackers -> link to generic tracker
     $art_group_id = $request->get('art_group_id');
     $art_name     = $request->get('art_name');
-    if (!util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
+    if (! util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
         exit_error($Language->getText('global', 'error'), $Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
     }
     generic_redirect($location, $aid, $art_group_id, $art_group_id, $atid, $atn, $art_name);
 }
 
 // not standard atn -> generic tracker.
-if (!util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
+if (! util_get_ids_from_aid($aid, $art_group_id, $atid, $art_name)) {
     exit_error($Language->getText('global', 'error'), $Language->getText('tracker_gotoid', 'invalid_art_nb', $aid));
 }
 generic_redirect($location, $aid, $group_id, $art_group_id, $atid, $atn, $art_name);

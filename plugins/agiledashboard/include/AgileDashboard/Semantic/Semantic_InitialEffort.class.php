@@ -244,7 +244,7 @@ class AgileDashBoard_Semantic_InitialEffort extends Tracker_Semantic
      */
     public static function load(Tracker $tracker)
     {
-        if (!isset(self::$_instances[$tracker->getId()])) {
+        if (! isset(self::$_instances[$tracker->getId()])) {
             $field = self::getFieldFromTracker($tracker);
             self::$_instances[$tracker->getId()] = new AgileDashBoard_Semantic_InitialEffort($tracker, $field);
         }

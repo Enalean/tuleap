@@ -28,7 +28,7 @@ $request->checkUserIsSuperUser();
 $project_id = $request->getValidated('group_id', 'uint', 0);
 $project    = ProjectManager::instance()->getProject($project_id);
 
-if ($project && is_object($project) && !$project->isError()) {
+if ($project && is_object($project) && ! $project->isError()) {
     if (send_new_project_email($project)) {
         $msg = $GLOBALS['Language']->getText('admin_newprojectmail', 'success');
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $msg);

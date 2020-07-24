@@ -32,7 +32,7 @@ class Bootstrap_FeedbackFormatter extends FeedbackFormatter
 
         $html .= '<div class="container-fluid">';
         foreach ($logs as $log) {
-            if (!is_null($old_level) && $old_level != $log['level']) {
+            if (! is_null($old_level) && $old_level != $log['level']) {
                 $html .= '</div>';
             }
             if (is_null($old_level) || $old_level != $log['level']) {
@@ -59,7 +59,7 @@ class Bootstrap_FeedbackFormatter extends FeedbackFormatter
             }
             $html .= $hp->purify($log['msg'], $log['purify']) . '<br />';
         }
-        if (!is_null($old_level)) {
+        if (! is_null($old_level)) {
             $html .= '</div>';
         }
         $html .= '</div>';

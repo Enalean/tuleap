@@ -108,7 +108,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
             $page = $author;
         }
         //trigger_error("2 p= $page a= $author");
-        if (!$page || !$author) { //user not signed in or no author specified
+        if (! $page || ! $author) { //user not signed in or no author specified
             return '';
         }
         //$pagelist = new PageList($info, $exclude);
@@ -142,7 +142,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                 $isminor = $rev->get('is_minor_edit');
                 $authordoesmatch = $author == $rev->get('author');
 
-                if ($authordoesmatch && (!$isminor || ($includeminor && $isminor))) {
+                if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                     $difflink = Button(
                         array('action' => 'diff',
                                              'previous' => 'minor'),
@@ -210,7 +210,7 @@ class WikiPlugin_AuthorHistory extends WikiPlugin
                 while ($rev = $allrevisions_iter->next()) {
                     $isminor = $rev->get('is_minor_edit');
                     $authordoesmatch = $author == $rev->get('author');
-                    if ($authordoesmatch && (!$isminor || ($includeminor && $isminor))) {
+                    if ($authordoesmatch && (! $isminor || ($includeminor && $isminor))) {
                         $difflink = Button(
                             array('action' => 'diff',
                                                  'previous' => 'minor'),

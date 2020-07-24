@@ -333,7 +333,7 @@ class UserDao extends DataAccessObject
             unset($user['clear_password']);
         }
         $dar = $this->searchByUserId($user['user_id']);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $current = $dar->current();
             foreach ($user as $field => $value) {
                 if ($field != 'user_id' && $value != $current[$field] && $value !== null) {
@@ -363,7 +363,7 @@ class UserDao extends DataAccessObject
         if ($this->update($sql)) {
             $sql = 'SELECT unix_uid FROM user WHERE user_id = ' . $this->da->quoteSmart($userId);
             $dar = $this->retrieve($sql);
-            if ($dar && !$dar->isError()) {
+            if ($dar && ! $dar->isError()) {
                 $row = $dar->current();
                 return $row['unix_uid'];
             }
@@ -480,7 +480,7 @@ class UserDao extends DataAccessObject
     {
         $sql = "SELECT FOUND_ROWS() as nb;";
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row['nb'];
         } else {
@@ -532,7 +532,7 @@ class UserDao extends DataAccessObject
                        WHERE addresses LIKE ' . $this->getDa()->quoteLikeValueSurround($user->getUserName());
 
             $dar = $this->retrieve($sqlSel);
-            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                 $res = true;
                 foreach ($dar as $row) {
                     $row['addresses'] = $this->replaceStringInList($row['addresses'], $user->getUserName(), $newName);
@@ -578,7 +578,7 @@ class UserDao extends DataAccessObject
         }
         $where  = "";
         $status = "";
-        if (!empty($status_values)) {
+        if (! empty($status_values)) {
             $status = $this->da->quoteSmartImplode(',', $status_values);
         }
         if ($pattern) {
@@ -637,7 +637,7 @@ class UserDao extends DataAccessObject
     {
         $sql = 'SELECT * FROM user_access WHERE user_id = ' . $this->da->escapeInt($userId);
         $dar  = $this->retrieve($sql);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $row = $dar->getRow();
             return $row;
         } else {

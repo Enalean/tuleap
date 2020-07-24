@@ -56,8 +56,8 @@ class WikiPlugin_RecentComments extends WikiPlugin_RecentChanges
         if ($show_deleted == 'sometimes') {
             $show_deleted = $args['show_minor'];
         }
-        if (!$show_deleted) {
-            $changes = new NonDeletedRevisionIterator($changes, !$args['show_all']);
+        if (! $show_deleted) {
+            $changes = new NonDeletedRevisionIterator($changes, ! $args['show_all']);
         }
         // sort out pages with no comments
         $changes = new RecentCommentsRevisionIterator($changes, $dbi);
@@ -129,7 +129,7 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
 
     public function next()
     {
-        if (!empty($this->comments) and $this->_current) {
+        if (! empty($this->comments) and $this->_current) {
             if (isset($this->comments[$this->_current])) {
                 return $this->comments[$this->_current++];
             } else {

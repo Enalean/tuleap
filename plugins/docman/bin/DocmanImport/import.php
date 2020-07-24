@@ -71,7 +71,7 @@ $folderId = getParameter($argv, 'folder-id', true);
 if (($archive = getParameter($argv, 'archive', true)) === null) {
     $console->error("Missing parameter: --archive");
 } elseif (is_dir($archive)) {
-    if (!is_file("$archive/" . basename($archive) . ".xml")) {
+    if (! is_file("$archive/" . basename($archive) . ".xml")) {
         $console->error("The archive folder must contain an XML file with the same name");
         $archive = null;
     }
@@ -100,7 +100,7 @@ $password              = getParameter($argv, 'password');
 if ($path === null) {
     $path = '/Project Documentation';
 } else {
-    if (!preg_match('/^(\/[^\/]+)+$/', $path)) {
+    if (! preg_match('/^(\/[^\/]+)+$/', $path)) {
         $console->error("The path must follow the pattern: /folder/subfolder(/subfolder...)");
         die;
     }
@@ -112,13 +112,13 @@ if ($url === null || ($project === null && $projectId === null) || $archive === 
 }
 
 // Ask for login and password
-if (!isset($login)) {
+if (! isset($login)) {
     echo "Login: ";
     $login = fgets(STDIN);
     $login = substr($login, 0, strlen($login) - 1);
 }
 
-if (!isset($password)) {
+if (! isset($password)) {
     echo "Password for $login: ";
 
     if (PHP_OS != 'WINNT') {

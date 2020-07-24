@@ -49,7 +49,7 @@ class LDAP_UserSync
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $syncClass = self::class;
             // Allows site defined user update
             include_once($GLOBALS['Language']->getContent('synchronize_user', 'en_US', 'ldap'));

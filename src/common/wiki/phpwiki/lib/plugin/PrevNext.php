@@ -89,7 +89,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
         $sep = $WikiTheme->getButtonSeparator();
         $links = HTML();
         if ($style == 'text') {
-            if (!$sep) {
+            if (! $sep) {
                 $sep = " | "; // force some kind of separator
             }
             $links->pushcontent(" [ ");
@@ -98,7 +98,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
         $this_is_first = true;
         foreach ($directions as $dir => $label) {
             // if ($last_is_text) $links->pushContent($sep);
-            if (!empty($args[$dir])) {
+            if (! empty($args[$dir])) {
                 $url = $args[$dir];
                 if ($style == 'button') {
                     // localized version: _("Previous").gif

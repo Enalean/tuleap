@@ -8,7 +8,7 @@
  * content into the zip archive.
  */
 
-if (!file_exists($argv[1])) {
+if (! file_exists($argv[1])) {
     fwrite(STDERR, "Usage: collect_xml_data.php archive.zip" . PHP_EOL);
     exit(1);
 }
@@ -49,7 +49,7 @@ function getFileContentFromArchive(ZipArchive $archive, $filename)
 {
     $fp       = $archive->getStream($filename);
     $contents = '';
-    while (!feof($fp)) {
+    while (! feof($fp)) {
         $contents .= fread($fp, 4096);
     }
     fclose($fp);

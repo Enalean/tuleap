@@ -65,7 +65,7 @@ class Contour
         }
 
         if ($aColors !== null && count($aColors) > 0) {
-            if (!is_array($aColors)) {
+            if (! is_array($aColors)) {
                 JpGraphError::RaiseL(28001);
                 //'Third argument to Contour must be an array of colors.'
             }
@@ -359,13 +359,13 @@ class Contour
                             $n2 = 1;
                             $n3 = 2;
                             $n4 = 3;
-                        } elseif (($midval > $ib && $v > $ib) ||  ($midval < $ib && $v < $ib)) {
+                        } elseif (($midval > $ib && $v > $ib) || ($midval < $ib && $v < $ib)) {
                             // Orientation of ridge/valley = "\"
                             $n1 = 0;
                             $n2 = 3;
                             $n3 = 2;
                             $n4 = 1;
-                        } elseif (($midval > $ib && $v < $ib) ||  ($midval < $ib && $v > $ib)) {
+                        } elseif (($midval > $ib && $v < $ib) || ($midval < $ib && $v > $ib)) {
                             // Orientation of ridge/valley = "/"
                             $n1 = 0;
                             $n2 = 2;

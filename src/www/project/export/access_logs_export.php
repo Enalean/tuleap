@@ -169,7 +169,7 @@ function export_wiki_pg_logs($project, $span, $who, $sf)
     $result_wiki_pg = db_query($sql_wiki_pg);
     $rows_wiki_pg = db_numrows($result_wiki_pg);
 
-    if (!$sf) {
+    if (! $sf) {
         if ($result_wiki_pg && $rows_wiki_pg > 0) {
         // Build csv for wiki pages access logs
             echo build_csv_header($col_list_wiki_pg, $wiki_pg_title) . $eol;

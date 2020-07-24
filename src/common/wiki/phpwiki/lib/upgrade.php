@@ -68,19 +68,19 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
             $pageinfo = $parts[0];
             $stat  = stat($path . "/" . $filename);
             $new_mtime = @$pageinfo['versiondata']['mtime'];
-            if (!$new_mtime) {
+            if (! $new_mtime) {
                 $new_mtime = @$pageinfo['versiondata']['lastmodified'];
             }
-            if (!$new_mtime) {
+            if (! $new_mtime) {
                 $new_mtime = @$pageinfo['pagedata']['date'];
             }
-            if (!$new_mtime) {
+            if (! $new_mtime) {
                 $new_mtime = $stat[9];
             }
             if ($new_mtime > $page_mtime) {
                 echo "$path/$pagename: ",_("newer than the existing page."),
                     _(" replace "),"($new_mtime &gt; $page_mtime)","<br />\n";
-                if (!$checkonly) {
+                if (! $checkonly) {
                     LoadAny($request, $path . "/" . $filename);
                 }
                 echo "<br />\n";
@@ -94,7 +94,7 @@ function doPgsrcUpdate(&$request, $pagename, $path, $filename, $checkonly = fals
         }
     } else {
         echo sprintf(_("%s does not exist"), $pagename),"<br />\n";
-        if (!$checkonly) {
+        if (! $checkonly) {
             LoadAny($request, $path . "/" . $filename);
         }
         echo "<br />\n";
@@ -198,7 +198,7 @@ function CheckPgsrcUpdate(&$request, $checkonly = false)
             $isHomePage = false;
             continue;
         }
-        if (!isActionPage($filename)) {
+        if (! isActionPage($filename)) {
             doPgsrcUpdate($request, $pagename, $path, $filename, $checkonly);
         }
     }
@@ -224,7 +224,7 @@ function fixConfigIni($match, $new)
         }
         fclose($in);
         fclose($out);
-        if (!$found) {
+        if (! $found) {
             echo " <b><font color=\"red\">",_("FAILED"),"</font></b>: ",
                 sprintf(_("%s not found"), $match);
             unlink($out);
@@ -296,7 +296,7 @@ class Upgrade_CheckDatabaseUpdate extends Upgrade {
  */
 function DoUpgrade($request)
 {
-    if (!$request->_user->isAdmin()) {
+    if (! $request->_user->isAdmin()) {
         $request->_notAuthorized(WIKIAUTH_ADMIN);
         $request->finish(
             HTML::div(

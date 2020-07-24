@@ -45,7 +45,7 @@ class b201301021153_add_postaction_cibuild_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_workflow_transition_postactions_cibuild')) {
+        if (! $this->db->tableNameExists('tracker_workflow_transition_postactions_cibuild')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_workflow_transition_postactions_cibuild table is missing');
         }
     }

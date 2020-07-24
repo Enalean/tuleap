@@ -41,7 +41,7 @@ class FRSProcessorDao extends DataAccessObject
             $this->da->quoteSmart((string) $name)
         );
         $proc = $this->retrieve($sql);
-        if (!$proc->valid()) {
+        if (! $proc->valid()) {
                    return null;
         }
         $current = $proc->current();

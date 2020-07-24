@@ -102,7 +102,7 @@ class HTTPRequest extends Codendi_Request
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }

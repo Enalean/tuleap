@@ -44,7 +44,7 @@ class MIME
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             $c = self::class;
             self::$_instance = new $c();
         }
@@ -63,7 +63,7 @@ class MIME
         $basename = basename($filename);
 
         // load the glob files if they haven't been loaded already
-        if (!isset($this->globFileLines)) {
+        if (! isset($this->globFileLines)) {
             $this->globFileLines = array();
 
             // go through the data dirs to search for the globbing files
@@ -115,13 +115,13 @@ class MIME
         }
 
         // load the magic files if they weren't loaded yet
-        if (!isset($this->magicRules)) {
+        if (! isset($this->magicRules)) {
             $this->magicRules = array();
 
             // go through the data dirs to search for the magic files
             foreach (array_reverse($this->XDG_DATA_DIRS) as $dir) {
                 // read the file
-                if (!file_exists("$dir/mime/magic") || ($buffer = file_get_contents("$dir/mime/magic")) === false) {
+                if (! file_exists("$dir/mime/magic") || ($buffer = file_get_contents("$dir/mime/magic")) === false) {
                     continue;
                 }
 
@@ -200,7 +200,7 @@ class MIME
         $data = fread($fp, $length);
         fclose($fp);
         for ($i = 0; $i < $length; $i++) {
-            if (!isset($data[$i]) || ($data[$i] < "\x20" && $data[$i] != "\x09" && $data[$i] != "\x0a" && $data[$i] != "\x0d")) {
+            if (! isset($data[$i]) || ($data[$i] < "\x20" && $data[$i] != "\x09" && $data[$i] != "\x0a" && $data[$i] != "\x0d")) {
                 return 'application/octet-stream';
             }
         }
@@ -242,7 +242,7 @@ class MIME
             $filename = "$dir/mime/$mimetype.xml";
 
             // open the XML file
-            if (!file_exists($filename) || ($fp = fopen($filename, 'r')) == false) {
+            if (! file_exists($filename) || ($fp = fopen($filename, 'r')) == false) {
                 continue;
             }
 
@@ -253,7 +253,7 @@ class MIME
                 function ($parser, $name, $attrs) {
                     $this->read = false;
                     if ($name == 'COMMENT') {
-                        if (!isset($attrs['XML:LANG']) || $attrs['XML:LANG'] == $this->lang) {
+                        if (! isset($attrs['XML:LANG']) || $attrs['XML:LANG'] == $this->lang) {
                             $this->read = true;
                         }
                     }
@@ -274,7 +274,7 @@ class MIME
 
             // read the file and parse
             while ($data = str_replace("\n", "", fread($fp, 4096))) {
-                if (!xml_parse($xml_parser, $data, feof($fp))) {
+                if (! xml_parse($xml_parser, $data, feof($fp))) {
                     error_log("ERROR: Couldn't parse $filename: " .
                               xml_error_string(xml_get_error_code($xml_parser)));
                     break;

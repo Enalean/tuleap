@@ -94,7 +94,7 @@ class WikiPlugin_Template extends WikiPlugin
             // Expand relative page names.
             $page = new WikiPageName($page, $basepage);
         }
-        if (!$page or !$page->name) {
+        if (! $page or ! $page->name) {
             return false;
         }
         return array($page->name);
@@ -108,7 +108,7 @@ class WikiPlugin_Template extends WikiPlugin
             $page = new WikiPageName($page, $basepage);
             $page = $page->name;
         }
-        if (!$page) {
+        if (! $page) {
             return $this->error(_("no page specified"));
         }
 
@@ -124,7 +124,7 @@ class WikiPlugin_Template extends WikiPlugin
         $p = $dbi->getPage($page);
         if ($rev) {
             $r = $p->getRevision($rev);
-            if (!$r) {
+            if (! $r) {
                 return $this->error(sprintf(
                     _("%s(%d): no such revision"),
                     $page,
@@ -151,7 +151,7 @@ class WikiPlugin_Template extends WikiPlugin
         }
         if (preg_match('/%%\w+%%/', $initial_content)) { // need variable expansion
             $var = array();
-            if (!empty($vars)) {
+            if (! empty($vars)) {
                 foreach (preg_split("/&/D", $vars) as $pair) {
                     list($key,$val) = preg_split("/=/D", $pair);
                     $var[$key] = $val;

@@ -19,7 +19,7 @@ class _UserPreference_recengine extends _UserPreference // recommendation engine
 
     public function sanify($value)
     {
-        if (!in_array($value, $this->valid_values)) {
+        if (! in_array($value, $this->valid_values)) {
             return $this->default_value;
         } else {
             return $value;
@@ -40,7 +40,7 @@ class _UserPreference_recalgo extends _UserPreference // recommendation engine a
 
     public function sanify($value)
     {
-        if (!in_array($value, $this->valid_values)) {
+        if (! in_array($value, $this->valid_values)) {
             return $this->default_value;
         } else {
             return $value;

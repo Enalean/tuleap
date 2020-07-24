@@ -81,11 +81,11 @@ class Backend
      */
     public static function instance($type = self::BACKEND, $base = null, $setup = null)
     {
-        if (!isset(self::$backend_instances[$type])) {
+        if (! isset(self::$backend_instances[$type])) {
             $backend = null;
 
             //determine the base class of the plugin if it is not define at the call
-            if (!$base) {
+            if (! $base) {
                 $base = 'Backend';
                 if ($type !== self::BACKEND) {
                     //BackendSVN, BackendSystem, ...
@@ -104,14 +104,14 @@ class Backend
             EventManager::instance()->processEvent($event, $params);
 
             //make sure that there is no problem between the keyboard and the chair
-            if (!class_exists($base)) {
+            if (! class_exists($base)) {
                 throw new RuntimeException("Class '$base' not found");
             }
             //Create a new instance of the wanted backend
             $backend = new $base();
 
             //check that all is ok
-            if (!is_a($backend, $wanted_base)) {
+            if (! is_a($backend, $wanted_base)) {
                 throw new Exception('Backend should inherit from ' . $wanted_base . '. Received: "' . get_class($backend) . '"');
             }
 
@@ -471,7 +471,7 @@ class Backend
      */
     public function addBlock($filename, $command)
     {
-        if (!$handle = fopen($filename, 'a')) {
+        if (! $handle = fopen($filename, 'a')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
@@ -519,7 +519,7 @@ class Backend
      */
     public function writeArrayToFile($file_array, $filename)
     {
-        if (!$handle = fopen($filename, 'w')) {
+        if (! $handle = fopen($filename, 'w')) {
             $this->log("Can't open file for writing: $filename", self::LOG_ERROR);
             return false;
         }
@@ -569,18 +569,18 @@ class Backend
                     unlink($file_old);
                 }
 
-                if (!rename($file, $file_old)) {
+                if (! rename($file, $file_old)) {
                     $this->log("Can't move file $file to $file_old", self::LOG_ERROR);
                     return false;
                 }
-                if (!rename($file_new, $file)) {
+                if (! rename($file_new, $file)) {
                     $this->log("Can't move file $file_new to $file", self::LOG_ERROR);
                     return false;
                 }
             } // Else do nothing: the configuration has not changed
         } else {
             // No existing file
-            if (!rename($file_new, $file)) {
+            if (! rename($file_new, $file)) {
                 $this->log("Can't move file $file_new to $file (no existing file)", self::LOG_ERROR);
                 return false;
             }
@@ -633,10 +633,10 @@ class Backend
      *
      * @param String $path
      *
-     * @return true if repository or file  or link already exists, false otherwise
+     * @return bool true if repository or file  or link already exists, false otherwise
      */
     public static function fileExists($path)
     {
-        return (is_dir($path)  || is_file($path) || is_link($path));
+        return (is_dir($path) || is_file($path) || is_link($path));
     }
 }

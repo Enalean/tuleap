@@ -131,7 +131,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject
                 WHERE artifact_id = $artifact_id";
 
         $result = $this->retrieve($sql);
-        if (!$result) {
+        if (! $result) {
             return;
         }
 

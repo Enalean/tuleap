@@ -61,7 +61,7 @@ class TrackerPermissionsChecker
             );
         }
 
-        if (!$tracker->userCanView($user)) {
+        if (! $tracker->userCanView($user)) {
             throw new RestException(
                 403,
                 null,

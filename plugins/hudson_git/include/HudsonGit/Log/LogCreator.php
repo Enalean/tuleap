@@ -65,7 +65,7 @@ class LogCreator
 
         $this->transaction_executor->execute(function () use ($log) {
             $id = $this->job_dao->create($log);
-            if (!$id) {
+            if (! $id) {
                 throw new CannotCreateLogException($GLOBALS['Language']->getText('plugin_hudson_git', 'job_error'));
             }
             if (count($log->getJobUrlList()) > 0) {

@@ -196,7 +196,7 @@ class ProjectXMLExport_Archive extends ZipArchive
 
     public function addEmptyDir($dirname)
     {
-        if (!is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
+        if (! is_dir($this->archive_path . DIRECTORY_SEPARATOR . $dirname)) {
             return mkdir($this->archive_path . DIRECTORY_SEPARATOR . $dirname, 0700);
         }
         return true;

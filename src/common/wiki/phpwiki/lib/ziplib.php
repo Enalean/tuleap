@@ -40,7 +40,7 @@ function gzip_tempnam()
 {
     global $gzip_tmpfile;
 
-    if (!$gzip_tmpfile) {
+    if (! $gzip_tmpfile) {
         //FIXME: does this work on non-unix machines?
         if (is_writable("/tmp")) {
             $gzip_tmpfile = tempnam("/tmp", "wkzip");
@@ -55,21 +55,21 @@ function gzip_tempnam()
 function gzip_compress($data)
 {
     $filename = gzip_tempnam();
-    if (!($fp = gzopen($filename, "wb"))) {
+    if (! ($fp = gzopen($filename, "wb"))) {
         trigger_error(sprintf("%s failed", 'gzopen'), E_USER_ERROR);
     }
     gzwrite($fp, $data, strlen($data));
-    if (!gzclose($fp)) {
+    if (! gzclose($fp)) {
         trigger_error(sprintf("%s failed", 'gzclose'), E_USER_ERROR);
     }
     $z = null;
-    if (!($fp = fopen($filename, "rb"))) {
+    if (! ($fp = fopen($filename, "rb"))) {
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
     }
-    while (!feof($fp)) {
+    while (! feof($fp)) {
         $z .= fread($fp, 1024);
     }
-    if (!fclose($fp)) {
+    if (! fclose($fp)) {
         trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
     }
     unlink($filename);
@@ -79,22 +79,22 @@ function gzip_compress($data)
 function gzip_uncompress($data)
 {
     $filename = gzip_tempnam();
-    if (!($fp = fopen($filename, "wb"))) {
+    if (! ($fp = fopen($filename, "wb"))) {
         trigger_error(sprintf("%s failed", 'fopen'), E_USER_ERROR);
     }
     fwrite($fp, $data, strlen($data));
-    if (!fclose($fp)) {
+    if (! fclose($fp)) {
         trigger_error(sprintf("%s failed", 'fclose'), E_USER_ERROR);
     }
 
-    if (!($fp = gzopen($filename, "rb"))) {
+    if (! ($fp = gzopen($filename, "rb"))) {
         trigger_error(sprintf("%s failed", 'gzopen'), E_USER_ERROR);
     }
     $unz = '';
     while ($buf = gzread($fp, 4096)) {
         $unz .= $buf;
     }
-    if (!gzclose($fp)) {
+    if (! gzclose($fp)) {
         trigger_error(sprintf("%s failed", 'gzclose'), E_USER_ERROR);
     }
 
@@ -233,7 +233,7 @@ function zip_inflate($data, $crc32, $uncomp_size)
         return $data;
     }
 
-    if (!function_exists('gzopen')) {
+    if (! function_exists('gzopen')) {
         global $request;
         $request->finish(_("Can't inflate data: zlib support not enabled in this PHP"));
     }
@@ -304,7 +304,7 @@ class ZipWriter
 
     public function addRegularFile($filename, $content, $attrib = false)
     {
-        if (!$attrib) {
+        if (! $attrib) {
             $attrib = array();
         }
 
@@ -323,12 +323,12 @@ class ZipWriter
             /* (Another choice might be 3 = Unix) */
         }
 
-        if (!isset($crc32)) {
+        if (! isset($crc32)) {
             $comp_type = ZIP_STORE;
             $crc32 = zip_crc32($content);
         }
 
-        if (!empty($attrib['write_protected'])) {
+        if (! empty($attrib['write_protected'])) {
             $atx = (0100444 << 16) | 1; // S_IFREG + read permissions to
         } else { // everybody.
             $atx = (0100644 << 16); // Add owner write perms.
@@ -343,10 +343,10 @@ class ZipWriter
 
         // Construct parts common to "Local file header" and "Central
         // directory file header."
-        if (!isset($attrib['extra_field'])) {
+        if (! isset($attrib['extra_field'])) {
             $attrib['extra_field'] = '';
         }
-        if (!isset($attrib['file_comment'])) {
+        if (! isset($attrib['file_comment'])) {
             $attrib['file_comment'] = '';
         }
 
@@ -437,7 +437,7 @@ class ZipReader
 {
     public function __construct($zipfile)
     {
-        if (!is_string($zipfile)) { // filepointer: File already open
+        if (! is_string($zipfile)) { // filepointer: File already open
             $this->fp = $zipfile;
             $zipfile = null;
         } elseif (
@@ -451,7 +451,7 @@ class ZipReader
         }
         if ($zipfile) {
             $this->zipfile = $zipfile;
-            if (!($this->fp = fopen($zipfile, "rb"))) {
+            if (! ($this->fp = fopen($zipfile, "rb"))) {
                 trigger_error(sprintf(
                     _("Can't open zip file '%s' for reading"),
                     $zipfile
@@ -581,7 +581,7 @@ function QuotedPrintableEncode($string)
         // The complicated regexp is to force quoting of trailing spaces.
         preg_match('/^([ !-<>-~]*)(?:([!-<>-~]$)|(.))/s', $string, $match);
         $quoted .= $match[1] . $match[2];
-        if (!empty($match[3])) {
+        if (! empty($match[3])) {
             $quoted .= sprintf("=%02X", ord($match[3]));
         }
         $string = substr($string, strlen($match[0]));
@@ -611,7 +611,7 @@ function MimeContentTypeHeader($type, $subtype, $params)
     $header = "Content-Type: $type/$subtype";
     foreach ($params as $key => $val) {
         //FIXME:  what about non-ascii printables in $val?
-        if (!preg_match('/^' . MIME_TOKEN_REGEXP . '$/', $val)) {
+        if (! preg_match('/^' . MIME_TOKEN_REGEXP . '$/', $val)) {
             $val = '"' . addslashes($val) . '"';
         }
         $header .= ";\r\n  $key=$val";
@@ -773,7 +773,7 @@ function ParseMimeContentType($string)
 
     // Get type/subtype
     if (
-        !preg_match(
+        ! preg_match(
             ':^\s*(' . MIME_TOKEN_REGEXP . ')\s*'
                     . '/'
                     . '\s*(' . MIME_TOKEN_REGEXP . ')\s*:x',
@@ -814,7 +814,7 @@ function ParseMimeContentType($string)
 
 function ParseMimeMultipart($data, $boundary)
 {
-    if (!$boundary) {
+    if (! $boundary) {
         ExitWiki("No boundary?");
     }
 
@@ -873,7 +873,7 @@ function GenerateFootnotesFromRefs($params)
 //          "list:_EVERY; remove:_ADMIN,_OWNER; change:_ADMIN,_OWNER; dump:_EVERY; "
 function ParseMimeifiedPerm($string)
 {
-    if (!class_exists('PagePermission')) {
+    if (! class_exists('PagePermission')) {
         return '';
     }
     $hash = array();
@@ -901,7 +901,7 @@ function ParseMimeifiedPerm($string)
 function ParseMimeifiedPages($data)
 {
     if (
-        !($headers = ParseRFC822Headers($data))
+        ! ($headers = ParseRFC822Headers($data))
         || empty($headers['content-type'])
     ) {
         //trigger_error( sprintf(_("Can't find %s"),'content-type header'),
@@ -910,7 +910,7 @@ function ParseMimeifiedPages($data)
     }
     $typeheader = $headers['content-type'];
 
-    if (!(list ($type, $subtype, $params) = ParseMimeContentType($typeheader))) {
+    if (! (list ($type, $subtype, $params) = ParseMimeContentType($typeheader))) {
         trigger_error(
             sprintf(
                 "Can't parse %s: (%s)",
@@ -979,7 +979,7 @@ function ParseMimeifiedPages($data)
 
     // FIXME: do we need to try harder to find a pagename if we
     //        haven't got one yet?
-    if (!isset($versiondata['author'])) {
+    if (! isset($versiondata['author'])) {
         global $request;
         if (is_object($request)) {
             $user = $request->getUser();

@@ -89,8 +89,8 @@ class IconPlot
     public function SetAnchor($aXAnchor = 'left', $aYAnchor = 'center')
     {
         if (
-            !in_array($aXAnchor, $this->iAnchors) ||
-            !in_array($aYAnchor, $this->iAnchors)
+            ! in_array($aXAnchor, $this->iAnchors) ||
+            ! in_array($aYAnchor, $this->iAnchors)
         ) {
             JpGraphError::RaiseL(8002);//("Anchor position for icons must be one of 'top', 'bottom', 'left', 'right' or 'center'");
         }
@@ -201,11 +201,11 @@ class IconPlot
             $this->iX = $x;
             $this->iY = $y;
         }
-        if ($this->iX >= 0  && $this->iX <= 1.0) {
+        if ($this->iX >= 0 && $this->iX <= 1.0) {
             $w = imagesx($aImg->img);
             $this->iX = round($w * $this->iX);
         }
-        if ($this->iY >= 0  && $this->iY <= 1.0) {
+        if ($this->iY >= 0 && $this->iY <= 1.0) {
             $h = imagesy($aImg->img);
             $this->iY = round($h * $this->iY);
         }

@@ -50,7 +50,7 @@ class ArtifactFile
         global $Language;
 
      //was Artifact legit?
-        if (!$Artifact || !is_object($Artifact)) {
+        if (! $Artifact || ! is_object($Artifact)) {
             $this->setError('ArtifactFile: ' . $Language->getText('tracker_common_file', 'invalid'));
             return false;
         }
@@ -65,7 +65,7 @@ class ArtifactFile
                 $this->data_array = $data;
                 return true;
             } else {
-                if (!$this->fetchData($data)) {
+                if (! $this->fetchData($data)) {
                     return false;
                 } else {
                     return true;
@@ -88,19 +88,19 @@ class ArtifactFile
     {
         global $Language;
 
-        if (!$description) {
+        if (! $description) {
             $description = $Language->getText('global', 'none');
         }
         $old_value = $this->Artifact->getAttachedFileNames();
 
      // Some browsers don't supply mime type if they don't know it
-        if (!$filetype) {
+        if (! $filetype) {
          // Let's be on safe side?
             $filetype = 'application/octet-stream';
         }
 
      //    data validation
-        if (!$filename || !$filetype || !$filesize || !$bin_data) {
+        if (! $filename || ! $filetype || ! $filesize || ! $bin_data) {
             $GLOBALS['Response']->addFeedback('error', '<P>|' . $filename . '|' . $filetype . '|' . $filesize . '|' . $bin_data . '|');
             $this->setError('ArtifactFile: ' . $Language->getText('tracker_common_file', 'name_requ'));
             return false;
@@ -120,7 +120,7 @@ class ArtifactFile
 
         $id = db_insertid($res, 'artifact_file', 'id');
 
-        if (!$res || !$id) {
+        if (! $res || ! $id) {
             $this->setError('ArtifactFile: ' . db_error());
             return false;
         } else {
@@ -192,7 +192,7 @@ class ArtifactFile
         $sql = "DELETE FROM artifact_file WHERE id=" . db_ei($this->getID());
      //echo "sql=$sql<br>";
         $res = db_query($sql);
-        if (!$res || db_affected_rows($res) < 1) {
+        if (! $res || db_affected_rows($res) < 1) {
             $this->setError('ArtifactFile: ' . $Language->getText('tracker_common_file', 'del_err'));
             return false;
         } else {
@@ -243,7 +243,7 @@ class ArtifactFile
                 WHERE (af.submitted_by = user.user_id) and af.id=" . db_ei($id);
      //echo $sql;
         $res = db_query($sql);
-        if (!$res || db_numrows($res) < 1) {
+        if (! $res || db_numrows($res) < 1) {
             $this->setError('ArtifactFile: ' . $Language->getText('tracker_common_file', 'invalid_id'));
             return false;
         }

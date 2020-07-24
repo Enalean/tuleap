@@ -131,7 +131,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         $blog = $request->getArg("blog");
         $request->setArg('blog', false);
 
-        if ($request->isPost() and !empty($blog['addblog'])) {
+        if ($request->isPost() and ! empty($blog['addblog'])) {
             $this->add($request, $blog); // noreturn
         }
 
@@ -139,7 +139,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         // for new comments
         $html = HTML();
         foreach (explode(',', $args['mode']) as $show) {
-            if (!empty($seen[$show])) {
+            if (! empty($seen[$show])) {
                 continue;
             }
             $seen[$show] = 1;
@@ -209,7 +209,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
         $body = trim($blog['body']);
 
         $saved = false;
-        while (!$saved) {
+        while (! $saved) {
             // Generate the page name.  For now, we use the format:
             //   Rootname/Blog/2003-01-11/14:03:02+00:00
             // This gives us natural chronological order when sorted
@@ -227,7 +227,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             // Check intermediate pages. If not existing they should RedirectTo the parent page.
             // Maybe add the BlogArchives plugin instead for the new interim subpage.
             $redirected = $prefix . $pagename;
-            if (!$dbi->isWikiPage($redirected)) {
+            if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = array('pagename' => $redirected,
                                   'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
@@ -237,7 +237,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
                 SavePage($request, $pageinfo, '', '');
             }
             $redirected = $prefix . $pagename . SUBPAGE_SEPARATOR . preg_replace("/T.*/", "", "$time");
-            if (!$dbi->isWikiPage($redirected)) {
+            if (! $dbi->isWikiPage($redirected)) {
                 require_once('lib/loadsave.php');
                 $pageinfo = array('pagename' => $redirected,
                                   'content'  => '<?plugin RedirectTo page=' . $parent . ' ?>',
@@ -302,14 +302,14 @@ class WikiPlugin_WikiBlog extends WikiPlugin
             }
 
             $name = $this->_blogPrefix($type);
-            if (!$args['noheader']) {
+            if (! $args['noheader']) {
                 $html->pushContent(HTML::h4(
                     array('class' => "$type-heading"),
                     fmt("%s on %s:", $name, WikiLink($parent))
                 ));
             }
             foreach ($blogs as $rev) {
-                if (!$rev->get($type)) {
+                if (! $rev->get($type)) {
                     // Ack! this is an old-style blog with data ctime in page meta-data.
                     $content = $this->_transformOldFormatBlog($rev, $type);
                 } else {
@@ -356,7 +356,7 @@ class WikiPlugin_WikiBlog extends WikiPlugin
 
         $blogs = array();
         while ($page = $pages->next()) {
-            if (!string_starts_with($page->getName(), $prefix)) {
+            if (! string_starts_with($page->getName(), $prefix)) {
                 continue;
             }
             $current = $page->getCurrentRevision();

@@ -45,8 +45,7 @@ class ProjectHistoryFormatter
 
     public function getHookConfigHistory(array $hook_config)
     {
-        return
-            HookConfig::MANDATORY_REFERENCE . ": " .
+        return HookConfig::MANDATORY_REFERENCE . ": " .
             $this->extractHookReadableValue($hook_config, HookConfig::MANDATORY_REFERENCE) .
             PHP_EOL .
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE . ": " .

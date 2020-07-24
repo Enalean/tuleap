@@ -185,7 +185,7 @@ foreach ($this->data['xhtmlnamespaces'] as $tag => $ns) {
             if ($tab['class']) {
                 echo ' class="' . htmlspecialchars($tab['class']) . '"';
             }
-            echo'><a href="' . htmlspecialchars($tab['href']) . '"';
+            echo '><a href="' . htmlspecialchars($tab['href']) . '"';
                     // We don't want to give the watch tab an accesskey if the
                     // page is being edited, because that conflicts with the
                     // accesskey on the watch checkbox.  We also don't want to
@@ -281,7 +281,7 @@ echo htmlspecialchars($item['class']) ?>"
             <?php
             foreach ($validFooterLinks as $aLink) {
                 if (isset($this->data[$aLink]) && $this->data[$aLink]) {
-                    ?>                    <li id="<?php echo$aLink?>"><?php $this->html($aLink) ?></li>
+                    ?>                    <li id="<?php echo $aLink?>"><?php $this->html($aLink) ?></li>
                 <?php }
             }
             ?>
@@ -299,7 +299,7 @@ echo htmlspecialchars($item['class']) ?>"
 -->
         <?php endif; ?>
         <!-- FUSIONFORGE Footer BEGIN -->
-        <?php	if (!ForgeConfig::get('sys_use_mwframe')) {
+        <?php	if (! ForgeConfig::get('sys_use_mwframe')) {
             $GLOBALS['HTML']->footer($params);
         } else { ?>
 </body></html>

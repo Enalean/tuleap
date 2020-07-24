@@ -52,8 +52,8 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
         $doc_params = array();
         if (isset($params['force_permissions'])) {
             $doc_params['newItem'] = array(
-               'hide_permissions'           => !$params['display_permissions'],
-                'hide_news'                  => !$params['display_news'],
+               'hide_permissions'           => ! $params['display_permissions'],
+                'hide_news'                  => ! $params['display_news'],
                 'update_permissions_on_init' => false,
                 'default_position'           => $params['force_ordering']
             );

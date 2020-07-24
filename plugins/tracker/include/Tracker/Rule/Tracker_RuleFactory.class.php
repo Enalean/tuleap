@@ -73,7 +73,7 @@ class Tracker_RuleFactory
     public static function instance()
     {
         static $_artifactrulefactory_instance;
-        if (!$_artifactrulefactory_instance) {
+        if (! $_artifactrulefactory_instance) {
             $rules_dao         = new Tracker_RuleDao();
             $_artifactrulefactory_instance = new Tracker_RuleFactory($rules_dao);
         }
@@ -88,7 +88,7 @@ class Tracker_RuleFactory
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = array();
         while ($rule_row = $dar->getRow()) {
-            if (!isset($this->rules[$rule_row['id']])) {
+            if (! isset($this->rules[$rule_row['id']])) {
                 $rule_row['tracker_id'] = $tracker_id;
                 $this->rules[$rule_row['id']] =& $this->_buildRuleInstance($rule_row);
             }

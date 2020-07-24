@@ -29,7 +29,7 @@ use Tuleap\Mediawiki\MediawikiMathExtensionEnabler;
 
 /* C style inclusion guard. Yes, I know. Don’t comment on it. */
 
-if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
+if (! isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
     $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
 // Force include of HTTPRequest here instead of relying on autoload for this

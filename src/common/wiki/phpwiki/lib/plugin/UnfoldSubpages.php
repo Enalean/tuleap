@@ -87,7 +87,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
     public function run($dbi, $argstr, &$request, $basepage)
     {
         static $included_pages = false;
-        if (!$included_pages) {
+        if (! $included_pages) {
             $included_pages = array($basepage);
         }
 
@@ -99,7 +99,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
         //    $subpages = $subpages->applyFilters(array('sortby' => $sortby, 'limit' => $limit, 'exclude' => $exclude));
         //$subpages = explodePageList($pagename . SUBPAGE_SEPARATOR . '*', false,
         //                            $sortby, $limit, $exclude);
-        if (is_string($exclude) and !is_array($exclude)) {
+        if (is_string($exclude) and ! is_array($exclude)) {
             $exclude = PageList::explodePageList($exclude, false, false, $limit);
         }
         $content = HTML();
@@ -136,7 +136,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                 ) {
                     // trap recursive redirects
                     if (in_array($m[1], $included_pages)) {
-                        if (!$quiet) {
+                        if (! $quiet) {
                             $content->pushContent(
                                 HTML::p(sprintf(
                                     _("recursive inclusion of page %s ignored"),

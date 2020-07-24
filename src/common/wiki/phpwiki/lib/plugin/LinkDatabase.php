@@ -87,7 +87,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
         $args = $this->getArgs($argstr, $request);
         $caption = _("All pages with all links in this wiki (%d total):");
 
-        if (!empty($args['owner'])) {
+        if (! empty($args['owner'])) {
             $pages = PageList::allPagesByOwner(
                 $args['owner'],
                 $args['include_empty'],
@@ -101,7 +101,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
                     count($pages)
                 );
             }
-        } elseif (!empty($args['author'])) {
+        } elseif (! empty($args['author'])) {
             $pages = PageList::allPagesByAuthor(
                 $args['author'],
                 $args['include_empty'],
@@ -115,7 +115,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
                     count($pages)
                 );
             }
-        } elseif (!empty($args['creator'])) {
+        } elseif (! empty($args['creator'])) {
             $pages = PageList::allPagesByCreator(
                 $args['creator'],
                 $args['include_empty'],
@@ -146,14 +146,14 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             $args['types']['links'] =
                 new _PageList_Column_LinkDatabase_links('links', _("Links"), 'left');
             $pagelist = new PageList($args['info'], $args['exclude_from'], $args);
-            if (!$args['noheader']) {
+            if (! $args['noheader']) {
                 $pagelist->setCaption($caption);
             }
             return $pagelist;
         } elseif ($args['format'] == 'text') {
             $request->discardOutput();
             $request->buffer_output(false);
-            if (!headers_sent()) {
+            if (! headers_sent()) {
                 header("Content-Type: text/plain");
             }
             $request->checkValidators();
@@ -180,7 +180,7 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
             $currpage = $request->getArg('pagename');
             $request->discardOutput();
             $request->buffer_output(false);
-            if (!headers_sent()) {
+            if (! headers_sent()) {
                 header("Content-Type: text/xml");
             }
             $request->checkValidators();

@@ -59,7 +59,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
         $html = '';
         $params = array('form_name' => $this->formName);
         $html  .= '<form name="' . $params['form_name'] . '" action="' . $this->url . '" method="post" class="docman_form">';
-        if (!$this->updateConfirmed && $this->_subItemsAreWritable()) {
+        if (! $this->updateConfirmed && $this->_subItemsAreWritable()) {
             $html .= '<div class="docman_confirm_delete">';
             $nbDocs = 0;
             if ($this->recurseOnDocs) {
@@ -140,7 +140,7 @@ class Docman_View_ItemDetailsSectionEditProperties extends Docman_View_ItemDetai
     {
         $html = '';
         if ($this->_subItemsAreWritable()) {
-            if (!$this->updateConfirmed) {
+            if (! $this->updateConfirmed) {
                 $html .= '<input type="hidden" name="validate_recurse" value="true" />';
             }
         }

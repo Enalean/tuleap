@@ -177,7 +177,7 @@ abstract class Widget_Rss extends Widget
             $rss = $request->get('rss');
             $vTitle = new Valid_String('title');
             $vTitle->required();
-            if (!$request->validInArray('rss', $vTitle)) {
+            if (! $request->validInArray('rss', $vTitle)) {
                 try {
                     $feed         = $this->retrieveFeed($rss['url']);
                     $rss['title'] = $feed->getTitle();

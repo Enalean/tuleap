@@ -355,7 +355,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function &getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'MediaWikiPluginInfo')) {
             $this->pluginInfo = new MediaWikiPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -771,7 +771,7 @@ class MediaWikiPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaratio
 
     public function permission_get_name($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$params['name']) {
+        if (! $params['name']) {
             switch ($params['permission_type']) {
                 case MediawikiManager::READ_ACCESS:
                     $params['name'] = 'Read';

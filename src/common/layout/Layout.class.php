@@ -352,7 +352,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
      */
     private function generic_header($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        if (!$this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
+        if (! $this->is_rendered_through_service && isset($GLOBALS['group_id']) && $GLOBALS['group_id']) {
             if (isset($params['toptab'])) {
                 $this->warning_for_services_which_configuration_is_not_inherited($GLOBALS['group_id'], $params['toptab']);
             }
@@ -770,7 +770,7 @@ abstract class Layout extends Tuleap\Layout\BaseLayout //phpcs:ignore PSR1.Class
 
     public function footer(array $params)
     {
-        if (!isset($params['showfeedback']) || $params['showfeedback']) {
+        if (! isset($params['showfeedback']) || $params['showfeedback']) {
             echo $this->_getFeedback();
         }
         ?>

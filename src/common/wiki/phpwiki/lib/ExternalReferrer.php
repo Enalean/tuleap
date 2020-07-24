@@ -6,7 +6,7 @@
  * Todo:
  *   store all external referrers in (rotatable) log/db for a RecentReferrers plugin.
  */
-if (!function_exists('isExternalReferrer')) { // better define that in stdlib.php
+if (! function_exists('isExternalReferrer')) { // better define that in stdlib.php
     function isExternalReferrer(&$request)
     {
         if ($referrer = $request->get('HTTP_REFERER')) {
@@ -99,7 +99,7 @@ class SearchEngines
             return false;
         }
         $url = @parse_url(strtolower($url));
-        if (!empty($url["query"])) {
+        if (! empty($url["query"])) {
             $url = $url["query"];
         }
         if ($query1 and @stristr($url, $query1)) {
@@ -107,7 +107,7 @@ class SearchEngines
         } elseif ($query2 and @stristr($url, $query2)) {
             $query = explode($query2, $url);
         }
-        if (!empty($query)) {
+        if (! empty($query)) {
             $query = @explode("&", $query[1]);
             $ref["query"] = @urldecode($query[0]);
         }

@@ -274,7 +274,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if (is_array($request->get('formElement_data'))) {
             $formElement_data = $request->get('formElement_data');
             //First store the specific properties if needed
-            if (!isset($formElement_data['specific_properties']) || !is_array($formElement_data['specific_properties']) || $this->storeProperties($formElement_data['specific_properties'])) {
+            if (! isset($formElement_data['specific_properties']) || ! is_array($formElement_data['specific_properties']) || $this->storeProperties($formElement_data['specific_properties'])) {
                 //Then store the formElement itself
                 if (Tracker_FormElementFactory::instance()->updateFormElement($this, $formElement_data)) {
                     $history_dao = new ProjectHistoryDao();
@@ -312,7 +312,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function getTracker()
     {
-        if (!$this->tracker) {
+        if (! $this->tracker) {
             $tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
             if ($tracker === null) {
                 throw new RuntimeException('Tracker does not exist');
@@ -442,7 +442,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     protected function getFormElementFactory()
     {
-        if (!$this->formElementFactory) {
+        if (! $this->formElementFactory) {
             $this->formElementFactory = Tracker_FormElementFactory::instance();
         }
         return $this->formElementFactory;
@@ -559,7 +559,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function getProperties()
     {
-        if (!$this->cache_specific_properties) {
+        if (! $this->cache_specific_properties) {
             $this->cache_specific_properties = $this->default_properties;
             if ($this->getDao() && ($row = $this->getDao()->searchByFieldId($this->id)->getRow())) {
                 foreach ($row as $key => $value) {
@@ -586,7 +586,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $properties = array();
         foreach ($p as $key => $property) {
             $properties[$key] = $property;
-            if (!empty($property['type'])) {
+            if (! empty($property['type'])) {
                 switch ($property['type']) {
                     case 'radio':
                         $properties = array_merge($properties, $this->getFlattenProperties($property['choices']));
@@ -802,7 +802,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function updateProperties($properties)
     {
-        if (isset($properties['label']) && !trim($properties['label'])) {
+        if (isset($properties['label']) && ! trim($properties['label'])) {
             return false;
         }
         $this->parent_id     = isset($properties['parent_id'])     ? $properties['parent_id']               : $this->parent_id;
@@ -881,7 +881,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $root->addAttribute('tracker_id', $this->tracker_id);
         $root->addAttribute('parent_id', $this->parent_id);
         // ony add if values are different from default
-        if (!$this->use_it) {
+        if (! $this->use_it) {
             $root->addAttribute('use_it', $this->use_it);
         }
         // TODO: decide which scope is default P or S
@@ -923,7 +923,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     {
         $child = $root->addChild('properties');
         foreach ($this->getProperties() as $name => $property) {
-            if (!empty($property['value'])) {
+            if (! empty($property['value'])) {
                 $child->addAttribute($name, $property['value']);
             }
         }
@@ -1313,7 +1313,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function isUpdateable()
     {
-        return !is_a($this, 'Tracker_FormElement_Field_ReadOnly');
+        return ! is_a($this, 'Tracker_FormElement_Field_ReadOnly');
     }
 
     /**
@@ -1323,7 +1323,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function isSubmitable()
     {
-        return !is_a($this, 'Tracker_FormElement_Field_ReadOnly');
+        return ! is_a($this, 'Tracker_FormElement_Field_ReadOnly');
     }
 
     /**

@@ -47,7 +47,7 @@ Fixes by Reini Urban:
   php version switch
   HIGHLIGHT_DATA_DIR, HIGHLIGHT_EXE
 */
-if (!defined('HIGHLIGHT_EXE')) {
+if (! defined('HIGHLIGHT_EXE')) {
     define('HIGHLIGHT_EXE', 'highlight');
 }
 //define('HIGHLIGHT_EXE','/usr/local/bin/highlight');
@@ -56,7 +56,7 @@ if (!defined('HIGHLIGHT_EXE')) {
 // highlight requires two subdirs themes and langDefs somewhere.
 // Best by highlight.conf in $HOME, but the webserver user usually
 // doesn't have a $HOME
-if (!defined('HIGHLIGHT_DATA_DIR')) {
+if (! defined('HIGHLIGHT_DATA_DIR')) {
     if (isWindows()) {
         define('HIGHLIGHT_DATA_DIR', 'f:\cygnus\usr\local\share\highlight');
     } else {
@@ -119,12 +119,12 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             fwrite($pipes[0], $input);
             fclose($pipes[0]);
             $buf = "";
-            while (!feof($pipes[1])) {
+            while (! feof($pipes[1])) {
                 $buf .= fgets($pipes[1], 1024);
             }
             fclose($pipes[1]);
             $stderr = '';
-            while (!feof($pipes[2])) {
+            while (! feof($pipes[2])) {
                 $stderr .= fgets($pipes[2], 1024);
             }
             fclose($pipes[2]);
@@ -145,7 +145,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
         if (empty($syntax)) {
             return $this->error(_("Syntax language not specified."));
         }
-        if (!empty($source)) {
+        if (! empty($source)) {
             $args = "";
             if (defined('HIGHLIGHT_DATA_DIR')) {
                 $args .= " --data-dir " . escapeshellarg(HIGHLIGHT_DATA_DIR);
@@ -158,7 +158,7 @@ class WikiPlugin_SyntaxHighlighter extends WikiPlugin
             }
             $html = HTML();
 
-            if (!empty($style)) {
+            if (! empty($style)) {
                 $args .= ' -F ' . escapeshellarg($style);
             }
             $commandLine = HIGHLIGHT_EXE . "$args -q -f -S " . escapeshellarg($syntax);

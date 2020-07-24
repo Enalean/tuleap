@@ -126,7 +126,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
             $project = ProjectManager::instance()->getProject($res['group_id']);
             if ($project->isPublic()) {
                 // Check restricted user
-                if (($user->isRestricted() && $user->isMember($res['group_id'])) || !$user->isRestricted()) {
+                if (($user->isRestricted() && $user->isMember($res['group_id'])) || ! $user->isRestricted()) {
                     return $res;
                 }
             } else {

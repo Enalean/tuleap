@@ -82,7 +82,7 @@ class ArtifactFieldSet
                 FROM artifact_field_set
                 WHERE artifact_field_set_id=" . db_ei($this->getID()) . "";
         $res = db_query($sql);
-        if (!$res || db_numrows($res) < 1) {
+        if (! $res || db_numrows($res) < 1) {
             return false;
         }
         // set the attributes of this fieldset
@@ -301,7 +301,7 @@ class ArtifactFieldSet
                 if ($ok) {
                     break;
                 }
-                if (!$field->isSpecial()) {
+                if (! $field->isSpecial()) {
                     $ok = $field->userCanSubmit($group_id, $group_artifact_id, $user_id);
                 }
             }
@@ -319,7 +319,7 @@ class ArtifactFieldSet
      */
     public function update($name, $description, $rank)
     {
-        if (!$name || trim($name) == "") {
+        if (! $name || trim($name) == "") {
             return false;
         }
 
@@ -330,7 +330,7 @@ class ArtifactFieldSet
                 WHERE field_set_id='" .  db_ei($this->getID())  . "'";
 
         $res = db_query($sql);
-        if (!$res) {
+        if (! $res) {
             return false;
         } else {
             $this->fetchData();

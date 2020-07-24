@@ -63,7 +63,7 @@ class Git_Driver_Gerrit_UmbrellaProjectManager
 
         $this->createProjectOnServers($gerrit_servers, $project);
 
-        if (!$parent_project) {
+        if (! $parent_project) {
             $this->resetProjectInheritanceOnServers($gerrit_servers, $project);
             return;
         }

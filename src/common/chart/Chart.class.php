@@ -185,7 +185,7 @@ class Chart
             }
             return false;
         }
-        if (!strnatcasecmp($method, 'SetScale')) {
+        if (! strnatcasecmp($method, 'SetScale')) {
             $this->jpgraph_instance->xaxis->SetColor($this->getMainColor(), $this->getMainColor());
             $this->jpgraph_instance->xaxis->SetFont($this->getFont(), FS_NORMAL, 8);
             $this->jpgraph_instance->xaxis->SetLabelAngle(45);

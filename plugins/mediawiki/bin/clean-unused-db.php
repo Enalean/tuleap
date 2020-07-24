@@ -74,7 +74,7 @@ $is_go_option = isset($argv[1]) && $argv[1] === 'go';
 $dry_run      = true;
 $force_all    = false;
 $limit        = null;
-if ($is_go_option && !isset($argv[2])) {
+if ($is_go_option && ! isset($argv[2])) {
     $dry_run = false;
 } elseif ($is_go_option && $argv[2] === "force") {
     $dry_run   = false;

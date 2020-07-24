@@ -41,7 +41,7 @@ class _CodendiPassUser extends _PassUser
         }*/
 
         $this->_userid = $UserName;
-        if (!isset($this->_prefs->_method)) {
+        if (! isset($this->_prefs->_method)) {
             parent::__construct($this->_userid);
         }
 
@@ -66,7 +66,7 @@ class _CodendiPassUser extends _PassUser
 
     public function userExists()
     {
-        return !empty($this->_userid);
+        return ! empty($this->_userid);
     }
     public function checkPass($submitted_password)
     {

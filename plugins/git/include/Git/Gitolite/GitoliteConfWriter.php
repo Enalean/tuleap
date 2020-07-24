@@ -261,7 +261,7 @@ class Git_Gitolite_GitoliteConfWriter
     private function getProjectPermissionConfFile(Project $project)
     {
         $prjConfDir = 'conf/projects';
-        if (!is_dir($prjConfDir)) {
+        if (! is_dir($prjConfDir)) {
             mkdir($prjConfDir);
         }
         return $prjConfDir . '/' . $project->getUnixName() . '.conf';
@@ -274,7 +274,7 @@ class Git_Gitolite_GitoliteConfWriter
 
     private function createConfFolderForMirrorIfNeeded(Git_Mirror_Mirror $mirror)
     {
-        if (!is_dir($this->getConfFolderForMirror($mirror))) {
+        if (! is_dir($this->getConfFolderForMirror($mirror))) {
             mkdir($this->getConfFolderForMirror($mirror));
         }
     }

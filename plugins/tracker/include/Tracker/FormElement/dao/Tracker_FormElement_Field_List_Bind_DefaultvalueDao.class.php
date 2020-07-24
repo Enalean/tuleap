@@ -57,7 +57,7 @@ class Tracker_FormElement_Field_List_Bind_DefaultvalueDao extends DataAccessObje
     public function save($field_id, $default_values)
     {
         $field_id = $this->da->escapeInt($field_id);
-        if (!is_array($default_values)) {
+        if (! is_array($default_values)) {
             $default_values = array($default_values);
         }
         $values = array();

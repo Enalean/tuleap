@@ -96,7 +96,7 @@ class FRSReleaseFactory
             return null;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return null;
         }
 
@@ -181,7 +181,7 @@ class FRSReleaseFactory
             $dar = $dao->searchByGroupPackageID($_id);
         }
 
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $releases = array ();
             foreach ($dar as $row) {
                 $releases[] = $row;
@@ -218,7 +218,7 @@ class FRSReleaseFactory
             return;
         }
 
-        if (!$dar->valid()) {
+        if (! $dar->valid()) {
             return;
         } else {
             $res = $dar->current();
@@ -242,7 +242,7 @@ class FRSReleaseFactory
 
     public function _getFRSReleaseDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao =  new FRSReleaseDao(CodendiDataAccess::instance(), $this->STATUS_DELETED);
         }
         return $this->dao;
@@ -311,7 +311,7 @@ class FRSReleaseFactory
     {
         $release = $this->getFRSReleaseFromDb($release_id, $group_id);
 
-        if (!$release) {
+        if (! $release) {
             //release not found for this project
             return false;
         } else {
@@ -342,9 +342,9 @@ class FRSReleaseFactory
     {
         $deleteState = true;
         $resReleases = $this->getFRSReleasesInfoListFromDb($groupId);
-        if (!empty($resReleases)) {
+        if (! empty($resReleases)) {
             foreach ($resReleases as $release) {
-                if (!$this->delete_release($groupId, $release['release_id'])) {
+                if (! $this->delete_release($groupId, $release['release_id'])) {
                     $deleteState = false;
                 }
             }
@@ -467,7 +467,7 @@ class FRSReleaseFactory
         // Reset permissions for this release, before setting the new ones
         if ($pm->clearPermission(FRSRelease::PERM_READ, $release->getReleaseID())) {
             $dar = $pm->getAuthorizedUgroups($release->getPackageID(), FRSPackage::PERM_READ, false);
-            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                 foreach ($dar as $row) {
                     // Set new permissions
                     $pm->addPermission(FRSRelease::PERM_READ, $release->getReleaseID(), $row['ugroup_id']);

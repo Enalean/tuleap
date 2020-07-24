@@ -140,7 +140,7 @@ class ErrorManager
     public function getPostponedErrorsAsHTML()
     {
         $flushed = $this->_flush_errors();
-        if (!$flushed) {
+        if (! $flushed) {
             return false;
         }
         if ($flushed->isEmpty()) {
@@ -250,7 +250,7 @@ class ErrorManager
     {
         static $in_handler;
 
-        if (!empty($in_handler)) {
+        if (! empty($in_handler)) {
             $msg = $error->_getDetail();
             $msg->unshiftContent(HTML::h2(fmt(
                 "%s: error while handling error:",
@@ -262,18 +262,18 @@ class ErrorManager
 
         // template which flushed the pending errors already handled,
         // so display now all errors directly.
-        if (!empty($GLOBALS['request']->_finishing)) {
+        if (! empty($GLOBALS['request']->_finishing)) {
             $this->_postpone_mask = 0;
         }
 
         $in_handler = true;
 
         foreach ($this->_handlers as $handler) {
-            if (!$handler) {
+            if (! $handler) {
                 continue;
             }
             $result = $handler->call($error);
-            if (!$result) {
+            if (! $result) {
                 continue;       // Handler did not handle error.
             } elseif (is_object($result)) {
                 // handler filtered the result. Still should pass to
@@ -285,7 +285,7 @@ class ErrorManager
                 $error = $result;
             } else {
                 // Handler handled error.
-                if (!$error->isFatal()) {
+                if (! $error->isFatal()) {
                     $in_handler = false;
                     return;
                 }
@@ -346,7 +346,7 @@ class ErrorManager
         $flushed = HTML();
         for ($i = 0; $i < count($errors); $i++) {
             $error = $errors[$i];
-            if (!is_object($error)) {
+            if (! is_object($error)) {
                 continue;
             }
             if (($error->errno & $keep_mask) != 0) {
@@ -372,7 +372,7 @@ class ErrorManager
         }
 
         // FIXME: Howto announce that to Request->cacheControl()?
-        if (!headers_sent()) {
+        if (! headers_sent()) {
             header("Cache-control: no-cache");
             header("Pragma: nocache");
         }
@@ -390,7 +390,7 @@ class ErrorManager
  */
 function ErrorManager_errorHandler($errno, $errstr, $errfile, $errline)
 {
-    if (!isset($GLOBALS['ErrorManager'])) {
+    if (! isset($GLOBALS['ErrorManager'])) {
         $GLOBALS['ErrorManager'] = new ErrorManager();
     }
 
@@ -569,7 +569,7 @@ class PhpError
         $nl = isset($_SERVER['REQUEST_METHOD']) ? "<br />" : "\n";
         echo $nl . "Traceback:" . $nl;
         foreach ($bt as $i => $elem) {
-            if (!array_key_exists('file', $elem)) {
+            if (! array_key_exists('file', $elem)) {
                 continue;
             }
             print "  " . $elem['file'] . ':' . $elem['line'] . $nl;
@@ -622,7 +622,7 @@ class PhpErrorOnce extends PhpError
 
     public function _sameError($error)
     {
-        if (!$error) {
+        if (! $error) {
             return false;
         }
         return ($this->errno == $error->errno and
@@ -634,7 +634,7 @@ class PhpErrorOnce extends PhpError
     public function removeDoublettes(&$errors)
     {
         for ($i = 0; $i < count($errors); $i++) {
-            if (!isset($errors[$i])) {
+            if (! isset($errors[$i])) {
                 continue;
             }
             if ($this->_sameError($errors[$i])) {
@@ -652,7 +652,7 @@ class PhpErrorOnce extends PhpError
     {
         // Codendi : don't display notices
         //if ($this->isNotice()) return;
-        if (!$count) {
+        if (! $count) {
             $count = $this->_count;
         }
         $dir = defined('PHPWIKI_DIR') ? PHPWIKI_DIR : substr(dirname(__FILE__), 0, -4);
@@ -697,7 +697,7 @@ class PhpErrorOnce extends PhpError
 
 require_once(dirname(__FILE__) . '/HtmlElement.php');
 
-if (!isset($GLOBALS['ErrorManager'])) {
+if (! isset($GLOBALS['ErrorManager'])) {
     $GLOBALS['ErrorManager'] = new ErrorManager();
 }
 

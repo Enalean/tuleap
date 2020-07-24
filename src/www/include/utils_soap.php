@@ -25,7 +25,7 @@ function groups_to_soap($groups)
 {
     $return = array();
     foreach ($groups as $group_id => $group) {
-        if (!$group || $group->isError()) {
+        if (! $group || $group->isError()) {
             //skip if error
         } else {
             $return[] = group_to_soap($group);
@@ -86,7 +86,7 @@ function ugroups_to_soap($ugroups)
 
     foreach ($ugroups as $ugroup) {
         $ugroup_id = $ugroup['ugroup_id'];
-        if (!isset($return[$ugroup_id])) {
+        if (! isset($return[$ugroup_id])) {
             $return[$ugroup_id]['ugroup_id'] = $ugroup_id;
             $return[$ugroup_id]['name'] = $ugroup['name'];
             $return[$ugroup_id]['members'] = array();

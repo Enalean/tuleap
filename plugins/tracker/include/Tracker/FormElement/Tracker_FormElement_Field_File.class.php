@@ -305,7 +305,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
         //Retrieve all the values for the changeset
         $to_values = $this->getChangesetValues($to['changeset_id']);
         foreach ($to_values as $key => $v) {
-            if (!$v['has_changed']) {
+            if (! $v['has_changed']) {
                 unset($to_values[$key]);
             }
         }
@@ -341,7 +341,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
                                  title="' . $sanitized_description . '">';
 
                 $add = '<div class="tracker_artifact_attachment">';
-                if (!$read_only) {
+                if (! $read_only) {
                     $add .= $this->fetchDeleteCheckbox($fileinfo, $submitted_values);
                 }
 
@@ -390,7 +390,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     public function getFileHTMLUrl(Tracker_FileInfo $file_info)
     {
         $artifact = $this->getFileInfoFactory()->getArtifactByFileInfoId($file_info->getId());
-        if (!$artifact) {
+        if (! $artifact) {
             return;
         }
 
@@ -405,7 +405,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
         $artifact = $this->getFileInfoFactory()->getArtifactByFileInfoId($file_info->getId());
 
-        if (!$artifact) {
+        if (! $artifact) {
             return;
         }
 
@@ -502,7 +502,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function fetchMailAllAttachment($artifact_id, $values, $format)
     {
         $output = '';
-        if (!count($values)) {
+        if (! count($values)) {
             return '';
         }
 
@@ -559,7 +559,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     protected function getChangesetValues($changeset_id)
     {
         $da = CodendiDataAccess::instance();
-        if (!$this->file_values_by_changeset) {
+        if (! $this->file_values_by_changeset) {
             $this->file_values_by_changeset = array();
             $field_id     = $da->escapeInt($this->id);
             $sql = "SELECT c.changeset_id, c.has_changed, f.id
@@ -734,7 +734,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
             $this->checkAllFilesHaveBeenSuccessfullyUploaded($value);
         }
 
-        return !$this->has_errors;
+        return ! $this->has_errors;
     }
 
     private function checkAllFilesHaveBeenSuccessfullyUploaded($value)
@@ -824,7 +824,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      */
     public function augmentDataFromRequest(&$fields_data)
     {
-        if (!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) {
+        if (! isset($fields_data[$this->getId()]) || ! is_array($fields_data[$this->getId()])) {
             $fields_data[$this->getId()] = array();
         }
         $files_infos = $this->getSubmittedInfoFromFILES();
@@ -863,7 +863,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
      */
     protected function extractFilesFromRequest()
     {
-        if (!$this->files_info_from_request) {
+        if (! $this->files_info_from_request) {
         }
         return $this->files_info_from_request;
     }
@@ -909,7 +909,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
     {
         //"old" and "new" value are irrelevant in this context.
         //We just have to know if there is at least one file successfully uploaded
-        return $this->checkThatAtLeastOneFileIsUploaded($new_value) || !empty($new_value['delete']);
+        return $this->checkThatAtLeastOneFileIsUploaded($new_value) || ! empty($new_value['delete']);
     }
 
     /**
@@ -1095,7 +1095,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field
 
     public function isEmpty($value, $artifact)
     {
-        $is_empty = !$this->checkThatAtLeastOneFileIsUploaded($value);
+        $is_empty = ! $this->checkThatAtLeastOneFileIsUploaded($value);
         if ($is_empty) {
             $is_empty = $this->isPreviousChangesetEmpty($artifact, $value);
         }

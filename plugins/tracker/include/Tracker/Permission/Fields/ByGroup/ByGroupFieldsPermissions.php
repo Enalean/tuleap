@@ -87,7 +87,7 @@ class ByGroupFieldsPermissions
 
     public function hasNoAccess(\Tracker_FormElement_Field $field): bool
     {
-        return !isset($this->field_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
+        return ! isset($this->field_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
     public function hasSubmitPermission(\Tracker_FormElement_Field $field): bool
@@ -97,7 +97,7 @@ class ByGroupFieldsPermissions
 
     public function hasReadOnlyPermission(\Tracker_FormElement_Field $field): bool
     {
-        return isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && !isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
+        return isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_READ']) && ! isset($this->fields_permissions[$field->getId()]['PLUGIN_TRACKER_FIELD_UPDATE']);
     }
 
     public function hasUpdatePermission(\Tracker_FormElement_Field $field): bool

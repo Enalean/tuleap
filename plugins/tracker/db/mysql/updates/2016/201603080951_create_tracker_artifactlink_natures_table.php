@@ -42,7 +42,7 @@ class b201603080951_create_tracker_artifactlink_natures_table extends ForgeUpgra
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_tracker_artifactlink_natures')) {
+        if (! $this->db->tableNameExists('plugin_tracker_artifactlink_natures')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('Table plugin_tracker_artifactlink_natures not created');
         }
     }

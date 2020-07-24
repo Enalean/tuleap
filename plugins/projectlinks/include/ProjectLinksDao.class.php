@@ -103,7 +103,7 @@ class ProjectLinksDao extends DataAccessObject
                ' WHERE group_id = ' . $groupId .
                ' LIMIT 1';
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
             return true;
         } else {
             $sql = 'SELECT NULL' .
@@ -112,7 +112,7 @@ class ProjectLinksDao extends DataAccessObject
                    ' OR master_group_id = ' . $groupId .
                    ' LIMIT 1';
             $dar = $this->retrieve($sql);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 return true;
             }
         }

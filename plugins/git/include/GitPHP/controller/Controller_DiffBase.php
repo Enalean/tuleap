@@ -45,7 +45,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
      */
     protected function ReadQuery() // @codingStandardsIgnoreLine
     {
-        if (!isset($this->params['plain']) || $this->params['plain'] != true) {
+        if (! isset($this->params['plain']) || $this->params['plain'] != true) {
             if ($this->DiffMode(isset($_GET['o']) ? $_GET['o'] : '') == self::DIFF_SIDEBYSIDE) {
                 $this->params['sidebyside'] = true;
             }
@@ -64,7 +64,7 @@ abstract class Controller_DiffBase extends ControllerBase // @codingStandardsIgn
     {
         $mode = self::DIFF_UNIFIED; // default
 
-        if (!empty($overrideMode)) {
+        if (! empty($overrideMode)) {
             /*
              * User is choosing a new mode
              */

@@ -70,10 +70,10 @@ EOT;
      */
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'synchro_policy')) {
+        if (! $this->db->columnNameExists('plugin_ldap_ugroup', 'synchro_policy')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column synchro_policy in table plugin_ldap_ugroup still not created');
         }
-        if (!$this->db->columnNameExists('plugin_ldap_ugroup', 'bind_option')) {
+        if (! $this->db->columnNameExists('plugin_ldap_ugroup', 'bind_option')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('The column bind_option in table plugin_ldap_ugroup still not created');
         }
     }

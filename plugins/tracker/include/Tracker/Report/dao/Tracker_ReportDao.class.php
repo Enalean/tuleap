@@ -267,7 +267,7 @@ class Tracker_ReportDao extends DataAccessObject
     public function getSqlFragmentForArtifactPermissions($user_is_admin, array $ugroups)
     {
         $res = array('from' => '', 'where' => '');
-        if (!$user_is_admin) {
+        if (! $user_is_admin) {
             $ugroups = $this->da->quoteSmartImplode(',', $ugroups);
             $res['from']  = " LEFT JOIN permissions
                               ON (permissions.object_id = CAST(c.artifact_id AS CHAR CHARACTER SET utf8)

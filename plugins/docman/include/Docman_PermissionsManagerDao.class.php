@@ -68,7 +68,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
             $group_id
         );
         $res = $this->retrieve($sql);
-        if (!$res->isError() && $res->rowCount() > 0) {
+        if (! $res->isError() && $res->rowCount() > 0) {
             return true;
         } else {
             return false;
@@ -112,7 +112,7 @@ class Docman_PermissionsManagerDao extends DataAccessObject
                 AND object_id = " . $this->da->escapeInt($project->getGroupId()) . "
               ORDER BY ugroup_id";
         $res = $this->retrieve($sql);
-        if ($res && !$res->isError()) {
+        if ($res && ! $res->isError()) {
             return $res;
         } else {
             return false;

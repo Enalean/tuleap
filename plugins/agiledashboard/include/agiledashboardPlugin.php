@@ -696,7 +696,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $redirect->base_url = '/plugins/agiledashboard/';
         $group_id = null;
 
-        if ($artifact->getTracker() &&  $artifact->getTracker()->getProject()) {
+        if ($artifact->getTracker() && $artifact->getTracker()->getProject()) {
             $group_id = $artifact->getTracker()->getProject()->getID();
         }
 
@@ -734,7 +734,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new AgileDashboardPluginInfo($this);
         }
         return $this->pluginInfo;

@@ -40,7 +40,7 @@ class Docman_View_ItemDetails
     public function addSection($section)
     {
         $this->sections[$section->getId()] = $section;
-        if (!$this->current_section && count($this->sections) == 1) {
+        if (! $this->current_section && count($this->sections) == 1) {
             $this->setCurrentSection($section->getId());
         }
     }

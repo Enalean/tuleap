@@ -37,8 +37,8 @@ class HTML_Element_Selectbox_TrackerFields_Int_TextFields extends HTML_Element_S
             if ($field->userCanRead($GLOBALS['group_id'], $GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())) {
                 if (
                     $field->isInt()
-                    && !$field->isUsername()
-                    && !$field->isStandardField()
+                    && ! $field->isUsername()
+                    && ! $field->isStandardField()
                     && $field->isTextField()
                 ) {
                     $selected = $this->value == $field->getName();

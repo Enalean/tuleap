@@ -61,7 +61,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'ForumMLPluginInfo')) {
             require_once('ForumMLPluginInfo.class.php');
             $this->pluginInfo = new ForumMLPluginInfo($this);
         }
@@ -75,7 +75,7 @@ class ForumMLPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $request  = HTTPRequest::instance();
         $group_id = (int) $request->get('group_id');
-        if (!isset($this->allowedForProject[$group_id])) {
+        if (! isset($this->allowedForProject[$group_id])) {
             $pM = PluginManager::instance();
             $this->allowedForProject[$group_id] = $pM->isPluginAllowedForProject($this, $group_id);
         }

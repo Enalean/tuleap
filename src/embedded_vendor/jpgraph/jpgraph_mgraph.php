@@ -127,7 +127,7 @@ class MGraph
 
         // Get extension to determine image type
         $e = explode('.', $aFileName);
-        if (!$e) {
+        if (! $e) {
             JpGraphError::RaiseL(12002, $aFileName);
             //('Incorrect file name for MGraph::SetBackgroundImage() : '.$aFileName.' Must have a valid image extension (jpg,gif,png) when using autodetection of image type');
         }
@@ -136,7 +136,7 @@ class MGraph
         $aImgFormat = strtolower($e[count($e) - 1]);
         if ($aImgFormat == 'jpeg') {
             $aImgFormat = 'jpg';
-        } elseif (!in_array($aImgFormat, $valid_formats)) {
+        } elseif (! in_array($aImgFormat, $valid_formats)) {
             JpGraphError::RaiseL(12003, $aImgFormat, $aFileName);
             //('Unknown file extension ($aImgFormat) in MGraph::SetBackgroundImage() for filename: '.$aFileName);
         }

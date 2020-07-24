@@ -207,7 +207,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         if ($value_type == '1') {
             // a date
             $prop = $property['choices']['default_value'];
-            if (!empty($prop['value'])) {
+            if (! empty($prop['value'])) {
                 // a specific date
                 $xml_element->addAttribute('default_value', $prop['value']);
             } // else no default value, nothing to do
@@ -696,7 +696,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         ?Tracker_Artifact_ChangesetValue $value = null,
         $format = 'text'
     ) {
-        if (empty($value) || !$value->getTimestamp()) {
+        if (empty($value) || ! $value->getTimestamp()) {
             return '-';
         }
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -753,7 +753,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
     public function fetchFollowUp($artifact, $from, $to)
     {
         $html = '';
-        if (!$from || !($from_value = $this->getValue($from['value_id']))) {
+        if (! $from || ! ($from_value = $this->getValue($from['value_id']))) {
             $html .= dgettext('tuleap-tracker', 'set to') . ' ';
         } else {
             $html .= dgettext('tuleap-tracker', 'changed from') . ' ' . $this->formatDate($from_value['value']) . ' ' . dgettext('tuleap-tracker', 'to') . ' ';
@@ -1065,7 +1065,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field
         $artifacts = array();
         $dao = new Tracker_FormElement_Field_Value_DateDao();
         $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             $artifactFactory = Tracker_ArtifactFactory::instance();
             foreach ($dar as $row) {
                 $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);

@@ -52,7 +52,7 @@ class Tracker_Report_RendererFactory
      */
     public static function instance()
     {
-        if (!isset(self::$_instance)) {
+        if (! isset(self::$_instance)) {
             self::$_instance = new self();
         }
         return self::$_instance;
@@ -72,7 +72,7 @@ class Tracker_Report_RendererFactory
                     ->searchById($id)
                     ->getRow();
         if ($row) {
-            if (!$report) {
+            if (! $report) {
                 //try to dynamically load it
                 $arf = Tracker_ReportFactory::instance();
                 $report = $arf->getReportById($row['report_id'], UserManager::instance()->getCurrentUser()->getId());
@@ -140,7 +140,7 @@ class Tracker_Report_RendererFactory
             $session->changeSessionNamespace('renderers');
             $row = $session->get($renderer_id);
         }
-        if (!$row) {
+        if (! $row) {
             $row = $this->getDao()->searchByIdAndReportId($renderer_id, $report->id)->getRow();
         }
         if ($row) {
@@ -355,7 +355,7 @@ class Tracker_Report_RendererFactory
      */
     protected function getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Tracker_Report_RendererDao();
         }
         return $this->dao;
@@ -367,7 +367,7 @@ class Tracker_Report_RendererFactory
      */
     protected function getTableDao()
     {
-        if (!$this->table_dao) {
+        if (! $this->table_dao) {
             $this->table_dao = new Tracker_Report_Renderer_TableDao();
         }
         return $this->table_dao;
@@ -392,12 +392,12 @@ class Tracker_Report_RendererFactory
             $this->report_session->changeSessionNamespace('renderers');
         }
 
-        if (!isset($this->renderers[$row['id']]) || $row['id'] == 0) {
+        if (! isset($this->renderers[$row['id']]) || $row['id'] == 0) {
             $instance = null;
             switch ($row['renderer_type']) {
                 case Tracker_Report_Renderer::TABLE:
                     //First retrieve specific properties of the renderer that are not saved in the generic table
-                    if (!isset($row['chunksz']) || !isset($row['multisort'])) {
+                    if (! isset($row['chunksz']) || ! isset($row['multisort'])) {
                         $row['chunksz']   = 15;
                         $row['multisort'] = 0;
                         $table_row = $this->getTableDao()

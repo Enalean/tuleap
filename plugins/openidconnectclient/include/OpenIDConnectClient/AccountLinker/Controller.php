@@ -90,7 +90,7 @@ class Controller
         }
         $return_to               = $request->get('return_to');
         $link_to_register_page   = $this->generateLinkToRegisterPage($request);
-        $is_registering_possible = !$provider->isUniqueAuthenticationEndpoint();
+        $is_registering_possible = ! $provider->isUniqueAuthenticationEndpoint();
         $presenter               = new Presenter(
             $return_to,
             $provider->getName(),

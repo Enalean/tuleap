@@ -76,7 +76,7 @@ final class QueryBuilderVisitorTest extends TestCase
             null,
             null,
         );
-        $int_field       = new  Tracker_FormElement_Field_Integer(
+        $int_field       = new Tracker_FormElement_Field_Integer(
             2,
             null,
             null,
@@ -89,7 +89,7 @@ final class QueryBuilderVisitorTest extends TestCase
             null,
             null,
         );
-        $float_field     = new  \Tracker_FormElement_Field_Float(
+        $float_field     = new \Tracker_FormElement_Field_Float(
             3,
             null,
             null,
@@ -102,7 +102,7 @@ final class QueryBuilderVisitorTest extends TestCase
             null,
             null,
         );
-        $date_field      = new  Tracker_FormElement_Field_Date(
+        $date_field      = new Tracker_FormElement_Field_Date(
             4,
             null,
             null,
@@ -115,14 +115,14 @@ final class QueryBuilderVisitorTest extends TestCase
             null,
             null,
         );
-        $bind            = new  \Tracker_FormElement_Field_List_Bind_Static(
+        $bind            = new \Tracker_FormElement_Field_List_Bind_Static(
             5,
             null,
             null,
             null,
             null
         );
-        $selectbox_field = new  Tracker_FormElement_Field_Selectbox(
+        $selectbox_field = new Tracker_FormElement_Field_Selectbox(
             6,
             null,
             null,

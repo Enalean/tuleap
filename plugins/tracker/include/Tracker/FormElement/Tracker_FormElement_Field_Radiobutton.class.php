@@ -41,7 +41,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
         }
         $label    = $this->getBind()->formatChangesetValueWithoutLink($value);
 
-        if (!$name) {
+        if (! $name) {
             $name = 'name="admin"';
         }
 
@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_Radiobutton extends Tracker_FormElement_Field_Se
         if (in_array($type, array('msb', 'cb'))) {
             //do not change from SB to MSB if the field is used to define the workflow
             $wf = WorkflowFactory::instance();
-            return !$wf->isWorkflowField($this);
+            return ! $wf->isWorkflowField($this);
         } elseif ($type === 'sb') {
             return true;
         }

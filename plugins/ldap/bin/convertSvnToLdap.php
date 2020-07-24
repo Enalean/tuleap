@@ -40,11 +40,11 @@ function extract_params($argv)
 function getLdapFromUserName($username)
 {
     static $list;
-    if (!isset($list[$username])) {
+    if (! isset($list[$username])) {
         $user = UserManager::instance()->getUserByUserName($username);
         if ($user) {
             $res = db_query('SELECT ldap_uid FROM plugin_ldap_user WHERE user_id = ' . $user->getId());
-            if (!db_error($res) && db_numrows($res) === 1) {
+            if (! db_error($res) && db_numrows($res) === 1) {
                 $list[$username] = strtolower(db_result($res, 0, 'ldap_uid'));
             } else {
                 $list[$username] = false;
@@ -149,7 +149,7 @@ function svn_utils_convert_access_file_to_ldap(LDAP_UserManager $ldapUm, $srcFil
 
         // Write new file
         $fd = fopen($dstFileName, "w");
-        if (!$fd) {
+        if (! $fd) {
             echo "** ERROR: $dstFileName: Not writable" . PHP_EOL;
         } else {
             fwrite($fd, $newContent);

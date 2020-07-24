@@ -95,7 +95,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
          // Send a notification message to the user when account is activated by the Site Administrator
         $base_url = HTTPRequest::instance()->getServerUrl();
         while ($row_user = db_fetch_array($res_user)) {
-            if (!send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
+            if (! send_approval_new_user_email($row_user['email'], $row_user['user_name'])) {
                  $GLOBALS['Response']->addFeedback(
                      Feedback::ERROR,
                      $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
@@ -134,7 +134,7 @@ if ($request->exist('form_expiry') && $request->get('form_expiry') != '' && ! pr
                  . " WHERE user_id IN (" . implode(',', $users_array) . ")");
 
         while ($row_user = db_fetch_array($res_user)) {
-            if (!send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
+            if (! send_new_user_email($row_user['email'], $row_user['user_name'], $row_user['confirm_hash'])) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
                         $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))

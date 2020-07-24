@@ -36,7 +36,7 @@ class Tracker_Semantic_ContributorFactory implements IBuildSemanticFromXML, IDup
      */
     public static function instance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             $c = self::class;
             self::$instance = new $c();
         }

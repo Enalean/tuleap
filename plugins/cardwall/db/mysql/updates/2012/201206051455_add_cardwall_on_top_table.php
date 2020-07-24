@@ -43,7 +43,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('plugin_cardwall_on_top')) {
+        if (! $this->db->tableNameExists('plugin_cardwall_on_top')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('plugin_cardwall_on_top table is missing');
         }
     }

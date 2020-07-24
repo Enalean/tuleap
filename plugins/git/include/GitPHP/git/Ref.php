@@ -73,7 +73,7 @@ abstract class Ref extends GitObject
         $this->project = $project;
         $this->refDir = $refDir;
         $this->refName = $refName;
-        if (!empty($refHash)) {
+        if (! empty($refHash)) {
             $this->SetHash($refHash);
         }
     }

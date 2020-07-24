@@ -83,10 +83,10 @@ class Docman_Log
     public $dao;
     public function _getDao()
     {
-        if (!$this->dao) {
+        if (! $this->dao) {
             $this->dao = new Docman_LogDao(CodendiDataAccess::instance());
         }
-        return  $this->dao;
+        return $this->dao;
     }
 
     public $dif;
@@ -103,7 +103,7 @@ class Docman_Log
         $hp   = Codendi_HTMLPurifier::instance();
         $html .= '<h3>' . dgettext('tuleap-docman', 'Document History') . '</h3>';
         $dar = $this->dao->searchByItemIdOrderByTimestamp($item_id);
-        if ($dar && !$dar->isError()) {
+        if ($dar && ! $dar->isError()) {
             if ($dar->valid()) {
                 $titles = array();
                 $titles[] = dgettext('tuleap-docman', 'When');

@@ -56,7 +56,7 @@ class SystemEvent_MAILING_LIST_DELETE extends SystemEvent
             return $this->setErrorBadParam();
         }
 
-        if (!Backend::instance('MailingList')->deleteList($group_list_id)) {
+        if (! Backend::instance('MailingList')->deleteList($group_list_id)) {
             $this->error("Could not delete mailing list $group_list_id");
             return false;
         }

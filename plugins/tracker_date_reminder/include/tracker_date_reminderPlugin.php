@@ -56,7 +56,7 @@ class tracker_date_reminderPlugin extends Plugin
 
     public function getPluginInfo()
     {
-        if (!is_a($this->pluginInfo, 'TrackerDateReminderPluginInfo')) {
+        if (! is_a($this->pluginInfo, 'TrackerDateReminderPluginInfo')) {
             include_once('TrackerDateReminderPluginInfo.class.php');
             $this->pluginInfo = new TrackerDateReminderPluginInfo($this);
         }
@@ -123,7 +123,7 @@ class tracker_date_reminderPlugin extends Plugin
             $fields = $tdrArtifactFieldFactory->getUsedDateFields($params['art_field_fact']);
             foreach ($fields as $field) {
                 // no notification status/settings for special Date field (Submitted on)
-                if (!$field->isSpecial()) {
+                if (! $field->isSpecial()) {
                     $notif_settings = '<A href="/tracker/admin/index.php?func=date_field_notification&group_id=' . $params['group_id'] . '&atid=' . $params['at']->getID() . '&field_id=' . $field->getID() . '">' . dgettext('tuleap-tracker', '[Edit Reminder Settings]') . '</A>';
                     if ($tdrArtifactFieldFactory->notificationEnabled($field->getID())) {
                         $notif_status = dgettext('tuleap-tracker_date_reminder', 'active');
@@ -163,42 +163,42 @@ class tracker_date_reminderPlugin extends Plugin
             return;
         }
 
-        if (!user_isloggedin()) {
+        if (! user_isloggedin()) {
             exit_not_logged_in();
             return;
         }
 
-        if (!$params['ath']->userIsAdmin()) {
+        if (! $params['ath']->userIsAdmin()) {
             exit_permission_denied();
             return;
         }
 
         $field_id = $request->getValidated('field_id', 'uint');
         $field    = $params['art_field_fact']->getFieldFromId($field_id);
-        if ($field && $field->isDateField() && !$field->isSpecial()) {
+        if ($field && $field->isDateField() && ! $field->isSpecial()) {
             if ($request->isPost()) {
                 if ($request->existAndNonEmpty('delete_reminder')) {
                     $tdrArtifactField = new TrackerDateReminder_ArtifactField();
                     $tdrArtifactField->deleteFieldReminderSettings($field->getID(), $params['ath']->getID());
                 } elseif (array_key_exists('submit_notif_settings', $_REQUEST) && $_REQUEST['submit_notif_settings']) {
-                    if ((!isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == null)) && _(!isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == null))) {
+                    if ((! isset($_REQUEST['notified_users']) || (isset($_REQUEST['notified_users']) && $_REQUEST['notified_users'] == null)) && (! isset($_REQUEST['notified_groups']) || (isset($_REQUEST['notified_groups']) && $_REQUEST['notified_groups'] == null))) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the users to be notified.'));
                     } elseif (
                         count($_REQUEST['notified_users']) == 1 && $_REQUEST['notified_users'][0] == 100 &&
                         count($_REQUEST['notified_groups']) == 1 && $_REQUEST['notified_groups'][0] == 100
                     ) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the users to be notified.'));
-                    } elseif (!isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == null)) {
+                    } elseif (! isset($_REQUEST['start']) || (isset($_REQUEST['start']) && $_REQUEST['start'] == null)) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the notification start date.'));
-                    } elseif (!preg_match("/^[0-9]+$/", $_REQUEST['start']) || $_REQUEST['start'] < 0) {
+                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['start']) || $_REQUEST['start'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
-                    } elseif (!isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == null || $_REQUEST['frequency'] == 0))) {
+                    } elseif (! isset($_REQUEST['frequency']) || (isset($_REQUEST['frequency']) && ($_REQUEST['frequency'] == null || $_REQUEST['frequency'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the notification frequency.'));
-                    } elseif (!preg_match("/^[0-9]+$/", $_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
+                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['frequency']) || $_REQUEST['frequency'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
-                    } elseif (!isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == null || $_REQUEST['recurse'] == 0))) {
+                    } elseif (! isset($_REQUEST['recurse']) || (isset($_REQUEST['recurse']) && ($_REQUEST['recurse'] == null || $_REQUEST['recurse'] == 0))) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify the number of mails to be sent.'));
-                    } elseif (!preg_match("/^[0-9]+$/", $_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
+                    } elseif (! preg_match("/^[0-9]+$/", $_REQUEST['recurse']) || $_REQUEST['recurse'] < 0) {
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
                     } else {
                         //merge notified_users and notified_groups into one array

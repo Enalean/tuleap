@@ -180,12 +180,12 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
             $pref = $report;
         } else {
             $pref = user_get_preference(PLUGIN_DOCMAN_VIEW_PREF . '_' . $group_id);
-            if (!$pref) {
+            if (! $pref) {
                 $sBo = Docman_SettingsBo::instance($group_id);
                 $pref = $sBo->getView();
             }
         }
-        if (!$pref || !Docman_View_Browse::isViewAllowed($pref)) {
+        if (! $pref || ! Docman_View_Browse::isViewAllowed($pref)) {
             $pref = 'Tree';
         }
         return $pref;

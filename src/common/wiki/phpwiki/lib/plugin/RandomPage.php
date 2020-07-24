@@ -73,7 +73,7 @@ class WikiPlugin_RandomPage extends WikiPlugin
         // fix new pages handling in arg preprozessor.
         } elseif (is_array($pages)) {
             $numpages = (int) $pages[0];
-            if ($numpages > 0 and !$dbi->isWikiPage($numpages)) {
+            if ($numpages > 0 and ! $dbi->isWikiPage($numpages)) {
                 $pages = false;
             } else {
                 $numpages = 1;

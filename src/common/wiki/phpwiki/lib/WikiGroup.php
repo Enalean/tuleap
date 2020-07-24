@@ -20,7 +20,7 @@
  */
 
 if (
-    !defined('GROUP_METHOD') or
+    ! defined('GROUP_METHOD') or
     GROUP_METHOD !== 'NONE'
 ) {
     trigger_error(_("No or unsupported GROUP_METHOD defined"), E_USER_WARNING);
@@ -86,13 +86,13 @@ class WikiGroup
     public function _getUserName()
     {
         global $request;
-        $user = (!empty($this->user)) ? $this->user : $request->getUser();
+        $user = (! empty($this->user)) ? $this->user : $request->getUser();
         $username = $user->getID();
         if ($username != $this->username) {
             $this->membership = array();
             $this->username = $username;
         }
-        if (!$this->not_current) {
+        if (! $this->not_current) {
             $this->user = $user;
         }
         return $username;
@@ -183,7 +183,7 @@ class WikiGroup
         if (isset($this->membership[$group])) {
             return $this->membership[$group];
         }
-        $user = (!empty($this->user)) ? $this->user : $request->getUser();
+        $user = (! empty($this->user)) ? $this->user : $request->getUser();
         switch ($group) {
             case GROUP_EVERY:
                 return $this->membership[$group] = true;
@@ -238,7 +238,7 @@ class WikiGroup
     public function _allUsers()
     {
         static $result = array();
-        if (!empty($result)) {
+        if (! empty($result)) {
             return $result;
         }
 

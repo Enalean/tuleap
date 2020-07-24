@@ -304,7 +304,7 @@ class Docman_ItemDao extends DataAccessObject
         $sql .= $this->_getItemSearchFromStmt();
         $sql .= (count($from) > 0 ? ' LEFT JOIN ' . implode(' LEFT JOIN ', $from) : '')
             . ' WHERE 1 AND ';
-        if (!isset($params['ignore_deleted']) || !$params['ignore_deleted']) {
+        if (! isset($params['ignore_deleted']) || ! $params['ignore_deleted']) {
             $sql .= ' ' . $this->getExcludeDeletedItemsStmt('i') . ' AND ';
         }
         if (isset($params['ignore_obsolete']) && $params['ignore_obsolete'] == true) {
@@ -400,7 +400,7 @@ class Docman_ItemDao extends DataAccessObject
             $row['create_date'] = time();
         }
 
-        if (!isset($row['update_date']) || $row['update_date'] == '') {
+        if (! isset($row['update_date']) || $row['update_date'] == '') {
             $row['update_date'] = time();
         }
 
@@ -561,7 +561,7 @@ class Docman_ItemDao extends DataAccessObject
     {
         $sql = 'SELECT parent_id, update_date FROM plugin_docman_item WHERE item_id = ' . $item_id_quoted;
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->valid()) {
+        if ($dar && ! $dar->isError() && $dar->valid()) {
             $item = $dar->current();
             $sql = 'UPDATE plugin_docman_item SET update_date = ' . $item['update_date'] . ' WHERE item_id = ' . $item['parent_id'];
             $this->update($sql);
@@ -867,7 +867,7 @@ class Docman_ItemDao extends DataAccessObject
             $obsoleteToday
         );
         $res = $this->retrieve($sql);
-        if ($res && !$res->isError() && $res->rowCount() >= 1) {
+        if ($res && ! $res->isError() && $res->rowCount() >= 1) {
             return true;
         } else {
             return false;
@@ -895,7 +895,7 @@ class Docman_ItemDao extends DataAccessObject
             db_ei($group_id)
         );
         $res = $this->retrieve($sql);
-        if ($res && !$res->isError()) {
+        if ($res && ! $res->isError()) {
             if ($res->rowCount() > 1) {
                 $res->rewind();
                 while ($res->valid()) {
@@ -1001,7 +1001,7 @@ class Docman_ItemDao extends DataAccessObject
              ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
 
         $dar = $this->retrieve($sql);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+        if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                         $pendings = array();
             foreach ($dar as $row) {
                 $pendings[] = $row;
@@ -1081,7 +1081,7 @@ class Docman_ItemDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
     public function countDocumentAfter(int $timestamp): int
     {
@@ -1092,6 +1092,6 @@ class Docman_ItemDao extends DataAccessObject
 
         $res = $this->retrieveFirstRow($sql);
 
-        return (!$res) ? 0 : (int) $res['nb'];
+        return (! $res) ? 0 : (int) $res['nb'];
     }
 }

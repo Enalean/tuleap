@@ -61,11 +61,11 @@ class Theme_Sidebar extends Theme
         static $UserCalPageTitle = false;
         global $request;
 
-        if (!$UserCalPageTitle) {
+        if (! $UserCalPageTitle) {
             $UserCalPageTitle = $request->_user->getId() .
                                 SUBPAGE_SEPARATOR . _("Calendar");
         }
-        if (!$UserCalPageTitle) {
+        if (! $UserCalPageTitle) {
             $UserCalPageTitle = (BLOG_EMPTY_DEFAULT_PREFIX ? ''
                                  : ($request->_user->getId() . SUBPAGE_SEPARATOR)) . "Blog";
         }
@@ -89,7 +89,7 @@ class Theme_Sidebar extends Theme
                 '',
                 array('src' => $this->_findData('jscalendar/calendar' . (DEBUG ? '' : '_stripped') . '.js'))
             ));
-            if (!($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js"))) {
+            if (! ($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js"))) {
                 $langfile = $this->_findData("jscalendar/lang/calendar-en.js");
             }
             $this->addMoreHeaders(JavaScript('', array('src' => $langfile)));
@@ -108,7 +108,7 @@ class Theme_Sidebar extends Theme
                     $existing[] = basename($page->_pagename);
                 }
             }
-            if (!empty($existing)) {
+            if (! empty($existing)) {
                 $js_exist = '{"' . join('":1,"', $existing) . '":1}';
                 //var SPECIAL_DAYS = {"2004-05-11":1,"2004-05-12":1,"2004-06-01":1}
                 $this->addMoreHeaders(JavaScript('

@@ -50,7 +50,7 @@ class Tracker_URL extends URL
             }
         } elseif ((int) $request->get('tracker') || (int) $request->get('atid')) {
             $tracker_id = (int) $request->get('tracker');
-            if (!$tracker_id) {
+            if (! $tracker_id) {
                 $tracker_id = (int) $request->get('atid');
             }
             if (($tracker = $this->getTrackerFactory()->getTrackerByid($tracker_id))) {

@@ -90,7 +90,7 @@ class Docman_BuildItemMappingVisitor
         // If there is not yet a mapping between the current item id and his
         // equivalent in the destination project, find it.
         // If not found, stop the job.
-        if (!isset($this->itemMapping[$item->getId()])) {
+        if (! isset($this->itemMapping[$item->getId()])) {
             $res = $this->findMatchingItem($item);
             if ($res !== true) {
                 return false;
@@ -125,7 +125,7 @@ class Docman_BuildItemMappingVisitor
     {
         if ($item->getParentId() == 0) {
             $dar = $this->searchMatchingItem($item, 0);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->getRow();
                 if ($this->checkItemPermissions($row['item_id'])) {
                     $this->itemMapping[$item->getId()] = $row['item_id'];
@@ -145,7 +145,7 @@ class Docman_BuildItemMappingVisitor
         if (isset($this->itemMapping[$item->getId()])) {
             $parentId = $this->itemMapping[$item->getId()];
             $dar = $this->searchMatchingChildren($item, $parentId);
-            if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
                 // When there are several items that match, we need to build a fake node
                 $node = new Docman_Folder();
                 while ($row = $dar->getRow()) {

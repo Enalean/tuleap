@@ -131,7 +131,7 @@ class MyProjectMilestones extends Widget
     {
         $project_id = $this->project_milestones_dao->searchProjectIdById((int) $id);
 
-        if (!$project_id) {
+        if (! $project_id) {
             return;
         }
 
@@ -155,7 +155,7 @@ class MyProjectMilestones extends Widget
 
     public function getPreferences($widget_id)
     {
-        if (!$this->project) {
+        if (! $this->project) {
             $this->project = $this->http->getProject();
         }
 

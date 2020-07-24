@@ -17,7 +17,7 @@ class WikiDB_backend_dumb_WantedPagesIter extends WikiDB_backend_iterator
         $this->_allpages   = $all_pages;
         $this->_allpages_array   = $all_pages->asArray();
         $this->_backend = &$backend;
-        if (!is_array($exclude)) {
+        if (! is_array($exclude)) {
             $this->exclude = $exclude ? PageList::explodePageList($exclude) : array();
         } else {
             $this->exclude = $exclude;

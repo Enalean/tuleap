@@ -163,7 +163,7 @@ $fmmf = new FileModuleMonitorFactory();
 
 $javascript_packages_array = array();
 
-if (!$pv && $permission_manager->isAdmin($project, $user)) {
+if (! $pv && $permission_manager->isAdmin($project, $user)) {
     $html .= '<p><a href="admin/package.php?func=add&amp;group_id=' . $group_id . '" data-test="create-new-package">[' . $GLOBALS['Language']->getText('file_admin_editpackages', 'create_new_p') . ']</a></p>';
 }
 
@@ -197,13 +197,13 @@ foreach ($packages as $package_id => $package_for_display) {
         detectSpecialCharactersInName($package->getName(), $GLOBALS['Language']->getText('file_showfiles', 'package'));
         $html .= '<fieldset class="package">';
         $html .= '<legend>';
-        if (!$pv) {
+        if (! $pv) {
             $frs_icon = $package_for_display['is_collapsed'] ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
             $html    .= '<a href="#"  data-test="toggle-package" onclick="javascript:toggle_package(\'p_' . $package_id . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . '" /></a>&nbsp;';
         }
         $html             .= " <$emphasis data-test='package-name'>" . $hp->purify(util_unconvert_htmlspecialchars($package->getName()))
             . "</$emphasis>";
-        if (!$pv) {
+        if (! $pv) {
             if ($permission_manager->isAdmin($project, $user)) {
                 $html .= '     <a href="admin/package.php?func=edit&amp;group_id=' . $group_id . '&amp;id=' .
                     $package_id . '" data-test="update-package" title="' .
@@ -236,7 +236,7 @@ foreach ($packages as $package_id => $package_for_display) {
         $res_release  = $package->getReleases();
         $num_releases = count($res_release);
 
-        if (!isset($proj_stats['releases'])) {
+        if (! isset($proj_stats['releases'])) {
             $proj_stats['releases'] = 0;
         }
         $proj_stats['releases'] += $num_releases;
@@ -244,14 +244,14 @@ foreach ($packages as $package_id => $package_for_display) {
         $javascript_releases_array = array();
         $package_class_collapsed   = $package_for_display['is_collapsed'] ? 'frs_collapsed' : '';
         $html .= '<div class="' . $package_class_collapsed . '" id="p_' . $package_id . '">';
-        if (!$pv && $permission_manager->isAdmin($project, $user)) {
+        if (! $pv && $permission_manager->isAdmin($project, $user)) {
             $html .= '<p><a
                          href="admin/release.php?func=add&amp;group_id=' . $group_id . '&amp;package_id=' . $package_id . '"
                          data-test="create-release">
                          [' . $GLOBALS['Language']->getText('file_admin_editpackages', 'add_releases') . ']
                          </a></p>';
         }
-        if (!$res_release || $num_releases < 1) {
+        if (! $res_release || $num_releases < 1) {
             $html .= '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
         } else {
             $cpt_release = 0;
@@ -287,13 +287,13 @@ foreach ($packages as $package_id => $package_for_display) {
                     $html .= '<table width="100%" class="release">';
                     $html .= ' <TR id="p_' . $package_id . 'r_' . $package_release->getReleaseID() . '">';
                     $html .= '  <TD>';
-                    if (!$pv) {
+                    if (! $pv) {
                         $frs_icon = $is_release_collapsed ? FRS_COLLAPSED_ICON : FRS_EXPANDED_ICON;
                         $html .= '<a href="#" onclick="javascript:toggle_release(\'p_' . $package_id . '\', \'r_' . $package_release->getReleaseID() . '\'); return false;" /><img src="' . $frs_icon . '" id="img_p_' . $package_id . 'r_' . $package_release->getReleaseID() . '" /></a>';
                     }
                     $html .= "     <$emphasis data-test='release-name'>" .
                         $hp->purify($package_release->getName()) . "</$emphasis>";
-                    if (!$pv) {
+                    if (! $pv) {
                         if ($permission_manager->isAdmin($project, $user)) {
                             $html .= '     <a
                             href="admin/release.php?func=edit&amp;group_id=' . $group_id . '&amp;package_id=' . $package_id . '&amp;id=' . $package_release->getReleaseID() . '"
@@ -312,7 +312,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     }
                     $html .= '</td> ';
                     $html .= '  <TD class="release_date">' . format_date("Y-m-d", $package_release->getReleaseDate()) . '';
-                    if (!$pv && $permission_manager->isAdmin($project, $user)) {
+                    if (! $pv && $permission_manager->isAdmin($project, $user)) {
                         $html .= ' <a
                         href="admin/release.php?func=delete&amp;group_id=' . $group_id . '&amp;package_id=' . $package_id . '&amp;id=' . $package_release->getReleaseID() . '"
                         title="' .  $hp->purify($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), CODENDI_PURIFIER_CONVERT_HTML)  . '"
@@ -332,14 +332,14 @@ foreach ($packages as $package_id => $package_for_display) {
                     }
                     $uploaded_links  = $uploaded_links_retriever->getLinksForRelease($package_release);
 
-                    if (!isset($proj_stats['files'])) {
+                    if (! isset($proj_stats['files'])) {
                         $proj_stats['files'] = 0;
                     }
                     $proj_stats['files'] += $num_files;
 
                     $javascript_files_array  = array();
                     $release_class_collapsed = $is_release_collapsed && ! $pv ? 'frs_collapsed' : '';
-                    if ((!$res_file && !$uploaded_links) || ($num_files < 1 && count($uploaded_links) < 1)) {
+                    if ((! $res_file && ! $uploaded_links) || ($num_files < 1 && count($uploaded_links) < 1)) {
                         $html .= '<span class="' . $release_class_collapsed . '" id="p_' . $package_id . 'r_' . $package_release->getReleaseID() . 'f_0"><B>' . $Language->getText('file_showfiles', 'no_files') . '</B></span>' . "\n";
                         $javascript_files_array[] = "'f_0'";
                     } else {
@@ -461,7 +461,7 @@ foreach ($packages as $package_id => $package_for_display) {
                     $cpt_release = $cpt_release + 1;
                 }
             }
-            if (!$cpt_release) {
+            if (! $cpt_release) {
                 $html .= '<B>' . $Language->getText('file_showfiles', 'no_releases') . '</B>' . "\n";
             }
         }
@@ -473,7 +473,7 @@ foreach ($packages as $package_id => $package_for_display) {
 
 echo $html;
 
-if (!$pv) {
+if (! $pv) {
     $javascript_array = 'var packages = {';
     $javascript_array .= implode(",", $javascript_packages_array);
     $javascript_array .= '}';

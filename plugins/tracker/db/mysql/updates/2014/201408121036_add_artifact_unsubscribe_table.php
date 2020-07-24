@@ -41,7 +41,7 @@ class b201408121036_add_artifact_unsubscribe_table extends ForgeUpgrade_Bucket
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_artifact_unsubscribe')) {
+        if (! $this->db->tableNameExists('tracker_artifact_unsubscribe')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('tracker_artifact_unsubscribe');
         }
     }

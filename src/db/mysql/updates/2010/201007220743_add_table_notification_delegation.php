@@ -44,7 +44,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('groups_notif_delegation')) {
+        if (! $this->db->tableNameExists('groups_notif_delegation')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('groups_notif_delegation table is missing');
         }
     }

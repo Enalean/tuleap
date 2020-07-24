@@ -172,7 +172,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     {
         $user_preference = $user->getPreference(PFUser::EDITION_DEFAULT_FORMAT);
 
-        if (!$user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
+        if (! $user_preference || $user_preference === Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT) {
             return Tracker_Artifact_ChangesetValue_Text::TEXT_CONTENT;
         }
 
@@ -258,11 +258,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
         $rule = new \Rule_String();
         foreach ($value['description'] as $key => $submitted_step_description) {
-            if (!isset($value['expected_results'][$key])) {
+            if (! isset($value['expected_results'][$key])) {
                 return false;
             }
 
-            if (!$rule->isValid($submitted_step_description) || !$rule->isValid($value['expected_results'][$key])) {
+            if (! $rule->isValid($submitted_step_description) || ! $rule->isValid($value['expected_results'][$key])) {
                 $GLOBALS['Response']->addFeedback(
                     \Feedback::ERROR,
                     sprintf(dgettext('tuleap-tracker', '%1$s is not a text.'), $this->getLabel())
@@ -271,11 +271,11 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
                 return false;
             }
 
-            if (!$this->isSubmittedFormatValid($value, 'description_format', $key)) {
+            if (! $this->isSubmittedFormatValid($value, 'description_format', $key)) {
                 return false;
             }
 
-            if (!$this->isSubmittedFormatValid($value, 'expected_results_format', $key)) {
+            if (! $this->isSubmittedFormatValid($value, 'expected_results_format', $key)) {
                 return false;
             }
         }
@@ -304,7 +304,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     ) {
         $existing_steps = $previous_changesetvalue->getValue();
         if ($this->doesUserWantToRemoveAllSteps($new_value)) {
-            return !empty($existing_steps);
+            return ! empty($existing_steps);
         }
 
         $submitted_steps = [];
@@ -364,7 +364,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         array $submitted_values,
         CreatedFileURLMapping $url_mapping
     ): array {
-        if ($this->doesUserWantToRemoveAllSteps($submitted_values) || !isset($submitted_values['description'])) {
+        if ($this->doesUserWantToRemoveAllSteps($submitted_values) || ! isset($submitted_values['description'])) {
             return [];
         }
 
@@ -372,10 +372,10 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $rank  = StepDefinition::START_RANK;
         foreach ($submitted_values['description'] as $key => $description) {
             $description = trim($description);
-            if (!$description) {
+            if (! $description) {
                 continue;
             }
-            if (!isset($submitted_values['description_format'][$key])) {
+            if (! isset($submitted_values['description_format'][$key])) {
                 continue;
             }
             $description_format = $submitted_values['description_format'][$key];
@@ -413,7 +413,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
 
     private function extractCrossRefs(Tracker_Artifact $artifact, array $submitted_steps): bool
     {
-        if (!isset($submitted_steps['description']) && !isset($submitted_steps['expected_results'])) {
+        if (! isset($submitted_steps['description']) && ! isset($submitted_steps['expected_results'])) {
             return true;
         }
 
@@ -423,7 +423,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
         $text = $concatenated_descriptions . PHP_EOL . $concatenated_expected_results;
 
         $tracker = $this->getTracker();
-        if (!$tracker) {
+        if (! $tracker) {
             return true;
         }
 
@@ -493,7 +493,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     private function getStepPresenter(Step $step): ?StepPresenter
     {
         $tracker = $this->getTracker();
-        if (!$tracker) {
+        if (! $tracker) {
             return null;
         }
 
@@ -516,7 +516,7 @@ class StepDefinition extends Tracker_FormElement_Field implements TrackerFormEle
     protected function renderStepEditionToString(?Tracker_Artifact $artifact, array $steps_presenters)
     {
         $tracker = $this->getTracker();
-        if (!$tracker) {
+        if (! $tracker) {
             throw new LogicException(self::class . ' # ' . $this->getId() . ' must have a valid tracker');
         }
 

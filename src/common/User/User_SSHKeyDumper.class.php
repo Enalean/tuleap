@@ -84,7 +84,7 @@ class User_SSHKeyDumper
         if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
             throw new RuntimeException("User " . $user->getUserName() . " has no uid/gid");
         }
-        if (!(posix_setegid($user_unix_info['gid']) && posix_seteuid($user_unix_info['uid']))) {
+        if (! (posix_setegid($user_unix_info['gid']) && posix_seteuid($user_unix_info['uid']))) {
             throw new RuntimeException("Cannot change current process uid/gid for " . $user->getUserName());
         }
     }
@@ -102,7 +102,7 @@ class User_SSHKeyDumper
             unlink($ssh_dir);
             throw new RuntimeException('SECURITY ISSUE! User "' . $user->getUserName() . '" made a symbolic link on it\'s .ssh dir (was a link to "' . $link_path . '"). Link was deleted but you should investigate.');
         }
-        if (!is_dir($ssh_dir)) {
+        if (! is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {
                 $this->backend->chmod($ssh_dir, 0700);
             } else {

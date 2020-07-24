@@ -36,7 +36,7 @@ class ArchiveCleaner
 
         $previous = $page->getRevisionBefore($revision);
 
-        return !empty($author_id)
+        return ! empty($author_id)
             && $author_id == $previous->get('author_id');
     }
 
@@ -67,7 +67,7 @@ class ArchiveCleaner
             }
 
             if ($this->isMergeable($revision)) {
-                if (!$keep) {
+                if (! $keep) {
                     $page->mergeRevision($revision);
                 }
             } else {
@@ -78,7 +78,7 @@ class ArchiveCleaner
                     }
                     $authors_seen[$author_id] = true;
                 }
-                if (!$keep) {
+                if (! $keep) {
                     $page->deleteRevision($revision);
                 }
             }
@@ -93,7 +93,7 @@ class ArchiveCleaner_Counter
 {
     public function __construct($params)
     {
-        if (!empty($params)) {
+        if (! empty($params)) {
             extract($params);
         }
         $INFINITY = 0x7fffffff;
@@ -126,7 +126,7 @@ class ArchiveCleaner_Counter
     {
         $supplanted = $revision->get('_supplanted');
 
-        if (!$supplanted) {
+        if (! $supplanted) {
             // Every revision but the most recent should have a supplanted time.
             // However, if it doesn't...
             trigger_error(

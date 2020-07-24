@@ -43,7 +43,7 @@ class b201412041555_add_tracker_field_computed_cache_table extends ForgeUpgrade_
 
     public function postUp()
     {
-        if (!$this->db->tableNameExists('tracker_field_computed_cache')) {
+        if (! $this->db->tableNameExists('tracker_field_computed_cache')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('table tracker_field_computed_cache not created');
         }
     }

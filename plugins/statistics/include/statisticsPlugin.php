@@ -123,7 +123,7 @@ class StatisticsPlugin extends Plugin
 
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo instanceof StatisticsPluginInfo) {
+        if (! $this->pluginInfo instanceof StatisticsPluginInfo) {
             include_once('StatisticsPluginInfo.class.php');
             $this->pluginInfo = new StatisticsPluginInfo($this);
         }

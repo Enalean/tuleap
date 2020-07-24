@@ -164,7 +164,7 @@ class Valid
             }
             if (
                 $this->globalErrorMessage !== null &&
-                !$this->isValid
+                ! $this->isValid
             ) {
                 $this->addFeedback($level, $this->globalErrorMessage);
             } else {
@@ -229,7 +229,7 @@ class Valid
     {
         if (
             $this->isRequired
-            || (!$this->isRequired && !$this->isValueEmpty($value))
+            || (! $this->isRequired && ! $this->isValueEmpty($value))
         ) {
             $this->checkEachRules($value);
             return $this->isValid;

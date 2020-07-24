@@ -31,7 +31,7 @@ EOT;
     public function preUp()
     {
         $this->db = $this->getApi('ForgeUpgrade_Bucket_Db');
-        if (!$this->db->tableNameExists('frs_file_deleted')) {
+        if (! $this->db->tableNameExists('frs_file_deleted')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotCompleteException('frs_file_deleted table is missing, run b201010191436_add_table_frs_file_deleted before.');
         }
     }

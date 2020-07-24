@@ -45,7 +45,7 @@ EOT;
 
     public function postUp()
     {
-        if (!$this->db->columnNameExists('plugin_git', 'repository_events_mailing_prefix')) {
+        if (! $this->db->columnNameExists('plugin_git', 'repository_events_mailing_prefix')) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Column repository_events_mailing_prefix in table plugin_git is missing');
         }
     }

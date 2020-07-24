@@ -63,7 +63,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\ReferenceAliasTracker\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;
@@ -89,7 +89,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
         $value     = $params['value'];
         $reference = $this->original_references_builder->getReference($keyword, $value);
 
-        if (!empty($reference)) {
+        if (! empty($reference)) {
             $params['reference'] = $reference;
         }
     }

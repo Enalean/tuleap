@@ -52,7 +52,7 @@ class FileUploadDataProvider
     {
         $file_fields = $this->formelement_factory->getUsedFileFields($tracker);
         foreach ($file_fields as $field) {
-            if (!$field->userCanUpdate($user)) {
+            if (! $field->userCanUpdate($user)) {
                 continue;
             }
 

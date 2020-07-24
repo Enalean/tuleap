@@ -37,8 +37,8 @@ class HTML_Element_Selectbox_TrackerFields_Numerics extends HTML_Element_Selectb
             if ($field->userCanRead($GLOBALS['group_id'], $GLOBALS['ath']->getID(), UserManager::instance()->getCurrentUser()->getId())) {
                 if (
                     ($field->isSelectBox() || $field->isInt() || $field->isFloat())
-                    && !$field->isUsername()
-                    && !$field->isStandardField()
+                    && ! $field->isUsername()
+                    && ! $field->isStandardField()
                 ) {
                     $selected = $this->value == $field->getName();
                     $this->addOption(new HTML_Element_Option($field->getLabel(), $field->getName(), $selected));

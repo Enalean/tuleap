@@ -47,8 +47,8 @@ class NewsPermissionsRepresentationBuilder
 
             if (
                 $selected_ugroup_id
-                && !$is_public
-                && !$this->isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
+                && ! $is_public
+                && ! $this->isUGroupAuthorizedToSeePrivateNews($selected_ugroup_id)
             ) {
                 continue;
             }
