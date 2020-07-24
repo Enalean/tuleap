@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2017-2019. All Rights Reserved.
+ * Copyright (c) Enalean, 2017-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -583,10 +583,7 @@ class CrossTrackerReportsResource extends AuthenticatedResource
      */
     private function getReportRepresentation($report)
     {
-        $representation = new CrossTrackerReportRepresentation();
-        $representation->build($report);
-
-        return $representation;
+        return CrossTrackerReportRepresentation::fromReport($report);
     }
 
     private function sendPaginationHeaders($limit, $offset, $size)

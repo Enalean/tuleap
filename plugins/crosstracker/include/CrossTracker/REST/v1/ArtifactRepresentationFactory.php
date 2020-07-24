@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2018. All Rights Reserved.
+ * Copyright (c) Enalean, 2018-Present. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -34,8 +34,7 @@ class ArtifactRepresentationFactory
             if (! $artifact->userCanView($current_user)) {
                 continue;
             }
-            $artifact_representation = new CrossTrackerArtifactReportRepresentation();
-            $artifact_representation->build($artifact, $current_user);
+            $artifact_representation = CrossTrackerArtifactReportRepresentation::build($artifact, $current_user);
             $representations[] = $artifact_representation;
         }
 
