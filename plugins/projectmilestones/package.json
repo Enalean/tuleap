@@ -12,7 +12,7 @@
     "vue": "^2.6.11",
     "vue-dompurify-html": "^2.2.1",
     "vue-template-compiler": "^2.6.11",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@types/d3-array": "^2.0.0",

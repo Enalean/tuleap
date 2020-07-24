@@ -8,7 +8,7 @@
     "luxon": "^0.5.3",
     "vue": "^2.6.11",
     "vue-gettext": "^2.1.8",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.3"
