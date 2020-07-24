@@ -91,7 +91,7 @@ class Factory
         if ($dar === false) {
             throw new ChannelsNotFoundException();
         }
-        $channels = array();
+        $channels = [];
         foreach ($dar as $row) {
             $channels[] = $row['channel_name'];
         }

@@ -50,13 +50,13 @@ class BotMattermostGitNotification
 
     public function toArray($repository_id)
     {
-        return array(
+        return [
             'id'             => $this->bot->getId(),
             'name'           => $this->bot->getName(),
             'webhook_url'    => $this->bot->getWebhookUrl(),
             'avatar'         => $this->bot->getAvatarUrl(),
             'channels'       => implode(', ', $this->channels),
             'is_assigned'    => $repository_id !== null
-        );
+        ];
     }
 }

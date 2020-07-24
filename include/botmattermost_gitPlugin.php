@@ -58,7 +58,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
 
     public function getDependencies()
     {
-        return array('git', 'botmattermost');
+        return ['git', 'botmattermost'];
     }
 
     public function getHooksAndCallbacks()
