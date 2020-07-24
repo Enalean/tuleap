@@ -15,6 +15,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#, php-format
+msgid "%s has been updated"
+msgstr "%s a été mis à jour"
+
+#, php-format
+msgid "%s has been updated by %s"
+msgstr "%s a été mis à jour par %s"
+
 msgid "Campaigns"
 msgstr "Campagnes"
 

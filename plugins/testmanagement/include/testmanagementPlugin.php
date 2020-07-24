@@ -26,6 +26,7 @@ use Tuleap\Layout\IncludeAssets;
 use Tuleap\Project\Event\ProjectServiceBeforeActivation;
 use Tuleap\Project\Flags\ProjectFlagsBuilder;
 use Tuleap\Project\Flags\ProjectFlagsDao;
+use Tuleap\Project\HeartbeatsEntryCollection;
 use Tuleap\Project\XML\Export\ArchiveInterface;
 use Tuleap\Project\XML\ServiceEnableForXmlImportRetriever;
 use Tuleap\TestManagement\Administration\StepFieldUsageDetector;
@@ -34,6 +35,8 @@ use Tuleap\TestManagement\Campaign\Execution\ExecutionDao;
 use Tuleap\TestManagement\Config;
 use Tuleap\TestManagement\Dao;
 use Tuleap\TestManagement\FirstConfigCreator;
+use Tuleap\TestManagement\Heartbeat\HeartbeatArtifactOverrider;
+use Tuleap\TestManagement\Heartbeat\LatestHeartbeatsCollector;
 use Tuleap\TestManagement\LegacyRoutingController;
 use Tuleap\TestManagement\Nature\NatureCoveredByOverrider;
 use Tuleap\TestManagement\Nature\NatureCoveredByPresenter;
@@ -55,6 +58,7 @@ use Tuleap\Tracker\Artifact\ActionButtons\AdditionalArtifactActionButtonsFetcher
 use Tuleap\Tracker\Artifact\ActionButtons\AdditionalButtonLinkPresenter;
 use Tuleap\Tracker\Artifact\Event\ExternalStrategiesGetter;
 use Tuleap\Tracker\Artifact\RecentlyVisited\HistoryQuickLinkCollection;
+use Tuleap\Tracker\Artifact\Heartbeat\OverrideArtifactsInFavourOfAnOther;
 use Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao;
 use Tuleap\Tracker\Artifact\RecentlyVisited\VisitRecorder;
 use Tuleap\Tracker\Events\ArtifactLinkTypeCanBeUnused;
@@ -127,6 +131,8 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
             $this->addHook(StatisticsCollectionCollector::NAME);
             $this->addHook(CheckPostActionsForTracker::NAME);
             $this->addHook(HistoryQuickLinkCollection::NAME);
+            $this->addHook(OverrideArtifactsInFavourOfAnOther::NAME);
+            $this->addHook(HeartbeatsEntryCollection::NAME);
         }
 
         return parent::getHooksAndCallbacks();
@@ -843,5 +849,17 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
                 'fa-check'
             )
         );
+    }
+
+    public function overrideArtifactsInFavourOfAnOther(OverrideArtifactsInFavourOfAnOther $event): void
+    {
+        $artifact_overrider = new HeartbeatArtifactOverrider();
+        $artifact_overrider->overrideArtifacts($this->getConfig(), $event);
+    }
+
+    public function collectHeartbeatsEntries(HeartbeatsEntryCollection $collection): void
+    {
+        $collector = LatestHeartbeatsCollector::build();
+        $collector->collect($collection);
     }
 }

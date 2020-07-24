@@ -119,6 +119,7 @@ use Tuleap\Tracker\FormElement\ChartConfigurationFieldRetriever;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueChecker;
 use Tuleap\Tracker\FormElement\ChartConfigurationValueRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\ArtifactLinkFieldValueDao;
+use Tuleap\Tracker\FormElement\Field\ArtifactLink\LinksRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationCollectionBuilder;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\SourceOfAssociationDetector;
@@ -1918,17 +1919,11 @@ class Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interfa
      *
      * @return Artifact[]
      */
-    public function getLinkedAndReverseArtifacts(PFUser $user)
+    public function getLinkedAndReverseArtifacts(PFUser $user): array
     {
-        $linked_and_reverse_artifacts = [];
-        $artifact_link_field          = $this->getAnArtifactLinkField($user);
-        $last_changeset               = $this->getLastChangeset();
+        $links = new LinksRetriever($this->getArtifactlinkDao());
 
-        if ($artifact_link_field && $last_changeset) {
-            $linked_and_reverse_artifacts = $artifact_link_field->getLinkedAndReverseArtifacts($last_changeset, $user);
-        }
-
-        return $linked_and_reverse_artifacts;
+        return $links->retrieveLinkedAndReverseArtifacts($this, $user);
     }
 
     /**

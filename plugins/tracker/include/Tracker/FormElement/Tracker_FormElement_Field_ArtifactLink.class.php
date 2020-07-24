@@ -1322,21 +1322,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * @return array
-     */
-    private function getReverseLinksIds($artifact_id)
-    {
-        $reverse_links_infos = $this->getReverseLinks($artifact_id);
-
-        $reverse_links_ids = [];
-        foreach ($reverse_links_infos as $reverse_link_info) {
-            $reverse_links_ids[] = $reverse_link_info->getArtifactId();
-        }
-
-        return $reverse_links_ids;
-    }
-
-    /**
      * @return Tracker_ArtifactLinkInfo[]
      */
     private function getArtifactLinkInfos($data)
@@ -1740,28 +1725,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
     }
 
     /**
-     * Retrieve linked artifacts and reverse linked artifacts according to user's permissions
-     *
-     * @return Artifact[]
-     */
-    public function getLinkedAndReverseArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user)
-    {
-        $artifacts        = [];
-        $changeset_value  = $changeset->getValue($this);
-        $all_artifact_ids = $this->getReverseLinksIds($changeset->getArtifact()->getId());
-
-        if ($changeset_value) {
-            $all_artifact_ids = array_unique(array_merge($all_artifact_ids, $changeset_value->getArtifactIds()));
-        }
-
-        foreach ($all_artifact_ids as $id) {
-            $this->addArtifactUserCanViewFromId($artifacts, $id, $user);
-        }
-
-        return $artifacts;
-    }
-
-    /**
      * Retrieve sliced linked artifacts according to user's permissions
      *
      * This is nearly the same as a paginated list however, for performance
@@ -1802,8 +1765,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field
         return new Tracker_Artifact_PaginatedArtifacts($artifacts, $size);
     }
 
-    /** @return Artifact|null */
-    private function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user)
+    public function addArtifactUserCanViewFromId(array &$artifacts, $id, PFUser $user): void
     {
         $artifact = $this->getArtifactFactory()->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {

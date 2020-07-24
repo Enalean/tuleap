@@ -99,4 +99,46 @@ class ExecutionDao extends DataAccessObject
             $definition_tracker_id
         );
     }
+
+    /**
+     * @psalm-return list<array{id:int, tracker_id: int, last_changeset_id: int, submitted_by:int, submitted_on: int, use_artifact_permissions: bool, per_tracker_id: int, last_update_date: int, last_updated_by_id:int}>
+     */
+    public function searchLastTestExecUpdate(int $project_id, int $nb_max, array $current_user_ugroup_ids): array
+    {
+        $user_ugroup_ids = EasyStatement::open()->in('?*', $current_user_ugroup_ids);
+
+        $sql = "SELECT test_campaign.id as id, test_campaign.*, test_exec_changeset.submitted_on AS last_update_date, test_exec.submitted_by AS last_updated_by_id
+    FROM tracker_artifact AS test_campaign
+             JOIN tracker_changeset_value AS campaign_cv ON (campaign_cv.changeset_id = test_campaign.last_changeset_id)
+             JOIN tracker_changeset_value_artifactlink AS campaign_artlink ON (campaign_artlink.changeset_value_id = campaign_cv.id)
+             JOIN tracker_artifact AS test_exec ON (test_exec.id = campaign_artlink.artifact_id)
+             JOIN tracker_changeset_value AS test_exec_cv ON (test_exec_cv.changeset_id = test_exec.last_changeset_id )
+             JOIN tracker_changeset AS test_exec_changeset ON (test_exec_changeset.id = test_exec_cv.changeset_id )
+             JOIN tracker_changeset_value_artifactlink AS test_exec_artlink ON (test_exec_artlink.changeset_value_id = test_exec_cv.id)
+             JOIN tracker_artifact AS artifact ON (artifact.id = test_exec_artlink.artifact_id)
+             JOIN tracker ON (tracker.id = artifact.tracker_id)
+             JOIN plugin_testmanagement AS testmanagement_config ON (testmanagement_config.project_id = tracker.group_id)
+             LEFT JOIN permissions ON (permissions.object_id = CAST(test_exec.id AS CHAR CHARACTER SET utf8)
+                   AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')
+            WHERE testmanagement_config.campaign_tracker_id = test_campaign.tracker_id
+              AND testmanagement_config.test_execution_tracker_id = test_exec.tracker_id
+              AND testmanagement_config.project_id = ?
+              AND (test_exec.use_artifact_permissions = 0 OR permissions.ugroup_id IN ($user_ugroup_ids))
+            GROUP BY test_campaign.id, test_exec_changeset.submitted_on
+            LIMIT ?";
+
+        $parameters_for_finding_all_test_exec_per_test_def = array_merge(
+            $user_ugroup_ids->values(),
+        );
+
+        return $this->getDB()->safeQuery(
+            $sql,
+            array_merge(
+                [$project_id],
+                $parameters_for_finding_all_test_exec_per_test_def,
+                [$nb_max]
+            ),
+            \PDO::FETCH_UNIQUE
+        );
+    }
 }
