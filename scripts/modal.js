@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { modal as createModal } from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     const add_modal_element = document.getElementById("admin-config-bot-add");
