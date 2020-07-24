@@ -67,7 +67,7 @@
     "psr/http-server-handler": "^1.0",
     "psr/http-server-middleware": "^1.0",
     "psr/log": "^1.1",
-    "sensiolabs-de/deptrac-shim": "^0.7.1",
+    "sensiolabs-de/deptrac-shim": "^0.8.2",
     "symfony/console": "^5.0",
     "symfony/lock": "^5.0",
     "symfony/process": "^5.0",
