@@ -84,7 +84,7 @@ class botmattermost_gitPlugin extends PluginWithLegacyInternalRouting
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new PluginInfo($this);
         }
         return $this->pluginInfo;

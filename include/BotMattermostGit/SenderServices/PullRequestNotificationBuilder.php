@@ -81,7 +81,7 @@ class PullRequestNotificationBuilder
     private function makeText($pull_request_description)
     {
         $text = '';
-        if (!empty($pull_request_description)) {
+        if (! empty($pull_request_description)) {
             $text = $pull_request_description;
         }
 
