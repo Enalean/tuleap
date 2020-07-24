@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as tlp from "tlp";
+import { createModal } from "tlp";
 
 document.addEventListener("DOMContentLoaded", () => {
     initModalAddBot();
@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function initModalAddBot() {
         var modal_element = document.getElementById("modal-add-bot");
 
-        var modal_simple_content = tlp.modal(modal_element, {});
+        var modal_simple_content = createModal(modal_element, {});
         document.getElementById("button-modal-add-bot").addEventListener("click", function () {
             modal_simple_content.toggle();
         });
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
-            var modal = tlp.modal(modal_element);
+            var modal = createModal(modal_element);
 
             button.addEventListener("click", function () {
                 modal.toggle();
