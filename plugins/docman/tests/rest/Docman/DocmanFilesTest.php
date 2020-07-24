@@ -1218,7 +1218,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -1229,7 +1229,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
     {
         $response = $this->getResponse($this->client->options('docman_files/' . $id . '/lock'), REST_TestDataBuilder::ADMIN_USER_NAME);
 
-        $this->assertEquals(array('OPTIONS', 'POST', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -1243,7 +1243,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -1257,7 +1257,7 @@ class DocmanFilesTest extends DocmanTestExecutionHelper
             REST_TestDataBuilder::ADMIN_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'PUT'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PUT'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 

@@ -45,7 +45,7 @@ class WikiPlugin__GroupInfo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

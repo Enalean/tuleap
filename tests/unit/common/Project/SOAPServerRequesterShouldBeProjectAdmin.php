@@ -64,7 +64,7 @@ class SOAPServerRequesterShouldBeProjectAdmin extends TestCase
         $this->permission_checker->shouldReceive('checkUserCreateAProject')->byDefault();
 
         $template = \Mockery::spy(\Project::class)->shouldReceive('isTemplate')->andReturns(true)->getMock();
-        $template->shouldReceive('getServices')->andReturns(array());
+        $template->shouldReceive('getServices')->andReturns([]);
         $this->project_manager->shouldReceive('getProject')->with($this->template_id)->andReturns($template);
 
         $this->project_creator->shouldReceive('create')->andReturns(\Mockery::spy(\Project::class));

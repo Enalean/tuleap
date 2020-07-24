@@ -118,18 +118,18 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
         $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
         $project->shouldReceive('isCVSTracked')->andReturns(true);
-        $proj_members = array("0" =>
-                              array (
+        $proj_members = ["0" =>
+                               [
                                      "user_name" => "user1",
-                                     "user_id"  => "1"),
+                                     "user_id"  => "1"],
                               "1" =>
-                              array (
+                               [
                                      "user_name" => "user2",
-                                     "user_id"  => "2"),
+                                     "user_id"  => "2"],
                               "2" =>
-                              array (
+                               [
                                      "user_name" => "user3",
-                                     "user_id"  => "3"));
+                                     "user_id"  => "3"]];
 
         $project->shouldReceive('getMembersUserNames')->andReturns($proj_members);
 
@@ -165,7 +165,7 @@ final class BackendCVSTest extends TestCase
     {
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $service_dao = \Mockery::spy(\ServiceDao::class);
-        $service_dao->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns(array(array('unix_group_name' => 'TestProj'),array('unix_group_name' => 'gpig')));
+        $service_dao->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns([['unix_group_name' => 'TestProj'], ['unix_group_name' => 'gpig']]);
         $backend->shouldReceive('_getServiceDao')->andReturns($service_dao);
 
         $backend->setCVSRootListNeedUpdate();
@@ -180,7 +180,7 @@ final class BackendCVSTest extends TestCase
         $this->assertContains("/cvsroot/gpig\n", $cvs_config_array1, "Project gpig should be listed in root file");
         $this->assertContains("/cvsroot/TestProj\n", $cvs_config_array1, "Project TestProj should be listed in root file");
 
-        $service_dao->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns(array(array('unix_group_name' => 'TestProj'),array('unix_group_name' => 'gpig')));
+        $service_dao->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns([['unix_group_name' => 'TestProj'], ['unix_group_name' => 'gpig']]);
         $backend->setCVSRootListNeedUpdate();
         $this->assertTrue($backend->getCVSRootListNeedUpdate(), "Need to update the repo list");
         $this->assertTrue($backend->CVSRootListUpdate());
@@ -192,7 +192,7 @@ final class BackendCVSTest extends TestCase
 
         // A project was added
         $service_dao2 = \Mockery::spy(\ServiceDao::class);
-        $service_dao2->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns(array(array('unix_group_name' => 'TestProj'),array('unix_group_name' => 'gpig'),array('unix_group_name' => 'newProj')));
+        $service_dao2->shouldReceive('searchActiveUnixGroupByUsedService')->andReturns([['unix_group_name' => 'TestProj'], ['unix_group_name' => 'gpig'], ['unix_group_name' => 'newProj']]);
         $backend2 = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend2->shouldReceive('_getServiceDao')->andReturns($service_dao2);
         $backend2->setCVSRootListNeedUpdate();
@@ -251,7 +251,7 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
         $project->shouldReceive('isCVSTracked')->andReturns(false);
 
-        $project->shouldReceive('getMembersUserNames')->andReturns(array());
+        $project->shouldReceive('getMembersUserNames')->andReturns([]);
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
@@ -286,7 +286,7 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(true)->andReturns('testproj');
         $project->shouldReceive('isCVSTracked')->andReturns(true);
 
-        $project->shouldReceive('getMembersUserNames')->andReturns(array());
+        $project->shouldReceive('getMembersUserNames')->andReturns([]);
 
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(142)->andReturns($project);
@@ -371,7 +371,7 @@ final class BackendCVSTest extends TestCase
 
         // The user
         $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getId')->andReturns(array(142));
+        $user->shouldReceive('getId')->andReturns([142]);
 
         $project1 = \Mockery::spy(\Project::class);
         $project1->shouldReceive('getId')->andReturns(102);
@@ -381,7 +381,7 @@ final class BackendCVSTest extends TestCase
         $project2->shouldReceive('getId')->andReturns(101);
         $project2->shouldReceive('usesCVS')->andReturns(true);
 
-        $projects =  array(102, 101);
+        $projects =  [102, 101];
         $user->shouldReceive('getProjects')->andReturns($projects);
 
         $pm = \Mockery::spy(\ProjectManager::class);
@@ -420,7 +420,7 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
         $pm = \Mockery::spy(\ProjectManager::class);
         $pm->shouldReceive('getProject')->with(1)->andReturns($project);
-        $project->shouldReceive('getMembersUserNames')->andReturns(array());
+        $project->shouldReceive('getMembersUserNames')->andReturns([]);
         $backend = \Mockery::mock(\BackendCVS::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $backend->shouldReceive('getProjectManager')->andReturns($pm);
         $backend->shouldReceive('getCVSWatchMode')->andReturns(false);
@@ -476,7 +476,7 @@ final class BackendCVSTest extends TestCase
         $project->shouldReceive('getUnixName')->with(false)->andReturns('TestProj');
         $project->shouldReceive('isPublic')->andReturns(true);
         $project->shouldReceive('isCVSPrivate')->andReturns(false);
-        $project->shouldReceive('getMembersUserNames')->andReturns(array());
+        $project->shouldReceive('getMembersUserNames')->andReturns([]);
 
         $backend = $this->GivenACVSRepositoryWithWrongOwnership($project, $cvsdir);
         $backend->shouldReceive('log')->with('Restoring ownership on CVS dir: ' . $cvsdir, 'info')->once();

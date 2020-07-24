@@ -65,7 +65,7 @@ if ($folders_len > 1) {
     $parent_id = $folders_ids[$folders_len - 2];
 }
 
-$sub_categories = array();
+$sub_categories = [];
 
 $sql = "SELECT t.trove_cat_id AS trove_cat_id, t.fullname AS fullname, SUM(IFNULL(t3.nb, 0)) AS subprojects
 FROM trove_cat AS t, trove_cat AS t2 LEFT JOIN (SELECT t.trove_cat_id AS trove_cat_id, count(t.group_id) AS nb
@@ -118,15 +118,15 @@ AND trove_cat_root = " . $form_cat;
 }
 
 // here we print list of root level categories, and use open folder for current
-$root_categories = array();
+$root_categories = [];
 $res_rootcat = db_query('SELECT trove_cat_id,fullname FROM trove_cat WHERE '
     . 'parent=0 ORDER BY fullname');
 while ($row_rootcat = db_fetch_array($res_rootcat)) {
-    $root_categories[] = array(
+    $root_categories[] = [
         'id'       => $row_rootcat['trove_cat_id'],
         'name'     => $row_rootcat['fullname'],
         'selected' => $row_rootcat['trove_cat_id'] == $folders_ids[0],
-    );
+    ];
 }
 
 if ($special_cat === 'none') {
@@ -136,7 +136,7 @@ if ($special_cat === 'none') {
         . ' GROUP BY group_id';
     $res_root_trov = db_query($qry_root_trov);
 
-    $prj_list_categorized = array();
+    $prj_list_categorized = [];
     while ($row_root_trov = db_fetch_array($res_root_trov)) {
         $prj_list_categorized[] = $row_root_trov['group_id'];
     }
@@ -195,27 +195,27 @@ $total_nb_projects = $row_count['nb'];
 
 $collection_retriever = new \Tuleap\Trove\TroveCatCollectionRetriever($trove_cat_dao);
 
-$projects = array();
+$projects = [];
 while ($row = db_fetch_array($res_grp)) {
-    $projects[] = array(
+    $projects[] = [
         'longname'    => $row['group_name'],
         'shortname'   => strtolower($row['unix_group_name']),
         'description' => $row['short_description'],
         'trovecats'   => $collection_retriever->getCollection($row['group_id']),
         'date'        => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['register_time']),
-    );
+    ];
 }
 
-$pagination_params = array(
+$pagination_params = [
     'form_cat' => $form_cat
-);
+];
 if ($special_cat) {
     $pagination_params['special_cat'] = $special_cat;
 }
 
 $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/softwaremap');
 
-$GLOBALS['HTML']->header(array('title' => $Language->getOverridableText('softwaremap_trove_list', 'map'), 'main_classes' => array('tlp-framed')));
+$GLOBALS['HTML']->header(['title' => $Language->getOverridableText('softwaremap_trove_list', 'map'), 'main_classes' => ['tlp-framed']]);
 
 $renderer->renderToPage(
     'software_map',
@@ -236,4 +236,4 @@ $renderer->renderToPage(
     )
 );
 
-$HTML->footer(array());
+$HTML->footer([]);

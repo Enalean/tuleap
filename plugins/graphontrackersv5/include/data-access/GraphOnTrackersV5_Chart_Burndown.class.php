@@ -138,11 +138,11 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function getSpecificRow()
     {
-        return array(
+        return [
             'field_id'   => $this->getFieldId(),
             'start_date' => $this->getStartDate(),
             'duration'   => $this->getDuration(),
-        );
+        ];
     }
 
     /**
@@ -210,7 +210,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
     {
         return array_merge(
             parent::getProperties(),
-            array(
+            [
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_NumericFieldsV5(
                     $this->getTracker(),
                     $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'burndown_property_effort'),
@@ -228,7 +228,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
                     $this->getDuration(),
                     4
                 )
-            )
+            ]
         );
     }
 
@@ -277,9 +277,9 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart
      */
     public function arrayOfSpecificProperties()
     {
-        return array('start_date' => $this->getStartDate(),
+        return ['start_date' => $this->getStartDate(),
                      'field_id' => $this->getFieldId(),
-                     'duration' => $this->getDuration());
+                     'duration' => $this->getDuration()];
     }
 
     public function exportToXml(SimpleXMLElement $root, $formsMapping)

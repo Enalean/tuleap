@@ -34,7 +34,7 @@ class ProjectListResultsPresenterBuilder
         $limit,
         $offset
     ) {
-        $matching_projects = array();
+        $matching_projects = [];
 
         foreach ($projects as $row) {
             if (! $this->isProjectStatusValid($row['status'])) {
@@ -104,7 +104,7 @@ class ProjectListResultsPresenterBuilder
                 break;
         }
 
-        return array($status_label, $status_class);
+        return [$status_label, $status_class];
     }
 
     /**

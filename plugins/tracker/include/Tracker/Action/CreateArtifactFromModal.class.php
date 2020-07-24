@@ -75,7 +75,7 @@ class Tracker_Action_CreateArtifactFromModal
 
     private function sendJSONErrors()
     {
-        $feedback            = array();
+        $feedback            = [];
         $feedback['message'] = dgettext('tuleap-tracker', 'The artifact cannot be created because there are several errors:');
 
         if ($GLOBALS['Response']->feedbackHasErrors()) {

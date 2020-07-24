@@ -90,18 +90,18 @@ class BurndownCalculator implements IProvideArtifactChildrenForComputedCalculati
         }
 
         if (count($computed_artifacts) > 0) {
-            return array(
+            return [
                 'computed_values' => $this->computed_dao->getBurndownComputedValueAtGivenTimestamp(
                     $computed_artifacts,
                     $selected_day->getTimestamp()
                 ),
                 'manual_sum'      => $manual_sum
-            );
+            ];
         }
 
-        return array(
+        return [
             'computed_values' => false,
             'manual_sum'      => $manual_sum
-        );
+        ];
     }
 }

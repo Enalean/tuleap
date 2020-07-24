@@ -59,9 +59,9 @@ class DocmanV1_XMLExportData
 
     private $data_path;
 
-    private $ugroups = array();
+    private $ugroups = [];
 
-    private $minimal_permissions = array();
+    private $minimal_permissions = [];
 
     public function __construct(DocmanV1_XMLExportDao $dao, UserManager $user_manager, UGroupManager $ugroup_manager, DOMDocument $doc, $data_path)
     {
@@ -70,12 +70,12 @@ class DocmanV1_XMLExportData
         $this->user_manager        = $user_manager;
         $this->data_path           = $data_path;
         $this->ugroup_manager      = $ugroup_manager;
-        $this->minimal_permissions = array(
-            ProjectUGroup::ANONYMOUS       => array(),
-            ProjectUGroup::REGISTERED      => array(),
-            ProjectUGroup::PROJECT_MEMBERS => array(),
-            ProjectUGroup::PROJECT_ADMIN   => array(self::V2_SOAP_PERM_MANAGE),
-        );
+        $this->minimal_permissions = [
+            ProjectUGroup::ANONYMOUS       => [],
+            ProjectUGroup::REGISTERED      => [],
+            ProjectUGroup::PROJECT_MEMBERS => [],
+            ProjectUGroup::PROJECT_ADMIN   => [self::V2_SOAP_PERM_MANAGE],
+        ];
     }
 
     public function appendUGroups(DOMElement $ugroups, Project $project)

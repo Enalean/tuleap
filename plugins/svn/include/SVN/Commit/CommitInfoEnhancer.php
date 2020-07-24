@@ -88,9 +88,9 @@ class CommitInfoEnhancer
     private function setChangedFiles(Repository $repository, $revision)
     {
         if ($this->checkRepositoryExists($repository)) {
-            $file_added    = array();
-            $file_updated  = array();
-            $file_deleted  = array();
+            $file_added    = [];
+            $file_updated  = [];
+            $file_deleted  = [];
             $changed_files = $this->svn_look->getChangedFiles($repository, $revision);
             if ($changed_files != "") {
                 foreach ($changed_files as $file) {

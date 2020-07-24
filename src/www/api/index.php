@@ -45,9 +45,9 @@ try {
 } catch (Exception $exception) {
     $request_instrumentation->incrementRest(403);
     header("HTTP/1.0 403 Forbidden");
-    $GLOBALS['Response']->sendJSON(array(
+    $GLOBALS['Response']->sendJSON([
         'error' => $exception->getMessage()
-    ));
+    ]);
     die();
 }
 

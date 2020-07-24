@@ -42,12 +42,12 @@ class LDAP_UserManager
     /**
      * @var Array of LDAPResult
      */
-    private $ldapResultCache = array();
+    private $ldapResultCache = [];
 
     /**
      * @var Array of User
      */
-    private $usersLoginChanged = array();
+    private $usersLoginChanged = [];
 
     /**
      * @var LDAP_UserSync
@@ -165,7 +165,7 @@ class LDAP_UserManager
      */
     public function getUserIdsForLdapUser($ldapIds)
     {
-        $userIds = array();
+        $userIds = [];
         $dao = $this->getDao();
         foreach ($ldapIds as $lr) {
             $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
@@ -190,7 +190,7 @@ class LDAP_UserManager
      */
     public function getUserIdsFromUserList($userList)
     {
-        $userIds = array();
+        $userIds = [];
         $userList = array_map('trim', preg_split('/[,;]/', $userList));
         foreach ($userList as $u) {
             $user = $this->getUserManager()->findUser($u);
@@ -389,7 +389,7 @@ class LDAP_UserManager
         $userUpdated = $this->getUserManager()->updateDb($user);
 
         $ldapUpdated = true;
-        $user_id    = $this->getLdapLoginFromUserIds(array($user->getId()))->getRow();
+        $user_id    = $this->getLdapLoginFromUserIds([$user->getId()])->getRow();
         if ($user_id['ldap_uid'] != $lr->getLogin()) {
             $ldapUpdated = $this->updateLdapUid($user, $lr->getLogin());
             $this->triggerRenameOfUsers();
@@ -444,7 +444,7 @@ class LDAP_UserManager
     public function triggerRenameOfUsers()
     {
         if (count($this->usersLoginChanged)) {
-            $userIds = array();
+            $userIds = [];
             foreach ($this->usersLoginChanged as $user) {
                 $userIds[] = $user->getId();
             }
@@ -461,7 +461,7 @@ class LDAP_UserManager
      */
     public function getUsersToBeSuspended()
     {
-        $users_to_be_suspended = array();
+        $users_to_be_suspended = [];
         $active_users          = $this->getDao()->getActiveUsers();
         foreach ($active_users as $active_user) {
             if ($this->isUserDeletedFromLdap($active_user)) {

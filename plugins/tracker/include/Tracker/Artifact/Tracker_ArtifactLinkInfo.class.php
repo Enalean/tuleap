@@ -134,11 +134,11 @@ class Tracker_ArtifactLinkInfo
     public function getUrl()
     {
         return HTTPRequest::instance()->getServerUrl() . '/goto?' . http_build_query(
-            array(
+            [
                 'key'      => $this->getKeyword(),
                 'val'      => $this->getArtifactId(),
                 'group_id' => $this->getGroupId()
-            )
+            ]
         );
     }
 
@@ -197,10 +197,10 @@ class Tracker_ArtifactLinkInfo
     public function shouldLinkBeHidden($nature)
     {
         $hide_artifact = false;
-        $params = array(
+        $params = [
             'nature'        => $nature,
             'hide_artifact' => &$hide_artifact
-        );
+        ];
         EventManager::instance()->processEvent(
             Tracker_Artifact_ChangesetValue_ArtifactLinkDiff::HIDE_ARTIFACT,
             $params

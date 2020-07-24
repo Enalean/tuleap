@@ -52,15 +52,15 @@ class SVN_LogFactory
     public function getRevisions($limit, PFUser $author)
     {
         $raw_revisions = $this->getRawRevisions($limit, $author);
-        $revisions     = array();
+        $revisions     = [];
 
         while ($raw_revision = db_fetch_array($raw_revisions)) {
             list($revision, $commit_id, $description, $date, $whoid) = $raw_revision;
 
-            $revisions[] = array('revision' => $revision,
+            $revisions[] = ['revision' => $revision,
                                  'author'   => $whoid,
                                  'date'     => $date,
-                                 'message'  => trim($description));
+                                 'message'  => trim($description)];
         }
 
         return $revisions;
@@ -76,11 +76,11 @@ class SVN_LogFactory
      */
     public function getCommiters(TimeInterval $interval)
     {
-        $stats = array();
+        $stats = [];
         $dao   = $this->getDao();
         $dar   = $dao->searchCommiters($this->project->getID(), $interval);
         foreach ($dar as $row) {
-            $stats[] = array('user_id' => $row['whoid'], 'commit_count' => $row['commit_count']);
+            $stats[] = ['user_id' => $row['whoid'], 'commit_count' => $row['commit_count']];
         }
         return $stats;
     }
@@ -89,11 +89,11 @@ class SVN_LogFactory
     {
         $where_forbidden = $this->getForbiddenPaths($user);
 
-        $stats = array();
+        $stats = [];
         $dao   = $this->getDao();
         $dar   = $dao->searchTopModifiedFiles($this->project->getID(), $interval, $limit, $where_forbidden);
         foreach ($dar as $row) {
-            $stats[] = array('path' => $row['path'], 'commit_count' => $row['commit_count']);
+            $stats[] = ['path' => $row['path'], 'commit_count' => $row['commit_count']];
         }
         return $stats;
     }

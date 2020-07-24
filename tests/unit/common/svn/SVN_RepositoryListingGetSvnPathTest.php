@@ -43,13 +43,13 @@ class SVN_RepositoryListingGetSvnPathTest extends TestCase
 
         $this->svn_perms_mgr->shouldReceive('userCanRead')->andReturns(true);
 
-        $content = array("/my/Project/tags",
+        $content = ["/my/Project/tags",
             "/my/Project/tags/1.0/",
-            "/my/Project/tags/2.0/");
+            "/my/Project/tags/2.0/"];
         $this->svnlook->shouldReceive('getDirectoryListing')->with($project, '/my/Project/tags')->andReturns($content);
 
         $tags = $this->svn_repo_listing->getSvnPaths($user, $project, $svn_path);
-        $this->assertEquals(array('1.0', '2.0'), array_values($tags));
+        $this->assertEquals(['1.0', '2.0'], array_values($tags));
     }
 
     public function testItEnsuresUserCannotAccessPathSheIsNotAllowedToSee(): void
@@ -60,12 +60,12 @@ class SVN_RepositoryListingGetSvnPathTest extends TestCase
 
         $this->svn_perms_mgr->shouldReceive('userCanRead')->with($user, $project, '/my/Project/tags/1.0/')->andReturns(true);
 
-        $content = array("/my/Project/tags/",
+        $content = ["/my/Project/tags/",
             "/my/Project/tags/1.0/",
-            "/my/Project/tags/2.0/");
+            "/my/Project/tags/2.0/"];
         $this->svnlook->shouldReceive('getDirectoryListing')->andReturns($content);
 
         $tags = $this->svn_repo_listing->getSvnPaths($user, $project, $svn_path);
-        $this->assertEquals(array('1.0'), array_values($tags));
+        $this->assertEquals(['1.0'], array_values($tags));
     }
 }

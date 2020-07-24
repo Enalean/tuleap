@@ -96,10 +96,10 @@ class Docman_NotificationsManager
         UgroupsUpdater $ugroups_updater
     ) {
         $this->project       = $project;
-        $this->_listeners    = array();
+        $this->_listeners    = [];
         $this->_feedback     = $feedback;
         $this->_item_factory = $this->_getItemFactory();
-        $this->notifications = array();
+        $this->notifications = [];
         $this->mail_builder  = $mail_builder;
         if ($project && ! $project->isError()) {
             $this->_group_name = $project->getPublicName();
@@ -188,13 +188,13 @@ class Docman_NotificationsManager
     */
     public function getListeningUsers(Docman_Item $item)
     {
-        $users = array();
+        $users = [];
         return $this->users_retriever->getListeningUsers($item, $users, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
     public function getListeningUGroups(Docman_Item $item)
     {
-        $ugroups = array();
+        $ugroups = [];
         return $this->ugroups_retriever->getListeningUGroups($item, $ugroups, PLUGIN_DOCMAN_NOTIFICATION);
     }
 
@@ -233,7 +233,7 @@ class Docman_NotificationsManager
             $subject = '[' . $this->_group_name . ' - Documents] ' . $subject;
 
             $this->notifications[$msg] = new Notification(
-                array(),
+                [],
                 $subject,
                 Codendi_HTMLPurifier::instance()->purify($msg, CODENDI_PURIFIER_BASIC),
                 $msg,

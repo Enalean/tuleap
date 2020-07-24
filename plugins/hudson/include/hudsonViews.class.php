@@ -37,7 +37,7 @@ class hudsonViews extends Views
     public function header()
     {
         $request = HTTPRequest::instance();
-        $GLOBALS['HTML']->header(array('title' => $this->_getTitle(),'group' => $request->get('group_id'), 'toptab' => 'hudson'));
+        $GLOBALS['HTML']->header(['title' => $this->_getTitle(), 'group' => $request->get('group_id'), 'toptab' => 'hudson']);
         echo $this->_getHelp();
         echo '<h2>' . $this->_getTitle() . '</h2>';
     }
@@ -59,7 +59,7 @@ class hudsonViews extends Views
     }
     public function footer()
     {
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
     }
 
     // {{{ Views
@@ -69,8 +69,8 @@ class hudsonViews extends Views
         $group_id = $request->get('group_id');
         $user     = UserManager::instance()->getCurrentUser();
         $em       = EventManager::instance();
-        $services = array();
-        $params   = array('group_id' => $group_id, 'services' => &$services);
+        $services = [];
+        $params   = ['group_id' => $group_id, 'services' => &$services];
         /* $services will contain an array of details of all plugins that will trigger CI builds
            Example of what $services may contain:
             Array(
@@ -236,8 +236,8 @@ class hudsonViews extends Views
 
                 echo '<h3>' . $GLOBALS['Language']->getText('plugin_hudson', 'editjob_title') . '</h3>';
 
-                $services = array();
-                $params   = array('group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services);
+                $services = [];
+                $params   = ['group_id' => $group_id, 'job_id' => $job_id, 'services' => &$services];
                 $em->processEvent('collect_ci_triggers', $params);
 
                 $button = $GLOBALS['Language']->getText('plugin_hudson', 'form_editjob_button');
@@ -330,19 +330,19 @@ class hudsonViews extends Views
 
                     echo '<td>';
                     echo '<img src="' . $purifier->purify($job->getStatusIcon()) . '" alt="' . $purifier->purify($job->getStatus()) . '" title="' . $purifier->purify($job->getStatus()) . '" /> ';
-                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', array($job->getName()))) . '">' . $purifier->purify($job->getName()) . '</a>';
+                    echo '<a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_job', [$job->getName()])) . '">' . $purifier->purify($job->getName()) . '</a>';
                     echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastSuccessfulBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastSuccessfulBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastSuccessfulBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', [$job->getLastSuccessfulBuildNumber(), $job->getName()])) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastSuccessfulBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
                     if ($job->getLastFailedBuildNumber() !== 0) {
-                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastFailedBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', array($job->getLastFailedBuildNumber(), $job->getName()))) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
+                        echo '  <td><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getLastFailedBuildUrl())) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'show_build', [$job->getLastFailedBuildNumber(), $job->getName()])) . '">' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'build') . ' #' . $job->getLastFailedBuildNumber()) . '</a></td>';
                     } else {
                         echo '  <td>&nbsp;</td>';
                     }
-                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', array($job->getName()))) . '"></a></td>';
+                    echo '  <td align="center"><a href="' . $purifier->purify($uri_sanitizer->sanitizeForHTMLAttribute($job->getUrl())) . '/rssAll"><img src="' . hudsonPlugin::ICONS_PATH . 'rss_feed.png" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', [$job->getName()])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'rss_feed', [$job->getName()])) . '"></a></td>';
 
                     if ($project->usesSVN()) {
                         if ($hudson_jobs_complementary_information[$job_id]['use_svn_trigger'] == 1) {
@@ -394,24 +394,24 @@ class hudsonViews extends Views
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=edit_job&group_id=' . $group_id . '&job_id=' . $job_id . '">' . $GLOBALS['HTML']->getimage(
                         'ic/edit.png',
-                        array('alt' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'edit_job')),
+                        ['alt' => $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'edit_job')),
                         'title' => $purifier->purify($GLOBALS['Language']->getText(
                             'plugin_hudson',
                             'edit_job'
-                        )))
+                        ))]
                     ) . '</a>';
                     echo '   </span>';
                     // delete job
                     echo '   <span class="job_action">';
                     echo '    <a href="?action=delete_job&group_id=' . $group_id . '&job_id=' . $job_id . '" onclick="return confirm(';
-                    echo "'" . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'delete_job_confirmation', array($hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName()))) . "'";
+                    echo "'" . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'delete_job_confirmation', [$hudson_jobs_complementary_information[$job_id]['name'], $project->getUnixName()])) . "'";
                     echo ');">' . $GLOBALS['HTML']->getimage(
                         'ic/cross.png',
-                        array('alt' => $GLOBALS['Language']->getText('plugin_hudson', 'delete_job'),
+                        ['alt' => $GLOBALS['Language']->getText('plugin_hudson', 'delete_job'),
                         'title' => $GLOBALS['Language']->getText(
                             'plugin_hudson',
                             'delete_job'
-                        ))
+                        )]
                     ) . '</a>';
                     echo '   </span>';
                     echo '  </td>';

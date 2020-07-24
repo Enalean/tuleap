@@ -114,7 +114,7 @@ class Planning_NoMilestone implements Planning_Milestone
 
     public function getAncestors()
     {
-        return array();
+        return [];
     }
 
     public function setAncestors(array $ancestors)

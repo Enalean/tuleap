@@ -37,8 +37,8 @@ function addPageTextData($user, $dbi, $new_data, $START_DELIM, $DELIM)
         $meta = $current->_data;
     } else {
         $text = '';
-        $meta = array('markup' => 2.0,
-                      'author' => $user->getId());
+        $meta = ['markup' => 2.0,
+                      'author' => $user->getId()];
     }
 
     // add new data to the appropriate line
@@ -86,7 +86,7 @@ function getPageTextData($fromUser, $dbi, $START_DELIM)
             }
         }
     }
-    $retArray = array();
+    $retArray = [];
     if ($p >= 0) {
         $singles = $pageArray[$p];
         $singles = substr($singles, strpos($singles, $START_DELIM) + strlen($START_DELIM));

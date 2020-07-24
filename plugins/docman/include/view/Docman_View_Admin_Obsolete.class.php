@@ -56,7 +56,7 @@ class Docman_View_Admin_Obsolete extends Docman_View_Extra
             $itemIterator = new ArrayIterator([]);
         }
 
-        $table = html_build_list_table_top(array('Title', 'Obsolete date'));
+        $table = html_build_list_table_top(['Title', 'Obsolete date']);
 
         $altRowClass = 0;
         $itemIterator->rewind();

@@ -66,7 +66,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
      */
     public function getChildList()
     {
-        $children = array();
+        $children = [];
         // hey ! for docman never add something in WebDAVUtils, docman may be not present ;)
         $docmanItemFactory = $this->getUtils()->getDocmanItemFactory();
         $nodes = $docmanItemFactory->getChildrenFromParent($this->getItem());
@@ -106,7 +106,7 @@ class WebDAVDocmanFolder extends Sabre_DAV_Directory
                     }
                 }
                 if (! isset($children[$index])) {
-                    $children[$index] = call_user_func(array($this,$method), $node);
+                    $children[$index] = call_user_func([$this, $method], $node);
                 }
             }
         }

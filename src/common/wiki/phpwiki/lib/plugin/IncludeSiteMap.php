@@ -62,7 +62,7 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
     }
     public function getDefaultArguments()
     {
-        return array('exclude'        => '',
+        return ['exclude'        => '',
                    'include_self'   => 0,
                    'noheader'       => 0,
                    'page'           => '[pagename]',
@@ -73,7 +73,7 @@ class WikiPlugin_IncludeSiteMap extends WikiPlugin_SiteMap
                    'firstreversed'  => false,
                    'excludeunknown' => true,
                    'includepages'   => 'words=50'
-                   );
+                   ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

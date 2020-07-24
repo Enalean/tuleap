@@ -50,7 +50,7 @@ final class Cardwall_CardControllerTest extends TestCase
         $edit_url       = 'edit';
         $accent_color   = 'rgb(12,12,12)';
         $swimline_id    = 215;
-        $drop_into      = array('5', '7');
+        $drop_into      = ['5', '7'];
 
         $artifact = Mockery::mock(Tracker_Artifact::class);
         $artifact->shouldReceive('getId')->andReturn($artifact_id);
@@ -62,7 +62,7 @@ final class Cardwall_CardControllerTest extends TestCase
         $field3 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
 
         $field1->shouldReceive('getJsonValue')->andReturns(5.1);
-        $field2->shouldReceive('getJsonValue')->andReturns(array(101, 201));
+        $field2->shouldReceive('getJsonValue')->andReturns([101, 201]);
         $field3->shouldReceive('getJsonValue')->andReturns(236);
 
         $field1->shouldReceive('fetchCardValue')->andReturns("5.1");
@@ -85,7 +85,7 @@ final class Cardwall_CardControllerTest extends TestCase
         $card_in_cell_presenter->shouldReceive('getDropIntoIds')->andReturns($drop_into);
         $card_in_cell_presenter->shouldReceive('getArtifact')->andReturns($artifact);
 
-        $card_fields->shouldReceive('getFields')->andReturns(array($field1, $field2, $field3));
+        $card_fields->shouldReceive('getFields')->andReturns([$field1, $field2, $field3]);
 
         $single_card = new Cardwall_SingleCard($card_in_cell_presenter, $card_fields, \Mockery::spy(\Cardwall_UserPreferences_UserPreferencesDisplayUser::class), 1111, \Mockery::spy(\Cardwall_OnTop_Config_TrackerMapping::class));
 
@@ -96,26 +96,26 @@ final class Cardwall_CardControllerTest extends TestCase
             $single_card
         );
 
-        $expected = array(
-            $artifact_id => array(
+        $expected = [
+            $artifact_id => [
                 'title'        => $artifact_title,
                 'xref'         => $cross_ref,
                 'edit_url'     => $edit_url,
                 'accent_color' => $accent_color,
                 'column_id'    => 1111,
                 'drop_into'    => $drop_into,
-                'fields'       => array(
+                'fields'       => [
                     'remaining_effort' => 5.1,
-                    'assigned_to'      => array(101, 201),
+                    'assigned_to'      => [101, 201],
                     'impediment'       => 236
-                ),
-                'html_fields'  => array(
+                ],
+                'html_fields'  => [
                     'remaining_effort' => '5.1',
                     'assigned_to'      => '<a href',
                     'impediment'       => '<span>Decorator</span>'
-                ),
-            )
-        );
+                ],
+            ]
+        ];
 
         $GLOBALS['Response']->shouldReceive('sendJSON')->with($expected)->once();
 

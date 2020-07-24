@@ -56,7 +56,7 @@ class GitTest extends TestCase
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setAction('del');
-        $git->setPermittedActions(array('del'));
+        $git->setPermittedActions(['del']);
 
         $repository = \Mockery::spy(\GitRepository::class);
         $repository->shouldReceive('getId')->andReturn(1);
@@ -74,7 +74,7 @@ class GitTest extends TestCase
     public function testDispatchToForkRepositoriesIfRequestsPersonal(): void
     {
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $request = new Codendi_Request(['choose_destination' => 'personal']);
         $git->setRequest($request);
         $git->shouldReceive('_doDispatchForkRepositories')->once();
 
@@ -91,7 +91,7 @@ class GitTest extends TestCase
     public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember(): void
     {
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $request = new Codendi_Request(['choose_destination' => 'personal']);
         $git->setRequest($request);
         $git->shouldReceive('_doDispatchForkRepositories')->never();
 
@@ -108,7 +108,7 @@ class GitTest extends TestCase
     public function testDispatchToForkCrossProjectIfRequestsProject(): void
     {
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $request = new Codendi_Request(array('choose_destination' => 'project'));
+        $request = new Codendi_Request(['choose_destination' => 'project']);
         $git->setRequest($request);
 
         $factory = \Mockery::spy(\GitRepositoryFactory::class);

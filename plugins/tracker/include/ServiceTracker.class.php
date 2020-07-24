@@ -30,14 +30,14 @@ class ServiceTracker extends Service
     /**
      * Display header for service tracker
      */
-    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = array()): void
+    public function displayHeader(string $title, $breadcrumbs, array $toolbar, array $params = []): void
     {
         $GLOBALS['HTML']->includeCalendarScripts();
 
         $tracker_manager         = new TrackerManager();
         $user_has_special_access = $tracker_manager->userCanAdminAllProjectTrackers();
 
-        $params = $params + array('user_has_special_access' => $user_has_special_access);
+        $params = $params + ['user_has_special_access' => $user_has_special_access];
         $params['service_name'] = self::NAME;
         $params['project_id']   = $this->getGroupId();
 
@@ -103,7 +103,7 @@ class ServiceTracker extends Service
 
     public static function getDefaultServiceData($project_id)
     {
-        return array(
+        return [
             'label'        => 'plugin_tracker:service_lbl_key',
             'description'  => 'plugin_tracker:service_desc_key',
             'link'         => "/plugins/tracker/?group_id=$project_id",
@@ -113,6 +113,6 @@ class ServiceTracker extends Service
             'location'     => 'master',
             'is_in_iframe' => 0,
             'server_id'    => 0,
-        );
+        ];
     }
 }

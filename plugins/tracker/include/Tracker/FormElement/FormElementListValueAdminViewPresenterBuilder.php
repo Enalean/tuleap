@@ -49,13 +49,13 @@ class FormElementListValueAdminViewPresenterBuilder
         $value_can_be_deleted = $this->canValueBeDeleted($value, $field);
 
         $delete_url           = TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                     'tracker'      => $field->getTrackerId(),
                     'func'         => 'admin-formElement-update',
                     'formElement'  => $field->getId(),
                     'bind-update'  => 1,
                     'bind[delete]' => $value->getId(),
-                )
+                ]
         );
 
         $image_title = $value_can_be_hidden ? dgettext(

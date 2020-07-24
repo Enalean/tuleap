@@ -73,7 +73,7 @@ class HistoryRetrieverTest extends TestCase
             Mockery::mock(\Tuleap\Glyph\Glyph::class),
             '',
             Mockery::mock(\Project::class),
-            array()
+            []
         );
     }
 

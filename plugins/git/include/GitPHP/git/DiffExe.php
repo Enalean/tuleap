@@ -154,7 +154,7 @@ class DiffExe
             $toFile = '/dev/null';
         }
 
-        $args = array();
+        $args = [];
         if ($this->unified) {
             if (is_numeric($this->unified)) {
                 $args[] = '-U';

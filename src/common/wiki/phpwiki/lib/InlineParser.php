@@ -156,8 +156,8 @@ class RegexpSet
         // and storing only those regexp which actually match.
         // There may be more than one, so we have to find the longest,
         // and match inside until the shortest is empty.
-            $matched = array();
-            $matched_ind = array();
+            $matched = [];
+            $matched_ind = [];
             for ($i = 0; $i < count($regexps); $i++) {
                 if (! trim($regexps[$i])) {
                     trigger_error("empty regexp $i", E_USER_WARNING);
@@ -402,7 +402,7 @@ function LinkBracketLink($bracketlink)
         // It's an anchor, not a link...
         $id = MangleXmlIdentifier($link);
         return HTML::a(
-            array('name' => $id, 'id' => $id),
+            ['name' => $id, 'id' => $id],
             $bar ? $label : $link
         );
     }
@@ -535,7 +535,7 @@ class Markup_wikiword extends SimpleMarkup
 
     public function _UserLink($PageName)
     {
-        $link = HTML::a(array('href' => $PageName));
+        $link = HTML::a(['href' => $PageName]);
         $link->pushContent(PossiblyGlueIconToText('wikiuser', $PageName));
         $link->setAttr('class', 'wikiuser');
         return $link;
@@ -671,9 +671,9 @@ class Markup_html_abbr extends BalancedMarkup
         $rest = substr($match, 1 + strlen($tag), -1);
         if (! empty($rest)) {
             list($key,$val) = explode("=", $rest);
-            $args = array($key => $val);
+            $args = [$key => $val];
         } else {
-            $args = array();
+            $args = [];
         }
         return new HtmlElement($tag, $args, $body);
     }
@@ -694,15 +694,15 @@ class Markup_color extends BalancedMarkup
         $color = substr($match, 7, -1);
         if (
             strlen($color) != 7
-            and in_array($color, array('red', 'blue', 'grey', 'black'))
+            and in_array($color, ['red', 'blue', 'grey', 'black'])
         ) {
             // must be a name
-            return new HtmlElement('font', array('color' => $color), $body);
+            return new HtmlElement('font', ['color' => $color], $body);
         } elseif (
             (substr($color, 0, 1) == '#')
                   and (strspn(substr($color, 1), '0123456789ABCDEFabcdef') == strlen($color) - 1)
         ) {
-            return new HtmlElement('font', array('color' => $color), $body);
+            return new HtmlElement('font', ['color' => $color], $body);
         } else {
             trigger_error(sprintf(_("unknown color %s ignored"), $color), E_USER_WARNING);
         }
@@ -761,11 +761,11 @@ class Markup_html_entities extends SimpleMarkup
 
     public function markup($match)
     {
-        static $entities = array('...'  => '&#133;',
+        static $entities = ['...'  => '&#133;',
                                  '--'   => '&ndash;',
                                  '---'  => '&mdash;',
                                  '(C)'  => '&copy;',
-                                 );
+                                 ];
         return HTML::Raw($entities[$match]);
     }
 }
@@ -797,19 +797,19 @@ class Markup_isohexchars extends SimpleMarkup
 
 class InlineTransformer
 {
-    public $_regexps = array();
-    public $_markup = array();
+    public $_regexps = [];
+    public $_markup = [];
 
     public function __construct($markup_types = false)
     {
         if (! $markup_types) {
             $non_default = false;
-            $markup_types = array('escape', 'bracketlink', 'url',
+            $markup_types = ['escape', 'bracketlink', 'url',
                                   'interwiki', 'wikiword', 'linebreak',
                                   'old_emphasis', 'nestled_emphasis',
                                   'html_emphasis', 'html_abbr', 'plugin',
                                   'isonumchars', 'isohexchars', /*'html_entities',*/
-                                  );
+                                  ];
         } else {
             $non_default = true;
         }
@@ -838,7 +838,7 @@ class InlineTransformer
         $this->_markup[] = $markup;
     }
 
-    public function parse(&$text, $end_regexps = array('$'))
+    public function parse(&$text, $end_regexps = ['$'])
     {
         $regexps = $this->_regexps;
 
@@ -922,8 +922,8 @@ class LinkTransformer extends InlineTransformer
 {
     public function __construct()
     {
-        parent::__construct(array('escape', 'bracketlink', 'url',
-                                       'interwiki', 'wikiword'));
+        parent::__construct(['escape', 'bracketlink', 'url',
+                                       'interwiki', 'wikiword']);
     }
 }
 

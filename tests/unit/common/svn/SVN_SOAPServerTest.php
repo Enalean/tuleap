@@ -41,7 +41,7 @@ class SVN_SOAPServerTest extends TestCase
         $this->soap_request_valid->shouldReceive('continueSession')->with($this->session_key)->andReturns($this->user);
 
         $this->svn_repository_listing = \Mockery::spy(\SVN_RepositoryListing::class);
-        $this->svn_repository_listing->shouldReceive('getSvnPathsWithLogDetails')->andReturns(array());
+        $this->svn_repository_listing->shouldReceive('getSvnPathsWithLogDetails')->andReturns([]);
         $this->order = 'ASC';
     }
 

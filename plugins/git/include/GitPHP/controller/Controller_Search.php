@@ -122,7 +122,7 @@ class Controller_Search extends ControllerBase // @codingStandardsIgnoreLine
         $this->tpl->assign('commit', $co);
         $this->tpl->assign('hashbase', $this->params['hashbase']);
 
-        $results = array();
+        $results = [];
         if ($co) {
             switch ($this->params['searchtype']) {
                 case self::SEARCH_COMMIT:

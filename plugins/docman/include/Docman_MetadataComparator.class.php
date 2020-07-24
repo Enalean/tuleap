@@ -42,7 +42,7 @@ class Docman_MetadataComparator
      */
     public function getArrayFromIterator($iter, $func)
     {
-        $a = array();
+        $a = [];
         while ($iter->valid()) {
             $e = $iter->current();
             $a[$e->$func()] = $e;
@@ -53,7 +53,7 @@ class Docman_MetadataComparator
 
     public function checkMdDifferences($srcMd, $dstMd, $loveMap)
     {
-        $diffArray = array();
+        $diffArray = [];
         if (! $dstMd->sameDescription($srcMd)) {
             $diffArray[] = dgettext('tuleap-docman', 'Description: <strong><em>new text</em></strong>');
         }
@@ -103,7 +103,7 @@ class Docman_MetadataComparator
         $purifier = Codendi_HTMLPurifier::instance();
 
         // Keep a trace of matching love
-        $matchingLove = array();
+        $matchingLove = [];
         while ($srcLoveIter->valid()) {
             $srcLove = $srcLoveIter->current();
             $rowStyle = 'missing';
@@ -198,7 +198,7 @@ class Docman_MetadataComparator
         $dstMdArray = $this->getArrayFromIterator($dstMdIter, 'getLabel');
 
         // Get mapping between the 2 definitions
-        $mdMap = array();
+        $mdMap = [];
         $srcMdFactory->getMetadataMapping($this->dstGo->getGroupId(), $mdMap);
 
         $html .= sprintf(dgettext('tuleap-docman', '<p>The table below highlight the differences between %1$s and %2$s properties.</p><p>If there are differences, you can click on "Import" button at the bottom of the page. The properties of %1$s will be modified match what is defined in %2$s.</p><p><strong>Note:</strong> this operation delete neither properties nor values in %1$s and %2$s won\'t be modified.</p>'), $purifier->purify($this->dstGo->getPublicName()), $purifier->purify($this->srcGo->getPublicName()));
@@ -217,7 +217,7 @@ class Docman_MetadataComparator
         $purifier = Codendi_HTMLPurifier::instance();
 
         // Keep a trace of metadata that matched in the dst metadata list.
-        $matchingMd = array();
+        $matchingMd = [];
         $srcMdIter->rewind();
         while ($srcMdIter->valid()) {
             $srcMd = $srcMdIter->current();

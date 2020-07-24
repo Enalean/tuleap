@@ -28,7 +28,7 @@ class TreeNode_GetStateVisitor
     public const STATE_BLANK = 2;
     public const STATE_PIPE  = 3;
 
-    private $states = array();
+    private $states = [];
 
     public function getState(TreeNode $node)
     {
@@ -91,7 +91,7 @@ class TreeNode_GetStateVisitor
     public function visit(TreeNode $node, $prefix = null)
     {
         if (! $prefix) {
-            $prefix = array();
+            $prefix = [];
         }
         $this->setState($node, $prefix);
     }

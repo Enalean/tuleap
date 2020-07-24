@@ -43,7 +43,7 @@ class TrackerFactory
      */
     protected function __construct()
     {
-        $this->trackers = array();
+        $this->trackers = [];
     }
 
     /**
@@ -84,7 +84,7 @@ class TrackerFactory
 
     public function clearCaches()
     {
-        $this->trackers = array();
+        $this->trackers = [];
 
         self::clearInstance();
     }
@@ -127,7 +127,7 @@ class TrackerFactory
     public function getDeletedTrackers()
     {
         $pending_trackers = $this->getDao()->retrieveTrackersMarkAsDeleted();
-        $deleted_trackers = array();
+        $deleted_trackers = [];
 
         if ($pending_trackers && ! $pending_trackers->isError()) {
             foreach ($pending_trackers as $pending_tracker) {
@@ -157,7 +157,7 @@ class TrackerFactory
      */
     public function getTrackersByGroupId($group_id)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
             $trackers[$tracker_id] = $this->getCachedInstanceFromRow($row);
@@ -170,7 +170,7 @@ class TrackerFactory
      */
     public function getTrackersByGroupIdUserCanView($group_id, PFUser $user)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($this->getDao()->searchByGroupId($group_id) as $row) {
             $tracker_id = $row['id'];
             $tracker    = $this->getCachedInstanceFromRow($row);
@@ -344,7 +344,7 @@ class TrackerFactory
      */
     public function collectTrackersNameInErrorOnMandatoryCreationInfo(array $trackers, $project_id): array
     {
-        $invalid_trackers_name = array();
+        $invalid_trackers_name = [];
 
         $checker = $this->getTrackerChecker();
 
@@ -471,11 +471,11 @@ class TrackerFactory
     public function duplicatePermissions($id_template, $id, $ugroup_mapping, $field_mapping, $duplicate_type)
     {
         $pm = PermissionsManager::instance();
-        $permission_type_tracker = array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE);
+        $permission_type_tracker = [Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_SUBMITTER_ONLY, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_FULL, Tracker::PERMISSION_NONE];
         //Duplicate tracker permissions
         $pm->duplicatePermissions($id_template, $id, $permission_type_tracker, $ugroup_mapping, $duplicate_type);
 
-        $permission_type_field = array('PLUGIN_TRACKER_FIELD_SUBMIT','PLUGIN_TRACKER_FIELD_READ','PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_NONE');
+        $permission_type_field = ['PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_NONE'];
         //Duplicate fields permissions
         foreach ($field_mapping as $f) {
             $from = $f['from'];
@@ -519,13 +519,13 @@ class TrackerFactory
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping)
     {
-        $tracker_mapping        = array();
-        $field_mapping          = array();
-        $report_mapping         = array();
-        $trackers_from_template = array();
+        $tracker_mapping        = [];
+        $field_mapping          = [];
+        $report_mapping         = [];
+        $trackers_from_template = [];
 
-        $tracker_ids_list         = array();
-        $params = array('project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list);
+        $tracker_ids_list         = [];
+        $params = ['project_id' => $from_project_id, 'tracker_ids_list' => &$tracker_ids_list];
         EventManager::instance()->processEvent(TRACKER_EVENT_PROJECT_CREATION_TRACKERS_REQUIRED, $params);
         $tracker_ids_list = array_unique($tracker_ids_list);
         foreach ($this->getTrackersByGroupId($from_project_id) as $tracker) {
@@ -558,14 +558,14 @@ class TrackerFactory
         $shared_factory = $this->getFormElementFactory();
         $shared_factory->fixOriginalFieldIdsAfterDuplication($to_project_id, $from_project_id, $field_mapping);
 
-        EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, array(
+        EventManager::instance()->processEvent(TRACKER_EVENT_TRACKERS_DUPLICATED, [
             'tracker_mapping'   => $tracker_mapping,
             'field_mapping'     => $field_mapping,
             'report_mapping'    => $report_mapping,
             'group_id'          => $to_project_id,
             'ugroups_mapping'   => $ugroup_mapping,
             'source_project_id' => $from_project_id
-        ));
+        ]);
     }
 
     /**

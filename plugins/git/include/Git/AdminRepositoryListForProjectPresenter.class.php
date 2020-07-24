@@ -29,7 +29,7 @@ class Git_AdminRepositoryListForProjectPresenter
     public $project_name;
 
     /** @var array */
-    public $repositories = array();
+    public $repositories = [];
 
     public function __construct($project_id, $project_name)
     {

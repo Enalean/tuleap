@@ -39,7 +39,7 @@ class UserDashboardRetriever
      */
     public function getAllUserDashboards(PFUser $user)
     {
-        $user_dashboards = array();
+        $user_dashboards = [];
 
         foreach ($this->dao->searchAllUserDashboards($user) as $row) {
             $user_dashboards[] = $this->instantiateFromRow($row);

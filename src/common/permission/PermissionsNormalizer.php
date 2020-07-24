@@ -25,7 +25,7 @@ class PermissionsNormalizer
     public function getNormalizedUGroupIds(Project $project, array $ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
     {
         $ugroup_mapper = new PermissionsUGroupMapper($project);
-        $normalized_ugroup_ids = array();
+        $normalized_ugroup_ids = [];
         foreach ($ugroup_ids as $ugroup_id) {
             $this->appendOnceToHash(
                 $normalized_ugroup_ids,
@@ -54,11 +54,11 @@ class PermissionsNormalizer
 
     private function filterPlatformCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
     {
-        $catch_all_groups = array(ProjectUGroup::ANONYMOUS, ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED);
+        $catch_all_groups = [ProjectUGroup::ANONYMOUS, ProjectUGroup::AUTHENTICATED, ProjectUGroup::REGISTERED];
         foreach ($catch_all_groups as $catch_all_ugroup_id) {
             if (isset($normalized_ugroup_ids[$catch_all_ugroup_id])) {
                 $override_collection->addArrayOverrideBy($normalized_ugroup_ids, $catch_all_ugroup_id);
-                return array($catch_all_ugroup_id);
+                return [$catch_all_ugroup_id];
             }
         }
         return null;
@@ -66,7 +66,7 @@ class PermissionsNormalizer
 
     private function filterProjectCatchAllGroup(array $normalized_ugroup_ids, PermissionsNormalizerOverrideCollection $override_collection)
     {
-        $final = array();
+        $final = [];
         foreach ($normalized_ugroup_ids as $ugroup_id) {
             if ($this->isProjectCatchAll($ugroup_id, $normalized_ugroup_ids)) {
                 $override_collection->addOverrideBy($ugroup_id, ProjectUGroup::PROJECT_MEMBERS);

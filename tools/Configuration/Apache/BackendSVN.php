@@ -58,16 +58,16 @@ class BackendSVN
         $this->backupOriginalFile('/etc/httpd/conf/httpd.conf');
         $httpd_conf = file_get_contents('/etc/httpd/conf/httpd.conf.orig');
 
-        $searches = array(
+        $searches = [
             'Listen 80',
             'User apache',
             'Group apache',
-        );
-        $replaces = array(
+        ];
+        $replaces = [
             'Listen 127.0.0.1:8080',
             'User ' . $this->application_user,
             'Group ' . $this->application_user,
-        );
+        ];
 
         $conf = str_replace($searches, $replaces, $httpd_conf);
         file_put_contents('/etc/httpd/conf/httpd.conf', $conf);

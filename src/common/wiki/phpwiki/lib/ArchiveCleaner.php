@@ -51,11 +51,11 @@ class ArchiveCleaner
     public function cleanPageRevisions($page)
     {
         $expire = &$this->expire_params;
-        foreach (array('major', 'minor', 'author') as $class) {
+        foreach (['major', 'minor', 'author'] as $class) {
             $counter[$class] = new ArchiveCleaner_Counter($expire[$class]);
         }
 
-        $authors_seen = array();
+        $authors_seen = [];
 
         $current = $page->getCurrentRevision(false);
 

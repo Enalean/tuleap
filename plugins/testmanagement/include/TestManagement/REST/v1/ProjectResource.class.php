@@ -286,10 +286,10 @@ class ProjectResource
                                           ->getArtifactsByIdListUserCanView($this->user, $slice_matching_ids);
         }
 
-        return array(
+        return [
             'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
             'total'       => $artifacts_count
-        );
+        ];
     }
 
     /**
@@ -311,16 +311,16 @@ class ProjectResource
         $artifacts = $paginated_artifacts->getArtifacts();
         $artifacts_count = $paginated_artifacts->getTotalSize();
 
-        return array(
+        return [
             'definitions' => $this->getDefinitionRepresentationsFromArtifactsList($artifacts),
             'total'       => $artifacts_count
-        );
+        ];
     }
 
     /** @return array {DefinitionRepresentation} */
     private function getDefinitionRepresentationsFromArtifactsList(array $artifacts)
     {
-        $definition_representations = array();
+        $definition_representations = [];
 
         foreach ($artifacts as $artifact) {
             $definition_representation =

@@ -234,7 +234,7 @@ class KanbanItemsResource extends AuthenticatedResource
 
     private function buildFieldsData(Tracker $tracker, KanbanItemPOSTRepresentation $item)
     {
-        $fields_data = array();
+        $fields_data = [];
 
         $this->addSummaryToFieldsData($tracker, $item, $fields_data);
         $this->addStatusToFieldsData($tracker, $item, $fields_data);
@@ -282,7 +282,7 @@ class KanbanItemsResource extends AuthenticatedResource
 
         $representation                 = new ArtifactValuesRepresentation();
         $representation->field_id       = (int) $status_field->getId();
-        $representation->bind_value_ids = array((int) $value);
+        $representation->bind_value_ids = [(int) $value];
 
         $fields_data[] = $representation;
     }

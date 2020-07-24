@@ -78,7 +78,7 @@ class ProviderManager
      */
     public function getProvidersUsableToLogIn(): array
     {
-        $providers = array();
+        $providers = [];
         $rows      = $this->dao->searchProvidersUsableToLogIn();
         if ($rows === false) {
             return $providers;
@@ -92,7 +92,7 @@ class ProviderManager
      */
     public function getProviders(): array
     {
-        $providers = array();
+        $providers = [];
         $rows      = $this->dao->searchProviders();
         if ($rows === false) {
             return $providers;

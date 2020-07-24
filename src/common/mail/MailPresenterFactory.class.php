@@ -39,14 +39,14 @@ class MailPresenterFactory
         $base_url       = HTTPRequest::instance()->getServerUrl();
         $this->setColorTheme($color_logo, $color_button);
 
-        $attributes_presenter = array(
+        $attributes_presenter = [
             "login"         => $login,
             "color_logo"    => $color_logo,
             "color_button"  => $color_button,
             "confirm_hash"  => $confirm_hash,
             "base_url"      => $base_url,
             "logo_url"      => $logo_url
-        );
+        ];
 
         if ($presenter_role === "user") {
             $presenter = $this->createUserEmailPresenter($attributes_presenter);
@@ -167,10 +167,10 @@ class MailPresenterFactory
         $presenter = new MailRegisterByAdminNotificationPresenter(
             $attributes_presenter["logo_url"],
             $GLOBALS['Language']->getText('account_register', 'mail_approval_title'),
-            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array(ForgeConfig::get('sys_name')), $attributes_presenter["login"]),
+            $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', [ForgeConfig::get('sys_name')], $attributes_presenter["login"]),
             $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two'),
             $GLOBALS['Language']->getText('account_register', 'mail_thanks'),
-            $GLOBALS['Language']->getText('account_register', 'mail_signature', array(ForgeConfig::get('sys_name'))),
+            $GLOBALS['Language']->getText('account_register', 'mail_signature', [ForgeConfig::get('sys_name')]),
             $attributes_presenter["color_logo"],
             $redirect_url,
             $GLOBALS['Language']->getText('account_register', 'mail_approval_redirect_button'),

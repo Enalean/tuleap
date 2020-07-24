@@ -27,7 +27,7 @@ class Cardwall_OnTop_Config_Updater
     /**
      * @var array of Cardwall_OnTop_Config_Command
      */
-    private $commands = array();
+    private $commands = [];
 
     public function addCommand(Cardwall_OnTop_Config_Command $command)
     {

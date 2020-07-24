@@ -111,7 +111,7 @@ class MediaWikiXMLImporter
         $mediawiki_storage_path = forge_get_config('projects_path', 'mediawiki') . "/" . $project->getID();
         $owner = ForgeConfig::get('sys_http_user');
         if ($owner) {
-            $no_filter_file_extension = array();
+            $no_filter_file_extension = [];
             $this->backend->recurseChownChgrp($mediawiki_storage_path, $owner, $owner, $no_filter_file_extension);
         } else {
             $this->logger->error("Could not get sys_http_user, permission problems may occur on $mediawiki_storage_path");
@@ -176,7 +176,7 @@ class MediaWikiXMLImporter
 
     private function getUgroupIdsForPermissions(Project $project, SimpleXMLElement $permission_xmlnode)
     {
-        $ugroup_ids = array();
+        $ugroup_ids = [];
         foreach ($permission_xmlnode->ugroup as $ugroup) {
             $ugroup_name = (string) $ugroup;
             $ugroup = $this->ugroup_manager->getUGroupByName($project, $ugroup_name);
@@ -193,14 +193,14 @@ class MediaWikiXMLImporter
     {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
-            array(
+            [
                 'logger'         => $this->logger,
-                'created_refs'   => array(),
+                'created_refs'   => [],
                 'service_name'   => self::SERVICE_NAME,
                 'xml_content'    => $xml_references,
                 'project'        => $project,
                 'configuration'  => $configuration,
-            )
+            ]
         );
     }
 }

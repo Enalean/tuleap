@@ -78,7 +78,7 @@ class FilteredDiagramRepresentationBuilder
     ) {
         $matching_ids = $report->getMatchingIds();
         if (! $matching_ids['id']) {
-            return $this->column_builder->build($kanban, $user, $dates, array());
+            return $this->column_builder->build($kanban, $user, $dates, []);
         }
 
         $matching_artifact_ids = explode(',', $matching_ids['id']);

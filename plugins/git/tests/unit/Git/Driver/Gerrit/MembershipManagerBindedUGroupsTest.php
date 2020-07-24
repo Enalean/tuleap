@@ -40,8 +40,8 @@ class MembershipManagerBindedUGroupsTest extends TestCase
         $this->gerrit_user_manager   = \Mockery::spy(\Git_Driver_Gerrit_UserAccountManager::class);
         $this->project_manager       = \Mockery::spy(\ProjectManager::class);
 
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->driver         = \Mockery::spy(\Git_Driver_Gerrit::class);
         $this->driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
@@ -62,10 +62,10 @@ class MembershipManagerBindedUGroupsTest extends TestCase
             ->shouldAllowMockingProtectedMethods();
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $this->ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $this->ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $this->ugroup->setProject($project);
         $this->ugroup->setSourceGroup(null);
-        $this->source = new ProjectUGroup(array('ugroup_id' => 124, 'name' => 'coders'));
+        $this->source = new ProjectUGroup(['ugroup_id' => 124, 'name' => 'coders']);
         $this->source->setProject($project);
     }
 
@@ -111,7 +111,7 @@ class MembershipManagerBindedUGroupsTest extends TestCase
     public function testItRemovesBindingWithAGroup(): void
     {
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $ugroup->setProject($project);
         $ugroup->setSourceGroup(null);
 
@@ -131,10 +131,10 @@ class MembershipManagerBindedUGroupsTest extends TestCase
         $this->gerrit_user_manager->shouldReceive('getGerritUser')->with($user)->andReturns($gerrit_user);
 
         $source_ugroup = \Mockery::spy(\ProjectUGroup::class);
-        $source_ugroup->shouldReceive('getMembers')->andReturns(array($user));
+        $source_ugroup->shouldReceive('getMembers')->andReturns([$user]);
 
         $project = \Mockery::spy(\Project::class)->shouldReceive('getUnixName')->andReturns('mozilla')->getMock();
-        $ugroup = new ProjectUGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup = new ProjectUGroup(['ugroup_id' => 112, 'name' => 'developers']);
         $ugroup->setProject($project);
         $ugroup->setSourceGroup($source_ugroup);
 

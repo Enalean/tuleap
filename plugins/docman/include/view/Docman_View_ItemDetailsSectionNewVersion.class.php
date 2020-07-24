@@ -69,30 +69,30 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    public function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = [])
     {
         return "";
     }
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         return "";
     }
-    public function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink($item, $params = array())
+    public function visitLink($item, $params = [])
     {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    public function visitFile($item, $params = array())
+    public function visitFile($item, $params = [])
     {
         return $this->visitVersionnedItem($item, $params);
     }
 
-    private function visitVersionnedItem($item, $params = array())
+    private function visitVersionnedItem($item, $params = [])
     {
         $label = '';
         if (isset($this->_controller->_viewParams['label'])) {
@@ -120,7 +120,7 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         $content .= '<table>';
         $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Version Label:') . '</td><td><input type="text" name="version[label]" value="' . $label . '" /></td></tr>';
         $content .= '<tr style="vertical-align:top"><td>' . dgettext('tuleap-docman', 'Change Log:') . '</td><td><textarea name="version[changelog]" rows="7" cols="80" data-test="docman_changelog">' . $changelog . '</textarea></td></tr>';
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
         if ($fields !== null) {
             foreach ($fields as $field) {
                 $content .= '<tr style="vertical-align:top;">';
@@ -160,12 +160,12 @@ class Docman_View_ItemDetailsSectionNewVersion extends Docman_View_ItemDetailsSe
         return $content;
     }
 
-    public function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = [])
     {
         return $this->visitFile($item, $params);
     }
 
-    public function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

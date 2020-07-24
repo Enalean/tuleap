@@ -39,7 +39,7 @@ class Feedback
 
     public function __construct()
     {
-        $this->logs = array();
+        $this->logs = [];
         $this->setFormatter(new FeedbackFormatter());
     }
 
@@ -51,10 +51,10 @@ class Feedback
     public function log($level, $msg, $purify = CODENDI_PURIFIER_CONVERT_HTML)
     {
         if (! is_array($msg)) {
-            $msg = array($msg);
+            $msg = [$msg];
         }
         foreach ($msg as $m) {
-            $this->logs[] = array('level' => $level, 'msg' => $m, 'purify' => $purify);
+            $this->logs[] = ['level' => $level, 'msg' => $m, 'purify' => $purify];
         }
     }
 
@@ -85,7 +85,7 @@ class Feedback
      */
     public function fetchErrors()
     {
-        $errors = array();
+        $errors = [];
         foreach ($this->logs as $log) {
             if ($log['level'] == self::ERROR) {
                 $errors[] = $log['msg'];

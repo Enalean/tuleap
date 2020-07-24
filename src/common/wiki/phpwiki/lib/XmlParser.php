@@ -67,12 +67,12 @@ class XmlParser
         //xml_set_object($this->_parser, &$this);
         xml_set_element_handler(
             $this->_parser,
-            array(&$this, 'tag_open'),
-            array(&$this, 'tag_close' )
+            [&$this, 'tag_open'],
+            [&$this, 'tag_close']
         );
         xml_set_character_data_handler(
             $this->_parser,
-            array(&$this, 'cdata')
+            [&$this, 'cdata']
         );
         //xml_set_element_handler($this->_parser, "tag_open", "tag_close");
         //xml_set_character_data_handler($this->_parser, "cdata");
@@ -107,17 +107,17 @@ class XmlParser
                 if (strstr($pair, "=")) {
                     list($key,$val) = preg_split('/=/D', $pair);
                     $key = strtolower(trim($key));
-                    $val = str_replace(array('"',"'"), '', trim($val));
+                    $val = str_replace(['"', "'"], '', trim($val));
                     $node->_attr[$key] = $val;
                 } else {
-                    $key = str_replace(array('"',"'"), '', strtolower(trim($pair)));
+                    $key = str_replace(['"', "'"], '', strtolower(trim($pair)));
                     $node->_attr[$key] = $key;
                 }
             }
         } elseif (! empty($attrs) and is_array($attrs)) {
             foreach ($attrs as $key => $val) {
                 $key = strtolower(trim($key));
-                $val = str_replace(array('"',"'"), '', trim($val));
+                $val = str_replace(['"', "'"], '', trim($val));
                 $node->_attr[$key] = $val;
             }
         }

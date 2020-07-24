@@ -99,7 +99,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent
             $url = HTTPRequest::instance()->getServerUrl() . GIT_BASE_URL . '/?action=repo_management&group_id=' . $repository->getProjectId() . '&repo_id=' . $repository->getId() . '&pane=gerrit';
 
             $notification = new Notification(
-                array($user->getEmail()),
+                [$user->getEmail()],
                 sprintf(dgettext('tuleap-git', 'Migration of %1$s to gerrit error'), $repository->getFullName()),
                 sprintf(dgettext('tuleap-git', 'An error occured while migrating repository %1$s on gerrit. Please check <a href="%2$s">gerrit settings</a> and contact site administration.'), $repository->getFullName(), $url),
                 sprintf(dgettext('tuleap-git', 'An error occured while migrating repository %1$s on gerrit. Please check <a href="%2$s">gerrit settings</a> and contact site administration.'), $repository->getFullName(), $url),

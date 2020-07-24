@@ -43,7 +43,7 @@ class Git_Driver_Gerrit_Template_TemplateFactory
      */
     public function getAllTemplatesOfProject(Project $project)
     {
-        $templates      = array();
+        $templates      = [];
         $templates_rows = $this->dao->getAllTemplatesOfProject($project->getId());
 
         foreach ($templates_rows as $row) {
@@ -78,7 +78,7 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     public function getTemplatesAvailableForProject(Project $project)
     {
         if ($project->isError()) {
-            return array();
+            return [];
         }
 
         $templates = array_merge(
@@ -98,10 +98,10 @@ class Git_Driver_Gerrit_Template_TemplateFactory
     public function getTemplatesAvailableForParentProjects(Project $project)
     {
         if ($project->isError()) {
-            return array();
+            return [];
         }
 
-        $templates       = array();
+        $templates       = [];
         $project_manager = ProjectManager::instance();
         $projects        = $project_manager->getAllParentsProjects($project->getId());
 

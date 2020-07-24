@@ -180,8 +180,8 @@ class Docman_ApprovalTableNotificationCycle
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
-            $dar = $dao->getFirstReviewerByStatus($this->table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
-                                                                              PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
+            $dar = $dao->getFirstReviewerByStatus($this->table->getId(), [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET,
+                                                                              PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED]);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($row['reviewer_id']);
@@ -258,7 +258,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
-            array($reviewer->getEmail()),
+            [$reviewer->getEmail()],
             $subject,
             '',
             $body,
@@ -293,7 +293,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
-            array($this->owner->getEmail()),
+            [$this->owner->getEmail()],
             $subject,
             '',
             $body,
@@ -334,7 +334,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $project,
-            array($this->owner->getEmail()),
+            [$this->owner->getEmail()],
             $subject,
             '',
             $body,
@@ -365,7 +365,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
-            array($this->owner->getEmail()),
+            [$this->owner->getEmail()],
             $subject,
             '',
             $body,
@@ -403,7 +403,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         $this->mail_notification_builder->buildAndSendEmail(
             $project,
-            array($reviewer->getEmail()),
+            [$reviewer->getEmail()],
             $subject,
             '',
             $body,
@@ -427,7 +427,7 @@ This is an automatic email sent by a robot. Please do not reply to this email.')
 
         return $this->mail_notification_builder->buildAndSendEmail(
             $group,
-            array($reviewer->getEmail()),
+            [$reviewer->getEmail()],
             $subject,
             '',
             $body,

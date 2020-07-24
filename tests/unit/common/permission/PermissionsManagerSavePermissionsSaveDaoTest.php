@@ -66,7 +66,7 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends TestCase
 
         $this->expectException(\PermissionDaoException::class);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }
 
     public function testItThrowsExceptionWhenAddFailed(): void
@@ -76,6 +76,6 @@ class PermissionsManagerSavePermissionsSaveDaoTest extends TestCase
 
         $this->expectException(\PermissionDaoException::class);
 
-        $this->savePermissions(array(ProjectUGroup::PROJECT_MEMBERS, 104));
+        $this->savePermissions([ProjectUGroup::PROJECT_MEMBERS, 104]);
     }
 }

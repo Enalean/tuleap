@@ -70,12 +70,12 @@ class ReverseProxy
     private function deployHTTPConfFromTemplate()
     {
         $template = file_get_contents($this->tuleap_base_dir . '/tools/distlp/reverse-proxy/http_tuleap.conf');
-        $searches = array(
+        $searches = [
             '%sys_default_domain%',
-        );
-        $replaces = array(
+        ];
+        $replaces = [
             $this->server_name,
-        );
+        ];
 
         $conf = str_replace($searches, $replaces, $template);
         file_put_contents($this->nginx_base_dir . '/conf.d/http_tuleap.conf', $conf);

@@ -37,7 +37,7 @@ class AgileDashboard_SequenceIdManager
     ) {
         $this->backlog_item_collection_factory = $backlog_item_collection_factory;
         $this->backlog_factory                 = $backlog_factory;
-        $this->backlog_item_ids                = array();
+        $this->backlog_item_ids                = [];
     }
 
     public function getSequenceId(PFUser $user, Planning_Milestone $milestone, $artifact_id)
@@ -64,7 +64,7 @@ class AgileDashboard_SequenceIdManager
         }
 
         if (! isset($this->backlog_item_ids[$milestone->getArtifactId()])) {
-            $this->backlog_item_ids[$milestone->getArtifactId() ?? 0] = array();
+            $this->backlog_item_ids[$milestone->getArtifactId() ?? 0] = [];
             $backlog           = $this->backlog_factory->getBacklog($milestone);
             $backlog_artifacts = $backlog->getArtifacts($user);
 
@@ -75,7 +75,7 @@ class AgileDashboard_SequenceIdManager
     private function loadTopBacklog(PFUser $user, Planning_Milestone $milestone)
     {
         if (! isset($this->backlog_item_ids[(int) $milestone->getArtifactId()])) {
-            $this->backlog_item_ids[(int) $milestone->getArtifactId()] = array();
+            $this->backlog_item_ids[(int) $milestone->getArtifactId()] = [];
 
             $backlog_unassigned = $this->backlog_factory->getSelfBacklog($milestone);
             $backlog_artifacts  = $this->backlog_item_collection_factory->getUnassignedOpenCollection($user, $milestone, $backlog_unassigned, false);

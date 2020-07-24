@@ -157,7 +157,7 @@ class Tracker_DateReminderManager
         $recipients = $reminder->getRecipients($artifact);
 
         // 2. Compute the body of the message + headers
-        $messages   = array();
+        $messages   = [];
         foreach ($recipients as $recipient) {
             if ($recipient && $artifact->userCanView($recipient) && $reminder->getField()->userCanRead($recipient)) {
                 $this->buildMessage($reminder, $artifact, $messages, $recipient);
@@ -197,18 +197,18 @@ class Tracker_DateReminderManager
         $txtBody   = $this->getBodyText($reminder, $artifact, $user, $lang);
 
         $subject   = $this->getSubject($reminder, $artifact, $user);
-        $headers   = array();
+        $headers   = [];
         $hash      = md5($htmlBody . $txtBody . serialize($headers) . serialize($subject));
         if (isset($messages[$hash])) {
             $messages[$hash]['recipients'][] = $recipient;
         } else {
-            $messages[$hash] = array(
+            $messages[$hash] = [
                     'headers'    => $headers,
                     'htmlBody'   => $htmlBody,
                     'txtBody'    => $txtBody,
                     'subject'    => $subject,
-                    'recipients' => array($recipient),
-            );
+                    'recipients' => [$recipient],
+            ];
         }
     }
 
@@ -226,7 +226,7 @@ class Tracker_DateReminderManager
     protected function sendReminder(Tracker_Artifact $artifact, $recipients, $headers, $subject, $htmlBody, $txtBody)
     {
         $hp             = Codendi_HTMLPurifier::instance();
-        $breadcrumbs    = array();
+        $breadcrumbs    = [];
         $project        = $this->getTracker()->getProject();
         $trackerId      = $this->getTracker()->getID();
         $artifactId     = $artifact->getID();

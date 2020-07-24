@@ -27,7 +27,7 @@
 class Tracker_Hierarchy
 {
 
-    private $parents = array();
+    private $parents = [];
 
     /**
      * @param int $parent_id The id of the parent in the relatonship
@@ -103,7 +103,7 @@ class Tracker_Hierarchy
      */
     public function getLevel($tracker_id)
     {
-        $callstack = array();
+        $callstack = [];
         return $this->getLevelRecursive($tracker_id, $callstack);
     }
 
@@ -161,7 +161,7 @@ class Tracker_Hierarchy
      */
     public function getLastLevelTrackerIds()
     {
-        $tracker_ids = array();
+        $tracker_ids = [];
 
         foreach (array_keys($this->parents) as $child_id) {
             if (! in_array($child_id, $this->parents)) {

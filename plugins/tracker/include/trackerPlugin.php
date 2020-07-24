@@ -391,12 +391,12 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function site_admin_option_hook($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => dgettext('tuleap-tracker', 'Tracker'),
             'href'  => $this->getPluginPath() . '/config.php',
             'has_shortname' => true,
             'shortname' => 'admin-tracker'
-        );
+        ];
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event)
@@ -412,7 +412,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function cssFile()
     {
         $include_tracker_css_file = false;
-        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
         // Only show the stylesheet if we're actually in the tracker pages.
         // This stops styles inadvertently clashing with the main site.
         if (
@@ -433,7 +433,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function burning_parrot_get_stylesheets($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         $include_tracker_css_file = false;
-        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, array('include_tracker_css_file' => &$include_tracker_css_file));
+        EventManager::instance()->processEvent(TRACKER_EVENT_INCLUDE_CSS_FILE, ['include_tracker_css_file' => &$include_tracker_css_file]);
 
         if ($include_tracker_css_file || strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
             $variant                 = $params['variant'];
@@ -463,23 +463,23 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
         switch ($params['type']) {
             case SystemEvent_TRACKER_V3_MIGRATION::NAME:
                 $params['class']        = 'SystemEvent_TRACKER_V3_MIGRATION';
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getMigrationManager(),
-                );
+                ];
                 break;
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME:
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_DAILY::NAME;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     new Tracker_FormElement_Field_BurndownDao(),
                     new FieldCalculator(new BurndownCalculator(new Tracker_FormElement_Field_ComputedDao())),
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
                     BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
-                );
+                ];
                 break;
             case 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME:
                 $params['class']        = 'Tuleap\\Tracker\\FormElement\\SystemEvent\\' . SystemEvent_BURNDOWN_GENERATE::NAME;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
                     new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
                     new Tracker_FormElement_Field_BurndownDao(),
@@ -487,7 +487,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                     new Tracker_FormElement_Field_ComputedDaoCache(new Tracker_FormElement_Field_ComputedDao()),
                     BackendLogger::getDefaultLogger(),
                     new BurndownCacheDateRetriever()
-                );
+                ];
                 break;
             default:
                 break;
@@ -641,7 +641,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         if (! $params['object_name']) {
             $type = $this->getObjectTypeFromPermissions($params);
-            if (in_array($params['permission_type'], array(Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'))) {
+            if (in_array($params['permission_type'], [Tracker::PERMISSION_ADMIN, Tracker::PERMISSION_FULL, Tracker::PERMISSION_SUBMITTER, Tracker::PERMISSION_ASSIGNEE, Tracker::PERMISSION_SUBMITTER_ONLY, 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS'])) {
                 $object_id = $params['object_id'];
                 if ($type == 'tracker') {
                     $ret = (string) $object_id;
@@ -685,7 +685,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
     public function permission_user_allowed_to_change($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['allowed']) {
-            $allowed = array(
+            $allowed = [
                 Tracker::PERMISSION_ADMIN,
                 Tracker::PERMISSION_FULL,
                 Tracker::PERMISSION_SUBMITTER,
@@ -696,7 +696,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
                 'PLUGIN_TRACKER_FIELD_UPDATE',
                 'PLUGIN_TRACKER_ARTIFACT_ACCESS',
                 'PLUGIN_TRACKER_WORKFLOW_TRANSITION',
-            );
+            ];
             if (in_array($params['permission_type'], $allowed)) {
                 $group_id  = $params['group_id'];
                 $object_id = $params['object_id'];
@@ -735,8 +735,8 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function get_available_reference_natures($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $natures = array(Tracker_Artifact::REFERENCE_NATURE => array('keyword' => 'artifact',
-                                                                     'label'   => 'Artifact Tracker v5'));
+        $natures = [Tracker_Artifact::REFERENCE_NATURE => ['keyword' => 'artifact',
+                                                                     'label'   => 'Artifact Tracker v5']];
         $params['natures'] = array_merge($params['natures'], $natures);
     }
 
@@ -844,11 +844,11 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array(
+        $this->removeOrphanWidgets([
             Tracker_Widget_MyArtifacts::ID,
             Tracker_Widget_MyRenderer::ID,
             Tracker_Widget_ProjectRenderer::ID
-        ));
+        ]);
     }
 
     /** @see AtUserCreationDefaultWidgetsCreator::DEFAULT_WIDGETS_FOR_NEW_USER */
@@ -877,7 +877,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             $trackers = $tf->getTrackersByGroupId($project->getGroupId());
 
             if ($trackers) {
-                $entries  = array();
+                $entries  = [];
                 $purifier = Codendi_HTMLPurifier::instance();
                 foreach ($trackers as $t) {
                     if ($t->userCanView()) {
@@ -1099,7 +1099,7 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
             return true;
         }
 
-        $plateform_natures["nature"] = array(Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD);
+        $plateform_natures["nature"] = [Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD];
         foreach ($this->getNatureDao()->searchAll() as $nature) {
             $plateform_natures["nature"][] = $nature['shortname'];
         }
@@ -1422,13 +1422,13 @@ class trackerPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.
 
         $is_service_used = $template->usesService($this->getServiceShortname());
 
-        $params['buttons'][] = array(
+        $params['buttons'][] = [
             'icon'        => 'fa-list',
             'label'       => dgettext('tuleap-tracker', 'Configure trackers'),
             'uri'         => TRACKER_BASE_URL . '/?group_id=' . (int) $template->getID(),
             'is_disabled' => ! $is_service_used,
             'title'       => ! $is_service_used ? dgettext('tuleap-tracker', 'This template does not use trackers') : ''
-        );
+        ];
     }
 
     public function get_permission_delegation($params)//phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

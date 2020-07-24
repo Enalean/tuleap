@@ -35,18 +35,18 @@ class Planning_MilestoneSelectorController extends MVC2_PluginController
         );
 
         if ($milestone->getArtifact()) {
-            $redirect_parameters = array(
+            $redirect_parameters = [
                 'group_id'    => $milestone->getGroupId(),
                 'planning_id' => $milestone->getPlanningId(),
                 'action'      => 'show',
                 'aid'         => $milestone->getArtifact()->getId(),
-            );
+            ];
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT,
-                array(
+                [
                         'milestone' => $milestone,
                         'redirect_parameters' => &$redirect_parameters
-                    )
+                    ]
             );
             $this->redirect($redirect_parameters);
         }

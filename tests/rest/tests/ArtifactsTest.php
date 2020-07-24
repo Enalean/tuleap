@@ -245,32 +245,32 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $start_date->setDate(2016, 11, 17);
         $start_date->setTime(23, 59, 59);
 
-        $expected_burndown_chart = array(
-            array(
+        $expected_burndown_chart = [
+            [
                 "date"             => $start_date->format(DATE_ATOM),
                 "remaining_effort" => 32
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
                 "remaining_effort" => 25
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            )
-        );
+            ]
+        ];
 
         $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
     }
@@ -293,32 +293,32 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $start_date->setDate(2016, 11, 17);
         $start_date->setTime(23, 59, 59);
 
-        $expected_burndown_chart = array(
-            array(
+        $expected_burndown_chart = [
+            [
                 "date"             => $start_date->format(DATE_ATOM),
                 "remaining_effort" => 25
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+3 day')->format(DATE_ATOM),
                 "remaining_effort" => 40
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            ),
-            array(
+            ],
+            [
                 "date"             => $start_date->modify('+1 day')->format(DATE_ATOM),
                 "remaining_effort" => 20
-            )
-        );
+            ]
+        ];
 
         $this->assertEquals($burndown['values'][6]['value']['points_with_date'], $expected_burndown_chart);
     }
@@ -343,7 +343,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $wanted_artifacts_ids     = $existing_artifact_ids;
         $wanted_artifacts_ids[]   = $do_not_exist_artifact_id;
 
-        $query = json_encode(array('id' => $wanted_artifacts_ids));
+        $query = json_encode(['id' => $wanted_artifacts_ids]);
 
         $response  = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
         $artifacts = $response->json();
@@ -362,7 +362,7 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     public function testGetTooManyArtifacts()
     {
         $too_many_artifacts_id = array_keys(array_fill(0, 200, 1));
-        $query                 = json_encode(array('id' => $too_many_artifacts_id));
+        $query                 = json_encode(['id' => $too_many_artifacts_id]);
 
         $response = $this->getResponse($this->client->get('artifacts?query=' . urlencode($query)));
         $this->assertEquals(403, $response->getStatusCode());
@@ -404,14 +404,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
 
-        return json_encode(array(
-            'values' => array(
-                array(
+        return json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "wunderbar",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -425,14 +425,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
 
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
+        $put_resource = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "wunderbar",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals(200, $response->getStatusCode());
@@ -452,14 +452,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
+        $put_resource = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "This should return 200",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
 
@@ -483,14 +483,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
+        $put_resource = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "varm choklade",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
 
@@ -514,14 +514,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
+        $put_resource = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "This should return 412",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $last_modified = "2001-03-05T15:14:55+01:00";
         $request       = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
@@ -541,14 +541,14 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
     {
         $field_label =  'Summary';
         $field_id = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
-        $put_resource = json_encode(array(
-            'values' => array(
-                array(
+        $put_resource = json_encode([
+            'values' => [
+                [
                     'field_id' => $field_id,
                     'value'    => "This should return 4122415",
-                ),
-            ),
-        ));
+                ],
+            ],
+        ]);
 
         $Etag    = "one empty bottle";
         $request = $this->client->put('artifacts/' . $artifact_id, null, $put_resource);
@@ -566,13 +566,13 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
      */
     public function testPutArtifactComment($artifact_id)
     {
-        $put_resource = json_encode(array(
-            'values' => array(),
-            'comment' => array(
+        $put_resource = json_encode([
+            'values' => [],
+            'comment' => [
                 'format' => 'text',
                 'body'   => 'Please see my comment',
-            ),
-        ));
+            ],
+        ]);
 
         $response    = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -595,17 +595,17 @@ class ArtifactsTest extends ArtifactsTestExecutionHelper  // @codingStandardsIgn
         $field_label     = 'artlink';
         $field_id        = $this->getFieldIdForFieldLabel($artifact_id, $field_label);
         $put_resource    = json_encode(
-            array(
-                'values' => array(
-                    array(
+            [
+                'values' => [
+                    [
                         'field_id' => $field_id,
-                        "links"    => array(
-                            array("id" => $this->level_three_artifact_ids[1], "type" => $nature_is_child),
-                            array("id" => $this->level_three_artifact_ids[3], "type" => $nature_empty),
-                        )
-                    ),
-                ),
-            )
+                        "links"    => [
+                            ["id" => $this->level_three_artifact_ids[1], "type" => $nature_is_child],
+                            ["id" => $this->level_three_artifact_ids[3], "type" => $nature_empty],
+                        ]
+                    ],
+                ],
+            ]
         );
 
         $response = $this->getResponse($this->client->put('artifacts/' . $artifact_id, null, $put_resource));

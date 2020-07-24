@@ -40,10 +40,10 @@ class VisitRetrieverTest extends TestCase
     {
         $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
         $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
-            array(
-                array('artifact_id' => 1, 'created_on' => 1),
-                array('artifact_id' => 2, 'created_on' => 2),
-            )
+            [
+                ['artifact_id' => 1, 'created_on' => 1],
+                ['artifact_id' => 2, 'created_on' => 2],
+            ]
         );
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
         $artifact         = Mockery::mock(Tracker_Artifact::class);
@@ -85,10 +85,10 @@ class VisitRetrieverTest extends TestCase
     {
         $recently_visited_dao = Mockery::mock(\Tuleap\Tracker\Artifact\RecentlyVisited\RecentlyVisitedDao::class);
         $recently_visited_dao->shouldReceive('searchVisitByUserId')->andReturns(
-            array(
-                array('artifact_id' => 1, 'created_on' => 1),
-                array('artifact_id' => 2, 'created_on' => 2),
-            )
+            [
+                ['artifact_id' => 1, 'created_on' => 1],
+                ['artifact_id' => 2, 'created_on' => 2],
+            ]
         );
         $artifact_factory = Mockery::mock(Tracker_ArtifactFactory::class);
         $artifact_factory->shouldReceive('getArtifactById')->andReturns(null);

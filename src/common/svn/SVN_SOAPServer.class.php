@@ -107,7 +107,7 @@ class SVN_SOAPServer
     public function getSvnPathsWithLogDetails($sessionKey, $group_id, $path, $sort)
     {
         try {
-            $data = array();
+            $data = [];
             $current_user = $this->soap_request_validator->continueSession($sessionKey);
             $project      = $this->soap_request_validator->getProjectById($group_id, 'getSVNPath');
             $this->soap_request_validator->assertUserCanAccessProject($current_user, $project);
@@ -243,7 +243,7 @@ class SVN_SOAPServer
     private function getUser($author_id)
     {
         if (! $author_id) {
-            $no_user_in_particular = new PFUser(array('user_name' => ''));
+            $no_user_in_particular = new PFUser(['user_name' => '']);
             return $no_user_in_particular;
         }
 

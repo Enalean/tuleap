@@ -252,11 +252,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
 
     public function getTypes()
     {
-        return array(
+        return [
             SystemEvent_SVN_CREATE_REPOSITORY::NAME,
             SystemEvent_SVN_DELETE_REPOSITORY::NAME,
             SystemEvent_SVN_RESTORE_REPOSITORY::NAME
-        );
+        ];
     }
 
     public function collectCLICommands(CLICommandsCollector $commands_collector): void
@@ -352,24 +352,24 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
         switch ($params['type']) {
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_CREATE_REPOSITORY::NAME:
                 $params['class'] = SystemEvent_SVN_CREATE_REPOSITORY::class;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getAccessFileHistoryCreator(),
                     $this->getRepositoryManager(),
                     $this->getUserManager(),
                     $this->getBackendSVN(),
                     $this->getBackendSystem(),
                     $this->getCopier()
-                );
+                ];
                 break;
             case 'Tuleap\\SVN\\Events\\' . SystemEvent_SVN_DELETE_REPOSITORY::NAME:
                 $params['class'] = SystemEvent_SVN_DELETE_REPOSITORY::class;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getRepositoryManager(),
                     ProjectManager::instance(),
                     $this->getApacheConfGenerator(),
                     $this->getRepositoryDeleter(),
                     new SvnAdmin(new System_Command(), \SvnPlugin::getLogger(), Backend::instance(Backend::SVN))
-                );
+                ];
                 break;
         }
     }
@@ -747,11 +747,11 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             $builder = new QueryBuilder();
             $query  = $builder->buildQuery($project, $params['span'], $params['who']);
 
-             $params['logs'][] = array(
+             $params['logs'][] = [
                 'sql'   => $query,
                 'field' => dgettext('tuleap-svn', 'Repository name'),
                 'title' => dgettext('tuleap-svn', 'SVN')
-             );
+             ];
         }
     }
 
@@ -1114,10 +1114,10 @@ class SvnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.Miss
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-svn', 'SVN'),
                 $this->getPluginPath() . '/?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID(),
                         'action'   => 'admin-groups'
-                    )
+                    ]
                 )
             )
         );

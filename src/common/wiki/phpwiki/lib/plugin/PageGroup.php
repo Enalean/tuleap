@@ -61,13 +61,13 @@ class WikiPlugin_PageGroup extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array(
+        return [
                      'parent'  => '',
                      'rev'     => false,
                      'section' => _("Contents"),
                      'label'   => '',
                      'loop'    => false,
-                     );
+                     ];
     }
 
     // Stolen from IncludePage.php
@@ -84,7 +84,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
                 $match
             )
         ) {
-            $result = array();
+            $result = [];
             //FIXME: return list of Wiki_Pagename objects
             foreach (explode("\n", $match[2]) as $line) {
                 $text = trim($line);
@@ -101,7 +101,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
             }
             return $result;
         }
-        return array(sprintf(_("<%s: no such section>"), $page . " " . $section));
+        return [sprintf(_("<%s: no such section>"), $page . " " . $section)];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -121,12 +121,12 @@ class WikiPlugin_PageGroup extends WikiPlugin
             $html = $error_text;
             return $html;
         }
-        $directions = array ('next'     => _("Next"),
+        $directions =  ['next'     => _("Next"),
                              'previous' => _("Previous"),
                              'contents' => _("Contents"),
                              'first'    => _("First"),
                              'last'     => _("Last")
-                             );
+                             ];
 
         global $WikiTheme;
         $sep = $WikiTheme->getButtonSeparator();
@@ -168,7 +168,7 @@ class WikiPlugin_PageGroup extends WikiPlugin
 
         $thispage = array_search($pagename, $c);
 
-        $go = array ('previous','next');
+        $go =  ['previous', 'next'];
         $links = HTML();
         $links->pushcontent($label);
         $links->pushcontent(" [ "); // an experiment

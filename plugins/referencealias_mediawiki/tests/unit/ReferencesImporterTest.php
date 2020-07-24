@@ -72,7 +72,7 @@ XML;
 
         $this->dao->shouldReceive('insertRef')->with($project, "wiki76532", "HomePage")->once();
 
-        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, array());
+        $this->importer->importCompatRefXML(new ImportConfig(), $project, $simple_xml, []);
     }
 
     public function testItShouldNotAddUnknownReferences(): void
@@ -88,6 +88,6 @@ XML;
 
         $this->dao->shouldReceive('insertRef')->never();
 
-        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, array());
+        $this->importer->importCompatRefXML(new ImportConfig(), \Mockery::spy(\Project::class), $simple_xml, []);
     }
 }

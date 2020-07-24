@@ -29,37 +29,37 @@ class XMLDocmanImport
     protected $dataBaseDir;
 
     // Metadata map
-    private $metadataMap = array();
+    private $metadataMap = [];
 
     // List of hardcoded metadata enabled on the target project
-    private $hardCodedMetadata = array();
+    private $hardCodedMetadata = [];
 
     // Group map
-    private $ugroupMap = array(
-        100 => array(
+    private $ugroupMap = [
+        100 => [
             'ugroup_name' => 'nobody',
-            'members' => array(),
-        ),
-        1 => array(
+            'members' => [],
+        ],
+        1 => [
             'ugroup_name' => 'all_users',
-            'members' => array(),
-        ),
-        2 => array(
+            'members' => [],
+        ],
+        2 => [
             'ugroup_name' => 'registered_users',
-            'members' => array(),
-        ),
-        3 => array(
+            'members' => [],
+        ],
+        3 => [
             'ugroup_name' => 'project_members',
-            'members' => array(),
-        ),
-        4 => array(
+            'members' => [],
+        ],
+        4 => [
             'ugroup_name' => 'project_admins',
-            'members' => array(),
-        ),
-    );
+            'members' => [],
+        ],
+    ];
 
     // User map (identifier => "unix" user name)
-    private $userMap = array();
+    private $userMap = [];
 
     // ID of the project
     protected $groupId;
@@ -115,7 +115,7 @@ class XMLDocmanImport
         $this->logger->info("Init Import process");
 
         try {
-            $this->soap = new SoapClient($wsdl, array('trace' => true));
+            $this->soap = new SoapClient($wsdl, ['trace' => true]);
             $this->hash = $this->soap->login($login, $password, "3.6")->session_hash;
             if ($projectId === null) {
                 $this->groupId = $this->soap->getGroupByName($this->hash, $project)->group_id;
@@ -254,7 +254,7 @@ class XMLDocmanImport
             foreach ($ugroups as $ugroup) {
                 if ($this->doc->xpath("/docman/ugroups/ugroup[@name='$ugroup->name']")) {
                     $this->ugroupMap[$ugroup->ugroup_id]['ugroup_name'] = $ugroup->name;
-                    $this->ugroupMap[$ugroup->ugroup_id]['members'] = array();
+                    $this->ugroupMap[$ugroup->ugroup_id]['members'] = [];
                     foreach ($ugroup->members as $member) {
                         $this->ugroupMap[$ugroup->ugroup_id]['members'][$member->user_name] = $member->user_id;
                     }
@@ -275,7 +275,7 @@ class XMLDocmanImport
     {
         $this->logger->info("Retrieving metadata definition... ");
 
-        $hardCodedMetadataLabels = array('title', 'description', 'owner' , 'create_date', 'update_date' , 'status', 'obsolescence_date');
+        $hardCodedMetadataLabels = ['title', 'description', 'owner', 'create_date', 'update_date', 'status', 'obsolescence_date'];
 
         try {
             $metadataList = $this->soap->getDocmanProjectMetadata($this->hash, $this->groupId);
@@ -291,7 +291,7 @@ class XMLDocmanImport
                         if ($metadata->type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
                             $this->metadataMap[$metadata->name]['isMultipleValuesAllowed'] = $metadata->isMultipleValuesAllowed;
                             $lov = $metadata->listOfValues;
-                            $this->metadataMap[$metadata->name]['values'] = array();
+                            $this->metadataMap[$metadata->name]['values'] = [];
                             foreach ($lov as $val) {
                                 if ($val->id != 100) {
                                     $this->metadataMap[$metadata->name]['values'][$val->name] = $val->id;
@@ -316,7 +316,7 @@ class XMLDocmanImport
 
     private function buildUserMap()
     {
-        $userIdentifiers = array();
+        $userIdentifiers = [];
         foreach (array_unique($this->doc->xpath('//author | //owner')) as $userIdentifier) {
             if ($userIdentifier != '') {
                 $userIdentifiers[] = self::userNodeToIdentifier($userIdentifier);
@@ -478,7 +478,7 @@ class XMLDocmanImport
         $propertiesList = $this->doc->xpath("//item[@type!='folder']/properties");
 
         // Build the list of all required properties
-        $requiredProperties = array();
+        $requiredProperties = [];
         foreach ($this->metadataMap as $metadataName => $metadataDef) {
             if (! $metadataDef['isEmptyAllowed']) {
                 $requiredProperties[] = $metadataName;
@@ -575,7 +575,7 @@ class XMLDocmanImport
                 // Check if the metadata type is the same in the XML document and on the server
                 if ($type == $this->metadataMap[$name]['type']) {
                     if ($type == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
-                        $values = array();
+                        $values = [];
                         foreach ($propdef->value as $value) {
                             $values[] = (string) $value;
                         }
@@ -736,7 +736,7 @@ class XMLDocmanImport
      */
     protected function getItemInformation(SimpleXMLElement $node)
     {
-        $information = array(
+        $information = [
                           (string) $node->properties->title,
                           (string) $node->properties->description,
                           (string) $node->properties->status,
@@ -744,17 +744,17 @@ class XMLDocmanImport
                           $this->userNodeToUsername($node->properties->owner),
                           $this->parseDate((string) $node->properties->create_date),
                           $this->parseDate((string) $node->properties->update_date),
-        );
+        ];
 
         // Dynamic metadata
-        $metadata = array();
+        $metadata = [];
         foreach ($node->xpath('properties/property') as $property) {
             $this->extractOneMetadata($property, $metadata);
         }
         $information[] = $metadata;
 
         // Permissions
-        $permissions = array();
+        $permissions = [];
         foreach ($node->xpath('permissions/permission') as $permission) {
             $this->extractOnePermission($permission, $permissions);
         }
@@ -768,13 +768,13 @@ class XMLDocmanImport
      */
     protected function getVersionInformation(SimpleXMLElement $node)
     {
-        $version = array(
+        $version = [
                        (string) $node->content,
                        (string) $node->label,
                        (string) $node->changelog,
                        $this->userNodeToUsername($node->author),
                        $this->parseDate((string) $node->date),
-        );
+        ];
 
         return $version;
     }
@@ -891,10 +891,10 @@ class XMLDocmanImport
             if ($values !== false && count($values) > 0) {
                 foreach ($values as $value) {
                     $val = (string) $value;
-                    $metadata[] = array('label' => $dstMetadataLabel, 'value' => $this->metadataMap[$propTitle]['values'][$val]);
+                    $metadata[] = ['label' => $dstMetadataLabel, 'value' => $this->metadataMap[$propTitle]['values'][$val]];
                 }
             } else {
-                $metadata[] = array('label' => $dstMetadataLabel, 'value' => '100');
+                $metadata[] = ['label' => $dstMetadataLabel, 'value' => '100'];
             }
         } else {
             $value = (string) $property;
@@ -903,7 +903,7 @@ class XMLDocmanImport
                 $value = $this->parseDate($value);
             }
 
-            $metadata[] = array('label' => $dstMetadataLabel, 'value' => $value);
+            $metadata[] = ['label' => $dstMetadataLabel, 'value' => $value];
         }
     }
 
@@ -928,7 +928,7 @@ class XMLDocmanImport
                 $type = '';
         }
 
-        $permissions[] = array('ugroup_id' => $ugroup_id, 'type' => $type);
+        $permissions[] = ['ugroup_id' => $ugroup_id, 'type' => $type];
     }
 
     protected function askWhatToDo($e)

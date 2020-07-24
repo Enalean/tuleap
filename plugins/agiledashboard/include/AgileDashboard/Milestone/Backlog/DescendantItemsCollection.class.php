@@ -22,7 +22,7 @@ class AgileDashboard_Milestone_Backlog_DescendantItemsCollection implements Iter
 {
 
     /** @var Tracker_Artifact[] */
-    private $items = array();
+    private $items = [];
 
     /** @var int */
     private $total_available_size;

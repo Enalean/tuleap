@@ -131,12 +131,12 @@ class TuleapRegisterMail
     private function createNotificationMessageText($login, $redirect_url)
     {
         $message = $GLOBALS['Language']->getText('account_register', 'mail_approval_title') . "\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', array(ForgeConfig::get('sys_name'))) . " "
-           . $login . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_after_login', array(ForgeConfig::get('sys_name'))) . "\n\n"
+           . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_one', [ForgeConfig::get('sys_name')]) . " "
+           . $login . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_after_login', [ForgeConfig::get('sys_name')]) . "\n\n"
            . $GLOBALS['Language']->getText('account_register', 'mail_approval_section_two') . "\n\n"
            . "<" . $redirect_url . ">\n\n"
            . $GLOBALS['Language']->getText('account_register', 'mail_thanks') . "\n\n"
-           . $GLOBALS['Language']->getText('account_register', 'mail_signature', array(ForgeConfig::get('sys_name'))) . "\n\n";
+           . $GLOBALS['Language']->getText('account_register', 'mail_signature', [ForgeConfig::get('sys_name')]) . "\n\n";
 
         return $message;
     }

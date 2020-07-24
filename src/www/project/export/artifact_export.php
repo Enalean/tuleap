@@ -87,7 +87,7 @@ $eol = "\n";
 
 //echo "DBG -- $sql<br>";
 
-$all_results = array();
+$all_results = [];
 if (isset($multiple_queries) && $multiple_queries) {
     foreach ($all_queries as $q) {
         $result = db_query($q);
@@ -114,7 +114,7 @@ if ($export == 'artifact') {
         echo build_csv_header($col_list, $lbl_list) . $eol;
 
         if ($multiple_queries) {
-            $multiarr = array();
+            $multiarr = [];
             for ($i = 0; $i < $rows; $i++) {
                 foreach ($all_results as $result) {
                       $multiarr = array_merge($multiarr, db_fetch_array($result));
@@ -132,7 +132,7 @@ if ($export == 'artifact') {
         }
     } else {
         assert(isset($pg_title));
-        project_admin_header(array('title' => $pg_title), 'data');
+        project_admin_header(['title' => $pg_title], 'data');
 
         echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'art_export') . '</h3>';
         if (isset($result) && $result) {
@@ -141,7 +141,7 @@ if ($export == 'artifact') {
             echo '<P>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'db_access_err', ForgeConfig::get('sys_name'));
             echo '<br>' . db_error();
         }
-        site_project_footer(array());
+        site_project_footer([]);
     }
 } elseif (isset($result, $rows) && $export == "artifact_format") {
     echo '<h3>' . $GLOBALS['Language']->getText('project_export_artifact_export', 'art_exp_format') . '</h3>';

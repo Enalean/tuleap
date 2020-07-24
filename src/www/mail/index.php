@@ -31,9 +31,9 @@ function display_ml_details($group_id, $list_server, $result, $i)
     $list_is_public = db_result($result, $i, 'is_public');
     $html_a = '';
     $em = EventManager::instance();
-    $em->processEvent('browse_archives', array('html' => &$html_a,
+    $em->processEvent('browse_archives', ['html' => &$html_a,
                                                'group_list_id' => db_result($result, $i, 'group_list_id')
-                                            ));
+                                            ]);
     if ($html_a) {
         echo $html_a;
     } else {
@@ -62,9 +62,9 @@ if ($group_id) {
 
     $hp = Codendi_HTMLPurifier::instance();
     $pm = ProjectManager::instance();
-    $params = array('title' => $Language->getText('mail_index', 'mail_list_for') . $pm->getProject($group_id)->getPublicName(),
+    $params = ['title' => $Language->getText('mail_index', 'mail_list_for') . $pm->getProject($group_id)->getPublicName(),
               'help' => 'collaboration.html#mailing-lists',
-                  'pv'   => isset($pv) ? $pv : false);
+                  'pv'   => isset($pv) ? $pv : false];
     mail_header($params);
 
     if (user_isloggedin() && user_ismember($group_id)) {
@@ -92,7 +92,7 @@ if ($group_id) {
                         break;
                 }
                 if ($iframe_url) {
-                    $GLOBALS['HTML']->iframe($iframe_url, array('class' => 'iframe_service', 'width' => '100%', 'height' => '650px'));
+                    $GLOBALS['HTML']->iframe($iframe_url, ['class' => 'iframe_service', 'width' => '100%', 'height' => '650px']);
                 }
             }
         }
@@ -110,7 +110,7 @@ if ($group_id) {
                 <H1>' . $Language->getText('mail_index', 'no_list_found_for') . $hp->purify($pm->getProject($group_id)->getPublicName()) . '</H1>';
             echo '
                 <P>' . $Language->getText('mail_index', 'proj_admin_use_admin_link');
-                    mail_footer(array('pv'   => isset($pv) ? $pv : false));
+                    mail_footer(['pv'   => isset($pv) ? $pv : false]);
             exit;
         }
 
@@ -139,11 +139,11 @@ if ($group_id) {
         echo '</TD></TR></TABLE>';
     }
 } else {
-    $params = array('title' => $Language->getText('mail_index', 'choose_group_first'),
+    $params = ['title' => $Language->getText('mail_index', 'choose_group_first'),
                   'help' => 'collaboration.html#mailing-lists',
-                  'pv'   => $pv);
+                  'pv'   => $pv];
     mail_header($params);
     echo '
 		<H1>' . $Language->getText('mail_index', 'group_err') . '</H1>';
 }
-mail_footer(array('pv'   => $pv));
+mail_footer(['pv'   => $pv]);

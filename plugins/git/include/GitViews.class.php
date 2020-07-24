@@ -136,7 +136,7 @@ class GitViews extends PluginViews
 
     public function footer()
     {
-        $GLOBALS['HTML']->footer(array());
+        $GLOBALS['HTML']->footer([]);
     }
 
     /**
@@ -319,9 +319,9 @@ class GitViews extends PluginViews
     {
         $params = $this->getData();
 
-        $repository_list       = (isset($params['repository_list'])) ? $params['repository_list'] : array();
-        $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : array();
-        $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : array();
+        $repository_list       = (isset($params['repository_list'])) ? $params['repository_list'] : [];
+        $templates_list        = (isset($params['templates_list'])) ? $params['templates_list'] : [];
+        $parent_templates_list = (isset($params['parent_templates_list'])) ? $params['parent_templates_list'] : [];
 
         $event = new GitAdminGetExternalPanePresenters($this->project);
         $this->event_manager->processEvent($event);
@@ -398,10 +398,10 @@ class GitViews extends PluginViews
         array $mirrors,
         array $mirror_ids_per_repository
     ) {
-        $mirrored_repositories_presenters = array();
+        $mirrored_repositories_presenters = [];
 
         foreach ($repositories as $repository) {
-            $used_mirrors = array();
+            $used_mirrors = [];
             foreach ($mirrors as $mirror) {
                 $is_used = isset($mirror_ids_per_repository[$repository->getId()])
                     && in_array($mirror->mirror_id, $mirror_ids_per_repository[$repository->getId()]);
@@ -429,7 +429,7 @@ class GitViews extends PluginViews
     private function getAdminMassUpdateMirrorPresenters()
     {
         $mirrors           = $this->mirror_data_mapper->fetchAllForProject($this->project);
-        $mirror_presenters = array();
+        $mirror_presenters = [];
 
         foreach ($mirrors as $mirror) {
             $mirror_presenters[] = new GitPresenters_MirrorPresenter($mirror, false);
@@ -512,7 +512,7 @@ class GitViews extends PluginViews
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';
-        $usrProject = array_diff($user->getAllProjects(), array($currentProjectId));
+        $usrProject = array_diff($user->getAllProjects(), [$currentProjectId]);
 
         foreach ($usrProject as $projectId) {
             $project = $manager->getProject($projectId);

@@ -21,7 +21,7 @@ class Text
     public $y = 0;
     public $halign = "left";
     public $valign = "top";
-    public $color = array(0,0,0);
+    public $color = [0, 0, 0];
     public $hide = false;
     public $dir = 0;
     public $iScalePosY = null;
@@ -126,7 +126,7 @@ class Text
 
     // Specify that the text should be boxed. fcolor=frame color, bcolor=border color,
     // $shadow=drop shadow should be added around the text.
-    public function SetBox($aFrameColor = array(255,255,255), $aBorderColor = array(0,0,0), $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
+    public function SetBox($aFrameColor = [255, 255, 255], $aBorderColor = [0, 0, 0], $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
     {
         if ($aFrameColor === false) {
             $this->boxed = false;
@@ -144,7 +144,7 @@ class Text
         $this->ishadowwidth = $aShadowWidth;
     }
 
-    public function SetBox2($aFrameColor = array(255,255,255), $aBorderColor = array(0,0,0), $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
+    public function SetBox2($aFrameColor = [255, 255, 255], $aBorderColor = [0, 0, 0], $aShadowColor = false, $aCornerRadius = 4, $aShadowWidth = 3)
     {
         $this->iBoxType = 2;
         $this->SetBox($aFrameColor, $aBorderColor, $aShadowColor, $aCornerRadius, $aShadowWidth);

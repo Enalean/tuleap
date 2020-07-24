@@ -80,33 +80,33 @@ class DefaultFineGrainedPermissionFactoryTest extends TestCase
         $this->ugroup_manager->shouldReceive('getById')->with(102)->andReturns($ugroup_02);
         $this->ugroup_manager->shouldReceive('getById')->with(103)->andReturns($ugroup_03);
         $this->project_manager->shouldReceive('getProject')->with(101)->andReturns($this->project);
-        $this->normalizer->shouldReceive('getNormalizedUGroupIds')->andReturns(array());
+        $this->normalizer->shouldReceive('getNormalizedUGroupIds')->andReturns([]);
 
-        $this->dao->shouldReceive('searchDefaultBranchesFineGrainedPermissions')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchDefaultBranchesFineGrainedPermissions')->andReturns(\TestHelper::arrayToDar([
             'id'         => 1,
             'project_id' => 101,
             'pattern'    => 'refs/heads/master',
-        )));
+        ]));
 
-        $this->dao->shouldReceive('searchDefaultTagsFineGrainedPermissions')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchDefaultTagsFineGrainedPermissions')->andReturns(\TestHelper::arrayToDar([
             'id'         => 2,
             'project_id' => 101,
             'pattern'    => 'refs/tags/v1',
-        )));
+        ]));
 
-        $this->dao->shouldReceive('searchDefaultWriterUgroupIdsForFineGrainedPermissions')->with(1)->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 101), array('ugroup_id' => 102)));
+        $this->dao->shouldReceive('searchDefaultWriterUgroupIdsForFineGrainedPermissions')->with(1)->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 101], ['ugroup_id' => 102]));
 
-        $this->dao->shouldReceive('searchDefaultRewinderUgroupIdsForFineGrainePermissions')->with(1)->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchDefaultRewinderUgroupIdsForFineGrainePermissions')->with(1)->andReturns(\TestHelper::arrayToDar([
             'ugroup_id' => 103,
-        )));
+        ]));
 
-        $this->dao->shouldReceive('searchDefaultWriterUgroupIdsForFineGrainedPermissions')->with(2)->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchDefaultWriterUgroupIdsForFineGrainedPermissions')->with(2)->andReturns(\TestHelper::arrayToDar([
             'ugroup_id' => 101,
-        )));
+        ]));
 
-        $this->dao->shouldReceive('searchDefaultRewinderUgroupIdsForFineGrainePermissions')->with(2)->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchDefaultRewinderUgroupIdsForFineGrainePermissions')->with(2)->andReturns(\TestHelper::arrayToDar([
             'ugroup_id' => 102,
-        )));
+        ]));
     }
 
     private function buildRequest(array $params): Codendi_Request
@@ -120,10 +120,10 @@ class DefaultFineGrainedPermissionFactoryTest extends TestCase
     public function testItRetrievesUpdatedPermissions(): void
     {
         $params = [
-            'edit-branch-write' => array(1 => array(101, 102)),
-            'edit-branch-rewind' => array(1 => array(102)),
-            'edit-tag-write' => array(2 => array(101)),
-            'edit-tag-rewind' => array(2 => array(102)),
+            'edit-branch-write' => [1 => [101, 102]],
+            'edit-branch-rewind' => [1 => [102]],
+            'edit-tag-write' => [2 => [101]],
+            'edit-tag-rewind' => [2 => [102]],
             'group_id' => 101
         ];
 
@@ -133,15 +133,15 @@ class DefaultFineGrainedPermissionFactoryTest extends TestCase
 
         $this->assertNotEmpty($updated);
         $this->assertCount(1, $updated);
-        $this->assertEquals(array(1), array_keys($updated));
+        $this->assertEquals([1], array_keys($updated));
     }
 
     public function testItDealsWithRemovedUgroups(): void
     {
         $params = [
-            'edit-branch-write' => array(1 => array(101, 102)),
-            'edit-branch-rewind' => array(1 => array(103)),
-            'edit-tag-rewind' => array(2 => array(102)),
+            'edit-branch-write' => [1 => [101, 102]],
+            'edit-branch-rewind' => [1 => [103]],
+            'edit-tag-rewind' => [2 => [102]],
             'group_id' => 101
         ];
 
@@ -151,6 +151,6 @@ class DefaultFineGrainedPermissionFactoryTest extends TestCase
 
         $this->assertNotEmpty($updated);
         $this->assertCount(1, $updated);
-        $this->assertEquals(array(2), array_keys($updated));
+        $this->assertEquals([2], array_keys($updated));
     }
 }

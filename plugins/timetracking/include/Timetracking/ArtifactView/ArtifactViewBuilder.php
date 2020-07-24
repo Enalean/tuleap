@@ -125,7 +125,7 @@ class ArtifactViewBuilder
      */
     private function getTimePresenters(PFUser $user, array $times_for_user)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($times_for_user as $time) {
             $presenters[] = $this->time_presenter_builder->buildPresenter($time, $user);

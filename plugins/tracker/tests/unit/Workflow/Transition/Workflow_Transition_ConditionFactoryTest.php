@@ -195,8 +195,8 @@ final class Workflow_Transition_ConditionFactoryTest extends \PHPUnit\Framework\
     public function testItDelegatesTheDuplicateToSubFactories(): void
     {
         $new_transition_id = 2;
-        $field_mapping     = array('some fields mapping');
-        $ugroup_mapping    = array('some ugroups mapping');
+        $field_mapping     = ['some fields mapping'];
+        $ugroup_mapping    = ['some ugroups mapping'];
         $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
         $this->permissions_factory->shouldReceive('duplicate')->with($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();

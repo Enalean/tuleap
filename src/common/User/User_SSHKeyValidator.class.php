@@ -36,18 +36,18 @@ class User_SSHKeyValidator // phpcs:ignore PSR1.Classes.ClassDeclaration.Missing
 
     public function validateAllKeys(array $all_keys)
     {
-        $valid_keys = array();
+        $valid_keys = [];
         foreach ($all_keys as $key) {
             $key = trim($key);
 
             if ($this->isValid($key)) {
                 if (in_array($key, $valid_keys, true)) {
-                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'key_already_added', array($key)));
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'key_already_added', [$key]));
                 } else {
                     $valid_keys[] = $key;
                 }
             } else {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', array($key)));
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', [$key]));
             }
         }
         return $valid_keys;

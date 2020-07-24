@@ -126,7 +126,7 @@ class LDAP_UserGroupDao extends DataAccessObject
     public function getMembersId($id)
     {
         include_once __DIR__ . '/../../../src/www/project/admin/ugroup_utils.php';
-        $ret = array();
+        $ret = [];
         $sql = ugroup_db_get_members($id);
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError()) {

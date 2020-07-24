@@ -85,13 +85,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
         $this->user         = \Mockery::spy(\PFUser::class);
         $this->date_factory->shouldReceive('getRule')->with($this->tracker, 123)->andReturns($this->rule_1);
         $this->date_factory->shouldReceive('getRule')->with($this->tracker, 456)->andReturns($this->rule_2);
-        $this->date_factory->shouldReceive('searchByTrackerId')->with($this->tracker_id)->andReturns(array($this->rule_1, $this->rule_2));
-        $this->date_factory->shouldReceive('getUsedDateFields')->andReturns(array(
+        $this->date_factory->shouldReceive('searchByTrackerId')->with($this->tracker_id)->andReturns([$this->rule_1, $this->rule_2]);
+        $this->date_factory->shouldReceive('getUsedDateFields')->andReturns([
             $this->planned_start_date,
             $this->actual_start_date,
             $this->planned_end_date,
             $this->actual_end_date
-        ));
+        ]);
 
         $this->rule_42 = \Mockery::spy(\Tracker_Rule_Date::class);
         $this->rule_42->shouldReceive('getId')->andReturns($this->rule_42_id);
@@ -156,7 +156,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDeletesARule(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123')],
+            [self::PARAMETER_REMOVE_RULES => ['123']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->andReturn(true)->once();
@@ -166,7 +166,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDeletesMultipleRules(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123','456')],
+            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->andReturn(true)->once();
@@ -187,7 +187,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDoesNotFailIfRequestContainsIrrevelantId(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('invalid_id')],
+            [self::PARAMETER_REMOVE_RULES => ['invalid_id']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 0)->andReturn(true)->once();
@@ -207,7 +207,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItProvidesFeedbackWhenDeletingARule(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123')],
+            [self::PARAMETER_REMOVE_RULES => ['123']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(true);
@@ -218,7 +218,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDoesNotPrintMultipleTimesTheFeedbackWhenRemovingMoreThanOneRule(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123', '456')],
+            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(true);
@@ -229,7 +229,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDoesNotPrintSuccessfullFeebackIfTheDeleteFailed(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123')],
+            [self::PARAMETER_REMOVE_RULES => ['123']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->andReturns(false);
@@ -240,7 +240,7 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     public function testItDoesNotStopOnTheFirstFailedDelete(): void
     {
         $request = new Codendi_Request(
-            [self::PARAMETER_REMOVE_RULES => array('123', '456')],
+            [self::PARAMETER_REMOVE_RULES => ['123', '456']],
             Mockery::mock(ProjectManager::class)
         );
         $this->date_factory->shouldReceive('deleteById')->with($this->tracker_id, 123)->ordered()->andReturns(false);
@@ -286,11 +286,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -303,10 +303,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -320,10 +320,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -336,11 +336,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '%invalid_id%',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -353,11 +353,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '-1',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -370,11 +370,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '0',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -387,10 +387,10 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -403,11 +403,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '%invalid_id%',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -420,11 +420,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '-1',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -437,11 +437,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '0',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -454,11 +454,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '%invalid_comparator%'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -471,11 +471,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '44',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -488,11 +488,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -504,11 +504,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '666',
                     self::PARAMETER_TARGET_FIELD => '22',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -521,11 +521,11 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_ADD_RULE => array(
+                self::PARAMETER_ADD_RULE => [
                     self::PARAMETER_SOURCE_FIELD => '44',
                     self::PARAMETER_TARGET_FIELD => '666',
                     self::PARAMETER_COMPARATOR   => '>'
-                )
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -538,13 +538,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -560,18 +560,18 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    ),
-                    "$this->rule_66_id" => array(
+                    ],
+                    "$this->rule_66_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '44',
                         self::PARAMETER_COMPARATOR   => '<'
-                    ),
-                )
+                    ],
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -587,13 +587,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '666',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -607,13 +607,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '666',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -627,13 +627,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR   => '%invalid_comparator%'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -647,12 +647,12 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_COMPARATOR   => '<'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -666,12 +666,12 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -685,13 +685,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "%invalid_rule_id%" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "%invalid_rule_id%" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -704,13 +704,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => $this->rule_42->getSourceField()->getId(),
                         self::PARAMETER_TARGET_FIELD => $this->rule_42->getTargetField()->getId(),
                         self::PARAMETER_COMPARATOR => $this->rule_42->getComparator()
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -723,13 +723,13 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR => '>'
-                    )
-                )
+                    ]
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );
@@ -743,18 +743,18 @@ final class Tracker_Workflow_Action_Rules_EditRulesTest extends \PHPUnit\Framewo
     {
         $request = new Codendi_Request(
             [
-                self::PARAMETER_UPDATE_RULES => array(
-                    "$this->rule_42_id" => array(
+                self::PARAMETER_UPDATE_RULES => [
+                    "$this->rule_42_id" => [
                         self::PARAMETER_SOURCE_FIELD => '44',
                         self::PARAMETER_TARGET_FIELD => '22',
                         self::PARAMETER_COMPARATOR   => '>'
-                    ),
-                    "$this->rule_66_id" => array(
+                    ],
+                    "$this->rule_66_id" => [
                         self::PARAMETER_SOURCE_FIELD => '22',
                         self::PARAMETER_TARGET_FIELD => '44',
                         self::PARAMETER_COMPARATOR   => '<'
-                    ),
-                )
+                    ],
+                ]
             ],
             Mockery::mock(ProjectManager::class)
         );

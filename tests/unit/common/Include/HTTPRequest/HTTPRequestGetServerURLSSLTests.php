@@ -27,7 +27,7 @@ class HTTPRequestGetServerURLSSLTests extends HTTPRequestGetServerURLTests // ph
     {
         parent::setUp();
 
-        $this->request->setTrustedProxies(array('17.18.19.20'));
+        $this->request->setTrustedProxies(['17.18.19.20']);
         $_SERVER['HTTP_HOST'] = 'example.com';
         ForgeConfig::set('sys_default_domain', 'example.com');
     }

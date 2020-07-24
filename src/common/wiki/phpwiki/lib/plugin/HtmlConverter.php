@@ -46,7 +46,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -56,19 +56,19 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
         extract($args);
         */
 
-        $form = HTML::form(array('action' => $request->getPostURL(),
+        $form = HTML::form(['action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
-                                 'method' => 'post'));
-        $contents = HTML::div(array('class' => 'wikiaction'));
-        $contents->pushContent(HTML::input(array('type' => 'hidden',
+                                 'method' => 'post']);
+        $contents = HTML::div(['class' => 'wikiaction']);
+        $contents->pushContent(HTML::input(['type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
-                                                 'value' => MAX_UPLOAD_SIZE)));
-        $contents->pushContent(HTML::input(array('name' => 'userfile',
+                                                 'value' => MAX_UPLOAD_SIZE]));
+        $contents->pushContent(HTML::input(['name' => 'userfile',
                                                  'type' => 'file',
-                                                 'size' => '50')));
+                                                 'size' => '50']));
         $contents->pushContent(HTML::raw(" "));
-        $contents->pushContent(HTML::input(array('value' => _("Upload"),
-                                                 'type' => 'submit')));
+        $contents->pushContent(HTML::input(['value' => _("Upload"),
+                                                 'type' => 'submit']));
         $form->pushContent($contents);
 
         $message = HTML();
@@ -121,7 +121,7 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
 
         $enclosing_regexp = "_(.*)<ul\s?[^>]*>((?U).*)</ul>(.*)_is";
         $indent_tag = "<li";
-        $embedded_fragment_array = array();
+        $embedded_fragment_array = [];
         $found = preg_match($enclosing_regexp, $file, $embedded_fragment_array);
         while ($found) {
             $indented = str_replace($indent_tag, "\t" . $indent_tag, $embedded_fragment_array[2]);
@@ -190,10 +190,10 @@ class WikiPlugin_HtmlConverter extends WikiPlugin
      // strip attributes from <pre>-Tags and add a new-line before
         $file = preg_replace("_<pre(\s[^>]*|)>_iU", "\n<pre>", $file);
 
-        $outputArea = HTML::textarea(array(
+        $outputArea = HTML::textarea([
             'rows' => '30',
         'cols' => '80',
-        'wrap' => 'virtual'));
+        'wrap' => 'virtual']);
 
         $outputArea->pushContent(_($file));
         $result->pushContent($outputArea);

@@ -110,11 +110,11 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
         $this->target_field_value = new Tracker_FormElement_Field_List_Bind_StaticValue($this->target_value_id, 'label', 'desc', 0, false);
         $this->target_field       = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->target_field->shouldReceive('getAllValues')->andReturns(array(
+        $this->target_field->shouldReceive('getAllValues')->andReturns([
            new Tracker_FormElement_Field_List_Bind_StaticValue(9998, 'label', 'desc', 0, false),
            $this->target_field_value,
            new Tracker_FormElement_Field_List_Bind_StaticValue(9999, 'label', 'desc', 0, false),
-        ));
+        ]);
     }
 
     public function testItFetchesFieldFromFormElementFactory(): void
@@ -157,7 +157,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
     {
         $target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $target_field->shouldReceive('getAllValues')->andReturns(array());
+        $target_field->shouldReceive('getAllValues')->andReturns([]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->andReturns($target_field);
 
         $this->expectException(\Tracker_FormElement_InvalidFieldValueException::class);
@@ -167,7 +167,7 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
 
     public function testItBuildsTheRuleWithCondition(): void
     {
-        $this->target_field->shouldReceive('getAllValues')->andReturns(array($this->target_field_value));
+        $this->target_field->shouldReceive('getAllValues')->andReturns([$this->target_field_value]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with('30')->andReturns(
             $this->target_field
         );
@@ -187,9 +187,9 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
         $this->target_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->target_field->shouldReceive('getId')->andReturn($this->target_field_id);
         $this->target_field->shouldReceive('getTracker')->andReturn($this->tracker);
-        $this->target_field->shouldReceive('getAllValues')->andReturns(array(
+        $this->target_field->shouldReceive('getAllValues')->andReturns([
                                                                            $this->target_field_value,
-                                                                       ));
+                                                                       ]);
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->target_field_id")->andReturns($this->target_field);
     }
 
@@ -205,9 +205,9 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
 
         $this->trigger_field = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field->shouldReceive('getTracker')->andReturn($child_tracker);
-        $this->trigger_field->shouldReceive('getAllValues')->andReturns(array(
+        $this->trigger_field->shouldReceive('getAllValues')->andReturns([
                                                                             $this->trigger_field_value,
-                                                                        ));
+                                                                        ]);
 
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id")->andReturns($this->trigger_field);
 
@@ -252,9 +252,9 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
         $this->trigger_field_1 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_1->shouldReceive('getId')->andReturn($this->trigger_field_id_1);
         $this->trigger_field_1->shouldReceive('getTracker')->andReturn($this->child_tracker_1);
-        $this->trigger_field_1->shouldReceive('getAllValues')->andReturns(array(
+        $this->trigger_field_1->shouldReceive('getAllValues')->andReturns([
                                                                               $this->trigger_field_value_1,
-                                                                          ));
+                                                                          ]);
 
         // field 2
         $child_tracker_2 = Mockery::mock(Tracker::class);
@@ -268,9 +268,9 @@ final class Tracker_Workflow_Trigger_RulesFactoryTest extends \PHPUnit\Framework
         $this->trigger_field_2 = \Mockery::spy(\Tracker_FormElement_Field_Selectbox::class);
         $this->trigger_field_2->shouldReceive('getId')->andReturn($trigger_field_id_2);
         $this->trigger_field_2->shouldReceive('getTracker')->andReturn($child_tracker_2);
-        $this->trigger_field_2->shouldReceive('getAllValues')->andReturns(array(
+        $this->trigger_field_2->shouldReceive('getAllValues')->andReturns([
                                                                               $this->trigger_field_value_2,
-                                                                          ));
+                                                                          ]);
 
         // Returns the 2 fields
         $this->formelement_factory->shouldReceive('getUsedFormElementFieldById')->with("$this->trigger_field_id_1")->andReturns($this->trigger_field_1);

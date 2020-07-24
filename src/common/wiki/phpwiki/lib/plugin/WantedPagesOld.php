@@ -48,12 +48,12 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('noheader' => false,
+        return ['noheader' => false,
                      'exclude'  => _("PgsrcTranslation"),
                      'page'     => '[pagename]',
                      'sortby'   => false,
                      'limit'    => 50,
-                     'paging'   => 'auto');
+                     'paging'   => 'auto'];
     }
 
     // info arg allows multiple columns
@@ -76,7 +76,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
 
         // The PageList class can't handle the 'count' column needed
         // for this table
-        $this->pagelist = array();
+        $this->pagelist = [];
 
         // There's probably a more memory-efficient way to do this (eg
         // a tailored SQL query via the backend, but this gets the job
@@ -144,9 +144,9 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                 // with quotes in oder to request a defnitive search.
                 $searchkey = (strstr($key, ' ') === false) ? $key : "\"$key\"";
                 $row = HTML::tr(HTML::td(
-                    array('align' => 'right'),
+                    ['align' => 'right'],
                     Button(
-                        array('s' => $searchkey),
+                        ['s' => $searchkey],
                         $val,
                         _("FullTextSearch")
                     ),
@@ -173,7 +173,7 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
                     $c
                 );
             }
-            $this->_columns = array(_("Count"), _("Page Name"));
+            $this->_columns = [_("Count"), _("Page Name")];
             if ($c > 0) {
                 return $this->_generateTable($caption);
             } else {
@@ -185,13 +185,13 @@ class WikiPlugin_WantedPagesOld extends WikiPlugin
     public function _generateTable($caption)
     {
         if (count($this->pagelist) > 0) {
-            $table = HTML::table(array('cellpadding' => 0,
+            $table = HTML::table(['cellpadding' => 0,
                                        'cellspacing' => 1,
                                        'border'      => 0,
-                                       'class'       => 'pagelist'));
+                                       'class'       => 'pagelist']);
             if ($caption) {
                 $table->pushContent(HTML::caption(
-                    array('align' => 'top'),
+                    ['align' => 'top'],
                     $caption
                 ));
             }

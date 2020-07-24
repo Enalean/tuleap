@@ -41,9 +41,9 @@ $usage_options .= 'f';  // should we force the export
 $usage_options .= 'h';  // should we display the usage
 $usage_options .= 'x';  // should we display the XML content
 
-$long_options = array(
+$long_options = [
     'dir', 'all'
-);
+];
 
 /**
  * @psalm-return never-return
@@ -102,7 +102,7 @@ if (isset($arguments['x'])) {
     $display_xml = true;
 }
 
-$options = array();
+$options = [];
 if (isset($arguments['t'])) {
     $options['tracker_id'] = (int) $arguments['t'];
 }

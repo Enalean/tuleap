@@ -42,8 +42,8 @@ class TrackerReportExtractor
      */
     public function extractTrackers(array $trackers_id)
     {
-        $invalid_tracker = array();
-        $list            = array();
+        $invalid_tracker = [];
+        $list            = [];
         foreach ($trackers_id as $tracker_id) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker && $tracker->userCanView() && ! $tracker->isDeleted() && $tracker->getProject()->isActive()) {

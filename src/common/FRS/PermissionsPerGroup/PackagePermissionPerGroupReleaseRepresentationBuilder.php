@@ -112,12 +112,12 @@ class PackagePermissionPerGroupReleaseRepresentationBuilder
     ) {
         return new PackagePermissionPerGroupReleaseRepresentation(
             '/file/admin/release.php?' . http_build_query(
-                array(
+                [
                     "func"       => "edit",
                     "group_id"   => $project->getID(),
                     "package_id" => $release->getPackageID(),
                     "id"         => $release->getReleaseID()
-                )
+                ]
             ),
             $release->getName(),
             $this->getUGroupsReleasePermissionsRepresentations(

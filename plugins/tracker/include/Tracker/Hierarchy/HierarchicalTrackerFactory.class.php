@@ -146,18 +146,18 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
     public function getChildrenMapFromDar(array $hierarchy_rows, $project_trackers)
     {
-        $children  = array();
-        $hierarchy_map = array();
+        $children  = [];
+        $hierarchy_map = [];
         foreach ($hierarchy_rows as $relationship) {
             $parent_id = $relationship['parent_id'];
             $child_id  = $relationship['child_id'];
             $children[] = $child_id;
 
             if (! isset($hierarchy_map[$child_id])) {
-                $hierarchy_map[$child_id] = array();
+                $hierarchy_map[$child_id] = [];
             }
             if (! isset($hierarchy_map[$parent_id])) {
-                $hierarchy_map[$parent_id] = array($child_id);
+                $hierarchy_map[$parent_id] = [$child_id];
             } else {
                 $hierarchy_map[$parent_id][] = $child_id;
             }
@@ -167,7 +167,7 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
 
         $unhierarchized_root_tracker_ids = array_diff(array_keys($project_trackers), array_keys($hierarchy_map));
         foreach ($unhierarchized_root_tracker_ids as $tracker_id) {
-            $hierarchy_map[$tracker_id] = array();
+            $hierarchy_map[$tracker_id] = [];
             $hierarchy_map['root'][]    = $tracker_id;
         }
 
@@ -182,9 +182,9 @@ class Tracker_Hierarchy_HierarchicalTrackerFactory
             $current_class = 'tracker-hierarchy-current';
         }
 
-        $node = new TreeNode(array('name'          => $tracker->getName(),
+        $node = new TreeNode(['name'          => $tracker->getName(),
                                    'id'            => $tracker->getId(),
-                                   'current_class' => $current_class));
+                                   'current_class' => $current_class]);
         $node->setId($tracker->getId());
 
         return $node;

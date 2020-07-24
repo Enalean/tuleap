@@ -119,7 +119,7 @@ class Cardwall_OnTop_ColumnDao extends DataAccessObject
                 FROM plugin_cardwall_on_top_column
                 WHERE tracker_id = $from_tracker_id
                 ORDER BY id ASC";
-        $mapping['plugin_cardwall_column_mapping'] = array();
+        $mapping['plugin_cardwall_column_mapping'] = [];
         foreach ($this->retrieve($sql) as $row) {
             $from_column_id = $row['id'];
             $sql = "INSERT INTO plugin_cardwall_on_top_column (tracker_id, label, bg_red, bg_green, bg_blue, tlp_color_name)

@@ -40,10 +40,10 @@ class CrossTrackerPermissionGateTest extends TestCase
         $search_field = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $search_field->shouldReceive('userCanRead')->andReturn(true);
         $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn(array($project));
-        $report->shouldReceive('getTrackers')->andReturn(array($tracker));
-        $report->shouldReceive('getColumnFields')->andReturn(array($column_field));
-        $report->shouldReceive('getSearchFields')->andReturn(array($search_field));
+        $report->shouldReceive('getProjects')->andReturn([$project]);
+        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
+        $report->shouldReceive('getColumnFields')->andReturn([$column_field]);
+        $report->shouldReceive('getSearchFields')->andReturn([$search_field]);
 
         $url_verification = \Mockery::spy(\URLVerification::class);
         $permission_gate  = new CrossTrackerPermissionGate($url_verification);
@@ -56,7 +56,7 @@ class CrossTrackerPermissionGateTest extends TestCase
         $project1 = \Mockery::spy(\Project::class);
         $project2 = \Mockery::spy(\Project::class);
         $report   = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn(array($project1, $project2));
+        $report->shouldReceive('getProjects')->andReturn([$project1, $project2]);
         $url_verification = \Mockery::spy(\URLVerification::class);
         $url_verification->shouldReceive('userCanAccessProject')->with($user, $project1)->andReturn(true);
         $url_verification->shouldReceive('userCanAccessProject')->with($user, $project2)->andThrow(
@@ -77,8 +77,8 @@ class CrossTrackerPermissionGateTest extends TestCase
         $tracker2->shouldReceive('userCanView')->andReturn(false);
         $project  = \Mockery::spy(\Project::class);
         $report   = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn(array($project));
-        $report->shouldReceive('getTrackers')->andReturn(array($tracker1, $tracker2));
+        $report->shouldReceive('getProjects')->andReturn([$project]);
+        $report->shouldReceive('getTrackers')->andReturn([$tracker1, $tracker2]);
 
         $url_verification = \Mockery::spy(\URLVerification::class);
         $permission_gate = new CrossTrackerPermissionGate($url_verification);
@@ -97,9 +97,9 @@ class CrossTrackerPermissionGateTest extends TestCase
         $column_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $column_field2->shouldReceive('userCanRead')->andReturn(false);
         $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn(array($project));
-        $report->shouldReceive('getTrackers')->andReturn(array($tracker));
-        $report->shouldReceive('getColumnFields')->andReturn(array($column_field1, $column_field2));
+        $report->shouldReceive('getProjects')->andReturn([$project]);
+        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
+        $report->shouldReceive('getColumnFields')->andReturn([$column_field1, $column_field2]);
 
         $url_verification = \Mockery::spy(\URLVerification::class);
         $permission_gate  = new CrossTrackerPermissionGate($url_verification);
@@ -120,10 +120,10 @@ class CrossTrackerPermissionGateTest extends TestCase
         $search_field2 = \Mockery::spy(\Tracker_FormElement_Field_List::class);
         $search_field2->shouldReceive('userCanRead')->andReturn(false);
         $report  = \Mockery::spy(\Tuleap\CrossTracker\CrossTrackerReport::class);
-        $report->shouldReceive('getProjects')->andReturn(array($project));
-        $report->shouldReceive('getTrackers')->andReturn(array($tracker));
-        $report->shouldReceive('getColumnFields')->andReturn(array($column_field));
-        $report->shouldReceive('getSearchFields')->andReturn(array($search_field1, $search_field2));
+        $report->shouldReceive('getProjects')->andReturn([$project]);
+        $report->shouldReceive('getTrackers')->andReturn([$tracker]);
+        $report->shouldReceive('getColumnFields')->andReturn([$column_field]);
+        $report->shouldReceive('getSearchFields')->andReturn([$search_field1, $search_field2]);
 
         $url_verification = \Mockery::spy(\URLVerification::class);
         $permission_gate  = new CrossTrackerPermissionGate($url_verification);

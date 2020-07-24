@@ -77,7 +77,7 @@ class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->expectException(GitRepositoryAlreadyExistsException::class);
-        $this->manager->create($this->repository, $this->creator, array());
+        $this->manager->create($this->repository, $this->creator, []);
     }
 
     public function testItThrowsAnExceptionIfNameIsNotCompliantToBackendStandards(): void
@@ -86,7 +86,7 @@ class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(false);
 
         $this->expectException(GitRepositoryNameIsInvalidException::class);
-        $this->manager->create($this->repository, $this->creator, array());
+        $this->manager->create($this->repository, $this->creator, []);
     }
 
     public function testItCreatesOnRepositoryBackendIfEverythingIsClean()
@@ -95,7 +95,7 @@ class GitRepositoryManagerCreateTest extends TestCase
         $this->creator->shouldReceive('isNameValid')->andReturns(true);
 
         $this->dao->shouldReceive('save')->with($this->repository)->once();
-        $this->manager->create($this->repository, $this->creator, array());
+        $this->manager->create($this->repository, $this->creator, []);
     }
 
     public function testItScheduleAnEventToCreateTheRepositoryInGitolite(): void
@@ -107,7 +107,7 @@ class GitRepositoryManagerCreateTest extends TestCase
 
         $this->git_system_event_manager->shouldReceive('queueRepositoryUpdate')->with($this->repository)->once();
 
-        $this->manager->create($this->repository, $this->creator, array());
+        $this->manager->create($this->repository, $this->creator, []);
     }
 
     public function testItSetRepositoryIdOnceSavedInDatabase(): void
@@ -117,7 +117,7 @@ class GitRepositoryManagerCreateTest extends TestCase
 
         $this->dao->shouldReceive('save')->andReturns(54);
 
-        $this->manager->create($this->repository, $this->creator, array());
+        $this->manager->create($this->repository, $this->creator, []);
         $this->assertEquals(54, $this->repository->getId());
     }
 }

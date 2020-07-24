@@ -56,14 +56,14 @@ class WikiPlugin_CreatePage extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('s'            => false,
+        return ['s'            => false,
                      'initial_content' => '',
                      'template'     => false,
                      'vars'         => false,
                      'overwrite'    => false,
                      //'buttontext' => false,
                      //'method'     => 'POST'
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -75,7 +75,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
         // Prevent spaces at the start and end of a page name
         $s = trim($s);
 
-        $param = array('action' => 'edit');
+        $param = ['action' => 'edit'];
         if ($template and $dbi->isWikiPage($template)) {
             $param['template'] = $template;
         } elseif (! empty($initial_content)) {
@@ -102,8 +102,8 @@ class WikiPlugin_CreatePage extends WikiPlugin
                 return $this->error(fmt("%s already exists", WikiLink($s)));
             } else {
                 $user = $request->getUser();
-                $meta = array('markup' => 2.0,
-                              'author' => $user->getId());
+                $meta = ['markup' => 2.0,
+                              'author' => $user->getId()];
                 if (! empty($param['template']) and ! $initial_content) {
                     $tmplpage = $dbi->getPage($template);
                     $currenttmpl = $tmplpage->getCurrentRevision();
@@ -113,7 +113,7 @@ class WikiPlugin_CreatePage extends WikiPlugin
                 $meta['summary'] = _("Created by CreatePage");
                 // expand variables in $initial_content
                 if (preg_match('/%%\w+%%/', $initial_content)) {
-                    $var = array();
+                    $var = [];
                     if (! empty($vars)) {
                         foreach (preg_split("/&/D", $vars) as $pair) {
                             list($key,$val) = preg_split("/=/D", $pair);

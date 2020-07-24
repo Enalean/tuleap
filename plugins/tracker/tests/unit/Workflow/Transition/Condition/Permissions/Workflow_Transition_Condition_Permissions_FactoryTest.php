@@ -25,7 +25,7 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \PHPUn
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    private $xml_mapping = array();
+    private $xml_mapping = [];
 
     /** @var Workflow_Transition_Condition_Permissions_Factory */
     private $permissions_factory;
@@ -87,11 +87,11 @@ final class Workflow_Transition_Condition_Permissions_FactoryTest extends \PHPUn
     public function testItDelegatesDuplicateToPermissionsManager(): void
     {
         $new_transition_id = 2;
-        $field_mapping     = array('some fields mapping');
-        $ugroup_mapping    = array('some ugroups mapping');
+        $field_mapping     = ['some fields mapping'];
+        $ugroup_mapping    = ['some ugroups mapping'];
         $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
-        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, array(Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION), $ugroup_mapping, $duplicate_type)->once();
+        $this->permissions_manager->shouldReceive('duplicatePermissions')->with($this->transition->getId(), $new_transition_id, [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION], $ugroup_mapping, $duplicate_type)->once();
         $this->permissions_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }

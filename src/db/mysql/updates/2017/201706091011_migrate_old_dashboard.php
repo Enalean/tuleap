@@ -59,9 +59,9 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
                 continue;
             }
 
-            $insert_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
-                array(':owner_id' => $dashboard['owner_id'], ':name' => self::DASHBOARD_NAME)
+                [':owner_id' => $dashboard['owner_id'], ':name' => self::DASHBOARD_NAME]
             );
 
             if ($result === false) {
@@ -94,17 +94,17 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
         $type = $this->getNewOwnerType($dashboard);
 
         $sql        = "SELECT * FROM layouts_rows WHERE layout_id = :old_layout_id";
-        $select_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
-            array(':old_layout_id' => $dashboard['layout_id'])
+            [':old_layout_id' => $dashboard['layout_id']]
         );
 
         foreach ($select_stm->fetchAll() as $line) {
             $sql        = "INSERT INTO dashboards_lines (dashboard_id, dashboard_type, rank)
                            VALUES (:new_dashboard_id, :type, :rank)";
-            $insert_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
-                array(':new_dashboard_id' => $new_dashboard_id, ':type' => $type, ':rank' => $line['rank'])
+                [':new_dashboard_id' => $new_dashboard_id, ':type' => $type, ':rank' => $line['rank']]
             );
 
             if ($result === false) {
@@ -129,9 +129,9 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
     private function migrateColumnsForLine(array $dashboard, array $line, $new_dashboard_id, $new_line_id)
     {
         $sql        = "SELECT * FROM layouts_rows_columns WHERE layout_row_id = :old_line_id";
-        $select_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
-            array(':old_line_id' => $line['id'])
+            [':old_line_id' => $line['id']]
         );
 
         $columns = $select_stm->fetchAll();
@@ -145,9 +145,9 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
         foreach ($columns as $column) {
             $sql        = "INSERT INTO dashboards_lines_columns (line_id, rank)
                            VALUES (:new_line_id, :rank)";
-            $insert_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $insert_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $insert_stm->execute(
-                array(':new_line_id' => $new_line_id, ':rank' => $rank)
+                [':new_line_id' => $new_line_id, ':rank' => $rank]
             );
 
             $rank++;
@@ -174,9 +174,9 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
         $sql        = "UPDATE dashboards_lines
                        SET layout = :layout
                        WHERE id = :new_line_id";
-        $update_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $update_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $result     = $update_stm->execute(
-            array(':layout' => $layout, ':new_line_id' => $new_line_id)
+            [':layout' => $layout, ':new_line_id' => $new_line_id]
         );
 
         if ($result === false) {
@@ -199,28 +199,28 @@ class b201706091011_migrate_old_dashboard extends ForgeUpgrade_Bucket
                   AND owner_id   = :owner_id
                 ORDER BY rank";
 
-        $select_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $select_stm->execute(
-            array(
+            [
                 ':old_column_id' => $column['id'],
                 ':owner_type'    => $dashboard['owner_type'],
                 ':owner_id'      => $dashboard['owner_id']
-            )
+            ]
         );
 
         foreach ($select_stm->fetchAll() as $widget) {
             $sql = "INSERT INTO dashboards_lines_columns_widgets (column_id, rank, name, content_id, is_minimized)
                     VALUES (:new_column_id, :rank, :name, :content_id, :is_minimized)";
 
-            $select_stm = $this->db->dbh->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $select_stm = $this->db->dbh->prepare($sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
             $result     = $select_stm->execute(
-                array(
+                [
                     ':new_column_id' => $new_column_id,
                     ':rank'          => $widget['rank'],
                     ':name'          => $widget['name'],
                     ':content_id'    => $widget['content_id'],
                     ':is_minimized'  => $widget['is_minimized']
-                )
+                ]
             );
 
             if ($result === false) {

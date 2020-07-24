@@ -33,15 +33,15 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testCompareFolderChildrenOk(): void
     {
         // Src (reference)
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 1', 'rank' => -1));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 1', 'rank' => -1]);
         $fld140->addItem($fld150);
         $fld140->addItem($fld135);
 
         // Dst
-        $fld36 = new Docman_Folder(array('item_id' => 36, 'title' => 'Folder 1', 'rank' => -4));
-        $fld40 = new Docman_Folder(array('item_id' => 40, 'title' => 'Folder 1', 'rank' => -2));
+        $fld36 = new Docman_Folder(['item_id' => 36, 'title' => 'Folder 1', 'rank' => -4]);
+        $fld40 = new Docman_Folder(['item_id' => 40, 'title' => 'Folder 1', 'rank' => -2]);
         $node  = new Docman_Folder();
         $node->addItem($fld40);
         $node->addItem($fld36);
@@ -49,18 +49,18 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
         $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
-            array(
+            [
                 150 => true,
                 135 => true
-            ),
+            ],
             $nodesOk
         );
         $itemMapping = $itemMappingVisitor->getItemMapping();
         $this->assertEquals(
-            array(
+            [
                 150 => 36,
                 135 => 40
-            ),
+            ],
             $itemMapping
         );
     }
@@ -71,15 +71,15 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testCompareFolderChildrenRankIssue(): void
     {
         // Src (reference)
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 1', 'rank' => -1));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 1', 'rank' => -1]);
         $fld140->addItem($fld150);
         $fld140->addItem($fld135);
 
         // Dst
-        $fld36 = new Docman_Folder(array('item_id' => 36, 'title' => 'Folder 1', 'rank' => -1));
-        $fld40 = new Docman_Folder(array('item_id' => 40, 'title' => 'Folder 1', 'rank' => -8));
+        $fld36 = new Docman_Folder(['item_id' => 36, 'title' => 'Folder 1', 'rank' => -1]);
+        $fld40 = new Docman_Folder(['item_id' => 40, 'title' => 'Folder 1', 'rank' => -8]);
         $node  = new Docman_Folder();
         $node->addItem($fld40);
         $node->addItem($fld36);
@@ -88,10 +88,10 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $itemMapping = $itemMappingVisitor->getItemMapping();
         $this->assertEquals(
-            array(
+            [
                 150 => 40,
                 135 => 36
-            ),
+            ],
             $itemMapping
         );
     }
@@ -102,17 +102,17 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testCompareFolderChildrenMoreSrcThanDst(): void
     {
         // Src (reference)
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 1', 'rank' => -1));
-        $fld136 = new Docman_Folder(array('item_id' => 136, 'title' => 'Folder 1', 'rank' => 0));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 1', 'rank' => -1]);
+        $fld136 = new Docman_Folder(['item_id' => 136, 'title' => 'Folder 1', 'rank' => 0]);
         $fld140->addItem($fld150);
         $fld140->addItem($fld135);
         $fld140->addItem($fld136);
 
         // Dst
-        $fld36 = new Docman_Folder(array('item_id' => 36, 'title' => 'Folder 1', 'rank' => -4));
-        $fld40 = new Docman_Folder(array('item_id' => 40, 'title' => 'Folder 1', 'rank' => -2));
+        $fld36 = new Docman_Folder(['item_id' => 36, 'title' => 'Folder 1', 'rank' => -4]);
+        $fld40 = new Docman_Folder(['item_id' => 40, 'title' => 'Folder 1', 'rank' => -2]);
         $node  = new Docman_Folder();
         $node->addItem($fld40);
         $node->addItem($fld36);
@@ -120,15 +120,15 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
         $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
-            array(
+            [
                 150 => true,
                 135 => true
-            ),
+            ],
             $nodesOk
         );
         $itemMapping = $itemMappingVisitor->getItemMapping();
-        $this->assertEquals($itemMapping, array(150 => 36,
-                                              135 => 40));
+        $this->assertEquals($itemMapping, [150 => 36,
+                                              135 => 40]);
     }
 
     /**
@@ -137,16 +137,16 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testCompareFolderChildrenMoreDstThanSrc(): void
     {
         // Src (reference)
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 1', 'rank' => -1));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 1', 'rank' => -1]);
         $fld140->addItem($fld150);
         $fld140->addItem($fld135);
 
         // Dst
-        $fld36 = new Docman_Folder(array('item_id' => 36, 'title' => 'Folder 1', 'rank' => -4));
-        $fld40 = new Docman_Folder(array('item_id' => 40, 'title' => 'Folder 1', 'rank' => -2));
-        $fld72 = new Docman_Folder(array('item_id' => 72, 'title' => 'Folder 1', 'rank' => 5));
+        $fld36 = new Docman_Folder(['item_id' => 36, 'title' => 'Folder 1', 'rank' => -4]);
+        $fld40 = new Docman_Folder(['item_id' => 40, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld72 = new Docman_Folder(['item_id' => 72, 'title' => 'Folder 1', 'rank' => 5]);
         $node  = new Docman_Folder();
         $node->addItem($fld40);
         $node->addItem($fld36);
@@ -155,18 +155,18 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = new Docman_BuildItemMappingVisitor(569);
         $nodesOk = $itemMappingVisitor->compareFolderChildren($fld140, $node);
         $this->assertEquals(
-            array(
+            [
                 150 => true,
                 135 => true
-            ),
+            ],
             $nodesOk
         );
         $itemMapping = $itemMappingVisitor->getItemMapping();
         $this->assertEquals(
-            array(
+            [
                 150 => 36,
                 135 => 40
-            ),
+            ],
             $itemMapping
         );
     }
@@ -197,12 +197,12 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testSimpleTree(): void
     {
         // Nodes definition
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation'));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1'));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'title' => 'Folder 1.1'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'title' => 'Folder 1.1.1'));
-        $fld115 = new Docman_Folder(array('item_id' => 115, 'title' => 'Folder 1.2'));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 2'));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation']);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1']);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'title' => 'Folder 1.1']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'title' => 'Folder 1.1.1']);
+        $fld115 = new Docman_Folder(['item_id' => 115, 'title' => 'Folder 1.2']);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 2']);
 
         // Build tree
         $fld140->addItem($fld150);
@@ -217,30 +217,30 @@ class BuildItemMappingVisitorTest extends TestCase
         // Init
         $mockDar0 = \Mockery::spy(DataAccessResult::class);
         $mockDar0->shouldReceive('rowCount')->andReturns(1);
-        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
+        $mockDao->shouldReceive('searchByTitle')->with(['Project documentation'], 569, 0)->andReturns($mockDar0);
 
         // Children of 35
         $mockDar35 = \Mockery::spy(DataAccessResult::class);
         $mockDar35->shouldReceive('rowCount')->andReturns(2);
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1]);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2]);
         $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 2'), 569, 35)->andReturns($mockDar35);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1', 'Folder 2'], 569, 35)->andReturns($mockDar35);
 
         // Children of 36
         $mockDar36 = \Mockery::spy(DataAccessResult::class);
         $mockDar36->shouldReceive('rowCount')->andReturns(1);
-        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2]);
         $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1', 'Folder 1.2'), 569, 36)->andReturns($mockDar36);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1', 'Folder 1.2'], 569, 36)->andReturns($mockDar36);
 
         // Children of 37
         $mockDar37 = \Mockery::spy(DataAccessResult::class);
         $mockDar37->shouldReceive('rowCount')->andReturns(1);
-        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(['item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1.1'], 569, 37)->andReturns($mockDar37);
 
         // Permissions mock
         $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
@@ -250,7 +250,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
-        $itemMappingVisitor->itemMapping = array();
+        $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks
         $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
@@ -261,13 +261,13 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMapping = $itemMappingVisitor->getItemMapping();
 
         $this->assertEquals(
-            array(
+            [
                 140 => 35,
                 150 => 36,
                 112 => 37,
                 113 => 38,
                 135 => 40
-            ),
+            ],
             $itemMapping
         );
     }
@@ -278,12 +278,12 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testSimpleTreePermissionDenied(): void
     {
         // Nodes definition
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation'));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1'));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'title' => 'Folder 1.1'));
-        $fld113 = new Docman_Folder(array('item_id' => 113, 'title' => 'Folder 1.1.1'));
-        $fld115 = new Docman_Folder(array('item_id' => 115, 'title' => 'Folder 1.2'));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 2'));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation']);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1']);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'title' => 'Folder 1.1']);
+        $fld113 = new Docman_Folder(['item_id' => 113, 'title' => 'Folder 1.1.1']);
+        $fld115 = new Docman_Folder(['item_id' => 115, 'title' => 'Folder 1.2']);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 2']);
 
         // Build tree
         $fld140->addItem($fld150);
@@ -298,30 +298,30 @@ class BuildItemMappingVisitorTest extends TestCase
         // Init
         $mockDar0 = \Mockery::spy(DataAccessResult::class);
         $mockDar0->shouldReceive('rowCount')->andReturns(1);
-        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
+        $mockDao->shouldReceive('searchByTitle')->with(['Project documentation'], 569, 0)->andReturns($mockDar0);
 
         // Children of 35
         $mockDar35 = \Mockery::spy(DataAccessResult::class);
         $mockDar35->shouldReceive('rowCount')->andReturns(2);
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1]);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 40, 'title' => 'Folder 2', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2]);
         $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 2'), 569, 35)->andReturns($mockDar35);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1', 'Folder 2'], 569, 35)->andReturns($mockDar35);
 
         // Children of 36
         $mockDar36 = \Mockery::spy(DataAccessResult::class);
         $mockDar36->shouldReceive('rowCount')->andReturns(1);
-        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2]);
         $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1', 'Folder 1.2'), 569, 36)->andReturns($mockDar36);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1', 'Folder 1.2'], 569, 36)->andReturns($mockDar36);
 
         // Children of 37
         $mockDar37 = \Mockery::spy(DataAccessResult::class);
         $mockDar37->shouldReceive('rowCount')->andReturns(1);
-        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(['item_id' => 38, 'title' => 'Folder 1.1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1.1'), 569, 37)->andReturns($mockDar37);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1.1'], 569, 37)->andReturns($mockDar37);
 
         // Permissions mock
         $mockUser = \Mockery::spy(PFUser::class);
@@ -336,7 +336,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
-        $itemMappingVisitor->itemMapping = array();
+        $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks
         $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
@@ -347,12 +347,12 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMapping = $itemMappingVisitor->getItemMapping();
 
         $this->assertEquals(
-            array(
+            [
                 140 => 35,
                 150 => 36,
                 112 => 37,
                 113 => 38
-            ),
+            ],
             $itemMapping
         );
     }
@@ -369,11 +369,11 @@ class BuildItemMappingVisitorTest extends TestCase
     public function testSeveralFoldersWithSameName(): void
     {
         // Nodes definition
-        $fld140 = new Docman_Folder(array('item_id' => 140, 'title' => 'Project documentation', 'rank' => 0));
-        $fld150 = new Docman_Folder(array('item_id' => 150, 'title' => 'Folder 1', 'rank' => -2));
-        $fld112 = new Docman_Folder(array('item_id' => 112, 'title' => 'Folder 1.1', 'rank' => 0));
-        $fld135 = new Docman_Folder(array('item_id' => 135, 'title' => 'Folder 1', 'rank' => -1));
-        $fld173 = new Docman_Folder(array('item_id' => 173, 'title' => 'Folder test', 'rank' => 0));
+        $fld140 = new Docman_Folder(['item_id' => 140, 'title' => 'Project documentation', 'rank' => 0]);
+        $fld150 = new Docman_Folder(['item_id' => 150, 'title' => 'Folder 1', 'rank' => -2]);
+        $fld112 = new Docman_Folder(['item_id' => 112, 'title' => 'Folder 1.1', 'rank' => 0]);
+        $fld135 = new Docman_Folder(['item_id' => 135, 'title' => 'Folder 1', 'rank' => -1]);
+        $fld173 = new Docman_Folder(['item_id' => 173, 'title' => 'Folder test', 'rank' => 0]);
 
         // Build tree
         $fld140->addItem($fld135);
@@ -387,30 +387,30 @@ class BuildItemMappingVisitorTest extends TestCase
         // Init
         $mockDar0 = \Mockery::spy(DataAccessResult::class);
         $mockDar0->shouldReceive('rowCount')->andReturns(1);
-        $mockDar0->shouldReceive('getRow')->once()->andReturns(array('item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
-        $mockDao->shouldReceive('searchByTitle')->with(array('Project documentation'), 569, 0)->andReturns($mockDar0);
+        $mockDar0->shouldReceive('getRow')->once()->andReturns(['item_id' => 35, 'title' => 'Project documentation', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
+        $mockDao->shouldReceive('searchByTitle')->with(['Project documentation'], 569, 0)->andReturns($mockDar0);
 
         // Children of 35
         $mockDar35 = \Mockery::spy(DataAccessResult::class);
         $mockDar35->shouldReceive('rowCount')->andReturns(2);
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1));
-        $mockDar35->shouldReceive('getRow')->once()->andReturns(array('item_id' => 40, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2));
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 36, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 1]);
+        $mockDar35->shouldReceive('getRow')->once()->andReturns(['item_id' => 40, 'title' => 'Folder 1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 2]);
         $mockDar35->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1', 'Folder 1'), 569, 35)->andReturns($mockDar35);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1', 'Folder 1'], 569, 35)->andReturns($mockDar35);
 
         // Children of 36
         $mockDar36 = \Mockery::spy(DataAccessResult::class);
         $mockDar36->shouldReceive('rowCount')->andReturns(1);
-        $mockDar36->shouldReceive('getRow')->once()->andReturns(array('item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2));
+        $mockDar36->shouldReceive('getRow')->once()->andReturns(['item_id' => 37, 'title' => 'Folder 1.1', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => -2]);
         $mockDar36->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder 1.1'), 569, 36)->andReturns($mockDar36);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder 1.1'], 569, 36)->andReturns($mockDar36);
 
         // Children of 40
         $mockDar37 = \Mockery::spy(DataAccessResult::class);
         $mockDar37->shouldReceive('rowCount')->andReturns(1);
-        $mockDar37->shouldReceive('getRow')->once()->andReturns(array('item_id' => 56, 'title' => 'Folder test', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0));
+        $mockDar37->shouldReceive('getRow')->once()->andReturns(['item_id' => 56, 'title' => 'Folder test', 'item_type' => PLUGIN_DOCMAN_ITEM_TYPE_FOLDER, 'rank' => 0]);
         $mockDar37->shouldReceive('getRow')->once()->andReturns(false);
-        $mockDao->shouldReceive('searchByTitle')->with(array('Folder test'), 569, 40)->andReturns($mockDar37);
+        $mockDao->shouldReceive('searchByTitle')->with(['Folder test'], 569, 40)->andReturns($mockDar37);
 
         // Permissions mock
         $mockDPM  = \Mockery::spy(Docman_PermissionsManager::class);
@@ -420,7 +420,7 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMappingVisitor = \Mockery::mock(Docman_BuildItemMappingVisitor::class)->makePartial()->shouldAllowMockingProtectedMethods();
         // Need to init by hand because of fake constructor.
         $itemMappingVisitor->groupId = 569;
-        $itemMappingVisitor->itemMapping = array();
+        $itemMappingVisitor->itemMapping = [];
 
         // Attach mocks
         $itemMappingVisitor->shouldReceive('getItemDao')->andReturns($mockDao);
@@ -431,13 +431,13 @@ class BuildItemMappingVisitorTest extends TestCase
         $itemMapping = $itemMappingVisitor->getItemMapping();
 
         $this->assertEquals(
-            array(
+            [
                 140 => 35,
                 150 => 36,
                 112 => 37,
                 135 => 40,
                 173 => 56
-            ),
+            ],
             $itemMapping
         );
     }

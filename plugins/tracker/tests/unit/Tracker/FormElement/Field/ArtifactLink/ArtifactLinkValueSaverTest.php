@@ -78,8 +78,8 @@ class ArtifactLinkValueSaverTest extends TestCase
         $this->tracker       = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(102)->getMock();
         $this->tracker_child = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(101)->getMock();
 
-        $this->tracker->shouldReceive('getChildren')->andReturns(array($this->tracker_child));
-        $this->tracker_child->shouldReceive('getChildren')->andReturns(array());
+        $this->tracker->shouldReceive('getChildren')->andReturns([$this->tracker_child]);
+        $this->tracker_child->shouldReceive('getChildren')->andReturns([]);
 
         $this->tracker->shouldReceive('getProject')->andReturns($project);
         $this->tracker_child->shouldReceive('getProject')->andReturns($project);
@@ -109,7 +109,7 @@ class ArtifactLinkValueSaverTest extends TestCase
         $this->artifact_factory->shouldReceive('getArtifactById')->with(458)->andReturns($this->another_artifact);
 
         $this->previous_changesetvalue = \Mockery::spy(\Tracker_Artifact_ChangesetValue_ArtifactLink::class);
-        $this->previous_changesetvalue->shouldReceive('getArtifactIds')->andReturns(array(36));
+        $this->previous_changesetvalue->shouldReceive('getArtifactIds')->andReturns([36]);
 
         $this->user = new PFUser([
             'language_id' => 'en',
@@ -139,16 +139,16 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(),
-            'removed_values' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [],
+            'removed_values' => [
                 36 => 1
-            )
-        );
+            ]
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
-        $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with(array())->ordered()->andReturns(array());
-        $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with(array(36))->ordered()->andReturns(array($this->initial_linked_artifact));
+        $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with([])->ordered()->andReturns([]);
+        $this->artifact_factory->shouldReceive('getArtifactsByArtifactIdList')->with([36])->ordered()->andReturns([$this->initial_linked_artifact]);
 
         $this->reference_manager->shouldReceive('removeBetweenTwoArtifacts')->with($artifact, $this->initial_linked_artifact, $this->user)->once();
         $this->dao->shouldReceive('create')->never();
@@ -166,12 +166,12 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class)->shouldReceive('getTracker')->andReturns($this->tracker)->getMock();
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->initial_linked_artifact, 'fixed_in')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->dao->shouldReceive('create')->once()->andReturns(true);
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
@@ -191,13 +191,13 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
@@ -216,13 +216,13 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, 'fixed_in'),
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, 'fixed_in')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
@@ -241,13 +241,13 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker_child);
 
@@ -266,13 +266,13 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->with(101, '_is_child')->andReturns(false);
@@ -292,12 +292,12 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->another_artifact, '_is_child')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
 
@@ -316,13 +316,13 @@ class ArtifactLinkValueSaverTest extends TestCase
     {
         $artifact = \Mockery::spy(\Tracker_Artifact::class);
 
-        $value = array(
-            'list_of_artifactlinkinfo' => array(
+        $value = [
+            'list_of_artifactlinkinfo' => [
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->some_artifact, ''),
                 Tracker_ArtifactLinkInfo::buildFromArtifact($this->other_artifact, '')
-            ),
-            'removed_values' => array()
-        );
+            ],
+            'removed_values' => []
+        ];
 
         $this->field->shouldReceive('getTracker')->andReturns($this->tracker);
         $this->artifact_link_usage_dao->shouldReceive('isTypeDisabledInProject')->with(101, '_is_child')->andReturns(true);

@@ -46,7 +46,7 @@ class referencealias_mediawikiPlugin extends Plugin //phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('mediawiki');
+        return ['mediawiki'];
     }
 
     /**

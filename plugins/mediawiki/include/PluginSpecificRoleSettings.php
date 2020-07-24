@@ -23,8 +23,8 @@ class PluginSpecificRoleSetting
     public $role;
     public $name           = '';
     public $section        = '';
-    public $values         = array();
-    public $default_values = array();
+    public $values         = [];
+    public $default_values = [];
     public $global         = false;
 
     public function __construct(&$role, $name, $global = false)
@@ -36,7 +36,7 @@ class PluginSpecificRoleSetting
 
     public function SetAllowedValues($values)
     {
-        $this->role->role_values = array_replace_recursive($this->role->role_values, array($this->name => $values));
+        $this->role->role_values = array_replace_recursive($this->role->role_values, [$this->name => $values]);
         if ($this->global) {
             $this->role->global_settings[] = $this->name;
         }

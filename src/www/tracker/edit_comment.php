@@ -32,10 +32,10 @@ if (! $ah->userCanEditFollowupComment($request->get('artifact_history_id'))) {
 
 $group = $ath->getGroup();
 $group_id = $ath->getGroupID();
-$params = array('title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
+$params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
               'pagename' => 'tracker',
               'atid' => $ath->getID(),
-              'help' => 'tracker-v3.html#comments');
+              'help' => 'tracker-v3.html#comments'];
 // Display header page
 $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';

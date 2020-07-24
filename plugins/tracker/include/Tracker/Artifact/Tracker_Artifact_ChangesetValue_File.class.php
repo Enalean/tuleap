@@ -184,7 +184,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
 
     public function getFullRESTValue(PFUser $user)
     {
-        $values = array();
+        $values = [];
         foreach ($this->getFiles() as $file_info) {
             $values[] = $file_info->getRESTValue();
         }
@@ -237,7 +237,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     {
         if ($this->files !== $changeset_value->getFiles()) {
             $result = '';
-            $removed = array();
+            $removed = [];
             foreach (array_diff($changeset_value->getFiles(), $this->files) as $fi) {
                 $removed[] = $fi->getFilename();
             }
@@ -274,7 +274,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
     {
         $artifact = $this->changeset->getArtifact();
 
-        $still_existing_files_ids = array();
+        $still_existing_files_ids = [];
 
         if ($artifact->getLastChangeset()->getValue($this->field)) {
             foreach ($artifact->getLastChangeset()->getValue($this->field)->getFiles() as $file) {
@@ -282,8 +282,8 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
             }
         }
 
-        $added    = array();
-        $previews = array();
+        $added    = [];
+        $previews = [];
         $this->extractAddedAndPreviewsFromFiles($files, $format, $still_existing_files_ids, $added, $previews);
 
         $result   = '';
@@ -296,7 +296,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
                 $artifact->getId(),
                 $previews,
                 true,
-                array(),
+                [],
                 true,
                 $this->changeset->getId()
             ) . '</div>';

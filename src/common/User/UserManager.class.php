@@ -41,9 +41,9 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public const SPECIAL_USERS_LIMIT = 100;
 
-    public $_users           = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    public $_userid_bynames  = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
-    public $_userid_byldapid = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_users           = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_userid_bynames  = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+    public $_userid_byldapid = []; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
     private $_userdao         = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
     private $_currentuser     = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
@@ -116,7 +116,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! isset($this->_users[$user_id])) {
             if (is_numeric($user_id)) {
                 if ($user_id == 0) {
-                    $this->_users[$user_id] = $this->getUserInstanceFromRow(array('user_id' => 0));
+                    $this->_users[$user_id] = $this->getUserInstanceFromRow(['user_id' => 0]);
                 } else {
                     $u = $this->getUserByIdWithoutCache($user_id);
                     if ($u) {
@@ -198,7 +198,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     {
         if (isset($row['user_id']) && $row['user_id'] < self::SPECIAL_USERS_LIMIT) {
             $user = null;
-            EventManager::instance()->processEvent(Event::USER_MANAGER_GET_USER_INSTANCE, array('row' => $row, 'user' => &$user));
+            EventManager::instance()->processEvent(Event::USER_MANAGER_GET_USER_INSTANCE, ['row' => $row, 'user' => &$user]);
             if ($user) {
                 return $user;
             }
@@ -246,8 +246,8 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if (! $ident) {
             return $user;
         }
-        $eParams = array('ident' => $ident,
-                         'user'  => &$user);
+        $eParams = ['ident' => $ident,
+                         'user'  => &$user];
         $this->_getEventManager()->processEvent('user_manager_find_user', $eParams);
         if (! $user) {
             // No valid user found, try an internal lookup for username
@@ -296,7 +296,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
     public function getUserIdsList($search)
     {
         $userArray = explode(',', $search);
-        $users = array();
+        $users = [];
         foreach ($userArray as $user) {
             $user = $this->findUser($user);
             if ($user) {
@@ -311,7 +311,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getPaginatedUsersByUsernameOrRealname($words, $exact, $offset, $limit)
     {
-        $users = array();
+        $users = [];
         foreach ($this->getDao()->searchGlobalPaginated($words, $exact, $offset, $limit) as $user) {
             $users[] = $this->getUserInstanceFromRow($user);
         }
@@ -337,7 +337,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getAllUsersByEmail($email): array
     {
-        $users = array();
+        $users = [];
         foreach ($this->getDao()->searchByEmail($email) as $user) {
             $users[] = $this->getUserInstanceFromRow($user);
         }
@@ -375,9 +375,9 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
         $em = $this->_getEventManager();
         $tokenFoundInPlugins = false;
-        $params = array('identifier' => $identifier,
+        $params = ['identifier' => $identifier,
                         'user'       => &$user,
-                        'tokenFound' => &$tokenFoundInPlugins);
+                        'tokenFound' => &$tokenFoundInPlugins];
         $em->processEvent('user_manager_get_user_by_identifier', $params);
 
         if (! $tokenFoundInPlugins) {
@@ -469,7 +469,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
             if (! isset($this->_currentuser)) {
                 //No valid session_hash/ip found. User is anonymous
-                $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
+                $this->_currentuser = $this->getUserInstanceFromRow(['user_id' => 0]);
             }
             //cache the user
             $this->_users[$this->_currentuser->getId()] = $this->_currentuser;
@@ -483,7 +483,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getUsersWithSshKey()
     {
-        return $this->getDao()->searchSSHKeys()->instanciateWith(array($this, 'getUserInstanceFromRow'));
+        return $this->getDao()->searchSSHKeys()->instanciateWith([$this, 'getUserInstanceFromRow']);
     }
 
     /**
@@ -491,7 +491,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     public function getPaginatedUsersWithSshKey($offset, $limit)
     {
-        $users = array();
+        $users = [];
         foreach ($this->getDao()->searchPaginatedSSHKeys($offset, $limit) as $user) {
             $users[] = $this->getUserInstanceFromRow($user);
         }
@@ -597,7 +597,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
      */
     private function createAnonymousUser()
     {
-        return $this->_getUserInstanceFromRow(array('user_id' => 0));
+        return $this->_getUserInstanceFromRow(['user_id' => 0]);
     }
 
     private function openWebSession(PFUser $user)
@@ -752,7 +752,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($row = $this->getDao()->searchByUserName($name)->getRow()) {
             $this->_currentuser = $this->getUserInstanceFromRow($row);
         } else {
-            $this->_currentuser = $this->getUserInstanceFromRow(array('user_id' => 0));
+            $this->_currentuser = $this->getUserInstanceFromRow(['user_id' => 0]);
         }
 
         //cache the user
@@ -851,7 +851,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     $session_manager = $this->getSessionManager();
                     $session_manager->destroyAllSessions($user);
                 }
-                $this->_getEventManager()->processEvent(Event::USER_MANAGER_UPDATE_DB, array('old_user' => $old_user, 'new_user' => &$user));
+                $this->_getEventManager()->processEvent(Event::USER_MANAGER_UPDATE_DB, ['old_user' => $old_user, 'new_user' => &$user]);
             }
             return $result;
         }
@@ -904,10 +904,10 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         if ($this->updateDb($user)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
 
-            $event_parameters = array(
+            $event_parameters = [
                 'user_id'       => $user->getId(),
                 'original_keys' => $original_authorised_keys,
-            );
+            ];
 
             $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, $event_parameters);
         }
@@ -979,7 +979,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
             $em = $this->_getEventManager();
 
-            $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, array('user' => $user));
+            $em->processEvent(Event::USER_MANAGER_CREATE_ACCOUNT, ['user' => $user]);
 
             $this->getDefaultWidgetCreator()->createDefaultDashboard($user);
 
@@ -991,7 +991,7 @@ class UserManager // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     break;
                 case PFUser::STATUS_ACTIVE:
                 case PFUser::STATUS_RESTRICTED:
-                    $em->processEvent('project_admin_activate_user', array('user_id' => $user_id));
+                    $em->processEvent('project_admin_activate_user', ['user_id' => $user_id]);
                     break;
             }
 

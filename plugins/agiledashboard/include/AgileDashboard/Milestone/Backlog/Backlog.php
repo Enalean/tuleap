@@ -93,7 +93,7 @@ class AgileDashboard_Milestone_Backlog_Backlog
 
     public function getDescendantTrackerIds()
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->descendant_trackers as $tracker) {
             $ids[] = $tracker->getId();
         }

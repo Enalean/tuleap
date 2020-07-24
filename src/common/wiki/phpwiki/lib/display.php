@@ -35,10 +35,10 @@ function GleanKeywords($page)
  */
 function RedirectorLink($pagename)
 {
-    $url = WikiURL($pagename, array('redirectfrom' => ''));
+    $url = WikiURL($pagename, ['redirectfrom' => '']);
     return HTML::a(
-        array('class' => 'redirectfrom wiki',
-                         'href' => $url),
+        ['class' => 'redirectfrom wiki',
+                         'href' => $url],
         $pagename
     );
 }
@@ -64,16 +64,16 @@ function actionPage(&$request, $action)
         $WikiTheme->linkExistingWikiWord($pagename, false, $version)
     ));
 
-    $validators = new HTTP_ValidatorSet(array('pageversion' => $revision->getVersion(),
-                                              '%mtime' => $revision->get('mtime')));
+    $validators = new HTTP_ValidatorSet(['pageversion' => $revision->getVersion(),
+                                              '%mtime' => $revision->get('mtime')]);
 
-    $request->appendValidators(array('pagerev' => $revision->getVersion(),
-                                     '%mtime' => $revision->get('mtime')));
-    $request->appendValidators(array('actionpagerev' => $actionrev->getVersion(),
-                                     '%mtime' => $actionrev->get('mtime')));
+    $request->appendValidators(['pagerev' => $revision->getVersion(),
+                                     '%mtime' => $revision->get('mtime')]);
+    $request->appendValidators(['actionpagerev' => $actionrev->getVersion(),
+                                     '%mtime' => $actionrev->get('mtime')]);
 
     $transformedContent = $actionrev->getTransformedContent();
-    $template = Template('browse', array('CONTENT' => $transformedContent));
+    $template = Template('browse', ['CONTENT' => $transformedContent]);
 /*
     if (!headers_sent()) {
         //FIXME: does not work yet. document.write not supported (signout button)
@@ -110,9 +110,9 @@ function displayPage(&$request, $template = false)
         $pages = explode(SUBPAGE_SEPARATOR, $pagename);
         $last_page = array_pop($pages); // deletes last element from array as side-effect
         $pageheader = HTML::span(HTML::a(
-            array('href' => WikiURL($pages[0]),
+            ['href' => WikiURL($pages[0]),
                                               'class' => 'pagetitle'
-                                              ),
+                                              ],
             $WikiTheme->maybeSplitWikiWord($pages[0] . SUBPAGE_SEPARATOR)
         ));
         $first_pages = $pages[0] . SUBPAGE_SEPARATOR;
@@ -120,8 +120,8 @@ function displayPage(&$request, $template = false)
         foreach ($pages as $p) {
             if ($pv != 2) {    //Add the Backlink in page title
                    $pageheader->pushContent(HTML::a(
-                       array('href' => WikiURL($first_pages . $p),
-                                                  'class' => 'backlinks'),
+                       ['href' => WikiURL($first_pages . $p),
+                                                  'class' => 'backlinks'],
                        $WikiTheme->maybeSplitWikiWord($p . SUBPAGE_SEPARATOR)
                    ));
             } else {    // Remove Backlinks
@@ -131,11 +131,11 @@ function displayPage(&$request, $template = false)
         }
         if ($pv != 2) {
             $backlink = HTML::a(
-                array('href' => WikiURL(
+                ['href' => WikiURL(
                     $pagename,
-                    array('action' => _("BackLinks"))
+                    ['action' => _("BackLinks")]
                 ),
-                      'class' => 'backlinks'),
+                      'class' => 'backlinks'],
                 $WikiTheme->maybeSplitWikiWord($last_page)
             );
             $backlink->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
@@ -146,11 +146,11 @@ function displayPage(&$request, $template = false)
     } else {
         if ($pv != 2) {
             $pageheader = HTML::a(
-                array('href' => WikiURL(
+                ['href' => WikiURL(
                     $pagename,
-                    array('action' => _("BackLinks"))
+                    ['action' => _("BackLinks")]
                 ),
-                       'class' => 'backlinks'),
+                       'class' => 'backlinks'],
                 $WikiTheme->maybeSplitWikiWord($pagename)
             );
             $pageheader->addTooltip(sprintf(_("BackLinks for %s"), $pagename));
@@ -174,11 +174,11 @@ function displayPage(&$request, $template = false)
     }
 
     $additional_html = false;
-    $eM->processEvent('wiki_before_content', array(
+    $eM->processEvent('wiki_before_content', [
                     'html' => &$additional_html,
                     'group_id' => GROUP_ID,
                     'wiki_page' => $pagename
-        ));
+        ]);
     if ($additional_html) {
         $beforeHeader = HTML();
         $beforeHeader->pushContent($additional_html);
@@ -194,7 +194,7 @@ function displayPage(&$request, $template = false)
     $pagetitle = SplitPagename($pagename);
     if (($redirect_from = $request->getArg('redirectfrom'))) {
         $redirect_message = HTML::span(
-            array('class' => 'redirectfrom'),
+            ['class' => 'redirectfrom'],
             fmt(
                 "(Redirected from %s)",
                 RedirectorLink($redirect_from)
@@ -206,8 +206,8 @@ function displayPage(&$request, $template = false)
         $request->setArg('errormsg', false);
     }
 
-    $request->appendValidators(array('pagerev' => $revision->getVersion(),
-                                     '%mtime' => $revision->get('mtime')));
+    $request->appendValidators(['pagerev' => $revision->getVersion(),
+                                     '%mtime' => $revision->get('mtime')]);
 
     $page_content = $revision->getTransformedContent();
 
@@ -249,13 +249,13 @@ function displayPage(&$request, $template = false)
                             $found = true;
                             $line = substr($line, strlen($m[0]));
                             $html[] = $m[1];    // prematch
-                            $html[] = HTML::strong(array('class' => 'search-term'), $m[2]); // match
+                            $html[] = HTML::strong(['class' => 'search-term'], $m[2]); // match
                         }
                     }
                     if ($found) {
                         $html[] = $line;  // postmatch
                         $page_content->_content[$i] = HTML::span(
-                            array('class' => 'search-context'),
+                            ['class' => 'search-context'],
                             $html
                         );
                     }

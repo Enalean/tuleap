@@ -71,11 +71,11 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
 
     public function addListener($event, $listener, $callback, $recallEvent)
     {
-        $this->listeners[$event][] = array(
+        $this->listeners[$event][] = [
             'listener'    => $listener,
             'callback'    => $callback,
             'recallEvent' => $recallEvent
-        );
+        ];
     }
 
     /**
@@ -92,7 +92,7 @@ class EventManager implements EventDispatcherInterface // phpcs:ignore
      * @param Tuleap\Event\Dispatchable|string $event
      * @param array $params
      */
-    public function processEvent($event, $params = array())
+    public function processEvent($event, $params = [])
     {
         if (is_object($event)) {
             $this->dispatch($event);

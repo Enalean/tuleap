@@ -25,7 +25,7 @@ require_once('Docman_View_View.class.php');
 
 class Docman_View_AjaxReferenceTooltipError extends Docman_View_View
 {
-    public function display($params = array())
+    public function display($params = [])
     {
         echo '<em>' . dgettext('tuleap-docman', 'You do not have sufficient access rights to view this item.') . '</em>';
     }

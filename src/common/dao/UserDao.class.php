@@ -199,8 +199,8 @@ class UserDao extends DataAccessObject
      */
     public function create($user_name, $email, ?ConcealedString $user_pw, $realname, $register_purpose, $status, $shell, $unix_status, $unix_uid, $unix_box, $ldap_id, $add_date, $confirm_hash, $mail_siteupdates, $mail_va, $sticky_login, $authorized_keys, $email_new, $timezone, $language_id, $expiry_date, $last_pwd_update)
     {
-        $columns = array();
-        $values  = array();
+        $columns = [];
+        $values  = [];
 
         if ($user_name !== null) {
             $columns[] = 'user_name';
@@ -316,7 +316,7 @@ class UserDao extends DataAccessObject
 
     public function updateByRow(array $user)
     {
-        $stmt = array();
+        $stmt = [];
         if (isset($user['clear_password'])) {
             $stmt[] = 'password=' . $this->da->quoteSmart($this->password_handler->computeHashPassword($user['clear_password']));
             /*
@@ -620,10 +620,10 @@ class UserDao extends DataAccessObject
             $where
             ORDER BY " . $sort_header . " " . $sort_order . $stmLimit;
 
-        return array(
+        return [
             'users'   => $this->retrieve($sql),
             'numrows' => $this->foundRows()
-        );
+        ];
     }
 
     /**

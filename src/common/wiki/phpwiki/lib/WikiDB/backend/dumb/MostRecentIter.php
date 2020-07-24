@@ -24,7 +24,7 @@ class WikiDB_backend_dumb_MostRecentIter extends WikiDB_backend_iterator
         if ($reverse) {
             $limit = -$limit;
         }
-        $this->_revisions = array();
+        $this->_revisions = [];
         while ($page = $pages->next()) {
             $revs = $backend->get_all_revisions($page['pagename']);
             while ($revision = &$revs->next()) {

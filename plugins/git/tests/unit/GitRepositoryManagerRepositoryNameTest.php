@@ -76,19 +76,19 @@ class GitRepositoryManagerRepositoryNameTest extends TestCase
 
     public function testItCannotCreateARepositoryWithSamePath()
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->aRepoWithPath('bla')));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('bla')]);
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla')));
     }
 
     public function testItCannotCreateARepositoryWithSamePathThatIsNotAtRoot()
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->aRepoWithPath('foo/bla')));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bla')]);
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla')));
     }
 
     public function testItForbidCreationOfRepositoriesWhenPathAlreadyExists()
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->aRepoWithPath('bla')));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('bla')]);
 
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum')));
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('bla/zoum/zaz')));
@@ -100,7 +100,7 @@ class GitRepositoryManagerRepositoryNameTest extends TestCase
 
     public function testItForbidCreationOfRepositoriesWhenPathAlreadyExistsAndHasParents()
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->aRepoWithPath('foo/bla')));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bla')]);
 
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff')));
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bla/stuff/zaz')));
@@ -112,7 +112,7 @@ class GitRepositoryManagerRepositoryNameTest extends TestCase
 
     public function testItForbidCreationWhenNewRepoIsInsideExistingPath()
     {
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->aRepoWithPath('foo/bar/bla')));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->aRepoWithPath('foo/bar/bla')]);
 
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo')));
         $this->assertTrue($this->manager->isRepositoryNameAlreadyUsed($this->aRepoWithPath('foo/bar')));

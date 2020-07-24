@@ -53,14 +53,14 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $groupId = 101;
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns($groupId);
-        $forkPermissions = array();
+        $forkPermissions = [];
         $toProjectId = 100;
         $toProject = \Mockery::spy(\Project::class);
         $toProject->shouldReceive('getId')->andReturns($toProjectId);
         $toProject->shouldReceive('getUnixNameLowerCase')->andReturns('toproject');
 
         $repo  = new GitRepository();
-        $repos = array($repo);
+        $repos = [$repo];
         $repo_ids = '200';
 
         $user = \Mockery::spy(\PFUser::class);
@@ -75,11 +75,11 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $repositoryFactory = \Mockery::spy(\GitRepositoryFactory::class);
         $repositoryFactory->shouldReceive('getRepositoryById')->with($repo_ids)->andReturns($repo);
 
-        $request = new Codendi_Request(array(
+        $request = new Codendi_Request([
                                         'choose_destination' => 'project',
                                         'to_project' => $toProjectId,
                                         'repos' => $repo_ids,
-                                        'repo_access' => $forkPermissions));
+                                        'repo_access' => $forkPermissions]);
 
         $permissions_manager = \Mockery::spy(\GitPermissionsManager::class)->shouldReceive('userIsGitAdmin')->with($user, $toProject)->andReturns(true)->getMock();
 
@@ -92,8 +92,8 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->setFactory($repositoryFactory);
         $git->setPermissionsManager($permissions_manager);
 
-        $git->shouldReceive('addAction')->with('fork', array($repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['Response'], '/plugins/git/toproject/', $forkPermissions))->once();
-        $git->shouldReceive('addAction')->with('getProjectRepositoryList', array($groupId))->once();
+        $git->shouldReceive('addAction')->with('fork', [$repos, $toProject, '', GitRepository::REPO_SCOPE_PROJECT, $user, $GLOBALS['Response'], '/plugins/git/toproject/', $forkPermissions])->once();
+        $git->shouldReceive('addAction')->with('getProjectRepositoryList', [$groupId])->once();
         $git->shouldReceive('addView')->with('forkRepositories')->once();
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null, $user);
@@ -111,7 +111,7 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->shouldReceive('addError')->with('No repository selected for the fork')->once();
         $git->shouldReceive('redirect')->with('/plugins/git/projectname/')->once();
 
-        $request = new Codendi_Request(array('to_project' => 234, 'repo_access' => array()));
+        $request = new Codendi_Request(['to_project' => 234, 'repo_access' => []]);
 
         $git->_doDispatchForkCrossProject($request, null);
     }
@@ -127,10 +127,10 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $git->shouldReceive('addError')->with('No project selected for the fork')->once();
         $git->shouldReceive('redirect')->with('/plugins/git/projectname/')->once();
 
-        $request = new Codendi_Request(array(
-            'repos'       => array('qdfj'),
-            'repo_access' => array()
-        ));
+        $request = new Codendi_Request([
+            'repos'       => ['qdfj'],
+            'repo_access' => []
+        ]);
 
         $git->_doDispatchForkCrossProject($request, null);
     }
@@ -159,11 +159,11 @@ final class GitForkCrossProjectTest extends \PHPUnit\Framework\TestCase
         $permissions_manager = Mockery::mock(GitPermissionsManager::class);
         $permissions_manager->shouldReceive('userIsGitAdmin')->with($user, $to_project)->andReturn(false);
 
-        $request = new Codendi_Request(array(
+        $request = new Codendi_Request([
             'to_project'  => 666,
             'repos'       => "1",
-            'repo_access' => array()
-        ));
+            'repo_access' => []
+        ]);
 
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);

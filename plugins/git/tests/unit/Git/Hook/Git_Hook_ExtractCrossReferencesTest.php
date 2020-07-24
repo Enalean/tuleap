@@ -60,7 +60,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
 
         $this->post_receive = new Git_Hook_ExtractCrossReferences($this->git_exec_repo, $this->reference_manager);
 
-        $this->push_details  = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', array());
+        $this->push_details  = new Git_Hook_PushDetails($this->repository, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
     }
 
 
@@ -122,7 +122,7 @@ class Git_Hook_ExtractCrossReferencesTest extends \PHPUnit\Framework\TestCase
 
         $this->reference_manager->shouldReceive('extractCrossRef')->with(\Mockery::any(), 'arch/x86_64/dev/469eaa9', \Mockery::any(), \Mockery::any(), \Mockery::any())->once();
 
-        $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', array());
+        $push_details = new Git_Hook_PushDetails($this->repository_in_subpath, $this->user, 'refs/heads/master', 'whatever', 'whatever', []);
         $this->post_receive->execute($push_details, '469eaa9');
     }
 }

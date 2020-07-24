@@ -85,7 +85,7 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(202);
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns(array($descendant_tracker));
+        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
         $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
 
         $parent_milestone_artifact->shouldReceive('linkArtifact')->never();
@@ -106,9 +106,9 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(201);
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns(array($descendant_tracker));
+        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
         $artifact_added->shouldReceive('getParent')->andReturns($parent_linked_artifact);
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns(array($parent_linked_artifact));
+        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
         $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
 
         $parent_milestone_artifact->shouldReceive('linkArtifact')->never();
@@ -130,11 +130,11 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
         $descendant_tracker        = Mockery::mock(Tracker::class);
         $descendant_tracker->shouldReceive('getId')->andReturn(201);
 
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns(array($descendant_tracker));
+        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
 
         $added_artifact->shouldReceive('getId')->andReturns(101);
         $added_artifact->shouldReceive('getParent')->andReturns($parent);
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns(array($parent_linked_artifact));
+        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
         $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
 
         $parent_milestone_artifact->shouldReceive('linkArtifact')->with(101, $this->user)->once();
@@ -157,9 +157,9 @@ final class MilestoneParentLinkerTest extends TestCase //phpcs:ignore PSR1.Class
 
         $added_artifact->shouldReceive('getId')->andReturns(101);
         $added_artifact->shouldReceive('getParent')->andReturns(null);
-        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns(array($descendant_tracker));
+        $this->backlog->shouldReceive('getDescendantTrackers')->andReturns([$descendant_tracker]);
 
-        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns(array($parent_linked_artifact));
+        $parent_milestone_artifact->shouldReceive('getLinkedArtifacts')->with($this->user)->andReturns([$parent_linked_artifact]);
         $this->milestone->shouldReceive('getParent')->andReturns($parent_milestone);
 
         $parent_milestone_artifact->shouldReceive('linkArtifact')->with(101, $this->user)->once();

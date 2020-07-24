@@ -70,10 +70,10 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     public function testItReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumPlanning(): void
     {
         $this->tracker->shouldReceive('getHierarchy')->andReturns($this->hierarchy);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns(array(78));
-        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns(array());
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns([78]);
+        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns([]);
 
-        $this->hierarchy->shouldReceive('flatten')->andReturns(array(12,45,78,68));
+        $this->hierarchy->shouldReceive('flatten')->andReturns([12, 45, 78, 68]);
 
         $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
@@ -81,10 +81,10 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     public function testItReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInScrumBacklog(): void
     {
         $this->tracker->shouldReceive('getHierarchy')->andReturns($this->hierarchy);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns(array());
-        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns(array(45));
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns([]);
+        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns([45]);
 
-        $this->hierarchy->shouldReceive('flatten')->andReturns(array(12,45,78,68));
+        $this->hierarchy->shouldReceive('flatten')->andReturns([12, 45, 78, 68]);
 
         $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
@@ -92,11 +92,11 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     public function testItReturnsFalseIfNoTrackerIsUsedInScrumAndKanban(): void
     {
         $this->tracker->shouldReceive('getHierarchy')->andReturns($this->hierarchy);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns(array(58));
-        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns(array(45));
-        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns(array());
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns([58]);
+        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns([45]);
+        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns([]);
 
-        $this->hierarchy->shouldReceive('flatten')->andReturns(array(12,78,68));
+        $this->hierarchy->shouldReceive('flatten')->andReturns([12, 78, 68]);
 
         $this->assertFalse($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
@@ -104,10 +104,10 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     public function testItReturnsTrueIfATrackerInTheTrackerHierarchyIsUsedInKanban(): void
     {
         $this->tracker->shouldReceive('getHierarchy')->andReturns($this->hierarchy);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns(array());
-        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns(array());
-        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns(array(45,68));
-        $this->hierarchy->shouldReceive('flatten')->andReturns(array(12,45,78,68));
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns([]);
+        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns([]);
+        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns([45, 68]);
+        $this->hierarchy->shouldReceive('flatten')->andReturns([12, 45, 78, 68]);
 
         $this->assertTrue($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }
@@ -115,10 +115,10 @@ class AgileDashboard_HierarchyCheckerTest extends TestCase
     public function testItReturnsFalseIfNoTrackerIsUsedInKanban(): void
     {
         $this->tracker->shouldReceive('getHierarchy')->andReturns($this->hierarchy);
-        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns(array());
-        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns(array());
-        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns(array(98,63));
-        $this->hierarchy->shouldReceive('flatten')->andReturns(array(12,45,78,68));
+        $this->planning_factory->shouldReceive('getPlanningTrackerIdsByGroupId')->andReturns([]);
+        $this->planning_factory->shouldReceive('getBacklogTrackerIdsByGroupId')->andReturns([]);
+        $this->kanban_factory->shouldReceive('getKanbanTrackerIds')->andReturns([98, 63]);
+        $this->hierarchy->shouldReceive('flatten')->andReturns([12, 45, 78, 68]);
 
         $this->assertFalse($this->hierarchy_checker->isPartOfScrumOrKanbanHierarchy($this->tracker));
     }

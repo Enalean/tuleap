@@ -40,9 +40,9 @@ class AgileDashboard_FirstScrumCreator
     private $template_path;
 
     /** @var string[] */
-    private $reserved_names = array(
+    private $reserved_names = [
         'epic', 'rel', 'sprint', 'task', 'story'
-    );
+    ];
 
     public function __construct(
         Project $project,

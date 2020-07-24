@@ -93,10 +93,10 @@ final class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends TestCase
         $this->system_event->injectDependencies($this->um, $this->backend, $this->project_manager, $this->ldap_project_manager);
 
         $user1 = \Mockery::spy(\PFUser::class);
-        $user1->shouldReceive('getAllProjects')->andReturns(array(201, 202));
+        $user1->shouldReceive('getAllProjects')->andReturns([201, 202]);
         $user1->shouldReceive('isActive')->andReturns(true);
         $user2 = \Mockery::spy(\PFUser::class);
-        $user2->shouldReceive('getAllProjects')->andReturns(array(202, 203));
+        $user2->shouldReceive('getAllProjects')->andReturns([202, 203]);
         $user2->shouldReceive('isActive')->andReturns(true);
         $this->um->shouldReceive('getUserById')->with('101')->andReturns($user1);
         $this->um->shouldReceive('getUserById')->with('102')->andReturns($user2);

@@ -223,9 +223,9 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic
     {
         EventManager::instance()->processEvent(
             TRACKER_EVENT_SEMANTIC_CONTRIBUTOR_CHANGE,
-            array(
+            [
                 'tracker' => $this->tracker,
-            )
+            ]
         );
     }
 

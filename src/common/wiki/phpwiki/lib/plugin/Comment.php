@@ -40,7 +40,7 @@ class WikiPlugin_Comment extends WikiPlugin
     // No arguments here.
     public function getDefaultArguments()
     {
-        return array();
+        return [];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

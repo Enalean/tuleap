@@ -31,7 +31,7 @@ class FRSValidator
     public function addError($error)
     {
         if (! $this->_errors) {
-            $this->_errors = array ();
+            $this->_errors =  [];
         }
         $this->_errors[] = $error;
     }

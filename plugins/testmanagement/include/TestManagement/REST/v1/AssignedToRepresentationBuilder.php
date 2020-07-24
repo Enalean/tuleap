@@ -81,7 +81,7 @@ class AssignedToRepresentationBuilder
 
         $changeset_value = $execution->getValue($assigned_to_field);
         if (! $changeset_value) {
-            return array();
+            return [];
         }
 
         return $changeset_value->getValue();

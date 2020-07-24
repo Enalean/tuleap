@@ -377,12 +377,12 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         }
         $html .= $GLOBALS['HTML']->getImage(
             'ic/toggle_' . $sign . '.png',
-            array(
+            [
                 'border' => 0,
                 'id'     => $id . '_toggle',
                 'style'  => 'cursor:hand; cursor:pointer',
                 'title'  => $GLOBALS['Language']->getText('tracker_include_artifact', 'toggle')
-            )
+            ]
         );
         $html .= ' ' . $title . '</legend><div id="' . $id . '_alternate" style="display:none;"></div>';
         $html .= '<script type="text/javascript">';
@@ -456,7 +456,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                 $value = $field_html->display($this->ArtifactType->getID(), $field_value, false, false, $read_only, false, false, 0, false, 0, false, 0, true, $this->ArtifactType->getGroupID());
             }
 
-            $html = array('label' => $label, 'value' => $value);
+            $html = ['label' => $label, 'value' => $value];
         }
         return $html;
     }
@@ -606,13 +606,13 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             // This div id used just to show the toggle of html format
             $html .= '<DIV ID="follow_up_comment_label"></DIV>';
             $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">';
-            $html .=  $hp->purify($Language->getText('tracker_include_artifact', 'is_copy', array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName() . ' #' . $this->getID())), CODENDI_PURIFIER_CONVERT_HTML);
+            $html .=  $hp->purify($Language->getText('tracker_include_artifact', 'is_copy', [$this->ArtifactType->getItemName(), $this->ArtifactType->getItemName() . ' #' . $this->getID()]), CODENDI_PURIFIER_CONVERT_HTML);
             $html .= '</TEXTAREA>';
         } else {
             if ($pv == 0) {
                 $html .= '<b>' . $Language->getText('tracker_include_artifact', 'add_comment') . '</b>';
                 $html .= '<DIV ID="follow_up_comment_label"></DIV>';
-                $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">' . $hp->purify($Language->getText('tracker_include_artifact', 'is_copy', array($this->ArtifactType->getItemName(),$this->ArtifactType->getItemName() . ' #' . $this->getID())), CODENDI_PURIFIER_CONVERT_HTML) . '</TEXTAREA>';
+                $html .= '<TEXTAREA NAME="follow_up_comment" id="tracker_artifact_comment" ROWS="10" style="width:700px;" WRAP="SOFT">' . $hp->purify($Language->getText('tracker_include_artifact', 'is_copy', [$this->ArtifactType->getItemName(), $this->ArtifactType->getItemName() . ' #' . $this->getID()]), CODENDI_PURIFIER_CONVERT_HTML) . '</TEXTAREA>';
             }
         }
         if (! user_isloggedin() && ($pv == 0)) {
@@ -707,7 +707,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         if ($rows > 0) {
-                    $title_arr = array();
+                    $title_arr = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'field');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'old_val');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'new_val');
@@ -815,7 +815,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
                     );
                     $out .= "------------------------------------------------------------------$sys_lf";
         } else {
-                    $title_arr = array();
+                    $title_arr = [];
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'artifact');
                     $title_arr[] = $Language->getText('tracker_include_artifact', 'summary');
                     $title_arr[] = $Language->getText('global', 'status');
@@ -1064,7 +1064,7 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
 
         echo '<H2>' . $link . ' - ' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup') . ' #' . $comment_id . '</H2>';
 
-        echo '<p>' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup_details', array(\DateHelper::timeAgoInWords($followUp['date'], false, true), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by']))) . '</p>';
+        echo '<p>' . $GLOBALS['Language']->getText('tracker_edit_comment', 'upd_followup_details', [\DateHelper::timeAgoInWords($followUp['date'], false, true), UserHelper::instance()->getLinkOnUserFromUserId($followUp['mod_by'])]) . '</p>';
 
         echo '<FORM ACTION="/tracker/?group_id=' . (int) $group_id . '&atid=' . (int) $group_artifact_id . '&func=updatecomment" METHOD="post">
         <INPUT TYPE="hidden" NAME="artifact_history_id" VALUE="' . (int) $comment_id . '">
@@ -1100,14 +1100,14 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
         $hp         = Codendi_HTMLPurifier::instance();
         $group      = $this->ArtifactType->getGroup();
         $server_url = HTTPRequest::instance()->getServerUrl();
-        $rss = new RSS(array(
+        $rss = new RSS([
             'title'       => $group->getPublicName() . ' ' . $this->ArtifactType->getName() . ' #' . $this->getId() . ' - ' . $this->getValue('summary') . ' - ' . $GLOBALS['Language']->getText('tracker_include_artifact', 'follow_ups'),
             'description' => '',
             'link'        => '<![CDATA[' . $server_url . '/tracker/?atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . ']]>',
             'language'    => 'en-us',
-            'copyright'   => $GLOBALS['Language']->getText('rss', 'copyright', array($GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y', time()))),
+            'copyright'   => $GLOBALS['Language']->getText('rss', 'copyright', [$GLOBALS['sys_long_org_name'],$GLOBALS['sys_name'],date('Y', time())]),
             'pubDate'     => gmdate('D, d M Y h:i:s', $this->getLastUpdateDate()) . ' GMT',
-        ));
+        ]);
         $result = $this->getFollowups();
         for ($i = 0; $i < db_numrows($result); $i++) {
             $comment_type = db_result($result, $i, 'comment_type');
@@ -1122,14 +1122,14 @@ class ArtifactHtml extends Artifact //phpcs:ignore PSR1.Classes.ClassDeclaration
             } else {
                 $comment_type = '<strong>[' . $comment_type . ']</strong><br />';
             }
-            $rss->addItem(array(
+            $rss->addItem([
                 'title'       => '<![CDATA[' . $GLOBALS['Language']->getText('tracker_include_artifact', 'add_flup_comment') . ' #' . $comment_id . ']]>',
                 'description' => '<![CDATA[' . $comment_type . $hp->purify(db_result($result, $i, 'new_value'), CODENDI_PURIFIER_BASIC, $group->getGroupId()) . ']]>',
                 'pubDate'     => gmdate('D, d M Y h:i:s', db_result($orig_date, 0, 'date')) . ' GMT',
                 'dc:creator'  => $hp->purify($uh->getDisplayNameFromUserId(db_result($orig_subm, 0, 'mod_by'))),
                 'link'        => '<![CDATA[' . $server_url . '/tracker/?func=detail&aid=' . $this->getId() . '&atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . '#comment_' . $comment_id . ']]>',
                 'guid'        => '<![CDATA[' . $server_url . '/tracker/?func=detail&aid=' . $this->getId() . '&atid=' . $this->ArtifactType->getID() . '&group_id=' . $group->getGroupId() . '#comment_' . $comment_id . ']]>'
-            ));
+            ]);
         }
         $rss->display();
         exit;

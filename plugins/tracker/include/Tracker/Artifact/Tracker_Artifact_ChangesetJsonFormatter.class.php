@@ -29,13 +29,13 @@ class Tracker_Artifact_ChangesetJsonFormatter
 
     public function format(Tracker_Artifact_Changeset $changeset, PFUser $current_user)
     {
-        return array(
+        return [
             'id'           => $changeset->getId(),
             'submitted_by' => $changeset->getSubmittedBy(),
             'submitted_on' => date('c', $changeset->getSubmittedOn()),
             'email'        => $changeset->getEmail(),
             'html'         => $this->getChangeContentForJson($changeset, $current_user),
-        );
+        ];
     }
 
     protected function getChangeContentForJson(Tracker_Artifact_Changeset $changeset, PFUser $current_user)

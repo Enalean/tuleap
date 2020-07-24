@@ -80,7 +80,7 @@ class ChangesetValue extends Tracker_Artifact_ChangesetValue
 
     private function getFormatedDiff($previous, $next)
     {
-        $callback = array(Codendi_HTMLPurifier::instance(), 'purify');
+        $callback = [Codendi_HTMLPurifier::instance(), 'purify'];
         $formater = new Codendi_HtmlUnifiedDiffFormatter();
         $diff     = new Codendi_Diff(
             array_map($callback, $previous, array_fill(0, count($previous), CODENDI_PURIFIER_CONVERT_HTML)),

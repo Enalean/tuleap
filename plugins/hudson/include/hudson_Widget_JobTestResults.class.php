@@ -72,9 +72,9 @@ class hudson_Widget_JobTestResults extends HudsonJobWidget
     {
         $title = '';
         if ($this->job && $this->test_result) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_widget_title', array($this->job->getName(), $this->test_result->getPassCount(), $this->test_result->getTotalCount()));
+            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_widget_title', [$this->job->getName(), $this->test_result->getPassCount(), $this->test_result->getTotalCount()]);
         } elseif ($this->job && ! $this->test_result) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_projectname', array($this->job->getName()));
+            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults_projectname', [$this->job->getName()]);
         } else {
             $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testresults');
         }

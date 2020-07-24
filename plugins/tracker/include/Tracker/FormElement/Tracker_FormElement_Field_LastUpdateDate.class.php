@@ -23,7 +23,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
-    public $default_properties = array();
+    public $default_properties = [];
 
     protected function getDao()
     {
@@ -372,7 +372,7 @@ class Tracker_FormElement_Field_LastUpdateDate extends Tracker_FormElement_Field
      */
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
-        $artifacts = array();
+        $artifacts = [];
         $dao = new Tracker_Artifact_ChangesetDao();
         $dar = $dao->getArtifactsByFieldAndLastUpdateDate($trackerId, $date);
         if ($dar && ! $dar->isError()) {

@@ -99,11 +99,11 @@ class Statistics_SOAPServer
 
     private function getDiskStatsForUser(PFUser $user, $group_id)
     {
-        $disk_stats = array(
-            'services' => array(),
+        $disk_stats = [
+            'services' => [],
             'total'    => $this->disk_usage_manager->returnTotalProjectSize($group_id),
             'quota'    => $this->getAllowedQuotaInBytes($group_id),
-        );
+        ];
 
         if ($this->userHasAdminPrivileges($user, $group_id)) {
             $disk_stats['services'] = $this->disk_usage_manager->returnTotalServiceSizeByProject($group_id);

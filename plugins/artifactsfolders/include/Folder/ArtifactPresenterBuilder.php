@@ -67,12 +67,12 @@ class ArtifactPresenterBuilder
     {
         $list_artifact_representation = $this->buildInFolderWithNoFilter($user, $folder);
 
-        $linked_folders_ids = array();
+        $linked_folders_ids = [];
         foreach ($list_artifact_representation as $artifact_representation) {
             $linked_folders_ids[] = $artifact_representation->id;
         }
 
-        $children_ids = array();
+        $children_ids = [];
         foreach ($linked_folders_ids as $artifact_id) {
             $children_ids = array_merge($children_ids, $this->collectChildrenIds($artifact_id, $linked_folders_ids));
         }
@@ -151,7 +151,7 @@ class ArtifactPresenterBuilder
 
     private function getListOfChildrenRepresentation(PFUser $user, $list_of_artifact_ids)
     {
-        $artifact_representations = array();
+        $artifact_representations = [];
         foreach ($list_of_artifact_ids as $artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
             if ($artifact) {
@@ -165,7 +165,7 @@ class ArtifactPresenterBuilder
 
     private function getListOfArtifactRepresentation(PFUser $user, $list_of_artifact_ids, array $folder_hierarchy)
     {
-        $artifact_representations = array();
+        $artifact_representations = [];
         foreach ($list_of_artifact_ids as $artifact_id) {
             $artifact = $this->artifact_factory->getArtifactByIdUserCanView($user, $artifact_id);
             if ($artifact) {

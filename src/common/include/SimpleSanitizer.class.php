@@ -28,8 +28,8 @@ class SimpleSanitizer
      */
     public static function sanitize($html)
     {
-        $pattern = array('@<@', '@>@');
-        $replacement = array('&lt;', '&gt;');
+        $pattern = ['@<@', '@>@'];
+        $replacement = ['&lt;', '&gt;'];
         return preg_replace($pattern, $replacement, $html);
     }
 
@@ -38,8 +38,8 @@ class SimpleSanitizer
      */
     public static function unsanitize($html)
     {
-        $pattern = array('@&lt;@', '@&gt;@');
-        $replacement = array('<', '>');
+        $pattern = ['@&lt;@', '@&gt;@'];
+        $replacement = ['<', '>'];
         return preg_replace($pattern, $replacement, $html);
     }
 }

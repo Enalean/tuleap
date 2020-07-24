@@ -67,7 +67,7 @@ class MembershipManagerListGroupsTest extends TestCase
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->remote_server_factory->shouldReceive('getServer')->andReturns($this->remote_server);
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
@@ -83,7 +83,7 @@ class MembershipManagerListGroupsTest extends TestCase
             \Mockery::spy(\UGroupManager::class),
             $this->project_manager
         );
-        $ls_groups_expected_return = array(
+        $ls_groups_expected_return = [
             'Administrators' => '31c2cb467c263d73eb24552a7cc98b7131ac2115',
             'Anonymous Users' => 'global:Anonymous-Users',
             'Non-Interactive Users' => '872372f18fd97a7d58bf1f93bc3996d758ffb31b',
@@ -92,7 +92,7 @@ class MembershipManagerListGroupsTest extends TestCase
             'someProject/project_members' => '53936c4a9782a73e3d5296380feecf6c8cc1076f',
             'someProject/project_admins' => 'ddfaa5d153a40cbf0ae41b73a441dfa97799891b',
             'someProject/group_from_ldap' => 'ec68131cc1adc6b42753c10adb3e3265493f64f9',
-        );
+        ];
         $this->driver->shouldReceive('getAllGroups')->andReturns($ls_groups_expected_return);
     }
 

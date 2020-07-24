@@ -44,7 +44,7 @@ class UploadedLinksRetriever
      */
     public function getLinksForRelease(\FRSRelease $release)
     {
-        $links = array();
+        $links = [];
 
         foreach ($this->dao->searchLinks($release->getReleaseID()) as $row) {
             $links[] = $this->instantiateRow($row);

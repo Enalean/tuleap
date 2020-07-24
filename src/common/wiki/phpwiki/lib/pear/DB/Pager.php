@@ -194,7 +194,7 @@ class DB_Pager extends PEAR
         $data['lastpage']  = $pages;
 
         // Build pages array
-        $data['pages'] = array();
+        $data['pages'] = [];
         for ($i = 1; $i <= $pages; $i++) {
             $offset = $limit * ($i - 1);
             $data['pages'][$i] = $offset;

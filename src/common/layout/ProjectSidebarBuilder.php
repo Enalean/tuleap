@@ -115,13 +115,13 @@ class ProjectSidebarBuilder
     /** @return string[] */
     private function getAllowedServicesForUser(PFUser $user, Project $project)
     {
-        $allowed_services = array('summary');
+        $allowed_services = ['summary'];
         if ($this->restrictedMemberIsNotProjectMember($user, $project)) {
             $this->event_manager->processEvent(
                 Event::GET_SERVICES_ALLOWED_FOR_RESTRICTED,
-                array(
+                [
                     'allowed_services' => &$allowed_services,
-                )
+                ]
             );
         }
 

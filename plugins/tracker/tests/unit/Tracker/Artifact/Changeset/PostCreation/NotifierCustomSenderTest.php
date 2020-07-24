@@ -111,22 +111,22 @@ class NotifierCustomSenderTest extends TestCase
 
         $changeset->shouldReceive('getComment')->andReturn(\Mockery::spy(\Tracker_Artifact_Changeset_Comment::class));
 
-        $this->recipients_manager->shouldReceive('getRecipients')->andReturn(array(
+        $this->recipients_manager->shouldReceive('getRecipients')->andReturn([
             'a_user' => true,
             'email@example.com' => true,
             'comment1' => true,
-        ));
+        ]);
 
         $language = \Mockery::spy(BaseLanguage::class);
 
         $example = \Mockery::spy(PFUser::class);
         $example->shouldReceive('toRow')->andReturn(
-            array(
+            [
                 'user_name' => 'abc',
                 'realname' => $this->user_realname,
                 'language' => $language,
                 'email' => 'email@example.com'
-            )
+            ]
         );
         $example->shouldReceive('getRealname')->andReturn($this->user_realname);
         $example->shouldReceive('getEmail')->andReturn('email@example.com');
@@ -148,10 +148,10 @@ class NotifierCustomSenderTest extends TestCase
         $changeset->shouldReceive('getArtifact')->andReturn($artifact);
 
         $this->custom_email_sender->shouldReceive('getCustomSender')->andReturn(
-            array(
+            [
                 'format' => $this->default_format,
                 'enabled' => $custom_sender_enabled
-            )
+            ]
         );
          return $this->mail_notification_task->buildOneMessageForMultipleRecipients($changeset, $this->recipients_manager->getRecipients($changeset, true), false);
     }
@@ -159,7 +159,7 @@ class NotifierCustomSenderTest extends TestCase
     public function testFetchesTheCorrectlyFormattedSenderFieldWhenEnabled()
     {
         $messages = $this->getMessagesForRecipients(true);
-        $formatter = new ConfigNotificationEmailCustomSenderFormatter(array($this->default_format_var => $this->default_format_value));
+        $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
             $this->assertNotEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);
         }
@@ -168,7 +168,7 @@ class NotifierCustomSenderTest extends TestCase
     public function testDoesNotFetchCustomSendersWhenDisabled()
     {
         $messages = $this->getMessagesForRecipients(false);
-        $formatter = new ConfigNotificationEmailCustomSenderFormatter(array($this->default_format_var => $this->default_format_value));
+        $formatter = new ConfigNotificationEmailCustomSenderFormatter([$this->default_format_var => $this->default_format_value]);
         foreach ($messages as $message) {
             $this->assertEquals(strpos($message['from'], $formatter->formatString($this->default_format)), false);
         }

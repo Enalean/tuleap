@@ -184,7 +184,7 @@ class TrackerExportToXmlTest extends TestCase
 
     public function testItExportsTheParentId()
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn(array());
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);
 
@@ -199,7 +199,7 @@ class TrackerExportToXmlTest extends TestCase
 
     public function testItExportsTheTrackerColor()
     {
-        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn(array());
+        $this->formelement_factory->shouldReceive('getUsedFormElementForTracker')->andReturn([]);
 
         $this->ugroup_retriever->shouldReceive('getProjectUgroupIds')->andReturn([]);
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturn([]);

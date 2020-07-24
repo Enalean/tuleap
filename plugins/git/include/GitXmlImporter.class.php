@@ -197,7 +197,7 @@ class GitXmlImporter
 
     private function importAdmins(Project $project, SimpleXMLElement $admins_xmlnode)
     {
-        $ugroup_ids = array();
+        $ugroup_ids = [];
         if (! empty($admins_xmlnode)) {
             $this->logger->debug($admins_xmlnode->count() . ' ugroups as admins.');
             $ugroup_ids = $this->xml_ugroup_retriever->getUgroupIdsForPermissionNode($project, $admins_xmlnode);
@@ -228,7 +228,7 @@ class GitXmlImporter
                 (string) $repository_info['bundle-path']
             );
         } else {
-            $this->repository_manager->create($repository, $this->gitolite_backend, array());
+            $this->repository_manager->create($repository, $this->gitolite_backend, []);
         }
         if ($this->hasLegacyPermissions($repository_xmlnode)) {
             $this->importPermissions($project, $repository_xmlnode, $repository);
@@ -238,7 +238,7 @@ class GitXmlImporter
         }
 
         $this->importLastPushDate($repository_xmlnode, $repository);
-        $this->system_event_manager->queueProjectsConfigurationUpdate(array($project->getGroupId()));
+        $this->system_event_manager->queueProjectsConfigurationUpdate([$project->getGroupId()]);
     }
 
     private function hasLegacyPermissions(SimpleXMLElement $repository_xmlnode)
@@ -376,16 +376,16 @@ class GitXmlImporter
     ) {
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
-            array(
+            [
                 'logger'         => $this->logger,
-                'created_refs'   => array(
+                'created_refs'   => [
                     'repository' => $repository,
-                ),
+                ],
                 'service_name'   => self::SERVICE_NAME,
                 'xml_content'    => $xml_references,
                 'project'        => $project,
                 'configuration'  => $configuration,
-            )
+            ]
         );
     }
 

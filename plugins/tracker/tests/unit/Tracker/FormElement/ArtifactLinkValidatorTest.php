@@ -123,7 +123,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsTrueWhenNoNewValuesAreSent()
     {
-        $this->assertTrue($this->artifact_link_validator->isValid(array(), $this->artifact, $this->field));
+        $this->assertTrue($this->artifact_link_validator->isValid([], $this->artifact, $this->field));
         $this->assertTrue($this->artifact_link_validator->isValid(null, $this->artifact, $this->field));
     }
 
@@ -133,7 +133,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
-                array('new_values' => '666'),
+                ['new_values' => '666'],
                 $this->artifact,
                 $this->field
             )
@@ -141,21 +141,21 @@ class ArtifactLinkValidatorTest extends TestCase
 
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
-                array('new_values' => '123, 666'),
+                ['new_values' => '123, 666'],
                 $this->artifact,
                 $this->field
             )
         );
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
-                array('new_values' => '123,666'),
+                ['new_values' => '123,666'],
                 $this->artifact,
                 $this->field
             )
         );
         $this->assertFalse(
             $this->artifact_link_validator->isValid(
-                array('new_values' => ',,,,'),
+                ['new_values' => ',,,,'],
                 $this->artifact,
                 $this->field
             )
@@ -164,7 +164,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsFalseWhenArtifactIdDoesNotExist()
     {
-        $value = array('new_values' => '1000');
+        $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn(null);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
 
@@ -173,7 +173,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsFalseWhenTrackerIsDeleted()
     {
-        $value = array('new_values' => '1000');
+        $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isDeleted')->andReturn(true);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
@@ -183,7 +183,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsFalseWhenProjectIsNotActive()
     {
-        $value = array('new_values' => '1000');
+        $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
         $this->project->shouldReceive('isActive')->andReturn(false);
@@ -193,7 +193,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsTrueWhenProjectCanNotUseNature()
     {
-        $value = array('new_values' => '1000');
+        $value = ['new_values' => '1000'];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(false);
         $this->project->shouldReceive('isActive')->andReturn(true);
@@ -203,7 +203,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsFalseWhenProjectCanUseNatureAndNatureDoesNotExist()
     {
-        $value = array('new_values' => '1000', 'natures' => array('_is_child', 'fixed_in'));
+        $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->andReturn(null);
@@ -220,10 +220,10 @@ class ArtifactLinkValidatorTest extends TestCase
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('fixed_in')->andReturn($this->nature_fixed_in);
         $this->project->shouldReceive('isActive')->andReturn(true);
 
-        $value = array('new_values' => '1000', 'natures' => array('_is_child', 'fixed_in'));
+        $value = ['new_values' => '1000', 'natures' => ['_is_child', 'fixed_in']];
         $this->assertTrue($this->artifact_link_validator->isValid($value, $this->artifact, $this->field));
 
-        $value = array('new_values' => '123          ,   321, 999', 'natures' => array('_is_child', 'fixed_in'));
+        $value = ['new_values' => '123          ,   321, 999', 'natures' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -232,7 +232,7 @@ class ArtifactLinkValidatorTest extends TestCase
             )
         );
 
-        $value = array('new_values' => '', 'natures' => array('_is_child', 'fixed_in'));
+        $value = ['new_values' => '', 'natures' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -241,7 +241,7 @@ class ArtifactLinkValidatorTest extends TestCase
             )
         ); // existing values
 
-        $value = array('new_values' => '123', 'natures' => array('_is_child', 'fixed_in'));
+        $value = ['new_values' => '123', 'natures' => ['_is_child', 'fixed_in']];
         $this->assertTrue(
             $this->artifact_link_validator->isValid(
                 $value,
@@ -253,7 +253,7 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsTrueWhenProjectCanUseNatureAndNatureEmpty()
     {
-        $value = array('new_values' => '1000', 'natures' => array(''));
+        $value = ['new_values' => '1000', 'natures' => ['']];
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);
         $this->nature_presenter_factory->shouldReceive('getFromShortname')->with('')->andReturn($this->nature_no_nature);
@@ -264,10 +264,10 @@ class ArtifactLinkValidatorTest extends TestCase
 
     public function testItReturnsFalseWhenProjectCanUseTypesAndAtLeastOneTypeIsDisabled()
     {
-        $value = array(
+        $value = [
             'new_values' => '1000',
-            'natures' => array('_is_child', 'fixed_in')
-        );
+            'natures' => ['_is_child', 'fixed_in']
+        ];
 
         $this->artifact_factory->shouldReceive('getArtifactById')->andReturn($this->linked_artifact);
         $this->tracker->shouldReceive('isProjectAllowedToUseNature')->andReturn(true);

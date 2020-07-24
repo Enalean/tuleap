@@ -47,7 +47,7 @@ class SystemEvent_PROFTPD_UPDATE_ACLTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(array('done'))->disableOriginalConstructor()->getMock();
+        $this->event   = $this->getMockBuilder('Tuleap\ProFTPd\SystemEvent\PROFTPD_UPDATE_ACL')->setMethods(['done'])->disableOriginalConstructor()->getMock();
         $this->acl_updater = $this->getMockBuilder('Tuleap\ProFTPd\Admin\ACLUpdater')->disableOriginalConstructor()->getMock();
 
         $group_unix_name            = "project_name";

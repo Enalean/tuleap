@@ -53,7 +53,7 @@ class Admin_PermissionDelegationPermissionsModalPresenter
 
     public function permissions_modal_title()
     {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', array($this->name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'permissions_modal_title', [$this->name]);
     }
 
     public function purified_permissions_modal_description()

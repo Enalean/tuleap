@@ -56,12 +56,12 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    's'         => false,
                    'markup'     => 2,
                    /* Columns to include in listing */
                    'info'     => 'pagename,markup,mtime',
-            )
+            ]
         );
     }
 
@@ -137,7 +137,7 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
             $post_args['markup'] = $args['markup'];
         }
         $next_action = 'select';
-        $pages = array();
+        $pages = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }
@@ -202,19 +202,19 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
         );
 
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('admin_markup')
+                ['admin_markup']
             ),
-            HiddenInputs(array('admin_markup[action]' => $next_action)),
+            HiddenInputs(['admin_markup[action]' => $next_action]),
             ENABLE_PAGEPERM
                           ? ''
-                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          : HiddenInputs(['require_authority_for_post' => WIKIAUTH_ADMIN]),
             $buttons
         );
     }
@@ -223,8 +223,8 @@ class WikiPlugin_WikiAdminMarkup extends WikiPlugin_WikiAdminSelect
     {
         $header->pushContent(_("Change markup") . " ");
         $header->pushContent(' ' . _("to") . ': ');
-        $header->pushContent(HTML::input(array('name' => 'admin_markup[markup]',
-                                               'value' => $post_args['markup'])));
+        $header->pushContent(HTML::input(['name' => 'admin_markup[markup]',
+                                               'value' => $post_args['markup']]));
         $header->pushContent(HTML::p());
         return $header;
     }

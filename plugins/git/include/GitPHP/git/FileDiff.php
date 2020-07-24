@@ -718,15 +718,15 @@ class FileDiff
         } else {
             $diffLines = explode("\n", $exe->Execute(
                 GitExe::DIFF,
-                array("-U0", escapeshellarg($this->fromHash),
-                    escapeshellarg($this->toHash))
+                ["-U0", escapeshellarg($this->fromHash),
+                    escapeshellarg($this->toHash)]
             ));
         }
 
         unset($exe);
 
         // parse diffs
-        $diffs = array();
+        $diffs = [];
         $currentDiff = false;
         foreach ($diffLines as $d) {
             if (strlen($d) == 0) {
@@ -743,8 +743,8 @@ class FileDiff
                     }
                     $comma = strpos($d, ",");
                     $line = -intval(substr($d, 2, $comma - 2));
-                    $currentDiff = array("line" => $line,
-                        "left" => array(), "right" => array());
+                    $currentDiff = ["line" => $line,
+                        "left" => [], "right" => []];
                     break;
                 case '+':
                     if ($currentDiff) {
@@ -774,12 +774,12 @@ class FileDiff
         }
 
         // iterate over diffs
-        $output = array();
+        $output = [];
         $idx = 0;
         foreach ($diffs as $d) {
             while ($idx + 1 < $d['line']) {
                 $h = $blob[$idx];
-                $output[] = array('', $h, $h);
+                $output[] = ['', $h, $h];
                 $idx++;
             }
 
@@ -794,7 +794,7 @@ class FileDiff
             for ($i = 0; $i < count($d['left']) || $i < count($d['right']); $i++) {
                 $left = $i < count($d['left']) ? $d['left'][$i] : false;
                 $right = $i < count($d['right']) ? $d['right'][$i] : false;
-                $output[] = array($mode, $left, $right);
+                $output[] = [$mode, $left, $right];
             }
 
             $idx += count($d['left']);
@@ -802,7 +802,7 @@ class FileDiff
 
         while ($idx < count($blob)) {
             $h = $blob[$idx];
-            $output[] = array('', $h, $h);
+            $output[] = ['', $h, $h];
             $idx++;
         }
 

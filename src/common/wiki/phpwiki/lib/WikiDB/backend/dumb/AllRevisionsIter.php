@@ -51,9 +51,9 @@ class WikiDB_backend_dumb_AllRevisionsIter extends WikiDB_backend_iterator
             return false;
         }
 
-        $rev = array('versiondata' => $vdata,
+        $rev = ['versiondata' => $vdata,
                      'pagename' => $pagename,
-                     'version' => $version);
+                     'version' => $version];
 
         if (! empty($vdata['%pagedata'])) {
             $rev['pagedata'] = &$vdata['%pagedata'];

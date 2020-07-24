@@ -42,12 +42,12 @@ class Docman_ApprovalTableReviewerFactory
         $this->reviewerCache = null;
 
         // Cache of error messages
-        $this->err = array();
-        $this->err['db'] = array();
-        $this->err['perm'] = array();
-        $this->err['notreg'] = array();
-        $this->warn = array();
-        $this->warn['double'] = array();
+        $this->err = [];
+        $this->err['db'] = [];
+        $this->err['perm'] = [];
+        $this->err['notreg'] = [];
+        $this->warn = [];
+        $this->warn['double'] = [];
 
         $this->notificationManager = $notificationManager;
     }
@@ -122,11 +122,11 @@ class Docman_ApprovalTableReviewerFactory
     public function getUgroupsAllowedForTable($groupId)
     {
         /** @psalm-suppress DeprecatedFunction */
-        $res = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        $ugroups = array();
+        $res = ugroup_db_get_existing_ugroups($groupId, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']]);
+        $ugroups = [];
         while ($row = db_fetch_array($res)) {
-            $r = array();
+            $r = [];
             $r['value'] = $row['ugroup_id'];
             $r['text'] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             $ugroups[] = $r;
@@ -159,9 +159,9 @@ class Docman_ApprovalTableReviewerFactory
      */
     public function getReviewerListForLatestVersion()
     {
-        $list = array();
+        $list = [];
         if ($this->reviewerCache === null) {
-            $this->reviewerCache = array();
+            $this->reviewerCache = [];
 
             $dao = $this->_getDao();
             foreach ($dao->getReviewerList($this->table->getId()) as $row) {
@@ -358,7 +358,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     /*static*/ public function getAllPendingReviewsForUser($userId)
     {
-        $reviewsArray = array();
+        $reviewsArray = [];
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllReviewsForUserByState($userId, PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET);
         $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
@@ -366,11 +366,11 @@ class Docman_ApprovalTableReviewerFactory
             $row = $dar->current();
             $baseUrl = $docmanUrl . '/?group_id=' . $row['group_id'];
             $url = $baseUrl . '&action=details&section=approval&id=' . $row['item_id'] . '&review=1';
-            $reviewsArray[] = array('group' => $row['group_name'],
+            $reviewsArray[] = ['group' => $row['group_name'],
                                     'group_id' => $row['group_id'],
                                     'title' => $row['title'],
                                     'date'  => $row['date'],
-                                    'url'   => $url);
+                                    'url'   => $url];
             $dar->next();
         }
         return $reviewsArray;
@@ -382,7 +382,7 @@ class Docman_ApprovalTableReviewerFactory
      */
     /*static*/ public function getAllApprovalTableForUser($userId)
     {
-        $reviewsArray = array();
+        $reviewsArray = [];
         $dao = Docman_ApprovalTableReviewerFactory::_getDao();
         $dar = $dao->getAllApprovalTableForUser($userId);
         $docmanUrl = HTTPRequest::instance()->getServerUrl() . '/plugins/docman';
@@ -434,12 +434,12 @@ class Docman_ApprovalTableReviewerFactory
                 }
             }
 
-            $reviewsArray[] = array('group' => $row['group_name'],
+            $reviewsArray[] = ['group' => $row['group_name'],
                                     'group_id' => $row['group_id'],
                                     'title' => $row['title'],
                                     'date'  => $row['date'],
                                     'url'   => $url,
-                                    'status' => $status);
+                                    'status' => $status];
             $dar->next();
         }
         return $reviewsArray;

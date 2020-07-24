@@ -100,7 +100,7 @@ class Tracker_FormElement_DateFormatter
     {
         return $this->getDatePicker(
             $GLOBALS['Language']->getText('global', 'unchanged'),
-            array()
+            []
         );
     }
 
@@ -128,7 +128,7 @@ class Tracker_FormElement_DateFormatter
             "tracker_admin_field_" . $this->field->getId(),
             'artifact[' . $this->field->getId() . ']',
             $value,
-            array(),
+            [],
             $errors,
             false
         );

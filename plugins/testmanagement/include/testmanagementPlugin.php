@@ -287,11 +287,11 @@ class testmanagementPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDecla
 
         $params['tracker_ids_list'] = array_merge(
             $params['tracker_ids_list'],
-            array(
+            [
                 $config->getCampaignTrackerId($project),
                 $config->getTestDefinitionTrackerId($project),
                 $config->getTestExecutionTrackerId($project)
-            )
+            ]
         );
     }
 

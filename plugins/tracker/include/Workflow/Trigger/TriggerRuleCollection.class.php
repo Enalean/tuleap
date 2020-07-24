@@ -23,11 +23,11 @@ class Tracker_Workflow_Trigger_TriggerRuleCollection implements Iterator, Counta
     /**
      * @var Tracker_Workflow_Trigger_TriggerRule[]
      */
-    private $trigger_rules = array();
+    private $trigger_rules = [];
 
     public function fetchFormattedForJson()
     {
-        $json = array();
+        $json = [];
         foreach ($this->trigger_rules as $rule) {
             $json[] = $rule->fetchFormattedForJson();
         }

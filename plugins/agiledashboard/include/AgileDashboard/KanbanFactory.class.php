@@ -40,7 +40,7 @@ class AgileDashboard_KanbanFactory
     public function getListOfKanbansForProject(PFUser $user, $project_id)
     {
         $rows    = $this->dao->getKanbansForProject($project_id);
-        $kanbans = array();
+        $kanbans = [];
 
         foreach ($rows as $kanban_data) {
             if ($this->isUserAllowedToAccessKanban($user, $kanban_data['tracker_id'])) {
@@ -88,7 +88,7 @@ class AgileDashboard_KanbanFactory
     public function getKanbanTrackerIds($project_id): array
     {
         $rows               = $this->dao->getKanbansForProject($project_id);
-        $kanban_tracker_ids = array();
+        $kanban_tracker_ids = [];
 
         foreach ($rows as $kanban_data) {
             $kanban_tracker_ids[] = (int) $kanban_data['tracker_id'];

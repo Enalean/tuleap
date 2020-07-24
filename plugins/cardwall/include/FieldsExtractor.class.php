@@ -43,11 +43,11 @@ class Cardwall_FieldsExtractor
 
     private function getArtifactsFromSecondLevelAndDown(TreeNode $root_node)
     {
-        $leafs = array();
+        $leafs = [];
         foreach ($root_node->getChildren() as $child) {
             $leafs = array_merge($leafs, $child->flattenChildren());
         }
-        $artifacts  = array();
+        $artifacts  = [];
         foreach ($leafs as $node) {
             $this->appendIfArtifactNode($artifacts, $node);
         }
@@ -63,18 +63,18 @@ class Cardwall_FieldsExtractor
 
     private function getIndexedStatusFieldsOf(array $artifacts)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($artifacts as $artifact) {
             $trackers[] = $artifact->getTracker();
         }
-        $status_fields          = array_filter(array_map(array($this->field_provider, 'getField'), $trackers));
+        $status_fields          = array_filter(array_map([$this->field_provider, 'getField'], $trackers));
         $indexed_status_fields  = $this->indexById($status_fields);
         return $indexed_status_fields;
     }
 
     private function indexById(array $fields)
     {
-        $indexed_array = array();
+        $indexed_array = [];
         foreach ($fields as $field) {
             $indexed_array[$field->getId()] = $field;
         }

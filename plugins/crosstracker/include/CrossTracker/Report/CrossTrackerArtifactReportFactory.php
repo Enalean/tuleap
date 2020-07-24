@@ -111,7 +111,7 @@ class CrossTrackerArtifactReportFactory
     private function getArtifactsFromGivenTrackers(array $trackers, $limit, $offset)
     {
         if (count($trackers) === 0) {
-            return new ArtifactMatchingReportCollection(array(), 0);
+            return new ArtifactMatchingReportCollection([], 0);
         }
 
         $trackers_id = $this->getTrackersId($trackers);
@@ -156,7 +156,7 @@ class CrossTrackerArtifactReportFactory
 
     private function getTrackersId(array $trackers)
     {
-        $id = array();
+        $id = [];
 
         foreach ($trackers as $tracker) {
             $id[] = $tracker->getId();
@@ -172,7 +172,7 @@ class CrossTrackerArtifactReportFactory
      */
     private function buildCollectionOfArtifacts(array $results, $total_size)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($results as $artifact) {
             $artifact = $this->artifact_factory->getArtifactById($artifact['id']);
             if ($artifact) {

@@ -81,13 +81,13 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
     {
         // TODO: results of ini_get() should be static for multiple
         // invocations of plugin on one WikiPage
-        return array('wrap'    => true,
+        return ['wrap'    => true,
                      'string'  => ini_get("highlight.string"),  //'#00CC00',
                      'comment' => ini_get("highlight.comment"), //'#FF9900',
                      'keyword' => ini_get("highlight.keyword"), //'#006600',
                      'default' => ini_get("highlight.default"), //'#0000CC',
                      'html'    => ini_get("highlight.html")     //'#000000'
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -104,8 +104,8 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
             $source = "<?php\n" . $source . "\n?>";
         } else {
             $source = str_replace(
-                array('< ?php', '? >'),
-                array('<?php', '?>'),
+                ['< ?php', '? >'],
+                ['<?php', '?>'],
                 $source
             );
         }
@@ -114,7 +114,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
 
         if ($wrap) {
             /* Remove "<?php\n" and "\n?>" again: */
-            $str = str_replace(array('&lt;?php<br />', '?&gt;'), '', $str);
+            $str = str_replace(['&lt;?php<br />', '?&gt;'], '', $str);
         }
 
         /**
@@ -122,7 +122,7 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
          * str_replace string does not produce results on my system,
          * maybe a php bug? '<font color="$color"></font>')
          */
-        foreach (array($string, $comment, $keyword, $bg, $default, $html) as $color) {
+        foreach ([$string, $comment, $keyword, $bg, $default, $html] as $color) {
             $search = "<font color=\"$color\"></font>";
             $str = str_replace($search, '', $str);
         }
@@ -144,13 +144,13 @@ class WikiPlugin_PhpHighlight extends WikiPlugin
      */
     public function sanify_colors($string, $comment, $keyword, $bg, $default, $html)
     {
-        static $html4colors = array("black", "silver", "gray", "white",
+        static $html4colors = ["black", "silver", "gray", "white",
                                     "maroon", "red", "purple", "fuchsia",
                                     "green", "lime", "olive", "yellow",
-                                    "navy", "blue", "teal", "aqua");
+                                    "navy", "blue", "teal", "aqua"];
         /* max(strlen("fuchsia"), strlen("#00FF00"), ... ) = 7 */
         static $MAXLEN = 7;
-        foreach (array($string, $comment, $keyword, $bg, $default, $html) as $color) {
+        foreach ([$string, $comment, $keyword, $bg, $default, $html] as $color) {
             $length = strlen($color);
             //trigger_error(sprintf(_("DEBUG: color '%s' is length %d."), $color, $length), E_USER_NOTICE);
             if (

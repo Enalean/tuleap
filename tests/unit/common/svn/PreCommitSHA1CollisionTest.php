@@ -43,7 +43,7 @@ class PreCommitSHA1CollisionTest extends TestCase
             \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
 
-        $svnlook->shouldReceive('getTransactionPath')->andReturns(array('D   trunk/f1', 'A   trunk/f2'));
+        $svnlook->shouldReceive('getTransactionPath')->andReturns(['D   trunk/f1', 'A   trunk/f2']);
         $svnlook->shouldReceive('getContent')->andReturns(popen('', 'rb'));
 
         $sha1_collision_detector->shouldReceive('isColliding')->once()->andReturns(false);
@@ -65,7 +65,7 @@ class PreCommitSHA1CollisionTest extends TestCase
             \Mockery::spy(\Psr\Log\LoggerInterface::class)
         );
 
-        $svnlook->shouldReceive('getTransactionPath')->andReturns(array('A   trunk/f1'));
+        $svnlook->shouldReceive('getTransactionPath')->andReturns(['A   trunk/f1']);
         $svnlook->shouldReceive('getContent')->andReturns(popen('', 'rb'));
         $sha1_collision_detector->shouldReceive('isColliding')->andReturns(true);
 

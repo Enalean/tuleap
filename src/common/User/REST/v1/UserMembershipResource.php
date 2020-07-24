@@ -84,7 +84,7 @@ class UserMembershipResource extends AuthenticatedResource
         $current_user = $this->user_manager->getCurrentUser();
         $this->checkUserCanSeeOtherUsers($current_user);
 
-        $users_memberships = array();
+        $users_memberships = [];
         $paginated_users   = $this->user_manager->getPaginatedUsersWithSshKey($offset, $limit);
         foreach ($paginated_users->getUsers() as $user) {
             $representation = new UserMembershipRepresentation();

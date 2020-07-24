@@ -24,7 +24,7 @@ use Feedback;
 
 class InvalidEntryInAutocompleterCollection
 {
-    private $entries = array();
+    private $entries = [];
 
     public function add($entry)
     {

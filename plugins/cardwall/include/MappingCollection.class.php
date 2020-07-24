@@ -27,12 +27,12 @@ class Cardwall_MappingCollection implements IteratorAggregate
     /**
      * @var array of Cardwall_Mapping
      */
-    private $mappings = array();
+    private $mappings = [];
 
     /**
      * @var array of array of Cardwall_Mapping indexed by field id
      */
-    private $mappings_by_field_id = array();
+    private $mappings_by_field_id = [];
 
     /**
      * @return Iterator
@@ -57,7 +57,7 @@ class Cardwall_MappingCollection implements IteratorAggregate
      */
     public function getSwimLineValues($field_id)
     {
-        $swim_line_values = array();
+        $swim_line_values = [];
         foreach ($this->getMappingsByFieldId($field_id) as $mapping) {
             $swim_line_values[] = $mapping->column_id;
         }
@@ -72,6 +72,6 @@ class Cardwall_MappingCollection implements IteratorAggregate
         if (isset($this->mappings_by_field_id[$field_id])) {
             return $this->mappings_by_field_id[$field_id];
         }
-        return array();
+        return [];
     }
 }

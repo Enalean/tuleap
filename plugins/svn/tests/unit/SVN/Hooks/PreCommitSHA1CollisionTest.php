@@ -74,7 +74,7 @@ class PreCommitSHA1CollisionTest extends TestCase
 
     public function testItAcceptsCommitThatDoesNotContainSHA1Collision(): void
     {
-        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(array('D   trunk/f1', 'A   trunk/f2'));
+        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(['D   trunk/f1', 'A   trunk/f2']);
         $this->svnlook->shouldReceive('getContent')->andReturn(popen('', 'rb'));
 
         $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(false);
@@ -83,7 +83,7 @@ class PreCommitSHA1CollisionTest extends TestCase
 
     public function testItRejectsCommitContainingSHA1Collision(): void
     {
-        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(array('A   trunk/f1'));
+        $this->svnlook->shouldReceive('getTransactionPath')->andReturn(['A   trunk/f1']);
         $this->svnlook->shouldReceive('getContent')->andReturn(popen('', 'rb'));
 
         $this->sha1_collision_detector->shouldReceive('isColliding')->once()->andReturn(true);

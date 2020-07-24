@@ -63,15 +63,15 @@ class HomepagePanePresenterBuilder
 
     private function getAllSectionPresenters()
     {
-        $available_queues = array(
+        $available_queues = [
             SystemEventQueue::NAME => new SystemEventQueue()
-        );
+        ];
         $this->event_manager->processEvent(
             Event::SYSTEM_EVENT_GET_CUSTOM_QUEUES,
-            array('queues' => &$available_queues)
+            ['queues' => &$available_queues]
         );
 
-        $section_presenters = array();
+        $section_presenters = [];
         foreach ($available_queues as $queue) {
             $this->addQueueSectionPresenter($section_presenters, $queue);
         }
@@ -81,13 +81,13 @@ class HomepagePanePresenterBuilder
 
     private function addQueueSectionPresenter(array &$section_presenters, SystemEventQueue $queue)
     {
-        $stats_by_status = array(
+        $stats_by_status = [
             SystemEvent::STATUS_NEW     => 0,
             SystemEvent::STATUS_RUNNING => 0,
             SystemEvent::STATUS_DONE    => 0,
             SystemEvent::STATUS_WARNING => 0,
             SystemEvent::STATUS_ERROR   => 0,
-        );
+        ];
 
         $types = $this->system_event_manager->getTypesForQueue($queue->getName());
         foreach ($this->dao->searchQueueStatsForLastDay($types) as $row) {

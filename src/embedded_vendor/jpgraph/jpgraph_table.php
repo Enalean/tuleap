@@ -45,12 +45,12 @@ class GTextTableCell
     private $iPRow = null;
     private $iPCol = null;
     private $iTable = null;
-    private $iGridColor = array('darkgray','darkgray','darkgray','darkgray');
-    private $iGridWeight = array(1,1,0,0); // left,top,bottom,right;
-    private $iGridStyle = array(TGRID_SINGLE,TGRID_SINGLE,TGRID_SINGLE,TGRID_SINGLE); // left,top,bottom,right;
+    private $iGridColor = ['darkgray', 'darkgray', 'darkgray', 'darkgray'];
+    private $iGridWeight = [1, 1, 0, 0]; // left,top,bottom,right;
+    private $iGridStyle = [TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE, TGRID_SINGLE]; // left,top,bottom,right;
     private $iNumberFormat = null;
     private $iIcon = null;
-    private $iIconConstrain = array();
+    private $iIconConstrain = [];
     private $iCSIMtarget = '';
     private $iCSIMwintarget = '';
     private $iCSIMalt = '';
@@ -63,7 +63,7 @@ class GTextTableCell
         $this->iCol = $aCol;
         $this->iPRow = $aRow; // Initialiy each cell is its own parent
         $this->iPCol = $aCol;
-        $this->iIconConstrain = array(-1,-1);
+        $this->iIconConstrain = [-1, -1];
     }
 
     public function Init($aTable)
@@ -89,10 +89,10 @@ class GTextTableCell
 
     public function SetImageConstrain($aType, $aVal)
     {
-        if (! in_array($aType, array(TIMG_WIDTH, TIMG_HEIGHT))) {
+        if (! in_array($aType, [TIMG_WIDTH, TIMG_HEIGHT])) {
             JpGraphError::RaiseL(27015);
         }
-        $this->iIconConstrain = array($aType,$aVal);
+        $this->iIconConstrain = [$aType, $aVal];
     }
 
     public function SetCountryFlag($aFlag, $aScale = 1.0, $aMix = 100, $aStdSize = 3)
@@ -193,7 +193,7 @@ class GTextTableCell
 
     public function SetGridWeight($aLeft = null, $aTop = null, $aBottom = null, $aRight = null)
     {
-        $weight_arr = array($aLeft, $aTop, $aBottom, $aRight);
+        $weight_arr = [$aLeft, $aTop, $aBottom, $aRight];
         for ($i = 0; $i < count($weight_arr); $i++) {
             if ($weight_arr[$i] === "") {
                 $weight_arr[$i] = 0;
@@ -280,7 +280,7 @@ class GTextTableCell
     {
         $aHorAlign = strtolower($aHorAlign);
         $aVertAlign = strtolower($aVertAlign);
-        $chk = array('left','right','center','bottom','top','middle');
+        $chk = ['left', 'right', 'center', 'bottom', 'top', 'middle'];
         if (! in_array($aHorAlign, $chk) || ! in_array($aVertAlign, $chk)) {
             JpGraphError::RaiseL(27011, $aHorAlign, $aVertAlign);
         }
@@ -563,8 +563,8 @@ class GTextTableCell
 //---------------------------------------------------------------------
 class GTextTable
 {
-    public $iCells = array(); // Need to be public since they are used by the cell
-    public $iSize = array(0,0); // Need to be public since they are used by the cell
+    public $iCells = []; // Need to be public since they are used by the cell
+    public $iSize = [0, 0]; // Need to be public since they are used by the cell
     private $iColWidth = null;
     private $iRowHeight = null;
     private $iXPos = 0;
@@ -1347,7 +1347,7 @@ class GTextTable
         if ($this->iScaleXPos === null || $this->iScaleYPos === null) {
             return false;
         }
-        return array($this->iScaleXPos, $this->iScaleYPos);
+        return [$this->iScaleXPos, $this->iScaleYPos];
     }
 
     public function _autoSizeTable($aImg)

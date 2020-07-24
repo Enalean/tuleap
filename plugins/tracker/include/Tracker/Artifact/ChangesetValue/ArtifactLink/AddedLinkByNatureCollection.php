@@ -40,7 +40,7 @@ class AddedLinkByNatureCollection implements ICollectChangeOfLinksBetweenTwoChan
     /**
      * @var Tracker_ArtifactLinkInfo[]
      */
-    private $added = array();
+    private $added = [];
 
     public function __construct(NaturePresenter $nature, CollectionOfLinksFormatter $formatter)
     {

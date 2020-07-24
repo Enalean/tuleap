@@ -80,7 +80,7 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
 
     public function format_revision($rev)
     {
-        static $doublettes = array();
+        static $doublettes = [];
         if (isset($doublettes[$rev->getPageName()])) {
             return;
         }
@@ -89,9 +89,9 @@ class _RecentChanges_CommentFormatter extends _RecentChanges_HtmlFormatter
         $class = 'rc-' . $this->importance($rev);
         $time = $this->time($rev);
         if (! $rev->get('is_minor_edit')) {
-            $time = HTML::strong(array('class' => 'pageinfo-majoredit'), $time);
+            $time = HTML::strong(['class' => 'pageinfo-majoredit'], $time);
         }
-        $line = HTML::li(array('class' => $class));
+        $line = HTML::li(['class' => $class]);
         if ($args['difflinks']) {
             $line->pushContent($this->diffLink($rev), ' ');
         }
@@ -140,8 +140,8 @@ class RecentCommentsRevisionIterator extends WikiDB_PageRevisionIterator
             $this->comments = $this->_blog->findBlogs($this->_wikidb, $rev->getPageName(), 'comment');
             if ($this->comments) {
                 if (count($this->comments) > 2) {
-                    usort($this->comments, array("WikiPlugin_WikiBlog",
-                                                 "cmp"));
+                    usort($this->comments, ["WikiPlugin_WikiBlog",
+                                                 "cmp"]);
                 }
                 if (isset($this->comments[$this->_current])) {
                     //$this->_current++;

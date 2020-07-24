@@ -14,7 +14,7 @@ class _HWLDF_WordAccumulator
 {
     public function __construct()
     {
-        $this->_lines = array();
+        $this->_lines = [];
         $this->_line = false;
         $this->_group = false;
         $this->_tag = '~begin';
@@ -99,9 +99,9 @@ class WordLevelDiff extends MappedDiff
                 $m
             )
         ) {
-            return array(array(''), array(''));
+            return [[''], ['']];
         }
-        return array($m[0], $m[1]);
+        return [$m[0], $m[1]];
     }
 
     public function orig()
@@ -152,7 +152,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
 
     public function _start_diff()
     {
-        $this->_top = HTML::div(array('class' => 'diff'));
+        $this->_top = HTML::div(['class' => 'diff']);
     }
     public function _end_diff()
     {
@@ -164,7 +164,7 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
     public function _start_block($header)
     {
         $this->_block = HTML::div(
-            array('class' => 'block'),
+            ['class' => 'block'],
             HTML::tt($header)
         );
     }
@@ -180,15 +180,15 @@ class HtmlUnifiedDiffFormatter extends UnifiedDiffFormatter
         if (! $prefix) {
             $prefix = HTML::raw('&nbsp;');
         }
-        $div = HTML::div(array('class' => 'difftext'));
+        $div = HTML::div(['class' => 'difftext']);
         foreach ($lines as $line) {
             if ($elem) {
                 $line = new HtmlElement($elem, $line);
             }
             $div->pushContent(HTML::div(
-                array('class' => $class),
+                ['class' => $class],
                 HTML::tt(
-                    array('class' => 'prefix'),
+                    ['class' => 'prefix'],
                     $prefix
                 ),
                 $line,
@@ -239,23 +239,23 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
 
     public function _start_diff()
     {
-        $this->_top = HTML::table(array('width' => '100%',
+        $this->_top = HTML::table(['width' => '100%',
                                         'class' => 'diff',
                                         'cellspacing' => 1,
                                         'cellpadding' => 1,
-                                        'border' => 1));
+                                        'border' => 1]);
     }
 
     public function _start_block($header)
     {
         $this->_block = HTML::table(
-            array('width' => '100%',
+            ['width' => '100%',
                                           'class' => 'block',
                                           'cellspacing' => 0,
                                           'cellpadding' => 1,
-                                          'border' => 0),
+                                          'border' => 0],
             HTML::tr(HTML::td(
-                array('colspan' => 2),
+                ['colspan' => 2],
                 HTML::tt($header)
             ))
         );
@@ -272,8 +272,8 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
         if (! $prefix) {
             $prefix = HTML::raw('&nbsp;');
         }
-        $prefix = HTML::td(array('class' => 'prefix',
-                                 'width' => "1%"), $prefix);
+        $prefix = HTML::td(['class' => 'prefix',
+                                 'width' => "1%"], $prefix);
         foreach ($lines as $line) {
             if (! trim($line)) {
                 $line = HTML::raw('&nbsp;');
@@ -281,10 +281,10 @@ class TableUnifiedDiffFormatter extends HtmlUnifiedDiffFormatter
                 $line = new HtmlElement($elem, $line);
             }
             $this->_block->pushContent(HTML::tr(
-                array('valign' => 'top'),
+                ['valign' => 'top'],
                 $prefix,
                 HTML::td(
-                    array('class' => $class),
+                    ['class' => $class],
                     $line
                 )
             ));
@@ -299,7 +299,7 @@ function PageInfoRow($label, $rev, &$request, $is_current = false)
 {
     global $WikiTheme;
 
-    $row = HTML::tr(HTML::td(array('align' => 'right'), $label));
+    $row = HTML::tr(HTML::td(['align' => 'right'], $label));
     if ($rev) {
         $author = $WikiTheme->getAuthorMessage($rev);
         $dbi = $request->getDbh();
@@ -310,8 +310,8 @@ function PageInfoRow($label, $rev, &$request, $is_current = false)
             $revertbutton = HTML();
         } else {
             $revertbutton = $WikiTheme->makeActionButton(
-                array('action' => 'revert',
-                                                               'version' => $version),
+                ['action' => 'revert',
+                                                               'version' => $version],
                 false,
                 $rev
             );
@@ -326,7 +326,7 @@ function PageInfoRow($label, $rev, &$request, $is_current = false)
             HTML::td($revertbutton)
         );
     } else {
-        $row->pushContent(HTML::td(array('colspan' => '4'), _("None")));
+        $row->pushContent(HTML::td(['colspan' => '4'], _("None")));
     }
     return $row;
 }
@@ -349,7 +349,7 @@ function showDiff(&$request)
     $current = $page->getCurrentRevision();
     if ($current->getVersion() < 1) {
         $html = HTML::div(
-            array('id' => 'content'),
+            ['id' => 'content'],
             HTML::p(fmt(
                 "I'm sorry, there is no such page as %s.",
                 WikiLink($pagename, 'unknown')
@@ -375,7 +375,7 @@ function showDiff(&$request)
             NoSuchRevision($request, $page, $previous);
         }
         $old_version = fmt("version %d", $previous);
-        $others = array('major', 'minor', 'author');
+        $others = ['major', 'minor', 'author'];
     } else {
         switch ($previous) {
             case 'author':
@@ -386,13 +386,13 @@ function showDiff(&$request)
                     }
                 }
                 $old_version = _("revision by previous author");
-                $others = array('major', 'minor');
+                $others = ['major', 'minor'];
                 break;
             case 'minor':
                 $previous = 'minor';
                 $old = $page->getRevisionBefore($new);
                 $old_version = _("previous revision");
-                $others = array('major', 'author');
+                $others = ['major', 'author'];
                 break;
             case 'major':
             default:
@@ -404,7 +404,7 @@ function showDiff(&$request)
                     $old = $page->getRevisionBefore($old);
                 }
                 $old_version = _("predecessor to the previous major change");
-                $others = array('minor', 'author');
+                $others = ['minor', 'author'];
                 break;
         }
     }
@@ -414,7 +414,7 @@ function showDiff(&$request)
     $page_link = WikiLink($page);
 
     $html = HTML::div(
-        array('id' => 'content'),
+        ['id' => 'content'],
         HTML::p(fmt(
             "Differences between %s and %s of %s.",
             $new_link,
@@ -424,11 +424,11 @@ function showDiff(&$request)
     );
 
     $otherdiffs = HTML::p(_("Other diffs:"));
-    $label = array('major' => _("Previous Major Revision"),
+    $label = ['major' => _("Previous Major Revision"),
                    'minor' => _("Previous Revision"),
-                   'author' => _("Previous Author"));
+                   'author' => _("Previous Author")];
     foreach ($others as $other) {
-        $args = array('action' => 'diff', 'previous' => $other);
+        $args = ['action' => 'diff', 'previous' => $other];
         if ($version) {
             $args['version'] = $version;
         }

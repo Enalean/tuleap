@@ -157,7 +157,7 @@ class ImportProjectXMLCommand extends Command
         $transformer    = new \User\XML\Import\MappingFileOptimusPrimeTransformer($user_manager, $use_lame_password);
         $console_logger = new ConsoleLogger($output);
         $file_logger    = ProjectXMLImporter::getLogger();
-        $broker_log  = new BrokerLogger(array($file_logger, $console_logger));
+        $broker_log  = new BrokerLogger([$file_logger, $console_logger]);
         $builder     = new \User\XML\Import\UsersToBeImportedCollectionBuilder(
             $user_manager,
             $security,
@@ -167,7 +167,7 @@ class ImportProjectXMLCommand extends Command
         try {
             $user = $user_manager->forceLogin($username);
             if ((! $user->isSuperUser() && ! $user->isAdmin($project_id)) || ! $user->isActive()) {
-                throw new \RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', array($username)));
+                throw new \RuntimeException($GLOBALS['Language']->getText('project_import', 'invalid_user', [$username]));
             }
 
             $absolute_archive_path = realpath($archive_path);

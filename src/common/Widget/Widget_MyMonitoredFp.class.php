@@ -85,7 +85,7 @@ class Widget_MyMonitoredFp extends Widget
                     $hide_item_id = null;
                 }
 
-                $vFrs = new Valid_WhiteList('hide_frs', array(0, 1));
+                $vFrs = new Valid_WhiteList('hide_frs', [0, 1]);
                 $vFrs->required();
                 if ($request->valid($vFrs)) {
                     $hide_frs = $request->get('hide_frs');

@@ -29,14 +29,14 @@
 class GitRepositoryWithPermissions
 {
     private $repository;
-    private $permissions = array(
-        Git::PERM_READ          => array(),
-        Git::PERM_WRITE         => array(),
-        Git::PERM_WPLUS         => array(),
-        Git::SPECIAL_PERM_ADMIN => array()
-    );
+    private $permissions = [
+        Git::PERM_READ          => [],
+        Git::PERM_WRITE         => [],
+        Git::PERM_WPLUS         => [],
+        Git::SPECIAL_PERM_ADMIN => []
+    ];
 
-    public function __construct(GitRepository $repository, array $permissions = array())
+    public function __construct(GitRepository $repository, array $permissions = [])
     {
         $this->repository  = $repository;
         if (count($permissions) > 0) {

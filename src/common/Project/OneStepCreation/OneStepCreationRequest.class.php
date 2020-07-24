@@ -89,7 +89,7 @@ class Project_OneStepCreation_OneStepCreationRequest
     /**
      * @var array
      */
-    private $custom_descriptions = array();
+    private $custom_descriptions = [];
 
     /** @var Codendi_Request */
     private $request;
@@ -127,9 +127,9 @@ class Project_OneStepCreation_OneStepCreationRequest
      */
     public function getProjectValues()
     {
-        return array(
+        return [
             'project' => array_merge(
-                array(
+                [
                     Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME                       => $this->getFullName(),
                     Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC                       => $this->isPublic(),
                     'allow_restricted'                                                                => $this->allow_restricted,
@@ -139,22 +139,22 @@ class Project_OneStepCreation_OneStepCreationRequest
                     Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION               => $this->getShortDescription(),
                     'is_test'                                                                         => false,
                     'services'                                                                        => $this->getServices(),
-                ),
+                ],
                 $this->custom_descriptions,
                 $this->getTroveCatDataForProjectRequest()
             )
-        );
+        ];
     }
 
     private function getTroveCatDataForProjectRequest()
     {
-        $trove_data = array();
+        $trove_data = [];
 
         if (count($this->trove_cats) > 0) {
-            $troves = array();
+            $troves = [];
 
             foreach ($this->trove_cats as $trove_id => $selected_child_trove_id) {
-                $troves[$trove_id] = array($selected_child_trove_id);
+                $troves[$trove_id] = [$selected_child_trove_id];
             }
 
             $trove_data['trove'] = $troves;

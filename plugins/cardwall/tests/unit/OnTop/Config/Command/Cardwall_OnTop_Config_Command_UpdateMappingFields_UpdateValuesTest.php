@@ -31,24 +31,24 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '69' => array(
+            [
+                '69' => [
                     'field' => '321',
-                    'values' => array(
-                        '11' => array(
+                    'values' => [
+                        '11' => [
                             '9001',
                             '9002'
-                        ),
-                    )
-                ),
-            )
+                        ],
+                    ]
+                ],
+            ]
         );
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => 321
-            )
+            ]
         ));
         $this->value_dao->shouldReceive('deleteAllFieldValues')->with($this->tracker_id, 69, 321, 11)->once();
         $this->value_dao->shouldReceive('save')->with($this->tracker_id, 69, 321, 9001, 11)->once();
@@ -61,24 +61,24 @@ final class Cardwall_OnTop_Config_Command_UpdateMappingFields_UpdateValuesTest e
         $request = new HTTPRequest();
         $request->set(
             'mapping_field',
-            array(
-                '69' => array(
+            [
+                '69' => [
                     'field' => '321',
-                    'values' => array(
-                        '11' => array(
+                    'values' => [
+                        '11' => [
                             '9001',
                             '9002'
-                        ),
-                    )
-                ),
-            )
+                        ],
+                    ]
+                ],
+            ]
         );
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker_id)->andReturns(TestHelper::arrayToDar(
-            array(
+            [
                 'cardwall_tracker_id' => 666,
                 'tracker_id'          => 69,
                 'field_id'            => 666,
-            )
+            ]
         ));
         $this->dao->shouldReceive('save')->andReturns(true);
         $this->value_dao->shouldReceive('delete')->with($this->tracker_id, 69)->once();

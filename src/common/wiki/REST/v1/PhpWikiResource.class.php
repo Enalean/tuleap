@@ -149,7 +149,7 @@ class PhpWikiResource extends AuthenticatedResource
         $wiki_page_representation = new PhpWikiPageVersionFullRepresentation();
         $wiki_page_representation->build($page_version, $wiki_page);
 
-        return array($wiki_page_representation);
+        return [$wiki_page_representation];
     }
 
     /**

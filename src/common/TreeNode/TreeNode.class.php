@@ -66,7 +66,7 @@ class TreeNode /*implements Visitable*/
             trigger_error(get_class($this).'::TreeNode => Do not accept arguments', E_USER_ERROR);
         }*/
         $this->data       = $data;
-        $this->children   = array();
+        $this->children   = [];
         $this->parentNode = null;
     }
 
@@ -138,7 +138,7 @@ class TreeNode /*implements Visitable*/
     {
         if (is_object($c) && is_a($c, 'TreeNode')) {
             if ($this->children === null) {
-                $this->children = array();
+                $this->children = [];
             }
             $c->_setParentNode($this);
             $this->children[] = $c;
@@ -229,7 +229,7 @@ class TreeNode /*implements Visitable*/
      */
     public function clearChildren()
     {
-        $this->children = array();
+        $this->children = [];
     }
 
     /**
@@ -283,7 +283,7 @@ class TreeNode /*implements Visitable*/
      */
     public function flattenChildren()
     {
-        $flatten_children = array();
+        $flatten_children = [];
 
         foreach ($this->getChildren() as $child) {
             $flatten_children = array_merge($flatten_children, $child->flatten());
@@ -297,7 +297,7 @@ class TreeNode /*implements Visitable*/
      */
     public function flatten()
     {
-        return array_merge(array($this), $this->flattenChildren());
+        return array_merge([$this], $this->flattenChildren());
     }
 
     public function getObject()

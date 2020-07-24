@@ -59,12 +59,12 @@ class BackendSVN
     private function deployBackendSVNConfig()
     {
         $template = file_get_contents($this->tuleap_base_dir . '/tools/distlp/backend-svn/backend-svn.conf');
-        $searches = array(
+        $searches = [
             '%sys_default_domain%',
-        );
-        $replaces = array(
+        ];
+        $replaces = [
             $this->server_name,
-        );
+        ];
 
         $conf = str_replace($searches, $replaces, $template);
         file_put_contents($this->nginx_base_dir . '/conf.d/backend-svn.conf', $conf);

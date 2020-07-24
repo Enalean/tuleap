@@ -39,21 +39,21 @@ class FineGrainedRepresentationBuilder
 
     public function buildRepositoryPermission(FineGrainedPermission $permission, Project $project)
     {
-        return array(
+        return [
             'id'        => $permission->getId(),
             'pattern'   => $permission->getPatternWithoutPrefix(),
             'writers'   => $this->option_builder->getWriteOptionsForFineGrainedPermissions($permission, $project),
             'rewinders' => $this->option_builder->getRewindOptionsForFineGrainedPermissions($permission, $project),
-        );
+        ];
     }
 
     public function buildDefaultPermission(DefaultFineGrainedPermission $permission, Project $project)
     {
-        return array(
+        return [
             'id'        => $permission->getId(),
             'pattern'   => $permission->getPatternWithoutPrefix(),
             'writers'   => $this->option_builder->getWriteOptionsForDefaultFineGrainedPermissions($permission, $project),
             'rewinders' => $this->option_builder->getRewindOptionsForDefaultFineGrainedPermissions($permission, $project),
-        );
+        ];
     }
 }

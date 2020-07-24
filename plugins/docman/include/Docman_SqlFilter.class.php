@@ -75,7 +75,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
 
     public function getFrom()
     {
-        $tables = array();
+        $tables = [];
 
         if ($this->isRealMetadata) {
             if (
@@ -91,7 +91,7 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
 
         if (
             $this->filter->getValue() !== null &&
@@ -132,9 +132,9 @@ class Docman_SqlFilter extends Docman_MetadataSqlQueryChunk
      */
     public function getSearchType($qv)
     {
-        $res = array();
+        $res = [];
         if (preg_match('/^\*(.+)$/', $qv)) {
-            $matches = array();
+            $matches = [];
             $data_access = CodendiDataAccess::instance();
             if (preg_match('/^\*(.+)\*$/', $qv, $matches)) {
                 $pattern = $data_access->quoteLikeValueSurround($matches[1]);
@@ -200,7 +200,7 @@ class Docman_SqlFilterDate extends Docman_SqlFilter
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
 
         switch ($this->filter->getOperator()) {
             case '-1': // '<'
@@ -238,7 +238,7 @@ class Docman_SqlFilterDateAdvanced extends Docman_SqlFilterDate
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
 
         $startValue = $this->filter->getValueStart();
         $endValue   = $this->filter->getValueEnd();
@@ -282,7 +282,7 @@ class Docman_SqlFilterOwner extends Docman_SqlFilter
 
     public function getFrom()
     {
-        $tables = array();
+        $tables = [];
         if (
             $this->filter->getValue() !== null
             && $this->filter->getValue() != ''
@@ -303,7 +303,7 @@ class Docman_SqlFilterText extends Docman_SqlFilter
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
         if (
             $this->filter->getValue() !== null &&
             $this->filter->getValue() != ''
@@ -330,7 +330,7 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
 
     public function getFrom()
     {
-        $tables = array();
+        $tables = [];
         if (
             $this->filter->getValue() !== null &&
             $this->filter->getValue() != ''
@@ -344,7 +344,7 @@ class Docman_SqlFilterGlobalText extends Docman_SqlFilterText
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
         if (
             $this->filter->getValue() !== null &&
             $this->filter->getValue() != ''
@@ -385,7 +385,7 @@ class Docman_SqlFilterListAdvanced extends Docman_SqlFilter
 
     public function _getSpecificSearchChunk()
     {
-        $stmt = array();
+        $stmt = [];
 
         $v = $this->filter->getValue();
         if (

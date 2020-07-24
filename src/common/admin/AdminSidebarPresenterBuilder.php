@@ -62,13 +62,13 @@ class AdminSidebarPresenterBuilder
 
     private function getPlugins()
     {
-        $plugins = array();
+        $plugins = [];
 
         EventManager::instance()->processEvent(
             'site_admin_option_hook',
-            array(
+            [
                 'plugins' => &$plugins
-            )
+            ]
         );
 
         usort($plugins, function ($plugin_a, $plugin_b) {
@@ -95,10 +95,10 @@ class AdminSidebarPresenterBuilder
 
     private function validatedUsersCount()
     {
-        return $this->user_manager->countUsersByStatus(array(
+        return $this->user_manager->countUsersByStatus([
             PFUser::STATUS_VALIDATED,
             PFUser::STATUS_VALIDATED_RESTRICTED
-        ));
+        ]);
     }
 
     private function allProjectsCount()

@@ -57,7 +57,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment implements Tra
     ) {
         $values      = $field_change->value;
 
-        $files_infos = array();
+        $files_infos = [];
 
         if ($this->isFieldChangeEmpty($values)) {
             $this->logger->warning(

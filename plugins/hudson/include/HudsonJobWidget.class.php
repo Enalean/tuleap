@@ -114,11 +114,11 @@ abstract class HudsonJobWidget extends HudsonWidget
             $html = '<div class="tlp-alert-warning">' . $GLOBALS['Language']->getText(
                 'plugin_hudson',
                 'widget_no_job_project',
-                array($this->group_id)
+                [$this->group_id]
             ) . '</div>';
         } else {
             $message = $this->owner_type == ProjectDashboardController::LEGACY_DASHBOARD_TYPE ?
-                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', array($this->group_id)) :
+                $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_project', [$this->group_id]) :
                 $GLOBALS['Language']->getText('plugin_hudson', 'widget_no_job_my');
 
             $html = '<div class="tlp-alert-warning">' . $message . '</div>';

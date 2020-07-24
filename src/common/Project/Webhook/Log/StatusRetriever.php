@@ -42,7 +42,7 @@ class StatusRetriever
             throw new StatusDataAccessException();
         }
 
-        $status = array();
+        $status = [];
         foreach ($data_access_result as $row) {
             $status[] = $this->instantiateFromRow($row);
         }

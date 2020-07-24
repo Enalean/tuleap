@@ -50,14 +50,14 @@ class CanvasScale
 
     public function Get()
     {
-        return array($this->ixmin,$this->ixmax,$this->iymin,$this->iymax);
+        return [$this->ixmin, $this->ixmax, $this->iymin, $this->iymax];
     }
 
     public function Translate($x, $y)
     {
         $xp = round(($x - $this->ixmin) / ($this->ixmax - $this->ixmin) * $this->w);
         $yp = round(($y - $this->iymin) / ($this->iymax - $this->iymin) * $this->h);
-        return array($xp,$yp);
+        return [$xp, $yp];
     }
 
     public function TranslateX($x)
@@ -229,7 +229,7 @@ class Shape
         $this->img->FilledRoundedRectangle($x1, $y1, $x2, $y2, $r);
     }
 
-    public function ShadowRectangle($x1, $y1, $x2, $y2, $fcolor = false, $shadow_width = null, $shadow_color = array(102,102,102))
+    public function ShadowRectangle($x1, $y1, $x2, $y2, $fcolor = false, $shadow_width = null, $shadow_color = [102, 102, 102])
     {
         list($x1,$y1) = $this->scale->Translate($x1, $y1);
         list($x2,$y2) = $this->scale->Translate($x2, $y2);
@@ -572,6 +572,6 @@ class CanvasRectangleText
         $this->iTxt->SetColor($this->iFontColor);
         $this->iTxt->Stroke($aImg, $this->ix + $this->iw / 2, $this->iy + $this->ih / 2);
 
-        return array($this->iw, $this->ih);
+        return [$this->iw, $this->ih];
     }
 }

@@ -56,7 +56,7 @@ class VisitRetriever
     public function getMostRecentlySeenArtifacts(\PFUser $user, $nb_maximum_artifacts)
     {
         $recently_visited_rows = $this->dao->searchVisitByUserId($user->getId(), $nb_maximum_artifacts);
-        $artifacts_id = array();
+        $artifacts_id = [];
         foreach ($recently_visited_rows as $recently_visited_row) {
             $artifacts_id[] = $recently_visited_row['artifact_id'];
         }

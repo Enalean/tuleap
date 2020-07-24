@@ -122,14 +122,14 @@ class ProjectQuotaManager
         $usage_output          = new Statistics_DiskUsageOutput($this->diskUsageManager);
         $over_quota_disk_space = $current_size - $allowed_size;
         $exceed_percent        = round(($over_quota_disk_space / $allowed_size), 2) * 100;
-        $projectRow            = array(
+        $projectRow            = [
             'project_unix_name'  => $project->getUnixNameMixedCase(),
             'project_name'       => $project->getPublicName(),
             'project_id'         => $project->getGroupId(),
             'exceed'             => $exceed_percent . '%',
             'disk_quota'         => $usage_output->sizeReadable($allowed_size),
             'current_disk_space' => $usage_output->sizeReadable($current_size),
-        );
+        ];
 
         return $projectRow;
     }
@@ -140,7 +140,7 @@ class ProjectQuotaManager
     public function getProjectsOverQuota()
     {
         $all_groups         = $this->fetchProjects();
-        $exceeding_projects = array();
+        $exceeding_projects = [];
         foreach ($all_groups as $key => $group) {
             $current_size = $this->diskUsageManager->returnTotalProjectSize($group['group_id']);
             $allowed_size = $this->getProjectAuthorizedQuota($group['group_id']);

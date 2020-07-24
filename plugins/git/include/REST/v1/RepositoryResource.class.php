@@ -928,14 +928,14 @@ class RepositoryResource extends AuthenticatedResource
 
         EventManager::instance()->processEvent(
             REST_GIT_PULL_REQUEST_GET_FOR_REPOSITORY,
-            array(
+            [
                 'version'    => 'v1',
                 'repository' => $repository,
                 'query'      => $query,
                 'limit'      => $limit,
                 'offset'     => $offset,
                 'result'     => &$result
-            )
+            ]
         );
 
         return $result;
@@ -947,9 +947,9 @@ class RepositoryResource extends AuthenticatedResource
 
         EventManager::instance()->processEvent(
             REST_GIT_PULL_REQUEST_ENDPOINTS,
-            array(
+            [
                 'available' => &$available
-            )
+            ]
         );
 
         if ($available === false) {

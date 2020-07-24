@@ -51,7 +51,7 @@ class Tracker_Artifact_BatchIterator
      */
     public function current()
     {
-        $offset = max(array(self::ITEMS_PER_BATCH * $this->batches_processed, 0));
+        $offset = max([self::ITEMS_PER_BATCH * $this->batches_processed, 0]);
         $limit  = self::ITEMS_PER_BATCH;
 
         $paginated_artifacts = $this->tracker_artifact_factory->getPaginatedArtifactsByTrackerId($this->tracker_id, $limit, $offset, false);

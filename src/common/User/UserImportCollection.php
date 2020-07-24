@@ -32,17 +32,17 @@ class UserImportCollection
     /**
      * @var array
      */
-    private $warnings_multiple_users = array();
+    private $warnings_multiple_users = [];
 
     /**
      * @var array
      */
-    private $warnings_invalid_users = array();
+    private $warnings_invalid_users = [];
 
     /**
      * @var PFUser[]
      */
-    private $users = array();
+    private $users = [];
     /**
      * @var UserHelper
      */
@@ -63,9 +63,9 @@ class UserImportCollection
 
     public function addWarningMultipleUsers($warning)
     {
-        $this->warnings_multiple_users[] = array(
+        $this->warnings_multiple_users[] = [
             "warning" => sprintf(_('%s has multiple corresponding users.'), $warning)
-        );
+        ];
     }
 
     /**
@@ -98,16 +98,16 @@ class UserImportCollection
 
     public function addWarningsInvalidUsers($warning_invalid_user)
     {
-        $this->warnings_invalid_users[] = array(
+        $this->warnings_invalid_users[] = [
             "warning" => sprintf(_("User '%s' does not exist"), $warning_invalid_user)
-        );
+        ];
     }
 
     public function getFormattedUsers()
     {
-        $users = array();
+        $users = [];
         foreach ($this->getUsers() as $user) {
-            $formatted_user = array();
+            $formatted_user = [];
             $formatted_user['has_avatar']       = $user->hasAvatar();
             $formatted_user['avatar_url']       = $user->getAvatarUrl();
             $formatted_user['user_name']        = $user->getUserName();

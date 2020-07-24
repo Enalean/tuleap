@@ -25,7 +25,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitAStringShouldFallbackOnField(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_String(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field::class, $visitor->getAdmin());
@@ -33,7 +33,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitAColumnShouldFallbackOnContainer(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Container_Column(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Container::class, $visitor->getAdmin());
@@ -41,7 +41,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitAnOpenListShouldFallbackOnList(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_OpenList(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_List::class, $visitor->getAdmin());
@@ -49,7 +49,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitARichTextShouldFallbackStaticField(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_StaticField_RichText(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_StaticField::class, $visitor->getAdmin());
@@ -57,7 +57,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitSelectbox(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_Selectbox(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_Selectbox::class, $visitor->getAdmin());
@@ -65,7 +65,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitArtifactId(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_ArtifactId(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_ArtifactId::class, $visitor->getAdmin());
@@ -73,7 +73,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitCrossReferences(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_CrossReferences(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_CrossReferences::class, $visitor->getAdmin());
@@ -81,7 +81,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitLastUpdateDate(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_LastUpdateDate(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_LastUpdateDate::class, $visitor->getAdmin());
@@ -89,7 +89,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitMultiSelectbox(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_MultiSelectbox(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_MultiSelectbox::class, $visitor->getAdmin());
@@ -97,7 +97,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitPermissionsOnArtifact(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_PermissionsOnArtifact(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_PermissionsOnArtifact::class, $visitor->getAdmin());
@@ -105,7 +105,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitSubmittedBy(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_SubmittedBy(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_SubmittedBy::class, $visitor->getAdmin());
@@ -113,7 +113,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitSubmittedOn(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_Field_SubmittedOn(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_Field_SubmittedOn::class, $visitor->getAdmin());
@@ -121,7 +121,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitLineBreak(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_StaticField_LineBreak(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_StaticField_LineBreak::class, $visitor->getAdmin());
@@ -129,7 +129,7 @@ final class AdminVisitorTest extends \PHPUnit\Framework\TestCase
 
     public function testVisitSeparator(): void
     {
-        $visitor = new Tracker_FormElement_View_Admin_Visitor(array());
+        $visitor = new Tracker_FormElement_View_Admin_Visitor([]);
         $formElement = new Tracker_FormElement_StaticField_Separator(null, null, null, null, null, null, null, null, null, null, null, null);
         $formElement->accept($visitor);
         $this->assertInstanceOf(Tracker_FormElement_View_Admin_StaticField_Separator::class, $visitor->getAdmin());

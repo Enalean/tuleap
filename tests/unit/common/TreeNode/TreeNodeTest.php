@@ -38,7 +38,7 @@ class TreeNodeTest extends TestCase
     public function testItReturnsAnEmptyArrayWhenNoChildren(): void
     {
         $node = new TreeNode();
-        $this->assertSame(array(), $node->flattenChildren());
+        $this->assertSame([], $node->flattenChildren());
     }
 
     public function testItReturnsTheChildrenWhenNoSubChildren(): void
@@ -50,7 +50,7 @@ class TreeNodeTest extends TestCase
         $node->addChild($child1);
         $node->addChild($child2);
 
-        $this->assertEquals(array($child1, $child2), $node->flattenChildren());
+        $this->assertEquals([$child1, $child2], $node->flattenChildren());
     }
 
     public function testItReturnsTheChildrenAndSubChildrenAsAFlatList(): void
@@ -63,7 +63,7 @@ class TreeNodeTest extends TestCase
 
         $node->addChild($child1);
         $node->addChild($child2);
-        $this->assertEquals(array($child1,  $subchild1, $child2), $node->flattenChildren());
+        $this->assertEquals([$child1, $subchild1, $child2], $node->flattenChildren());
     }
 
     public function testItBuildsATreeInline(): void
@@ -95,7 +95,7 @@ class TreeNodeTest extends TestCase
     public function testItAddsTheGivenChildren(): void
     {
         $root       = new TreeNode();
-        $children   = array(new TreeNode(), new TreeNode());
+        $children   = [new TreeNode(), new TreeNode()];
         $root->setChildren($children);
         $this->assertEquals($children, $root->getChildren());
     }
@@ -105,7 +105,7 @@ class TreeNodeTest extends TestCase
         $root       = new TreeNode();
         $node_1     = new TreeNode();
         $node_2     = new TreeNode();
-        $children   = array($node_1, $node_2);
+        $children   = [$node_1, $node_2];
         $root->setChildren($children);
         $this->assertEquals($root, $node_2->getParentNode());
         $this->assertEquals($root, $node_1->getParentNode());

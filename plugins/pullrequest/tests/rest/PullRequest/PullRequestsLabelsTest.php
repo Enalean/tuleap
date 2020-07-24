@@ -35,7 +35,7 @@ final class PullRequestsLabelsTest extends RestBase
     {
         $response = $this->getResponse($this->client->options('pull_requests/1/labels'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithReadOnlyAdmin(): void
@@ -45,7 +45,7 @@ final class PullRequestsLabelsTest extends RestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETLabel(): void
@@ -69,7 +69,7 @@ final class PullRequestsLabelsTest extends RestBase
     {
         $content = $response->json();
 
-        $this->assertEquals(array(), $content['labels']);
+        $this->assertEquals([], $content['labels']);
     }
 
     /**
@@ -82,11 +82,11 @@ final class PullRequestsLabelsTest extends RestBase
                 'pull_requests/1/labels',
                 null,
                 json_encode(
-                    array(
-                        'add' => array(
-                            array('label' => 'Emergency Fix')
-                        )
-                    )
+                    [
+                        'add' => [
+                            ['label' => 'Emergency Fix']
+                        ]
+                    ]
                 )
             )
         );
@@ -107,11 +107,11 @@ final class PullRequestsLabelsTest extends RestBase
                 'pull_requests/1/labels',
                 null,
                 json_encode(
-                    array(
-                        'add' => array(
-                            array('label' => 'Emergency Fix')
-                        )
-                    )
+                    [
+                        'add' => [
+                            ['label' => 'Emergency Fix']
+                        ]
+                    ]
                 )
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
@@ -139,20 +139,20 @@ final class PullRequestsLabelsTest extends RestBase
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
         $label_ids = array_map(
             function ($label) {
-                return array('id' => $label['id']);
+                return ['id' => $label['id']];
             },
             $response['labels']
         );
 
         $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
-            array(
+            [
                 'remove' => $label_ids
-            )
+            ]
         )));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $response = $this->getResponse($this->client->get('pull_requests/1/labels'))->json();
-        $this->assertEquals(array(), $response['labels']);
+        $this->assertEquals([], $response['labels']);
     }
 
     /**
@@ -176,11 +176,11 @@ final class PullRequestsLabelsTest extends RestBase
         $expected_label = $response['labels'][0];
 
         $response = $this->getResponse($this->client->patch('pull_requests/1/labels', null, json_encode(
-            array(
-                'add' => array(
-                    array('id' => $expected_label['id'])
-                )
-            )
+            [
+                'add' => [
+                    ['id' => $expected_label['id']]
+                ]
+            ]
         )));
         $this->assertEquals($response->getStatusCode(), 200);
 

@@ -73,7 +73,7 @@ if (! $user_id || ! $user) {
 }
 
 // Validate action
-$vAction = new Valid_WhiteList('action', array('update_user', 'update_password'));
+$vAction = new Valid_WhiteList('action', ['update_user', 'update_password']);
 $vAction->required();
 if ($request->valid($vAction)) {
     $action = $request->get('action');
@@ -201,11 +201,11 @@ if ($request->isPost()) {
                                 $user->setUserName($request->get('form_user_login_name'));
                                 break;
                             default:
-                                $em->processEvent(Event::USER_RENAME, array(
+                                $em->processEvent(Event::USER_RENAME, [
                                     'user_id'  => $user->getId(),
                                     'new_name' => $request->get('form_user_login_name'),
-                                    'old_user' => $user));
-                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'rename_user_msg', array($user->getUserName(), $request->get('form_user_login_name'))));
+                                    'old_user' => $user]);
+                                $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'rename_user_msg', [$user->getUserName(), $request->get('form_user_login_name')]));
                                 $GLOBALS['Response']->addFeedback('warning', $Language->getText('admin_usergroup', 'rename_user_warn'));
                         }
                     }
@@ -228,7 +228,7 @@ if ($request->isPost()) {
             if ($um->updateDb($user)) {
                 $GLOBALS['Response']->addFeedback('info', $Language->getText('admin_usergroup', 'success_upd_u'));
                 if ($accountActivationEvent) {
-                    $em->processEvent($accountActivationEvent, array('user_id' => $user->getId()));
+                    $em->processEvent($accountActivationEvent, ['user_id' => $user->getId()]);
                 }
             }
 
@@ -280,35 +280,35 @@ if ($request->isPost()) {
     }
 }
 
-$projects = array();
+$projects = [];
 foreach ($user->getGroups() as $project) {
     $projects[] = new Tuleap\User\Admin\UserDetailsProjectPresenter($project, $user->isAdmin($project->getID()));
 }
 
-$additional_details = array();
+$additional_details = [];
 EventManager::instance()->processEvent(
     UserDetailsPresenter::ADDITIONAL_DETAILS,
-    array(
+    [
         'user'               => $user,
         'additional_details' => &$additional_details
-    )
+    ]
 );
 
 $details_formatter = new UserDetailsFormatter(new UserStatusBuilder($user_status_checker));
 
-$additional_password_messages = array();
+$additional_password_messages = [];
 EventManager::instance()->processEvent(
     'before_admin_change_pw',
-    array(
+    [
         'additional_password_messages' => &$additional_password_messages
-    )
+    ]
 );
 
 $password_configuration_retriever = new PasswordConfigurationRetriever(new PasswordConfigurationDAO());
 $password_configuration           = $password_configuration_retriever->getPasswordConfiguration();
 $password_strategy                = new PasswordStrategy($password_configuration);
 include($GLOBALS['Language']->getContent('account/password_strategy'));
-$passwords_validators = array();
+$passwords_validators = [];
 foreach ($password_strategy->validators as $key => $v) {
     $passwords_validators[] = new PasswordValidatorPresenter(
         'password_validator_msg_' . $purifier->purify($key),

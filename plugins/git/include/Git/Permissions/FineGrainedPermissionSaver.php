@@ -76,7 +76,7 @@ class FineGrainedPermissionSaver
      */
     private function getWriterIds(FineGrainedPermission $permission)
     {
-        $ids = array();
+        $ids = [];
         foreach ($permission->getWritersUgroup() as $ugroup) {
             $ids[] = $ugroup->getId();
         }
@@ -89,7 +89,7 @@ class FineGrainedPermissionSaver
      */
     private function getRewinderIds(FineGrainedPermission $permission)
     {
-        $ids = array();
+        $ids = [];
         foreach ($permission->getRewindersUgroup() as $ugroup) {
             $ids[] = $ugroup->getId();
         }

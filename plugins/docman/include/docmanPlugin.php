@@ -134,14 +134,14 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
      *
      * @var array
      */
-    private $rootItems = array();
+    private $rootItems = [];
 
     /**
      * Store controller instances
      *
      * @var Array
      */
-    private $controller = array();
+    private $controller = [];
 
     public function __construct($id)
     {
@@ -285,7 +285,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function permission_get_object_type($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_type']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
                 require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
@@ -298,7 +298,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function permission_get_object_name($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         if (! $params['object_name']) {
-            if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
+            if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
                 require_once('Docman_ItemFactory.class.php');
                 $if = new Docman_ItemFactory();
                 $item = $if->getItemFromDb($params['object_id']);
@@ -314,7 +314,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     {
         if (! $params['allowed']) {
             if (! $this->_cached_permission_user_allowed_to_change) {
-                if (in_array($params['permission_type'], array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'))) {
+                if (in_array($params['permission_type'], ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE', 'PLUGIN_DOCMAN_ADMIN'])) {
                     $docman = $this->getHTTPController();
                     switch ($params['permission_type']) {
                         case 'PLUGIN_DOCMAN_READ':
@@ -411,7 +411,7 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
         if (isset($params['shortname']) && $params['shortname'] == $this->getServiceShortname()) {
             if (isset($params['is_used']) && $params['is_used']) {
                 $this->installNewDocman(
-                    array('ugroupsMapping' => false, 'group_id' => $params['group_id'])
+                    ['ugroupsMapping' => false, 'group_id' => $params['group_id']]
                 );
             }
         }
@@ -459,12 +459,12 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
 
     public function uninstall()
     {
-        $this->removeOrphanWidgets(array(
+        $this->removeOrphanWidgets([
             'plugin_docman_mydocman',
             'plugin_docman_mydocman_search',
             'plugin_docman_my_embedded',
             'plugin_docman_project_embedded'
-        ));
+        ]);
     }
 
     /**
@@ -503,12 +503,12 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function wiki_page_updated($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
         require_once('Docman_WikiRequest.class.php');
-        $request = new Docman_WikiRequest(array('action' => 'wiki_page_updated',
+        $request = new Docman_WikiRequest(['action' => 'wiki_page_updated',
                                                 'wiki_page' => $params['wiki_page'],
                                                 'diff_link' => $params['diff_link'],
                                                 'group_id'  => $params['group_id'],
                                                 'user'      => $params['user'],
-                                                'version'   => $params['version']));
+                                                'version'   => $params['version']]);
         $this->getWikiController($request)->process();
     }
 
@@ -606,11 +606,11 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
     public function referenceGetTooltipContentEvent(Tuleap\Reference\ReferenceGetTooltipContentEvent $event)
     {
         if ($event->getReference()->getServiceShortName() === 'docman') {
-            $request = new Codendi_Request(array(
+            $request = new Codendi_Request([
                 'id'       => $event->getValue(),
                 'group_id' => $event->getProject()->getID(),
                 'action'   => 'ajax_reference_tooltip'
-            ));
+            ]);
             $controller = $this->getHTTPController($request);
             ob_start();
             $controller->process();
@@ -904,10 +904,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     count($versions),
                     $nbVersions,
                     "/admin/show_pending_documents.php",
-                    array(
+                    [
                         'group_id'   => $groupId,
                         'offsetItem' => ($offset + $limit)
-                    )
+                    ]
                 );
 
                 $html .= '<div class="siteadmin-projects-pending-doc-pagination">';
@@ -986,10 +986,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                     count($res),
                     $nbItems,
                     "/admin/show_pending_documents.php",
-                    array(
+                    [
                         'group_id'   => $groupId,
                         'offsetItem' => ($offset + $limit)
-                    )
+                    ]
                 );
 
                 $html .= '<div class="siteadmin-projects-pending-doc-pagination">';
@@ -1339,10 +1339,10 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
             new NavigationDropdownItemPresenter(
                 dgettext('tuleap-docman', 'Document manager'),
                 $this->getPluginPath() . '/?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID(),
                         'action'   => 'admin_permissions'
-                    )
+                    ]
                 )
             )
         );

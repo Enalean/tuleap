@@ -36,7 +36,7 @@ class Workflow_Transition_Condition_Permissions_Factory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition, Project $project)
     {
-        $authorized_ugroups_keyname = array();
+        $authorized_ugroups_keyname = [];
         if (isset($xml->permissions)) {
             foreach ($xml->permissions->permission as $perm) {
                 $ugroup = (string) $perm['ugroup'];
@@ -63,7 +63,7 @@ class Workflow_Transition_Condition_Permissions_Factory
         PermissionsManager::instance()->duplicatePermissions(
             $from_transition->getId(),
             $new_transition_id,
-            array(Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION),
+            [Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION],
             $ugroup_mapping,
             $duplicate_type
         );

@@ -70,8 +70,8 @@ command="/bin/false user2",some-options ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDF
         $keys->append($key1);
         $keys->append($key2);
         $system_command = Mockery::mock('System_Command');
-        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', array(), 1))->ordered();
-        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', array(), 1))->ordered();
+        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', [], 1))->ordered();
+        $system_command->shouldReceive('exec')->once()->andThrow(new \System_Command_CommandException('', [], 1))->ordered();
         $system_command->shouldReceive('exec')->once()->andReturnTrue()->ordered();
         $temporary_file = tempnam(sys_get_temp_dir(), 'AuthorizedKeysFileCreatorUnitTests');
 

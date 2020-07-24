@@ -68,7 +68,7 @@ class Tracker_ArtifactCreatorTest extends TestCase // phpcs:ignore
      */
     private $visit_recorder;
 
-    private $fields_data       = array();
+    private $fields_data       = [];
     private $submitted_on      = 1234567890;
     private $send_notification = true;
     /**

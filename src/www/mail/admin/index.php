@@ -73,7 +73,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     }
 
                     // Raise an event
-                    EventManager::instance()->processEvent('mail_list_create', array('group_list_id' => $group_list_id,));
+                    EventManager::instance()->processEvent('mail_list_create', ['group_list_id' => $group_list_id,]);
 
                     // get email addr
                     $res_email = db_query("SELECT email FROM user WHERE user_id='" . $db_escaped_user_id . "'");
@@ -83,7 +83,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                     $row_email = db_fetch_array($res_email);
 
                     // mail password to admin
-                    $message = $Language->getText('mail_admin_index', 'list_create_explain', array(ForgeConfig::get('sys_name'), $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password));
+                    $message = $Language->getText('mail_admin_index', 'list_create_explain', [ForgeConfig::get('sys_name'), $new_list_name . '@' . $sys_lists_domain, $list_server . "/mailman/listinfo/$new_list_name", $list_server . "/mailman/admin/$new_list_name", $list_password]);
 
                     $hdrs = "From: " . ForgeConfig::get('sys_email_admin') . ForgeConfig::get('sys_lf');
                     $hdrs .= 'Content-type: text/plain; charset=utf-8' . ForgeConfig::get('sys_lf');
@@ -112,7 +112,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             } else {
                 if ($is_public == 9) {
                     // List deleted: raise event
-                    EventManager::instance()->processEvent('mail_list_delete', array('group_list_id' => $group_list_id,));
+                    EventManager::instance()->processEvent('mail_list_delete', ['group_list_id' => $group_list_id,]);
                 }
                 $feedback .= ' ' . $Language->getText('mail_admin_index', 'status_update_success') . ' ';
             }
@@ -123,8 +123,8 @@ if ($group_id && user_ismember($group_id, 'A')) {
         /*
           Show the form for adding mailing list
          */
-        mail_header_admin(array('title' => $Language->getText('mail_admin_index', 'add_a_mail_list'),
-            'help' => 'collaboration.html#creation'));
+        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'add_a_mail_list'),
+            'help' => 'collaboration.html#creation']);
 
         echo '
             <H3>' . $Language->getText('mail_admin_index', 'add_a_mail_list') . '</H3>';
@@ -158,13 +158,13 @@ if ($group_id && user_ismember($group_id, 'A')) {
             <INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('mail_admin_index', 'add_this_list') . '">
             </FORM>';
 
-        mail_footer(array());
+        mail_footer([]);
     } elseif ($request->existAndNonEmpty('change_status')) {
         /*
           Change a forum to public/private
          */
-        mail_header_admin(array('title' => $Language->getText('mail_admin_index', 'update_mail_list'),
-            'help' => 'collaboration.html#creation'));
+        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'update_mail_list'),
+            'help' => 'collaboration.html#creation']);
 
         $sql = "SELECT list_name,group_list_id,is_public,description " .
                 "FROM mail_group_list " .
@@ -184,7 +184,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
             <P>
             ' . $Language->getText('mail_admin_index', 'admin_lists_here', ForgeConfig::get('sys_name') . '<P>');
 
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('mail_admin_index', 'list');
             $title_arr[] = $Language->getText('global', 'status');
             $title_arr[] = $Language->getText('mail_admin_index', 'update');
@@ -222,14 +222,14 @@ if ($group_id && user_ismember($group_id, 'A')) {
             echo '</TABLE>';
         }
 
-        mail_footer(array());
+        mail_footer([]);
     } else {
         /*
           Show main page for choosing
           either moderotor or delete
          */
-        mail_header_admin(array('title' => $Language->getText('mail_admin_index', 'mail_list_admin'),
-            'help' => 'collaboration.html#mailing-lists'));
+        mail_header_admin(['title' => $Language->getText('mail_admin_index', 'mail_list_admin'),
+            'help' => 'collaboration.html#mailing-lists']);
 
         echo '
             <H2>' . $Language->getText('mail_admin_index', 'mail_list_admin') . '</H2>
@@ -238,7 +238,7 @@ if ($group_id && user_ismember($group_id, 'A')) {
                                                       <p>' . $Language->getText('mail_admin_index', 'create_new_mail_lists') . '
             <h3><A HREF="?group_id=' . $group_id . '&change_status=1">' . $Language->getText('mail_admin_index', 'admin_update_lists') . '</A></h3>
                                                       <p>' . $Language->getText('mail_admin_index', 'manage_mail');
-        mail_footer(array());
+        mail_footer([]);
     }
 } else {
     /*

@@ -59,11 +59,11 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends TestCase // phpcs:ignore Squ
 
     public function testItRetrievesParameters(): void
     {
-        $parameters            = array(
+        $parameters            = [
             'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
             'project_id'  => 101,
             'name'        => 'project1/stuff'
-        );
+        ];
         $serialized_parameters = SystemEvent_SVN_CREATE_REPOSITORY::serializeParameters($parameters);
 
         $system_event = new SystemEvent_SVN_CREATE_REPOSITORY(
@@ -84,11 +84,11 @@ class SystemEvent_SVN_CREATE_REPOSITORYTest extends TestCase // phpcs:ignore Squ
 
     public function testItRetrievesParametersInStandardFormat(): void
     {
-        $parameters                            = array(
+        $parameters                            = [
             'system_path' => '/var/lib/tuleap/svn_plugin/101/test',
             'project_id'  => 101,
             'name'        => 'project1/stuff'
-        );
+        ];
         $serialized_parameters_standard_format = implode(\SystemEvent::PARAMETER_SEPARATOR, $parameters);
 
         $system_event = new SystemEvent_SVN_CREATE_REPOSITORY(

@@ -69,7 +69,7 @@ class PriorityDaoTest extends TestCase
     public function test42HasAnHigherPriorityThan1()
     {
         $this->setInitialOrder(1, 42);
-        $this->dao->moveListOfArtifactsBefore(array(42), 1);
+        $this->dao->moveListOfArtifactsBefore([42], 1);
         $this->assertOrder(42, 1);
     }
 
@@ -85,7 +85,7 @@ class PriorityDaoTest extends TestCase
     public function test1HasAGreaterPriorityThan101()
     {
         $this->setInitialOrder(42, 1, 66, 123, 101);
-        $this->dao->moveListOfArtifactsBefore(array(1), 101);
+        $this->dao->moveListOfArtifactsBefore([1], 101);
         $this->assertOrder(42, 66, 123, 1, 101);
     }
 
@@ -99,7 +99,7 @@ class PriorityDaoTest extends TestCase
     public function test42HasAnHigherPriorityThan101()
     {
         $this->setInitialOrder(66, 123, 1, 42, 101);
-        $this->dao->moveListOfArtifactsBefore(array(42), 101);
+        $this->dao->moveListOfArtifactsBefore([42], 101);
         $this->assertOrder(66, 123, 1, 42, 101);
     }
 
@@ -120,56 +120,56 @@ class PriorityDaoTest extends TestCase
     public function testItMovesManyArtifactsAtOnceBefore42()
     {
         $this->setInitialOrder(66, 1, 42, 101);
-        $this->dao->moveListOfArtifactsBefore(array(42, 101), 1);
+        $this->dao->moveListOfArtifactsBefore([42, 101], 1);
         $this->assertOrder(66, 42, 101, 1);
     }
 
     public function testItMovesManyArtifactsAtOnceAtTheBeginning()
     {
         $this->setInitialOrder(66, 42, 101, 1);
-        $this->dao->moveListOfArtifactsBefore(array(1, 42), 66);
+        $this->dao->moveListOfArtifactsBefore([1, 42], 66);
         $this->assertOrder(1, 42, 66, 101);
     }
 
     public function testItMovesManyArtifactsAtOnceAfter66()
     {
         $this->setInitialOrder(1, 42, 66, 101, 123);
-        $this->dao->moveListOfArtifactsAfter(array(123, 42), 66);
+        $this->dao->moveListOfArtifactsAfter([123, 42], 66);
         $this->assertOrder(1, 66, 123, 42, 101);
     }
 
     public function testItMovesManyArtifactsAtOnceAtTheSecondPosition()
     {
         $this->setInitialOrder(1, 66, 123, 42, 101);
-        $this->dao->moveListOfArtifactsAfter(array(101, 42, 66), 1);
+        $this->dao->moveListOfArtifactsAfter([101, 42, 66], 1);
         $this->assertOrder(1, 101, 42, 66, 123);
     }
 
     public function testItMovesManyArtifactsAtOnceAtTheSamePosition()
     {
         $this->setInitialOrder(1, 101, 42, 66, 123);
-        $this->dao->moveListOfArtifactsBefore(array(66), 123);
+        $this->dao->moveListOfArtifactsBefore([66], 123);
         $this->assertOrder(1, 101, 42, 66, 123);
     }
 
     public function testItMovesManyArtifactsAtOnceAtTheVeryEnd()
     {
         $this->setInitialOrder(1, 101, 42, 66, 123);
-        $this->dao->moveListOfArtifactsAfter(array(1, 42, 66), 123);
+        $this->dao->moveListOfArtifactsAfter([1, 42, 66], 123);
         $this->assertOrder(101, 123, 1, 42, 66);
     }
 
     public function testItMovesManyArtifactsAtOnceAtTheBeforeLastPosition()
     {
         $this->setInitialOrder(1, 101, 42, 66, 123);
-        $this->dao->moveListOfArtifactsBefore(array(1, 42, 66), 123);
+        $this->dao->moveListOfArtifactsBefore([1, 42, 66], 123);
         $this->assertOrder(101, 1, 42, 66, 123);
     }
 
     public function testItMovesExtremitiesAtTheMiddle()
     {
         $this->setInitialOrder(1, 101, 42, 66, 123);
-        $this->dao->moveListOfArtifactsBefore(array(1, 123), 42);
+        $this->dao->moveListOfArtifactsBefore([1, 123], 42);
         $this->assertOrder(101, 1, 123, 42, 66);
     }
 
@@ -179,14 +179,14 @@ class PriorityDaoTest extends TestCase
 
         $this->expectException(Tracker_Artifact_Exception_CannotRankWithMyself::class);
 
-        $this->dao->moveListOfArtifactsBefore(array(1, 101), 1);
+        $this->dao->moveListOfArtifactsBefore([1, 101], 1);
     }
 
     public function testItDoesntRelyOnMysqlInsertOrder()
     {
         $this->setInitialOrder(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 28);
 
-        $this->dao->moveListOfArtifactsAfter(array(28, 19, 17), 18);
+        $this->dao->moveListOfArtifactsAfter([28, 19, 17], 18);
         $this->assertOrder(16, 18, 28, 19, 17, 20, 21, 22, 23, 24, 25);
     }
 

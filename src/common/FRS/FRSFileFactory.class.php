@@ -100,7 +100,7 @@ class FRSFileFactory
         $dao = $this->_getFRSFileDao();
         $dar = $dao->searchByReleaseId($_id);
 
-        $files = array();
+        $files = [];
         if (! $dar->isError() && $dar->valid()) {
             while ($dar->valid()) {
                 $data_array = $dar->current();
@@ -127,7 +127,7 @@ class FRSFileFactory
             return;
         }
 
-        $file_info = array ();
+        $file_info =  [];
         while ($dar->valid()) {
             $file_info[] = $dar->current();
             $dar->next();
@@ -150,7 +150,7 @@ class FRSFileFactory
             return;
         }
 
-        $file_info = array ();
+        $file_info =  [];
         while ($dar->valid()) {
             $file_info[] = $dar->current();
             $dar->next();
@@ -224,9 +224,9 @@ class FRSFileFactory
             $file = $this->getFRSFileFromDb($data_array['file_id']);
             $this->_getEventManager()->processEvent(
                 'frs_update_file',
-                array(
+                [
                 'group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $data_array['file_id'])
+                'item_id'    => $data_array['file_id']]
             );
 
             if ($old_file->getFilePath() != $file->getFilePath()) {
@@ -249,11 +249,11 @@ class FRSFileFactory
         $manager = $this->_getSystemEventManager();
         $manager->addSystemEvent(
             SystemEvent_MOVE_FRS_FILE::NAME,
-            array(
+            [
                 'project_path' => $project_path,
                 'file_id'      => $file_id,
                 'old_path'     => $old_path
-            )
+            ]
         );
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('file_admin_editreleases', 'move_event'));
@@ -269,8 +269,8 @@ class FRSFileFactory
             $user = $um->getCurrentUser();
             $this->_getEventManager()->processEvent(
                 'frs_create_file',
-                array('group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $id)
+                ['group_id' => $file->getGroup()->getGroupId(),
+                'item_id'    => $id]
             );
             return $id;
         }
@@ -358,7 +358,7 @@ class FRSFileFactory
      */
     public function getUploadedFileNames(Project $project)
     {
-        $uploaded_file_names = array();
+        $uploaded_file_names = [];
         //iterate and show the files in the upload directory
 
         // Workaround for files bigger than 2Gb:
@@ -434,10 +434,10 @@ class FRSFileFactory
     public function getSrcDir(Project $project)
     {
         $src_dir = ForgeConfig::get('ftp_incoming_dir');
-        $params  = array(
+        $params  = [
             'project' => $project,
             'src_dir' => &$src_dir
-        );
+        ];
 
         EventManager::instance()->processEvent(Event::GET_FTP_INCOMING_DIR, $params);
 
@@ -478,8 +478,8 @@ class FRSFileFactory
         if ($dao->delete($_id)) {
             $this->_getEventManager()->processEvent(
                 'frs_delete_file',
-                array('group_id' => $file->getGroup()->getGroupId(),
-                'item_id'    => $_id)
+                ['group_id' => $file->getGroup()->getGroupId(),
+                'item_id'    => $_id]
             );
             return true;
         }
@@ -940,8 +940,8 @@ class FRSFileFactory
                     if ($dao->restoreFile($file->getFileID())) {
                         $this->_getEventManager()->processEvent(
                             'frs_restore_file',
-                            array('group_id' => $file->getGroup()->getGroupId(),
-                            'item_id'  => $file->getFileID())
+                            ['group_id' => $file->getGroup()->getGroupId(),
+                            'item_id'  => $file->getFileID()]
                         );
                         return true;
                     }

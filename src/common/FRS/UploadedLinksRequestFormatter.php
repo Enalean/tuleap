@@ -33,10 +33,10 @@ class UploadedLinksRequestFormatter
         if ($request->validArray(new Valid_String('uploaded-link-name'))) {
             $release_links_name = $request->get('uploaded-link-name');
         } else {
-            $release_links_name = array();
+            $release_links_name = [];
         }
 
-        $uploaded_links = array();
+        $uploaded_links = [];
         $valid_http     = new Rule_Regexp(Valid_LocalURI::URI_REGEXP);
         $valid_ftp      = new Rule_Regexp(Valid_FTPURI::URI_REGEXP);
 
@@ -50,10 +50,10 @@ class UploadedLinksRequestFormatter
                     throw new UploadedLinksInvalidFormException();
                 }
 
-                $uploaded_links[] = array(
+                $uploaded_links[] = [
                     "link" => $link,
                     "name" => $release_links_name[$key]
-                );
+                ];
             }
         }
         return $uploaded_links;

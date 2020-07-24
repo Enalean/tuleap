@@ -59,7 +59,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
      */
     protected function fetchAdminFormElement()
     {
-        return $this->fetchSubmitValue(array());
+        return $this->fetchSubmitValue([]);
     }
 
     public static function getFactoryLabel()
@@ -213,7 +213,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function fetchArtifactValue(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        $submitted_values = []
     ) {
         $html = '';
         if (
@@ -279,7 +279,7 @@ class Tracker_FormElement_Field_Encrypted extends Tracker_FormElement_Field impl
     protected function fetchArtifactValueWithEditionFormIfEditable(
         Tracker_Artifact $artifact,
         ?Tracker_Artifact_ChangesetValue $value = null,
-        $submitted_values = array()
+        $submitted_values = []
     ) {
         return "<div class='tracker-form-element-encrypted'>" . $this->fetchArtifactValueReadOnly($artifact, $value) . "</div>" .
             $this->getHiddenArtifactValueForEdition($artifact, $value, $submitted_values);

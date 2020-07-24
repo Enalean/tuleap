@@ -153,7 +153,7 @@ class PermissionPerGroupPaneBuilder
         $formatted_group = $this->formatter->getFormattedUGroups($project, $permissions);
 
         $collection->addPermissions(
-            array('name' => $group_name, 'groups' => $formatted_group, 'url' => $this->getGlobalAdminLink($project))
+            ['name' => $group_name, 'groups' => $formatted_group, 'url' => $this->getGlobalAdminLink($project)]
         );
     }
 

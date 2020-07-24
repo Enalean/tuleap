@@ -210,7 +210,7 @@ class FlamingParrot_NavBarPresenter
             return 'active';
         } else {
             if (! is_array($pathsToDetect)) {
-                $pathsToDetect = array($pathsToDetect);
+                $pathsToDetect = [$pathsToDetect];
             }
             foreach ($pathsToDetect as $path) {
                 if (strpos($this->request_uri, $path) === 0) {

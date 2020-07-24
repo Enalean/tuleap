@@ -25,8 +25,8 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
     public const COPY_BY_REFERENCE = true;
     public const COPY_BY_VALUE = false;
 
-    private $cache_canbedeleted_values = array();
-    private $cache_canbehidden_values = array();
+    private $cache_canbedeleted_values = [];
+    private $cache_canbehidden_values = [];
 
     public function __construct()
     {

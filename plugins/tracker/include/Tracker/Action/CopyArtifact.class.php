@@ -187,7 +187,7 @@ class Tracker_Action_CopyArtifact
      */
     private function importBareArtifacts(SimpleXMLElement $xml_artifacts)
     {
-        $new_artifacts = array();
+        $new_artifacts = [];
         foreach ($xml_artifacts->children() as $xml_artifact) {
             $tracker = $this->tracker_factory->getTrackerById((int) $xml_artifact['tracker_id']);
             $config = new \Tuleap\Project\XML\Import\ImportConfig();
@@ -237,7 +237,7 @@ class Tracker_Action_CopyArtifact
         $comment           = $this->logger->getAllLogs();
         $comment[]         = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s #%2$s is finished.'), $original_artifact->getTracker()->getItemName(), $original_artifact->getId());
         $artifact->createNewChangesetWhitoutRequiredValidation(
-            array(),
+            [],
             implode("\n", $comment),
             $user,
             true,

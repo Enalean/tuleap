@@ -59,12 +59,12 @@ class CITokenController extends SettingsController
 
     private function redirect(GitRepository $repository)
     {
-        $redirect_url = GIT_BASE_URL . '/?' . http_build_query(array(
+        $redirect_url = GIT_BASE_URL . '/?' . http_build_query([
                 'action' => 'repo_management',
                 'group_id' => $repository->getProjectId(),
                 'repo_id' => $repository->getId(),
                 'pane' => GitViewsRepoManagementPaneCIToken::ID
-            ));
+            ]);
 
         $GLOBALS['Response']->redirect($redirect_url);
     }

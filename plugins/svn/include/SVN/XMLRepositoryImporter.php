@@ -118,13 +118,13 @@ class XMLRepositoryImporter
 
         $this->access_file_contents = (string) $xml_repo->{"access-file"};
 
-        $this->subscriptions = array();
+        $this->subscriptions = [];
         foreach ($xml_repo->notification as $notif) {
             $a                     = $notif->attributes();
-            $this->subscriptions[] = array(
+            $this->subscriptions[] = [
                 'path' => $a['path'],
                 'emails' => $a['emails']
-            );
+            ];
         }
 
         $this->references                   = $xml_repo->references;
@@ -271,8 +271,8 @@ class XMLRepositoryImporter
                 $repo,
                 $subscription['path'],
                 $this->notifications_emails_builder->transformNotificationEmailsStringAsArray($subscription['emails']),
-                array(),
-                array()
+                [],
+                []
             );
             $mail_notification_manager->create($notif);
         }
@@ -282,16 +282,16 @@ class XMLRepositoryImporter
     {
         EventManager::instance()->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
-            array(
+            [
                 'logger' => $logger,
-                'created_refs' => array(
+                'created_refs' => [
                     'repository' => $repo,
-                ),
+                ],
                 'service_name' => self::SERVICE_NAME,
                 'xml_content' => $this->references,
                 'project' => $repo->getProject(),
                 'configuration' => $configuration,
-            )
+            ]
         );
     }
 

@@ -55,7 +55,7 @@ class ArtifactPresenter
         $date                     = new DateTime('@' . $artifact->getLastUpdateDate());
         $this->last_modified_date = $date->format($GLOBALS['Language']->getText('system', 'datefmt'));
 
-        $this->assignees = array();
+        $this->assignees = [];
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
             $this->assignees[] = $this->getUserPresenter($assignee);
         }
@@ -74,10 +74,10 @@ class ArtifactPresenter
                     $title = $folder->getXRef();
                 }
 
-                return array(
+                return [
                     'url'   => $folder->getUri(),
                     'title' => $title
-                );
+                ];
             },
             $folder_hierarchy
         );
@@ -87,10 +87,10 @@ class ArtifactPresenter
     {
         $user_helper = UserHelper::instance();
 
-        return array(
+        return [
             'url'          => $user_helper->getUserUrl($user),
             'display_name' => $this->getDisplayName($user)
-        );
+        ];
     }
 
     private function getDisplayName(PFUser $user)

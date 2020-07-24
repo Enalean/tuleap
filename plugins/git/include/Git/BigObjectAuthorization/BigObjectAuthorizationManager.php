@@ -58,7 +58,7 @@ class BigObjectAuthorizationManager
      */
     public function getAuthorizedProjects()
     {
-        $projects = array();
+        $projects = [];
 
         foreach ($this->big_object_authorization_dao->getAuthorizedProjects() as $authorizedProject) {
             $projects[] = $this->project_manager->getProject($authorizedProject);

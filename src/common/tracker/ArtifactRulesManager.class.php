@@ -110,22 +110,22 @@ class ArtifactRulesManager
         // construction of $values array : selected values in the form
         // $values[$field_id]['field'] = artifactfield Object
         // $values[$field_id]['values'][] = selected value
-        $values = array();
+        $values = [];
         foreach ($value_field_list as $field_name => $value) {
             $field = $art_field_fact->getFieldFromName($field_name);
-            $values[$field->getID()] = array('field' => $field, 'values' => is_array($value) ? $value : array($value));
+            $values[$field->getID()] = ['field' => $field, 'values' => is_array($value) ? $value : [$value]];
         }
 
         // construction of $dependencies array : dependcies defined rules
         // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
-        $dependencies = array();
+        $dependencies = [];
         foreach ($this->getAllRulesByArtifactTypeWithOrder($artifact_type_id) as $rule) {
             if (is_a($rule, 'ArtifactRuleValue')) {
                 if (! isset($dependencies[$rule->source_field])) {
-                    $dependencies[$rule->source_field] = array();
+                    $dependencies[$rule->source_field] = [];
                 }
                 if (! isset($dependencies[$rule->source_field][$rule->target_field])) {
-                    $dependencies[$rule->source_field][$rule->target_field] = array();
+                    $dependencies[$rule->source_field][$rule->target_field] = [];
                 }
                 $dependencies[$rule->source_field][$rule->target_field][] = $rule;
             }
@@ -214,9 +214,9 @@ class ArtifactRulesManager
     public function _getSelectedValuesForField($db_result, $field_id, $field_values)
     {
         if (! is_array($field_values)) {
-            $field_values = array($field_values);
+            $field_values = [$field_values];
         }
-        $selected_values = array();
+        $selected_values = [];
         if (db_numrows($db_result) > 1) {
             while ($row = db_fetch_array($db_result)) {
                 if (isset($row['field_id'])) {

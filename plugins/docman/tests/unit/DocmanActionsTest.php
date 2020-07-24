@@ -217,8 +217,8 @@ final class Docman_ActionsTest extends TestCase
         $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $actions->_controler                   = $controller;
-        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
-        $params['listeners_ugroups_to_delete'] = array();
+        $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
+        $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
         $actions->update_monitoring($params);
         $notificationsManager->shouldReceive('userExists')->with(123)->andReturns(false);
@@ -247,8 +247,8 @@ final class Docman_ActionsTest extends TestCase
         $actions                               = \Mockery::mock(\Docman_Actions::class)->makePartial(
         )->shouldAllowMockingProtectedMethods();
         $actions->_controler                   = $controller;
-        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
-        $params['listeners_ugroups_to_delete'] = array();
+        $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
+        $params['listeners_ugroups_to_delete'] = [];
         $item                                  = new Docman_Item();
         $item->setId(10);
         $params['item'] = new Docman_Item();
@@ -279,8 +279,8 @@ final class Docman_ActionsTest extends TestCase
         $actions->_controler              = $controller;
         $actions->event_manager           = \Mockery::spy(EventManager::class);
         $actions->shouldReceive('_getUserManagerInstance')->andReturns($userManager);
-        $params['listeners_users_to_delete']   = array($user1, $user2, $user3);
-        $params['listeners_ugroups_to_delete'] = array();
+        $params['listeners_users_to_delete']   = [$user1, $user2, $user3];
+        $params['listeners_ugroups_to_delete'] = [];
         $params['item']                        = new Docman_Item();
         $notificationsManager->shouldReceive('userExists')->times(3)->andReturns(true);
         $notificationsManager->shouldReceive('removeUser')->times(6)->andReturns(true);
@@ -319,7 +319,7 @@ final class Docman_ActionsTest extends TestCase
         $user2->shouldReceive('getId')->andReturns(2);
         $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring for user(s) "Carol" already exists')->ordered();
         $controller->feedback->shouldReceive('log')->with('warning', 'Monitoring for user(s) "Carlos" already exists')->ordered();
-        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(true);
         $notificationsManager->shouldReceive('addUser')->never();
@@ -346,7 +346,7 @@ final class Docman_ActionsTest extends TestCase
         $user2->shouldReceive('getName')->andReturns('Carlos');
         $controller->feedback->shouldReceive('log')->with('error', 'Monitoring for user(s) "Carol" has not been added')->ordered();
         $controller->feedback->shouldReceive('log')->with('error', 'Monitoring for user(s) "Carlos" has not been added')->ordered();
-        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(false);
         $notificationsManager->shouldReceive('addUser')->times(2)->andReturns(false);
@@ -375,7 +375,7 @@ final class Docman_ActionsTest extends TestCase
         $user2->shouldReceive('getName')->andReturns('Carlos');
         $controller->feedback->shouldReceive('log')->with('warning', 'Insufficient permissions for user(s) "Carlos"')->ordered();
         $controller->feedback->shouldReceive('log')->with('info', 'Le monitoring a été ajouté pour le(s) utilisateur(s) "Carol"')->ordered();
-        $params['listeners_users_to_add'] = array($user1, $user2);
+        $params['listeners_users_to_add'] = [$user1, $user2];
         $params['item']                   = new Docman_Item();
         $notificationsManager->shouldReceive('userExists')->times(2)->andReturns(false);
         $notificationsManager->shouldReceive('addUser')->once()->andReturns(true);
@@ -399,7 +399,7 @@ final class Docman_ActionsTest extends TestCase
         $docmanPermissionsManager         = \Mockery::spy(\Docman_PermissionsManager::class);
         $docmanPermissionsManager->shouldReceive('userCanRead')->andReturns(true);
         $actions->shouldReceive('_getDocmanPermissionsManagerInstance')->andReturns($docmanPermissionsManager);
-        $params['listeners_users_to_add'] = array($user);
+        $params['listeners_users_to_add'] = [$user];
         $params['item']                   = new Docman_Item();
         $notificationsManager->shouldReceive('userExists')->once()->andReturns(false);
         $notificationsManager->shouldReceive('addUser')->once()->andReturns(true);

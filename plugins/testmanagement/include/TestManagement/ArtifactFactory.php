@@ -68,7 +68,7 @@ class ArtifactFactory
      */
     public function getArtifactsByIdListUserCanView(PFUser $user, array $artifact_ids)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($artifact_ids as $artifact_id) {
             $artifact = $this->getArtifactById($artifact_id);
 
@@ -90,7 +90,7 @@ class ArtifactFactory
      */
     public function getPaginatedOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
-        $artifacts = array();
+        $artifacts = [];
         $rows      = $this->dao->searchPaginatedOpenByTrackerId($tracker_id, $milestone_id, $limit, $offset);
         $size      = (int) $this->dao->foundRows();
         foreach ($rows as $row) {
@@ -114,7 +114,7 @@ class ArtifactFactory
      */
     public function getPaginatedClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset)
     {
-        $artifacts = array();
+        $artifacts = [];
         $rows      = $this->dao->searchPaginatedClosedByTrackerId($tracker_id, $milestone_id, $limit, $offset);
         $size      = (int) $this->dao->foundRows();
         foreach ($rows as $row) {
@@ -139,7 +139,7 @@ class ArtifactFactory
      */
     public function getPaginatedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id, $milestone_id, $limit, $offset, $reverse_order)
     {
-        $artifacts = array();
+        $artifacts = [];
         $rows      = $this->dao->searchPaginatedByTrackerId($tracker_id, $milestone_id, $limit, $offset, $reverse_order);
         $size      = (int) $this->dao->foundRows();
         foreach ($rows as $row) {

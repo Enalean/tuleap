@@ -29,7 +29,7 @@ class MilestonesContentTest extends MilestoneBase //phpcs:ignore PSR1.Classes.Cl
     public function testOPTIONSContent(): void
     {
         $response = $this->getResponse($this->client->options('milestones/' . $this->release_artifact_ids[1] . '/content'));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PUT', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PUT', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSContentWithRESTReadOnlyUser(): void

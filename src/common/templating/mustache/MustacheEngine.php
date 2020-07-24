@@ -32,14 +32,14 @@ class MustacheEngine extends \Mustache_Engine
         $glyph_helper   = new GlyphHelper(new GlyphFinder(EventManager::instance()));
 
         parent::__construct(
-            array(
+            [
                 'escape'           => $escape_callback,
                 'entity_flags'     => ENT_QUOTES,
                 'strict_callables' => true,
                 'strict_variables' => true,
                 'loader'           => $loader,
                 'cache'            => $cache->getPath(),
-                'helpers'          => array(
+                'helpers'          => [
                     GettextHelper::GETTEXT   => function ($text) use ($gettext_helper) {
                         return $gettext_helper->gettext($text);
                     },
@@ -55,8 +55,8 @@ class MustacheEngine extends \Mustache_Engine
                     GlyphHelper::GLYPH => function ($text) use ($glyph_helper) {
                         return $glyph_helper->glyph($text);
                     },
-                )
-            )
+                ]
+            ]
         );
     }
 }

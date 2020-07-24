@@ -116,7 +116,7 @@ class GitViewsTest extends TestCase
     private function givenAUserWithProjects(): PFUser
     {
         $user = \Mockery::spy(\PFUser::class);
-        $user->shouldReceive('getAllProjects')->andReturns(array('123', '456'));
+        $user->shouldReceive('getAllProjects')->andReturns(['123', '456']);
         $user->shouldReceive('isMember')->with('123', 'A')->andReturns(true);
         $user->shouldReceive('isMember')->with('456', 'A')->andReturns(false);
         return $user;

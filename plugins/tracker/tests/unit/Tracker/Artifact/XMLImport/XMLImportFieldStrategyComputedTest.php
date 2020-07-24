@@ -41,7 +41,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
-        $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0');
+        $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '0'];
 
         $this->assertSame($expected_result, $change_computed);
     }
@@ -57,7 +57,7 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
-        $expected_result = array(Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1');
+        $expected_result = [Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'];
 
         $this->assertSame($expected_result, $change_computed);
     }
@@ -74,10 +74,10 @@ final class XMLImportFieldStrategyComputedTest extends TestCase
         $strategy_computed = new XMLImportFieldStrategyComputed();
 
         $change_computed = $strategy_computed->getFieldData($field, $xml_change, $user, Mockery::mock(Tracker_Artifact::class));
-        $expected_result = array(
+        $expected_result = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'
-        );
+        ];
 
         $this->assertSame($expected_result, $change_computed);
     }

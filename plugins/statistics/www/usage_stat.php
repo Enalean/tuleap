@@ -47,7 +47,7 @@ $max_year = 0;
 $min_month = 13;
 $max_month = 0;
 
-$total_array = array();
+$total_array = [];
 
 $sql = 'SELECT YEAR(FROM_UNIXTIME(add_date)) as year, month(FROM_UNIXTIME(add_date)) as month, count(*) as c from user where user_id > 101 group by year,month';
 $res = db_query($sql);

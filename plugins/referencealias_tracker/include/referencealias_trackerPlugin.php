@@ -55,7 +55,7 @@ class referencealias_trackerPlugin extends Plugin //phpcs:ignore
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     /**

@@ -153,7 +153,7 @@ if (! $art_report_html) {
    will avoid to deal with scalar in simple search and array in
    advanced which would greatly complexifies the code)
  ================================================== */
-$all_prefs = array();
+$all_prefs = [];
 foreach ($prefs as $field => $value_id) {
     $field_object = $art_field_fact->getFieldFromName($field);
     if (! is_array($value_id)) {
@@ -169,7 +169,7 @@ foreach ($prefs as $field => $value_id) {
         if ($advsrch) {
             $field_end = $field . '_end';
             if (! is_array($request->get($field_end))) {
-                $all_prefs[$field_end] = array($request->get($field_end));
+                $all_prefs[$field_end] = [$request->get($field_end)];
             } else {
                 $all_prefs[$field_end] = $request->get($field_end);
             }
@@ -177,9 +177,9 @@ foreach ($prefs as $field => $value_id) {
         } else {
             $field_op = $field . '_op';
             if (! $request->get($field_op)) {
-                $all_prefs[$field_op] = array('>');
+                $all_prefs[$field_op] = ['>'];
             } else {
-                $all_prefs[$field_op] = array($request->get($field_op));
+                $all_prefs[$field_op] = [$request->get($field_op)];
             }
             //echo 'DBG Setting $prefs['.$field.'_op]= '.$prefs[$field.'_op'].'<br>';
         }
@@ -271,7 +271,7 @@ if (! $request->exist('set')) {
         $set = 'open';
     }
 } else {
-    $validSet = new Valid_WhiteList('set', array('my', 'open', 'custom', 'all'));
+    $validSet = new Valid_WhiteList('set', ['my', 'open', 'custom', 'all']);
     $set      = $request->getValidated('set', $validSet, '');
 }
 
@@ -362,12 +362,12 @@ if ($pv != 2) {
     $_help = ''; // printer version without help
 }
 
-$params = array('title' => $_title,
-              'titlevals' => array($ath->getName()),
+$params = ['title' => $_title,
+              'titlevals' => [$ath->getName()],
               'pagename' => 'tracker_browse',
               'atid' => $ath->getID(),
               'pv' => $pv,
-              'help' => $_help);
+              'help' => $_help];
 
 
 // Display the menus
@@ -375,7 +375,7 @@ $ath->header($params);
 echo '<div id="tracker_toolbar_clear"></div>';
 
 $em = EventManager::instance();
-$pref_params = array('group_id'   => $group_id,
+$pref_params = ['group_id'   => $group_id,
                      'atid'       => $atid,
                      'report_id'  => $report_id,
                      'prefs'      => $prefs,
@@ -385,7 +385,7 @@ $pref_params = array('group_id'   => $group_id,
                      'msort'      => $msort,
                      'offset'     => $offset,
                      'set'        => $set
-);
+];
 $em->processEvent('tracker_user_pref', $pref_params);
 
 // Display the artifact items according to all the parameters

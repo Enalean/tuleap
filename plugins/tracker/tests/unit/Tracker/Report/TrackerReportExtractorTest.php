@@ -68,10 +68,10 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
         $this->project->shouldReceive('isActive')->andReturn(true);
 
-        $expected_result = array();
+        $expected_result = [];
         $this->assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers(array($this->tracker_id_1))
+            $this->extractor->extractTrackers([$this->tracker_id_1])
         );
     }
 
@@ -81,10 +81,10 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_1->shouldReceive('userCanView')->andReturn(true);
         $this->tracker_1->shouldReceive('isDeleted')->andReturn(true);
 
-        $expected_result = array();
+        $expected_result = [];
         $this->assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers(array($this->tracker_id_1))
+            $this->extractor->extractTrackers([$this->tracker_id_1])
         );
     }
 
@@ -96,10 +96,10 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
         $this->project->shouldReceive('isActive')->andReturn(false);
 
-        $expected_result = array();
+        $expected_result = [];
         $this->assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers(array($this->tracker_id_1))
+            $this->extractor->extractTrackers([$this->tracker_id_1])
         );
     }
 
@@ -108,7 +108,7 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_factory->shouldReceive('getTrackerById')->with($this->tracker_id_1)->andReturn(null);
 
         $this->expectException('Tuleap\Tracker\Report\TrackerNotFoundException');
-        $this->extractor->extractTrackers(array($this->tracker_id_1));
+        $this->extractor->extractTrackers([$this->tracker_id_1]);
     }
 
     public function testItExtractsTrackers()
@@ -119,10 +119,10 @@ class TrackerReportExtractorTest extends TestCase
         $this->tracker_1->shouldReceive('getProject')->andReturn($this->project);
         $this->project->shouldReceive('isActive')->andReturn(true);
 
-        $expected_result = array($this->tracker_1);
+        $expected_result = [$this->tracker_1];
         $this->assertEquals(
             $expected_result,
-            $this->extractor->extractTrackers(array($this->tracker_id_1))
+            $this->extractor->extractTrackers([$this->tracker_id_1])
         );
     }
 }

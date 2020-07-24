@@ -78,10 +78,10 @@ class SettingsRetriever
 
     private function getCommitRules(Project $project)
     {
-        return array(
+        return [
             HookConfig::MANDATORY_REFERENCE       => $project->isSVNMandatoryRef(),
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $project->canChangeSVNLog()
-        );
+        ];
     }
 
     /**
@@ -111,7 +111,7 @@ class SettingsRetriever
      */
     private function getMailNotification(Repository $repository)
     {
-        $mail_notifications = array();
+        $mail_notifications = [];
 
         $core_notifications = $this->notification_dao->getSvnMailingList($repository->getProject()->getID());
         foreach ($core_notifications as $key => $notification) {
@@ -120,8 +120,8 @@ class SettingsRetriever
                 $repository,
                 $notification['path'],
                 explode(',', $notification['svn_events_mailing_list']),
-                array(),
-                array()
+                [],
+                []
             );
         }
 
@@ -130,7 +130,7 @@ class SettingsRetriever
 
     private function getAccessFileHistory(Repository $repository)
     {
-        $version_history = array();
+        $version_history = [];
 
         foreach ($this->history_dao->getAllVersions($repository->getProject()->getID()) as $version) {
             $version_history[] = new AccessFileHistory(

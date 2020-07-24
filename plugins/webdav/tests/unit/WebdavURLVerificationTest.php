@@ -53,7 +53,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlHTTPAndHTTPSHostNotAvailable(): void
     {
-        $server = array('HTTP_HOST' => 'webdav.tuleap.test');
+        $server = ['HTTP_HOST' => 'webdav.tuleap.test'];
 
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', '');
@@ -68,7 +68,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlHTTPSAndHTTPSHostNotAvailable(): void
     {
-        $server = array('HTTP_HOST' => 'webdav.tuleap.test');
+        $server = ['HTTP_HOST' => 'webdav.tuleap.test'];
         $this->request->shouldReceive('isSecure')->andReturns(true);
 
         ForgeConfig::set('sys_default_domain', 'example.com');
@@ -84,7 +84,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlHTTPAndHTTPSHostAvailable(): void
     {
-        $server = array('HTTP_HOST' => 'webdav.tuleap.test');
+        $server = ['HTTP_HOST' => 'webdav.tuleap.test'];
 
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'example.com');
@@ -99,7 +99,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlHTTPSAndHTTPSHostAvailable(): void
     {
-        $server = array('HTTP_HOST' => 'webdav.tuleap.test');
+        $server = ['HTTP_HOST' => 'webdav.tuleap.test'];
         $this->request->shouldReceive('isSecure')->andReturns(true);
 
         ForgeConfig::set('sys_default_domain', 'example.com');
@@ -115,7 +115,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlNotPluginHost(): void
     {
-        $server = array('HTTP_HOST' => 'codendi.org');
+        $server = ['HTTP_HOST' => 'codendi.org'];
 
         $this->webdavURLVerification->shouldReceive('getWebDAVHost')->andReturns('webdav.codendi.org');
 
@@ -127,7 +127,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlButWebdavHostIsDefaultDomain(): void
     {
-        $server = array('HTTP_HOST' => 'a.example.com');
+        $server = ['HTTP_HOST' => 'a.example.com'];
 
         ForgeConfig::set('sys_default_domain', 'a.example.com');
 
@@ -141,7 +141,7 @@ class WebdavURLVerificationTest extends TestCase
 
     public function testAssertValidUrlButWebdavHostIsHttpsHost(): void
     {
-        $server = array('HTTP_HOST' => 'b.example.com');
+        $server = ['HTTP_HOST' => 'b.example.com'];
 
         ForgeConfig::set('sys_default_domain', 'example.com');
         ForgeConfig::set('sys_https_host', 'b.example.com');

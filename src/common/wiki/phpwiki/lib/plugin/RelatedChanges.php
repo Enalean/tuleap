@@ -129,7 +129,7 @@ class RelatedChangesRevisionIterator extends WikiDB_PageRevisionIterator
         $this->_wikidb = $dbi;
         $page = $dbi->getPage($pagename);
         $links = $page->getLinks();
-        $this->_links = array();
+        $this->_links = [];
         while ($linked_page = $links->next()) {
             $this->_links[$linked_page->_pagename] = 1;
         }

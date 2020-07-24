@@ -24,7 +24,7 @@ use Psr\Log\LogLevel;
 class Tracker_XML_Importer_CopyArtifactInformationsAggregator extends \Psr\Log\AbstractLogger implements LoggerInterface
 {
     /** @var string[] */
-    private $logs_stack = array();
+    private $logs_stack = [];
 
     /** @var LoggerInterface */
     private $backend_logger;

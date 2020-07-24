@@ -28,15 +28,15 @@ final class Cardwall_OnTop_Config_TrackerMappingNoFieldTest extends \PHPUnit\Fra
     public function testItHasAnEmptyValueMappings(): void
     {
         $tracker          = Mockery::mock(Tracker::class);
-        $available_fields = array();
+        $available_fields = [];
         $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
-        $this->assertEquals(array(), $mapping->getValueMappings());
+        $this->assertEquals([], $mapping->getValueMappings());
     }
 
     public function testItsFieldIsNull(): void
     {
         $tracker          = Mockery::mock(Tracker::class);
-        $available_fields = array();
+        $available_fields = [];
         $mapping = new Cardwall_OnTop_Config_TrackerMappingNoField($tracker, $available_fields);
         $this->assertNull($mapping->getField());
     }

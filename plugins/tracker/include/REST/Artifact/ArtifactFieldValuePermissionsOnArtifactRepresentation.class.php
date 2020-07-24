@@ -37,12 +37,12 @@ class ArtifactFieldValuePermissionsOnArtifactRepresentation extends ArtifactFiel
     /**
      * @var string[]
      */
-    public $granted_groups = array();
+    public $granted_groups = [];
 
     /**
      * @var Tuleap\Project\REST\UserGroupRepresentation[]
      */
-    public $granted_groups_details = array();
+    public $granted_groups_details = [];
 
     public function build($id, $label, array $granted_groups, array $granted_groups_details)
     {

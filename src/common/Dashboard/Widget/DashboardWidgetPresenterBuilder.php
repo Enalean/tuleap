@@ -56,7 +56,7 @@ class DashboardWidgetPresenterBuilder
         array $widgets_lines,
         $can_update_dashboards
     ) {
-        $lines_presenter = array();
+        $lines_presenter = [];
 
         foreach ($widgets_lines as $line) {
             $columns_presenter = $this->getColumnsPresenterByLine($dashboard, $owner_info, $line, $can_update_dashboards);
@@ -79,7 +79,7 @@ class DashboardWidgetPresenterBuilder
         DashboardWidgetLine $line,
         $can_update_dashboards
     ) {
-        $columns_presenter = array();
+        $columns_presenter = [];
         foreach ($line->getWidgetColumns() as $column) {
             $widgets_presenter = $this->getWidgetsPresenterByColumn($dashboard, $owner_info, $column, $can_update_dashboards);
             $columns_presenter[] = new DashboardWidgetColumnPresenter($column->getId(), $widgets_presenter);
@@ -96,7 +96,7 @@ class DashboardWidgetPresenterBuilder
         DashboardWidgetColumn $column,
         $can_update_dashboards
     ) {
-        $widgets_presenter = array();
+        $widgets_presenter = [];
         foreach ($column->getWidgets() as $dashboard_widget) {
             $widget = $this->widget_factory->getInstanceByWidgetName($dashboard_widget->getName());
             if (

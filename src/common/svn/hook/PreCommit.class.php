@@ -111,7 +111,7 @@ class SVN_Hook_PreCommit extends SVN_Hook
         $project       = $this->getProjectFromRepositoryPath($repository);
         $changed_paths = $this->svn_look->getTransactionPath($project, $transaction);
         foreach ($changed_paths as $path) {
-            $matches = array();
+            $matches = [];
             if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
                 continue;
             }
@@ -204,7 +204,7 @@ class SVN_Hook_PreCommit extends SVN_Hook
             return false;
         }
 
-        $whitelist_regexp = array();
+        $whitelist_regexp = [];
         foreach ($whitelist as $whitelist_path) {
             $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
         }

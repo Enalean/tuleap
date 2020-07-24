@@ -48,7 +48,7 @@ class Launcher
     /** @var BuildParams  */
     private $build_params;
 
-    private $launched_jobs = array();
+    private $launched_jobs = [];
 
     public function __construct(Factory $factory, LoggerInterface $logger, Jenkins_Client $ci_client, BuildParams $build_params)
     {
@@ -133,7 +133,7 @@ class Launcher
      */
     private function getWellFormedChangedDirectories(CommitInfo $commit_info)
     {
-        $well_formed_directories = array();
+        $well_formed_directories = [];
         foreach ($commit_info->getChangedDirectories() as $changed_directory) {
             if ($changed_directory !== self::ROOT_DIRECTORY) {
                 $changed_directory = self::ROOT_DIRECTORY . $changed_directory;

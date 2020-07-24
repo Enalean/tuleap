@@ -21,20 +21,20 @@ class Docman_View_PermissionsForItem extends Docman_View_View  /* implements Vis
     {
         $html = '';
         if ($params['user_can_manage']) {
-            $titles = array();
+            $titles = [];
             $titles[] = dgettext('tuleap-docman', 'User groups');
             $titles[] = dgettext('tuleap-docman', 'Access Permissions');
             $html .= html_build_list_table_top($titles, false, false, false);
-            $odd_even = array('boxitem', 'boxitemalt');
+            $odd_even = ['boxitem', 'boxitemalt'];
             $i = 0;
-            $ugroups = permission_get_ugroups_permissions($params['group_id'], $id, array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
+            $ugroups = permission_get_ugroups_permissions($params['group_id'], $id, ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'], false);
             ksort($ugroups);
             foreach ($ugroups as $ugroup) {
                 $html .= '<tr class="' . $odd_even[$i++ % count($odd_even)] . '">';
                 $html .= '<td>' . $ugroup['ugroup']['name'] . '</td>';
                 $html .= '<td style="text-align:center;"><select name="permissions[' . $ugroup['ugroup']['id'] . ']">';
                 $html .= '<option value="100">-</option>';
-                $perms = array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE');
+                $perms = ['PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'];
                 $i = 1;
                 foreach ($perms as $perm) {
                     if (isset($params['force_permissions'][$ugroup['ugroup']['id']])) {

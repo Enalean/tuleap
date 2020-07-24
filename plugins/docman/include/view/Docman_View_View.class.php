@@ -21,8 +21,8 @@
 
 /* abstract */ class Docman_View_View
 {
-    public $dfltSortParams = array();
-    public $dfltSearchParams = array();
+    public $dfltSortParams = [];
+    public $dfltSearchParams = [];
 
     /**
      * @var Docman_Controller
@@ -46,7 +46,7 @@
         $this->javascript = "";
     }
 
-    public function display($params = array())
+    public function display($params = [])
     {
         $this->_header($params);
         $this->_scripts($params);
@@ -121,8 +121,8 @@
     public function _initSearchAndSortParams($params)
     {
         if (! count($this->dfltSortParams)) {
-            $this->dfltSortParams = array();
-            $this->dfltSearchParams = array();
+            $this->dfltSortParams = [];
+            $this->dfltSearchParams = [];
 
             if (isset($params['filter']) && $params['filter'] !== null) {
                 // Report paramters
@@ -187,7 +187,7 @@
     public function getActionForItem(Docman_Item $item)
     {
         $js = 'docman.addActionForItem(' . $item->getId() . ', ';
-        $params = array();
+        $params = [];
         $user = $this->_controller->getUser();
         $itemMenuVisitor = new Docman_View_GetMenuItemsVisitor($user, $item->getGroupId());
         $user_actions = $item->accept($itemMenuVisitor, $params);

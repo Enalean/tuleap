@@ -57,10 +57,10 @@ class Tracker_Permission_ChainOfResponsibility_PermissionsOfRegistered extends T
             $GLOBALS['Language']->getText(
                 'tracker_admin_permissions',
                 'tracker_ignore_g_regis_full',
-                array(
+                [
                     $permission_setter->getUGroupName($ugroup_id),
                     $permission_setter->getUGroupName(ProjectUGroup::REGISTERED),
-                )
+                ]
             )
         );
     }

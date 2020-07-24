@@ -137,11 +137,11 @@ class Tracker_Action_CreateArtifact
 
             if ($art_link && $this->isParentCreationRequested($request, $current_user)) {
                 $art_link_key = 'artifact[' . $art_link->getId() . '][new_values]';
-                $redirect_params = array(
+                $redirect_params = [
                     'tracker'     => (string) $parent_tracker->getId(),
                     'func'        => 'new-artifact',
                     $art_link_key => (string) $artifact->getId()
-                );
+                ];
                 $redirect->mode             = Tracker_Artifact_Redirect::STATE_CREATE_PARENT;
                 $redirect->query_parameters = $redirect_params;
             }
@@ -187,7 +187,7 @@ class Tracker_Action_CreateArtifact
 
     private function calculateRedirectParams($tracker_id, $artifact_id, $stay, $continue)
     {
-        $redirect_params = array();
+        $redirect_params = [];
         $redirect_params['tracker']       = $tracker_id;
         if ($continue) {
             $redirect_params['func']      = 'new-artifact';

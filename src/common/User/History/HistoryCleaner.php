@@ -38,9 +38,9 @@ class HistoryCleaner
     {
         $this->event_manager->processEvent(
             Event::USER_HISTORY_CLEAR,
-            array(
+            [
                 'user' => $user
-            )
+            ]
         );
     }
 }

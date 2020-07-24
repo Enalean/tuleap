@@ -435,7 +435,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
         // Start Test
-        $this->docmanPm->retreiveReadPermissionsForItems(array(1515), $this->user);
+        $this->docmanPm->retreiveReadPermissionsForItems([1515], $this->user);
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '1515'));
     }
 
@@ -453,7 +453,7 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
         // Start Test
-        $this->docmanPm->retreiveReadPermissionsForItems(array(1515), $this->user);
+        $this->docmanPm->retreiveReadPermissionsForItems([1515], $this->user);
         $this->assertTrue($this->docmanPm->userCanRead($this->user, '1515'));
     }
 
@@ -630,31 +630,31 @@ class Docman_PermissionsManagerTest extends TestCase
         $dao->shouldReceive('getUgroupMembers')->never();
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
-        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
     public function testGetDocmanManagerUsersDynamicUgroup(): void
     {
-        $dar = array(array('ugroup_id' => 101));
+        $dar = [['ugroup_id' => 101]];
         $pm  = \Mockery::mock(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
         $dao     = \Mockery::mock(\Docman_PermissionsManagerDao::class);
-        $members = array(array('email'       => 'john.doe@example.com',
-                               'language_id' => 'en_US'),
-                         array('email'       => 'jane.doe@example.com',
-                               'language_id' => 'fr_FR'));
+        $members = [['email'       => 'john.doe@example.com',
+                               'language_id' => 'en_US'],
+                         ['email'       => 'jane.doe@example.com',
+                               'language_id' => 'fr_FR']];
         $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
-        $userArray = array('john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR');
+        $userArray = ['john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR'];
         $this->assertEquals($userArray, $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
     public function testGetDocmanManagerUsersEmptyDynamicUgroup(): void
     {
-        $dar = array(array('ugroup_id' => 101));
+        $dar = [['ugroup_id' => 101]];
         $pm  = \Mockery::mock(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm)->once();
         $dao = \Mockery::mock(\Docman_PermissionsManagerDao::class);
@@ -663,12 +663,12 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
-        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
     public function testGetDocmanManagerUsersStaticUgroup(): void
     {
-        $dar = array(array('ugroup_id' => 100));
+        $dar = [['ugroup_id' => 100]];
         $pm  = \Mockery::spy(\PermissionsManager::class);
         $this->docmanPm->shouldReceive('_getPermissionManagerInstance')->andReturn($pm);
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
@@ -677,7 +677,7 @@ class Docman_PermissionsManagerTest extends TestCase
 
         $pm->shouldReceive('getUgroupIdByObjectIdAndPermissionType')->once()->andReturns($dar);
         $dao->shouldReceive('getUgroupMembers')->never();
-        $this->assertEquals(array(), $this->docmanPm->getDocmanManagerUsers(1, $this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanManagerUsers(1, $this->project));
     }
 
     public function testGetDocmanAdminUsersError(): void
@@ -687,48 +687,48 @@ class Docman_PermissionsManagerTest extends TestCase
 
         $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns(null);
         $dao->shouldReceive('getUgroupMembers')->never();
-        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetDocmanAdminUsersDynamicUgroup(): void
     {
-        $dar     = array(array('ugroup_id' => 101));
+        $dar     = [['ugroup_id' => 101]];
         $dao     = \Mockery::spy(\Docman_PermissionsManagerDao::class);
-        $members = array(array('email'       => 'john.doe@example.com',
-                               'language_id' => 'en_US'),
-                         array('email'       => 'jane.doe@example.com',
-                               'language_id' => 'fr_FR'));
+        $members = [['email'       => 'john.doe@example.com',
+                               'language_id' => 'en_US'],
+                         ['email'       => 'jane.doe@example.com',
+                               'language_id' => 'fr_FR']];
         $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn($members);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
-        $userArray = array('john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR');
+        $userArray = ['john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR'];
         $this->assertEquals($userArray, $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetDocmanAdminUsersEmptyDynamicUgroup()
     {
-        $dar = array(array('ugroup_id' => 101));
+        $dar = [['ugroup_id' => 101]];
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dao->shouldReceive('getUgroupMembers')->with(101)->andReturn([]);
         $dao->setReturnvalue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
-        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetDocmanAdminUsersStaticUgroup()
     {
-        $dar = array(array('ugroup_id' => 100));
+        $dar = [['ugroup_id' => 100]];
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
         $dao->setReturnvalue('getDocmanAdminUgroups', null);
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getDocmanAdminUgroups')->once()->andReturns($dar);
         $dao->shouldReceive('getUgroupMembers')->never();
-        $this->assertEquals(array(), $this->docmanPm->getDocmanAdminUsers($this->project));
+        $this->assertEquals([], $this->docmanPm->getDocmanAdminUsers($this->project));
     }
 
     public function testGetProjectAdminUsersError()
@@ -737,21 +737,21 @@ class Docman_PermissionsManagerTest extends TestCase
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao);
 
         $dao->shouldReceive('getProjectAdminMembers')->once()->andReturns(null);
-        $this->assertEquals(array(), $this->docmanPm->getProjectAdminUsers($this->project));
+        $this->assertEquals([], $this->docmanPm->getProjectAdminUsers($this->project));
     }
 
     public function testGetProjectAdminUsersSuccess()
     {
         $dao = \Mockery::spy(\Docman_PermissionsManagerDao::class);
-        $dar = array(array('email'       => 'john.doe@example.com',
-                           'language_id' => 'en_US'),
-                     array('email'       => 'jane.doe@example.com',
-                           'language_id' => 'fr_FR'));
+        $dar = [['email'       => 'john.doe@example.com',
+                           'language_id' => 'en_US'],
+                     ['email'       => 'jane.doe@example.com',
+                           'language_id' => 'fr_FR']];
         $this->docmanPm->shouldReceive('getDao')->andReturn($dao)->once();
 
         $dao->shouldReceive('getProjectAdminMembers')->once()->andReturns($dar);
-        $userArray = array('john.doe@example.com' => 'en_US',
-                           'jane.doe@example.com' => 'fr_FR');
+        $userArray = ['john.doe@example.com' => 'en_US',
+                           'jane.doe@example.com' => 'fr_FR'];
         $this->assertEquals($userArray, $this->docmanPm->getProjectAdminUsers($this->project));
     }
 }

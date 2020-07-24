@@ -39,10 +39,10 @@ class EditBindingUGroupEventLauncher
     {
         $this->event_manager->processEvent(
             'project_admin_ugroup_bind_modified',
-            array(
+            [
                 'group_id'  => $ugroup->getProjectId(),
                 'ugroup_id' => $ugroup->getId()
-            )
+            ]
         );
     }
 }

@@ -52,7 +52,7 @@ class Tracker_Artifact_Changeset_ValueDao extends DataAccessObject
                 FROM tracker_changeset_value AS changeset_value
                 JOIN tracker_changeset AS changeset ON (changeset.id = changeset_value.changeset_id)
                 WHERE changeset.artifact_id = $artifact_id";
-        $results = array();
+        $results = [];
         foreach ($this->retrieve($sql) as $row) {
             $results[$row['changeset_id']][] = $row;
         }

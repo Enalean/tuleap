@@ -27,7 +27,7 @@ class GlobalNotificationsAddressesBuilder
     public function removeAddressFromString($addresses, PFUser $user)
     {
         $addresses = $this->transformNotificationAddressesStringAsArray($addresses);
-        $addresses = array_diff($addresses, array($user->getEmail(), $user->getUserName()));
+        $addresses = array_diff($addresses, [$user->getEmail(), $user->getUserName()]);
 
         return implode(",", $addresses);
     }

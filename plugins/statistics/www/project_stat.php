@@ -51,7 +51,7 @@ if (! $user->isAdmin($groupId)) {
     $GLOBALS['Response']->redirect('/');
 }
 
-$vPeriod = new Valid_WhiteList('period', array('year', 'months'));
+$vPeriod = new Valid_WhiteList('period', ['year', 'months']);
 $vPeriod->required();
 if ($request->valid($vPeriod)) {
     $period = $request->get('period');
@@ -168,9 +168,9 @@ if ($project && ! $project->isError()) {
     echo '</tr>';
 
     echo '<tr>';
-    $services = array();
+    $services = [];
     foreach ($disk_usage_manager->getProjectServices(false) as $service => $label) {
-        $services[] = array('value' => $service, 'text' => $label);
+        $services[] = ['value' => $service, 'text' => $label];
     }
     echo '<td valign="top">';
     echo html_build_multiple_select_box_from_array($services, 'services[]', $selectedServices, '6', false, '', false, '', false, '', false) . ' ';

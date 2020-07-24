@@ -28,11 +28,11 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
 {
 
     /** @var Array of available post actions classes */
-    protected $post_actions_classes = array(
+    protected $post_actions_classes = [
         Transition_PostAction_Field_Date::SHORT_NAME  => 'Transition_PostAction_Field_Date',
         Transition_PostAction_Field_Int::SHORT_NAME   => 'Transition_PostAction_Field_Int',
         Transition_PostAction_Field_Float::SHORT_NAME => 'Transition_PostAction_Field_Float',
-    );
+    ];
 
     /** @var array of Transition_PostAction_FieldDao */
     private $daos;
@@ -47,11 +47,11 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         Transition_PostAction_Field_FloatDao $float_dao
     ) {
         $this->element_factory = $element_factory;
-        $this->daos            = array(
+        $this->daos            = [
             Transition_PostAction_Field_Date::SHORT_NAME  => $date_dao,
             Transition_PostAction_Field_Int::SHORT_NAME   => $int_dao,
             Transition_PostAction_Field_Float::SHORT_NAME => $float_dao,
-        );
+        ];
     }
 
     /**
@@ -74,7 +74,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     public function loadPostActions(Transition $transition)
     {
-        $post_actions = array();
+        $post_actions = [];
         $post_actions_classes = $this->post_actions_classes;
 
         foreach ($post_actions_classes as $shortname => $klass) {

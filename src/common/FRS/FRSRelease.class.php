@@ -306,7 +306,7 @@ class FRSRelease
 
     public function toArray()
     {
-        $array = array();
+        $array = [];
         $array['release_id']   = $this->getReleaseID();
         $array['package_id']   = $this->getPackageID();
         $array['name']         = $this->getName();
@@ -335,7 +335,7 @@ class FRSRelease
     public function &getFiles()
     {
         if (! is_array($this->release_files) || count($this->release_files) < 1) {
-            $this->release_files = array();
+            $this->release_files = [];
             $frsff = new FRSFileFactory();
             $this->release_files = $frsff->getFRSFilesFromDb($this->getReleaseID());
         }

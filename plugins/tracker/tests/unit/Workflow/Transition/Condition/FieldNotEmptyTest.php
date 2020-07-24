@@ -76,20 +76,20 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     public function testItSavesUsingTheRealFieldObject(): void
     {
         $this->condition->addField($this->field);
-        $this->dao->shouldReceive('create')->with(42, array(123))->once();
+        $this->dao->shouldReceive('create')->with(42, [123])->once();
         $this->condition->saveObject();
     }
 
     public function testItReturnsTrueWhenNoField(): void
     {
-        $fields_data = array();
+        $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
 
     public function testItReturnsTrueWhenNoFieldId(): void
     {
-        $fields_data = array(1 => $this->not_empty_data);
+        $fields_data = [1 => $this->not_empty_data];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
@@ -97,7 +97,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsTrueWhenFieldNotEmpty(): void
     {
         $this->condition->addField($this->field);
-        $fields_data = array(123 => $this->not_empty_data);
+        $fields_data = [123 => $this->not_empty_data];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
@@ -107,7 +107,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
         $this->condition->addField($this->field);
         $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns($this->previous_value);
         $this->previous_value->shouldReceive('getValue')->andReturns($this->not_empty_data);
-        $fields_data = array();
+        $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
@@ -117,7 +117,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
         $this->condition->addField($this->field);
         $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns($this->previous_value);
         $this->previous_value->shouldReceive('getValue')->andReturns($this->empty_data);
-        $fields_data = array();
+        $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
@@ -126,7 +126,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     {
         $this->condition->addField($this->field);
         $this->changeset->shouldReceive('getValue')->with($this->field)->andReturns(null);
-        $fields_data = array();
+        $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
@@ -135,7 +135,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     {
         $this->condition->addField($this->field);
         $artifact_without_changeset = \Mockery::spy(\Tracker_Artifact::class);
-        $fields_data = array();
+        $fields_data = [];
         $is_valid    = $this->condition->validate($fields_data, $artifact_without_changeset, '');
         $this->assertFalse($is_valid);
     }
@@ -143,7 +143,7 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsFalseWhenTheFieldIsEmpty(): void
     {
         $this->condition->addField($this->field);
-        $fields_data = array(123 => $this->empty_data);
+        $fields_data = [123 => $this->empty_data];
         $is_valid    = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }
@@ -152,10 +152,10 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     {
         $this->condition->addField($this->field);
         $this->condition->addField($this->field_bis);
-        $fields_data = array(
+        $fields_data = [
             123 => $this->not_empty_data,
             234 => $this->not_empty_data
-        );
+        ];
         $is_valid = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertTrue($is_valid);
     }
@@ -164,10 +164,10 @@ final class FieldNotEmptyTest extends \PHPUnit\Framework\TestCase
     {
         $this->condition->addField($this->field);
         $this->condition->addField($this->field_bis);
-        $fields_data = array(
+        $fields_data = [
             123 => $this->not_empty_data,
             234 => $this->empty_data
-        );
+        ];
         $is_valid = $this->condition->validate($fields_data, $this->artifact, '');
         $this->assertFalse($is_valid);
     }

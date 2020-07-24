@@ -48,14 +48,14 @@ class ProjectManagerGetValidProjectTest extends TestCase
 
     public function testItFindsTheProjectWithItsID(): void
     {
-        $this->dao->shouldReceive('searchById')->with(112)->andReturns(\TestHelper::arrayToDar(array('group_id' => 112, 'status' => 'A')));
+        $this->dao->shouldReceive('searchById')->with(112)->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
         $project = $this->project_manager->getValidProjectByShortNameOrId(112);
         $this->assertEquals(112, $project->getID());
     }
 
     public function testItFindsTheProjectWithItsUnixName(): void
     {
-        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(array('group_id' => 112, 'status' => 'A')));
+        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'A']));
         $project = $this->project_manager->getValidProjectByShortNameOrId('1gpig');
         $this->assertEquals(112, $project->getID());
     }
@@ -73,7 +73,7 @@ class ProjectManagerGetValidProjectTest extends TestCase
     {
         $this->expectException(\Project_NotFoundException::class);
         $this->dao->shouldReceive('searchById')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(array('group_id' => 112, 'status' => 'D')));
+        $this->dao->shouldReceive('searchByCaseInsensitiveUnixGroupName')->with('1gpig')->andReturns(\TestHelper::arrayToDar(['group_id' => 112, 'status' => 'D']));
         $this->project_manager->getValidProjectByShortNameOrId('1gpig');
     }
 }

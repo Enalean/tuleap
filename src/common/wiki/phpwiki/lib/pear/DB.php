@@ -356,7 +356,7 @@ class DB
     {
         static $errorMessages;
         if (! isset($errorMessages)) {
-            $errorMessages = array(
+            $errorMessages = [
                 DB_ERROR                    => 'unknown error',
                 DB_ERROR_ALREADY_EXISTS     => 'already exists',
                 DB_ERROR_CANNOT_CREATE      => 'can not create',
@@ -386,7 +386,7 @@ class DB
                 DB_ERROR_NOSUCHDB           => 'no such database',
                 DB_ERROR_ACCESS_VIOLATION   => 'insufficient permissions',
                 DB_ERROR_TRUNCATED          => 'truncated'
-            );
+            ];
         }
 
         if (DB::isError($value)) {
@@ -494,7 +494,7 @@ class DB_result
      * @param resource $result  result resource id
      * @param array    $options assoc array with optional result options
      */
-    public function __construct(&$dbh, $result, $options = array())
+    public function __construct(&$dbh, $result, $options = [])
     {
         $this->dbh = &$dbh;
         $this->result = $result;

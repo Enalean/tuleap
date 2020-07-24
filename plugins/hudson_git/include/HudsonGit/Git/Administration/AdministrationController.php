@@ -139,7 +139,7 @@ class AdministrationController implements DispatchableWithRequest, DispatchableW
             )
         );
 
-        $layout->footer(array());
+        $layout->footer([]);
     }
 
     /**

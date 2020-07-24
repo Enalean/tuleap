@@ -58,7 +58,7 @@ class FieldCalculator
             $children   = $children_list['children'];
 
             $current_fetch_artifact = $artifact_ids_to_fetch;
-            $artifact_ids_to_fetch  = array();
+            $artifact_ids_to_fetch  = [];
             $last_id                = null;
             if ($children) {
                 foreach ($children as $row) {

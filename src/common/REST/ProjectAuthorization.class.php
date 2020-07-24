@@ -55,11 +55,11 @@ class ProjectAuthorization
         } catch (Project_AccessNotAdminException $exception) {
             $can_access    = false;
             $event_manager = EventManager::instance();
-            $event_manager->processEvent(Event::CAN_USER_ACCESS_UGROUP_INFO, array(
+            $event_manager->processEvent(Event::CAN_USER_ACCESS_UGROUP_INFO, [
                 'can_access' => &$can_access,
                 'user'       => $user,
                 'project'    => $project
-            ));
+            ]);
 
             if (! $can_access) {
                 throw new RestException(403, $exception->getMessage());

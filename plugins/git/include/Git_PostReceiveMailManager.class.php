@@ -99,7 +99,7 @@ class Git_PostReceiveMailManager
     {
         $dar = $this->dao->searchByRepositoryId($repositoryId);
 
-        $mailList = array();
+        $mailList = [];
         foreach ($dar as $row) {
             $mailList[] = $row['recipient_mail'];
         }

@@ -32,7 +32,7 @@ class HTML_Element_Selectbox extends HTML_Element
     public function __construct($label, $name, $value, $with_none = false, $onchange = "", $desc = "")
     {
         parent::__construct($label, $name, $value, $desc);
-        $this->options = array();
+        $this->options = [];
 
         $this->onchange = $onchange;
         if ($with_none) {

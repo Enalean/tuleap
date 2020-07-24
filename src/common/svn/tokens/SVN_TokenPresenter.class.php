@@ -77,6 +77,6 @@ class SVN_TokenPresenter
 
     private function getDefaultComment()
     {
-        return $GLOBALS['Language']->getText('svn_tokens', 'default_comment', array($this->generated_date));
+        return $GLOBALS['Language']->getText('svn_tokens', 'default_comment', [$this->generated_date]);
     }
 }

@@ -75,6 +75,6 @@ class GraphOnTrackersV5_Burndown_DataBuilder extends ChartDataBuilderV5
      */
     protected function isValidType($type)
     {
-        return in_array($type, array('int', 'float'));
+        return in_array($type, ['int', 'float']);
     }
 }

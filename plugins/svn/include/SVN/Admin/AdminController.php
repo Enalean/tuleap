@@ -158,11 +158,11 @@ class AdminController
         }
 
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'group_id' => $request->getProject()->getid(),
                 'repo_id' => $request->get('repo_id'),
                 'action' => 'display-mail-notification'
-            )
+            ]
         ));
     }
 
@@ -374,10 +374,10 @@ class AdminController
     public function updateHooksConfig(ServiceSvn $service, HTTPRequest $request)
     {
         $repository  = $this->repository_manager->getByIdAndProject($request->get('repo_id'), $request->getProject());
-        $hook_config = array(
+        $hook_config = [
             HookConfig::MANDATORY_REFERENCE => (bool) $request->get("pre_commit_must_contain_reference"),
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => (bool) $request->get("allow_commit_message_changes")
-        );
+        ];
         $this->hook_config_updator->updateHookConfig($repository, $hook_config);
 
         $this->displayHooksConfig($service, $request);
@@ -475,29 +475,29 @@ class AdminController
     private function generateTokenDeletion(Project $project, Repository $repository)
     {
         return new CSRFSynchronizerToken(SVN_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'group_id' => $project->getID(),
                 'repo_id' => $repository->getId(),
                 'action' => 'delete-repository'
-            )
+            ]
         ));
     }
 
     private function redirect($project_id)
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
-            array('group_id' => $project_id)
+            ['group_id' => $project_id]
         ));
     }
 
     private function redirectOnDisplayNotification(HTTPRequest $request)
     {
         $GLOBALS['Response']->redirect(SVN_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'group_id' => $request->getProject()->getid(),
                 'repo_id' => $request->get('repo_id'),
                 'action' => 'display-mail-notification'
-            )
+            ]
         ));
     }
 

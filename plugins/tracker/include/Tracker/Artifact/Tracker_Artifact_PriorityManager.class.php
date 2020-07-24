@@ -175,7 +175,7 @@ class Tracker_Artifact_PriorityManager
     private function getGlobalRanks($list_of_artifact_ids)
     {
         $rows  = $this->priority_dao->getGlobalRanks($list_of_artifact_ids);
-        $ranks = array();
+        $ranks = [];
         foreach ($rows as $row) {
             $ranks[$row['artifact_id']] = $row['rank'];
         }
@@ -185,7 +185,7 @@ class Tracker_Artifact_PriorityManager
     public function getArtifactPriorityHistory(Tracker_Artifact $artifact)
     {
         $rows                     = $this->priority_history_dao->getArtifactPriorityHistory($artifact->getId());
-        $priority_history_changes = array();
+        $priority_history_changes = [];
 
         foreach ($rows as $row) {
             $priority_history_changes[] = $this->getInstanceFromRow($row);

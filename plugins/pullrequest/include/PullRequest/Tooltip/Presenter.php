@@ -48,11 +48,11 @@ class Presenter
 
     private function getTranslatedStatus($status_acronym)
     {
-        $status_name = array(
+        $status_name = [
             PullRequest::STATUS_MERGED    => $GLOBALS['Language']->getText('plugin_pullrequest', 'status_merged'),
             PullRequest::STATUS_ABANDONED => $GLOBALS['Language']->getText('plugin_pullrequest', 'status_abandoned'),
             PullRequest::STATUS_REVIEW    => $GLOBALS['Language']->getText('plugin_pullrequest', 'status_in_review'),
-        );
+        ];
 
         return $status_name[$status_acronym];
     }

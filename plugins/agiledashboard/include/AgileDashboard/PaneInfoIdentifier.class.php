@@ -30,9 +30,9 @@ class AgileDashboard_PaneInfoIdentifier
      */
     public function isPaneAPlanningV2($pane_info_identifier)
     {
-        return in_array($pane_info_identifier, array(
+        return in_array($pane_info_identifier, [
             PlanningV2PaneInfo::IDENTIFIER,
             TopPlanningV2PaneInfo::IDENTIFIER
-        ));
+        ]);
     }
 }

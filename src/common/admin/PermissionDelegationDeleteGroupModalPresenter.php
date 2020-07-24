@@ -42,7 +42,7 @@ class Admin_PermissionDelegationDeleteGroupModalPresenter
 
     public function group_title_delete()
     {
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', array($this->name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_delete', [$this->name]);
     }
 
     public function purified_group_delete_confirmation()

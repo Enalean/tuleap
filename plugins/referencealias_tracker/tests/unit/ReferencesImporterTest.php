@@ -69,7 +69,7 @@ final class ReferencesImporterTest extends TestCase
             </references>
 XML;
         $simple_xml         = new \SimpleXMLElement($xml);
-        $created_references = array('tracker' => array('T2' => '12'), 'artifact' => array('1' => '2', '5' => '6'));
+        $created_references = ['tracker' => ['T2' => '12'], 'artifact' => ['1' => '2', '5' => '6']];
 
         $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
 
@@ -87,7 +87,7 @@ XML;
             </references>
 XML;
         $simple_xml         = new \SimpleXMLElement($xml);
-        $created_references = array();
+        $created_references = [];
 
         $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
 
@@ -104,7 +104,7 @@ XML;
             </references>
 XML;
         $simple_xml         = new \SimpleXMLElement($xml);
-        $created_references = array('package' => array('1' => '1337'));
+        $created_references = ['package' => ['1' => '1337']];
 
         $this->dao->shouldReceive('getRef')->andReturns(\TestHelper::arrayToDar([]));
 

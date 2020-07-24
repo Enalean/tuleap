@@ -156,7 +156,7 @@ class ArtifactRepresentation
     {
         $artifact_id = $artifact->getId();
 
-        $assignees = array();
+        $assignees = [];
         foreach ($artifact->getAssignedTo($current_user) as $assignee) {
             $user_representation = MinimalUserRepresentation::build($assignee);
             $assignees[] = $user_representation;

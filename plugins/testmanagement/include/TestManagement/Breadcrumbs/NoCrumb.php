@@ -30,6 +30,6 @@ class NoCrumb implements Breadcrumbs
      */
     public function getCrumbs(Project $project): array
     {
-        return array();
+        return [];
     }
 }

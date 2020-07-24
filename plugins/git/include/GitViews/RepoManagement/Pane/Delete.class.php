@@ -86,12 +86,12 @@ class Delete extends Pane
         $html .= '<p>';
         $html .= '<input type="hidden" id="action" name="action" value="del" />';
         $html .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="' . dgettext('tuleap-git', 'Yes') . '"data-test="deletion-confirmation-button"/> ';
-        $onclick = 'onclick="window.location=\'/plugins/git/?' . http_build_query(array(
+        $onclick = 'onclick="window.location=\'/plugins/git/?' . http_build_query([
             'action'   => 'repo_management',
             'pane'     => $this->getIdentifier(),
             'group_id' => $this->repository->getProjectId(),
             'repo_id'  => $this->repository->getId(),
-        )) . '\'"';
+        ]) . '\'"';
         $html .= '<input type="button" class="btn" value="' . dgettext('tuleap-git', 'No') . '" ' . $onclick . '/>';
         $html .= '</p>';
         $html .= '</div>';

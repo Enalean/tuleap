@@ -71,7 +71,7 @@ class Tracker_ReportFactory
      */
     public function getReportsByTrackerId($tracker_id, $user_id)
     {
-        $reports = array();
+        $reports = [];
         foreach ($this->getDao()->searchByTrackerId($tracker_id, $user_id) as $row) {
             $reports[$row['id']] = $this->getInstanceFromRow($row);
         }
@@ -109,7 +109,7 @@ class Tracker_ReportFactory
      */
     public function getReportsByUserId($user_id)
     {
-        $reports = array();
+        $reports = [];
         foreach ($this->getDao()->searchByUserId($user_id) as $row) {
             $reports[$row['id']] = $this->getInstanceFromRow($row);
         }
@@ -144,7 +144,7 @@ class Tracker_ReportFactory
 
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping)
     {
-        $report_mapping = array();
+        $report_mapping = [];
         foreach ($this->getReportsByTrackerId($from_tracker_id, null) as $from_report) {
             $new_report = $this->duplicateReport($from_report, $to_tracker_id, $field_mapping, null);
             $report_mapping[$from_report->getId()] = $new_report->getId();
@@ -261,8 +261,8 @@ class Tracker_ReportFactory
         $group_id
     ) {
         $att = $xml->attributes();
-        $row = array('name' => (string) $xml->name,
-                     'description' => (string) $xml->description);
+        $row = ['name' => (string) $xml->name,
+                     'description' => (string) $xml->description];
         $row['is_default'] = isset($att['is_default']) ? (int) $att['is_default'] : 0;
         $row['is_query_displayed'] = isset($att['is_query_displayed']) ? (int) $att['is_query_displayed'] : 1;
         $row['is_in_expert_mode']  = isset($att['is_in_expert_mode']) ? (int) $att['is_in_expert_mode'] : 0;
@@ -277,7 +277,7 @@ class Tracker_ReportFactory
         $row['updated_at'] = null;
         $report = $this->getInstanceFromRow($row);
         // create criteria
-        $report->criterias = array();
+        $report->criterias = [];
         foreach ($xml->criterias->criteria as $criteria) {
             $report_criteria = $this->getCriteriaFactory()->getInstanceFromXML($criteria, $report, $xmlMapping);
             if (! $report_criteria) {
@@ -294,7 +294,7 @@ class Tracker_ReportFactory
             $report->criterias[] = $report_criteria;
         }
         // create renderers
-        $report->renderers = array();
+        $report->renderers = [];
         foreach ($xml->renderers->renderer as $renderer) {
             $rend = $this->getRendererFactory()->getInstanceFromXML($renderer, $report, $xmlMapping);
             $report->renderers[] = $rend;

@@ -60,8 +60,8 @@ class Tracker_SystemEventManager extends SystemEventManager
 
     public function getTypes()
     {
-        return array(
+        return [
             SystemEvent_TRACKER_V3_MIGRATION::NAME,
-        );
+        ];
     }
 }

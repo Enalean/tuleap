@@ -38,7 +38,7 @@ $GLOBALS['UGROUP_PROJECT_ADMIN']      = ProjectUGroup::PROJECT_ADMIN;
 $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'] = ProjectUGroup::FILE_MANAGER_ADMIN;
 $GLOBALS['UGROUP_WIKI_ADMIN']         = ProjectUGroup::WIKI_ADMIN;
 $GLOBALS['UGROUP_TRACKER_ADMIN']      = ProjectUGroup::TRACKER_ADMIN;
-$GLOBALS['UGROUPS'] = array(
+$GLOBALS['UGROUPS'] = [
     'UGROUP_NONE'               => $GLOBALS['UGROUP_NONE'],
     'UGROUP_ANONYMOUS'          => $GLOBALS['UGROUP_ANONYMOUS'],
     'UGROUP_REGISTERED'         => $GLOBALS['UGROUP_REGISTERED'],
@@ -48,7 +48,7 @@ $GLOBALS['UGROUPS'] = array(
     'UGROUP_FILE_MANAGER_ADMIN' => $GLOBALS['UGROUP_FILE_MANAGER_ADMIN'],
     'UGROUP_WIKI_ADMIN'         => $GLOBALS['UGROUP_WIKI_ADMIN'],
     'UGROUP_TRACKER_ADMIN'      => $GLOBALS['UGROUP_TRACKER_ADMIN'],
-);
+];
 /*
 *      anonymous
 *          ^
@@ -85,7 +85,7 @@ function ugroup_db_get_members(
     $ugroup_id,
     $with_display_preferences = false,
     $keyword = null,
-    array $user_ids = array()
+    array $user_ids = []
 ) {
     $data_access = CodendiDataAccess::instance();
 
@@ -150,7 +150,7 @@ function ugroup_get_ugroups_with_members($group_id)
     "WHERE ugroup.group_id=" . db_ei($group_id) .
     " ORDER BY ugroup.name";
 
-    $return = array();
+    $return = [];
 
     $res = db_query($sql);
     while ($data = db_fetch_array($res)) {
@@ -201,10 +201,10 @@ function ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $user_id
     $user = UserManager::instance()->getUserById($user_id);
 
     if ($user->isAnonymous()) {
-        return array($GLOBALS['UGROUP_ANONYMOUS']);
+        return [$GLOBALS['UGROUP_ANONYMOUS']];
     }
 
-    $res = array($GLOBALS['UGROUP_ANONYMOUS'],$GLOBALS['UGROUP_REGISTERED']);
+    $res = [$GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED']];
 
     if (ForgeConfig::areRestrictedUsersAllowed()) {
         $res[] = $GLOBALS['UGROUP_AUTHENTICATED'];
@@ -320,7 +320,7 @@ function ugroup_db_get_dynamic_members(
     $keyword = null,
     $show_suspended = false,
     bool $show_deleted = false,
-    array $user_ids = array()
+    array $user_ids = []
 ): ?string {
     $data_access = CodendiDataAccess::instance();
 
@@ -410,9 +410,9 @@ function ugroup_db_get_dynamic_members(
  */
 function ugroup_get_all_dynamic_members($group_id, $atid = 0)
 {
-    $members = array();
-    $sql     = array();
-    $ugroups = array();
+    $members = [];
+    $sql     = [];
+    $ugroups = [];
     //retrieve dynamic ugroups id and name
     $rs = db_query("SELECT ugroup_id, name FROM ugroup WHERE ugroup_id IN (" . implode(',', $GLOBALS['UGROUPS']) . ") ");
     while ($row = db_fetch_array($rs)) {
@@ -428,12 +428,12 @@ function ugroup_get_all_dynamic_members($group_id, $atid = 0)
         }
         $rs  = db_query($sql);
         while ($row = db_fetch_array($rs)) {
-            $members[] = array(
+            $members[] = [
                 'ugroup_id' => $ugroup_id,
                 'name'      => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $ugroups[$ugroup_id]),
                 'user_id'   => $row['user_id'],
                 'user_name' => $row['user_name'],
-            );
+            ];
         }
     }
     return $members;
@@ -508,7 +508,7 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
         while ($row = db_fetch_array($res)) {
             $sql = "INSERT INTO ugroup_user (ugroup_id,user_id) VALUES (" . db_ei($ugroup_id) . "," . db_ei($row['user_id']) . ")";
             if (! db_query($sql)) {
-                exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', array($row['user_id'],$ugroup_id,db_error())));
+                exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_ugroup_utils', 'cant_insert_u_in_g', [$row['user_id'], $ugroup_id, db_error()]));
             }
             $countuser++;
         }
@@ -517,10 +517,10 @@ function ugroup_create($group_id, $ugroup_name, $ugroup_description, $group_temp
 
     // raise an event for ugroup creation
     $em = EventManager::instance();
-    $em->processEvent('project_admin_ugroup_creation', array(
+    $em->processEvent('project_admin_ugroup_creation', [
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id
-    ));
+    ]);
 
     return $ugroup_id;
 }
@@ -569,7 +569,7 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
     }
 
     // Search for all members of this ugroup
-    $pickList = array();
+    $pickList = [];
     $sql = "SELECT user_id FROM ugroup_user WHERE ugroup_id = " . db_ei($ugroup_id);
     if ($res = db_query($sql)) {
         while ($row = db_fetch_array($res)) {
@@ -579,19 +579,19 @@ function ugroup_update($group_id, $ugroup_id, $ugroup_name, $ugroup_description)
 
     // raise an event for ugroup edition
     $em = EventManager::instance();
-    $em->processEvent('project_admin_ugroup_edition', array(
+    $em->processEvent('project_admin_ugroup_edition', [
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id,
         'ugroup_name' => $ugroup_name,
         'ugroup_old_name' => $ugroup_old_name,
         'ugroup_desc' => $ugroup_description,
         'pick_list' => $pickList
-    ));
+    ]);
 
     // Now log in project history
-    (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array($ugroup_name));
+    (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, [$ugroup_name]);
 
-    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_upd_success', array($ugroup_name,count($pickList))));
+    $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils', 'ug_upd_success', [$ugroup_name, count($pickList)]));
 }
 
 function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
@@ -606,7 +606,7 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
     if ($rows = db_affected_rows($res)) {
         // Now log in project history
         $res = ugroup_db_get_ugroup($ugroup_id);
-        (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array(db_result($res, 0, 'name')));
+        (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, [db_result($res, 0, 'name')]);
         // Search for all members of this ugroup
         $sql = "SELECT count(user.user_id)" .
              "FROM ugroup_user, user " .
@@ -615,15 +615,15 @@ function ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id)
              "AND ugroup_user.ugroup_id=" . db_ei($ugroup_id);
         $result = db_query($sql);
         $usersCount = db_result($result, 0, 0);
-        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', array(db_result($res, 0, 'name'), $usersCount)));
+        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', [db_result($res, 0, 'name'), $usersCount]));
         if ($usersCount == 0) {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_empty'));
         }
         // Raise event for ugroup modification
-        EventManager::instance()->processEvent('project_admin_ugroup_remove_user', array(
+        EventManager::instance()->processEvent('project_admin_ugroup_remove_user', [
                 'group_id' => $group_id,
                 'ugroup_id' => $ugroup_id,
-                'user_id' => $user_id));
+                'user_id' => $user_id]);
     }
 }
 function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
@@ -637,13 +637,13 @@ function ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id)
         if ($rows = db_affected_rows($res)) {
             // Now log in project history
             $res = ugroup_db_get_ugroup($ugroup_id);
-            (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, array(db_result($res, 0, 'name')));
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', array(db_result($res, 0, 'name'), 1)));
+            (new ProjectHistoryDao())->groupAddHistory('upd_ug', '', $group_id, [db_result($res, 0, 'name')]);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_admin_ugroup_utils', 'ug_upd_success', [db_result($res, 0, 'name'), 1]));
             // Raise event for ugroup modification
-            EventManager::instance()->processEvent('project_admin_ugroup_add_user', array(
+            EventManager::instance()->processEvent('project_admin_ugroup_add_user', [
                 'group_id' => $group_id,
                 'ugroup_id' => $ugroup_id,
-                'user_id' => $user_id));
+                'user_id' => $user_id]);
         }
     } else {
         $GLOBALS['Response']->addFeedback(
@@ -695,11 +695,11 @@ function ugroup_delete($group_id, $ugroup_id)
 
     // raise an event for ugroup deletion
     $em = EventManager::instance();
-    $em->processEvent('project_admin_ugroup_deletion', array(
+    $em->processEvent('project_admin_ugroup_deletion', [
         'group_id'  => $group_id,
         'ugroup_id' => $ugroup_id,
         'ugroup'    => $ugroup,
-    ));
+    ]);
 
     // Last, remove permissions for this group
     $perm_cleared = permission_clear_ugroup($group_id, $ugroup_id);
@@ -711,7 +711,7 @@ function ugroup_delete($group_id, $ugroup_id)
         $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_ugroup_utils', 'perm_warning', $perm_cleared));
     }
     // Now log in project history
-    (new ProjectHistoryDao())->groupAddHistory('del_ug', '', $group_id, array($ugroup->getName()));
+    (new ProjectHistoryDao())->groupAddHistory('del_ug', '', $group_id, [$ugroup->getName()]);
 
     return true;
 }
@@ -750,7 +750,7 @@ function ugroup_count_project_admins($groupId, $usersSql)
             }
         }
     }
-    return array('admins' => $admins, 'non_admins' => $nonAdmins);
+    return ['admins' => $admins, 'non_admins' => $nonAdmins];
 }
 
 /**
@@ -824,10 +824,10 @@ function ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, &$validU
  */
 function ugroup_filter_ugroups_by_project_admin($groupId, $ugroups)
 {
-    $validUGroups = array();
+    $validUGroups = [];
     // Check static ugroups
     $nonAdmins = ugroup_count_non_admin_for_static_ugroups($groupId, $ugroups, $validUGroups);
     // Check dynamic ugroups
     $nonAdmins += ugroup_count_non_admin_for_dynamic_ugroups($groupId, $ugroups, $validUGroups);
-    return array('non_admins' => $nonAdmins, 'ugroups' => $validUGroups);
+    return ['non_admins' => $nonAdmins, 'ugroups' => $validUGroups];
 }

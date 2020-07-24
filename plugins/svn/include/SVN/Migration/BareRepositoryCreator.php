@@ -94,7 +94,7 @@ class BareRepositoryCreator
                 $repository,
                 $user,
                 $settings,
-                array(),
+                [],
                 $copy_from_core
             );
         } catch (RepositoryNameIsInvalidException $e) {

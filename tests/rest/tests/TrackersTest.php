@@ -30,7 +30,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options('trackers'));
 
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -41,7 +41,7 @@ final class TrackersTest extends TrackerBase
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -49,7 +49,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options($this->getReleaseTrackerUri()));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -60,7 +60,7 @@ final class TrackersTest extends TrackerBase
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -68,7 +68,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options($this->getReleaseTrackerReportsUri()));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -87,7 +87,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options($this->report_uri));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -106,7 +106,7 @@ final class TrackersTest extends TrackerBase
     {
         $response = $this->getResponse($this->client->options($this->getReportsArtifactsUri()));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -118,14 +118,14 @@ final class TrackersTest extends TrackerBase
         );
 
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsGetParentArtifacts(): void
     {
         $response = $this->getResponse($this->client->options('trackers/' . $this->user_stories_tracker_id . '/parent_artifacts'));
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals($response->getStatusCode(), 200);
     }
 
@@ -136,7 +136,7 @@ final class TrackersTest extends TrackerBase
             \REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -395,9 +395,9 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackerArtifactsBasicQuery()
     {
         $query     = json_encode(
-            array(
+            [
                 "Name" => "lease"
-            )
+            ]
         );
         $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?query=' . urlencode($query));
         $response  = $this->getResponse($request);
@@ -413,9 +413,9 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackerArtifactsBasicCounterQuery()
     {
         $query = json_encode(
-            array(
+            [
             "Name" => "wwwxxxyyyzzz"
-            )
+            ]
         );
 
         $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?values=all&limit=10&query=' . urlencode($query));
@@ -429,12 +429,12 @@ final class TrackersTest extends TrackerBase
     public function testGetTrackerArtifactsAdvancedQuery()
     {
         $query = json_encode(
-            array(
-            "Name" => array(
+            [
+            "Name" => [
                 "operator" => "contains",
                 "value" => "lease"
-                )
-            )
+                ]
+            ]
         );
         $request   = $this->client->get($this->getReleaseTrackerUri() . '/artifacts?values=all&query=' . urlencode($query));
         $response  = $this->getResponse($request);

@@ -177,7 +177,7 @@ function WikiURL($pagename, $args = '', $get_abs_url = false)
         }
     }
     if (is_array($args)) {
-        $enc_args = array();
+        $enc_args = [];
         foreach ($args as $key => $val) {
             // avoid default args
             if (USE_PATH_INFO and $key == 'pagename') {
@@ -279,7 +279,7 @@ function IconForLink($protocol_or_url)
         list ($proto) = explode(':', $protocol_or_url, 2);
         $src = $WikiTheme->getLinkIconURL($proto);
         if ($src) {
-            return HTML::img(array('src' => $src, 'alt' => "", 'class' => 'linkicon', 'border' => 0));
+            return HTML::img(['src' => $src, 'alt' => "", 'class' => 'linkicon', 'border' => 0]);
         } else {
             return false;
         }
@@ -330,7 +330,7 @@ function PossiblyGlueIconToText($proto_or_url, $text)
             $prefix = false;
         }
         $text = HTML::span(
-            array('style' => 'white-space: nowrap'),
+            ['style' => 'white-space: nowrap'],
             $last_word,
             HTML::Raw('&nbsp;'),
             $icon
@@ -350,7 +350,7 @@ function PossiblyGlueIconToText($proto_or_url, $text)
         $tail = false;
     }
     $text = HTML::span(
-        array('style' => 'white-space: nowrap'),
+        ['style' => 'white-space: nowrap'],
         $icon,
         $first_word
     );
@@ -391,14 +391,14 @@ function LinkURL($url, $linktext = '')
     // FIXME: Is this needed (or sufficient?)
     if (! IsSafeURL($url)) {
         $link = HTML::strong(HTML::u(
-            array('class' => 'baduri'),
+            ['class' => 'baduri'],
             _("BAD URL -- remove all of <, >, \"")
         ));
     } else {
         if (! $linktext) {
             $linktext = preg_replace("/mailto:/A", "", $url);
         }
-        $args = array('href' => $url, 'rel' => 'noreferrer');
+        $args = ['href' => $url, 'rel' => 'noreferrer'];
         if (defined('EXTERNAL_LINK_TARGET')) { // can also be set in the css
             $args['target'] = is_string(EXTERNAL_LINK_TARGET) ? EXTERNAL_LINK_TARGET : "_blank";
         }
@@ -424,7 +424,7 @@ function LinkImage($url, $alt = false)
     // FIXME: Is this needed (or sufficient?)
     if (! IsSafeURL($url)) {
         $link = HTML::strong(HTML::u(
-            array('class' => 'baduri'),
+            ['class' => 'baduri'],
             _("BAD URL -- remove all of <, >, \"")
         ));
     } else {
@@ -439,7 +439,7 @@ function LinkImage($url, $alt = false)
         if (empty($alt)) {
             $alt = basename($url);
         }
-        $link = HTML::img(array('src' => $url, 'alt' => $alt, 'title' => $alt));
+        $link = HTML::img(['src' => $url, 'alt' => $alt, 'title' => $alt]);
         if (count($arr) > 1) {
             array_shift($arr);
             foreach ($arr as $attr) {
@@ -538,7 +538,7 @@ function ImgObject($img, $url)
             $type = mime_content_type($url);
         }
     }
-    $link = HTML::object(array_merge($img->_attr, array('src' => $url, 'type' => $type)));
+    $link = HTML::object(array_merge($img->_attr, ['src' => $url, 'type' => $type]));
     $link->setAttr('class', 'inlineobject');
     if (isBrowserSafari()) {
         return HTML::embed($link->_attr);
@@ -554,7 +554,7 @@ class Stack
     // var in php5 deprecated
     public function __construct()
     {
-        $this->items = array();
+        $this->items = [];
         $this->size = 0;
     }
     public function push($item)
@@ -593,7 +593,7 @@ function SplitQueryArgs($query_args = '')
 {
     // FIXME: use the arg-seperator which might not be &
     $split_args = preg_split('/&/D', $query_args);
-    $args = array();
+    $args = [];
     foreach ($split_args as $val) {
         if (preg_match('/^ ([^=]+) =? (.*) /x', $val, $m)) {
             $args[$m[1]] = $m[2];
@@ -604,13 +604,13 @@ function SplitQueryArgs($query_args = '')
 
 function LinkPhpwikiURL($url, $text = '', $basepage = false)
 {
-    $args = array();
+    $args = [];
 
     if (! preg_match('/^ phpwiki: ([^?]*) [?]? (.*) $/x', $url, $m)) {
         return HTML::strong(
-            array('class' => 'rawurl'),
+            ['class' => 'rawurl'],
             HTML::u(
-                array('class' => 'baduri'),
+                ['class' => 'baduri'],
                 _("BAD phpwiki: URL")
             )
         );
@@ -628,7 +628,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
         // Convert old style links (to not break diff links in
         // RecentChanges).
         $pagename = urldecode($m[2]);
-        $args = array("action" => $m[1]);
+        $args = ["action" => $m[1]];
     } else {
         $args = SplitQueryArgs($qargs);
     }
@@ -655,7 +655,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
         $page = $dbi->getPage($basepage ? $basepage : $pagename);
         if (! $page->get('locked')) {
             return HTML::span(
-                array('class' => 'wikiunsafe'),
+                ['class' => 'wikiunsafe'],
                 HTML::u(_("Lock page to enable link"))
             );
         }
@@ -663,7 +663,7 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
     }
 
     if (! $text) {
-        $text = HTML::span(array('class' => 'rawurl'), $url);
+        $text = HTML::span(['class' => 'rawurl'], $url);
     }
 
     $wikipage = new WikiPageName($pagename);
@@ -673,8 +673,8 @@ function LinkPhpwikiURL($url, $text = '', $basepage = false)
     }
 
     return HTML::a(
-        array('href'  => WikiURL($pagename, $args),
-                         'class' => $class),
+        ['href'  => WikiURL($pagename, $args),
+                         'class' => $class],
         $text
     );
 }
@@ -789,7 +789,7 @@ class WikiPageName
 
     public function getWarnings()
     {
-        $warnings = array();
+        $warnings = [];
         if (isset($this->_warnings)) {
             $warnings = array_merge($warnings, $this->_warnings);
         }
@@ -939,7 +939,7 @@ function ConvertOldMarkup($text, $markup_type = "block")
     $debug_skip = false;
     // I suspect this only to crash with Apache2 and IIS.
     if (
-        in_array(php_sapi_name(), array('apache2handler','apache2filter','isapi'))
+        in_array(php_sapi_name(), ['apache2handler', 'apache2filter', 'isapi'])
         and preg_match("/plugin CreateToc/", $text)
     ) {
         trigger_error(_("The CreateTocPlugin is not yet old markup compatible! ")
@@ -975,7 +975,7 @@ function ConvertOldMarkup($text, $markup_type = "block")
         $orig[] = '/!((?:' . join(')|(', $bang_esc) . '))/';
         $repl[] = '~\\1';
 
-        $subs["links"] = array($orig, $repl);
+        $subs["links"] = [$orig, $repl];
 
         // Temporarily URL-encode pairs of underscores in links to hide
         // them from the re for bold markup.
@@ -1009,7 +1009,7 @@ function ConvertOldMarkup($text, $markup_type = "block")
         $orig = '/\[[^\[\]]*?%5F%5F[^\[\]]*?\]/e';
         $repl = 'str_replace(\'%5F%5F\', \'__\', \'\\0\')';
 
-        $subs["inline"] = array($orig, $repl);
+        $subs["inline"] = [$orig, $repl];
 
         /*****************************************************************
          * Patterns which match block markup constructs which take
@@ -1491,7 +1491,7 @@ function PHPWikiVsprintf($fmt, $args)
         }
 
         $fmt = preg_replace('/(?<!%)%\d+\$/x', '%', $fmt);
-        $newargs = array();
+        $newargs = [];
 
         // Reorder arguments appropriately.
         foreach ($m[1] as $argnum) {
@@ -1583,7 +1583,7 @@ class fileSet
 
     public function __construct($directory, $filepattern = false)
     {
-        $this->_fileList = array();
+        $this->_fileList = [];
         $this->_pattern = $filepattern;
         if ($filepattern) {
             $this->_pcre_pattern = glob_to_pcre($this->_pattern);
@@ -1651,7 +1651,7 @@ class ListRegexExpand
     public function expandRegex($index, &$pages)
     {
         $this->index = $index;
-        array_walk($pages, array($this, 'listMatchCallback'));
+        array_walk($pages, [$this, 'listMatchCallback']);
         return $this->list;
     }
 }
@@ -1788,7 +1788,7 @@ function function_usable($function_name)
 {
     static $disabled;
     if (! is_array($disabled)) {
-        $disabled = array();
+        $disabled = [];
         // Use get_cfg_var since ini_get() is one of the disabled functions
         // (on Lycos, at least.)
         $split = preg_split('/\s*,\s*/', trim(get_cfg_var('disable_functions')));
@@ -1890,10 +1890,10 @@ class Alert
     public function __construct($head, $body, $buttons = false)
     {
         if ($buttons === false) {
-            $buttons = array();
+            $buttons = [];
         }
 
-        $this->_tokens = array('HEADER' => $head, 'CONTENT' => $body);
+        $this->_tokens = ['HEADER' => $head, 'CONTENT' => $body];
         $this->_buttons = $buttons;
     }
 
@@ -1920,7 +1920,7 @@ class Alert
 
         $buttons = $this->_buttons;
         if (! $buttons) {
-            $buttons = array(_("Okay") => $request->getURLtoSelf());
+            $buttons = [_("Okay") => $request->getURLtoSelf()];
         }
 
         global $WikiTheme;
@@ -1973,7 +1973,7 @@ function isWikiWord($word)
 // needed to store serialized objects-values only (perm, pref)
 function obj2hash($obj, $exclude = false, $fields = false)
 {
-    $a = array();
+    $a = [];
     if (! $fields) {
         $fields = get_object_vars($obj);
     }
@@ -2098,7 +2098,7 @@ function url_get_contents($uri)
  */
 function GenerateId($name)
 {
-    static $ids = array();
+    static $ids = [];
     if (empty($ids[$name])) {
         $ids[$name] = 1;
         return $name;
@@ -2172,7 +2172,7 @@ function extractSection($section, $content, $page, $quiet = false, $sectionhead 
     } else {
         $mesg = $section;
     }
-    return array(sprintf(_("<%s: no such section>"), $mesg));
+    return [sprintf(_("<%s: no such section>"), $mesg)];
 }
 
 // use this faster version: only load ExternalReferrer if we came from an external referrer

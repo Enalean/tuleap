@@ -36,7 +36,7 @@ if (! $mw_plugin || ! $plugin_manager->isPluginAvailable($mw_plugin)) {
  */
 require_once MEDIAWIKI_BASE_DIR . '/../fusionforge/compat/load_compatibilities_method.php';
 
-$vWhiteList = new Valid_WhiteList('action', array('save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list', 'site_update_allow_all_projects'));
+$vWhiteList = new Valid_WhiteList('action', ['save_permissions', 'save_language', 'index', 'site_index', 'site_update_allowed_project_list', 'site_update_allow_all_projects']);
 $vWhiteList->required();
 
 $action = $request->getValidated('action', $vWhiteList, 'index');

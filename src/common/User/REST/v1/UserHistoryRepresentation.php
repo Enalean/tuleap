@@ -34,7 +34,7 @@ class UserHistoryRepresentation
      */
     public function build(array $history)
     {
-        $this->entries = array();
+        $this->entries = [];
         foreach ($history as $history_entry) {
             $history_entry_representation = new UserHistoryEntryRepresentation();
             $history_entry_representation->build($history_entry);

@@ -66,12 +66,12 @@ class Tracker_SemanticFactoryTest extends TestCase
 
         $tracker = Mockery::mock(\Tracker::class);
 
-        $mapping = array(
+        $mapping = [
             'F8'  => 108,
             'F9'  => 109,
             'F16' => 116,
             'F14' => 114
-        );
+        ];
 
         //Title
         $title = $tsf->getInstanceFromXML($xml_title, $xml_title, $mapping, $tracker);

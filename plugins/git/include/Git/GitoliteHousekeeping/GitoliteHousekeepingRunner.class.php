@@ -59,13 +59,13 @@ class Git_GitoliteHousekeeping_GitoliteHousekeepingRunner
     /** @return Git_GitoliteHousekeeping_ChainOfResponsibility_Command */
     public function getChain()
     {
-        $commands = array(
+        $commands = [
             new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceStopper($this->response, $this->backend_service),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_CheckRunningEvents($this->response, $this->process_manager, $this->process),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_CleanUpGitoliteAdminRepo($this->response, $this->gitolite_var_path, $this->remote_admin_repository),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_EnableGitGc($this->response, $this->housekeeping_dao),
             new Git_GitoliteHousekeeping_ChainOfResponsibility_ServiceRestarter($this->response, $this->backend_service)
-        );
+        ];
         $this->setUpChainFromArrayOfCommands($commands);
         $head_of_chain = $commands[0];
 

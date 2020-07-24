@@ -115,7 +115,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\ProjectDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('rowCount')->andReturns(1);
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByUnixGroupName')->andReturns($exists);
         $rule = \Mockery::spy(\Rule_ProjectName::class);
@@ -142,7 +142,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\ProjectDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
         $exists->shouldReceive('rowCount')->andReturns(1);
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $rule = \Mockery::spy(\Rule_ProjectName::class);
         $url->shouldReceive('getProjectNameRule')->andReturns($rule);
@@ -170,10 +170,10 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $exists1 = \Mockery::spy(\DataAccessResult::class);
-        $exists1->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists1->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists1)->ordered();
@@ -189,7 +189,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
 
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => '42'))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => '42'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists);
         $_REQUEST['forum_id'] = 1;
@@ -203,7 +203,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\ForumDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
 
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => ForgeConfig::get('sys_news_group')))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao->shouldReceive('searchByGroupForumId')->andReturns($exists)->ordered();
         $_REQUEST['forum_id'] = 1;
@@ -211,7 +211,7 @@ class URLTest extends \PHPUnit\Framework\TestCase
 
         $dao2 = \Mockery::spy(\NewsBytesDao::class);
         $exists2 = \Mockery::spy(\DataAccessResult::class);
-        $exists2->shouldReceive('getRow')->andReturns(array('group_id' => ForgeConfig::get('sys_news_group')))->ordered();
+        $exists2->shouldReceive('getRow')->andReturns(['group_id' => ForgeConfig::get('sys_news_group')])->ordered();
         $exists2->shouldReceive('getRow')->andReturns(false)->ordered();
         $dao2->shouldReceive('searchByForumId')->andReturns($exists2)->ordered();
         $url->shouldReceive('getNewsBytesDao')->andReturns($dao2);
@@ -235,11 +235,11 @@ class URLTest extends \PHPUnit\Framework\TestCase
         $url = \Mockery::mock(\URL::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $dao = \Mockery::spy(\ArtifactDao::class);
         $exists = \Mockery::spy(\DataAccessResult::class);
-        $exists->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists->shouldReceive('getRow')->andReturns(false)->ordered();
 
         $exists1 = \Mockery::spy(\DataAccessResult::class);
-        $exists1->shouldReceive('getRow')->andReturns(array('group_id' => '1'))->ordered();
+        $exists1->shouldReceive('getRow')->andReturns(['group_id' => '1'])->ordered();
         $exists1->shouldReceive('getRow')->andReturns(false)->ordered();
 
         $dao->shouldReceive('searchArtifactId')->andReturns($exists)->ordered();

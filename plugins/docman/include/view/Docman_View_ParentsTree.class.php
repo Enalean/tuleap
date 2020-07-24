@@ -37,11 +37,11 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $html .= '<div id="docman_new_item_location_current_folder"></div>';
         $html .= '<div id="docman_new_item_location_other_folders">';
         $html .= '<ul class="docman_new_parentfolder docman_items">';
-        $html .= $this->fetchFolder($params['hierarchy']->accept($this, $params), array(
+        $html .= $this->fetchFolder($params['hierarchy']->accept($this, $params), [
             'is_last'    => true,
             'select'     => $params['current'],
             'input_name' => isset($params['input_name']) ? $params['input_name'] : 'item[parent_id]'
-        ));
+        ]);
         $html .= '</ul>';
         $html .= '</div>';
         $html .= '<div id="docman_new_item_location_position_panel" style="border-top:1px solid #e7e7e7">Position : ';
@@ -67,7 +67,7 @@ class Docman_View_ParentsTree /* implements Visitor*/
         $disabled = ($this->docman->userCanWrite($folder['id'])) ? '' : 'disabled="disabled"';
         $label_classes = $selected ? 'docman_item_actual_parent' : '';
 
-        $h  = '<li  class="' . Docman_View_Browse::getItemClasses(array('is_last' => $params['is_last'])) . '">';
+        $h  = '<li  class="' . Docman_View_Browse::getItemClasses(['is_last' => $params['is_last']]) . '">';
         $h .= '<label for="item_parent_id_' . $folder['id'] . '" class="' . $label_classes . '" >';
         $h .= '<input type="radio" ' . $selected . ' name="' . $params['input_name'] . '" value="' . $folder['id'] . '" id="item_parent_id_' . $folder['id'] . '" ' . $disabled . ' />';
         $h .= '<img src="' . $folder['icon_src'] . '" class="docman_item_icon" />';
@@ -94,17 +94,17 @@ class Docman_View_ParentsTree /* implements Visitor*/
         return $ok;
     }
 
-    public function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = [])
     {
         $t = '';
         if ($this->docman->userCanRead($item->getId()) && $this->_itemCanBeFetched($item, $params)) {
-            $t = array(
+            $t = [
                 'id'        => $item->getId(),
                 'parent_id' => $item->getParentId(),
                 'title'     => $item->getTitle(),
-                'items'     => array(),
-                'icon_src'  => $params['docman_icons']->getIconForItem($item, array('expanded' => true))
-            );
+                'items'     => [],
+                'icon_src'  => $params['docman_icons']->getIconForItem($item, ['expanded' => true])
+            ];
 
             $items = $item->getAllItems();
             $it = $items->iterator();
@@ -121,28 +121,28 @@ class Docman_View_ParentsTree /* implements Visitor*/
         }
         return $t;
     }
-    public function visitDocument(&$item, $params = array())
+    public function visitDocument(&$item, $params = [])
     {
         return false;
     }
-    public function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

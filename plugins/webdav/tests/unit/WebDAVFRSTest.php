@@ -52,7 +52,7 @@ final class WebDAVFRSTest extends TestCase
     public function testGetChildrenNoPackages(): void
     {
         $webDAVFRS = Mockery::mock(WebDAVFRS::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns(array());
+        $webDAVFRS->shouldReceive('getPackageList')->andReturns([]);
 
         $this->assertSame([], $webDAVFRS->getChildren());
     }
@@ -69,7 +69,7 @@ final class WebDAVFRSTest extends TestCase
         $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($package);
 
         $FRSPackage = Mockery::spy(FRSPackage::class);
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns(array($FRSPackage));
+        $webDAVFRS->shouldReceive('getPackageList')->andReturns([$FRSPackage]);
 
         $this->assertSame([], $webDAVFRS->getChildren());
     }
@@ -87,9 +87,9 @@ final class WebDAVFRSTest extends TestCase
         $webDAVFRS->shouldReceive('getWebDAVPackage')->andReturns($package);
 
         $FRSPackage = Mockery::spy(FRSPackage::class);
-        $webDAVFRS->shouldReceive('getPackageList')->andReturns(array($FRSPackage));
+        $webDAVFRS->shouldReceive('getPackageList')->andReturns([$FRSPackage]);
 
-        $this->assertSame(array($package), $webDAVFRS->getChildren());
+        $this->assertSame([$package], $webDAVFRS->getChildren());
     }
 
     /**

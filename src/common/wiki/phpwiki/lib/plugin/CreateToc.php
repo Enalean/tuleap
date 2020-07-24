@@ -64,7 +64,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'pagename'  => '[pagename]', // TOC of another page here?
+        return [ 'pagename'  => '[pagename]', // TOC of another page here?
                       // or headers=1,2,3 is also possible.
                       'headers'   => "!!!,!!,!",   // "!!!"=>h1, "!!"=>h2, "!"=>h3
                       'noheader'  => 0,            // omit <h1>Table of Contents</h1>
@@ -75,12 +75,12 @@ class WikiPlugin_CreateToc extends WikiPlugin
                       'liststyle' => 'dl',         // 'dl' or 'ul' or 'ol'
                       'indentstr' => '&nbsp;&nbsp;&nbsp;&nbsp;',
               'with_counter' => 1,
-                      );
+                      ];
     }
     // Initialisation of toc counter
     public function _initTocCounter()
     {
-        $counter = array(1 => 0, 2 => 0, 3 => 0);
+        $counter = [1 => 0, 2 => 0, 3 => 0];
         return $counter;
     }
 
@@ -109,8 +109,8 @@ class WikiPlugin_CreateToc extends WikiPlugin
     public function preg_quote($heading)
     {
         return str_replace(
-            array("/",".","?","*"),
-            array('\/','\.','\?','\*'),
+            ["/", ".", "?", "*"],
+            ['\/', '\.', '\?', '\*'],
             $heading
         );
     }
@@ -223,7 +223,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
      */
     public function _nextAnchor($s)
     {
-        static $anchors = array();
+        static $anchors = [];
 
         $s = str_replace(' ', '_', $s);
         $i = 1;
@@ -245,12 +245,12 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $basepage = ''
     ) {
         if (! $levels) {
-            $levels = array(1,2);
+            $levels = [1, 2];
         }
         $tocCounter = $this->_initTocCounter();
         reset($levels);
         sort($levels);
-        $headers = array();
+        $headers = [];
         $j = 0;
         for ($i = 0; $i < count($content); $i++) {
             foreach ($levels as $level) {
@@ -277,9 +277,9 @@ class WikiPlugin_CreateToc extends WikiPlugin
                         if ($counter) {
                             $texts = $this->_getCounter($tocCounter, $level) . ' - ' . $s;
                         }
-                        $headers[] = array('text' => $texts,
+                        $headers[] = ['text' => $texts,
                                            'anchor' => $anchor,
-                                           'level' => $level);
+                                           'level' => $level];
                         // Change original wikitext, but that is useless art...
                         $content[$i] = $match[1] . " #[|$manchor][$s|#TOC]";
                         // And now change the to be printed markup (XmlTree):
@@ -394,13 +394,13 @@ class WikiPlugin_CreateToc extends WikiPlugin
         $current = $page->getCurrentRevision();
         //FIXME: I suspect this only to crash with Apache2
         if (! $current->get('markup') or $current->get('markup') < 2) {
-            if (in_array(php_sapi_name(), array('apache2handler','apache2filter'))) {
+            if (in_array(php_sapi_name(), ['apache2handler', 'apache2filter'])) {
                 trigger_error(_("CreateToc disabled for old markup"), E_USER_WARNING);
                 return '';
             }
         }
         $content = $current->getContent();
-        $html = HTML::div(array('class' => 'toc', 'id' => 'toc'));
+        $html = HTML::div(['class' => 'toc', 'id' => 'toc']);
         /*if ($liststyle == 'dl')
             $list = HTML::dl(array('id'=>'toclist','class' => 'toc'));
         elseif ($liststyle == 'ul')
@@ -408,14 +408,14 @@ class WikiPlugin_CreateToc extends WikiPlugin
         elseif ($liststyle == 'ol')
             $list = HTML::ol(array('id'=>'toclist','class' => 'toc'));
             */
-        $list = HTML::ul(array('id' => 'toclist','class' => 'toc'));
+        $list = HTML::ul(['id' => 'toclist', 'class' => 'toc']);
 
         if (! strstr($headers, ",")) {
-            $headers = array($headers);
+            $headers = [$headers];
         } else {
             $headers = explode(",", $headers);
         }
-        $levels = array();
+        $levels = [];
         foreach ($headers as $h) {
             //replace !!! with level 1, ...
             if (strstr($h, "!")) {
@@ -441,7 +441,7 @@ class WikiPlugin_CreateToc extends WikiPlugin
             )
         ) {
             $container     = $list;
-            $levelRefs     = array();
+            $levelRefs     = [];
             $previousLevel = 3;
             foreach ($headers as $k => $h) {
                 if ($h['level'] < $previousLevel) {
@@ -492,8 +492,8 @@ function toggletoc(a) {
             $toclink = HTML(
                 _("Table Of Contents"),
                 " ",
-                HTML::a(array('name' => 'TOC')),
-                HTML::img(array(
+                HTML::a(['name' => 'TOC']),
+                HTML::img([
                                             'id' => 'toctoggle',
                                             'class' => 'wikiaction',
                                             'title' => _("Click to display to TOC"),
@@ -501,18 +501,18 @@ function toggletoc(a) {
                                             'height' => 15,
                                             'width' => 15,
                                             'border' => 0,
-                'src' => $jshide ? $close : $open ))
+                'src' => $jshide ? $close : $open ])
             );
         } else {
             $toclink = HTML::a(
-                array('name' => 'TOC',
+                ['name' => 'TOC',
                      'class' => 'wikiaction',
                      'title' => _("Click to display"),
-                     'onclick' => "toggletoc(this)"),
+                     'onclick' => "toggletoc(this)"],
                 _("Table Of Contents"),
                 HTML::span(
-                    array('style' => 'display:none',
-                    'id' => 'toctoggle'),
+                    ['style' => 'display:none',
+                    'id' => 'toctoggle'],
                     " "
                 )
             );

@@ -81,7 +81,7 @@ class FileFinder
     public function forcePathSlashes($path, $sep = '/')
     {
         if (is_array($path)) {
-            $result = array();
+            $result = [];
             foreach ($path as $dir) {
                 $result[] = $this->forcePathSlashes($dir, $sep);
             }
@@ -366,7 +366,7 @@ class FileFinder
     {
         // Try less specific versions of the locale
         $langs[] = $lang;
-        foreach (array('@', '.', '_') as $sep) {
+        foreach (['@', '.', '_'] as $sep) {
             if (($tail = strchr($lang, $sep))) {
                 $langs[] = substr($lang, 0, -strlen($tail));
             }
@@ -386,14 +386,14 @@ class FileFinder
             return $GLOBALS['LANG'];
         }
 
-        foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES') as $var) {
+        foreach (['LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES'] as $var) {
             $lang = setlocale(constant($var), 0);
             if (! empty($lang)) {
                 return $lang;
             }
         }
 
-        foreach (array('LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES', 'LANG') as $var) {
+        foreach (['LC_ALL', 'LC_MESSAGES', 'LC_RESPONSES', 'LANG'] as $var) {
             $lang = getenv($var);
             if (! empty($lang)) {
                 return $lang;
@@ -431,11 +431,11 @@ class PearFileFinder extends FileFinder
      * A good set of defaults is provided, so you can probably leave
      * this parameter blank.
      */
-    public function __construct($path = array())
+    public function __construct($path = [])
     {
         parent::__construct(array_merge(
             $path,
-            array('/usr/share/php4',
+            ['/usr/share/php4',
                                 '/usr/share/php',
                                 '/usr/lib/php4',
                                 '/usr/lib/php',
@@ -445,7 +445,7 @@ class PearFileFinder extends FileFinder
                                 '/usr/local/lib/php',
                                 '/System/Library/PHP',
                                 '/Apache/pear'        // Windows
-            )
+            ]
         ));
     }
 }
@@ -467,7 +467,7 @@ class LocalizedFileFinder extends FileFinder
     {
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
-        $path = array();
+        $path = [];
 
         $lang = $this->_get_lang();
         assert(! empty($lang));
@@ -504,7 +504,7 @@ class LocalizedButtonFinder extends FileFinder
         global $WikiTheme;
         $this->_pathsep = $this->_get_syspath_separator();
         $include_path = $this->_get_include_path();
-        $path = array();
+        $path = [];
 
         $lang = $this->_get_lang();
         assert(! empty($lang));

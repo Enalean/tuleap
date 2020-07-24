@@ -67,12 +67,12 @@ class TrackerRulesDateValidatorTest extends TestCase
         $tracker_rule_date2->shouldReceive('getSourceFieldId')->andReturn(12);
         $tracker_rule_date2->shouldReceive('getTargetFieldId')->andReturn(13);
 
-        $value_field_list = array(
+        $value_field_list = [
             10 => '',
             11 => '',
             12 => '',
             13 => '',
-        );
+        ];
         $this->assertTrue($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));
     }
 
@@ -105,12 +105,12 @@ class TrackerRulesDateValidatorTest extends TestCase
         $source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $target_field->shouldReceive('setHasErrors')->withArgs([true]);
 
-        $value_field_list = array(
+        $value_field_list = [
             10 => '',
             11 => '',
             12 => '',
             13 => '',
-        );
+        ];
         $this->assertFalse($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));
     }
 
@@ -144,10 +144,10 @@ class TrackerRulesDateValidatorTest extends TestCase
         $source_field->shouldReceive('setHasErrors')->withArgs([true]);
         $target_field->shouldReceive('setHasErrors')->withArgs([true]);
 
-        $value_field_list = array(
+        $value_field_list = [
             10 => '',
             11 => ''
-        );
+        ];
 
         $this->assertFalse($this->tracker_rules_date_validator->validateDateRules($value_field_list, [$tracker_rule_date, $tracker_rule_date2]));
     }

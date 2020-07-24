@@ -45,10 +45,10 @@ abstract class Tracker_Artifact_View_View
     public function getURL()
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'aid'  => $this->artifact->getId(),
                 'view' => $this->getIdentifier()
-            )
+            ]
         );
     }
 

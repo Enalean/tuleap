@@ -106,7 +106,7 @@ final class FileExtensionFilterIteratorTest extends TestCase
      */
     private function extractFilenames(\Iterator $iterator): array
     {
-        $filenames = array();
+        $filenames = [];
         foreach ($iterator as $path => $file_information) {
             $filenames[] = $file_information->getFilename();
         }

@@ -38,9 +38,9 @@ class Tracker_Chart_Burndown
     protected $width = 640;
     protected $height = 480;
 
-    private $graph_data_ideal_burndown   = array();
-    private $graph_data_human_dates      = array();
-    private $graph_data_remaining_effort = array();
+    private $graph_data_ideal_burndown   = [];
+    private $graph_data_human_dates      = [];
+    private $graph_data_remaining_effort = [];
 
     public function __construct(GraphOnTrackersV5_Burndown_Data $burndown_data)
     {
@@ -94,7 +94,7 @@ class Tracker_Chart_Burndown
         $date           = new DateTime();
         $date->setTimestamp($this->burndown_data->getTimePeriod()->getStartDate());
 
-        $data                  = array();
+        $data                  = [];
         $last_remaining_effort = null;
 
         foreach ($remaining_effort as $day => $effort) {
@@ -118,11 +118,11 @@ class Tracker_Chart_Burndown
                         $last_remaining_effort[$artifact] = $value;
                     }
 
-                    $data[$date->format('D d')] = array(array_sum($last_remaining_effort ?? []));
+                    $data[$date->format('D d')] = [array_sum($last_remaining_effort ?? [])];
                 } else {
                     if ($last_remaining_effort) {
-                        $data[$date->format('D d')] = array(array_sum($last_remaining_effort));
-                        $last_remaining_effort[$date->format('Ymd')] = array(array_sum($last_remaining_effort));
+                        $data[$date->format('D d')] = [array_sum($last_remaining_effort)];
+                        $last_remaining_effort[$date->format('Ymd')] = [array_sum($last_remaining_effort)];
                     } else {
                         $data[$date->format('D d')] = null;
                     }

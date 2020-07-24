@@ -104,16 +104,16 @@ class NaturePresenterFactory
 
     private function getDefaultNatures()
     {
-        return array(new NatureIsChildPresenter());
+        return [new NatureIsChildPresenter()];
     }
 
     private function getPluginsNatures()
     {
-        $natures = array();
+        $natures = [];
 
-        $params  = array(
+        $params  = [
             'natures' => &$natures
-        );
+        ];
 
         EventManager::instance()->processEvent(
             self::EVENT_GET_ARTIFACTLINK_NATURES,
@@ -133,7 +133,7 @@ class NaturePresenterFactory
 
     private function getCustomNatures()
     {
-        $natures = array();
+        $natures = [];
 
         foreach ($this->dao->searchAll() as $row) {
             $natures[] = $this->instantiateFromRow($row);
@@ -145,7 +145,7 @@ class NaturePresenterFactory
     /** @return string[] */
     public function getAllUsedNaturesByProject(Project $project): array
     {
-        $natures = array();
+        $natures = [];
 
         foreach ($this->dao->searchAllUsedNatureByProject($project->getGroupId()) as $row) {
             $natures[] = $row['nature'];
@@ -181,10 +181,10 @@ class NaturePresenterFactory
     {
         $presenter = null;
 
-        $params  = array(
+        $params  = [
             'presenter' => &$presenter,
             'shortname' => $shortname
-        );
+        ];
 
         EventManager::instance()->processEvent(
             self::EVENT_GET_NATURE_PRESENTER,

@@ -84,7 +84,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
         $res_numrows = db_query($sql);
         $row = db_fetch_array($res_numrows);
 
-        return array('projects' => $res, 'numrows' => $row['nb']);
+        return ['projects' => $res, 'numrows' => $row['nb']];
     }
 
     protected function _showAllProject()
@@ -93,7 +93,7 @@ class AdminDelegation_ShowProjectWidget extends Widget
 
         $urlParam = '';
 
-        $vFunc = new Valid_WhiteList('plugin_admindelegation_func', array('show_projects'));
+        $vFunc = new Valid_WhiteList('plugin_admindelegation_func', ['show_projects']);
         $vFunc->required();
         if ($request->valid($vFunc)) {
             $func = $request->get('plugin_admindelegation_func');
@@ -101,8 +101,8 @@ class AdminDelegation_ShowProjectWidget extends Widget
             $func = '';
         }
 
-        $condition    = array();
-        $allCriterias = array('group_name', 'unix_group_name', 'short_description');
+        $condition    = [];
+        $allCriterias = ['group_name', 'unix_group_name', 'short_description'];
         foreach ($allCriterias as $val) {
             $selectedCriteria[$val] = '';
         }

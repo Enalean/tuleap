@@ -32,9 +32,9 @@ $usage_options  = '';
 $usage_options .= 'p:'; // give me a project
 $usage_options .= 'u:'; // give me a user
 $usage_options .= 'h';  // help message
-$usage_long_options = array(
+$usage_long_options = [
     'help'
-);
+];
 
 function usage()
 {

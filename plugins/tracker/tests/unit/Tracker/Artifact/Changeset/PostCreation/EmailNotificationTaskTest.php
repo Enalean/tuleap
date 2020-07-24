@@ -53,7 +53,7 @@ class EmailNotificationTaskTest extends TestCase
         $this->user_helper                     = \Mockery::spy(\UserHelper::class);
         $this->custom_email_sender = \Mockery::mock(ConfigNotificationEmailCustomSender::class);
 
-        $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(array('format' => '', 'enabled' => 0));
+        $this->custom_email_sender->shouldReceive('getCustomSender')->andReturns(['format' => '', 'enabled' => 0]);
 
         $this->tracker  = \Mockery::spy(\Tracker::class);
         $this->artifact = \Mockery::spy(\Tracker_Artifact::class);
@@ -95,11 +95,11 @@ class EmailNotificationTaskTest extends TestCase
         $mail_sender = \Mockery::mock(MailSender::class);
         $mail_sender->shouldReceive('send')->withArgs([
             $this->changeset,
-            array( // recipients
+            [ // recipients
                 'a_user',
                 'email@example.com',
                 'comment1',
-            ),
+            ],
             [],              // headers
             \Mockery::any(), // from
             '[story #666] ', // subject

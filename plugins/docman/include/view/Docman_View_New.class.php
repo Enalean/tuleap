@@ -49,14 +49,14 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     }
     /* protected */ public function _getJSDocmanParameters($params)
     {
-        $doc_params = array();
+        $doc_params = [];
         if (isset($params['force_permissions'])) {
-            $doc_params['newItem'] = array(
+            $doc_params['newItem'] = [
                'hide_permissions'           => ! $params['display_permissions'],
                 'hide_news'                  => ! $params['display_news'],
                 'update_permissions_on_init' => false,
                 'default_position'           => $params['force_ordering']
-            );
+            ];
         }
         return array_merge(
             parent::_getJSDocmanParameters($params),
@@ -80,9 +80,9 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
 
     public function metadataToSkip()
     {
-        $labels = array('owner'       => 'owner',
+        $labels = ['owner'       => 'owner',
                         'create_date' => 'create_date',
-                        'update_date' => 'update_date');
+                        'update_date' => 'update_date'];
         return $labels;
     }
 
@@ -115,8 +115,8 @@ abstract class Docman_View_New extends Docman_View_Display /* implements Visitor
     public function _getPropertiesFields($params)
     {
         $get_fields = new Docman_View_GetFieldsVisitor($this->metadataToSkip());
-        $fields = $this->newItem->accept($get_fields, array('form_name'  => $params['form_name'],
-                                                            'theme_path' => $params['theme_path']));
+        $fields = $this->newItem->accept($get_fields, ['form_name'  => $params['form_name'],
+                                                            'theme_path' => $params['theme_path']]);
         return $fields;
     }
 

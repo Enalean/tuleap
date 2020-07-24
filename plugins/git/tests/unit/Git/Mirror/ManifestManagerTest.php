@@ -60,7 +60,7 @@ class ManifestManagerTest extends TestCase
         $this->generator   = \Mockery::spy(\Git_Mirror_ManifestFileGenerator::class);
         $this->data_mapper = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class);
 
-        $this->data_mapper->shouldReceive('fetchAll')->andReturns(array($this->singapour_mirror, $this->noida_mirror));
+        $this->data_mapper->shouldReceive('fetchAll')->andReturns([$this->singapour_mirror, $this->noida_mirror]);
 
         $this->manager = new Git_Mirror_ManifestManager($this->data_mapper, $this->generator);
     }
@@ -76,7 +76,7 @@ class ManifestManagerTest extends TestCase
 
     public function testItAsksToUpdateTheManifestsWhereTheRepositoryIsMirrored(): void
     {
-        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror, $this->singapour_mirror));
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([$this->noida_mirror, $this->singapour_mirror]);
 
         $this->generator->shouldReceive('addRepositoryToManifestFile')->with(\Mockery::any(), $this->repository)->times(2);
         $this->generator->shouldReceive('addRepositoryToManifestFile')->with($this->noida_mirror, $this->repository)->ordered();
@@ -87,7 +87,7 @@ class ManifestManagerTest extends TestCase
 
     public function testItAsksToDeleteTheRepositoryFromTheManifestsWhereTheRepositoryIsNotMirrored(): void
     {
-        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->noida_mirror));
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([$this->noida_mirror]);
 
         $this->generator->shouldReceive('addRepositoryToManifestFile')->with($this->noida_mirror, $this->repository)->once();
         $this->generator->shouldReceive('removeRepositoryFromManifestFile')->with($this->singapour_mirror, $this->repository->getPath())->once();
@@ -106,19 +106,19 @@ class ManifestManagerTest extends TestCase
 
     public function testItEnsuresThatManifestFilesOfMirrorsContainTheRepositories(): void
     {
-        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->singapour_mirror)->andReturns(array($this->repository));
-        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->noida_mirror)->andReturns(array($this->repository, $this->another_repository));
+        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->singapour_mirror)->andReturns([$this->repository]);
+        $this->data_mapper->shouldReceive('fetchRepositoriesForMirror')->with($this->noida_mirror)->andReturns([$this->repository, $this->another_repository]);
 
         $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->times(2);
-        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->singapour_mirror, array(new GitRepositoryGitoliteAdmin(), $this->repository))->ordered();
-        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->noida_mirror, array(new GitRepositoryGitoliteAdmin(), $this->repository, $this->another_repository))->ordered();
+        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->singapour_mirror, [new GitRepositoryGitoliteAdmin(), $this->repository])->ordered();
+        $this->generator->shouldReceive('ensureManifestContainsLatestInfoOfRepositories')->with($this->noida_mirror, [new GitRepositoryGitoliteAdmin(), $this->repository, $this->another_repository])->ordered();
 
         $this->manager->checkManifestFiles();
     }
 
     public function testItUpdatesTheCurrentTimeAfterAGitPush(): void
     {
-        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array($this->singapour_mirror));
+        $this->data_mapper->shouldReceive('fetchAllRepositoryMirrors')->andReturns([$this->singapour_mirror]);
 
         $this->generator->shouldReceive('updateCurrentTimeOfRepository')->with($this->singapour_mirror, $this->repository)->once();
 

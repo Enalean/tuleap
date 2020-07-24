@@ -121,7 +121,7 @@ class MigrationHandlerTest extends TestCase
         $gerrit_template_id = "none";
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns(array());
+        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
 
         $this->expectException('Tuleap\Git\Exceptions\RepositoryCannotBeMigratedOnRestrictedGerritServerException');
         $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
@@ -141,7 +141,7 @@ class MigrationHandlerTest extends TestCase
         $gerrit_template_id = "none";
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns(array());
+        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([]);
 
         $this->expectException('Tuleap\Git\Exceptions\RepositoryNotMigratedException');
         $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->never();
@@ -161,7 +161,7 @@ class MigrationHandlerTest extends TestCase
         $gerrit_template_id = "none";
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns(array(1 => $this->server));
+        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
 
         $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->once();
 
@@ -178,7 +178,7 @@ class MigrationHandlerTest extends TestCase
         $gerrit_template_id = "none";
 
         $this->server_factory->shouldReceive('getServerById')->with(1)->andReturns($this->server);
-        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns(array(1 => $this->server));
+        $this->server_factory->shouldReceive('getAvailableServersForProject')->andReturns([1 => $this->server]);
 
         $this->git_system_event_manager->shouldReceive('queueMigrateToGerrit')->once();
 

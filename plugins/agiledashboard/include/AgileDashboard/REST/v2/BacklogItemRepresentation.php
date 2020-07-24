@@ -154,7 +154,7 @@ class BacklogItemRepresentation
     {
         $child_trackers = $backlog_item->getArtifact()->getTracker()->getChildren();
 
-        $accept = array('trackers' => array());
+        $accept = ['trackers' => []];
         foreach ($child_trackers as $child_tracker) {
             $reference = TrackerReference::build($child_tracker);
 

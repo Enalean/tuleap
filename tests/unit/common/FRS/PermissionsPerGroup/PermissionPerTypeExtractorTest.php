@@ -92,19 +92,19 @@ class PermissionPerTypeExtractorTest extends TestCase
             $this->ugroup_manager
         );
 
-        $this->formatted_project_member = array(
+        $this->formatted_project_member = [
             'is_project_admin' => false,
             'is_static'        => true,
             'is_custom'        => false,
             'name'             => "Project members"
-        );
+        ];
 
-        $this->formatted_project_admin = array(
+        $this->formatted_project_admin = [
             'is_project_admin' => true,
             'is_static'        => true,
             'is_custom'        => false,
             'name'             => "Project admin"
-        );
+        ];
 
         $this->ugroup_project_member = new ProjectUGroup(
             [
@@ -126,11 +126,11 @@ class PermissionPerTypeExtractorTest extends TestCase
     public function testItAlwaysAddFRSAdminPermissionForFRSAdmin()
     {
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
-            array(
+            [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
                 )
-            )
+            ]
         );
         $this->ugroup_manager->method('getProjectAdminsUGroup')->willReturn($this->ugroup_project_admin);
         $this->ugroup_manager->method('getUGroup')->withConsecutive(
@@ -178,11 +178,11 @@ class PermissionPerTypeExtractorTest extends TestCase
     public function testItDontAddProjectAdminPermissionForFRSReaders()
     {
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
-            array(
+            [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
                 )
-            )
+            ]
         );
         $this->ugroup_manager->method('getUGroup')->withConsecutive(
             [$this->equalTo($this->project), (int) ProjectUGroup::PROJECT_MEMBERS]
@@ -225,11 +225,11 @@ class PermissionPerTypeExtractorTest extends TestCase
     public function testItDontAddProjectAdminPermissionOnFilterWhenUGroupIsNotInServicePermissions()
     {
         $this->permission_factory->method('getFrsUGroupsByPermission')->willReturn(
-            array(
+            [
                 ProjectUGroup::PROJECT_MEMBERS => new FRSPermission(
                     ProjectUGroup::PROJECT_MEMBERS
                 )
-            )
+            ]
         );
         $this->ugroup_manager->method('getUGroup')->willReturn(
             $this->ugroup_project_member

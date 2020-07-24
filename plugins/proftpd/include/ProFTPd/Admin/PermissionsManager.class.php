@@ -82,7 +82,7 @@ class PermissionsManager
         $this->savePermission(
             $new_project,
             self::PERM_READ,
-            array($new_ugroup_read)
+            [$new_ugroup_read]
         );
     }
 
@@ -99,7 +99,7 @@ class PermissionsManager
         $this->savePermission(
             $new_project,
             self::PERM_WRITE,
-            array($new_ugroup_write)
+            [$new_ugroup_write]
         );
     }
 

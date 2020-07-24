@@ -130,7 +130,7 @@ class Admin_PermissionDelegationController
     private function redirect($id = null)
     {
         if ($id) {
-            $redirect = http_build_query(array('id' => $id));
+            $redirect = http_build_query(['id' => $id]);
             $GLOBALS['Response']->redirect(self::REDIRECT_URL . '?' . $redirect);
         }
 
@@ -294,14 +294,14 @@ class Admin_PermissionDelegationController
 
     private function getFormattedGroups(array $groups, $current_id)
     {
-        $formatted_groups = array();
+        $formatted_groups = [];
 
         foreach ($groups as $group) {
-            $formatted_groups[] = array(
+            $formatted_groups[] = [
                 'id'         => $group->getId(),
                 'name'       => $group->getName(),
                 'is_current' => $group->getId() == $current_id,
-            );
+            ];
         }
 
         if (! $current_id && $formatted_groups) {

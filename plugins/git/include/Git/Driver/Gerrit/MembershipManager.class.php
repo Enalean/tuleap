@@ -41,7 +41,7 @@ class Git_Driver_Gerrit_MembershipManager
     /** @var ProjectManager */
     private $project_manager;
 
-    private $cache_groups = array();
+    private $cache_groups = [];
 
     public function __construct(
         Git_Driver_Gerrit_MembershipDao $dao,
@@ -91,13 +91,13 @@ class Git_Driver_Gerrit_MembershipManager
     private function getDynamicUgroupsForUser(PFUser $user)
     {
         $project_ids = $user->getProjects();
-        $ugroups     = array();
+        $ugroups     = [];
 
         foreach ($project_ids as $group_id) {
-            $ugroups[] = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'group_id' => $group_id));
+            $ugroups[] = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_MEMBERS, 'group_id' => $group_id]);
 
             if ($user->isAdmin($group_id)) {
-                $ugroups[] = new ProjectUGroup(array('ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'group_id' => $group_id));
+                $ugroups[] = new ProjectUGroup(['ugroup_id' => ProjectUGroup::PROJECT_ADMIN, 'group_id' => $group_id]);
             }
         }
 
@@ -186,7 +186,7 @@ class Git_Driver_Gerrit_MembershipManager
      */
     public function createArrayOfGroupsForServer(Git_RemoteServer_GerritServer $server, array $ugroups)
     {
-        $migrated_ugroups = array();
+        $migrated_ugroups = [];
 
         $need_flush = false;
 

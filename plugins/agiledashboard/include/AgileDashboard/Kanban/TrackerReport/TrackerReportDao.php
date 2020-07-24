@@ -68,7 +68,7 @@ class TrackerReportDao extends DataAccessObject
     private function addForKanban($kanban_id, array $tracker_report_ids)
     {
         $kanban_id = $this->da->escapeInt($kanban_id);
-        $values = array();
+        $values = [];
         foreach ($tracker_report_ids as $report_id) {
             $report_id = $this->da->escapeInt($report_id);
 

@@ -73,7 +73,7 @@ class FineGrainedPermission implements Permission
 
     public function getPatternWithoutPrefix()
     {
-        $matches = array();
+        $matches = [];
         preg_match("/^refs\/(?:heads|tags)\/(?P<pattern>.*)$/", $this->pattern, $matches);
 
         return $matches['pattern'];

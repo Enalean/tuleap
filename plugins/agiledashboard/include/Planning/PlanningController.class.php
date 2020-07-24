@@ -246,7 +246,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
 
     private function getKanbanSummaryPresenters()
     {
-        $kanban_presenters = array();
+        $kanban_presenters = [];
 
         $user = $this->request->getCurrentUser();
 
@@ -283,7 +283,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function getMilestoneAccessPresenters($plannings)
     {
-        $milestone_access_presenters = array();
+        $milestone_access_presenters = [];
         foreach ($plannings as $planning) {
             $milestone_type      = $planning->getPlanningTracker();
             $milestone_presenter = new Planning_Presenter_MilestoneAccessPresenter(
@@ -316,7 +316,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function getLastLevelMilestonesPresenters($last_plannings, PFUser $user)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($last_plannings as $last_planning) {
             $presenters[] = new Planning_Presenter_LastLevelMilestone(
@@ -333,7 +333,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
      */
     private function getMilestoneSummaryPresenters(Planning $last_planning, PFUser $user)
     {
-        $presenters   = array();
+        $presenters   = [];
         $has_cardwall = $this->hasCardwall($last_planning);
 
         $last_planning_current_milestones = $this->getPlanningMilestonesDependingOnTimePeriodOrStatus($last_planning);
@@ -452,7 +452,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
     private function redirectNonAdmin()
     {
         if (! $this->isUserAdmin()) {
-            $this->redirect(array('group_id' => $this->group_id));
+            $this->redirect(['group_id' => $this->group_id]);
         }
     }
 
@@ -513,7 +513,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
             $xml = $this->getFullConfigurationAsXML($project);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback(Feedback::ERROR, dgettext('tuleap-agiledashboard', 'Unable to export the configuration'));
-            $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
+            $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
         }
 
         $GLOBALS['Response']->sendXMLAttachementFile($xml, self::AGILE_DASHBOARD_TEMPLATE_NAME);
@@ -541,7 +541,7 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 Feedback::ERROR,
                 dgettext('tuleap-agiledashboard', 'You cannot create more than one planning in scrum V2.')
             );
-            $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
+            $this->redirect(['group_id' => $this->group_id, 'action' => 'new']);
         }
 
         if ($this->planning_request_validator->isValid($this->request)) {
@@ -557,14 +557,14 @@ class Planning_Controller extends BaseController //phpcs:ignore PSR1.Classes.Cla
                 dgettext('tuleap-agiledashboard', 'Planning succesfully created.')
             );
 
-            $this->redirect(array('group_id' => $this->group_id, 'action' => 'admin'));
+            $this->redirect(['group_id' => $this->group_id, 'action' => 'admin']);
         } else {
             // TODO: Error message should reflect validation detail
             $this->addFeedback(
                 Feedback::ERROR,
                 dgettext('tuleap-agiledashboard', 'Planning name, backlog tracker and planning tracker are mandatory.')
             );
-            $this->redirect(array('group_id' => $this->group_id, 'action' => 'new'));
+            $this->redirect(['group_id' => $this->group_id, 'action' => 'new']);
         }
     }
 

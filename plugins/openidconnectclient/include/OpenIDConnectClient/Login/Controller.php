@@ -212,12 +212,12 @@ class Controller
         }
 
         $this->session_storage[\openidconnectclientPlugin::SESSION_LINK_ID_KEY] = $unlinked_account->getId();
-        $query_parameters = array(
+        $query_parameters = [
             'action'    => 'link',
             'return_to' => $flow_response->getReturnTo(),
-        );
+        ];
         $user_informations = $flow_response->getUserInformations();
-        foreach (array('name', 'nickname', 'email', 'zoneinfo') as $query_parameter) {
+        foreach (['name', 'nickname', 'email', 'zoneinfo'] as $query_parameter) {
             if (isset($user_informations[$query_parameter])) {
                 $query_parameters[$query_parameter] = $user_informations[$query_parameter];
             }

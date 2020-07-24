@@ -63,7 +63,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
     public function testItDumpsTheConf()
     {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn(array());
+        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([]);
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
@@ -76,13 +76,13 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
         $this->assertSame(
             file_get_contents(__DIR__ . '/_fixtures/default_gitolite.conf'),
-            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
     }
 
     public function testItAllowsOverrideBySiteAdmin()
     {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn(array());
+        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([]);
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
@@ -95,13 +95,13 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
 
         $this->assertSame(
             file_get_contents(__DIR__ . '/_fixtures/override_gitolite.conf'),
-            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
     }
 
     public function testItGrantsReadAccessToGitoliteAdminForMirrorUsers()
     {
-        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn(array($this->mirror_1, $this->mirror_2));
+        $this->mirror_mapper->shouldReceive('fetchAll')->andReturn([$this->mirror_1, $this->mirror_2]);
         $serializer = new Git_Gitolite_ConfigPermissionsSerializer(
             $this->mirror_mapper,
             Mockery::spy(\Git_Driver_Gerrit_ProjectCreatorStatus::class),
@@ -113,7 +113,7 @@ class ConfigPermissionsSerializerGitoliteConfTest extends TestCase
         );
         $this->assertSame(
             file_get_contents(dirname(__FILE__) . '/_fixtures/mirrors_gitolite.conf'),
-            $serializer->getGitoliteDotConf(array('projecta', 'projectb'))
+            $serializer->getGitoliteDotConf(['projecta', 'projectb'])
         );
     }
 }

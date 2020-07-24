@@ -87,12 +87,12 @@ class Git_Mirror_MirrorDataMapper
 
         $user = $this->createUserForMirror($mirror_id, $password, $ssh_key);
 
-        return $this->getInstanceFromRow($user, array(
+        return $this->getInstanceFromRow($user, [
             'id'       => $mirror_id,
             'url'      => $url,
             'hostname' => $hostname,
             'name'     => $name
-        ));
+        ]);
     }
 
     private function checkThatHostnameIsValidOnCreation($hostname)
@@ -137,11 +137,11 @@ class Git_Mirror_MirrorDataMapper
 
     private function createUserForMirror($mirror_id, \Tuleap\Cryptography\ConcealedString $password, $ssh_key): PFUser
     {
-        $user = new PFUser(array(
+        $user = new PFUser([
             'user_name'       => self::MIRROR_OWNER_PREFIX . $mirror_id,
             'status'          => 'A',
             'unix_status'     => 'A'
-        ));
+        ]);
         $user->setPassword($password);
         $this->user_manager->createAccount($user);
         $this->user_manager->addSSHKeys($user, $ssh_key);
@@ -188,7 +188,7 @@ class Git_Mirror_MirrorDataMapper
      */
     private function mapDataAccessResultToArrayOfMirrors(array $rows)
     {
-        $mirrors = array();
+        $mirrors = [];
         foreach ($rows as $row) {
             $owner     = $this->getMirrorOwner($row['id']);
             $mirrors[] = $this->getInstanceFromRow($owner, $row);
@@ -199,7 +199,7 @@ class Git_Mirror_MirrorDataMapper
 
     public function fetchRepositoriesForMirror(Git_Mirror_Mirror $mirror)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
             $repositories[] = $this->repository_factory->instanciateFromRow($row);
         }
@@ -210,7 +210,7 @@ class Git_Mirror_MirrorDataMapper
     public function fetchAllProjectRepositoriesForMirror(Git_Mirror_Mirror $mirror, array $project_ids)
     {
         $rows         = $this->dao->fetchAllProjectRepositoriesForMirror($mirror->id, $project_ids);
-        $repositories = array();
+        $repositories = [];
 
         foreach ($rows as $row) {
             $repositories[] = $this->repository_factory->instanciateFromRow($row);
@@ -221,7 +221,7 @@ class Git_Mirror_MirrorDataMapper
 
     public function fetchRepositoriesPerMirrorPresenters(Git_Mirror_Mirror $mirror)
     {
-        $presenters = array();
+        $presenters = [];
 
         $previous_group_id = -1;
         foreach ($this->dao->fetchAllRepositoryMirroredByMirror($mirror->id) as $row) {
@@ -233,10 +233,10 @@ class Git_Mirror_MirrorDataMapper
                 $presenters[] = $project_presenter;
             }
 
-            $project_presenter->repositories[] = array(
+            $project_presenter->repositories[] = [
                 'repository_id'   => $row['repository_id'],
                 'repository_path' => $row['repository_path'],
-            );
+            ];
 
             $previous_group_id = $row['group_id'];
         }
@@ -249,7 +249,7 @@ class Git_Mirror_MirrorDataMapper
      */
     public function fetchAllProjectsConcernedByMirroring()
     {
-        $projects = array();
+        $projects = [];
 
         foreach ($this->dao->fetchAllProjectIdsConcernedByMirroring() as $row) {
             $projects[] = $this->project_manager->getProject($row['project_id']);
@@ -260,7 +260,7 @@ class Git_Mirror_MirrorDataMapper
 
     public function fetchAllProjectsConcernedByAMirror(Git_Mirror_Mirror $mirror)
     {
-        $projects = array();
+        $projects = [];
 
         foreach ($this->dao->fetchAllProjectIdsConcernedByAMirror($mirror->id) as $row) {
             $projects[] = $this->project_manager->getProject($row['project_id']);
@@ -330,7 +330,7 @@ class Git_Mirror_MirrorDataMapper
         }
 
         if ($ssh_key != $mirror->ssh_key) {
-            $this->user_manager->updateUserSSHKeys($mirror->owner, array($ssh_key));
+            $this->user_manager->updateUserSSHKeys($mirror->owner, [$ssh_key]);
         }
 
         $this->git_system_event_manager->queueUpdateMirror($id, $mirror->hostname);
@@ -391,10 +391,10 @@ class Git_Mirror_MirrorDataMapper
 
     public function getListOfMirrorIdsPerRepositoryForProject(Project $project)
     {
-        $repositories = array();
+        $repositories = [];
         foreach ($this->dao->fetchAllRepositoryMirroredInProject($project->getId()) as $row) {
             if (! isset($repositories[$row['repository_id']])) {
-                $repositories[$row['repository_id']] = array();
+                $repositories[$row['repository_id']] = [];
             }
 
             $repositories[$row['repository_id']][] = $row['mirror_id'];

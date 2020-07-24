@@ -112,14 +112,14 @@ class GitWebhooksSettingsEnhancer
 
             $params['sections'][] = new SectionOfWebhooksPresenter(
                 $GLOBALS['Language']->getText('plugin_hudson_git', 'jenkins_hook'),
-                array(
+                [
                     new JenkinsWebhookPresenter(
                         $repository,
                         $url,
                         $triggered_jobs,
                         $this->csrf
                     )
-                )
+                ]
             );
         }
 

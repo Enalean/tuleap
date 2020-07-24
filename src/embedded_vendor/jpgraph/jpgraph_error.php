@@ -139,8 +139,8 @@ class LineErrorPlot extends ErrorPlot
     // Data is (val, errdeltamin, errdeltamax)
     public function __construct($datay, $datax = false)
     {
-        $ly = array();
-        $ey = array();
+        $ly = [];
+        $ey = [];
         $n = count($datay);
         if ($n % 3 != 0) {
             JpGraphError::RaiseL(4002);

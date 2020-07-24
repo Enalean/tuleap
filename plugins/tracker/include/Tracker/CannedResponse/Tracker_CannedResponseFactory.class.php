@@ -86,7 +86,7 @@ class Tracker_CannedResponseFactory
      */
     public function getCannedResponses($tracker)
     {
-        $responses = array();
+        $responses = [];
         foreach ($this->getDao()->searchByTrackerId($tracker->id) as $row) {
             $row['tracker'] = $tracker;
             $responses[$row['id']] = $this->getInstanceFromRow($row);

@@ -40,11 +40,11 @@ class Rule_FileTest extends TestCase
         $fd = fopen($tmpName, 'w');
         fwrite($fd, 'A test file');
         fclose($fd);
-        $this->file = array('name'     => 'File test 1',
+        $this->file = ['name'     => 'File test 1',
                             'type'     => 'text/plain',
                             'size'     => '11',
                             'tmp_name' => $tmpName,
-                            'error'    => UPLOAD_ERR_OK);
+                            'error'    => UPLOAD_ERR_OK];
     }
 
     public function testOk(): void

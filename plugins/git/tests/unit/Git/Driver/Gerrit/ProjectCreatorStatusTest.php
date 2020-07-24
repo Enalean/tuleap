@@ -57,11 +57,11 @@ class ProjectCreatorStatusTest extends TestCase
         $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
         $this->repository->shouldReceive('getMigrationStatus')->andReturns(null);
 
-        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns(array(
+        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns([
             'status'      => SystemEvent::STATUS_ERROR,
             'create_date' => '1453886645',
             'log'         => 'stuff',
-        ));
+        ]);
 
         $this->assertEquals(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
@@ -85,11 +85,11 @@ class ProjectCreatorStatusTest extends TestCase
         $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
         $this->repository->shouldReceive('getMigrationStatus')->andReturns(null);
 
-        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns(array(
+        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns([
             'status'      => SystemEvent::STATUS_WARNING,
             'create_date' => '1453886645',
             'log'         => 'stuff',
-        ));
+        ]);
 
         $this->assertEquals(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
@@ -99,11 +99,11 @@ class ProjectCreatorStatusTest extends TestCase
         $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
         $this->repository->shouldReceive('getMigrationStatus')->andReturns(null);
 
-        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns(array(
+        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns([
             'status'      => SystemEvent::STATUS_DONE,
             'create_date' => '1453886645',
             'log'         => '',
-        ));
+        ]);
 
         $this->assertEquals(Git_Driver_Gerrit_ProjectCreatorStatus::DONE, $this->gerrit_status->getStatus($this->repository));
     }
@@ -123,11 +123,11 @@ class ProjectCreatorStatusTest extends TestCase
         $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(false);
         $this->repository->shouldReceive('getMigrationStatus')->andReturns(null);
 
-        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns(array(
+        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns([
             'status'      => SystemEvent::STATUS_NEW,
             'create_date' => '1453886645',
             'log'         => '',
-        ));
+        ]);
 
         $this->assertEquals(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE, $this->gerrit_status->getStatus($this->repository));
     }
@@ -137,11 +137,11 @@ class ProjectCreatorStatusTest extends TestCase
         $this->repository->shouldReceive('isMigratedToGerrit')->andReturns(true);
         $this->repository->shouldReceive('getMigrationStatus')->andReturns(null);
 
-        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns(array(
+        $this->dao->shouldReceive('getSystemEventForRepository')->andReturns([
             'status'      => SystemEvent::STATUS_RUNNING,
             'create_date' => '1453886645',
             'log'         => '',
-        ));
+        ]);
 
         $this->assertEquals(Git_Driver_Gerrit_ProjectCreatorStatus::QUEUE, $this->gerrit_status->getStatus($this->repository));
     }

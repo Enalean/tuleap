@@ -48,7 +48,7 @@ class Tracker_UgroupPermissionsGoldenRetriever
     public function getListOfInvolvedStaticUgroups(Tracker $template_tracker)
     {
         $project = $template_tracker->getProject();
-        $ugroups = array();
+        $ugroups = [];
         foreach ($this->permissions_dao->getAuthorizedStaticUgroupIds($template_tracker->getId()) as $id) {
             $ugroup = $this->ugroup_manager->getUGroup($project, $id);
             if ($ugroup) {

@@ -80,23 +80,23 @@ class GitPresenters_AdminGitAdminsPresenter extends GitPresenters_AdminPresenter
 
     private function getSelectorOptions()
     {
-        $options = array($this->getProjectMembersOption());
+        $options = [$this->getProjectMembersOption()];
         foreach ($this->static_ugroups as $group) {
-            $options[] = array(
+            $options[] = [
                 'value'    => $group->getId(),
                 'label'    => $group->getTranslatedName(),
                 'selected' => isset($this->selected_ugroups) ? in_array($group->getId(), $this->selected_ugroups) : false
-            );
+            ];
         }
         return $options;
     }
 
     private function getProjectMembersOption()
     {
-        return array(
+        return [
             'value'    => ProjectUGroup::PROJECT_MEMBERS,
             'label'    => $GLOBALS['Language']->getText('project_admin_editugroup', 'proj_members'),
             'selected' => isset($this->selected_ugroups) ? in_array(ProjectUGroup::PROJECT_MEMBERS, $this->selected_ugroups) : false
-        );
+        ];
     }
 }

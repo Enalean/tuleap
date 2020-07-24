@@ -28,9 +28,9 @@ require_once __DIR__ . '/admin_utils.php';
 $request = HTTPRequest::instance();
 $request->checkUserIsSuperUser();
 
-$fake_project        = new Project(array('group_id' => -1, 'unix_group_name' => $Language->getText('admin_generic_user', 'unix_name_template'), 'group_name' => $Language->getText('admin_generic_user', 'name_template')));
-$sample_project      = new Project(array('group_id' => -1, 'unix_group_name' => 'gpig', 'group_name' => 'Guinea Pig'));
-$fake_user           = new PFUser(array());
+$fake_project        = new Project(['group_id' => -1, 'unix_group_name' => $Language->getText('admin_generic_user', 'unix_name_template'), 'group_name' => $Language->getText('admin_generic_user', 'name_template')]);
+$sample_project      = new Project(['group_id' => -1, 'unix_group_name' => 'gpig', 'group_name' => 'Guinea Pig']);
+$fake_user           = new PFUser([]);
 
 $generic_user_factory = new GenericUserFactory(
     UserManager::instance(),
@@ -44,14 +44,14 @@ $sample_generic_user = $generic_user_factory->getGenericUser($sample_project, $f
 $name_css = '';
 $valid_username_format = new Valid_GenericUserNameSuffix('');
 if (! $valid_username_format->validate($sample_generic_user->getUnixName())) {
-    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_generic_user', 'invalid_suffix', array(GenericUserFactory::CONFIG_KEY_SUFFIX)));
+    $GLOBALS['Response']->addFeedback(Feedback::ERROR, $Language->getText('admin_generic_user', 'invalid_suffix', [GenericUserFactory::CONFIG_KEY_SUFFIX]));
     $name_css = 'highlight';
 }
 
-site_admin_header(array('title' => $Language->getText('admin_generic_user', 'title'), 'main_classes' => array('tlp-framed')));
+site_admin_header(['title' => $Language->getText('admin_generic_user', 'title'), 'main_classes' => ['tlp-framed']]);
 echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
       <p>' . $Language->getText('admin_generic_user', 'help') . '</p>
-      <p>' . $Language->getText('admin_generic_user', 'help_update', array(GenericUserFactory::CONFIG_KEY_SUFFIX)) . '</p>
+      <p>' . $Language->getText('admin_generic_user', 'help_update', [GenericUserFactory::CONFIG_KEY_SUFFIX]) . '</p>
       <p>
         <label><b>' . $Language->getText('account_register', 'realname') . '</b>:</label><br />
         ' . $fake_generic_user->getRealName() . '
@@ -71,4 +71,4 @@ echo '<h1>' . $Language->getText('admin_generic_user', 'title') . '</h1>
      </p>
      <p><a href="/admin">' . $Language->getText('admin_generic_user', 'back') . '</a></p>';
 
-site_admin_footer(array());
+site_admin_footer([]);

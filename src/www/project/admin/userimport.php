@@ -56,15 +56,15 @@ $import        = new UserImport(
 $user_filename = $_FILES['user_filename']['tmp_name'];
 
 if (! file_exists($user_filename) || ! is_readable($user_filename)) {
-    return $GLOBALS['Response']->send400JSONErrors(array('error' => _('You should provide a file in entry.')));
+    return $GLOBALS['Response']->send400JSONErrors(['error' => _('You should provide a file in entry.')]);
 }
 
 $user_collection = $import->parse($request->get('project_id'), $user_filename);
 
 $GLOBALS['Response']->sendJSON(
-    array(
+    [
         'users'                  => $user_collection->getFormattedUsers(),
         'warning_multiple_users' => $user_collection->getWarningsMultipleUsers(),
         'warning_inavlid_users'  => $user_collection->getWarningsInvalidUsers()
-    )
+    ]
 );

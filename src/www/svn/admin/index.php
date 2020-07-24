@@ -25,13 +25,13 @@ if (! user_ismember($group_id, 'A') && ! user_ismember($group_id, 'SVN_ADMIN')) 
     exit_permission_denied();
 }
 
-$vFunc = new Valid_WhiteList('func', array(
+$vFunc = new Valid_WhiteList('func', [
     'general_settings',
     'immutable_tags',
     'access_control',
     'notification',
     'access_control_version'
-));
+]);
 $vFunc->required();
 if ($request->valid($vFunc)) {
     $func = $request->get('func');
@@ -54,7 +54,7 @@ if ($request->valid($vFunc)) {
             $dao = new SVN_AccessFile_DAO();
             $result = $dao->getVersionContent($version_id);
 
-            $GLOBALS['Response']->sendJSON(array('content' => $result));
+            $GLOBALS['Response']->sendJSON(['content' => $result]);
 
             break;
         case 'notification':
@@ -69,10 +69,10 @@ if ($request->valid($vFunc)) {
         exit_no_group();
     }
 
-    svn_header_admin(array(
+    svn_header_admin([
         'title' => $Language->getText('svn_admin_index', 'admin'),
         'help' => 'svn.html#subversion-administration-interface'
-       ));
+       ]);
 
     echo '<H2>' . $Language->getText('svn_admin_index', 'admin') . '</H2>';
     echo '<H3><a href="/svn/admin/?func=general_settings&group_id=' . $group_id . '">' . $Language->getText('svn_admin_index', 'gen_sett') . '</a></H3>';
@@ -86,5 +86,5 @@ if ($request->valid($vFunc)) {
     echo '<H3><a href="/svn/admin/?func=notification&group_id=' . $group_id . '">' . $Language->getText('svn_admin_index', 'email_sett') . '</a></H3>';
     echo '<p>' . $Language->getText('svn_admin_index', 'email_comment') . '</P>';
 
-    svn_footer(array());
+    svn_footer([]);
 }

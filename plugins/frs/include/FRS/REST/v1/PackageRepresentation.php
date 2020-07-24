@@ -49,10 +49,10 @@ class PackageRepresentation extends PackageMinimalRepresentation
 
         $this->permissions_for_groups = $permissions_for_groups;
 
-        $this->resources = array(
-            'releases' => array(
+        $this->resources = [
+            'releases' => [
                 'uri' => $this->uri . '/' . ReleaseRepresentation::ROUTE
-            )
-        );
+            ]
+        ];
     }
 }

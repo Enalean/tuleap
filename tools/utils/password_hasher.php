@@ -20,7 +20,7 @@
  */
 
 $password_hasher_short_options = 'p:u';
-$password_hasher_long_options  = array('password:', 'unix');
+$password_hasher_long_options  = ['password:', 'unix'];
 
 $options  = getopt($password_hasher_short_options, $password_hasher_long_options);
 $password = false;

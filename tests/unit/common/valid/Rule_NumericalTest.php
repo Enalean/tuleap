@@ -83,7 +83,7 @@ class Rule_NumericalTest extends TestCase
 
     public function testWhiteList(): void
     {
-        $r = new Rule_WhiteList(array('-1', '0', '42'));
+        $r = new Rule_WhiteList(['-1', '0', '42']);
 
         $this->assertTrue($r->isValid('-1'));
         $this->assertTrue($r->isValid('0'));

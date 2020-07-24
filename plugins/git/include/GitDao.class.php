@@ -228,7 +228,7 @@ class GitDao extends \Tuleap\DB\DataAccessObject
         }
 
         if (empty($projectId)) {
-            return array();
+            return [];
         }
 
         if ($scope) {

@@ -79,10 +79,10 @@ class FRSPermissionManagerTest extends TestCase
 
     public function testItRetrunsTrueIfUserIsInFrsGroupAdmin()
     {
-        $permissions = array(
+        $permissions = [
             '5' => new FRSPermission('5'),
             '4' => new FRSPermission('4')
-        );
+        ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
         $this->user->shouldReceive('isMemberOfUGroup')->with(5, 101)->andReturns(false);
@@ -93,10 +93,10 @@ class FRSPermissionManagerTest extends TestCase
 
     public function testItReturnsFalseIfUserIsNotProjectAdminAndUserIsNotInFrsGroupAdmin()
     {
-        $permissions = array(
+        $permissions = [
             '5' => new FRSPermission('5'),
             '4' => new FRSPermission('4')
-        );
+        ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
         $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
@@ -108,9 +108,9 @@ class FRSPermissionManagerTest extends TestCase
     {
         $this->user->shouldReceive('isSuperUser')->andReturns(true);
 
-        $permissions = array(
+        $permissions = [
             '4' => new FRSPermission('4')
-        );
+        ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
         $this->user->shouldReceive('isMemberOfUGroup')->andReturns(false);
@@ -134,9 +134,9 @@ class FRSPermissionManagerTest extends TestCase
 
     public function testUserHasReadAccessIfTheyAreAdmin()
     {
-        $permissions = array(
+        $permissions = [
             '4' => new FRSPermission('4')
-        );
+        ];
 
         $this->permission_factory->shouldReceive('getFrsUgroupsByPermission')->with($this->project, FRSPermission::FRS_ADMIN)->andReturns($permissions);
         $this->user->shouldReceive('isMemberOfUGroup')->with(4, 101)->andReturns(true);

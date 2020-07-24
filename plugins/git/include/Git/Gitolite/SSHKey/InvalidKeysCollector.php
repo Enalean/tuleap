@@ -25,7 +25,7 @@ class InvalidKeysCollector
     /**
      * @var Key[]
      */
-    private $collector = array();
+    private $collector = [];
 
     public function add(Key $key)
     {

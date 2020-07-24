@@ -217,7 +217,7 @@ class RecipientsManagerTest extends TestCase
         $field = $this->getSelectBox();
         $field->shouldReceive('isNotificationsSupported')->andReturns(true);
         $field->shouldReceive('hasNotifications')->andReturns(true);
-        $field->shouldReceive('getRecipients')->andReturns(array('recipient1'));
+        $field->shouldReceive('getRecipients')->andReturns(['recipient1']);
         $field->shouldReceive('userCanRead')->andReturns(true);
         $this->formelement_factory->shouldReceive('getFieldById')->with(1)->andReturns($field);
 

@@ -42,7 +42,7 @@ class PermissionPerGroupUGroupRetriever
             return $permissions;
         }
 
-        return array();
+        return [];
     }
 
     public function getAllUGroupForObject(\Project $project, $object_id, $permission_type)

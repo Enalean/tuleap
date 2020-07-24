@@ -76,24 +76,24 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         $new_values     = $this->extractArtifactLinkFromXml($field_change, $artifact);
         $last_changeset = $artifact->getLastChangeset();
 
-        $removed_values = array();
+        $removed_values = [];
         if ($last_changeset) {
             $removed_values = $this->removeValuesIfDontExistInLastChangeset($new_values['new_values'], $last_changeset->getValues());
         }
 
         $add_values = implode(',', $new_values['new_values']);
 
-        return array(
+        return [
             'new_values'     => $add_values,
             'removed_values' => $removed_values,
             'natures'        => $new_values['natures']
-        );
+        ];
     }
 
     private function extractArtifactLinkFromXml(SimpleXMLElement $field_change, Tracker_Artifact $artifact)
     {
-        $artifact_links = array();
-        $natures        = array();
+        $artifact_links = [];
+        $natures        = [];
 
         foreach ($field_change->value as $artifact_link) {
             $linked_artifact_id = (int) $artifact_link;
@@ -110,12 +110,12 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
             }
         }
 
-        return array("new_values" => $artifact_links, "natures" => $natures);
+        return ["new_values" => $artifact_links, "natures" => $natures];
     }
 
     private function checkNatureExistOnPlateform($linked_nature, $linked_artifact_id)
     {
-        $system_nature = array();
+        $system_nature = [];
         $this->retrieveSystemNatures($system_nature);
 
         if ($linked_nature && ! in_array($linked_nature, $system_nature)) {
@@ -158,7 +158,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyArtifactLink implements T
         array $artifact_links,
         array $changesets
     ) {
-        $removed_artifacts = array();
+        $removed_artifacts = [];
         foreach ($changesets as $changeset) {
             if (is_a($changeset, "Tracker_Artifact_ChangesetValue_ArtifactLink")) {
                 foreach ($changeset->getArtifactIds() as $artifact_id) {

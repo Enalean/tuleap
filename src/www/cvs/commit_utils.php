@@ -44,11 +44,11 @@ function commits_header($params)
     $params['toptab'] = 'cvs';
     $group_id        = $params['group'];
 
-    $additional_params = array();
+    $additional_params = [];
     if (isset($params['body_class'])) {
-        $additional_params = array(
+        $additional_params = [
             'body_class' => $params['body_class']
-        );
+        ];
     }
 
     $pm = ProjectManager::instance();
@@ -63,39 +63,39 @@ function commits_header($params)
         return;
     }
 
-    $toolbar = array();
-    $toolbar[] = array('title' => $GLOBALS['Language']->getText('svn_utils', 'svn_info'),
-        'url'   => '/cvs/?func=info&group_id=' . $group_id);
+    $toolbar = [];
+    $toolbar[] = ['title' => $GLOBALS['Language']->getText('svn_utils', 'svn_info'),
+        'url'   => '/cvs/?func=info&group_id=' . $group_id];
 
     if ($project->isPublic() || user_isloggedin()) {
-        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse'),
-            'url'   => '/cvs/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=cvs');
+        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_browse'),
+            'url'   => '/cvs/viewvc.php/?root=' . $project->getUnixName(false) . '&roottype=cvs'];
     }
 
     if (user_isloggedin()) {
-        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_my'),
-            'url'   => '/cvs/?func=browse&group_id=' . $group_id . '&set=my');
-        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query'),
-            'url'   => '/cvs/?func=browse&group_id=' . $group_id);
+        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_my'),
+            'url'   => '/cvs/?func=browse&group_id=' . $group_id . '&set=my'];
+        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_query'),
+            'url'   => '/cvs/?func=browse&group_id=' . $group_id];
     }
     if (user_ismember($group_id, 'A')) {
-        $toolbar[] = array('title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin'),
-            'url'   => '/cvs/?func=admin&group_id=' . $group_id);
+        $toolbar[] = ['title' => $GLOBALS['Language']->getText('cvs_commit_utils', 'menu_admin'),
+            'url'   => '/cvs/?func=admin&group_id=' . $group_id];
     }
     if (! isset($params['help'])) {
         $params['help'] = "cvs.html";
     }
-    $toolbar[] = array('title' => $GLOBALS['Language']->getText('global', 'help'),
-        'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');');
+    $toolbar[] = ['title' => $GLOBALS['Language']->getText('global', 'help'),
+        'url'   => 'javascript:help_window(\'/doc/' . UserManager::instance()->getCurrentUser()->getShortLocale() . '/user-guide/code-versioning/' . $params['help'] . '\');'];
 
     $service->displayHeader(
         $params['title'],
-        array(
-            array(
+        [
+            [
                 'title' => $GLOBALS['Language']->getText('project_admin_editservice', 'service_cvs_lbl_key'),
                 'url' => '/cvs/?group_id=' . $group_id
-            )
-        ),
+            ]
+        ],
         $toolbar,
         $additional_params
     );
@@ -215,7 +215,7 @@ function show_commitslist(
         $text = $GLOBALS['Language']->getText('cvs_commit_utils', 'activate');
     }
 
-    echo '<P>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg', array($url . '&order=#results',$url_alternate_sort,$text));
+    echo '<P>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'sort_msg', [$url . '&order=#results', $url_alternate_sort, $text]);
 
     // If all bugs on screen so no prev/begin pointer at all
     if ($total_rows > $chunksz) {
@@ -280,13 +280,13 @@ function show_commitslist(
 
     $rows = db_numrows($result);
     $url .= "&order=";
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'id');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'description');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'date');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'who');
 
-    $links_arr = array();
+    $links_arr = [];
     $links_arr[] = $url . 'id#results';
     $links_arr[] = $url . 'description#results';
     $links_arr[] = $url . 'f_when#results';
@@ -462,7 +462,7 @@ function show_commit_details($group_id, $commit_id, $result)
     }
 
     echo '<h3>' . $GLOBALS['Language']->getText('cvs_commit_utils', 'impacted_file') . '</h3>';
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'file');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'rev');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'branch');
@@ -470,7 +470,7 @@ function show_commit_details($group_id, $commit_id, $result)
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'added_line');
     $title_arr[] = $GLOBALS['Language']->getText('cvs_commit_utils', 'removed_line');
 
-    $links_arr = array();
+    $links_arr = [];
     $links_arr[] = $url . 'filename';
     $links_arr[] = $url . 'revision';
     $links_arr[] = $url . 'branch';
@@ -504,7 +504,7 @@ function show_commit_details($group_id, $commit_id, $result)
           // back to rcs to complete
             $repo = db_result($result, $i, 'repository');
             $command = "rlog -r" . escapeshellarg($revision) . " " . escapeshellarg($repo . "/" . $filename);
-            $output = array();
+            $output = [];
             exec($command, $output, $ret);
             $added = 0;
             $removed = 0;
@@ -547,7 +547,7 @@ function show_commit_details($group_id, $commit_id, $result)
                         $previous = join(".", $prev);
                     } else {
                         $index = 0;
-                        $new_prev = array();
+                        $new_prev = [];
                         while ($index <= $lastIndex - 2) {
                             $new_prev[$index] = $prev[$index];
                             $index++;
@@ -602,7 +602,7 @@ function format_cvs_history($group_id)
     if (! $res_cvsfullhist || db_numrows($res_cvsfullhist) < 1) {
         $output = '<P>' . $GLOBALS['Language']->getText('cvs_intro', 'no_history');
     } else {
-        $cvshist = array();
+        $cvshist = [];
         while ($row_cvsfullhist = db_fetch_array($res_cvsfullhist)) {
             $cvshist[$row_cvsfullhist['user_name']]['full'] = $row_cvsfullhist['commits'];
             $cvshist[$row_cvsfullhist['user_name']]['last'] = 0;
@@ -795,7 +795,7 @@ function cvs_get_revisions(&$project, $offset, $chunksz, $_tag = 100, $_branch =
     $result1 = db_query($sql1);
     $totalrows = db_numrows($result1);
 
-    return array($result, $totalrows);
+    return [$result, $totalrows];
 }
 
 function cvs_get_revision_detail($commit_id)

@@ -48,9 +48,9 @@ class CommitRulesRepresentation
 
     public function toArray()
     {
-        return array(
+        return [
             HookConfig::MANDATORY_REFERENCE       => $this->is_reference_mandatory,
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => $this->is_commit_message_change_allowed,
-        );
+        ];
     }
 }

@@ -33,7 +33,7 @@ class ProjectPlanningsResource
 
     public function get(PFUser $user, Project $project, $limit, $offset)
     {
-        $planning_representations = array();
+        $planning_representations = [];
         $project_id               = $project->getId();
 
         $all_plannings = PlanningFactory::build()->getPlannings($user, $project_id);

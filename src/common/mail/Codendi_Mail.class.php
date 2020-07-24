@@ -80,12 +80,12 @@ class Codendi_Mail implements Codendi_Mail_Interface
     /**
      * @var MimePart[]
      */
-    private $attachments = array();
+    private $attachments = [];
 
     /**
      * @var MimePart[]
      */
-    private $inline_attachments = array();
+    private $inline_attachments = [];
 
     public function __construct()
     {
@@ -132,9 +132,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
         if (preg_match($pattern, $mail, $matches)) {
             // Remove extra spaces and quotes
             $name = trim(trim($matches[1]), '"\'');
-            return array($matches[2], $name);
+            return [$matches[2], $name];
         } else {
-            return array($mail, '');
+            return [$mail, ''];
         }
     }
 
@@ -159,13 +159,13 @@ class Codendi_Mail implements Codendi_Mail_Interface
      */
     private function getRecipientsFromHeader($recipient_type)
     {
-        $allowed = array('To', 'Cc', 'Bcc');
+        $allowed = ['To', 'Cc', 'Bcc'];
         if (in_array($recipient_type, $allowed)) {
             $headers = $this->message->getHeaders();
             if ($headers->has($recipient_type)) {
                 $recipient_header = $headers->get($recipient_type);
                 $list_addresses   = $recipient_header->getAddressList();
-                $addresses = array();
+                $addresses = [];
                 foreach ($list_addresses as $address) {
                     $addresses[] = $address->getEmail();
                 }
@@ -183,7 +183,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     public function clearFrom()
     {
-        $this->message->setFrom(array());
+        $this->message->setFrom([]);
     }
 
     public function setSubject($subject)
@@ -459,7 +459,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function setToUser($to)
     {
         $arrayTo = $this->validateArrayOfUsers($to);
-        $arrayToRealName = array();
+        $arrayToRealName = [];
         foreach ($arrayTo as $to) {
             $this->message->addTo($to['email'], $to['real_name']);
             $arrayToRealName[] = $to['real_name'];
@@ -476,7 +476,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function setBccUser($bcc)
     {
         $arrayBcc = $this->validateArrayOfUsers($bcc);
-        $arrayBccRealName = array();
+        $arrayBccRealName = [];
         foreach ($arrayBcc as $user) {
             $this->message->addBcc($user['email'], $user['real_name']);
             $arrayBccRealName[] = $user['real_name'];
@@ -493,7 +493,7 @@ class Codendi_Mail implements Codendi_Mail_Interface
     public function setCcUser($cc)
     {
         $arrayCc = $this->validateArrayOfUsers($cc);
-        $arrayCcRealName = array();
+        $arrayCcRealName = [];
         foreach ($arrayCc as $user) {
             $this->message->addCc($user['email'], $user['real_name']);
             $arrayCcRealName[] = $user['real_name'];
@@ -571,9 +571,9 @@ class Codendi_Mail implements Codendi_Mail_Interface
 
     private function clearRecipients()
     {
-        $this->message->setTo(array());
-        $this->message->setCc(array());
-        $this->message->setBcc(array());
+        $this->message->setTo([]);
+        $this->message->setCc([]);
+        $this->message->setBcc([]);
     }
 
     public function addAdditionalHeader($name, $value)

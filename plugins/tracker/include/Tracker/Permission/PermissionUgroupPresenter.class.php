@@ -24,7 +24,7 @@ class Tracker_Permission_PermissionUgroupPresenter
     private $id;
     private $name;
     private $url;
-    private $permissions_list = array();
+    private $permissions_list = [];
 
     public function __construct($id, $name, $url, array $permissions_list)
     {

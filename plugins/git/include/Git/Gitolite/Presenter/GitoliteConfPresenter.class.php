@@ -24,7 +24,7 @@ class Git_Gitolite_Presenter_GitoliteConfPresenter
     /**
      * @var array
      */
-    public $mirrors = array();
+    public $mirrors = [];
 
     /**
      * @var array

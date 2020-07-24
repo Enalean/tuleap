@@ -70,7 +70,7 @@ class PluginResourceRestrictor
     public function searchAllowedProjectsOnPlugin(Plugin $plugin)
     {
         $rows     = $this->restricted_plugin_dao->searchAllowedProjectsOnResource($plugin->getId());
-        $projects = array();
+        $projects = [];
 
         foreach ($rows as $row) {
             $projects[] = new Project($row);

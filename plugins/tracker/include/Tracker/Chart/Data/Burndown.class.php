@@ -44,9 +44,9 @@ class Tracker_Chart_Data_Burndown
         $this->time_period               = $time_period;
         $this->capacity                  = $capacity;
         $this->is_under_calcul           = $is_under_calcul;
-        $this->remaining_effort          = array();
-        $this->ideal_effort              = array();
-        $this->remaining_efforts_at_date = array();
+        $this->remaining_effort          = [];
+        $this->ideal_effort              = [];
+        $this->remaining_efforts_at_date = [];
     }
 
     /**
@@ -79,7 +79,7 @@ class Tracker_Chart_Data_Burndown
      */
     public function getRemainingEffort()
     {
-        $remaining_effort = array();
+        $remaining_effort = [];
 
         if ($this->time_period->isTodayBeforeTimePeriod()) {
             $remaining_effort[] = null;
@@ -142,11 +142,11 @@ class Tracker_Chart_Data_Burndown
 
     public function getJsonRepresentation()
     {
-        $values = array(
+        $values = [
             'duration' => $this->getDuration(),
             'capacity' => $this->getCapacityValueInJson(),
             'points'   => $this->getRemainingEffortWithoutNullValues()
-        );
+        ];
 
         return json_encode($values);
     }
@@ -162,7 +162,7 @@ class Tracker_Chart_Data_Burndown
     public function getRemainingEffortWithoutNullValues()
     {
         if ($this->is_under_calcul === true) {
-            return array();
+            return [];
         }
 
         return $this->removeNullRemainingEffort($this->getRemainingEffort());
@@ -173,7 +173,7 @@ class Tracker_Chart_Data_Burndown
      */
     private function removeNullRemainingEffort($remaining_efforts)
     {
-        $remaining_effort_without_null_values = array();
+        $remaining_effort_without_null_values = [];
 
         foreach ($remaining_efforts as $remaining_effort) {
             if ($remaining_effort !== null) {

@@ -13,13 +13,13 @@ if (! $group_id) {
 }
 
 
-session_require(array('group' => $group_id,'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
-commits_header(array(
+commits_header([
     'title' => $GLOBALS['Language']->getText('cvs_admin_commit', 'title'),
     'help'  => 'cvs.html#cvs-administration',
     'group' => $group_id
-));
+]);
 
 // get project name
 $sql = "SELECT unix_group_name, cvs_tracker, cvs_watch_mode, cvs_events_mailing_list, cvs_events_mailing_header, cvs_preamble, cvs_is_private from groups where group_id=" . db_ei($group_id);
@@ -61,7 +61,7 @@ if (! $project->isPublic()) {
 }
     echo '</p>
 	<h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_hdr') .
-'</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_msg', array(ForgeConfig::get('sys_name'))) .
+'</H3><p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_msg', [ForgeConfig::get('sys_name')]) .
         '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'tracking_lbl') .
         '&nbsp;&nbsp;&nbsp;&nbsp;<SELECT name="tracked"> ' .
         '<OPTION VALUE="1"' . (($cvs_tracked == '1') ? ' SELECTED' : '') . '>' . $GLOBALS['Language']->getText('global', 'on') . '</OPTION>' .
@@ -81,8 +81,8 @@ if (! $project->isPublic()) {
         '<p>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'subject') . ': <br>' .
         '<INPUT TYPE="TEXT" SIZE="30" NAME="custom_mailing_header" VALUE="' . $custom_mailing_header .
         '"></p> <h3>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_hdr') .
-'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', array("/cvs/?func=info&group_id=" . $group_id, ForgeConfig::get('sys_name'))) .
+'</h3><P>' . $GLOBALS['Language']->getText('cvs_admin_commit', 'preamble_msg', ["/cvs/?func=info&group_id=" . $group_id, ForgeConfig::get('sys_name')]) .
         '<p><TEXTAREA cols="70" rows="8" wrap="virtual" name="form_preamble">' . $cvs_preamble . '</TEXTAREA>';
 echo '</p><INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '"></p></FORM>';
 
-commits_footer(array());
+commits_footer([]);

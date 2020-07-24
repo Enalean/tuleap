@@ -62,7 +62,7 @@ final class GitPermissionsManagerTest extends TestCase
 
         $this->git_permissions_dao->shouldReceive('updateAllAnonymousAccessToRegistered')->once();
 
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(101, 104))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([101, 104])->once();
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::REGULAR);
     }
@@ -92,7 +92,7 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->shouldReceive('getAllProjectsWithAnonymousRepositories')->andReturns([['group_id' => 101], ['group_id' => 104]]);
 
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(101, 104))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([101, 104])->once();
         $this->git_permissions_dao->shouldReceive('updateAllAnonymousAccessToRegistered')->once();
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::ANONYMOUS, ForgeAccess::RESTRICTED);
@@ -102,7 +102,7 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->shouldReceive('getAllProjectsWithUnrestrictedRepositories')->andReturns([['group_id' => 102], ['group_id' => 107]]);
 
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(102, 107))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([102, 107])->once();
         $this->git_permissions_dao->shouldReceive('updateAllAuthenticatedAccessToRegistered')->once();
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::ANONYMOUS);
@@ -112,7 +112,7 @@ final class GitPermissionsManagerTest extends TestCase
     {
         $this->git_permissions_dao->shouldReceive('getAllProjectsWithUnrestrictedRepositories')->andReturns([['group_id' => 102], ['group_id' => 107]]);
 
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(102, 107))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([102, 107])->once();
         $this->git_permissions_dao->shouldReceive('updateAllAuthenticatedAccessToRegistered')->once();
 
         $this->git_permissions_manager->updateSiteAccess(ForgeAccess::RESTRICTED, ForgeAccess::REGULAR);
@@ -142,7 +142,7 @@ final class GitPermissionsManagerTest extends TestCase
     public function testWhenSwitchingFromPublicToPrivateItSetsProjectMembersForAllPublicRepositories(): void
     {
         $this->git_permissions_dao->shouldReceive('disableAnonymousRegisteredAuthenticated')->with(102)->once();
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(102))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([102])->once();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC, Project::ACCESS_PRIVATE);
     }
@@ -174,7 +174,7 @@ final class GitPermissionsManagerTest extends TestCase
     public function testWhenSwitchingFromUnrestrictedToPublicItRemoveAccessToAuthenticated(): void
     {
         $this->git_permissions_dao->shouldReceive('disableAuthenticated')->with(102)->once();
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(102))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([102])->once();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PUBLIC);
     }
@@ -182,7 +182,7 @@ final class GitPermissionsManagerTest extends TestCase
     public function testWhenSwitchingFromUnrestrictedToPrivateItSetsProjectMembersForAllPublicRepositories(): void
     {
         $this->git_permissions_dao->shouldReceive('disableAnonymousRegisteredAuthenticated')->with(102)->once();
-        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with(array(102))->once();
+        $this->git_system_event_manager->shouldReceive('queueProjectsConfigurationUpdate')->with([102])->once();
 
         $this->git_permissions_manager->updateProjectAccess($this->project, Project::ACCESS_PUBLIC_UNRESTRICTED, Project::ACCESS_PRIVATE);
     }

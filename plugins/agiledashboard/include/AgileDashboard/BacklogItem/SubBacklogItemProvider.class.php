@@ -38,10 +38,10 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
     private $dao;
 
     /** @var array */
-    private $backlog_ids = array();
+    private $backlog_ids = [];
 
     /** @var int[] */
-    private $inspected_ids = array();
+    private $inspected_ids = [];
 
     /** @var AgileDashboard_Milestone_Backlog_BacklogItemCollectionFactory */
     private $backlog_item_collection_factory;
@@ -96,7 +96,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
 
     private function getMatchingIdsForMilestone(Planning_Milestone $milestone, Tracker $backlog_tracker, PFUser $user)
     {
-        $milestone_id_seed = array($milestone->getArtifactId() ?? 0);
+        $milestone_id_seed = [$milestone->getArtifactId() ?? 0];
         $this->inspected_ids = $milestone_id_seed;
 
         $filtrable_backlog_tracker_ids = $this->getSubPlanningTrackerIds($milestone, $user);
@@ -133,7 +133,7 @@ class AgileDashboard_BacklogItem_SubBacklogItemProvider
      */
     private function filterBacklogIds($backlog_tracker_id, array $artifacts, array $filtrable_planning_tracker_ids)
     {
-        $artifacts_to_inspect = array();
+        $artifacts_to_inspect = [];
         foreach ($this->dao->getLinkedArtifactsByIds($artifacts, $this->inspected_ids) as $artifact_row) {
             $artifact_row_tracker_id = $artifact_row['tracker_id'];
 

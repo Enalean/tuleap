@@ -78,13 +78,13 @@ class ContinuousIntegrationCollector
                 )
             );
 
-            return array(
+            return [
                 'service'   => "",
                 'title'     => $GLOBALS['Language']->getText('plugin_hudson_svn', 'ci_trigger'),
                 'used'      => $job_ids,
                 'add_form'  => $html_form,
                 'edit_form' => $html_form
-            );
+            ];
         }
     }
 
@@ -113,7 +113,7 @@ class ContinuousIntegrationCollector
 
     private function getJobIdsThatTriggerCommit(Project $project)
     {
-        $used = array();
+        $used = [];
 
         foreach ($this->getJobIds($project) as $job_id) {
             $used[$job_id] = true;
@@ -124,14 +124,14 @@ class ContinuousIntegrationCollector
 
     private function getRepositories(Project $project, $job)
     {
-        $repositories_presenter = array();
+        $repositories_presenter = [];
 
         foreach ($this->repository_manager->getRepositoriesInProject($project) as $repository) {
-            $repositories_presenter[] = array(
+            $repositories_presenter[] = [
                 'id'          => $repository->getId(),
                 'name'        => $repository->getName(),
                 'is_selected' => $this->isRepositorySelected($repository, $job)
-            );
+            ];
         }
 
         return $repositories_presenter;

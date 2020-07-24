@@ -89,7 +89,7 @@ class DefaultFineGrainedPermissionReplicator
             $ugroups_mapping
         );
 
-        $warnings = array();
+        $warnings = [];
         foreach ($replicated_branch_permissions as $permission) {
             if ($this->pattern_validator->isValidForDefault($template_project, $permission->getPattern(), false)) {
                 $this->saver->saveBranchPermission($permission);

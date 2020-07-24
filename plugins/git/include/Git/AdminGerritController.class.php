@@ -192,7 +192,7 @@ class Git_AdminGerritController //phpcs:ignore PSR1.Classes.ClassDeclaration.Mis
     {
         $this->fetchGerritServers();
 
-        $list_of_presenters = array();
+        $list_of_presenters = [];
         foreach ($this->servers as $server) {
             $is_used = $this->gerrit_server_factory->isServerUsed($server);
             $list_of_presenters[] = new Git_RemoteServer_GerritServerPresenter($server, $is_used);

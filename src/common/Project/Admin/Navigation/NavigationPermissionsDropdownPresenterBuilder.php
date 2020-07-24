@@ -33,14 +33,14 @@ class NavigationPermissionsDropdownPresenterBuilder
 
     public function build(Project $project, $current_pane_shortname)
     {
-        $permission_links = array();
+        $permission_links = [];
 
         $permission_links[] = new NavigationDropdownItemPresenter(
             _('Per group'),
             '/project/admin/permission_per_group.php?' . http_build_query(
-                array(
+                [
                     'group_id' => $project->getID(),
-                )
+                ]
             )
         );
 
@@ -48,9 +48,9 @@ class NavigationPermissionsDropdownPresenterBuilder
             $permission_links[] = new NavigationDropdownItemPresenter(
                 _('Permissions for deprecated services'),
                 '/project/admin/userperms.php?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID()
-                    )
+                    ]
                 )
             );
         }
@@ -58,9 +58,9 @@ class NavigationPermissionsDropdownPresenterBuilder
         $permission_links[] = new NavigationDropdownItemPresenter(
             _('Permission Request'),
             '/project/admin/permission_request.php?' . http_build_query(
-                array(
+                [
                     'group_id' => $project->getID(),
-                )
+                ]
             )
         );
 
@@ -80,24 +80,24 @@ class NavigationPermissionsDropdownPresenterBuilder
 
     private function buildServicesQuickLinks(Project $project)
     {
-        $core_services_quicklinks = array();
+        $core_services_quicklinks = [];
 
         if ($project->usesWiki()) {
             $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
                 _('Wiki'),
-                '/wiki/admin/index.php?' . http_build_query(array(
+                '/wiki/admin/index.php?' . http_build_query([
                     'group_id' => $project->getID(),
                     'view' => 'wikiPerms'
-                ))
+                ])
             );
         }
         if ($project->usesFile()) {
             $core_services_quicklinks[] = new NavigationDropdownItemPresenter(
                 _('FRS'),
-                '/file/admin/?' . http_build_query(array(
+                '/file/admin/?' . http_build_query([
                     'group_id' => $project->getID(),
                     'action' => 'edit-permissions'
-                ))
+                ])
             );
         }
 
@@ -115,7 +115,7 @@ class NavigationPermissionsDropdownPresenterBuilder
     private function indexQuickLinks(array $quick_links)
     {
         if (count($quick_links) === 0) {
-            return array();
+            return [];
         }
 
         usort($quick_links, function ($previous_link, $current_link) {

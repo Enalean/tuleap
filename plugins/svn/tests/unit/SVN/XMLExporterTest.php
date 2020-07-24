@@ -84,27 +84,27 @@ final class XMLExporterTest extends TestCase
         $repository = \Mockery::spy(\Tuleap\SVN\Repository\Repository::class);
         $repository->shouldReceive('getName')->andReturn('MyRepo');
         $repository->shouldReceive('getSystemPath')->andReturn($this->fixtures_dir);
-        $repository_manager->shouldReceive('getRepositoriesInProject')->andReturn(array($repository));
+        $repository_manager->shouldReceive('getRepositoriesInProject')->andReturn([$repository]);
 
         $mail_notification_manager->shouldReceive('getByRepository')->withArgs([$repository])->andReturn(
-            array(
+            [
                 new MailNotification(
                     1,
                     $repository,
                     '/',
-                    array('mail@example.com'),
-                    array(),
-                    array()
+                    ['mail@example.com'],
+                    [],
+                    []
                 ),
                 new MailNotification(
                     2,
                     $repository,
                     '/trunk',
-                    array('mail2@example.com'),
-                    array(),
-                    array()
+                    ['mail2@example.com'],
+                    [],
+                    []
                 )
-            )
+            ]
         );
 
         $data = '<?xml version="1.0" encoding="UTF-8"?>

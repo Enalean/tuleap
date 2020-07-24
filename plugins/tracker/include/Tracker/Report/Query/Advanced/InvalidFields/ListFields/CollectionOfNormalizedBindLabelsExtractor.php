@@ -58,7 +58,7 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
     public function visitListBindStatic(Tracker_FormElement_Field_List_Bind_Static $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
-        $list_label_values = array();
+        $list_label_values = [];
 
         foreach ($list_values as $value) {
             $list_label_values[] = $this->value_normalizer->normalize($value->getLabel());
@@ -70,7 +70,7 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
     public function visitListBindUsers(Tracker_FormElement_Field_List_Bind_Users $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
-        $list_label_values = array();
+        $list_label_values = [];
 
         foreach ($list_values as $value) {
             $list_label_values[] = $this->value_normalizer->normalize($value->getUserName());
@@ -82,7 +82,7 @@ class CollectionOfNormalizedBindLabelsExtractor implements BindVisitor
     public function visitListBindUgroups(Tracker_FormElement_Field_List_Bind_Ugroups $bind, BindParameters $parameters)
     {
         $list_values       = $parameters->getField()->getAllValues();
-        $list_label_values = array();
+        $list_label_values = [];
 
         foreach ($list_values as $value) {
             $value = $value->getLabel();

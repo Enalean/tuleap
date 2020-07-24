@@ -65,8 +65,8 @@ function IniConfig($file)
 {
     // List of all valid config options to be define()d which take "values" (not
     // booleans). Needs to be categorised, and generally made a lot tidier.
-    $_IC_VALID_VALUE = array
-        ('WIKI_NAME', 'ADMIN_USER', 'ADMIN_PASSWD',
+    $_IC_VALID_VALUE =
+        ['WIKI_NAME', 'ADMIN_USER', 'ADMIN_PASSWD',
          'DEFAULT_DUMP_DIR', 'HTML_DUMP_DIR',
          'HTML_DUMP_SUFFIX', 'MAX_UPLOAD_SIZE', 'MINOR_EDIT_TIMEOUT',
          'CACHE_CONTROL', 'CACHE_CONTROL_MAX_AGE',
@@ -85,12 +85,12 @@ function IniConfig($file)
          'PLUGIN_CACHED_MAXARGLEN', 'PLUGIN_CACHED_IMGTYPES',
          // extra logic:
          'SERVER_NAME','SERVER_PORT','SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
-         );
+         ];
 
     // Optional values which need to be defined.
     // These are not defined in config-default.ini and empty if not defined.
-    $_IC_OPTIONAL_VALUE = array
-        (
+    $_IC_OPTIONAL_VALUE =
+        [
          'DEBUG', 'TEMP_DIR', 'DEFAULT_LANGUAGE',
          'LDAP_AUTH_HOST','LDAP_SET_OPTION','LDAP_BASE_DN', 'LDAP_AUTH_USER',
          'LDAP_AUTH_PASSWORD','LDAP_SEARCH_FIELD','LDAP_OU_GROUP','LDAP_OU_USERS',
@@ -101,11 +101,11 @@ function IniConfig($file)
          'DISABLE_GETIMAGESIZE','DBADMIN_USER','DBADMIN_PASSWD',
          'SESSION_SAVE_PATH', 'TOOLBAR_PAGELINK_PULLDOWN', 'TOOLBAR_TEMPLATE_PULLDOWN',
          'EXTERNAL_LINK_TARGET', 'ENABLE_MARKUP_TEMPLATE'
-         );
+         ];
 
     // List of all valid config options to be define()d which take booleans.
-    $_IC_VALID_BOOL = array
-        ('ENABLE_USER_NEW', 'ENABLE_PAGEPERM', 'ENABLE_EDIT_TOOLBAR', 'JS_SEARCHREPLACE',
+    $_IC_VALID_BOOL =
+        ['ENABLE_USER_NEW', 'ENABLE_PAGEPERM', 'ENABLE_EDIT_TOOLBAR', 'JS_SEARCHREPLACE',
          'ENABLE_XHTML_XML', 'ENABLE_DOUBLECLICKEDIT', 'ENABLE_LIVESEARCH',
          'USECACHE', 'WIKIDB_NOCACHE_MARKUP',
          'ENABLE_REVERSE_DNS', 'ZIPDUMP_AUTH',
@@ -118,7 +118,7 @@ function IniConfig($file)
          'WARN_NONPUBLIC_INTERWIKIMAP', 'USE_PATH_INFO',
          'DISABLE_HTTP_REDIRECT',
          'BLOG_EMPTY_DEFAULT_PREFIX', 'ENABLE_DISCUSSION_LINK'
-         );
+         ];
 
     $rs = @parse_ini_file($file);
     $rsdef = @parse_ini_file(dirname(__FILE__) . "/../config/config-default.ini");
@@ -146,10 +146,10 @@ function IniConfig($file)
         } elseif (
             in_array(
                 $item,
-                array('DATABASE_PREFIX', 'SERVER_NAME', 'SERVER_PORT',
+                ['DATABASE_PREFIX', 'SERVER_NAME', 'SERVER_PORT',
                                  'SCRIPT_NAME', 'DATA_PATH', 'PHPWIKI_DIR', 'VIRTUAL_PATH',
                                  'LDAP_AUTH_HOST','IMAP_AUTH_HOST','POP3_AUTH_HOST',
-                'PLUGIN_CACHED_CACHE_DIR')
+                'PLUGIN_CACHED_CACHE_DIR']
             )
         ) {
         } elseif (! defined("_PHPWIKI_INSTALL_RUNNING")) {
@@ -179,13 +179,13 @@ function IniConfig($file)
         // calculate them later: old or dynamic constants
         if (
             ! array_key_exists($item, $rs) and
-            in_array($item, array('USE_PATH_INFO',
+            in_array($item, ['USE_PATH_INFO',
                                   'ALLOW_HTTP_AUTH_LOGIN', 'ALLOW_LDAP_LOGIN',
                                   'ALLOW_IMAP_LOGIN', 'ALLOW_USER_LOGIN',
                                   'REQUIRE_SIGNIN_BEFORE_EDIT',
                                   'WIKIDB_NOCACHE_MARKUP',
                                   'COMPRESS_OUTPUT'
-                                  ))
+                                  ])
         ) {
         } elseif (! $val) {
             define($item, false);
@@ -207,8 +207,8 @@ function IniConfig($file)
 
     // Expiry stuff
     global $ExpireParams;
-    foreach (array('major','minor','author') as $major) {
-        foreach (array('max_age','min_age','min_keep','keep','max_keep') as $max) {
+    foreach (['major', 'minor', 'author'] as $major) {
+        foreach (['max_age', 'min_age', 'min_keep', 'keep', 'max_keep'] as $max) {
             $item = strtoupper($major) . '_' . strtoupper($max);
             if (defined($item)) {
                 $val = constant($item);
@@ -218,7 +218,7 @@ function IniConfig($file)
                 $val = $rsdef[$item];
             }
             if (! isset($ExpireParams[$major])) {
-                $ExpireParams[$major] = array();
+                $ExpireParams[$major] = [];
             }
             $ExpireParams[$major][$max] = $val;
             unset($rs[$item]);
@@ -236,7 +236,7 @@ function IniConfig($file)
                 $rs['USER_AUTH_ORDER']
             );
         } else {
-            $GLOBALS['USER_AUTH_ORDER'] = array("PersonalPage");
+            $GLOBALS['USER_AUTH_ORDER'] = ["PersonalPage"];
         }
     }
 
@@ -581,7 +581,7 @@ function fixup_dynamic_configs($file)
 
     //////////////////////////////////////////////////////////////////
     // Autodetect URL settings:
-    foreach (array('SERVER_NAME','SERVER_PORT') as $var) {
+    foreach (['SERVER_NAME', 'SERVER_PORT'] as $var) {
         //FIXME: for CGI without _SERVER
         if (! defined($var) and ! empty($_SERVER[$var])) {
             define($var, $_SERVER[$var]);

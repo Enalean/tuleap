@@ -78,7 +78,7 @@ class Gitolite3LogParser
     /**
      * @var array
      */
-    private $access_cache = array();
+    private $access_cache = [];
 
     /**
      * @var array
@@ -196,7 +196,7 @@ class Gitolite3LogParser
 
     private function resetCaches()
     {
-        $this->access_cache = array();
+        $this->access_cache = [];
     }
 
     private function cacheAccess(GitRepository $repository, $user_id, DateTime $day)

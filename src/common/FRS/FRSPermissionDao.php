@@ -69,7 +69,7 @@ class FRSPermissionDao extends DataAccessObject
         if (count($ugroup_ids) == 0) {
             return $this->da->commit();
         }
-        $ugroups = array();
+        $ugroups = [];
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroup_id   = $this->da->escapeInt($ugroup_id);
             $ugroups[] = "($project_id, $permission_type, $ugroup_id)";
@@ -112,7 +112,7 @@ class FRSPermissionDao extends DataAccessObject
     {
         return $this->updateAccessControl(
             $project_id,
-            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::PROJECT_MEMBERS
         );
     }
@@ -121,7 +121,7 @@ class FRSPermissionDao extends DataAccessObject
     {
         return $this->updateAccessControl(
             $project_id,
-            array(ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::REGISTERED
         );
     }

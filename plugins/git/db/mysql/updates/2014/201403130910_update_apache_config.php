@@ -61,7 +61,7 @@ EOT;
         if ($source_lines === false) {
             throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('Unable to read config file: ' . self::CONFIG_FILE);
         }
-        $target_lines = array();
+        $target_lines = [];
         foreach ($source_lines as $line) {
             if ($line == '<DirectoryMatch "/usr/share/codendi/plugins/([^/]*)/www/">') {
                 $app_name    = 'codendi';

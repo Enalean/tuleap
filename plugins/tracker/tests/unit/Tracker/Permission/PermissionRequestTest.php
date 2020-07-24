@@ -29,12 +29,12 @@ final class Tracker_Permission_PermissionRequestTest extends \PHPUnit\Framework\
 
     protected function setUp(): void
     {
-        $this->minimal_ugroup_list = array(
+        $this->minimal_ugroup_list = [
             ProjectUGroup::ANONYMOUS,
             ProjectUGroup::REGISTERED,
             ProjectUGroup::PROJECT_MEMBERS,
             ProjectUGroup::PROJECT_ADMIN
-        );
+        ];
     }
 
     public function testItHasPermissionsBasedOnGroupIds(): void
@@ -49,7 +49,7 @@ final class Tracker_Permission_PermissionRequestTest extends \PHPUnit\Framework\
         $request->shouldReceive('get')
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
 
-        $set_permission_request = new Tracker_Permission_PermissionRequest(array());
+        $set_permission_request = new Tracker_Permission_PermissionRequest([]);
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
         $this->assertEquals(Tracker_Permission_Command::PERMISSION_SUBMITTER_ONLY, $set_permission_request->getPermissionType(ProjectUGroup::ANONYMOUS));
@@ -68,7 +68,7 @@ final class Tracker_Permission_PermissionRequestTest extends \PHPUnit\Framework\
         $request->shouldReceive('get')
             ->andReturn(Tracker_Permission_Command::PERMISSION_FULL);
 
-        $set_permission_request = new Tracker_Permission_PermissionRequest(array());
+        $set_permission_request = new Tracker_Permission_PermissionRequest([]);
         $set_permission_request->setFromRequest($request, $this->minimal_ugroup_list);
 
         $set_permission_request->revoke(ProjectUGroup::REGISTERED);

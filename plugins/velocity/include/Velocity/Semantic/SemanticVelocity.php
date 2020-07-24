@@ -312,7 +312,7 @@ class SemanticVelocity extends Tracker_Semantic
     {
         return Tracker_FormElementFactory::instance()->getUsedFormElementsByType(
             $this->getTracker(),
-            array('int', 'float')
+            ['int', 'float']
         );
     }
 

@@ -67,7 +67,7 @@ class GerritServerResourceRestrictor
     public function searchAllowedProjects(Git_RemoteServer_GerritServer $gerrit_server)
     {
         $rows     = $this->dao->searchAllowedProjectsOnResource($gerrit_server->getId());
-        $projects = array();
+        $projects = [];
 
         foreach ($rows as $row) {
             $projects[] = new Project($row);

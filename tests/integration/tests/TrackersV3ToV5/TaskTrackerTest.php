@@ -156,11 +156,11 @@ class TaskTrackerTest extends TestCase
 
     public function testItGivesFullAccessToAllUsers()
     {
-        $this->assertEquals($this->task_tracker->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($this->task_tracker->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker::PERMISSION_FULL
-            )
-        ));
+            ]
+        ]);
     }
 
     public function testItHasATitleSemantic()
@@ -171,15 +171,15 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Summary");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasAStatusSemantic()
@@ -190,14 +190,14 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Status");
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasOnlyOneOpenValueForStatusSemantic()
@@ -218,15 +218,15 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
         $this->assertEquals(1, $field->isMultiple());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasSubmittedBy()
@@ -237,11 +237,11 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Submitted by");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasATextFieldDescription()
@@ -252,15 +252,15 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Original Submission");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasADateFieldStartDate()
@@ -271,15 +271,15 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($field->getLabel(), "Start Date");
         $this->assertEquals(0, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
-        $this->assertEquals($field->getPermissionsByUgroupId(), array(
-            ProjectUGroup::ANONYMOUS => array(
+        $this->assertEquals($field->getPermissionsByUgroupId(), [
+            ProjectUGroup::ANONYMOUS => [
                 Tracker_FormElement::PERMISSION_READ
-            ),
-            ProjectUGroup::PROJECT_MEMBERS => array(
+            ],
+            ProjectUGroup::PROJECT_MEMBERS => [
                 Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
-            ),
-        ));
+            ],
+        ]);
     }
 
     public function testItHasAnUnusedField()
@@ -300,7 +300,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals(1, $field->isRequired());
         $this->assertEquals(1, $field->isUsed());
 
-        $this->compareValuesToLabel($field->getAllValues(), array('1 - Lowest', '2', '3', '4', '5 - Medium', '6', '7', '8', '9 - Highest'));
+        $this->compareValuesToLabel($field->getAllValues(), ['1 - Lowest', '2', '3', '4', '5 - Medium', '6', '7', '8', '9 - Highest']);
     }
 
     protected function compareValuesToLabel(array $values, array $labels)
@@ -328,7 +328,7 @@ class TaskTrackerTest extends TestCase
     public function testItHasThreeCriteria()
     {
         $criteria = $this->tasks_report->getCriteria();
-        $this->thereAreCriteriaForFields($criteria, array('Subproject', 'Assigned to (multiple)', 'Status'));
+        $this->thereAreCriteriaForFields($criteria, ['Subproject', 'Assigned to (multiple)', 'Status']);
     }
 
     protected function thereAreCriteriaForFields(array $criteria, array $field_labels)
@@ -358,7 +358,7 @@ class TaskTrackerTest extends TestCase
         $this->assertInstanceOf(Tracker_Report_Renderer_Table::class, $renderer);
 
         $columns = $renderer->getTableColumns(false, true, false);
-        $this->thereAreColumnsForFields($columns, array('Artifact ID', 'Assigned to (multiple)', 'Subproject', 'Effort', 'Status', 'Start Date', 'Summary'));
+        $this->thereAreColumnsForFields($columns, ['Artifact ID', 'Assigned to (multiple)', 'Subproject', 'Effort', 'Status', 'Start Date', 'Summary']);
     }
 
     public function thereAreColumnsForFields($columns, $field_labels)
@@ -389,7 +389,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[0]->getNotificationType(), Tracker_DateReminder::BEFORE);
         $this->assertEquals($reminders[0]->getField(), $start_date_field);
         $this->assertEquals($reminders[0]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[0]->getUgroups(true), array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN));
+        $this->assertEquals($reminders[0]->getUgroups(true), [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN]);
         $this->assertEquals($reminders[0]->getRoles(), []);
     }
 
@@ -403,7 +403,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[1]->getNotificationType(), Tracker_DateReminder::BEFORE);
         $this->assertEquals($reminders[1]->getField(), $start_date_field);
         $this->assertEquals($reminders[1]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[1]->getUgroups(true), array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN));
+        $this->assertEquals($reminders[1]->getUgroups(true), [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN]);
         $this->assertEquals($reminders[1]->getRoles(), []);
     }
 
@@ -417,7 +417,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[2]->getNotificationType(), Tracker_DateReminder::AFTER);
         $this->assertEquals($reminders[2]->getField(), $start_date_field);
         $this->assertEquals($reminders[2]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[2]->getUgroups(true), array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN));
+        $this->assertEquals($reminders[2]->getUgroups(true), [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::TRACKER_ADMIN]);
         $this->assertEquals($reminders[2]->getRoles(), []);
     }
 
@@ -425,7 +425,7 @@ class TaskTrackerTest extends TestCase
     {
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
-        $notified_roles = array($submitterRole);
+        $notified_roles = [$submitterRole];
         $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
@@ -433,7 +433,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[3]->getNotificationType(), Tracker_DateReminder::AFTER);
         $this->assertEquals($reminders[3]->getField(), $end_date_field);
         $this->assertEquals($reminders[3]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[3]->getUgroups(true), array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->assertEquals($reminders[3]->getUgroups(true), [ProjectUGroup::PROJECT_MEMBERS]);
         $this->assertEquals($reminders[3]->getRoles(), $notified_roles);
     }
 
@@ -441,7 +441,7 @@ class TaskTrackerTest extends TestCase
     {
         $end_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'end_date');
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
-        $notified_roles = array($submitterRole);
+        $notified_roles = [$submitterRole];
         $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
 
@@ -449,7 +449,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[4]->getNotificationType(), Tracker_DateReminder::AFTER);
         $this->assertEquals($reminders[4]->getField(), $end_date_field);
         $this->assertEquals($reminders[4]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[4]->getUgroups(true), array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->assertEquals($reminders[4]->getUgroups(true), [ProjectUGroup::PROJECT_MEMBERS]);
         $this->assertEquals($reminders[4]->getRoles(), $notified_roles);
     }
 
@@ -457,7 +457,7 @@ class TaskTrackerTest extends TestCase
     {
         $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
-        $notified_roles = array($submitterRole);
+        $notified_roles = [$submitterRole];
 
         $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
@@ -466,7 +466,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[5]->getNotificationType(), Tracker_DateReminder::AFTER);
         $this->assertEquals($reminders[5]->getField(), $due_date_field);
         $this->assertEquals($reminders[5]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[5]->getUgroups(true), array(""));
+        $this->assertEquals($reminders[5]->getUgroups(true), [""]);
         $this->assertEquals($reminders[5]->getRoles(), $notified_roles);
     }
 
@@ -474,7 +474,7 @@ class TaskTrackerTest extends TestCase
     {
         $due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
         $submitterRole = new Tracker_DateReminder_Role_Submitter();
-        $notified_roles = array($submitterRole);
+        $notified_roles = [$submitterRole];
 
         $factory = new Tracker_DateReminderFactory($this->task_tracker, new Tracker_DateReminderRenderer($this->task_tracker));
         $reminders = $factory->getTrackerReminders();
@@ -483,7 +483,7 @@ class TaskTrackerTest extends TestCase
         $this->assertEquals($reminders[6]->getNotificationType(), Tracker_DateReminder::AFTER);
         $this->assertEquals($reminders[6]->getField(), $due_date_field);
         $this->assertEquals($reminders[6]->getStatus(), Tracker_DateReminder::ENABLED);
-        $this->assertEquals($reminders[6]->getUgroups(true), array(""));
+        $this->assertEquals($reminders[6]->getUgroups(true), [""]);
         $this->assertEquals($reminders[6]->getRoles(), $notified_roles);
     }
 

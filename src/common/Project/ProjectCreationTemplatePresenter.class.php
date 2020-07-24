@@ -62,7 +62,7 @@ class ProjectCreationTemplatePresenter
         $ugroup_manager = new UGroupManager();
         $admin_ugroup   = $ugroup_manager->getProjectAdminsUGroup($this->project);
         $user_helper    = UserHelper::instance();
-        $users          = array();
+        $users          = [];
         foreach ($admin_ugroup->getMembers() as $user) {
             $users[] = $user_helper->getLinkOnUser($user);
         }

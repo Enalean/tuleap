@@ -103,7 +103,7 @@ class AdminWebhooks extends Tracker_Workflow_Action
      */
     private function getLogsForWebhook(Webhook $webhook)
     {
-        $logs = array();
+        $logs = [];
         foreach ($this->logs_retriever->getLogsForWebhook($webhook) as $row) {
             $logs[] = new WebhookLogPresenter($row['created_on'], $row['status']);
         }

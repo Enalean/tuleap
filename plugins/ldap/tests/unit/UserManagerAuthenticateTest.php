@@ -45,14 +45,14 @@ final class UserManagerAuthenticateTest extends TestCase
 
     private $username    = 'toto';
     private $password;
-    private $ldap_params = array(
+    private $ldap_params = [
         'dn'          => 'dc=tuleap,dc=local',
         'mail'        => 'mail',
         'cn'          => 'cn',
         'uid'         => 'uid',
         'eduid'       => 'uuid',
         'search_user' => '(|(uid=%words%)(cn=%words%)(mail=%words%))',
-    );
+    ];
 
     private $empty_ldap_result_iterator;
     private $john_mc_lane_result_iterator;
@@ -117,7 +117,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItDelegatesAuthenticateToLDAP(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
 
         $this->ldap->shouldReceive('authenticate')->with($this->username, $this->password)->once()->andReturnTrue();
@@ -139,7 +139,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItFetchLDAPUserInfoBasedOnLogin(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
 
         $this->ldap->shouldReceive('searchLogin')
@@ -155,7 +155,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItFetchesLDAPUserInfoWithExtendedAttributesDefinedInUserSync(): void
     {
-        $attributes = array('mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType');
+        $attributes = ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'];
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns($attributes);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
 
@@ -172,13 +172,13 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItFetchesStandardLDAPInfosEvenWhenNotSpecifiedInSyncAttributes(): void
     {
-        $attributes = array('employeeType');
+        $attributes = ['employeeType'];
         $this->user_sync->shouldReceive('getSyncAttributes')->andReturns($attributes);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
 
         $this->ldap->shouldReceive('searchLogin')
-            ->with(\Mockery::any(), array('mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'))
+            ->with(\Mockery::any(), ['mail', 'cn', 'uid', 'uuid', 'dn', 'employeeType'])
             ->once()
             ->andReturns($this->john_mc_lane_result_iterator);
 
@@ -190,7 +190,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItTriesToFindTheTuleapUserBasedOnLdapId(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
 
@@ -206,7 +206,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItRaisesAnExceptionWhenLDAPUserIsNotFound(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->empty_ldap_result_iterator);
 
@@ -220,7 +220,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItRaisesAnExceptionWhenSeveralLDAPUsersAreFound(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->buildLDAPIterator(
             [
@@ -249,7 +249,7 @@ final class UserManagerAuthenticateTest extends TestCase
 
     public function testItCreatesUserAccountWhenUserDoesntExist(): void
     {
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
         $this->user_manager->shouldReceive('getUserByLdapId')->andReturns(null);
@@ -262,7 +262,7 @@ final class UserManagerAuthenticateTest extends TestCase
     public function testItReturnsUserOnAccountCreation(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
         $this->user_manager->shouldReceive('getUserByLdapId')->andReturns(null);
@@ -279,7 +279,7 @@ final class UserManagerAuthenticateTest extends TestCase
     public function testItUpdateUserAccountsIfAlreadyExists(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
         $this->user_manager->shouldReceive('getUserByLdapId')->andReturns($expected_user);
@@ -294,7 +294,7 @@ final class UserManagerAuthenticateTest extends TestCase
     public function testItReturnsUserOnAccountUpdate(): void
     {
         $expected_user = $this->buildUser();
-        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns(array());
+        $this->user_sync->shouldReceive('getSyncAttributes')->andReturns([]);
         $this->ldap->shouldReceive('authenticate')->andReturns(true);
         $this->ldap->shouldReceive('searchLogin')->andReturns($this->john_mc_lane_result_iterator);
         $this->user_manager->shouldReceive('getUserByLdapId')->andReturns($expected_user);
@@ -312,25 +312,25 @@ final class UserManagerAuthenticateTest extends TestCase
 
     private function buildLDAPIterator(array $info, array $ldap_params): LDAPResultIterator
     {
-        $ldap_info = array(
+        $ldap_info = [
             'count' => count($info),
-        );
+        ];
         $i = 0;
         foreach ($info as $people) {
             $nb_params_excluding_dn = count($people) - 1;
-            $ldap_info[$i] = array(
+            $ldap_info[$i] = [
                 'dn'    => $people['dn'],
                 'count' => $nb_params_excluding_dn
-            );
+            ];
             $j = 0;
             foreach ($people as $param => $value) {
                 if ($param == 'dn') {
                     continue;
                 }
-                $ldap_info[$i][$param] = array(
+                $ldap_info[$i][$param] = [
                     'count' => 1,
                     0       => $value,
-                );
+                ];
                 $ldap_info[$i][$j] = $param;
                 $j++;
             }

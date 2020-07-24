@@ -31,18 +31,18 @@ function site_admin_footer($vals = 0)
 {
     global $HTML;
     echo html_feedback_bottom($GLOBALS['feedback']);
-    $HTML->footer(array());
+    $HTML->footer([]);
 }
 
 function site_admin_warnings(Tuleap\Admin\Homepage\NbUsersByStatus $nb_users_by_status)
 {
-    $warnings = array();
+    $warnings = [];
     EventManager::instance()->processEvent(
         Event::GET_SITEADMIN_WARNINGS,
-        array(
+        [
             'nb_users_by_status' => $nb_users_by_status,
             'warnings'           => &$warnings
-        )
+        ]
     );
 
     if (! ForgeConfig::get('disable_forge_upgrade_warnings')) {

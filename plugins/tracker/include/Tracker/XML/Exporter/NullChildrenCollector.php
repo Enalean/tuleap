@@ -29,7 +29,7 @@ class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCol
 
     public function getAllChildrenIds()
     {
-        return array();
+        return [];
     }
 
     public function pop()
@@ -39,11 +39,11 @@ class Tracker_XML_Exporter_NullChildrenCollector extends Tracker_XML_ChildrenCol
 
     public function getAllParents()
     {
-        return array();
+        return [];
     }
 
     public function getChildrenForParent($parent_id)
     {
-        return array();
+        return [];
     }
 }

@@ -80,7 +80,7 @@ class CampaignRepresentationBuilder
         int $limit,
         int $offset
     ) {
-        $campaign_representations = array();
+        $campaign_representations = [];
         $milestone_id = (int) $milestone_criterion->getMilestoneId();
 
         if ($status_criterion->shouldRetrieveOnlyClosedCampaigns()) {

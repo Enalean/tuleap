@@ -73,10 +73,10 @@ class AgileDashboard_XMLFullStructureExporter
     {
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EXPORT_XML,
-            array(
+            [
                 'project'  => $project,
                 'into_xml' => $into_xml
-            )
+            ]
         );
     }
 

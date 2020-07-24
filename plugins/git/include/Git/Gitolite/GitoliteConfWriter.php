@@ -228,7 +228,7 @@ class Git_Gitolite_GitoliteConfWriter
             return;
         }
 
-        $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, array($project->getGroupId()));
+        $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, [$project->getGroupId()]);
         $this->createConfFolderForMirrorIfNeeded($mirror);
 
         $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
@@ -244,7 +244,7 @@ class Git_Gitolite_GitoliteConfWriter
             return;
         }
 
-        $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, array($project->getGroupId()));
+        $repositories = $this->mirror_data_mapper->fetchAllProjectRepositoriesForMirror($mirror, [$project->getGroupId()]);
         $this->createConfFolderForMirrorIfNeeded($mirror);
 
         $config_file  = $this->getProjectPermissionConfFileForMirror($project, $mirror);
@@ -468,7 +468,7 @@ class Git_Gitolite_GitoliteConfWriter
 
     private function readProjectListFromPath($dir_path)
     {
-        $project_names = array();
+        $project_names = [];
 
         if (! is_dir($dir_path)) {
             return $project_names;

@@ -119,7 +119,7 @@ class Docman_ReportHtml
 
         $html .= '<table class="docman_form" data-test="docman_form_table">';
         $fi = $this->report->getFilterIterator();
-        $trashLinkBase = $this->view->_buildSearchUrl($params, array('del_filter' => ''));
+        $trashLinkBase = $this->view->_buildSearchUrl($params, ['del_filter' => '']);
 
         if ($fi->count() == 0) {
             $html .= '<div style="text-align:center; font-style:italic;">';
@@ -304,7 +304,7 @@ class Docman_ReportHtml
         $html .= '<form name="plugin_docman_filters" method="get" action="?" id="plugin_docman_report_form" >';
         $html .= $hidden_fields;
 
-        $displayedFilters = array();
+        $displayedFilters = [];
         $html .= $this->getSelectedFilters($params, $displayedFilters);
         $html .= $this->getFiltersOptions($params, $displayedFilters);
         $html .= $this->getReportOptions();

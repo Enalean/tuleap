@@ -114,9 +114,9 @@ class DiskUsageProjectsPresenterBuilder
             $limit
         );
 
-        $data_projects = array();
+        $data_projects = [];
         foreach ($projects as $value) {
-            $data_project = array(
+            $data_project = [
                 'project_id'          => $value['group_id'],
                 'group_name'          => $value['group_name'],
                 'start_size'          => $this->usage_output->sizeReadable($value['start_size']),
@@ -125,12 +125,12 @@ class DiskUsageProjectsPresenterBuilder
                 'evolution_rate'      => $value['evolution_rate'],
                 'project_details_url' => $this->buildProjectDetailsUrl($value['group_id']),
                 'project_url'         => $this->buildProjectUrl($value['group_id'])
-            );
+            ];
 
             $data_projects[] = $data_project;
         }
 
-        return array($data_projects, $total_projects);
+        return [$data_projects, $total_projects];
     }
 
     private function getHeaderPresenter($title)
@@ -143,7 +143,7 @@ class DiskUsageProjectsPresenterBuilder
 
     private function getServiceKeys(array $selected_services)
     {
-        $services_keys_selected = array();
+        $services_keys_selected = [];
 
         foreach ($selected_services as $service) {
             if ($service['is_selected']) {
@@ -157,10 +157,10 @@ class DiskUsageProjectsPresenterBuilder
     private function buildProjectDetailsUrl($project_id)
     {
         $page   = '/plugins/statistics/disk_usage.php';
-        $params = array(
+        $params = [
             'menu'       => 'services',
             'project_id' => $project_id
-        );
+        ];
 
         return $page . '?' . http_build_query($params);
     }
@@ -168,9 +168,9 @@ class DiskUsageProjectsPresenterBuilder
     private function buildProjectUrl($project_id)
     {
         $page   = '/admin/groupedit.php';
-        $params = array(
+        $params = [
             'group_id' => $project_id
-        );
+        ];
 
         return $page . '?' . http_build_query($params);
     }

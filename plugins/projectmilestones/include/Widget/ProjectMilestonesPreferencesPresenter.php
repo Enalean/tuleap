@@ -51,7 +51,7 @@ class ProjectMilestonesPreferencesPresenter
         $this->placeholder = dgettext('tuleap-projectmilestones', 'Project name');
         $data = [];
         if ($project) {
-            $data = array(["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]);
+            $data = [["id" => (int) $project->getID(), "text" => $project->getPublicName(), "selected" => true, "disabled" => false]];
         }
         $this->data = (string) json_encode($data, JSON_THROW_ON_ERROR);
     }

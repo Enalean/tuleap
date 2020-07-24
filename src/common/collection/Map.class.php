@@ -31,7 +31,7 @@ class Map
 
     public function __construct()
     {
-        $this->elements = array();
+        $this->elements = [];
     }
 
     /**

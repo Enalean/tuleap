@@ -76,11 +76,11 @@ class PermissionPerTypeExtractor
 
         if (count($formatted_permissions->getPermissions()) > 0) {
             $permissions->addPermissions(
-                array(
+                [
                     'name'   => $permission_title,
                     'groups' => $formatted_permissions->getPermissions(),
                     'url'    => $this->url_builder->getGlobalAdminLink($project)
-                )
+                ]
             );
         }
     }

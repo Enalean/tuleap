@@ -49,7 +49,7 @@ class Docman_FilterFactoryTest extends TestCase
         $itMd->setLabel('item_type');
 
         $itMd->setUseIt(PLUGIN_DOCMAN_METADATA_USED);
-        $metadataMapping = array('md' => array(), 'love' => array());
+        $metadataMapping = ['md' => [], 'love' => []];
         $dstFilterFactory = \Mockery::mock(Docman_FilterFactory::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $filterFactory->shouldReceive('getFilterFactory')->andReturns($dstFilterFactory);

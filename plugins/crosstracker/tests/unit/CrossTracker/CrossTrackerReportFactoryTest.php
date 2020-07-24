@@ -81,14 +81,14 @@ class CrossTrackerReportFactoryTest extends TestCase
     public function testItDoesNotThrowsAnExceptionWhenTrackerIsNotFound()
     {
         $this->report_dao->shouldReceive('searchReportById')->andReturn(
-            array("id" => 1, "expert_query" => "")
+            ["id" => 1, "expert_query" => ""]
         );
 
         $this->report_dao->shouldReceive('searchReportTrackersById')->andReturn(
-            array(
-                array("tracker_id" => 1),
-                array("tracker_id" => 2)
-            )
+            [
+                ["tracker_id" => 1],
+                ["tracker_id" => 2]
+            ]
         );
 
         $this->tracker_factory->shouldReceive('getTrackerById')->with(1)->andReturn(null);
@@ -96,7 +96,7 @@ class CrossTrackerReportFactoryTest extends TestCase
 
         $this->tracker_2->shouldReceive('userCanView')->andReturn(true);
 
-        $expected_result = new CrossTrackerReport(1, '', array($this->tracker_2));
+        $expected_result = new CrossTrackerReport(1, '', [$this->tracker_2]);
 
         $this->assertEquals(
             $this->cross_tracker_factory->getById(1),

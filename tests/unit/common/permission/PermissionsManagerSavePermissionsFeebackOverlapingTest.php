@@ -69,12 +69,12 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends TestCase
 
         $this->normalizer->getNormalizedUGroupIds(
             $this->project,
-            array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS),
+            [ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN, ProjectUGroup::PROJECT_MEMBERS],
             $override_collection
         );
 
         $this->assertEquals(
-            array(ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN),
+            [ProjectUGroup::SVN_ADMIN, ProjectUGroup::WIKI_ADMIN],
             $override_collection->getOverrideBy(ProjectUGroup::PROJECT_MEMBERS)
         );
     }
@@ -88,12 +88,12 @@ class PermissionsManagerSavePermissionsFeebackOverlapingTest extends TestCase
 
         $this->normalizer->getNormalizedUGroupIds(
             $this->project,
-            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_MEMBERS),
+            [ProjectUGroup::ANONYMOUS, ProjectUGroup::PROJECT_MEMBERS],
             $override_collection
         );
 
         $this->assertEquals(
-            array(ProjectUGroup::PROJECT_MEMBERS),
+            [ProjectUGroup::PROJECT_MEMBERS],
             $override_collection->getOverrideBy(ProjectUGroup::ANONYMOUS)
         );
     }

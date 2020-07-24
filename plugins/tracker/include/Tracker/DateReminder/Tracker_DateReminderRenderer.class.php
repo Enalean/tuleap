@@ -152,11 +152,11 @@ class Tracker_DateReminderRenderer
     protected function getAllowedNotifiedForTracker($reminderId = null)
     {
         /** @psalm-suppress DeprecatedFunction */
-        $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, array($GLOBALS['UGROUP_PROJECT_MEMBERS'],
-                                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $res = ugroup_db_get_existing_ugroups($this->tracker->group_id, [$GLOBALS['UGROUP_PROJECT_MEMBERS'],
+                                                                              $GLOBALS['UGROUP_PROJECT_ADMIN']]);
         $selectedUgroups = '';
-        $ugroups         = array();
-        $roles           = array();
+        $ugroups         = [];
+        $roles           = [];
         if (! empty($reminderId)) {
             $reminder = $this->dateReminderFactory->getReminder($reminderId);
             $ugroups  = $reminder->getUgroups(true);
@@ -178,11 +178,11 @@ class Tracker_DateReminderRenderer
         }
         $output  .= '</optgroup>';
          $output  .= '<optgroup label="' . $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_optgroup_label_role') . '">';
-         $all_possible_roles = array(
+         $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
             new Tracker_DateReminder_Role_Commenter()
-         );
+         ];
          $purifier = Codendi_HTMLPurifier::instance();
          foreach ($all_possible_roles as $role) {
              if ($roles && in_array($role, $roles)) {
@@ -229,7 +229,7 @@ class Tracker_DateReminderRenderer
         if ($request->valid($validFieldId)) {
             return $request->get('reminder_field_date');
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_field', array($request->get('reminder_field_date')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_field', [$request->get('reminder_field_date')]);
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -248,7 +248,7 @@ class Tracker_DateReminderRenderer
         if ($request->valid($validDistance)) {
             return $request->get('distance');
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_distance', array($request->get('distance')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_distance', [$request->get('distance')]);
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -267,7 +267,7 @@ class Tracker_DateReminderRenderer
         if ($request->valid($validNotificationType)) {
             return $request->get('notif_type');
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_notification_type', array($request->get('notif_type')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_notification_type', [$request->get('notif_type')]);
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -286,7 +286,7 @@ class Tracker_DateReminderRenderer
         if ($request->valid($validStatus)) {
             return $request->get('notif_status');
         } else {
-            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_status', array($request->get('notif_status')));
+            $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_status', [$request->get('notif_status')]);
             throw new Tracker_DateReminderException($errorMessage);
         }
     }
@@ -303,18 +303,18 @@ class Tracker_DateReminderRenderer
     {
         $groupId = $this->getTracker()->getGroupId();
         /** @psalm-suppress DeprecatedFunction */
-        $ugs       = ugroup_db_get_existing_ugroups($groupId, array($GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
-        $ugroupIds = array();
+        $ugs       = ugroup_db_get_existing_ugroups($groupId, [$GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']]);
+        $ugroupIds = [];
         while ($row = db_fetch_array($ugs)) {
             $ugroupIds[] = intval($row['ugroup_id']);
         }
-        $validUgroupIds  = array();
+        $validUgroupIds  = [];
         if (! empty($selectedUgroups)) {
             foreach ($selectedUgroups as $ugroup) {
                 if (in_array($ugroup, $ugroupIds)) {
                     $validUgroupIds[] = $ugroup;
                 } else {
-                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_ugroup', array($ugroup));
+                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_ugroup', [$ugroup]);
                     throw new Tracker_DateReminderException($errorMessage);
                 }
             }
@@ -331,12 +331,12 @@ class Tracker_DateReminderRenderer
      */
     public function validateReminderRoles(array $selectedRoles)
     {
-        $validRoles = array();
-        $all_possible_roles = array(
+        $validRoles = [];
+        $all_possible_roles = [
             new Tracker_DateReminder_Role_Submitter(),
             new Tracker_DateReminder_Role_Assignee(),
             new Tracker_DateReminder_Role_Commenter()
-        );
+        ];
         foreach ($all_possible_roles as $possible_role) {
             $roles[] = $possible_role->getIdentifier();
         }
@@ -344,7 +344,7 @@ class Tracker_DateReminderRenderer
             if (in_array($role, $roles)) {
                 $validRoles[] = $role;
             } else {
-                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_role_param', array($ugroup));
+                    $errorMessage = $GLOBALS['Language']->getText('project_admin_utils', 'tracker_date_reminder_invalid_role_param', [$ugroup]);
                     throw new Tracker_DateReminderException($errorMessage);
             }
         }
@@ -362,7 +362,7 @@ class Tracker_DateReminderRenderer
     public function scindReminderNotifiedPeople(HTTPRequest $request)
     {
         $vArray = new Valid_Array('reminder_notified');
-        $notified = $roles = $ugroups = array();
+        $notified = $roles = $ugroups = [];
         if ($request->valid($vArray)) {
             $people = $request->get('reminder_notified');
             if ($people) {
@@ -391,10 +391,10 @@ class Tracker_DateReminderRenderer
      */
     public function displayAllReminders()
     {
-        $titles           = array(dgettext('tuleap-tracker', 'Send an email to'),
+        $titles           = [dgettext('tuleap-tracker', 'Send an email to'),
                                   dgettext('tuleap-tracker', 'When'),
                                   dgettext('tuleap-tracker', 'Field'),
-                                  dgettext('tuleap-tracker', 'Actions'));
+                                  dgettext('tuleap-tracker', 'Actions')];
         $i                = 0;
         $trackerReminders = $this->dateReminderFactory->getTrackerReminders(true);
         if (! empty($trackerReminders)) {

@@ -77,7 +77,7 @@ class ArtifactLinkInformationPrepender
     private function fetchLinkToFolder(array $folder_hierarchy)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $folders = array();
+        $folders = [];
         foreach ($folder_hierarchy as $folder) {
             \assert($folder instanceof Tracker_Artifact);
             $uri = $folder->getUri() . '&view=artifactsfolders';
@@ -105,7 +105,7 @@ class ArtifactLinkInformationPrepender
 
         $project = $artifact->getTracker()->getProject();
 
-        $options    = array();
+        $options    = [];
         $collection = $this->builder->buildFolderHierarchicalRepresentationCollection(
             $artifact,
             $project,

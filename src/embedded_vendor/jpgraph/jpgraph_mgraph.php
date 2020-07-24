@@ -22,7 +22,7 @@ class MGraph
 
     protected $img = null;
     protected $iCnt = 0;
-    protected $iGraphs = array(); // image_handle, x, y, fx, fy, sizex, sizey
+    protected $iGraphs = []; // image_handle, x, y, fx, fy, sizex, sizey
     protected $iFillColor = 'white';
     protected $iCurrentColor = 0;
     protected $lm = 4;
@@ -132,7 +132,7 @@ class MGraph
             //('Incorrect file name for MGraph::SetBackgroundImage() : '.$aFileName.' Must have a valid image extension (jpg,gif,png) when using autodetection of image type');
         }
 
-        $valid_formats = array('png', 'jpg', 'gif');
+        $valid_formats = ['png', 'jpg', 'gif'];
         $aImgFormat = strtolower($e[count($e) - 1]);
         if ($aImgFormat == 'jpeg') {
             $aImgFormat = 'jpg';
@@ -209,7 +209,7 @@ class MGraph
         if ($h == 0) {
             $h = @imagesy($agdCanvas);
         }
-        $this->iGraphs[$this->iCnt++] = array($agdCanvas,$x,$y,$fx,$fy,$w,$h,$mix);
+        $this->iGraphs[$this->iCnt++] = [$agdCanvas, $x, $y, $fx, $fy, $w, $h, $mix];
     }
 
     public function SetMargin($lm, $rm, $tm, $bm)

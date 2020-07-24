@@ -70,7 +70,7 @@ class Cardwall_Form
         $this->renderer_id         = (int) $renderer_id;
         $this->printer_version     = (int) $printer_version;
         $this->has_printer_version = $printer_version === false;
-        $this->possible_columns    = array();
+        $this->possible_columns    = [];
         $this->one_selected        = false;
 
         $current_field_id = $field ? $field->getId() : false;
@@ -81,10 +81,10 @@ class Cardwall_Form
                     $selected           = true;
                     $this->one_selected = true;
                 }
-                $this->possible_columns[] = array(
+                $this->possible_columns[] = [
                     'field'    => $form_element,
                     'selected' => $selected
-                );
+                ];
             }
         }
         $this->has_possible_columns = count($this->possible_columns) > 0;

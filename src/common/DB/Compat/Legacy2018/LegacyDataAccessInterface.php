@@ -31,7 +31,7 @@ interface LegacyDataAccessInterface
      * @deprecated
      * @return object MySQLDataAccessResultInterface
      */
-    public function query($sql, $params = array());
+    public function query($sql, $params = []);
 
     /**
      * Return ID generated from the previous INSERT operation.
@@ -71,7 +71,7 @@ interface LegacyDataAccessInterface
      *
      * @return string
      */
-    public function quoteSmart($value, $params = array());
+    public function quoteSmart($value, $params = []);
 
     /**
      * Quote schema name to make safe
@@ -81,14 +81,14 @@ interface LegacyDataAccessInterface
      *
      * @return string
      */
-    public function quoteSmartSchema($value, $params = array());
+    public function quoteSmartSchema($value, $params = []);
 
     /**
      * Safe implode function to use with SQL queries
      * @deprecated
      * @static
      */
-    public function quoteSmartImplode($glue, $pieces, $params = array());
+    public function quoteSmartImplode($glue, $pieces, $params = []);
 
     /**
      * cast to int

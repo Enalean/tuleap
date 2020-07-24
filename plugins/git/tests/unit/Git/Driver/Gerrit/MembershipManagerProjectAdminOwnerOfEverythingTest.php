@@ -92,16 +92,16 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
         $this->admin_ugroup->shouldReceive('getNormalizedName')->andReturns('project_admins');
         $this->admin_ugroup->shouldReceive('getProject')->andReturns($this->project);
         $this->admin_ugroup->shouldReceive('getProjectId')->andReturns($project_id);
-        $this->admin_ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->admin_ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->ugroup_manager->shouldReceive('getUGroup')->andReturns($this->admin_ugroup);
 
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
     }
 
     public function testItCheckIfProjectAdminsGroupExist(): void
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->membership_manager->shouldReceive('doesGroupExistOnServer')->with($this->remote_server, $this->admin_ugroup)->once();
 
@@ -110,7 +110,7 @@ class MembershipManagerProjectAdminOwnerOfEverythingTest extends TestCase
 
     public function testItCreatesTheProjectAdminGroupWhenNoExist(): void
     {
-        $this->ugroup->shouldReceive('getMembers')->andReturns(array());
+        $this->ugroup->shouldReceive('getMembers')->andReturns([]);
 
         $this->membership_manager->shouldReceive('doesGroupExistOnServer')->andReturns(false);
         $this->driver->shouldReceive('createGroup')->times(2);

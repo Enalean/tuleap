@@ -57,11 +57,11 @@ class WikiPlugin_ListPages extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('pages'    => false,
+            ['pages'    => false,
                    //'exclude'  => false,
                    'info'     => 'pagename',
                    'dimension' => 0,
-            )
+            ]
         );
     }
 
@@ -84,7 +84,7 @@ class WikiPlugin_ListPages extends WikiPlugin
         if ($info) {
             $info = preg_split('/,/D', $info);
         } else {
-            $info = array();
+            $info = [];
         }
 
         if (in_array('top3recs', $info)) {
@@ -105,15 +105,15 @@ class WikiPlugin_ListPages extends WikiPlugin
                 ) {
                     $userids = getBuddies($active_userid, $dbi);
                 } else {
-                    $userids = array();
+                    $userids = [];
                     // XXX: this wipes out the category caption...
                     $caption = _("You must be logged in to view ratings.");
                 }
             }
 
             // find out which users we should show ratings for
-            $options = array('dimension' => $dimension,
-                             'users' => array());
+            $options = ['dimension' => $dimension,
+                             'users' => []];
             $args = array_merge($options, $args);
         }
         if (empty($pages) and $pages != '0') {
@@ -128,7 +128,7 @@ class WikiPlugin_ListPages extends WikiPlugin
         }
 
         $pagelist = new PageList($info, $exclude, $args);
-        $pages_array = is_string($pages) ? explodePageList($pages) : (is_array($pages) ? $pages : array());
+        $pages_array = is_string($pages) ? explodePageList($pages) : (is_array($pages) ? $pages : []);
         $pagelist->addPageList($pages_array);
         return $pagelist;
     }

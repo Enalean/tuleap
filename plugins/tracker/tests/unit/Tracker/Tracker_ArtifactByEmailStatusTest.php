@@ -45,7 +45,7 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
 
         $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns(array($field_title, $field_description));
+        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $field_description]);
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
     }
 
@@ -59,7 +59,7 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
         $field_description = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns(array($field_title, $field_description));
+        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
@@ -80,7 +80,7 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
         $another_field     = \Mockery::spy(\Tracker_FormElement_Field_Text::class);
         $another_field->shouldReceive('getId')->andReturns(3);
         $another_field->shouldReceive('isRequired')->andReturns(true);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns(array($field_title, $another_field, $field_description));
+        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $another_field, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertFalse($tracker_artifactbyemailstatus->canCreateArtifact($this->tracker));
@@ -178,7 +178,7 @@ class Tracker_ArtifactByEmailStatusTest extends \PHPUnit\Framework\TestCase //ph
         $another_field->shouldReceive('getId')->andReturns(3);
         $this->tracker->shouldReceive('getTitleField')->andReturns($field_title);
         $this->tracker->shouldReceive('getDescriptionField')->andReturns($field_description);
-        $this->tracker->shouldReceive('getFormElementFields')->andReturns(array($field_title, $another_field, $field_description));
+        $this->tracker->shouldReceive('getFormElementFields')->andReturns([$field_title, $another_field, $field_description]);
 
         $tracker_artifactbyemailstatus = new Tracker_ArtifactByEmailStatus($this->tracker_plugin_conf);
         $this->assertTrue($tracker_artifactbyemailstatus->isRequiredFieldsConfigured($this->tracker));

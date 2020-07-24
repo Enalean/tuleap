@@ -31,6 +31,6 @@ if ($plugin_manager->isPluginAvailable($ldap_plugin)) {
     $user = UserManager::instance()->getUserByUserName($argv[1]);
     if ($user !== null) {
         $user->setPassword($argv[2]);
-        $ldap_plugin->user_manager_update_db(array('user' => $user));
+        $ldap_plugin->user_manager_update_db(['user' => $user]);
     }
 }

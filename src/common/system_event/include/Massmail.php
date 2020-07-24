@@ -185,14 +185,14 @@ class Massmail extends SystemEvent
 
     private function getDestinationLabel($destination)
     {
-        $labels = array(
+        $labels = [
             'comm'    => 'Additional Community Mailings Subcribers',
             'sf'      => 'Site Updates Subcribers',
             'all'     => 'All Users',
             'admin'   => 'Project Administrators',
             'sfadmin' => ForgeConfig::get('sys_name') . ' Administrators',
             'devel'   => 'Project Developers',
-        );
+        ];
 
         return isset($labels[$destination]) ? $labels[$destination] : 'Unknown';
     }

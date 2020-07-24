@@ -86,35 +86,35 @@ class ConfigPermissionsSerializerTest extends TestCase
 
     public function testItReturnsEmptyStringForUnknownType()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array());
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, '__none__');
         $this->assertSame('', $result);
     }
 
     public function testItReturnsEmptyStringForAUserIdLowerOrEqualThan100()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(100));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([100]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertSame('', $result);
     }
 
     public function testItReturnsStringWithUserIdIfIdGreaterThan100()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertMatchesRegularExpression('/=\s@ug_101$/', $result);
     }
 
     public function testItReturnsSiteActiveIfUserGroupIsRegistered()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::REGISTERED));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::REGISTERED]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertMatchesRegularExpression('/=\s@site_active @' . $this->project->getUnixName() . '_project_members$/', $result);
     }
 
     public function testItReturnsProjectNameWithProjectMemberIfUserIsProjectMember()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::PROJECT_MEMBERS));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_MEMBERS]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_members$/', $result);
@@ -122,7 +122,7 @@ class ConfigPermissionsSerializerTest extends TestCase
 
     public function testItReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(ProjectUGroup::PROJECT_ADMIN));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([ProjectUGroup::PROJECT_ADMIN]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertMatchesRegularExpression('/=\s@' . $project_name . '_project_admin$/', $result);
@@ -130,28 +130,28 @@ class ConfigPermissionsSerializerTest extends TestCase
 
     public function testItPrefixesWithRForReaders()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertMatchesRegularExpression('/^\sR\s\s\s=/', $result);
     }
 
     public function testItPrefixesWithRWForWriters()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WRITE);
         $this->assertMatchesRegularExpression('/^\sRW\s\s=/', $result);
     }
 
     public function testItPrefixesWithRWPlusForWritersPlus()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(101));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([101]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WPLUS);
         $this->assertMatchesRegularExpression('/^\sRW\+\s=/', $result);
     }
 
     public function testItReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups()
     {
-        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns(array(666, ProjectUGroup::REGISTERED));
+        $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')->andReturns([666, ProjectUGroup::REGISTERED]);
         $result = $this->serializer->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertSame(' R   = @ug_666 @site_active @' . $this->project->getUnixName() . '_project_members' . PHP_EOL, $result);
     }

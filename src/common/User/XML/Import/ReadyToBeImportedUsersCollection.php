@@ -25,9 +25,9 @@ use Psr\Log\LoggerInterface;
 class ReadyToBeImportedUsersCollection
 {
 
-    private $users_by_name    = array();
-    private $users_by_id      = array();
-    private $users_by_ldap_id = array();
+    private $users_by_name    = [];
+    private $users_by_id      = [];
+    private $users_by_ldap_id = [];
 
     public function add(ReadyToBeImportedUser $user, $user_id, $username, $ldap_id)
     {

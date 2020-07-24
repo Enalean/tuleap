@@ -84,97 +84,97 @@ class Header
 
     public static function allowOptions()
     {
-        self::sendAllowHeaders(array(self::OPTIONS));
+        self::sendAllowHeaders([self::OPTIONS]);
     }
 
     public static function allowOptionsGet()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET));
+        self::sendAllowHeaders([self::OPTIONS, self::GET]);
     }
 
     public static function allowOptionsPostDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::POST, self::DELETE]);
     }
 
     public static function allowOptionsDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::DELETE]);
     }
 
     public static function allowOptionsGetPut()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT]);
     }
 
     public static function allowOptionsGetPutPost()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::POST]);
     }
 
     public static function allowOptionsGetPutPostDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::POST, self::DELETE]);
     }
 
     public static function allowOptionsGetPutPostPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::POST, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::POST, self::PATCH]);
     }
 
     public static function allowOptionsGetPutPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::PATCH]);
     }
 
     public static function allowOptionsGetPutDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::DELETE]);
     }
 
     public static function allowOptionsGetPutDeletePatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PUT, self::DELETE, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PUT, self::DELETE, self::PATCH]);
     }
 
     public static function allowOptionsPut()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::PUT));
+        self::sendAllowHeaders([self::OPTIONS, self::PUT]);
     }
 
     public static function allowOptionsPost()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::POST));
+        self::sendAllowHeaders([self::OPTIONS, self::POST]);
     }
 
     public static function allowOptionsPostPut()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::PUT));
+        self::sendAllowHeaders([self::OPTIONS, self::POST, self::PUT]);
     }
 
     public static function allowOptionsGetPost()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::POST]);
     }
 
     public static function allowOptionsGetPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PATCH]);
     }
 
     public static function allowOptionsGetPatchDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::PATCH, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::PATCH, self::DELETE]);
     }
 
     public static function allowOptionsPatchDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::PATCH, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::PATCH, self::DELETE]);
     }
 
     public static function allowOptionsGetDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::DELETE]);
     }
 
     public static function allowOptionsGetPostDelete()
@@ -184,22 +184,22 @@ class Header
 
     public static function allowOptionsPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::PATCH]);
     }
 
     public static function allowOptionsPostPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::POST, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::POST, self::PATCH]);
     }
 
     public static function allowOptionsGetPostPatch()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST, self::PATCH));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::POST, self::PATCH]);
     }
 
     public static function allowOptionsGetPostPatchDelete()
     {
-        self::sendAllowHeaders(array(self::OPTIONS, self::GET, self::POST, self::PATCH, self::DELETE));
+        self::sendAllowHeaders([self::OPTIONS, self::GET, self::POST, self::PATCH, self::DELETE]);
     }
 
     private static function sendAllowHeaders($methods)

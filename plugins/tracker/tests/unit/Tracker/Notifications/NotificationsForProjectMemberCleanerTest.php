@@ -61,7 +61,7 @@ class NotificationsForProjectMemberCleanerTest extends TestCase
         $this->unreadable_tracker->shouldReceive('userCanView')->with($this->user)->andReturns(false);
         $this->readable_tracker->shouldReceive('userCanView')->with($this->user)->andReturns(true);
 
-        $this->factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturns(array($this->unreadable_tracker, $this->readable_tracker));
+        $this->factory->shouldReceive('getTrackersByGroupId')->with(101)->andReturns([$this->unreadable_tracker, $this->readable_tracker]);
 
         $this->users_to_notify_dao = \Mockery::spy(\Tuleap\Tracker\Notifications\UsersToNotifyDao::class);
 

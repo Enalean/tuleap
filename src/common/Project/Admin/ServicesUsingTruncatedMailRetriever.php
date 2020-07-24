@@ -43,7 +43,7 @@ class ServicesUsingTruncatedMailRetriever
 
     public function getServicesImpactedByTruncatedEmails(Project $project)
     {
-        $truncated_mails_impacted_services = array();
+        $truncated_mails_impacted_services = [];
         $file_service                      = $project->getService(Service::FILE);
         if ($file_service) {
             $truncated_mails_impacted_services[] = $file_service->getInternationalizedName();
@@ -61,10 +61,10 @@ class ServicesUsingTruncatedMailRetriever
 
         $this->event_manager->processEvent(
             Event::SERVICES_TRUNCATED_EMAILS,
-            array(
+            [
                 'project'  => $project,
                 'services' => &$truncated_mails_impacted_services
-            )
+            ]
         );
 
         return $truncated_mails_impacted_services;

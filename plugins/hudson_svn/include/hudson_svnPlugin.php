@@ -70,7 +70,7 @@ class hudson_svnPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclarati
      */
     public function getDependencies()
     {
-        return array('svn', 'hudson');
+        return ['svn', 'hudson'];
     }
 
     /**

@@ -90,7 +90,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
 
     public function getAllSourceFields($target_id)
     {
-        $sources = array();
+        $sources = [];
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach ($used_fields as $field) {
@@ -107,7 +107,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
 
     public function getAllTargetFields($source_id)
     {
-        $targets = array();
+        $targets = [];
         $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach ($used_fields as $field) {
@@ -166,7 +166,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
         }
         echo '</select>';
         //Preload spinner
-        echo $GLOBALS['HTML']->getImage('ic/spinner.gif', array('style' => 'display:none'));
+        echo $GLOBALS['HTML']->getImage('ic/spinner.gif', ['style' => 'display:none']);
         echo '</td></tr></thead>';
         echo '<tbody><tr style="vertical-align:top;" class="boxitemalt"><td>';
         if ($source_field && $target_field && isset($sources[$source_field]) && isset($targets[$target_field])) {
@@ -316,7 +316,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
     }
     public function _header()
     {
-        $params = array();
+        $params = [];
         $params['title']   = $this->artifact_type->getName() . ' ' . $GLOBALS['Language']->getText('tracker_include_type', 'mng_field_dependencies');
         $params['help']    = 'tracker-v3.html#field-dependencies';
         $this->artifact_type->adminHeader($params);
@@ -325,6 +325,6 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager
 
     public function _footer()
     {
-        $this->artifact_type->footer(array());
+        $this->artifact_type->footer([]);
     }
 }

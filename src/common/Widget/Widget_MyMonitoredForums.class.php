@@ -87,7 +87,7 @@ class Widget_MyMonitoredForums extends Widget
                     $hide_item_id = null;
                 }
 
-                $vForum = new Valid_WhiteList('hide_forum', array(0, 1));
+                $vForum = new Valid_WhiteList('hide_forum', [0, 1]);
                 $vForum->required();
                 if ($request->valid($vForum)) {
                     $hide_forum = $request->get('hide_forum');

@@ -106,9 +106,9 @@ class ArtifactDeletor
     {
         $this->event_manager->processEvent(
             TRACKER_EVENT_ARTIFACT_DELETE,
-            array(
+            [
                 'artifact' => $artifact,
-            )
+            ]
         );
     }
 }

@@ -96,7 +96,7 @@ function display_exported_fields($col_list, $lbl_list, $dsc_list, $sample_val, $
 {
     global $Language;
 
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = $Language->getText('project_export_utils', 'label');
     $title_arr[] = $Language->getText('project_export_utils', 'sample_val');
     $title_arr[] = $Language->getText('project_admin_editugroup', 'desc');
@@ -120,7 +120,7 @@ function pick_a_record_at_random($result, $numrows, $col_list)
     /* return a record from a result set at random using the column
          list passed as an argument */
 
-    $record = array();
+    $record = [];
 
     // If there is an item  available pick one at random
     // and display Sample values.
@@ -129,7 +129,7 @@ function pick_a_record_at_random($result, $numrows, $col_list)
     }
 
     // Build the array with the record picked at random
-    $record = array();
+    $record = [];
     foreach ($col_list as $col) {
         $record[$col] = db_result($result, $pickone, $col);
     }
@@ -164,7 +164,7 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
     $line = '';
     foreach ($fields as $field) {
         if ($field->isSelectBox() || $field->isMultiSelectBox()) {
-            $values = array();
+            $values = [];
             if ($field->isStandardField()) {
                 $values[] = $record[$field->getName()];
             } else {
@@ -215,7 +215,7 @@ function prepare_artifact_record($at, $fields, $group_artifact_id, &$record, $ex
     //CC
     $cc_list = $ah->getCCList();
     $rows = db_numrows($cc_list);
-    $cc = array();
+    $cc = [];
     for ($i = 0; $i < $rows; $i++) {
         $cc_email = db_result($cc_list, $i, 'email');
         $cc[] = $cc_email;

@@ -86,12 +86,12 @@ class WorkflowFactoryTest extends TestCase
         $static_value_01->shouldReceive('getId')->andReturn(801);
         $static_value_02->shouldReceive('getId')->andReturn(802);
 
-        $mapping = array(
+        $mapping = [
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
             'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02
-        );
+        ];
 
         $condition_factory = Mockery::mock(Workflow_Transition_ConditionFactory::class);
         $condition_factory->shouldReceive('getAllInstancesFromXML')
@@ -104,7 +104,7 @@ class WorkflowFactoryTest extends TestCase
         $date_post_action->shouldReceive('getValueType')->andReturn(1);
 
         $third_transition = Mockery::mock(Transition::class);
-        $third_transition->shouldReceive('getPostActions')->andReturn(array($date_post_action));
+        $third_transition->shouldReceive('getPostActions')->andReturn([$date_post_action]);
 
         $first_transition = Mockery::mock(Transition::class);
         $first_transition->shouldReceive('getPostActions')->andReturns([]);
@@ -185,12 +185,12 @@ class WorkflowFactoryTest extends TestCase
         $static_value_01->shouldReceive('getId')->andReturn(801);
         $static_value_02->shouldReceive('getId')->andReturn(802);
 
-        $mapping = array(
+        $mapping = [
             'F1'     => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(110)->getMock(),
             'F32'    => Mockery::mock(Tracker_FormElement_Field_Selectbox::class)->shouldReceive('getId')->andReturn(111)->getMock(),
             'F32-V0' => $static_value_01,
             'F32-V1' => $static_value_02
-        );
+        ];
 
         $date_post_action = Mockery::mock(Transition_PostAction_Field_Date::class);
         $date_post_action->shouldReceive('getField')->andReturn(110);

@@ -103,7 +103,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
 
         EventManager::instance()->processEvent(
             Event::SERVICE_CLASSNAMES,
-            array('classnames' => &$this->serviceClassnames)
+            ['classnames' => &$this->serviceClassnames]
         );
     }
 
@@ -118,7 +118,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
         // Get Service data
         $allowed_services = ServiceManager::instance()->getListOfAllowedServicesForProject($this);
         if (count($allowed_services) < 1) {
-            $this->service_data_array = array();
+            $this->service_data_array = [];
         }
         $j = 1;
         foreach ($allowed_services as $service) {
@@ -205,7 +205,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
      */
     public function getAllUsedServices()
     {
-        $used_services = array();
+        $used_services = [];
         foreach ($this->getServices() as $service) {
             if ($service->isUsed()) {
                 $used_services[] = $service->getShortName();
@@ -464,7 +464,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     public function getProjectsCreatedFrom()
     {
         $sql = 'SELECT * FROM groups WHERE built_from_template = ' . $this->getGroupId() . " AND status <> 'D'";
-        $subprojects = array();
+        $subprojects = [];
         if ($res = db_query($sql)) {
             while ($data = db_fetch_array($res)) {
                 $subprojects[] = $data;
@@ -477,7 +477,7 @@ class Project extends Group implements PFO_Project  // phpcs:ignore PSR1.Classes
     {
         $sql = 'SELECT group_desc_id, value FROM group_desc_value WHERE group_id=' . db_ei($this->getGroupId());
 
-        $descfieldsvalue = array();
+        $descfieldsvalue = [];
         if ($res = db_query($sql)) {
             while ($data = db_fetch_array($res)) {
                 $descfieldsvalue[] = $data;

@@ -82,10 +82,10 @@ class ArtifactLinksToRender
             if ($this->canUseArtifactLink($current_user, $artifact_link)) {
                 $artifact_link_tracker_id = $artifact_link->getTrackerId();
                 if (! isset($ids[$artifact_link_tracker_id])) {
-                    $ids[$artifact_link->getTrackerId()] = array(
+                    $ids[$artifact_link->getTrackerId()] = [
                         'id'                => '',
                         'last_changeset_id' => ''
-                    );
+                    ];
                     if ($project_allowed_to_use_nature) {
                         $ids[$artifact_link_tracker_id]['nature'] = [];
                     }

@@ -102,7 +102,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
         $field_value_analyzed = \Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $field_value_analyzed->shouldReceive('getId')->andReturns(2067);
 
-        $fields_data = array('field_id' => 'value');
+        $fields_data = ['field_id' => 'value'];
 
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
         $t1->setConditions(new Workflow_Transition_ConditionsCollection());
@@ -110,7 +110,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
         $a1 = \Mockery::spy(\Transition_PostAction::class);
         $a2 = \Mockery::spy(\Transition_PostAction::class);
 
-        $t1->setPostActions(array($a1, $a2));
+        $t1->setPostActions([$a1, $a2]);
 
         $a1->shouldReceive('before')->with($fields_data, $current_user)->once();
         $a2->shouldReceive('before')->with($fields_data, $current_user)->once();
@@ -132,7 +132,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
         $post_action_1 = \Mockery::spy(\Transition_PostAction::class);
         $post_action_2 = \Mockery::spy(\Transition_PostAction::class);
 
-        $transition->setPostActions(array($post_action_1, $post_action_2));
+        $transition->setPostActions([$post_action_1, $post_action_2]);
 
         $post_action_1->shouldReceive('after')->once();
         $post_action_2->shouldReceive('after')->once();
@@ -145,7 +145,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
     public function testItReturnsTrueWhenConditionsAreValid(): void
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
-        $fields_data = array();
+        $fields_data = [];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
         $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(true)->getMock();
         $transition->setConditions($conditions);
@@ -155,7 +155,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
     public function testItReturnsFalseWhenConditionsAreNotValid(): void
     {
         $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
-        $fields_data = array();
+        $fields_data = [];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
         $conditions  = \Mockery::spy(\Workflow_Transition_ConditionsCollection::class)->shouldReceive('validate')->andReturns(false)->getMock();
         $transition->setConditions($conditions);
@@ -164,7 +164,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
 
     public function testItBypassesPermission(): void
     {
-        $posts_actions    = array($this->date_post_action);
+        $posts_actions    = [$this->date_post_action];
 
         $this->transition->setPostActions($posts_actions);
         $this->assertTrue($this->transition->bypassPermissions($this->field));
@@ -173,7 +173,7 @@ final class TransitionTest extends \PHPUnit\Framework\TestCase // phpcs:ignore P
     public function testItBypassesPermissionIfThereIsACIJob(): void
     {
         $ci_job           = \Mockery::spy(\Transition_PostAction_CIBuild::class);
-        $posts_actions    = array($ci_job, $this->date_post_action);
+        $posts_actions    = [$ci_job, $this->date_post_action];
 
         $this->transition->setPostActions($posts_actions);
         $this->assertTrue($this->transition->bypassPermissions($this->field));

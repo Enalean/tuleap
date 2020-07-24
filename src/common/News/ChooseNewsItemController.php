@@ -104,17 +104,17 @@ class ChooseNewsItemController
     private function displayHeader()
     {
         news_header(
-            array(
+            [
                 'title'      => $GLOBALS['Language']->getText('news_admin_index', 'title'),
                 'help'       => 'collaboration.html#news-service',
                 'project_id' => $this->request->get('project_id')
-            )
+            ]
         );
     }
 
     private function displayFooter()
     {
-        news_footer(array());
+        news_footer([]);
     }
 
     private function getProjectFromRequest()

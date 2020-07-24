@@ -58,8 +58,8 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
         $GLOBALS['Response']->shouldReceive('addFeedback')->never();
 
         $this->assertEquals(
-            array($this->key1),
-            $this->validator->validateAllKeys(array($this->key1))
+            [$this->key1],
+            $this->validator->validateAllKeys([$this->key1])
         );
     }
 
@@ -68,17 +68,17 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
         $GLOBALS['Response']->shouldReceive('addFeedback')->never();
 
         $this->assertEquals(
-            array($this->key1, $this->key2),
-            $this->validator->validateAllKeys(array(
+            [$this->key1, $this->key2],
+            $this->validator->validateAllKeys([
                 $this->key1,
                 $this->key2
-            ))
+            ])
         );
     }
 
     public function testItRaisesAWarningWhenTheKeyIsInvalid(): void
     {
-        $keys = array("bla");
+        $keys = ["bla"];
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', \Mockery::any())->once();
 
@@ -87,9 +87,9 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
 
     public function testItRaisesAWarningWhenTheKeyIsNotValidOutsideAnAuthorizedKeysFile(): void
     {
-        $keys = array(
+        $keys = [
             'tuleap.example.com,192.0.2.1 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDNpemQvp5G/ldgg5diu/OZdNVV3mHqsHmTBcJKiFnfwxNxzZDdTb7hXQKEd6akU6qbmlGPr8AYMBEfII/C47o/B93y2trghS1dVYKyEq7Md/uZx+NFnGysNiMeWr1jPWHWEiNfKgbZPW6OMY200fNGXROmxvp4BQLID7bPLXVLctvCRO4uD2KlK66uWaql7QuGWxzY2C09d15Q/84oVwcIVook/luP1ieHg6syS9FutO+j0//Hfg2Cze/JrrxIZT2XUUAVeyM9uSwW2bBprmDI8rq3UXUotcJws9Pc4PgK7U5P4w1qBQFRonJSjYbK2+1EXLPvV5S60E2mwu6Ta513'
-        );
+        ];
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', \Mockery::any())->once();
 
@@ -109,23 +109,23 @@ class User_SSHKeyValidator_KeyValidation extends \PHPUnit\Framework\TestCase // 
 
     public function testItRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys(): void
     {
-        $keys = array(
+        $keys = [
             $this->key1,
             "bla",
             $this->key2
-        );
+        ];
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', \Mockery::any())->once();
 
-        $this->assertEquals(array($this->key1, $this->key2), $this->validator->validateAllKeys($keys));
+        $this->assertEquals([$this->key1, $this->key2], $this->validator->validateAllKeys($keys));
     }
 
     public function testItRaisesAWarningWhenTheSameKeyIsAddedTwice(): void
     {
-        $keys = array(
+        $keys = [
             $this->key1,
             $this->key1
-        );
+        ];
 
         $GLOBALS['Response']->shouldReceive('addFeedback')->with('warning', \Mockery::any())->once();
 

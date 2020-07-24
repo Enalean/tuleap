@@ -72,10 +72,10 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = array(
+        $data = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
-        );
+        ];
         $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_CREATED, $data);
     }
 
@@ -89,10 +89,10 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = array(
+        $data = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
-        );
+        ];
         $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_DELETED, $data);
     }
 
@@ -105,13 +105,13 @@ class RealTimeMessageSender
         ?UserRepresentation $previous_user
     ): void {
         $user_representation = UserRepresentation::build($user);
-        $data = array(
+        $data = [
             'artifact_id'     => $artifact->getId(),
             'status'          => $status,
             'previous_status' => $previous_status,
             'user'            => $user_representation,
             'previous_user'   => $previous_user
-        );
+        ];
         $this->sendExecution($user, $campaign, $artifact, self::EVENT_NAME_EXECUTION_UPDATED, $data);
     }
 
@@ -125,10 +125,10 @@ class RealTimeMessageSender
             return;
         }
 
-        $data = array(
+        $data = [
             'artifact_id'         => $execution_artifact->getId(),
             'added_artifact_link' => $this->buildArtifactLinkRepresentation($linked_artifact)
-        );
+        ];
 
         $this->artifact_message_sender->sendMessage(
             $user,
@@ -148,10 +148,10 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data = array(
+        $data = [
             'artifact_id' => $artifact->getId(),
             'user'        => $user_representation,
-        );
+        ];
         $this->artifact_message_sender->sendMessage(
             $user,
             $artifact,
@@ -173,14 +173,14 @@ class RealTimeMessageSender
         }
 
         $user_representation = UserRepresentation::build($user);
-        $data    = array(
-            'presence' => array(
+        $data    = [
+            'presence' => [
                 'execution_id' => $artifact->getId(),
                 'uuid'         => $uuid,
                 'remove_from'  => $remove_from,
                 'user'         => $user_representation
-            )
-        );
+            ]
+        ];
         $rights  = new ArtifactRightsPresenter($artifact, $this->permissions_serializer);
         $message = new MessageDataPresenter(
             $user->getId(),

@@ -203,7 +203,7 @@ class PageType_interwikimap extends PageType
 
         if (! isset($this->_map[$moniker])) {
             return HTML::span(
-                array('class' => 'bad-interwiki'),
+                ['class' => 'bad-interwiki'],
                 $linktext ? $linktext : $link
             );
         }
@@ -228,12 +228,12 @@ class PageType_interwikimap extends PageType
             $url .= $page_enc;
         }
 
-        $link = HTML::a(array('href' => $url));
+        $link = HTML::a(['href' => $url]);
 
         if (! $linktext) {
             $link->pushContent(
                 PossiblyGlueIconToText('interwiki', "$moniker:"),
-                HTML::span(array('class' => 'wikipage'), $page)
+                HTML::span(['class' => 'wikipage'], $page)
             );
             $link->setAttr('class', 'interwiki');
         } else {
@@ -290,7 +290,7 @@ class PageType_interwikimap extends PageType
             }
         }
 
-        foreach (array('Upload','User','Talk') as $special) {
+        foreach (['Upload', 'User', 'Talk'] as $special) {
             // Expand special variables:
             //   %u => username
             //   %b => wikibaseurl
@@ -413,7 +413,7 @@ class PageFormatter_wikitext extends PageFormatter
     public function format($text)
     {
         return HTML::div(
-            array('class' => 'wikitext'),
+            ['class' => 'wikitext'],
             $this->_transform($text)
         );
     }
@@ -424,7 +424,7 @@ class PageFormatter_interwikimap extends PageFormatter
     public function format($text)
     {
         return HTML::div(
-            array('class' => 'wikitext'),
+            ['class' => 'wikitext'],
             $this->_transform($this->_getHeader($text)),
             $this->_formatMap($text),
             $this->_transform($this->_getFooter($text))
@@ -454,8 +454,8 @@ class PageFormatter_interwikimap extends PageFormatter
             return HTML::p("<No interwiki map found>"); // Shouldn't happen.
         }
 
-        $mon_attr = array('class' => 'interwiki-moniker');
-        $url_attr = array('class' => 'interwiki-url');
+        $mon_attr = ['class' => 'interwiki-moniker'];
+        $url_attr = ['class' => 'interwiki-url'];
 
         $thead = HTML::thead(HTML::tr(
             HTML::th($mon_attr, _("Moniker")),
@@ -469,7 +469,7 @@ class PageFormatter_interwikimap extends PageFormatter
         }
 
         return HTML::table(
-            array('class' => 'interwiki-map'),
+            ['class' => 'interwiki-map'],
             $thead,
             HTML::tbody(false, $rows)
         );
@@ -514,7 +514,7 @@ class PageFormatter_attach extends PageFormatter
         $tokens[$this->prefix . "_PARENT"] = $name->getParent();
 
         $meta = $this->_meta[$this->type];
-        foreach (array('ctime', 'creator', 'creator_id') as $key) {
+        foreach (['ctime', 'creator', 'creator_id'] as $key) {
             $tokens[$this->prefix . "_" . strtoupper($key)] = $meta[$key];
         }
 

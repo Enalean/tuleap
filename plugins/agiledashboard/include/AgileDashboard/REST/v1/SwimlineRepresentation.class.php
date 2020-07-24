@@ -26,7 +26,7 @@ class AgileDashboard_SwimlineRepresentation
 
     public function build(Cardwall_Swimline $swimline, $planning_id, PFUser $user)
     {
-        $this->cards = array();
+        $this->cards = [];
         $swimline_card_in_cell_presenter = $swimline->getCardInCellPresenter();
         if ($swimline_card_in_cell_presenter) {
             $card_representation = new AgileDashboard_CardRepresentation();

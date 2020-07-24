@@ -45,7 +45,7 @@ final class LegacySendMessageController implements DispatchableWithRequest
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
     {
         \Tuleap\Project\ServiceInstrumentation::increment('docman');
-        $func = $request->getValidated('func', new Valid_WhiteList('func', array('docman_access_request')));
+        $func = $request->getValidated('func', new Valid_WhiteList('func', ['docman_access_request']));
 
         if ($request->exist('Submit') && $request->existAndNonEmpty('func') && $func === 'docman_access_request') {
             $defaultMsg = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');

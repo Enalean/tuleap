@@ -81,16 +81,16 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_filename);
 
-        $expected_user = array(
+        $expected_user = [
             'has_avatar'       => 'false',
             'user_name'        => 'zurg',
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
             'username_display' => 'getDisplayName',
             'avatar_url'       => ''
-        );
+        ];
 
-        $this->assertEquals(array($expected_user), $user_collection->getFormattedUsers());
+        $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
         $this->assertEmpty($user_collection->getWarningsMultipleUsers());
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
@@ -99,20 +99,20 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
     {
         $user = $this->getUser(102);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns(array($user));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns([$user]);
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
-        $expected_user = array(
+        $expected_user = [
             'has_avatar'       => 'false',
             'user_name'        => 'zurg',
             'email'            => 'zurg@example.com',
             'profile_page_url' => '/users/zurg/',
             'username_display' => 'getDisplayName',
             'avatar_url'       => ''
-        );
+        ];
 
-        $this->assertEquals(array($expected_user), $user_collection->getFormattedUsers());
+        $this->assertEquals([$expected_user], $user_collection->getFormattedUsers());
         $this->assertEmpty($user_collection->getWarningsMultipleUsers());
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
     }
@@ -122,15 +122,15 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $user  = $this->getUser(102);
         $user2 = $this->getUser(103);
 
-        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns(array($user, $user2));
+        $this->user_manager->shouldReceive('getAllUsersByEmail')->with('zurg@example.com')->andReturns([$user, $user2]);
 
         $user_collection = $this->user_import->parse($this->project->getID(), $this->user_email_filename);
 
         $this->assertEmpty($user_collection->getFormattedUsers());
         $this->assertEquals(
-            array(
-                array('warning' => 'zurg@example.com has multiple corresponding users.')
-            ),
+            [
+                ['warning' => 'zurg@example.com has multiple corresponding users.']
+            ],
             $user_collection->getWarningsMultipleUsers(),
         );
         $this->assertEmpty($user_collection->getWarningsInvalidUsers());
@@ -146,9 +146,9 @@ final class UserImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEmpty($user_collection->getFormattedUsers());
         $this->assertEmpty($user_collection->getWarningsMultipleUsers());
         $this->assertEquals(
-            array(
-                array('warning' => "User 'zurg' does not exist")
-            ),
+            [
+                ['warning' => "User 'zurg' does not exist"]
+            ],
             $user_collection->getWarningsInvalidUsers()
         );
     }

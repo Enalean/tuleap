@@ -97,12 +97,12 @@ class Planning_Presenter_BaseHomePresenter
     private function getBaseParameters()
     {
         $token      = new CSRFSynchronizerToken('/plugins/agiledashboard/?action=admin');
-        $parameters = array(
+        $parameters = [
             'group_id'                                => $this->group_id,
             'action'                                  => 'updateConfiguration',
             'home-ease-onboarding'                    => 1,
             CSRFSynchronizerToken::DEFAULT_TOKEN_NAME => $token->getToken()
-        );
+        ];
 
         return $parameters;
     }

@@ -30,7 +30,7 @@ $vGroupId->required();
 if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'))) {
     $group_id = $request->get('group_id');
     $current_project = ProjectManager::instance()->getProject($group_id);
-    $vPostChanges = new Valid_WhiteList('post_changes', array('y'));
+    $vPostChanges = new Valid_WhiteList('post_changes', ['y']);
     $vPostChanges->required();
     if ($request->isPost() && $request->valid($vPostChanges)) {
         /*
@@ -49,7 +49,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         $vDescription->required();
 
         // Is public
-        $vIsPublic = new Valid_WhiteList('is_public', array(0, 1, 9));
+        $vIsPublic = new Valid_WhiteList('is_public', [0, 1, 9]);
         $vIsPublic->required();
 
         if ($request->existAndNonEmpty('delete')) {
@@ -101,7 +101,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             /*
                 Adding forums to this group
             */
-            $vMonitored = new Valid_WhiteList('is_monitored', array(0, 1));
+            $vMonitored = new Valid_WhiteList('is_monitored', [0, 1]);
             $vMonitored->required();
 
             if (
@@ -163,8 +163,8 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
         /*
             Show page for deleting messages
         */
-        forum_header(array('title' => $Language->getText('forum_admin_index', 'del_a_msg'),
-        'help' => 'collaboration.html#web-forums'));
+        forum_header(['title' => $Language->getText('forum_admin_index', 'del_a_msg'),
+        'help' => 'collaboration.html#web-forums']);
 
         echo '
 			<H2>' . $Language->getText('forum_admin_index', 'del_a_msg') . '</H2>
@@ -182,13 +182,13 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<INPUT CLASS="btn" TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
 			</FORM>';
 
-        forum_footer(array());
+        forum_footer([]);
     } elseif ($request->existAndNonEmpty('add_forum')) {
         /*
             Show the form for adding forums
         */
-        forum_header(array('title' => $Language->getText('forum_admin_index', 'add_a_forum'),
-        'help' => 'collaboration.html#web-forums'));
+        forum_header(['title' => $Language->getText('forum_admin_index', 'add_a_forum'),
+        'help' => 'collaboration.html#web-forums']);
 
         $sql = "SELECT forum_name FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
@@ -223,13 +223,13 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<INPUT TYPE="SUBMIT" NAME="SUBMIT" VALUE="' . $Language->getText('forum_admin_index', 'add_this_forum') . '">
 			</FORM>';
 
-        forum_footer(array());
+        forum_footer([]);
     } elseif ($request->existAndNonEmpty('change_status')) {
         /*
             Change a forum to public/private
         */
-        forum_header(array('title' => $Language->getText('forum_admin_index', 'change_status'),
-        'help' => 'collaboration.html#web-forums'));
+        forum_header(['title' => $Language->getText('forum_admin_index', 'change_status'),
+        'help' => 'collaboration.html#web-forums']);
 
         $sql = "SELECT * FROM forum_group_list WHERE group_id=" . db_ei($group_id);
         $result = db_query($sql);
@@ -247,7 +247,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
                 echo '<P>
 			         ' . $Language->getText('forum_admin_index', 'private_explain') . '<P>';
             }
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('forum_admin_index', 'forum');
             $title_arr[] = $Language->getText('global', 'status');
             $title_arr[] = $Language->getText('forum_admin_index', 'update');
@@ -285,14 +285,14 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
             echo '</TABLE>';
         }
 
-        forum_footer(array());
+        forum_footer([]);
     } else {
      /*
       Show main page for choosing
       either moderotor or delete
      */
-        forum_header(array('title' => $Language->getText('forum_admin_index', 'forum_admin'),
-          'help' => 'collaboration.html#web-forums'));
+        forum_header(['title' => $Language->getText('forum_admin_index', 'forum_admin'),
+          'help' => 'collaboration.html#web-forums']);
 
         echo '
 			<H2>' . $Language->getText('forum_admin_index', 'forum_admin') . '</H2>
@@ -301,7 +301,7 @@ if ($request->valid($vGroupId) && (user_ismember($request->get('group_id'), 'F2'
 			<A HREF="?group_id=' . $group_id . '&delete=1">' . $Language->getText('forum_admin_index', 'del_msg') . '</A><BR>
 			<A HREF="?group_id=' . $group_id . '&change_status=1">' . $Language->getText('forum_admin_index', 'update_forum_status') . '</A>';
 
-        forum_footer(array());
+        forum_footer([]);
     }
 } else {
     /*

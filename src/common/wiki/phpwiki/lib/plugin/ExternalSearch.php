@@ -72,7 +72,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('s'        => false,
+        return ['s'        => false,
                      'formsize' => 30,
                      'url'      => false,
                      'name'     => '',
@@ -80,7 +80,7 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
                      'width'    => false,
                      'height'   => false,
                      'debug'    => false
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -116,19 +116,19 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
         $this->_url = $url;
         $this->_getInterWikiUrl($request);
         $form = HTML::form(
-            array('action' => $request->getPostURL(),
+            ['action' => $request->getPostURL(),
                                  'method' => 'post',
                                  //'class'  => 'class', //fixme
-                                 'accept-charset' => $GLOBALS['charset']),
-            HiddenInputs(array('pagename' => $basepage))
+                                 'accept-charset' => $GLOBALS['charset']],
+            HiddenInputs(['pagename' => $basepage])
         );
 
-        $form->pushContent(HTML::input(array('type' => 'hidden',
+        $form->pushContent(HTML::input(['type' => 'hidden',
                                              'name'  => 'url',
-                                             'value' => $this->_url)));
+                                             'value' => $this->_url]));
         if (! empty($args["useimage"])) {
             //FIXME: This does not work with Gecko
-            $button = HTML::img(array('src' => $useimage, 'alt' => 'imagebutton'));
+            $button = HTML::img(['src' => $useimage, 'alt' => 'imagebutton']);
             if (! empty($width)) {
                 $button->setAttr('width', $width);
             }
@@ -136,20 +136,20 @@ class WikiPlugin_ExternalSearch extends WikiPlugin
                 $button->setAttr('height', $height);
             }
             $form->pushContent(HTML::button(
-                array('type' => 'button',
+                ['type' => 'button',
                                                   'class' => 'button',
                                                   'value' => $this->_name,
-                                                  ),
+                                                  ],
                 $button
             ));
         } else {
-            $form->pushContent(HTML::input(array('type' => 'submit',
+            $form->pushContent(HTML::input(['type' => 'submit',
                                                  'class' => 'button',
-                                                 'value' => $this->_name)));
-            $form->pushContent(HTML::input(array('type' => 'text',
+                                                 'value' => $this->_name]));
+            $form->pushContent(HTML::input(['type' => 'text',
                                                  'value' => $this->_s,
                                                  'name'  => 's',
-                                                 'size'  => $formsize)));
+                                                 'size'  => $formsize]));
         }
         return $form;
     }

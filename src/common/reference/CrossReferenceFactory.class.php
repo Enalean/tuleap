@@ -54,8 +54,8 @@ class CrossReferenceFactory
 
         $res = db_query($sql);
         if ($res && db_numrows($res) > 0) {
-            $this->source_refs_datas = array();
-            $this->target_refs_datas = array();
+            $this->source_refs_datas = [];
+            $this->target_refs_datas = [];
 
             while ($field_array = db_fetch_array($res)) {
                 $target_id = $field_array['target_id'];
@@ -131,9 +131,9 @@ class CrossReferenceFactory
     public function getFormattedCrossReferences()
     {
         $crossRefArray = $this->getCrossReferences();
-        $refs = array();
+        $refs = [];
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {
-            foreach (array('both', 'target', 'source') as $key) {
+            foreach (['both', 'target', 'source'] as $key) {
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         if ($key === 'source') {
@@ -143,7 +143,7 @@ class CrossReferenceFactory
                             $ref = $currRef->getRefTargetKey() . " #" . $currRef->getRefTargetId();
                             $url = $currRef->getRefTargetUrl();
                         }
-                        $refs[$key][] = array( 'ref' => $ref, 'url' => $url);
+                        $refs[$key][] = ['ref' => $ref, 'url' => $url];
                     }
                 }
             }
@@ -200,11 +200,11 @@ class CrossReferenceFactory
                 $can_delete = false;
         }
 
-        $classes = array(
+        $classes = [
             'both'   => 'cross_reference',
             'source' => 'referenced_by',
             'target' => 'reference_to',
-        );
+        ];
         $message = addslashes($GLOBALS['Language']->getText('cross_ref_fact_include', 'confirm_delete'));
 
          // HTML part (stored in $display)
@@ -227,7 +227,7 @@ class CrossReferenceFactory
 
             // loop through each type of target
             $display .= '<ul class="cross_reference_list">';
-            foreach (array('both', 'target', 'source') as $key) {
+            foreach (['both', 'target', 'source'] as $key) {
                 if (array_key_exists($key, $refArraySourceTarget)) {
                     // one li for one type of ref (both, target, source)
                     $display .= '<li class="' . $classes[$key] . '">';
@@ -235,40 +235,40 @@ class CrossReferenceFactory
                         case 'both':
                             $display .= $GLOBALS['HTML']->getImage(
                                 'ic/both_arrows.png',
-                                array(
+                                [
                                     'alt'    => $Language->getText('cross_ref_fact_include', 'cross_referenced'),
                                     'align'  => 'top-left',
                                     'hspace' => '5',
                                     'title'  => $Language->getText('cross_ref_fact_include', 'cross_referenced')
-                                )
+                                ]
                             );
                             break;
                         case 'target':
                             $display .= $GLOBALS['HTML']->getImage(
                                 'ic/right_arrow.png',
-                                array(
+                                [
                                     'alt'    => $Language->getText('cross_ref_fact_include', 'reference_to'),
                                     'align'  => 'top-left',
                                     'hspace' => '5',
                                     'title'  => $Language->getText('cross_ref_fact_include', 'reference_to')
-                                )
+                                ]
                             );
                             break;
                         default:
                             $display .= $GLOBALS['HTML']->getImage(
                                 'ic/left_arrow.png',
-                                array(
+                                [
                                     'alt'    => $Language->getText('cross_ref_fact_include', 'referenced_in'),
                                     'align'  => 'top-left',
                                     'hspace' => '5',
                                     'title'  => $Language->getText('cross_ref_fact_include', 'referenced_in')
-                                )
+                                ]
                             );
                             break;
                     }
 
                     // the refs
-                    $spans = array();
+                    $spans = [];
                     foreach ($refArraySourceTarget[$key] as $currRef) {
                         $span = '';
                         if ($key === 'source') {
@@ -296,10 +296,10 @@ class CrossReferenceFactory
                                            onClick="return delete_ref(\'' . $id . '\', \'' . $message . '\');">';
                             $span .= $GLOBALS['HTML']->getImage(
                                 'ic/cross.png',
-                                array(
+                                [
                                    'alt'   => $Language->getText('cross_ref_fact_include', 'delete'),
                                    'title' => $Language->getText('cross_ref_fact_include', 'delete')
-                                )
+                                ]
                             );
                             $span .= '</a>';
                         }
@@ -326,7 +326,7 @@ class CrossReferenceFactory
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '<div>';
-            $refs = array();
+            $refs = [];
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
@@ -354,7 +354,7 @@ class CrossReferenceFactory
 
         foreach ($cross_refs as $nature => $references_by_destination) {
             $html .= '';
-            $refs = array();
+            $refs = [];
             foreach ($references_by_destination as $key => $references) {
                 foreach ($references as $reference) {
                     if ($key === 'source') {
@@ -377,7 +377,7 @@ class CrossReferenceFactory
      */
     protected function getCrossReferences()
     {
-        $crossRefArray = array();
+        $crossRefArray = [];
 
         // Walk the target ref array in order to fill the crossRefArray array
         for ($i = 0, $nb_target_refs = count($this->target_refs_datas); $i < $nb_target_refs; $i++) {

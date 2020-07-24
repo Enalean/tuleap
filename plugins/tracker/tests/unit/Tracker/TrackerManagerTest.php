@@ -65,7 +65,7 @@ class TrackerManagerTest extends TestCase
         $this->tracker->shouldReceive('isActive')->andReturns(true);
         $this->tracker->shouldReceive('getTracker')->andReturns($this->tracker);
 
-        $trackers       = array($this->tracker);
+        $trackers       = [$this->tracker];
 
         $tf = \Mockery::spy(\TrackerFactory::class);
         $tf->shouldReceive('getTrackerById')->with(3)->andReturns($this->tracker);
@@ -245,7 +245,7 @@ class TrackerManagerTest extends TestCase
     {
         $source_project_id       = 100;
         $destinatnion_project_id = 120;
-        $u_group_mapping         = array();
+        $u_group_mapping         = [];
 
         $tm = Mockery::mock(TrackerManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
 

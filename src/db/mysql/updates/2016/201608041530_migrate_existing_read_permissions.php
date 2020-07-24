@@ -90,8 +90,8 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
     {
         $permission_frs_reader = 'FRS_READ';
 
-        $ugroups  = array();
-        $projects = array();
+        $ugroups  = [];
+        $projects = [];
 
         $sql = "SELECT count(*) AS nb FROM forgeconfig f WHERE name = 'access_mode' AND value = '$access_mode'";
         $row = $this->db->dbh->query($sql)->fetch();
@@ -103,9 +103,9 @@ class b201608041530_migrate_existing_read_permissions extends ForgeUpgrade_Bucke
             }
         }
 
-        return array(
+        return [
             "ugroups"  => $ugroups,
             "projects" => $projects
-        );
+        ];
     }
 }

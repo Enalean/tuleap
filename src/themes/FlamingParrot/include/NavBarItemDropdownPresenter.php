@@ -26,7 +26,7 @@ class FlamingParrot_NavBarItemDropdownPresenter extends FlamingParrot_NavBarItem
     public $label;
 
     /** @var FlamingParrot_NavBarItemDropdownSectionPresenter[] */
-    public $sections = array();
+    public $sections = [];
 
     public function __construct($id, $is_active, $label)
     {

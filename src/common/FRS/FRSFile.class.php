@@ -393,7 +393,7 @@ class FRSFile
 
     public function toArray()
     {
-        $array = array();
+        $array = [];
         $array['file_id']       = $this->getFileID();
         $array['filename']      = $this->getFileName();
         $array['filepath']      = $this->getFilePath();

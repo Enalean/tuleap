@@ -118,7 +118,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function getAccessURL(GitRepository $repository)
     {
-        $transports = array();
+        $transports = [];
         $ssh_transport = $this->gitolite_access_URL_generator->getSSHURL($repository);
         if ($ssh_transport) {
             $transports['ssh'] = $ssh_transport;
@@ -340,7 +340,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     protected function glRenameProject($oldName, $newName)
     {
         $retVal = 0;
-        $output = array();
+        $output = [];
         $mvCmd  = ForgeConfig::get('codendi_dir') . '/src/utils/php-launcher.sh ' . ForgeConfig::get('codendi_dir') . '/plugins/git/bin/gl-rename-project.php ' . escapeshellarg($oldName) . ' ' . escapeshellarg($newName);
         $cmd    = 'su -l codendiadm -c "' . $mvCmd . ' 2>&1"';
         exec($cmd, $output, $retVal);
@@ -550,7 +550,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
      */
     public function searchOtherRepositoriesInSameProjectFromRepositoryList(GitRepository $repository, $repositor_ids)
     {
-        $project_repositories = array();
+        $project_repositories = [];
 
         $result = $this->getDao()->searchRepositoriesInSameProjectFromRepositoryList($repositor_ids, $repository->getProjectId());
         if (! $result) {

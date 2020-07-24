@@ -42,10 +42,10 @@ class ColorHelper
     public static function HexatoRGB($hex)
     {
         $delta = strlen($hex) == 4 ? 1 : 2;
-        return array(
+        return [
             hexdec(substr($hex, 1 + 0 * $delta, $delta)),
             hexdec(substr($hex, 1 + 1 * $delta, $delta)),
             hexdec(substr($hex, 1 + 2 * $delta, $delta)),
-        );
+        ];
     }
 }

@@ -25,7 +25,7 @@ require_once __DIR__ . '/../forum/forum_utils.php';
 
 $request = HTTPRequest::instance();
 
-$params = array();
+$params = [];
 
 $vMsg = new Valid_UInt('msg_id');
 $vMsg->required();
@@ -63,8 +63,8 @@ if ($request->valid($vMsg)) {
         }
     }
 
-    $params = array('title' => db_result($result, 0, 'subject'),
-                      'pv'   => isset($pv) ? $pv : false);
+    $params = ['title' => db_result($result, 0, 'subject'),
+                      'pv'   => isset($pv) ? $pv : false];
     forum_header($params);
 
     echo "<P>";
@@ -81,7 +81,7 @@ if ($request->valid($vMsg)) {
         return 'message not found.\n';
     }
 
-    $title_arr = array();
+    $title_arr = [];
     $title_arr[] = 'Message: ' . $msg_id;
 
     echo html_build_list_table_top($title_arr);

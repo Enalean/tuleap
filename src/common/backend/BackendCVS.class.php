@@ -178,7 +178,7 @@ class BackendCVS extends Backend
             $this->system("touch $cvs_dir/CVSROOT/history");
             // Must be writable
             $this->system("chmod 0666 $cvs_dir/CVSROOT/history");
-            $no_filter_file_extension = array();
+            $no_filter_file_extension = [];
             $this->recurseChownChgrp(
                 $cvs_dir . "/CVSROOT",
                 $this->getHTTPUser(),
@@ -252,7 +252,7 @@ class BackendCVS extends Backend
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, $command);
                 $this->_RcsCommit($filename);
-                $no_filter_file_extension = array();
+                $no_filter_file_extension = [];
                 $this->recurseChownChgrp(
                     $cvs_dir . "/CVSROOT",
                     $this->getHTTPUser(),
@@ -268,7 +268,7 @@ class BackendCVS extends Backend
                 $this->_RcsCheckout($filename);
                 $this->addBlock($filename, "ALL " . ForgeConfig::get('codendi_bin_prefix') . "/commit_prep -T $unix_group_name -r");
                 $this->_RcsCommit($filename);
-                $no_filter_file_extension = array();
+                $no_filter_file_extension = [];
                 $this->recurseChownChgrp(
                     $cvs_dir . "/CVSROOT",
                     $this->getHTTPUser(),
@@ -317,7 +317,7 @@ class BackendCVS extends Backend
 
         // Get list of project members (Unix names)
         $members_id_array   = $project->getMembersUserNames();
-        $members_name_array = array();
+        $members_name_array = [];
         foreach ($members_id_array as $member) {
             $members_name_array[] = strtolower($member['user_name']) . "\n";
         }
@@ -394,7 +394,7 @@ class BackendCVS extends Backend
                 $this->_RcsCheckout($filename);
                 $this->removeBlock($filename);
                 $this->_RcsCommit($filename);
-                $no_filter_file_extension = array();
+                $no_filter_file_extension = [];
                 $this->recurseChownChgrp(
                     $cvs_dir . "/CVSROOT",
                     $this->getHTTPUser(),
@@ -494,9 +494,9 @@ class BackendCVS extends Backend
      */
     public function CVSRootListUpdate()
     {
-        $cvs_root_allow_array = array();
-        $projlist = array();
-        $repolist = array();
+        $cvs_root_allow_array = [];
+        $projlist = [];
+        $repolist = [];
 
         $service_dao = $this->_getServiceDao();
         $dar = $service_dao->searchActiveUnixGroupByUsedService('cvs');
@@ -610,7 +610,7 @@ class BackendCVS extends Backend
             }
         }
         // Sometimes, there might be a bad ownership on file (e.g. chmod failed, maintenance done as root...)
-        $files_to_check = array('CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config');
+        $files_to_check = ['CVSROOT/loginfo', 'CVSROOT/commitinfo', 'CVSROOT/config'];
         $need_owner_update = false;
         foreach ($files_to_check as $file) {
             if (file_exists($cvsroot . '/' . $file)) {

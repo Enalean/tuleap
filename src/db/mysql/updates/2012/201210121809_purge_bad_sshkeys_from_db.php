@@ -33,19 +33,19 @@ EOT;
     public function up()
     {
         $update_sql = 'UPDATE user SET authorized_keys = :authorized_keys WHERE user_id = :user_id';
-        $update_sth = $this->db->dbh->prepare($update_sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $update_sth = $this->db->dbh->prepare($update_sql, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
 
         $sql = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WHERE authorized_keys != "" AND authorized_keys IS NOT NULL';
         $res = $this->db->dbh->query($sql);
         $key_file = '/var/tmp/codendi_cache/ssh_key_check';
         foreach ($res->fetchAll() as $row) {
-            $valid_keys = array();
+            $valid_keys = [];
             $keys = array_filter(explode('###', $row['authorized_keys']));
             foreach ($keys as $key) {
                 $written  = file_put_contents($key_file, $key);
                 if ($written === strlen($key)) {
                     $return = 1;
-                    $output = array();
+                    $output = [];
                     exec("ssh-keygen -l -f $key_file 2>&1", $output, $return);
                     if ($return === 0) {
                         $valid_keys[] = $key;
@@ -55,7 +55,7 @@ EOT;
             $str_valid_keys = implode('###', $valid_keys);
             if ($str_valid_keys !== $row['authorized_keys']) {
                 $this->log->info("Remove invalid SSH key for user " . $row['user_id'] . ": " . $row['user_name'] . " (" . $row['realname'] . " <" . $row['email'] . ">)");
-                $update_sth->execute(array(':authorized_keys' => $str_valid_keys, ':user_id' => $row['user_id']));
+                $update_sth->execute([':authorized_keys' => $str_valid_keys, ':user_id' => $row['user_id']]);
             }
         }
         if (file_exists($key_file)) {

@@ -75,7 +75,7 @@ final class DisplayKeysTokensControllerTest extends TestCase
             $this->svn_tokens_presenter_builder,
         );
 
-        $_SESSION = array();
+        $_SESSION = [];
     }
 
     protected function tearDown(): void

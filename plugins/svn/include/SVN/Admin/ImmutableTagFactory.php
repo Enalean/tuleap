@@ -91,7 +91,7 @@ class ImmutableTagFactory
         Repository $repository,
         ImmutableTagRepresentation $immutable_tag_representation
     ) {
-        $row = array();
+        $row = [];
 
         $row['paths']     = implode(PHP_EOL, $immutable_tag_representation->paths);
         $row['whitelist'] = implode(PHP_EOL, $immutable_tag_representation->whitelist);

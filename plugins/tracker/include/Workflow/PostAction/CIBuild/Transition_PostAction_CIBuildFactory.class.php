@@ -33,9 +33,9 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     /**
      * @var Array of available post actions classes run after fields validation
      */
-    protected $post_actions_classes_ci = array(
+    protected $post_actions_classes_ci = [
         Transition_PostAction_CIBuild::SHORT_NAME => 'Transition_PostAction_CIBuild',
-    );
+    ];
 
     /** @var Transition_PostAction_CIBuildDao */
     private $dao;
@@ -50,7 +50,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      */
     public function loadPostActions(Transition $transition)
     {
-        $post_actions = array();
+        $post_actions = [];
 
         foreach ($this->loadPostActionRows($transition) as $row) {
             $post_actions[] = $this->buildPostAction($transition, $row);
@@ -89,10 +89,10 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
         $postaction_attributes = $xml->attributes();
-        $row = array(
+        $row = [
             'id'      => 0,
             'job_url' => (string) $postaction_attributes['job_url'],
-        );
+        ];
 
         return $this->buildPostAction($transition, $row);
     }

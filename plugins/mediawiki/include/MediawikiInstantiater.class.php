@@ -319,7 +319,7 @@ class MediaWikiInstantiater
         $template         = ProjectManager::instance()->getProject($this->project->getTemplate());
         $mapper           = new MediawikiUserGroupsMapper($this->dao, new User_ForgeUserGroupPermissionsDao());
         $template_mapping = $mapper->getCurrentUserGroupMapping($template);
-        $new_mapping      = array();
+        $new_mapping      = [];
         foreach ($template_mapping as $mw_group => $tuleap_groups) {
             foreach ($tuleap_groups as $grp) {
                 if ($grp < ProjectUGroup::DYNAMIC_UPPER_BOUNDARY) {
@@ -350,7 +350,7 @@ class MediaWikiInstantiater
 
     private function getFormattedDefaultValues($group_id, array $mappings)
     {
-        $values = array();
+        $values = [];
 
         foreach ($mappings as $group_name => $mapping) {
             foreach ($mapping as $ugroup_id) {
@@ -373,7 +373,7 @@ class MediaWikiInstantiater
 
     private function getUgroupsForProjectFromMapping(array $original_ugroups, array $ugroup_mapping)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($original_ugroups as $upgroup) {
             if (isset($ugroup_mapping[$upgroup])) {

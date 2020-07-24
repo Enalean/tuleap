@@ -9,7 +9,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
         &$pages,
         $search,
         $fulltext = false,
-        $options = array()
+        $options = []
     ) {
         $this->_backend = &$backend;
         $this->_pages = $pages;
@@ -17,7 +17,7 @@ class WikiDB_backend_dumb_TextSearchIter extends WikiDB_backend_iterator
         $this->_search  = $search;
         $this->_index   = 0;
         $this->_stoplist = $search->_stoplist;
-        $this->stoplisted = array();
+        $this->stoplisted = [];
 
         if (isset($options['limit'])) {
             $this->_limit = $options['limit'];

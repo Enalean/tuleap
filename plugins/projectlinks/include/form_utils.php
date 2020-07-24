@@ -229,9 +229,9 @@ function form_Start($serviceURI = "")
     $gFormName = "Form" . $gFormID;
     $gFormUsedDateBox = false;
     $gFirstFormTextBox = "";
-    $gFormHiddenParams = array();
-    $gFormCaptions = array();
-    $gValidationCollection = array();
+    $gFormHiddenParams = [];
+    $gFormCaptions = [];
+    $gValidationCollection = [];
 
     if ($gInForm) {
         trigger_error("Nested forms - form_start() inside form");
@@ -410,7 +410,7 @@ function form_Validation($ParamName, $Tests, $OptionalParam = null)
         trigger_error("form_Validation() outside of form");
     }
     if (! is_array($Tests)) {
-        $Tests = array($Tests => $OptionalParam);
+        $Tests = [$Tests => $OptionalParam];
     }
     foreach ($Tests as $Test => $OptionalParam) {
         $valItem = new tValidation();
@@ -716,7 +716,7 @@ define("BLANK_ROW_PREFIX", true);
 function form_genSelectBoxFromSQL($ParamName, $Caption, $SQLstr, $DefaultValue = "", $PrefixWithBlankItem = NO_BLANK_ROW_PREFIX, $SubmitOnChange = NO_SUBMIT_ON_CHANGE)
 {
     $db_res = db_query($SQLstr);
-    $optionsList = array();
+    $optionsList = [];
     if ($PrefixWithBlankItem) {
         $optionsList["- - -"] = "";
     }

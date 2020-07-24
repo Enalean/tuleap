@@ -71,7 +71,7 @@ class Git_RemoteServer_GerritServerFactory
      */
     public function getServers()
     {
-        $servers = array();
+        $servers = [];
         foreach ($this->dao->searchAll() as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
@@ -91,7 +91,7 @@ class Git_RemoteServer_GerritServerFactory
      */
     public function getUnrestrictedServers()
     {
-        $servers = array();
+        $servers = [];
         foreach ($this->dao->searchAllUnrestricted() as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
@@ -104,7 +104,7 @@ class Git_RemoteServer_GerritServerFactory
      */
     public function getAvailableServersForProject(Project $project)
     {
-        $servers = array();
+        $servers = [];
         foreach ($this->dao->searchAvailableServersForProject($project->getID()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
@@ -123,7 +123,7 @@ class Git_RemoteServer_GerritServerFactory
      */
     public function getServersForProject(Project $project)
     {
-        $servers = array();
+        $servers = [];
         foreach ($this->dao->searchAllByProjectId($project->getID()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }
@@ -136,7 +136,7 @@ class Git_RemoteServer_GerritServerFactory
 
     public function getServersForUGroup(ProjectUGroup $ugroup)
     {
-        $servers = array();
+        $servers = [];
         foreach ($this->dao->searchAllByUGroupId($ugroup->getProjectId(), $ugroup->getId()) as $row) {
             $servers[$row['id']] = $this->instantiateFromRow($row);
         }

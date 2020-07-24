@@ -62,10 +62,10 @@ class userlogPlugin extends Plugin implements DispatchableWithRequest, Dispatcha
 
     public function siteAdminHooks($params)
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => $GLOBALS['Language']->getText('plugin_userlog', 'descriptor_name'),
             'href'  => $this->getPluginPath() . '/'
-        );
+        ];
     }
 
     public function hitEvent(HitEvent $event)

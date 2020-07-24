@@ -38,13 +38,13 @@ class Tracker_Artifact_ChangesetJsonFormatterTest extends \PHPUnit\Framework\Tes
 
         $this->assertEquals(
             $json_formatter->format($changeset, Mockery::mock(PFUser::class)),
-            array(
+            [
                 'id'           => 15,
                 'submitted_by' => 45,
                 'submitted_on' => date('c', $timestamp),
                 'email'        => '',
                 'html'         => 'body',
-            )
+            ]
         );
     }
 }

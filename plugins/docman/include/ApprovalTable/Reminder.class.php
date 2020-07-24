@@ -39,7 +39,7 @@ class Docman_ApprovalTableReminder
     {
         $dao = new Docman_ApprovalTableItemDao();
         $dar = $dao->getTablesForReminder();
-        $tables = array();
+        $tables = [];
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 if ($row['item_id']) {
@@ -119,7 +119,7 @@ class Docman_ApprovalTableReminder
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
             return false;
         } else {
-            $dar = $dao->getFirstReviewerByStatus($table->getId(), array(PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED));
+            $dar = $dao->getFirstReviewerByStatus($table->getId(), [PLUGIN_DOCMAN_APPROVAL_STATE_NOTYET, PLUGIN_DOCMAN_APPROVAL_STATE_COMMENTED]);
             if ($dar && ! $dar->isError() && $dar->rowCount() == 1) {
                 $row = $dar->current();
                 return $this->notifyIndividual($table, $row['reviewer_id']);
@@ -197,7 +197,7 @@ class Docman_ApprovalTableReminder
 
         return $mail_notification_builder->buildAndSendEmail(
             $this->getItemProject($docmanItem),
-            array($reviewer->getEmail()),
+            [$reviewer->getEmail()],
             $subject,
             $html_body,
             $text_body,

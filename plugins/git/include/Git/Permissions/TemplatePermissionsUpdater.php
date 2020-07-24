@@ -127,9 +127,9 @@ class TemplatePermissionsUpdater
         $csrf = new CSRFSynchronizerToken("/plugins/git/?group_id=$project_id&action=admin-default-access-rights");
         $csrf->check();
 
-        $read_ugroup_ids                 = array();
-        $write_ugroup_ids                = array();
-        $rewind_ugroup_ids               = array();
+        $read_ugroup_ids                 = [];
+        $write_ugroup_ids                = [];
+        $rewind_ugroup_ids               = [];
         $ugroup_ids                      = $request->get(self::REQUEST_KEY);
         $enable_fine_grained_permissions = $request->get('use-fine-grained-permissions');
         $enable_regexp                   = $request->get('use-regexp');
@@ -166,7 +166,7 @@ class TemplatePermissionsUpdater
                 Git::DEFAULT_GIT_PERMS_GRANTED_FOR_PROJECT,
                 $this->history_value_formatter->formatValueForProject($project),
                 $project_id,
-                array($project_id)
+                [$project_id]
             );
         }
 
@@ -188,9 +188,9 @@ class TemplatePermissionsUpdater
         $current_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project)
             + $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
 
-        $updated_permissions        = array();
-        $added_tags_permissions     = array();
-        $added_branches_permissions = array();
+        $updated_permissions        = [];
+        $added_tags_permissions     = [];
+        $added_branches_permissions = [];
 
         if (
             $this->isEnablingFineGrainedPermissions($project, $enable_fine_grained_permissions) &&
@@ -288,7 +288,7 @@ class TemplatePermissionsUpdater
                 'regexp_activated_for_git_template',
                 sprintf(dgettext('tuleap-git', 'Regular expression %1$s for project %2$s.'), $regexp_activation, $project->getPublicName()),
                 $project->getID(),
-                array($regexp_activation, $project->getUnixNameMixedCase())
+                [$regexp_activation, $project->getUnixNameMixedCase()]
             );
         }
 
@@ -308,7 +308,7 @@ class TemplatePermissionsUpdater
      */
     private function getUgroupIdsForPermission(array $ugroup_ids, $permission)
     {
-        $ugroup_ids_for_permission = array();
+        $ugroup_ids_for_permission = [];
 
         if (isset($ugroup_ids[$permission]) && is_array($ugroup_ids[$permission])) {
             $ugroup_ids_for_permission = $ugroup_ids[$permission];

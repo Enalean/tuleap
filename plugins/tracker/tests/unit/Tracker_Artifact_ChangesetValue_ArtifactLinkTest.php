@@ -119,16 +119,16 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framewor
             ->shouldAllowMockingProtectedMethods();
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
-        $new_value = array('list_of_artifactlinkinfo' => '');
+        $new_value = ['list_of_artifactlinkinfo' => ''];
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
     public function testItHasNoChangesWhenSameValues(): void
     {
-        $old_values = array(
+        $old_values = [
             1 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
-        );
+        ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
          */
@@ -138,22 +138,22 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framewor
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
-        $new_value = array(
-            'list_of_artifactlinkinfo' => array(
+        $new_value = [
+            'list_of_artifactlinkinfo' => [
                 2 => Mockery::spy(Tracker_ArtifactLinkInfo::class),
                 1 => Mockery::spy(Tracker_ArtifactLinkInfo::class)
-            )
-        );
+            ]
+        ];
 
         $this->assertFalse($changeset_value->hasChanges($new_value));
     }
 
     public function testItHasChangesWhenLinksAreAdded(): void
     {
-        $old_values = array(
+        $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-        );
+        ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
          */
@@ -163,23 +163,23 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framewor
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
-        $new_value = array(
-            'list_of_artifactlinkinfo' => array(
+        $new_value = [
+            'list_of_artifactlinkinfo' => [
                 1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
                 2 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
                 3 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-            )
-        );
+            ]
+        ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
     public function testItHasChangesWhenLinksAreRemoved(): void
     {
-        $old_values = array(
+        $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-        );
+        ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
          */
@@ -189,21 +189,21 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framewor
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
-        $new_value = array(
-            'list_of_artifactlinkinfo' => array(
+        $new_value = [
+            'list_of_artifactlinkinfo' => [
                 1 => Mockery::mock(Tracker_ArtifactLinkInfo::class)
-            )
-        );
+            ]
+        ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }
 
     public function testItHasChangesWhenNatureIsChanged(): void
     {
-        $old_values = array(
+        $old_values = [
             1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => '_is_child']),
             2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
-        );
+        ];
         /**
          * @var $changeset_value \Mockery\Mock|Tracker_Artifact_ChangesetValue_ArtifactLink
          */
@@ -213,12 +213,12 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends \PHPUnit\Framewor
 
         $changeset_value->shouldReceive('getValue')->andReturn($old_values);
 
-        $new_value = array(
-            'list_of_artifactlinkinfo' => array(
+        $new_value = [
+            'list_of_artifactlinkinfo' => [
                 1 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => 'fixed_in']),
                 2 => Mockery::mock(Tracker_ArtifactLinkInfo::class, ['getNature' => ''])
-            )
-        );
+            ]
+        ];
 
         $this->assertTrue($changeset_value->hasChanges($new_value));
     }

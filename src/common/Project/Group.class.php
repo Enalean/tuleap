@@ -84,14 +84,14 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
             if (db_numrows($this->db_result) < 1) {
              //function in class we extended
                 $this->setError($GLOBALS['Language']->getText('include_group', 'g_not_found'));
-                $this->data_array = array();
+                $this->data_array = [];
             } else {
              //set up an associative array for use by other functions
                 $this->data_array = db_fetch_array($this->db_result);
             }
         } else {
             $this->setError('');
-            $this->data_array = array();
+            $this->data_array = [];
         }
     }
 
@@ -257,14 +257,14 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
         } else {
             $res = db_query("SELECT user_id FROM user_group WHERE group_id='" . $this->getGroupId() . "'");
             if ($res && db_numrows($res) > 0) {
-                    $mb_array = array();
+                    $mb_array = [];
                 while ($row = db_fetch_array($res)) {
                     $mb_array[] = $row[0];
                 }
                 $this->members_data_array = $mb_array;
             } else {
                     echo db_error();
-                    $this->members_data_array = array();
+                    $this->members_data_array = [];
             }
             db_free_result($res);
         }
@@ -369,11 +369,11 @@ class Group //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
                     $this->perm_data_array = db_fetch_array($res);
                 } else {
                     echo db_error();
-                    $this->perm_data_array = array();
+                    $this->perm_data_array = [];
                 }
                 db_free_result($res);
             } else {
-                    $this->perm_data_array = array();
+                    $this->perm_data_array = [];
             }
         }
         return $this->perm_data_array;

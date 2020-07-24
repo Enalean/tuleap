@@ -63,7 +63,7 @@
 
     protected function getToolbar(array $params)
     {
-        return array();
+        return [];
     }
 
     /* protected */ public function _getTitle($params)
@@ -93,15 +93,15 @@
     /* protected */ public function _footer($params)
     {
         if (isset($params['pv']) && $params['pv'] > 0) {
-            $GLOBALS['HTML']->pv_footer(array());
+            $GLOBALS['HTML']->pv_footer([]);
         } else {
-            $GLOBALS['HTML']->footer(array());
+            $GLOBALS['HTML']->footer([]);
         }
     }
 
     /* protected */ public function _getAdditionalHtmlParams($params)
     {
-        return array();
+        return [];
     }
 
     /* protected */ public function _feedback($params)

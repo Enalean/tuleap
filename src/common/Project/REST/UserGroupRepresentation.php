@@ -101,17 +101,17 @@ class UserGroupRepresentation
     public static function getProjectAndUserGroupFromRESTId(string $identifier): array
     {
         if (preg_match(self::SIMPLE_REST_ID_PATTERN, $identifier)) {
-            return array(
+            return [
                 'project_id'    => null,
                 'user_group_id' => $identifier
-            );
+            ];
         }
 
         if (preg_match(self::COMPLEX_REST_ID_PATTERN, $identifier, $complex_id)) {
-            return array(
+            return [
                 'project_id'    => $complex_id[1],
                 'user_group_id' => $complex_id[2]
-            );
+            ];
         }
 
         throw new Exception('Invalid ID format(' . $identifier . ')');

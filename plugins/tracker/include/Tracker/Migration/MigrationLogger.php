@@ -30,13 +30,13 @@ class Tracker_Migration_MigrationLogger extends BrokerLogger
     public function __construct(LoggerInterface $backend_logger, LoggerInterface $mail_logger)
     {
         parent::__construct(
-            array(
+            [
                 $backend_logger,
                 new TruncateLevelLogger(
                     $mail_logger,
                     \Psr\Log\LogLevel::WARNING
                 ),
-            )
+            ]
         );
     }
 }

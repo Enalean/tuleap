@@ -105,7 +105,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             $metadataId
         );
         $dar = $this->retrieve($sql);
-        $valId = array();
+        $valId = [];
         $dar->rewind();
         while ($dar->valid()) {
             $row = $dar->current();
@@ -264,7 +264,7 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
             $dar = $this->serachByValueId($id);
             if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
-                $set_array = array();
+                $set_array = [];
                 foreach ($row as $key => $value) {
                     if ($key != 'value_id' && isset($current[$key]) && $value != $current[$key]) {
                         $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);
@@ -283,8 +283,8 @@ class Docman_MetadataListOfValuesElementDao extends DataAccessObject
 
     public function delete($id)
     {
-        $row = array('value_id' => $id,
-                     'status'   => 'D');
+        $row = ['value_id' => $id,
+                     'status'   => 'D'];
         return $this->updateFromRow($row);
     }
 

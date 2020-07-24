@@ -37,9 +37,9 @@ class ResourcesInjector
 
     public function declareProjectResource(array &$resources, Project $project)
     {
-        $routes = array(
+        $routes = [
             RepositoryRepresentation::ROUTE,
-        );
+        ];
 
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();

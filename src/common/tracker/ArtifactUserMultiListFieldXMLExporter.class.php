@@ -84,8 +84,8 @@ class ArtifactUserMultiListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExpo
         $value1 = explode(',', $value1);
         $value2 = explode(',', $value2);
 
-        $value1 = array_map(array($this, 'getValueLabel'), $value1);
-        $value2 = array_map(array($this, 'getValueLabel'), $value2);
+        $value1 = array_map([$this, 'getValueLabel'], $value1);
+        $value2 = array_map([$this, 'getValueLabel'], $value2);
 
         sort($value1);
         sort($value2);

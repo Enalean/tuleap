@@ -46,7 +46,7 @@ class UserAccountManagerPushSSHKeysTest extends TestCase
 
         $this->user_account_manager  = \Mockery::mock(
             \Git_Driver_Gerrit_UserAccountManager::class,
-            array($this->gerrit_driver_factory, $this->remote_gerrit_factory)
+            [$this->gerrit_driver_factory, $this->remote_gerrit_factory]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -55,15 +55,15 @@ class UserAccountManagerPushSSHKeysTest extends TestCase
         $this->remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $this->remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
-        $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns(array(
+        $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns([
             $this->remote_server1,
             $this->remote_server2,
-        ));
+        ]);
     }
 
     public function testItDoesntPushIfUserHasNoRemoteServers(): void
     {
-        $remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns(array())->getMock();
+        $remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns([])->getMock();
 
         $user_account_manager = new Git_Driver_Gerrit_UserAccountManager($this->gerrit_driver_factory, $remote_gerrit_factory);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->never();
@@ -85,10 +85,10 @@ class UserAccountManagerPushSSHKeysTest extends TestCase
 
     public function testItCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes(): void
     {
-        $pushed_keys = array(
+        $pushed_keys = [
             'Im a new key',
             'Im another new key',
-        );
+        ];
 
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $pushed_keys[1]);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $pushed_keys[1]);

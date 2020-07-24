@@ -25,7 +25,7 @@ class UploadedLinkPresentersBuilder
 {
     public function build(array $uploaded_links)
     {
-        $presenters = array();
+        $presenters = [];
 
         foreach ($uploaded_links as $link) {
             $presenters[] = new UploadedLinkPresenter($link);

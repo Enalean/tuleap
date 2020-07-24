@@ -115,7 +115,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
         string $link_url = '',
         string $wiki_page = ''
     ) {
-        $item = array(
+        $item = [
             'parent_id'         => $docman_root_id,
             'group_id'          => $this->project->getID(),
             'title'             => $title,
@@ -130,7 +130,7 @@ class DocmanDataBuildCommon extends REST_TestDataBuilder
             'link_url'          => $link_url,
             'wiki_page'         => $wiki_page,
             'file_is_embedded'  => ''
-        );
+        ];
 
         return $this->docman_item_factory->create($item, 1);
     }

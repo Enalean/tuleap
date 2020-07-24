@@ -48,7 +48,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('info' => 'args');
+        return ['info' => 'args'];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -61,7 +61,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
         if (! REQUIRE_ADMIN || $request->_user->isadmin()) {
             $h->pushContent(HTML::h2(_("Plugins")));
 
-            $table = HTML::table(array('class' => "pagelist"));
+            $table = HTML::table(['class' => "pagelist"]);
             $this->_generateColgroups($info, $table);
             $this->_generateColheadings($info, $table);
             $this->_generateTableBody($info, $dbi, $request, $table);
@@ -86,12 +86,12 @@ class WikiPlugin_PluginManager extends WikiPlugin
     {
         // specify last two column widths
         $colgroup = HTML::colgroup();
-        $colgroup->pushContent(HTML::col(array('width' => '0*')));
-        $colgroup->pushContent(HTML::col(array('width' => '0*',
-                                               'align' => 'right')));
-        $colgroup->pushContent(HTML::col(array('width' => '9*')));
+        $colgroup->pushContent(HTML::col(['width' => '0*']));
+        $colgroup->pushContent(HTML::col(['width' => '0*',
+                                               'align' => 'right']));
+        $colgroup->pushContent(HTML::col(['width' => '9*']));
         if ($info == 'args') {
-            $colgroup->pushContent(HTML::col(array('width' => '2*')));
+            $colgroup->pushContent(HTML::col(['width' => '2*']));
         }
         $table->pushcontent($colgroup);
     }
@@ -100,7 +100,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
     {
         // table headings
         $tr = HTML::tr();
-        $headings = array(_("Plugin"), _("Version"), _("Description"));
+        $headings = [_("Plugin"), _("Version"), _("Description")];
         if ($info == 'args') {
             $headings[] = _("Arguments");
         }
@@ -188,7 +188,7 @@ class WikiPlugin_PluginManager extends WikiPlugin
             $group = (int) ($row_no / 1); //_group_rows
             $class = ($group % 2) ? 'evenrow' : 'oddrow';
             // generate table row
-            $tr = HTML::tr(array('class' => $class));
+            $tr = HTML::tr(['class' => $class]);
             if ($pluginDocPageNamelink) {
                 // plugin has a description page 'PluginName' . 'Plugin'
                 $tr->pushContent(HTML::td(
@@ -204,8 +204,8 @@ class WikiPlugin_PluginManager extends WikiPlugin
             $tr->pushContent(HTML::td($ver), HTML::td($desc));
             if ($info == 'args') {
                 // add Arguments column
-                $style = array('style'
-                               => 'font-family:monospace;font-size:smaller');
+                $style = ['style'
+                               => 'font-family:monospace;font-size:smaller'];
                 $tr->pushContent(HTML::td($style, $arguments));
             }
             $tbody->pushContent($tr);

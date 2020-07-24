@@ -45,7 +45,7 @@ class FilterValidContent implements IFilterValidElementsToUnkink
 
     public function filter(PFUser $user, array $artifact_ids_to_be_removed): array
     {
-        $valid_artifact_ids = array();
+        $valid_artifact_ids = [];
         foreach ($artifact_ids_to_be_removed as $id) {
             $artifact = $this->artifact_factory->getArtifactById($id);
             if (isset($this->indexed_backlog_trackers[$artifact->getTrackerId()])) {

@@ -42,11 +42,11 @@ class UserDashboardSaverTest extends TestCase
         $this->user = new \PFUser(['user_id' => 1, 'language_id' => 'en_US']);
 
         $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'new_dashboard')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchByUserIdAndName')->with($this->user, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar([
             'id'      => 1,
             'user_id' => 1,
             'name'    => 'existing_dashboard'
-        )));
+        ]));
 
         $this->user_saver = new UserDashboardSaver($this->dao);
     }

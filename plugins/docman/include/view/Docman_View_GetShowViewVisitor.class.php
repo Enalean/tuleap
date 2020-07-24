@@ -26,28 +26,28 @@ use Tuleap\Docman\Item\ItemVisitor;
  */
 class Docman_View_GetShowViewVisitor implements ItemVisitor
 {
-    public function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
         return (string) Docman_View_Browse::getViewForCurrentUser($item->getGroupId(), $params);
     }
-    public function visitWiki(Docman_Wiki $item, $params = array())
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return 'Redirect';
     }
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         return 'Redirect';
     }
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         return 'Download';
     }
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return 'Embedded';
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return 'Empty';
     }

@@ -75,7 +75,7 @@ class AgileDashboard_Milestone_SelectedMilestoneProviderTest extends \PHPUnit\Fr
 
     public function testItReturnsAnyWhenNoCriterion(): void
     {
-        $additional_criteria = array();
+        $additional_criteria = [];
 
         $provider = new AgileDashboard_Milestone_SelectedMilestoneProvider(
             $additional_criteria,

@@ -42,12 +42,12 @@ class ArtifactFieldValuePermissionsOnArtifactFullRepresentation extends Artifact
     /**
      * @var string[]
      */
-    public $granted_groups = array();
+    public $granted_groups = [];
 
     /**
      * @var string[]
      */
-    public $granted_groups_ids = array();
+    public $granted_groups_ids = [];
 
     public function build($id, $type, $label, array $granted_groups, array $granted_groups_ids)
     {

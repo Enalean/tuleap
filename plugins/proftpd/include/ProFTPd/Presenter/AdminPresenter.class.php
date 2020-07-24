@@ -46,7 +46,7 @@ class AdminPresenter
         $this->static_ugroups    = $static_ugroups;
         $this->readers_ugroup_id = $readers_ugroup_id;
         $this->writers_ugroup_id = $writers_ugroup_id;
-        $this->admin_ugroup_url  = '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $this->project_id));
+        $this->admin_ugroup_url  = '/project/admin/ugroup.php?' . http_build_query(['group_id' => $this->project_id]);
     }
 
     public function project_id()
@@ -61,40 +61,40 @@ class AdminPresenter
 
     public function readers_selector()
     {
-        return array(
+        return [
             'name'    => 'permissions[' . PermissionsManager::PERM_READ . ']',
             'options' => $this->getSelectorOptions($this->readers_ugroup_id)
-        );
+        ];
     }
 
     public function writers_selector()
     {
-        return array(
+        return [
             'name'    => 'permissions[' . PermissionsManager::PERM_WRITE . ']',
             'options' => $this->getSelectorOptions($this->writers_ugroup_id)
-        );
+        ];
     }
 
     private function getSelectorOptions($selected)
     {
-        $options = array($this->getNoneOption($selected));
+        $options = [$this->getNoneOption($selected)];
         foreach ($this->static_ugroups as $group) {
-            $options[] = array(
+            $options[] = [
                 'value'    => $group->getId(),
                 'label'    => $group->getTranslatedName(),
                 'selected' => $selected == $group->getId()
-            );
+            ];
         }
         return $options;
     }
 
     private function getNoneOption($selected)
     {
-        return array(
+        return [
             'value'    => ProjectUGroup::NONE,
             'label'    => $GLOBALS['Language']->getText('global', 'none'),
             'selected' => $selected == ProjectUGroup::NONE,
-        );
+        ];
     }
 
     public function some_usergroups_exists()

@@ -58,7 +58,7 @@ class RegexpPermissionFilter
 
     public function filterNonRegexpPermissions(GitRepository $repository)
     {
-        $removed = array();
+        $removed = [];
 
         $branches_permissions = $this->permission_factory->getBranchesFineGrainedPermissionsForRepository($repository);
         $this->removeRegexpPermissions($repository, $branches_permissions, $removed);
@@ -91,7 +91,7 @@ class RegexpPermissionFilter
 
     public function filterNonRegexpPermissionsForDefault(Project $project)
     {
-        $removed = array();
+        $removed = [];
 
         $branches_permissions = $this->default_permission_factory->getBranchesFineGrainedPermissionsForProject($project);
         $this->removeRegexpPermissionsForDefault($project, $branches_permissions, $removed);

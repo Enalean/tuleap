@@ -78,7 +78,7 @@ final class TokenManagerTest extends TestCase
     {
         $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
 
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar(array()));
+        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar([]));
         $this->assertEquals($this->user, $this->token_manager->checkToken($this->token));
     }
 
@@ -94,7 +94,7 @@ final class TokenManagerTest extends TestCase
     {
         $this->user_manager->shouldReceive('getUserById')->with($this->user_id)->andReturns($this->user);
 
-        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar(array()));
+        $this->token_dao->shouldReceive('checkTokenExistenceForUserId')->with($this->user_id, $this->token_value)->andReturns(\TestHelper::arrayToDar([]));
         $this->token_dao->shouldReceive('deleteToken')->with($this->token_value)->andReturns(true)->once();
 
         $this->token_manager->expireToken($this->token);

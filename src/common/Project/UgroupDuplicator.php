@@ -102,10 +102,10 @@ class UgroupDuplicator
 
     private function pluginDuplicatesUgroup(ProjectUGroup $source_ugroup, ProjectUGroup $new_ugroup)
     {
-        $params = array(
+        $params = [
             'source_ugroup'  => $source_ugroup,
             'new_ugroup_id'  => $new_ugroup->getId(),
-        );
+        ];
 
         $this->event_manager->processEvent(
             Event::UGROUP_DUPLICATION,

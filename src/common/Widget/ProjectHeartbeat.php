@@ -71,8 +71,8 @@ class ProjectHeartbeat extends Widget
     {
         $include_assets = new IncludeAssets(__DIR__ . '/../../www/assets/core', '/assets/core');
 
-        return array(
-            array('file' => $include_assets->getFileURL('widget-project-heartbeat.js'))
-        );
+        return [
+            ['file' => $include_assets->getFileURL('widget-project-heartbeat.js')]
+        ];
     }
 }

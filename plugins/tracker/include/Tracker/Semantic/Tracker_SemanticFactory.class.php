@@ -105,14 +105,14 @@ class Tracker_SemanticFactory
 
         EventManager::instance()->processEvent(
             TRACKER_EVENT_SEMANTIC_FROM_XML,
-            array(
+            [
                 'xml'               => $xml,
                 'full_semantic_xml' => $full_semantic_xml,
                 'xml_mapping'       => $xml_mapping,
                 'tracker'           => $tracker,
                 'semantic'          => &$semantic,
                 'type'              => $type,
-            )
+            ]
         );
 
         return $semantic;
@@ -205,18 +205,18 @@ class Tracker_SemanticFactory
             new SemanticTimeframeDao()
         );
 
-        $duplicators = array(
+        $duplicators = [
             $this->getSemanticTitleFactory(),
             $this->getSemanticDescriptionFactory(),
             $this->getSemanticStatusFactory(),
             $this->getSemanticContributorFactory(),
             $this->getSemanticTooltipFactory(),
             $timeframe_duplicator
-        );
+        ];
 
         EventManager::instance()->processEvent(
             TRACKER_EVENT_GET_SEMANTIC_DUPLICATORS,
-            array('duplicators' => &$duplicators)
+            ['duplicators' => &$duplicators]
         );
 
         return $duplicators;

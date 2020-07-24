@@ -77,12 +77,12 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
 
         EventManager::instance()->processEvent(
             TRACKER_EVENT_FIELD_AUGMENT_DATA_FOR_REPORT,
-            array(
+            [
                 'additional_criteria' => $report->getAdditionalCriteria(),
                 'result'              => &$result,
                 'artifact_id'         => $artifact_id,
                 'field'               => $this
-            )
+            ]
         );
 
         return $result;
@@ -113,7 +113,7 @@ class Tracker_FormElement_Field_Priority extends Tracker_FormElement_Field_Integ
      */
     public function getAggregateFunctions()
     {
-        return array();
+        return [];
     }
 
     /**

@@ -65,7 +65,7 @@ class AgileDashboard_KanbanItemManager
 
     public function getKanbanItemIndexInBacklog(Tracker_Artifact $artifact)
     {
-        $column_item_ids = array();
+        $column_item_ids = [];
         foreach ($this->item_dao->getKanbanBacklogItemIds($artifact->getTrackerId()) as $row) {
             array_push($column_item_ids, $row['id']);
         }
@@ -74,7 +74,7 @@ class AgileDashboard_KanbanItemManager
 
     public function getKanbanItemIndexInArchive(Tracker_Artifact $artifact)
     {
-        $column_item_ids = array();
+        $column_item_ids = [];
         foreach ($this->item_dao->getKanbanArchiveItemIds($artifact->getTrackerId()) as $row) {
             array_push($column_item_ids, $row['id']);
         }
@@ -83,7 +83,7 @@ class AgileDashboard_KanbanItemManager
 
     public function getKanbanItemIndexInColumn(Tracker_Artifact $artifact, $column)
     {
-        $column_item_ids = array();
+        $column_item_ids = [];
         foreach ($this->item_dao->getItemsInColumn($artifact->getTrackerId(), $column) as $row) {
             array_push($column_item_ids, $row['id']);
         }

@@ -75,7 +75,7 @@ class PlanningFactory
         foreach ($planning_rows as $row) {
             if (isset($tracker_mapping[$row['planning_tracker_id']])) {
                 $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
-                $row['backlog_tracker_ids'] = array();
+                $row['backlog_tracker_ids'] = [];
                 foreach ($this->dao->searchBacklogTrackersById($row['id']) as $backlog_row) {
                     $row['backlog_tracker_ids'][] = $tracker_mapping[$backlog_row['tracker_id']];
                 }
@@ -107,7 +107,7 @@ class PlanningFactory
 
     private function replaceOldStaticUgroupsWithTheNewOnes(array $priority_change_permission_ugroup_ids, array $ugroups_mapping)
     {
-        $new_ugroups = array();
+        $new_ugroups = [];
 
         foreach ($priority_change_permission_ugroup_ids as $ugroup) {
             $new_ugroups[] = $this->getUGroupIdToSaveRegardingMappings($ugroup, $ugroups_mapping);
@@ -135,7 +135,7 @@ class PlanningFactory
      */
     public function getPlannings(PFUser $user, $group_id)
     {
-        $plannings = array();
+        $plannings = [];
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
             if ($tracker && $tracker->userCanView($user)) {
@@ -157,7 +157,7 @@ class PlanningFactory
      */
     public function getVirtualTopPlanning(PFUser $user, $group_id)
     {
-        $backlog_trackers = array();
+        $backlog_trackers = [];
         $first_planning   = $this->getRootPlanning($user, $group_id);
         if (! $first_planning) {
             throw new Planning_NoPlanningsException('No Root Plannings Exist');
@@ -367,7 +367,7 @@ class PlanningFactory
             $row['group_id'],
             $row['backlog_title'],
             $row['plan_title'],
-            array(),
+            [],
             $row['planning_tracker_id']
         );
         $planning->setBacklogTrackers($this->getBacklogTrackers($planning));
@@ -397,7 +397,7 @@ class PlanningFactory
                 $planning['group_id'],
                 $planning['backlog_title'],
                 $planning['plan_title'],
-                array(),
+                [],
                 $planning['planning_tracker_id']
             );
             $p->setPlanningTracker($this->getPlanningTracker($p));
@@ -432,7 +432,7 @@ class PlanningFactory
      */
     public function getPlanningsByBacklogTracker(Tracker $backlog_tracker)
     {
-        $plannings = array();
+        $plannings = [];
         foreach ($this->dao->searchByBacklogTrackerId($backlog_tracker->getId()) as $planning) {
             $p = new Planning(
                 $planning['id'],
@@ -440,10 +440,10 @@ class PlanningFactory
                 $planning['group_id'],
                 $planning['backlog_title'],
                 $planning['plan_title'],
-                array($backlog_tracker->getId()),
+                [$backlog_tracker->getId()],
                 $planning['planning_tracker_id']
             );
-            $p->setBacklogTrackers(array($backlog_tracker));
+            $p->setBacklogTrackers([$backlog_tracker]);
             $p->setPlanningTracker($this->getPlanningTracker($p));
             $plannings[] = $p;
         }
@@ -481,7 +481,7 @@ class PlanningFactory
      */
     public function getBacklogTrackersIds($planning_id)
     {
-        $tracker_ids = array();
+        $tracker_ids = [];
         $rows = $this->dao->searchBacklogTrackersById($planning_id);
         foreach ($rows as $row) {
             $tracker_ids[] = $row['tracker_id'];
@@ -492,7 +492,7 @@ class PlanningFactory
 
     public function getBacklogTrackersIdsIndexedByTrackerId($planning_id)
     {
-        $tracker_ids = array();
+        $tracker_ids = [];
         $rows = $this->dao->searchBacklogTrackersById($planning_id);
         foreach ($rows as $row) {
             $tracker_ids[$row['tracker_id']] = true;
@@ -521,7 +521,7 @@ class PlanningFactory
      */
     private function getBacklogTrackers(Planning $planning)
     {
-        $backlog_trackers = array();
+        $backlog_trackers = [];
         $planning_id      = $planning->getId();
         $rows             = $this->dao->searchBacklogTrackersById($planning_id);
 
@@ -601,7 +601,7 @@ class PlanningFactory
     public function getAvailableBacklogTrackers(PFUser $user, $group_id)
     {
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
-        $backlog_trackers = array();
+        $backlog_trackers = [];
         foreach ($this->dao->searchNonPlanningTrackersByGroupId($group_id) as $row) {
             if (! in_array($row['id'], $potential_planning_trackers)) {
                 $backlog_trackers[] = $this->tracker_factory->getInstanceFromRow($row);
@@ -620,7 +620,7 @@ class PlanningFactory
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
         if (count($potential_planning_trackers) > 0) {
             $existing_plannings = $this->getPlanningTrackerIdsByGroupId($group_id);
-            $trackers = array();
+            $trackers = [];
             foreach ($potential_planning_trackers as $tracker_id) {
                 if (! in_array($tracker_id, $existing_plannings)) {
                     $trackers[] = $this->tracker_factory->getTrackerById($tracker_id);
@@ -645,7 +645,7 @@ class PlanningFactory
      */
     public function getPotentialPlanningTrackers(PFUser $user, $group_id)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($this->getPotentialPlanningTrackerIds($user, $group_id) as $tracker_id) {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             if ($tracker !== null) {
@@ -671,16 +671,16 @@ class PlanningFactory
         $root_planning = $this->getRootPlanning($user, $group_id);
         if ($root_planning) {
             return $this->tracker_factory->getHierarchyFactory()->getHierarchy(
-                array($root_planning->getPlanningTracker()->getId())
+                [$root_planning->getPlanningTracker()->getId()]
             )->flatten();
         } else {
-            return array();
+            return [];
         }
     }
 
     public function getPlanningsOutOfRootPlanningHierarchy(PFUser $user, $group_id)
     {
-        $plannings = array();
+        $plannings = [];
         $potential_planning_trackers = $this->getPotentialPlanningTrackerIds($user, $group_id);
         if ($potential_planning_trackers) {
             $existing_planning_tracker_ids = $this->getPlanningTrackerIdsByGroupId($group_id);
@@ -714,7 +714,7 @@ class PlanningFactory
      */
     public function getPlanningTrackers($group_id, PFUser $user)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($this->getPlannings($user, $group_id) as $planning) {
             $planning   = $this->getPlanning($planning->getId());
             $tracker_id = $planning->getPlanningTrackerId();

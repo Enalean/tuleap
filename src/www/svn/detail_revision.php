@@ -27,7 +27,7 @@ if (! $request->valid($vGroupId)) {
         $rev_id = 0;
     }
 
-    $vOrder = new Valid_WhiteList('order', array('filename', 'type'));
+    $vOrder = new Valid_WhiteList('order', ['filename', 'type']);
     $vOrder->required();
     if ($request->valid($vOrder)) {
         $order = $request->get('order');
@@ -40,10 +40,10 @@ if (! $request->valid($vGroupId)) {
     $group_name = $project->getUnixName(false);
     $result = svn_data_get_revision_detail($group_id, $commit_id, $rev_id, $order);
     if (db_numrows($result) > 0) {
-        svn_header($project, array ('title' => $Language->getText('svn_detail_revision', 'svn_rev', db_result($result, 0, 'revision')),
-                          'help' => 'svn.html#the-subversion-browsing-interface'));
+        svn_header($project, ['title' => $Language->getText('svn_detail_revision', 'svn_rev', db_result($result, 0, 'revision')),
+                          'help' => 'svn.html#the-subversion-browsing-interface']);
         svn_utils_show_revision_detail($result, $group_id, $group_name, $commit_id);
-        svn_footer(array());
+        svn_footer([]);
     } else {
         exit_error($Language->getText('global', 'error'), $Language->getText('svn_detail_revision', 'id_not_found', $commit_id));
     }

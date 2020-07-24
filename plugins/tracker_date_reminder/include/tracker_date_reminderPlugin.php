@@ -109,7 +109,7 @@ class tracker_date_reminderPlugin extends Plugin
         if ($params['at']->userIsAdmin()) {
             echo '<br><h3>' . dgettext('tuleap-tracker_date_reminder', 'Date Fields Email Notification') . ' </h3>';
 
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $GLOBALS['Language']->getText('tracker_include_type', 'df');
             $title_arr[] = dgettext('tuleap-tracker_date_reminder', 'Notification Status');
             $title_arr[] = dgettext('tuleap-tracker_date_reminder', 'Notification Settings');
@@ -202,7 +202,7 @@ class tracker_date_reminderPlugin extends Plugin
                         $GLOBALS['Response']->addFeedback('error', dgettext('tuleap-tracker_date_reminder', 'Error. You must specify a positive value.'));
                     } else {
                         //merge notified_users and notified_groups into one array
-                        $notified = array();
+                        $notified = [];
                         if (isset($_REQUEST['notified_users'])) {
                             foreach ($_REQUEST['notified_users'] as $u) {
                                 if ($u != 100) {
@@ -228,14 +228,14 @@ class tracker_date_reminderPlugin extends Plugin
                     }
                 }
             }
-            $params['ath']->adminHeader(array ('title' => dgettext('tuleap-tracker_date_reminder', 'Tracker Administration - Date Fields Reminder Settings'),
-            'help' => 'tracker.html#email-notification-settings'));
+            $params['ath']->adminHeader(['title' => dgettext('tuleap-tracker_date_reminder', 'Tracker Administration - Date Fields Reminder Settings'),
+            'help' => 'tracker.html#email-notification-settings']);
 
             echo '<H2>' . dgettext('tuleap-tracker', 'Tracker') . ' \'<a href="/tracker/admin/?group_id=' . $params['ath']->Group->getID() . '&atid=' . $params['ath']->getID() . '">' . $params['ath']->getName() . '</a>\' - ' . dgettext('tuleap-tracker_date_reminder', 'Notification Settings') . '</h2>';
 
             $tdrArtifactFieldHtml = new TrackerDateReminder_ArtifactFieldHtml();
             $tdrArtifactFieldHtml->displayDateFieldNotificationSettings($params['ath'], $field);
-            $params['ath']->footer(array());
+            $params['ath']->footer([]);
             exit;
         }
     }

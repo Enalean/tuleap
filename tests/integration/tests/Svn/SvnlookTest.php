@@ -69,7 +69,7 @@ final class SvnlookTest extends TestCase
     {
         $tree = $this->svnlook->getTree($this->project);
 
-        $expected = array('/', 'tags/', 'tags/2.0/', 'tags/1.0/');
+        $expected = ['/', 'tags/', 'tags/2.0/', 'tags/1.0/'];
 
         $this->assertEqualsCanonicalizing($expected, $tree);
     }
@@ -77,11 +77,11 @@ final class SvnlookTest extends TestCase
     public function testItGetsHistoryOfAPath(): void
     {
         $this->assertEquals(
-            array(
+            [
                 'REVISION   PATH',
                 '--------   ----',
                 '       2   /tags',
-            ),
+            ],
             $this->svnlook->getPathLastHistory($this->project, '/tags')
         );
     }

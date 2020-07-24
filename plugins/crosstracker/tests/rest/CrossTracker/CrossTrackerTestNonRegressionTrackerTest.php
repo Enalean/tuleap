@@ -33,9 +33,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testItThrowsAnExceptionWhenMoreThan10Trackers()
     {
-        $params   = array(
-            "trackers_id" => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-        );
+        $params   = [
+            "trackers_id" => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        ];
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -43,9 +43,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testItThrowsAnExceptionWhenATrackerIsNotFoundOnePlatform()
     {
-        $params   = array(
-            "trackers_id" => array(1001)
-        );
+        $params   = [
+            "trackers_id" => [1001]
+        ];
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
 
         $this->assertEquals(400, $response->getStatusCode());
@@ -53,9 +53,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testItThrowsAnExceptionWhenTrackerIsDuplicateInList()
     {
-        $params   = array(
-            "trackers_id" => array($this->epic_tracker_id, $this->epic_tracker_id)
-        );
+        $params   = [
+            "trackers_id" => [$this->epic_tracker_id, $this->epic_tracker_id]
+        ];
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
 
         $this->assertEquals($response->getStatusCode(), 400);
@@ -63,9 +63,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
 
     public function testItDoesNotAddTrackersUserCantView()
     {
-        $params   = array(
-            "trackers_id" => array($this->epic_tracker_id, $this->kanban_tracker_id)
-        );
+        $params   = [
+            "trackers_id" => [$this->epic_tracker_id, $this->kanban_tracker_id]
+        ];
         $response = $this->getResponseForNonProjectMember($this->client->put('cross_tracker_reports/1', null, $params));
 
         $this->assertEquals($response->getStatusCode(), 403);
@@ -74,9 +74,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArray()
     {
         $query = json_encode(
-            array(
+            [
                 "trackers_id" => "toto"
-            )
+            ]
         );
 
         $response = $this->getResponse(
@@ -89,9 +89,9 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotAnArrayOfInt()
     {
         $query = json_encode(
-            array(
-                "trackers_id" => array("toto")
-            )
+            [
+                "trackers_id" => ["toto"]
+            ]
         );
 
         $response = $this->getResponse(
@@ -104,7 +104,7 @@ class CrossTrackerTestNonRegressionTrackerTest extends RestBase
     public function itThrowsAnExceptionWhenAQueryIsDefinedAndTrackersIdAreNotSent()
     {
         $query = json_encode(
-            array("toto")
+            ["toto"]
         );
 
         $response = $this->getResponse(

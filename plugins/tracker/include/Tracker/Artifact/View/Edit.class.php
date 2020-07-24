@@ -58,9 +58,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
     public function getURL()
     {
         return TRACKER_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'aid' => $this->artifact->getId(),
-            )
+            ]
         );
     }
 
@@ -183,7 +183,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View
         $i    = 0;
 
         $previous_item    = null;
-        $comments_content = array();
+        $comments_content = [];
 
         foreach ($comments as $item) {
             \assert($item instanceof Tracker_Artifact_Followup_Item);

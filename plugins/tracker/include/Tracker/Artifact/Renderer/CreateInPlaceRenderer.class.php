@@ -44,7 +44,7 @@ class Tracker_Artifact_Renderer_CreateInPlaceRenderer
     public function display($artifact_link_id, $render_with_javascript)
     {
         $artifact_to_link = null;
-        $submitted_values = array();
+        $submitted_values = [];
 
         if ($artifact_link_id) {
             $artifact_to_link = $this->tracker_artifact_factory->getArtifactByid($artifact_link_id);

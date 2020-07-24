@@ -77,7 +77,7 @@ class Docman_View_ItemDetailsSectionNotifications extends Docman_View_ItemDetail
         $content .= '<label class="checkbox" for="plugin_docman_monitor_item">';
         $content .= '<input type="checkbox" name="monitor" value="1" id="plugin_docman_monitor_item" ' . $checked . ' ' . $disabled . ' />' . dgettext('tuleap-docman', 'Send me an email whenever this item is updated.');
         $content .= '</label></p>';
-        $content .= $this->item->accept($this, array('user' => &$user));
+        $content .= $this->item->accept($this, ['user' => &$user]);
         $content .= '<p><input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></p>';
         $content .= '</form>';
         $content .= '</dd></fieldset></dl>';

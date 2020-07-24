@@ -391,13 +391,13 @@ function news_notify_promotion_request($group_id, $news_bytes_id, $summary, $det
     $mail = new Codendi_Mail();
     $mail->setFrom(ForgeConfig::get('sys_noreply'));
     $mail->setTo(ForgeConfig::get('sys_email_admin'), true); // Don't invalidate admin email!
-    $mail->setSubject($Language->getText('news_utils', 'news_request', array(ForgeConfig::get('sys_name'))));
+    $mail->setSubject($Language->getText('news_utils', 'news_request', [ForgeConfig::get('sys_name')]));
     $body = '';
-    $body .= $Language->getText('news_utils', 'news_request_mail_intro', array(ForgeConfig::get('sys_name'))) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
-    $body .= $Language->getText('news_utils', 'news_request_mail_project', array($group->getPublicName(), $group->getUnixName())) . ForgeConfig::get('sys_lf');
-    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', array($user->getName())) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
-    $body .= $Language->getText('news_utils', 'news_request_mail_summary', array($summary)) . ForgeConfig::get('sys_lf');
-    $body .= $Language->getText('news_utils', 'news_request_mail_details', array($details)) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_intro', [ForgeConfig::get('sys_name')]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_project', [$group->getPublicName(), $group->getUnixName()]) . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_submitted_by', [$user->getName()]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_summary', [$summary]) . ForgeConfig::get('sys_lf');
+    $body .= $Language->getText('news_utils', 'news_request_mail_details', [$details]) . ForgeConfig::get('sys_lf') . ForgeConfig::get('sys_lf');
     $body .= $Language->getText('news_utils', 'news_request_mail_approve_link') . ForgeConfig::get('sys_lf');
     $body .= HTTPRequest::instance()->getServerUrl() . "/news/admin/?approve=1&id=" . $news_bytes_id . ForgeConfig::get('sys_lf');
     $mail->setBodyText($body);
@@ -421,7 +421,7 @@ function news_send_to_ugroups($ugroups, $summary, $details, $group_id)
     $html_body = '<h1>' . $hp->purify($summary, CODENDI_PURIFIER_BASIC) . '</h1>';
     $html_body .= '<p>' . $hp->purify($details, CODENDI_PURIFIER_BASIC) . '</p>';
 
-    $users = array();
+    $users = [];
     foreach ($ugroups as $ugroup_id) {
         $ugroup = $ugroup_manager->getUGroupWithMembers($project, $ugroup_id);
         foreach ($ugroup->getMembers() as $member) {
@@ -443,12 +443,12 @@ function news_fetch_ugroups($project)
 {
     $ugroup_manager   = new UGroupManager();
     $hp               = Codendi_HTMLPurifier::instance();
-    $excluded_ugroups = array(
+    $excluded_ugroups = [
         ProjectUGroup::NONE,
         ProjectUGroup::ANONYMOUS,
         ProjectUGroup::REGISTERED,
         ProjectUGroup::TRACKER_ADMIN
-    );
+    ];
 
     $ugroups = $ugroup_manager->getUGroups($project, $excluded_ugroups);
     $html  = '';

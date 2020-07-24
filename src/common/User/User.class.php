@@ -217,7 +217,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $this->is_super_user = null;
         $this->locale        = '';
-        $this->_preferences  = array();
+        $this->_preferences  = [];
 
         $this->user_id            = isset($row['user_id'])            ? $row['user_id']            : 0;
         $this->user_name          = isset($row['user_name'])          ? $row['user_name']          : null;
@@ -270,7 +270,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function toRow()
     {
-        return array(
+        return [
             'user_id'            => $this->user_id,
             'user_name'          => $this->user_name,
             'email'              => $this->email,
@@ -296,7 +296,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
             'last_pwd_update'    => $this->last_pwd_update,
             'expiry_date'        => $this->expiry_date,
             'has_avatar'         => $this->has_avatar,
-        );
+        ];
     }
 
     /**
@@ -338,7 +338,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setUserGroupData($data)
     {
-        $this->_group_data = array();
+        $this->_group_data = [];
         foreach ($data as $row) {
             $this->_group_data[$row['group_id']] = $row;
         }
@@ -401,7 +401,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
         return $this->isMember($group_id, 'A');
     }
 
-    private $cache_ugroup_membership = array();
+    private $cache_ugroup_membership = [];
     /**
      * Check membership of the user to a specified ugroup
      * (call to old style ugroup_user_is_member in /src/www/project/admin ; here for unit tests purpose)
@@ -455,7 +455,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     protected function getTrackerData()
     {
         if (! $this->_tracker_data) {
-            $this->_tracker_data = array();
+            $this->_tracker_data = [];
             $id = (int) $this->user_id;
             //TODO: use a DAO (waiting for the next tracker api)
             $sql = "SELECT group_artifact_id, perm_level
@@ -503,7 +503,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $hash = md5(serialize($instances));
         if (! isset($this->_ugroups)) {
-            $this->_ugroups = array();
+            $this->_ugroups = [];
         }
         if (! isset($this->_ugroups[$hash])) {
             $this->_ugroups[$hash] = array_merge($this->getDynamicUgroups($group_id, $instances), $this->getStaticUgroups($group_id));
@@ -537,7 +537,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
     {
         $hash = md5(serialize($instances));
         if (! isset($this->_dynamics_ugroups)) {
-            $this->_dynamics_ugroups = array();
+            $this->_dynamics_ugroups = [];
         }
         if (! isset($this->_dynamics_ugroups[$hash])) {
             $this->_dynamics_ugroups[$hash] = ugroup_db_list_dynamic_ugroups_for_user($group_id, $instances, $this->id);
@@ -963,7 +963,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getProjects($return_all_data = false)
     {
-        $projects = array();
+        $projects = [];
         foreach ($this->getUserGroupDao()->searchActiveGroupsByUserId($this->user_id) as $data) {
             if (
                 $data['access'] === Project::ACCESS_PRIVATE_WO_RESTRICTED &&
@@ -990,7 +990,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getGroups()
     {
-        $projects = array();
+        $projects = [];
         foreach ($this->getProjects() as $group_id) {
             $projects[] = ProjectManager::instance()->getProject($group_id);
         }
@@ -1005,7 +1005,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function getAllProjects()
     {
-        $projects = array();
+        $projects = [];
         $dar      = $this->getUGroupDao()->searchGroupByUserId($this->user_id);
         foreach ($dar as $row) {
             $projects[] = $row['group_id'];
@@ -1071,11 +1071,11 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setStatus($status)
     {
-        $allowedStatus = array('A' => true,
+        $allowedStatus = ['A' => true,
                                'R' => true,
                                'D' => true,
                                'S' => true,
-                               'P' => true);
+                               'P' => true];
         if (isset($allowedStatus[$status])) {
             $this->status = $status;
         }
@@ -1132,12 +1132,12 @@ class PFUser implements PFO_User, IHaveAnSSHKey
      */
     public function setUnixStatus($unixStatus)
     {
-        $allowedStatus = array(0 => true,
+        $allowedStatus = [0 => true,
                                '0' => true,
                                'N' => true,
                                'A' => true,
                                'S' => true,
-                               'D' => true);
+                               'D' => true];
         if (isset($allowedStatus[$unixStatus])) {
             $this->unix_status = $unixStatus;
         }
@@ -1405,7 +1405,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       */
     public static function getAllUnixStatus()
     {
-        return array('N', 'A', 'S', 'D');
+        return ['N', 'A', 'S', 'D'];
     }
 
      /**
@@ -1425,7 +1425,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey
       */
     public static function getAllWorkingStatus()
     {
-        return array(self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED);
+        return [self::STATUS_ACTIVE, self::STATUS_RESTRICTED, self::STATUS_SUSPENDED, self::STATUS_DELETED];
     }
 
      /**

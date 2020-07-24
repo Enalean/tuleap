@@ -182,7 +182,7 @@ class WikiCloner
    */
     public function cloneWikiPageTable()
     {
-        $ids = array();
+        $ids = [];
         $result = db_query(sprintf("SELECT id, pagename FROM wiki_page WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
             $pagename =  $row['pagename'];
@@ -203,7 +203,7 @@ class WikiCloner
   */
     public function cloneWikiRecentTable($array)
     {
-        $recent_infos = array();
+        $recent_infos = [];
         foreach ($array as $tmpl_id => $new_id) {
             $recent_infos = $this->getTemplatePageRecentInfos($tmpl_id);
             if (! empty($recent_infos)) {
@@ -259,7 +259,7 @@ class WikiCloner
             mkdir(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->group_id, fileperms(ForgeConfig::get('sys_wiki_attachment_data_dir') . '/' . $this->template_id));
         }
 
-        $ids = array();
+        $ids = [];
         $result = db_query(sprintf("SELECT id, name FROM wiki_attachment WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
             $id = $row['id'];
@@ -373,7 +373,7 @@ class WikiCloner
    */
     public function cloneWikiAttachmentRevisionTable($array)
     {
-        $array_rev = array();
+        $array_rev = [];
         foreach ($array as $tmpl_id => $new_id) {
             $result = db_query(sprintf("SELECT user_id, date, revision, mimetype, size FROM wiki_attachment_revision WHERE attachment_id=%d", $tmpl_id));
             while ($row = db_fetch_array($result)) {
@@ -465,13 +465,13 @@ class WikiCloner
    */
     public function getTemplatePageRecentInfos($id)
     {
-        $recent = array();
+        $recent = [];
         $result = db_query(sprintf("SELECT latestversion, latestmajor, latestminor FROM wiki_recent where id=%d", $id));
         if (db_numrows($result) > 0) {
-            $recent = array('latestversion' => (int) db_result($result, 0, 'latestversion'), 'latestmajor' => (int) db_result($result, 0, 'latestmajor')
-                         , 'latestminor' => (int) db_result($result, 0, 'latestminor'));
+            $recent = ['latestversion' => (int) db_result($result, 0, 'latestversion'), 'latestmajor' => (int) db_result($result, 0, 'latestmajor')
+                         , 'latestminor' => (int) db_result($result, 0, 'latestminor')];
         } else {
-            return array();
+            return [];
         }
         return $recent;
     }
@@ -486,11 +486,11 @@ class WikiCloner
    */
     public function getTemplateWikiEntries()
     {
-        $we = array();
+        $we = [];
         $result = db_query(sprintf("SELECT id, wiki_name, wiki_link, description, rank, language_id FROM wiki_group_list WHERE group_id=%d", $this->template_id));
         while ($row = db_fetch_array($result)) {
             $id = $row['id'];
-            $we[$id] = array('wiki_name' => $row['wiki_name'], 'wiki_link' => $row['wiki_link'], 'description' => $row['description'], 'rank' => $row['rank']);
+            $we[$id] = ['wiki_name' => $row['wiki_name'], 'wiki_link' => $row['wiki_link'], 'description' => $row['description'], 'rank' => $row['rank']];
         }
         return $we;
     }
@@ -540,7 +540,7 @@ class WikiCloner
    */
     public function getTemplateWikiVersionData($id)
     {
-        $version = array();
+        $version = [];
         $result = db_query(sprintf("SELECT version, versiondata FROM wiki_version WHERE id=%d", $id));
         while ($row = db_fetch_array($result)) {
             $version_number = $row['version'];
@@ -578,7 +578,7 @@ class WikiCloner
     public function createNewPageData($data)
     {
         if (empty($data)) {
-            return array();
+            return [];
         } else {
             foreach ($data as $key => $value) {
                 if (is_array($value)) {
@@ -769,6 +769,6 @@ class WikiCloner
    */
     public function _deserialize($data)
     {
-        return empty($data) ? array() : unserialize($data);
+        return empty($data) ? [] : unserialize($data);
     }
 }

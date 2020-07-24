@@ -38,7 +38,7 @@ class Request
                 $this->args = &$_POST;
                 break;
             default:
-                $this->args = array();
+                $this->args = [];
                 break;
         }
 
@@ -95,7 +95,7 @@ class Request
     }
 
     // Well oh well. Do we really want to pass POST params back as GET?
-    public function getURLtoSelf($args = false, $exclude = array())
+    public function getURLtoSelf($args = false, $exclude = [])
     {
         $get_args = $this->args;
         if ($args) {
@@ -105,7 +105,7 @@ class Request
         // Err... good point...
         // sortby buttons
         if ($this->isPost()) {
-            $exclude = array_merge($exclude, array('action','auth'));
+            $exclude = array_merge($exclude, ['action', 'auth']);
             //$get_args = $args; // or only the provided
             /*
             trigger_error("Request::getURLtoSelf() should probably not be from POST",
@@ -137,7 +137,7 @@ class Request
     {
         return in_array(
             $this->get('REQUEST_METHOD'),
-            array('GET', 'HEAD')
+            ['GET', 'HEAD']
         );
     }
 
@@ -186,7 +186,7 @@ class Request
             $this->buffer_output(false);
 
             include_once('lib/Template.php');
-            $tmpl = new Template('redirect', $this, array('REDIRECT_URL' => $url));
+            $tmpl = new Template('redirect', $this, ['REDIRECT_URL' => $url]);
             $tmpl->printXML();
             $this->finish();
         } elseif ($bogus) {
@@ -318,7 +318,7 @@ class Request
             $status = $m[1];
         } else {
             $status = (int) $status;
-            $reason = array('200' => 'OK',
+            $reason = ['200' => 'OK',
                             '302' => 'Found',
                             '303' => 'See Other',
                             '304' => 'Not Modified',
@@ -326,7 +326,7 @@ class Request
                             '401' => 'Unauthorized',
                             '403' => 'Forbidden',
                             '404' => 'Not Found',
-                            '412' => 'Precondition Failed');
+                            '412' => 'Precondition Failed'];
             // FIXME: is it always okay to send HTTP/1.1 here, even for older clients?
             header(sprintf("HTTP/1.1 %d %s", $status, $reason[$status]));
         }
@@ -810,7 +810,7 @@ class HTTP_ValidatorSet
     public function __construct($validators)
     {
         $this->_mtime = $this->_weak = false;
-        $this->_tag = array();
+        $this->_tag = [];
 
         foreach ($validators as $key => $val) {
             if ($key == '%mtime') {

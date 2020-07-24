@@ -61,9 +61,9 @@ class ReferencesBuilder
      */
     public function getExtraReferenceSpecs()
     {
-        return array(
-            array(
-                'cb'     => array($this, 'referenceFromMatch'),
+        return [
+            [
+                'cb'     => [$this, 'referenceFromMatch'],
                 'regexp' => '/
                     (?<![_a-zA-Z0-9])  # ensure the pattern is not following digits or letters
                     (?P<ref>
@@ -72,8 +72,8 @@ class ReferencesBuilder
                     )
                     (?![_A-Za-z0-9])   # ensure the pattern is not folloed by digits or letters
                 /x'
-            )
-        );
+            ]
+        ];
     }
 
     /**

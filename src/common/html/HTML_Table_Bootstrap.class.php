@@ -30,6 +30,6 @@ class HTML_Table_Bootstrap extends HTML_Table
     public function __construct()
     {
         parent::__construct();
-        $this->setTableClasses(array('table'));
+        $this->setTableClasses(['table']);
     }
 }

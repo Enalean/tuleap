@@ -70,7 +70,7 @@ class KanbanArtifactMessageBuilder
             );
         }
 
-        $has_changed = $last_changeset->hasChanges(array($status_field->getId() => $artifact->getStatusForChangeset($last_changeset)));
+        $has_changed = $last_changeset->hasChanges([$status_field->getId() => $artifact->getStatusForChangeset($last_changeset)]);
         if (! $has_changed) {
             throw new RealTimeArtifactMessageException(
                 'Field ' . $status_field->getLabel() . ' of the last changeset has not changed for the artifact id ' . $artifact->getId() . '.'
@@ -173,7 +173,7 @@ class KanbanArtifactMessageBuilder
      */
     private function getItemsIdsInColumn(Tracker_Artifact $artifact, array $values, $in_column, $status)
     {
-        $column_item_ids = array();
+        $column_item_ids = [];
 
         if ($in_column === ColumnIdentifier::BACKLOG_COLUMN) {
             $items_in_column = $this->kanban_item_dao->getKanbanBacklogItemIds($artifact->getTracker()->getId());

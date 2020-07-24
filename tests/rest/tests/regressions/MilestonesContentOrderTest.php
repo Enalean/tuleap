@@ -37,13 +37,13 @@ class Regressions_MilestonesContentOrderTest extends RestBase
         $epics    = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'epic');
         $products = $this->getArtifactIdsIndexedByTitle('pbi-6348', 'product');
 
-        $put = json_encode(array($epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']));
+        $put = json_encode([$epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']]);
         $this->getResponse($this->client->put('milestones/' . $products['Widget 1'] . '/content', null, $put));
-        $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), array($epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']));
+        $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), [$epics['Epic 1'], $epics['Epic 2'], $epics['Epic 3'], $epics['Epic 4']]);
 
-        $put = json_encode(array($epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']));
+        $put = json_encode([$epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']]);
         $this->getResponse($this->client->put('milestones/' . $products['Widget 1'] . '/content', null, $put));
-        $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), array($epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']));
+        $this->assertEquals($this->getMilestoneContentIds($products['Widget 1']), [$epics['Epic 3'], $epics['Epic 1'], $epics['Epic 2'], $epics['Epic 4']]);
     }
 
     private function getMilestoneContentIds($id)
@@ -53,7 +53,7 @@ class Regressions_MilestonesContentOrderTest extends RestBase
 
     private function getIds($route)
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->getResponse($this->client->get($route))->json() as $item) {
             $ids[] = $item['id'];
         }

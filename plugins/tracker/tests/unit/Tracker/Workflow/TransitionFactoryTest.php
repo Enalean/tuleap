@@ -80,11 +80,11 @@ class TransitionFactoryTest extends TestCase
 
         $this->from_value  = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
         $this->to_value    = Mockery::spy(\Tracker_FormElement_Field_List_Value::class);
-        $this->xml_mapping = array(
+        $this->xml_mapping = [
             'F32'    => $this->field,
             'F32-V1' => $this->from_value,
             'F32-V0' => $this->to_value
-        );
+        ];
     }
 
     public function testItReconstitutesPostActions()

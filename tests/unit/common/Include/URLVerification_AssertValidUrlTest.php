@@ -67,9 +67,9 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getUrlChunks')->andReturn(null);
         $this->url_verification->shouldReceive('header')->never();
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/'
-        );
+        ];
         $this->url_verification->assertValidUrl($server, $this->request);
     }
 
@@ -78,12 +78,12 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('getUrl')->andReturn(Mockery::spy(URL::class));
 
         $this->url_verification->shouldReceive('isException')->andReturn(false);
-        $this->url_verification->shouldReceive('getUrlChunks')->andReturn(array('protocol' => 'https', 'host' => 'secure.example.com'));
+        $this->url_verification->shouldReceive('getUrlChunks')->andReturn(['protocol' => 'https', 'host' => 'secure.example.com']);
         $this->url_verification->shouldReceive('header')->once();
 
-        $server = array(
+        $server = [
             'REQUEST_URI' => '/'
-        );
+        ];
         $this->url_verification->assertValidUrl($server, $this->request);
     }
 
@@ -93,7 +93,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/api/'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/api/'], $this->request);
     }
 
     public function testCheckNotActiveAndNotSuspendedProjectError()
@@ -109,7 +109,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
     public function testCheckNotActiveBecauseSuspendedProjectError()
@@ -123,7 +123,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
 
         $this->url_verification->shouldReceive('displaySuspendedProjectError')->once();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
     public function testCheckActiveProjectNoError()
@@ -139,7 +139,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/some_service/?group_id=1', 'REQUEST_URI' => '/some_service/?group_id=1'], $this->request);
     }
 
     public function testUserCanAccessPrivateShouldLetUserPassWhenNotInAProject()
@@ -150,7 +150,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
         $this->url_verification->shouldReceive('displayRestrictedUserProjectError')->never();
         $this->url_verification->shouldReceive('displayPrivateProjectError')->never();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request);
     }
 
     public function testNoGroupIdFallsbackOnUserAccessCheck()
@@ -159,7 +159,7 @@ class URLVerification_AssertValidUrlTest extends TestCase
 
         $this->url_verification->shouldReceive('checkRestrictedAccess')->once();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request);
     }
 
     public function testGiveAProjectByPassUrlAnalyis()
@@ -168,6 +168,6 @@ class URLVerification_AssertValidUrlTest extends TestCase
 
         $this->url_verification->shouldReceive('userCanAccessProject')->with(Mockery::any(), $project)->once();
 
-        $this->url_verification->assertValidUrl(array('SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'), $this->request, $project);
+        $this->url_verification->assertValidUrl(['SCRIPT_NAME' => '/stuff', 'REQUEST_URI' => '/stuff'], $this->request, $project);
     }
 }

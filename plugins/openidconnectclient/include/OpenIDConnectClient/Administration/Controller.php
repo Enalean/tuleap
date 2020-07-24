@@ -98,7 +98,7 @@ class Controller
     public function showAdministration(CSRFSynchronizerToken $csrf_token, PFUser $user)
     {
         $providers            = $this->provider_manager->getProviders();
-        $providers_presenters = array();
+        $providers_presenters = [];
 
         foreach ($providers as $provider) {
             if ($provider instanceof AzureADProvider) {

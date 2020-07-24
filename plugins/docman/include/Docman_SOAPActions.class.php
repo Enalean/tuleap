@@ -82,7 +82,7 @@ class Docman_SOAPActions extends Docman_Actions
                     $fs = $this->_getFileStorage();
 
                     if ($request->existAndNonEmpty('all_versions')) {
-                        $md5sum = array();
+                        $md5sum = [];
                         $vf = $this->_getVersionFactory();
                         $versions = $vf->getAllVersionForItem($item);
                         foreach ($versions as $version) {
@@ -147,7 +147,7 @@ class Docman_SOAPActions extends Docman_Actions
 
         $md = $metadataFactory->getFromLabel($label);
 
-        $res = array();
+        $res = [];
         if ($md->getType() == PLUGIN_DOCMAN_METADATA_TYPE_LIST) {
             foreach ($metadataLovFactory->getListByFieldId($md->id, $md->label, true) as $val) {
                 $res[] = $val;
@@ -180,7 +180,7 @@ class Docman_SOAPActions extends Docman_Actions
             $itemList = $itemFactory->getItemList($parent_id, $nb, $params);
             $itemList[] = $itemFactory->getItemFromDb($parent_id);
 
-            $res = array();
+            $res = [];
             foreach ($itemList as $item) {
                 $type = $itemFactory->getItemTypeForItem($item);
                 if ($type == PLUGIN_DOCMAN_ITEM_TYPE_FILE || $type == PLUGIN_DOCMAN_ITEM_TYPE_EMBEDDEDFILE) {
@@ -195,14 +195,14 @@ class Docman_SOAPActions extends Docman_Actions
                     $nbVersions = null;
                     $filename   = null;
                 }
-                $res[] = array(
+                $res[] = [
                              'id'          => $item->getId(),
                              'parent_id'   => $item->getParentId(),
                              'title'       => $item->getTitle(),
                              'filename'    => $filename,
                              'type'        => $type,
                              'nb_versions' => $nbVersions,
-                         );
+                         ];
             }
 
             $this->_controler->_viewParams['action_result'] = $res;

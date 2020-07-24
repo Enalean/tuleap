@@ -81,7 +81,7 @@ class GraphOnTrackersV5_InSessionChartSorter
                 break;
             default:
                 $elements_to_move = array_splice($charts, $wanted_position - 1);
-                $charts = array_merge($charts, array($edited_chart), $elements_to_move);
+                $charts = array_merge($charts, [$edited_chart], $elements_to_move);
         }
     }
 }

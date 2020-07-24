@@ -35,29 +35,29 @@ class WidgetRetrieverTest extends TestCase
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        $dao->shouldReceive('searchAllLinesByDashboardIdOrderedByRank')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchAllLinesByDashboardIdOrderedByRank')->andReturns(\TestHelper::arrayToDar([
             'id'             => 1,
             'dashboard_id'   => 1,
             'dashboard_type' => 'user',
             'layout'         => 'one-column',
             'rank'           => 0
-        )));
-        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 1, 'line_id' => 1, 'rank' => 0),
-            array('id' => 2, 'line_id' => 1, 'rank' => 1),
-            array('id' => 3, 'line_id' => 1, 'rank' => 2)
-        )));
-        $dao->shouldReceive('searchAllWidgetByColumnId')->with(1)->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10, 'is_minimized' => 0),
-            array('id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12, 'is_minimized' => 0)
-        )));
-        $dao->shouldReceive('searchAllWidgetByColumnId')->with(2)->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11, 'is_minimized' => 0),
-            array('id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13, 'is_minimized' => 0)
-        )));
-        $dao->shouldReceive('searchAllWidgetByColumnId')->with(3)->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14, 'is_minimized' => 0)
-        )));
+        ]));
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar([
+            ['id' => 1, 'line_id' => 1, 'rank' => 0],
+            ['id' => 2, 'line_id' => 1, 'rank' => 1],
+            ['id' => 3, 'line_id' => 1, 'rank' => 2]
+        ]));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(1)->andReturns(\TestHelper::argListToDar([
+            ['id' => 1, 'column_id' => 1, 'rank' => 0, 'name' => 'image', 'content_id' => 10, 'is_minimized' => 0],
+            ['id' => 3, 'column_id' => 1, 'rank' => 1, 'name' => 'image', 'content_id' => 12, 'is_minimized' => 0]
+        ]));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(2)->andReturns(\TestHelper::argListToDar([
+            ['id' => 2, 'column_id' => 2, 'rank' => 0, 'name' => 'image', 'content_id' => 11, 'is_minimized' => 0],
+            ['id' => 4, 'column_id' => 2, 'rank' => 1, 'name' => 'image', 'content_id' => 13, 'is_minimized' => 0]
+        ]));
+        $dao->shouldReceive('searchAllWidgetByColumnId')->with(3)->andReturns(\TestHelper::argListToDar([
+            ['id' => 5, 'column_id' => 3, 'rank' => 0, 'name' => 'image', 'content_id' => 14, 'is_minimized' => 0]
+        ]));
 
         $lines                = $retriever->getAllWidgets(1, 'user');
         $columns              = $lines[0]->getWidgetColumns();
@@ -96,11 +96,11 @@ class WidgetRetrieverTest extends TestCase
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 1, 'line_id' => 1, 'rank' => 0),
-            array('id' => 2, 'line_id' => 1, 'rank' => 1),
-            array('id' => 3, 'line_id' => 1, 'rank' => 2)
-        )));
+        $dao->shouldReceive('searchAllColumnsByLineIdOrderedByRank')->andReturns(\TestHelper::argListToDar([
+            ['id' => 1, 'line_id' => 1, 'rank' => 0],
+            ['id' => 2, 'line_id' => 1, 'rank' => 1],
+            ['id' => 3, 'line_id' => 1, 'rank' => 2]
+        ]));
 
         $columns = $retriever->getColumnsByLineById(1);
 
@@ -128,14 +128,14 @@ class WidgetRetrieverTest extends TestCase
         $dao       = \Mockery::spy(\Tuleap\Dashboard\Widget\DashboardWidgetDao::class);
         $retriever = new DashboardWidgetRetriever($dao);
 
-        $dao->shouldReceive('searchWidgetById')->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchWidgetById')->andReturns(\TestHelper::arrayToDar([
             'id'           => 1,
             'column_id'    => 1,
             'rank'         => 0,
             'name'         => 'image',
             'content_id'   => 10,
             'is_minimized' => 0
-        )));
+        ]));
 
         $widget   = $retriever->getWidgetById(1);
         $expected = new DashboardWidget(1, 'image', 10, 1, 0, 0);

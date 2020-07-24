@@ -128,7 +128,7 @@ class URLVerification // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNames
 
         // Plugins
         $anonymousAllowed = false;
-        $params = array('script_name' => $server['SCRIPT_NAME'], 'anonymous_allowed' => &$anonymousAllowed);
+        $params = ['script_name' => $server['SCRIPT_NAME'], 'anonymous_allowed' => &$anonymousAllowed];
         $this->getEventManager()->processEvent('anonymous_access_to_script_allowed', $params);
 
         return $anonymousAllowed;

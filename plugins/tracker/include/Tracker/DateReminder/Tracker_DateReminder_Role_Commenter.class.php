@@ -48,7 +48,7 @@ class Tracker_DateReminder_Role_Commenter implements Tracker_DateReminder_Role
      */
     public function getRecipientsFromArtifact(Tracker_Artifact $artifact)
     {
-        $recipients   = array();
+        $recipients   = [];
         $userManager  = $artifact->getUserManager();
         $recipientIds = $artifact->getCommentators();
         foreach ($recipientIds as $recipientId) {

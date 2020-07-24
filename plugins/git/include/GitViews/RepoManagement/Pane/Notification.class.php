@@ -99,11 +99,11 @@ class Notification extends Pane
     private function getPluginNotifications()
     {
         $output = '';
-        EventManager::instance()->processEvent(GIT_ADDITIONAL_NOTIFICATIONS, array(
+        EventManager::instance()->processEvent(GIT_ADDITIONAL_NOTIFICATIONS, [
             'request'    => $this->request,
             'repository' => $this->repository,
             'output'     => &$output,
-        ));
+        ]);
 
         return $output;
     }

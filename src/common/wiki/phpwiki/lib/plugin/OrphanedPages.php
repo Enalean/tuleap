@@ -51,14 +51,14 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('noheader'      => false,
+        return ['noheader'      => false,
                      'include_empty' => false,
                      'exclude'       => '',
                      'info'          => '',
                      'sortby'        => false,
                      'limit'         => 0,
                      'paging'        => 'auto',
-                     );
+                     ];
     }
     // info arg allows multiple columns
     // info=mtime,hits,summary,version,author,locked,minor,markup or all
@@ -73,7 +73,7 @@ class WikiPlugin_OrphanedPages extends WikiPlugin
         // tailored SQL query via the backend, but this does the job
 
         $allpages_iter = $dbi->getAllPages($include_empty);
-        $pages = array();
+        $pages = [];
         while ($page = $allpages_iter->next()) {
             $links_iter = $page->getBackLinks();
             // Test for absence of backlinks. If a page is linked to

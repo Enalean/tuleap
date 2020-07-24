@@ -46,7 +46,7 @@ class Docman_Filter
 
     public function getUrlParameters()
     {
-        $param = array();
+        $param = [];
         //if($this->value !== null) {
             $param[$this->md->getLabel()] = $this->value;
             //}
@@ -175,7 +175,7 @@ class Docman_FilterDate extends Docman_Filter
 
     public function getUrlParameters()
     {
-        $param = array();
+        $param = [];
         //if($this->value !== null) {
             $param[$this->field_value_name] = $this->value;
             //if($this->operator !== null) {
@@ -288,7 +288,7 @@ class Docman_FilterDateAdvanced extends Docman_FilterDate
 
     public function getUrlParameters()
     {
-        $param = array();
+        $param = [];
         $param[$this->fieldNameStart] = $this->valueStart;
         $param[$this->fieldNameEnd]   = $this->valueEnd;
         return $param;
@@ -408,7 +408,7 @@ class Docman_FilterListAdvanced extends Docman_FilterList
     public function __construct($md)
     {
         parent::__construct($md);
-        $this->setValue(array());
+        $this->setValue([]);
     }
 
     public function _urlValueIsValid($request)
@@ -436,15 +436,15 @@ class Docman_FilterListAdvanced extends Docman_FilterList
             if (! is_array($this->getValue())) {
                 if ($this->getValue() !== null && $this->getValue() != '') {
                     // Convert simple value to advanced
-                    $this->setValue(array($this->getValue()));
+                    $this->setValue([$this->getValue()]);
                 } else {
-                    $this->setValue(array());
+                    $this->setValue([]);
                 }
             } elseif (count($this->getValue()) == 1) {
                 // If empty value, clean-up
                 $v = $this->getValue();
                 if ($v[0] == '') {
-                    $this->setValue(array(0));
+                    $this->setValue([0]);
                 }
             }
             return true;
@@ -455,7 +455,7 @@ class Docman_FilterListAdvanced extends Docman_FilterList
     public function _urlMatchAdd($request)
     {
         if (parent::_urlMatchAdd($request)) {
-            $this->setValue(array(0));
+            $this->setValue([0]);
             return true;
         }
         return false;
@@ -480,7 +480,7 @@ class Docman_FilterItemTypeAdvanced extends Docman_FilterListAdvanced
     public function __construct($md)
     {
         Docman_Filter::__construct($md);
-        $this->setValue(array());
+        $this->setValue([]);
     }
 }
 
@@ -512,7 +512,7 @@ class Docman_FilterText extends Docman_Filter
     public function getUrlParameters()
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $param = array($this->md->getLabel() => $hp->purify($this->value));
+        $param = [$this->md->getLabel() => $hp->purify($this->value)];
         return $param;
     }
 }

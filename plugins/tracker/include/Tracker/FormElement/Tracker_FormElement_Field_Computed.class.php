@@ -30,22 +30,22 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     public const FIELD_VALUE_IS_AUTOCOMPUTED = 'is_autocomputed';
     public const FIELD_VALUE_MANUAL          = 'manual_value';
 
-    public $default_properties = array(
-        'target_field_name' => array(
+    public $default_properties = [
+        'target_field_name' => [
             'value' => null,
             'type'  => 'string',
             'size'  => 40,
-        ),
-        'fast_compute' => array(
+        ],
+        'fast_compute' => [
             'value' => null,
             'type'  => 'upgrade_button',
-        ),
-        'default_value' => array(
+        ],
+        'default_value' => [
             'value' => '',
             'type'  => 'string',
             'size'  => 40,
-        ),
-    );
+        ],
+    ];
 
     public function __construct(
         $id,
@@ -119,7 +119,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $timestamp = null
     ) {
         return $this->getCalculator()->calculate(
-            array($artifact->getId()),
+            [$artifact->getId()],
             $timestamp,
             true,
             $this->getName(),
@@ -129,12 +129,12 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
 
     public function getComputedValueWithNoStopOnManualValue(Tracker_Artifact $artifact)
     {
-        $computed_children_to_fetch    = array();
-        $artifact_ids_to_fetch         = array();
+        $computed_children_to_fetch    = [];
+        $artifact_ids_to_fetch         = [];
         $has_manual_value_in_children  = false;
         $target_field_name             = $this->getName();
         $dar                           = $this->getDao()->getComputedFieldValues(
-            array($artifact->getId()),
+            [$artifact->getId()],
             $target_field_name,
             $this->getId(),
             false
@@ -163,16 +163,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
             if (count($computed_children_to_fetch) > 0) {
                 $computed_children = $this->getStandardCalculationMode($computed_children_to_fetch);
             }
-            $manually_set_children = $this->getStopAtManualSetFieldMode(array($artifact->getId()));
+            $manually_set_children = $this->getStopAtManualSetFieldMode([$artifact->getId()]);
             return $manually_set_children + $computed_children;
         }
 
         if (count($artifact_ids_to_fetch) === 0 && $has_manual_value_in_children) {
-            return $this->getStopAtManualSetFieldMode(array($artifact->getId()));
+            return $this->getStopAtManualSetFieldMode([$artifact->getId()]);
         }
 
         if ($has_manual_value_in_children && $manual_value_for_current_node['value'] === null) {
-            return $this->getStandardCalculationMode(array($artifact->getId()));
+            return $this->getStandardCalculationMode([$artifact->getId()]);
         }
 
         if (count($artifact_ids_to_fetch) === 0) {
@@ -217,7 +217,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
     protected function getComputedValueWithNoLabel(Tracker_Artifact $artifact, PFUser $user, $stop_on_manual_value)
     {
         if ($stop_on_manual_value) {
-            $empty_array = array();
+            $empty_array = [];
             $computed_value = $this->getComputedValue($user, $artifact, null, $empty_array);
         } else {
             $computed_value = $this->getComputedValueWithNoStopOnManualValue($artifact);
@@ -235,11 +235,11 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field_Float
         $formElement_data = $request->get('formElement_data');
 
         if ($formElement_data !== false) {
-            $default_specific_properties = array(
+            $default_specific_properties = [
                 'fast_compute'      => '1',
                 'target_field_name' => $formElement_data['name']
-            );
-            $submitted_specific_properties = isset($formElement_data['specific_properties']) ? $formElement_data['specific_properties'] : array();
+            ];
+            $submitted_specific_properties = isset($formElement_data['specific_properties']) ? $formElement_data['specific_properties'] : [];
 
             $merged_specific_properties = array_merge(
                 $default_specific_properties,

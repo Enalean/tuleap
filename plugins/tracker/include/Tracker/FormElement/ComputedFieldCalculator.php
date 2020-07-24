@@ -52,9 +52,9 @@ class ComputedFieldCalculator implements IProvideArtifactChildrenForComputedCalc
             $stop_on_manual_value
         );
 
-        return array(
+        return [
             'children'   => $dar,
             'manual_sum' => null
-        );
+        ];
     }
 }

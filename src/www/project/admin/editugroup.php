@@ -40,7 +40,7 @@ require_once __DIR__ . '/../../include/pre.php';
 $request = HTTPRequest::instance();
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 $event_manager                            = EventManager::instance();
 $ugroup_manager                           = new UGroupManager();

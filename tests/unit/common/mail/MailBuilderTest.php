@@ -50,7 +50,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
     {
         parent::setUp();
 
-        $user_manager = \Mockery::spy(\UserManager::class)->shouldReceive('getAllUsersByEmail')->andReturns(array())->getMock();
+        $user_manager = \Mockery::spy(\UserManager::class)->shouldReceive('getAllUsersByEmail')->andReturns([])->getMock();
         UserManager::setInstance($user_manager);
 
         $this->renderer   = \Mockery::spy(\TemplateRenderer::class);
@@ -63,7 +63,7 @@ final class MailBuilderTest extends \PHPUnit\Framework\TestCase
         $this->builder->__construct($template_factory, $this->mail_filter);
         $this->codendi_mail  = \Mockery::spy(\Codendi_Mail::class);
 
-        $emails            = array('a@example.com', 'b@example.com');
+        $emails            = ['a@example.com', 'b@example.com'];
         $subject           = 'This is an awesome subject';
         $full_body_html    = 'Body in <b> HTML </b>';
         $full_body_text    = 'Body in plain/text';

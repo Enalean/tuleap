@@ -38,7 +38,7 @@ class AccessFileHistoryFactory
     /** return AccessFileHistory[] */
     public function getByRepository(Repository $repository)
     {
-        $accessFiles = array();
+        $accessFiles = [];
         foreach ($this->dao->searchByRepositoryId($repository->getId()) as $row) {
             $accessFiles[] = $this->instantiateFromRowAndRepository($row, $repository);
         }

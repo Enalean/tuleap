@@ -107,7 +107,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     public function tracker_event_export_full_xml($params) //phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
@@ -353,9 +353,9 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $em = EventManager::instance();
         $em->processEvent(
             CARDWALL_EVENT_USE_STANDARD_JAVASCRIPT,
-            array(
+            [
                 'use_standard' => &$use_standard
-            )
+            ]
         );
 
         return $use_standard;
@@ -481,13 +481,13 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $planning    = PlanningFactory::build()->getPlanning($planning_id);
         if ($planning) {
             $redirect->base_url         = AGILEDASHBOARD_BASE_URL;
-            $redirect->query_parameters = array(
+            $redirect->query_parameters = [
                 'group_id'    => $planning->getGroupId(),
                 'planning_id' => $planning->getId(),
                 'action'      => 'show',
                 'aid'         => $artifact_id,
                 'pane'        => 'cardwall',
-            );
+            ];
         }
     }
 
@@ -496,10 +496,10 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
         $report_id                   = key($redirect_params);
         $renderer_id                 = current($redirect_params);
         $redirect->base_url          = TRACKER_BASE_URL;
-        $redirect->query_parameters  = array(
+        $redirect->query_parameters  = [
             'report'   => $report_id,
             'renderer' => $renderer_id,
-        );
+        ];
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
@@ -512,7 +512,7 @@ class cardwallPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration
 
     private function appendCardwallParameter(Tracker_Artifact_Redirect $redirect, $cardwall)
     {
-        [$key, $value] = explode('=', urldecode(http_build_query(array('cardwall' => $cardwall))));
+        [$key, $value] = explode('=', urldecode(http_build_query(['cardwall' => $cardwall])));
         $redirect->query_parameters[$key] = $value;
     }
 

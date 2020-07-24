@@ -57,7 +57,7 @@ class MailSender
     public function send(Tracker_Artifact_Changeset $changeset, $recipients, $headers, $from, $subject, $htmlBody, $txtBody, $message_id)
     {
         $hp                = Codendi_HTMLPurifier::instance();
-        $breadcrumbs       = array();
+        $breadcrumbs       = [];
         $tracker           = $changeset->getTracker();
         $project           = $tracker->getProject();
         $artifactId        = $changeset->getArtifact()->getId();

@@ -32,7 +32,7 @@ class Cardwall_Swimline
     /**
      * @var array
      */
-    public $cells = array();
+    public $cells = [];
 
     /**
      * @var int

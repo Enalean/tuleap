@@ -57,9 +57,9 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
             M::spy(\Psr\Log\LoggerInterface::class)
         );
 
-        $this->options = array(
+        $this->options = [
             'tracker_id' => 10
-        );
+        ];
         $this->export_dir = "__fixtures";
 
         $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
@@ -110,11 +110,11 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns(array(
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([
             $project_ugroup_members,
             $project_ugroup_members2,
             $project_ugroup_members3,
-        ));
+        ]);
 
         $this->project->shouldReceive('getServices')->andReturns([]);
         $this->event_manager->shouldReceive('processEvent')->once();
@@ -179,7 +179,7 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 
-        $this->project->shouldReceive('getServices')->andReturns(array());
+        $this->project->shouldReceive('getServices')->andReturns([]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
 
@@ -213,28 +213,28 @@ final class ProjectXMLExporterTest extends \PHPUnit\Framework\TestCase
 
     public function testItExportsProjectInfo(): void
     {
-        $data_01 = array(
+        $data_01 = [
             'is_used'    => true,
             'short_name' => 's01'
-        );
+        ];
 
-        $data_02 = array(
+        $data_02 = [
             'is_used'    => false,
             'short_name' => 's02'
-        );
+        ];
 
         $service_01 = new Service($this->project, $data_01);
         $service_02 = new Service($this->project, $data_02);
 
         $this->project->shouldReceive('getUnixName')->andReturns('myproject');
         $this->project->shouldReceive('getDescription')->andReturns('my short desc');
-        $this->project->shouldReceive('getServices')->andReturns(array($service_01, $service_02));
+        $this->project->shouldReceive('getServices')->andReturns([$service_01, $service_02]);
         $this->project->shouldReceive('getAccess')->andReturns('public');
         $project_ugroup_dynamic = M::spy(ProjectUGroup::class, ['getNormalizedName' => 'ugroup_dynamic']);
-        $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns(array());
+        $project_ugroup_dynamic->shouldReceive('getMembers')->andReturns([]);
         $this->ugroup_manager->shouldReceive('getProjectAdminsUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
         $this->ugroup_manager->shouldReceive('getProjectMembersUGroup')->with($this->project)->andReturns($project_ugroup_dynamic);
-        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns(array());
+        $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 
         $xml       = $this->xml_exporter->export($this->project, $this->options, $this->user, $this->archive, $this->export_dir);
         $xml_objet = simplexml_load_string($xml);

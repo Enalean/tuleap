@@ -43,12 +43,12 @@ class HeaderNavigationDisplayer
 
     private function displayNavigation($title, Project $project, $template_name, $current_pane_shortname)
     {
-        $params = array(
+        $params = [
             'title'      => $title . ' - ' . $project->getPublicName(),
             'toptab'     => 'admin',
             'group'      => $project->getID(),
-            'body_class' => array('project-administration')
-        );
+            'body_class' => ['project-administration']
+        ];
 
         site_project_header($params);
 
@@ -65,6 +65,6 @@ class HeaderNavigationDisplayer
         $navigation_presenter = $builder->build($project, $request, $current_pane_shortname);
 
         $renderer->renderToPage($template_name, $navigation_presenter);
-        $renderer->renderToPage('start-project-admin-content', array());
+        $renderer->renderToPage('start-project-admin-content', []);
     }
 }

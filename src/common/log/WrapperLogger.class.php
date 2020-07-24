@@ -26,7 +26,7 @@ class WrapperLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerIn
      */
     private $logger;
 
-    private $prefix = array();
+    private $prefix = [];
 
     public function __construct(\Psr\Log\LoggerInterface $logger, $prefix)
     {

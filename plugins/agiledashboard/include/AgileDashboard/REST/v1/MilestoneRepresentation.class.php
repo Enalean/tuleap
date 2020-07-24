@@ -178,7 +178,7 @@ class MilestoneRepresentation
     /**
      * @var array
      */
-    public $resources = array(
+    public $resources = [
         'milestones'       => null,
         'backlog'          => null,
         'content'          => null,
@@ -186,7 +186,7 @@ class MilestoneRepresentation
         'burndown'         => null,
         'siblings'         => null,
         'additional_panes' => [],
-    );
+    ];
 
     private function __construct(
         int $id,
@@ -292,33 +292,33 @@ class MilestoneRepresentation
         );
         $submilestone_tracker = $finder->findFirstSubmilestoneTracker($milestone);
 
-        $submilestone_trackers = array();
+        $submilestone_trackers = [];
         if ($submilestone_tracker) {
             $submilestone_tracker_ref = TrackerReference::build($finder->findFirstSubmilestoneTracker($milestone));
-            $submilestone_trackers = array($submilestone_tracker_ref);
+            $submilestone_trackers = [$submilestone_tracker_ref];
         }
 
         $resources = [];
 
-        $resources['milestones'] = array(
+        $resources['milestones'] = [
             'uri'    => $uri . '/' . self::ROUTE,
-            'accept' => array(
+            'accept' => [
                 'trackers' => $submilestone_trackers
-            )
-        );
-        $resources['backlog'] = array(
+            ]
+        ];
+        $resources['backlog'] = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::BACKLOG_ROUTE,
-            'accept' => array(
+            'accept' => [
                 'trackers'        => self::getTrackersRepresentation($backlog_trackers),
                 'parent_trackers' => self::getTrackersRepresentation($parent_trackers)
-            )
-        );
-        $resources['content'] = array(
+            ]
+        ];
+        $resources['content'] = [
             'uri'    => $uri . '/' . BacklogItemRepresentation::CONTENT_ROUTE,
-            'accept' => array(
+            'accept' => [
                 'trackers' => self::getContentTrackersRepresentation($milestone)
-            )
-        );
+            ]
+        ];
         $resources['siblings'] = [
             'uri' => $uri . '/siblings'
         ];
@@ -392,7 +392,7 @@ class MilestoneRepresentation
 
     private static function getTrackersRepresentation(array $trackers)
     {
-        $trackers_representation = array();
+        $trackers_representation = [];
         foreach ($trackers as $tracker) {
             $tracker_reference = TrackerReference::build($tracker);
             $trackers_representation[] = $tracker_reference;

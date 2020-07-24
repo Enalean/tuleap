@@ -46,10 +46,10 @@ class AccessFileReader
 
     private function extractBlocksFromAccessFile(Repository $repository)
     {
-        $blocks = array(
+        $blocks = [
             'default' => '',
             'content' => ''
-        );
+        ];
 
         $in_default_block = false;
         foreach (file($this->getPath($repository)) as $line) {

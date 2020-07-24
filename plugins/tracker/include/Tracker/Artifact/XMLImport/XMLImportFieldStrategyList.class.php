@@ -57,7 +57,7 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyList extends Tracker_Arti
         Tracker_Artifact $artifact
     ) {
         $bind = (string) $field_change['bind'];
-        $data = array();
+        $data = [];
 
         if ($bind === self::BIND_STATIC) {
             foreach ($field_change as $value) {

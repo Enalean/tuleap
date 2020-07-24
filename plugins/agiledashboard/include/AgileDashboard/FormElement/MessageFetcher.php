@@ -59,7 +59,7 @@ class MessageFetcher
     public function getWarningsRelatedToPlanningConfiguration(Tracker $tracker)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        $warnings = array();
+        $warnings = [];
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
 
         if (! $planning) {

@@ -45,7 +45,7 @@ class HookConfigRetriever
     {
         $row = $this->hook_dao->getHookConfig($repository->getId());
         if (! $row) {
-            $row = array();
+            $row = [];
         }
 
         $this->hook_config_sanitizer->sanitizeHookConfigArray($row);

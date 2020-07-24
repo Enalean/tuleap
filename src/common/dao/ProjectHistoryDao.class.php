@@ -61,7 +61,7 @@ class ProjectHistoryDao extends DataAccessObject
         if ($offset > 0 || $limit > 0) {
             $sql .= ' LIMIT ' . $this->da->escapeInt($offset) . ', ' . $this->da->escapeInt($limit);
         }
-        return array('history' => $this->retrieve($sql), 'numrows' => $this->foundRows());
+        return ['history' => $this->retrieve($sql), 'numrows' => $this->foundRows()];
     }
 
     /**

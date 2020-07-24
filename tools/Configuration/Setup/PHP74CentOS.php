@@ -42,11 +42,11 @@ class PHP74CentOS
         try {
             $options = getopt(
                 'h',
-                array(
+                [
                     'help',
                     'module:',
                     'development',
-                )
+                ]
             );
             $this->exitIfHelp($options);
 

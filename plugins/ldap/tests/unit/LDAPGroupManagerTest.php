@@ -50,10 +50,10 @@ class LDAPGroupManagerTest extends TestCase
 
     public function testDoesBuildANotificationOnUpdate(): void
     {
-        $ldapResIter = $this->getLdapResult('getGroupMembers', array(
+        $ldapResIter = $this->getLdapResult('getGroupMembers', [
             'eduid=edA,ou=people,dc=codendi,dc=com',
             'eduid=edE,ou=people,dc=codendi,dc=com'
-        ));
+        ]);
 
         $ldap = \Mockery::mock(
             \LDAP::class,
@@ -69,7 +69,7 @@ class LDAPGroupManagerTest extends TestCase
         $ldap->shouldReceive('getLdapParam')->with('grp_dn')->andReturns('ou=groups,dc=codendi,dc=com');
 
         $ldap_user_manager = \Mockery::spy(LDAP_UserManager::class);
-        $ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturn(array(101,102));
+        $ldap_user_manager->shouldReceive('getUserIdsForLdapUser')->andReturn([101, 102]);
         $user = Mockery::mock(PFUser::class);
         $user->shouldReceive('getRealName')->andReturn("J. Doe");
         $user->shouldReceive('getUserName')->andReturn("jdoe");
@@ -112,11 +112,11 @@ class LDAPGroupManagerTest extends TestCase
     public function testLdapGroupContainsOtherLdapGroups()
     {
         // Search for umbrella group
-        $ldapResIterABCDEF = $this->getLdapResult('getGroupMembers', array('cn=ABC,ou=groups,dc=codendi,dc=com', 'cn=DEF,ou=groups,dc=codendi,dc=com'));
+        $ldapResIterABCDEF = $this->getLdapResult('getGroupMembers', ['cn=ABC,ou=groups,dc=codendi,dc=com', 'cn=DEF,ou=groups,dc=codendi,dc=com']);
         // Search for first sub-group
-        $ldapResIterABC = $this->getLdapResult('getGroupMembers', array('eduid=edA,ou=people,dc=codendi,dc=com'));
+        $ldapResIterABC = $this->getLdapResult('getGroupMembers', ['eduid=edA,ou=people,dc=codendi,dc=com']);
         // Search for second sub-group
-        $ldapResIterDEF = $this->getLdapResult('getGroupMembers', array('eduid=edE,ou=people,dc=codendi,dc=com'));
+        $ldapResIterDEF = $this->getLdapResult('getGroupMembers', ['eduid=edE,ou=people,dc=codendi,dc=com']);
         // Search for first user
         $ldapResIterUserA = $this->getLdapResult('getEdUid', 'edA');
         // Search for second user

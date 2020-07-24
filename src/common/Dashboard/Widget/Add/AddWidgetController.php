@@ -147,10 +147,10 @@ class AddWidgetController
         array $used_widgets
     ) {
         $categories                 = $this->getWidgetsGroupedByCategories($dashboard_type);
-        $widgets_category_presenter = array();
+        $widgets_category_presenter = [];
 
         foreach ($categories as $category => $widgets) {
-            $widgets_presenter = array();
+            $widgets_presenter = [];
             foreach ($widgets as $widget) {
                 $widget = $this->factory->getInstanceByWidgetName($widget->id);
                 if (
@@ -165,7 +165,7 @@ class AddWidgetController
         }
         $this->sortAlphabetically($widgets_category_presenter);
 
-        $GLOBALS['Response']->sendJSON(array('widgets_categories' => $widgets_category_presenter));
+        $GLOBALS['Response']->sendJSON(['widgets_categories' => $widgets_category_presenter]);
     }
 
     private function sortAlphabetically(array &$widgets_category_presenter)
@@ -208,7 +208,7 @@ class AddWidgetController
 
     private function getWidgetsGroupedByCategories($dashboard_type)
     {
-        $categories = array();
+        $categories = [];
         $widgets    = $this->factory->getWidgetsForOwnerType($dashboard_type);
         foreach ($widgets as $widget) {
             if ($widget && $widget->isAvailable()) {
@@ -287,9 +287,9 @@ class AddWidgetController
 
         $GLOBALS['Response']->redirect(
             $url . '?' . http_build_query(
-                array(
+                [
                     'dashboard_id' => $dashboard_id
-                )
+                ]
             )
         );
     }
@@ -301,7 +301,7 @@ class AddWidgetController
      */
     private function getUsedWidgets($dashboard_id, $dashboard_type)
     {
-        $used_widgets = array();
+        $used_widgets = [];
         foreach ($this->dao->searchUsedWidgetsContentByDashboardId($dashboard_id, $dashboard_type) as $row) {
             $used_widgets[] = $row['name'];
         }

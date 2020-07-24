@@ -25,16 +25,16 @@ if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
 
     my_check_bookmark_URL($bookmark_url, '/my/bookmark_add.php');
 
-    $HTML->header(array("title" => $Language->getText('bookmark_add', 'title')));
+    $HTML->header(["title" => $Language->getText('bookmark_add', 'title')]);
     print "<H3>" . $Language->getText('bookmark_add', 'title') . "</H3>";
-    print $Language->getText('bookmark_add', 'message', array($purifier->purify($bookmark_url), $purifier->purify($bookmark_title))) . "<p>\n";
+    print $Language->getText('bookmark_add', 'message', [$purifier->purify($bookmark_url), $purifier->purify($bookmark_title)]) . "<p>\n";
 
     $bookmark_id = bookmark_add($bookmark_url, $bookmark_title);
     print '<A HREF="' . $purifier->purify($bookmark_url) . '">' . $Language->getText('bookmark_add', 'visit') . "</A> - ";
     print '<A HREF="/my/bookmark_edit.php?bookmark_id=' . $bookmark_id . '">' . $Language->getText('bookmark_add', 'edit') . "</A>";
     print '<p><A HREF="/my/">[' . $Language->getText('global', 'back_home') . "]</A>";
 } else {
-    $HTML->header(array("title" => $Language->getText('bookmark_add', 'title')));
+    $HTML->header(["title" => $Language->getText('bookmark_add', 'title')]);
     print "<H3>" . $Language->getText('bookmark_add', 'title') . "</H3>";
 
     $bookmark_url = 'http://';
@@ -59,4 +59,4 @@ if ($request->isPost() && $request->valid($vUrl) && $request->valid($vTitle)) {
     <?php
 }
 
-$HTML->footer(array());
+$HTML->footer([]);

@@ -69,7 +69,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     {
         $nearest_planning_tracker = $this->nearest_planning_tracker_provider->getNearestPlanningTracker($backlog_tracker, $this->hierarchy_factory);
         if (! $nearest_planning_tracker) {
-            return array();
+            return [];
         }
 
         $planning_trackers_ids = $this->getPlanningTrackersIds($nearest_planning_tracker);
@@ -81,8 +81,8 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     private function formatAllMilestonesAsSelectboxOptions(array $planning_trackers_ids, $selected_milestone_id, Tracker $backlog_tracker, PFUser $user)
     {
         $hp = Codendi_HTMLPurifier::instance();
-        $options = array();
-        $current_milestone = array();
+        $options = [];
+        $current_milestone = [];
 
         $options[] = $this->addTopBacklogPlanningEntry($selected_milestone_id, $backlog_tracker, $user);
 
@@ -168,7 +168,7 @@ class AgileDashboard_Milestone_MilestoneReportCriterionOptionsProvider
     /** @return Tracker[] */
     private function keepsTrackersUntilThereIsNoPlanning(array $list_of_trackers)
     {
-        $trackers = array();
+        $trackers = [];
         foreach ($list_of_trackers as $tracker) {
             if (! $this->planning_factory->getPlanningByPlanningTracker($tracker)) {
                 break;

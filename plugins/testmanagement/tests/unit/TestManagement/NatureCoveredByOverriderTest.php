@@ -68,7 +68,7 @@ class NatureCoveredByOverriderTest extends TestCase
 
     public function testItGivesTheCoveredByNatureToNewLinkToTestDefinition()
     {
-        $new_linked_artifact_ids = array($this->artifact_id);
+        $new_linked_artifact_ids = [$this->artifact_id];
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
 
@@ -90,7 +90,7 @@ class NatureCoveredByOverriderTest extends TestCase
 
     public function testItReturnsNothingWhenNotLinkingToTestDefinition()
     {
-        $new_linked_artifact_ids = array($this->artifact_id);
+        $new_linked_artifact_ids = [$this->artifact_id];
 
         $this->dao->shouldReceive('isTypeDisabledInProject')
             ->with(101, '_covered_by')
@@ -107,7 +107,7 @@ class NatureCoveredByOverriderTest extends TestCase
 
     public function testItReturnsNothingWhenUpdatingLinkToTestDefinition()
     {
-        $new_linked_artifact_ids = array();
+        $new_linked_artifact_ids = [];
 
         $this->artifact->shouldReceive('getTrackerId')->andReturn($this->test_definition_tracker_id);
 
@@ -126,7 +126,7 @@ class NatureCoveredByOverriderTest extends TestCase
 
     public function testItReturnsNothingIfCoveredByTypeIsDisabled()
     {
-        $new_linked_artifact_ids = array($this->artifact_id);
+        $new_linked_artifact_ids = [$this->artifact_id];
 
         $this->dao->shouldReceive('isTypeDisabledInProject')
             ->with(101, '_covered_by')

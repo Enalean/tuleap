@@ -37,9 +37,9 @@ class HookDao extends DataAccessObject
     {
         $id = $this->da->escapeInt($id_repository);
 
-        $update = array();
-        $cols   = array();
-        $vals   = array();
+        $update = [];
+        $cols   = [];
+        $vals   = [];
         foreach ($hook_config as $tablename => $value) {
             $update[] = "$tablename = " . $this->da->quoteSmart((bool) $value);
             $cols[]   = $tablename;

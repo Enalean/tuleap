@@ -44,7 +44,7 @@ final class ServiceTest extends RestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options(sprintf('projects/%d/frs_service', $this->project_id)));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testServiceAsAdmin(): void

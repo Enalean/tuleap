@@ -92,7 +92,7 @@ class Docman_SystemCheckTest extends TestCase
     public function testItCreatesFolderForActiveProject(): void
     {
         $this->retriever->shouldReceive('getActiveProjectUnixNamesThatUseDocman')->andReturns(
-            array('project_01')
+            ['project_01']
         );
 
         $this->backend->shouldReceive('changeOwnerGroupMode')->once();

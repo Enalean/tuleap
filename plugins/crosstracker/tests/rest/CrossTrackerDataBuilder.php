@@ -39,7 +39,7 @@ class CrossTrackerDataBuilder extends REST_TestDataBuilder
 
         $cross_tracker_saver = new CrossTrackerReportDao();
         $report_id           = $cross_tracker_saver->create();
-        $cross_tracker_saver->addTrackersToReport(array($this->getKanbanTracker()), $report_id);
+        $cross_tracker_saver->addTrackersToReport([$this->getKanbanTracker()], $report_id);
 
         $widget_dao = new DashboardWidgetDao(
             new WidgetFactory(

@@ -73,37 +73,37 @@ class SemanticDoneTest extends TestCase
 
     public function testItExportsTheSemanticInXml(): void
     {
-        $this->semantic_status->shouldReceive('getOpenValues')->andReturns(array(
+        $this->semantic_status->shouldReceive('getOpenValues')->andReturns([
             1,
             2
-        ));
+        ]);
 
         $field = \Mockery::spy(\Tracker_FormElement_Field_List::class)->shouldReceive('getId')->andReturns(101)->getMock();
 
-        $field->shouldReceive('getAllVisibleValues')->andReturns(array(
+        $field->shouldReceive('getAllVisibleValues')->andReturns([
             1 => $this->to_do_value,
             2 => $this->on_going_value,
             3 => $this->done_value
-        ));
+        ]);
 
         $this->semantic_status->shouldReceive('getField')->andReturns($field);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_xml_mapping = array(
+        $array_xml_mapping = [
             'F14' => 101,
-            'values' => array(
+            'values' => [
                 'F14-V66' => 1,
                 'F14-V67' => 2,
                 'F14-V68' => 3,
-            )
-        );
+            ]
+        ];
 
         $semantic_done = new SemanticDone(
             $this->tracker,
             $this->semantic_status,
             $this->dao,
             $this->value_checker,
-            array(3 => $this->done_value)
+            [3 => $this->done_value]
         );
 
         $semantic_done->exportToXML($xml, $array_xml_mapping);
@@ -118,21 +118,21 @@ class SemanticDoneTest extends TestCase
         $this->semantic_status->shouldReceive('getField')->andReturns(null);
 
         $xml               = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
-        $array_xml_mapping = array(
+        $array_xml_mapping = [
             'F14' => 101,
-            'values' => array(
+            'values' => [
                 'F14-V66' => 1,
                 'F14-V67' => 2,
                 'F14-V68' => 3,
-            )
-        );
+            ]
+        ];
 
         $semantic_done = new SemanticDone(
             $this->tracker,
             $this->semantic_status,
             $this->dao,
             $this->value_checker,
-            array()
+            []
         );
 
         $semantic_done->exportToXML($xml, $array_xml_mapping);

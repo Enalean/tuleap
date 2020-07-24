@@ -41,7 +41,7 @@ class NewsItemForWidgetDataMapper
     {
         $rows = $this->dao->fetchAll($project->getID());
 
-        $items = array();
+        $items = [];
         foreach ($rows as $row) {
             $items[] = new NewsItem($row);
         }

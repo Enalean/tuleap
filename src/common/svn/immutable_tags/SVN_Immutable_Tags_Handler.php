@@ -67,7 +67,7 @@ class SVN_Immutable_Tags_Handler
         $content = $this->getImmutableTagsWhitelistForProject($project->getID());
 
         if (! $content) {
-            return array();
+            return [];
         }
 
         return explode(PHP_EOL, $content);

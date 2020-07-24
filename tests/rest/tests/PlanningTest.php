@@ -29,7 +29,7 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
     public function testOptionsPlannings(): void
     {
         $response = $this->getResponse($this->client->options('projects/' . $this->project_private_member_id . '/plannings'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOptionsPlanningsWithRESTReadOnlyUser(): void
@@ -65,11 +65,11 @@ class PlanningTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration
         $release_planning = $plannings[0];
         $this->assertArrayHasKey('id', $release_planning);
         $this->assertEquals($release_planning['label'], "Release Planning");
-        $this->assertEquals($release_planning['project'], array(
+        $this->assertEquals($release_planning['project'], [
             'id'    => $this->project_private_member_id,
             'uri'   => 'projects/' . $this->project_private_member_id,
             'label' => null
-        ));
+        ]);
         $this->assertArrayHasKey('id', $release_planning['milestone_tracker']);
         $this->assertArrayHasKey('uri', $release_planning['milestone_tracker']);
         $this->assertMatchesRegularExpression('%^trackers/[0-9]+$%', $release_planning['milestone_tracker']['uri']);

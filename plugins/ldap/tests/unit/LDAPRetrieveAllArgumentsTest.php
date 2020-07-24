@@ -43,14 +43,14 @@ class LDAPRetrieveAllArgumentsTest extends TestCase
     use MockeryPHPUnitIntegration;
     use ForgeConfigSandbox;
 
-    private $ldap_params = array(
+    private $ldap_params = [
         'dn'          => 'dc=tuleap,dc=local',
         'mail'        => 'mail',
         'cn'          => 'cn',
         'uid'         => 'uid',
         'eduid'       => 'uuid',
         'search_user' => '(|(uid=%words%)(cn=%words%)(mail=%words%))',
-    );
+    ];
 
     private $logger;
 
@@ -69,42 +69,42 @@ class LDAPRetrieveAllArgumentsTest extends TestCase
 
     public function testItSearchesLoginWithAllAttributesExplicitly(): void
     {
-        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'uid=john doe', LDAP::SCOPE_SUBTREE, array('mail', 'cn', 'uid', 'uuid', 'dn'))->once();
+        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'uid=john doe', LDAP::SCOPE_SUBTREE, ['mail', 'cn', 'uid', 'uuid', 'dn'])->once();
 
         $this->ldap->searchLogin('john doe');
     }
 
     public function testItSearchesEduidWithAllAttributesExplicitly(): void
     {
-        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'uuid=edx887', LDAP::SCOPE_SUBTREE, array('mail', 'cn', 'uid', 'uuid', 'dn'))->once();
+        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'uuid=edx887', LDAP::SCOPE_SUBTREE, ['mail', 'cn', 'uid', 'uuid', 'dn'])->once();
 
         $this->ldap->searchEdUid('edx887');
     }
 
     public function testItSearchesDNWiWithAllAttributesExplicitlyByDefault(): void
     {
-        $this->ldap->shouldReceive('search')->with('dn=edx887,dc=tuleap,dc=local', 'objectClass=*', LDAP::SCOPE_BASE, array('mail', 'cn', 'uid', 'uuid', 'dn'))->once();
+        $this->ldap->shouldReceive('search')->with('dn=edx887,dc=tuleap,dc=local', 'objectClass=*', LDAP::SCOPE_BASE, ['mail', 'cn', 'uid', 'uuid', 'dn'])->once();
 
         $this->ldap->searchDn('dn=edx887,dc=tuleap,dc=local');
     }
 
     public function testItSearchesDNWiWithExpectedAttributes(): void
     {
-        $this->ldap->shouldReceive('search')->with('dn=edx887,dc=tuleap,dc=local', 'objectClass=*', LDAP::SCOPE_BASE, array('mail', 'uuid'))->once();
+        $this->ldap->shouldReceive('search')->with('dn=edx887,dc=tuleap,dc=local', 'objectClass=*', LDAP::SCOPE_BASE, ['mail', 'uuid'])->once();
 
-        $this->ldap->searchDn('dn=edx887,dc=tuleap,dc=local', array('mail', 'uuid'));
+        $this->ldap->searchDn('dn=edx887,dc=tuleap,dc=local', ['mail', 'uuid']);
     }
 
     public function testItSearchesCommonNameWithAllAttributesExplicitly(): void
     {
-        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'cn=John Snow', LDAP::SCOPE_SUBTREE, array('mail', 'cn', 'uid', 'uuid', 'dn'))->once();
+        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', 'cn=John Snow', LDAP::SCOPE_SUBTREE, ['mail', 'cn', 'uid', 'uuid', 'dn'])->once();
 
         $this->ldap->searchCommonName('John Snow');
     }
 
     public function testItSearchesUsersWithAllAttributesExplicitly(): void
     {
-        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', '(|(uid=John Snow)(cn=John Snow)(mail=John Snow))', LDAP::SCOPE_SUBTREE, array('mail', 'cn', 'uid', 'uuid', 'dn'))->once();
+        $this->ldap->shouldReceive('search')->with('dc=tuleap,dc=local', '(|(uid=John Snow)(cn=John Snow)(mail=John Snow))', LDAP::SCOPE_SUBTREE, ['mail', 'cn', 'uid', 'uuid', 'dn'])->once();
 
         $this->ldap->searchUser('John Snow');
     }

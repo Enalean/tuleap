@@ -25,26 +25,26 @@ final class Tracker_Report_ResultJoinerTest extends \PHPUnit\Framework\TestCase
 
     public function testItRemovesEntriesWhoseKeysAreNotPresentInOtherResult(): void
     {
-        $matching_ids = array(123 => 'whatever', 456 => 'whatever', 789 => 'whatever');
-        $other_result = array(456 => 'whatever');
+        $matching_ids = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];
+        $other_result = [456 => 'whatever'];
 
         $john = new Tracker_Report_ResultJoiner();
-        $results = $john->joinResults($matching_ids, array($other_result));
+        $results = $john->joinResults($matching_ids, [$other_result]);
 
-        $expected = array(456 => 'whatever');
+        $expected = [456 => 'whatever'];
         $this->assertEquals($expected, $results);
     }
 
     public function testItDoesAnIntersectionWithEveryResults(): void
     {
-        $matching_ids = array(123 => 'whatever', 456 => 'whatever', 789 => 'whatever');
-        $other_result_1 = array(456 => 'whatever', 789 => 'whatever');
-        $other_result_2 = array(456 => 'whatever');
+        $matching_ids = [123 => 'whatever', 456 => 'whatever', 789 => 'whatever'];
+        $other_result_1 = [456 => 'whatever', 789 => 'whatever'];
+        $other_result_2 = [456 => 'whatever'];
 
         $john = new Tracker_Report_ResultJoiner();
-        $results = $john->joinResults($matching_ids, array($other_result_1, $other_result_2));
+        $results = $john->joinResults($matching_ids, [$other_result_1, $other_result_2]);
 
-        $expected = array(456 => 'whatever');
+        $expected = [456 => 'whatever'];
         $this->assertEquals($expected, $results);
     }
 }

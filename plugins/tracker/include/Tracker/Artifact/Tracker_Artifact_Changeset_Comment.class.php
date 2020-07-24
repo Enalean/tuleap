@@ -39,10 +39,10 @@ class Tracker_Artifact_Changeset_Comment
     /**
     * @const Changeset available comment formats
     */
-    private static $available_comment_formats = array(
+    private static $available_comment_formats = [
         self::TEXT_COMMENT,
         self::HTML_COMMENT,
-    );
+    ];
 
     public $id;
     /**
@@ -61,18 +61,18 @@ class Tracker_Artifact_Changeset_Comment
     /**
      * @var array of purifier levels to be used when the comment is displayed in text/plain context
      */
-    public static $PURIFIER_LEVEL_IN_TEXT = array(
+    public static $PURIFIER_LEVEL_IN_TEXT = [
         self::HTML_COMMENT => CODENDI_PURIFIER_STRIP_HTML,
         self::TEXT_COMMENT => CODENDI_PURIFIER_DISABLED,
-    );
+    ];
 
     /**
      * @var array of purifier levels to be used when the comment is displayed in text/html context
      */
-    public static $PURIFIER_LEVEL_IN_HTML = array(
+    public static $PURIFIER_LEVEL_IN_HTML = [
         self::HTML_COMMENT => CODENDI_PURIFIER_FULL,
         self::TEXT_COMMENT => CODENDI_PURIFIER_BASIC,
-    );
+    ];
 
     /**
      * Constructor
@@ -358,7 +358,7 @@ class Tracker_Artifact_Changeset_Comment
     {
         $reference_manager = new ReferenceManager();
         $pattern           = $reference_manager->_getExpForRef();
-        $matches           = array();
+        $matches           = [];
         $escaped_body      = $this->body;
 
         if (preg_match_all($pattern, $this->body, $matches)) {

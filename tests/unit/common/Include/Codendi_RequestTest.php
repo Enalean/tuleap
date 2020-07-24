@@ -34,13 +34,13 @@ class Codendi_RequestTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function testItReturnsTheProject()
     {
-        $request = new Codendi_Request(array('group_id' => '123'), $this->project_manager);
+        $request = new Codendi_Request(['group_id' => '123'], $this->project_manager);
         $this->assertEquals($this->project, $request->getProject());
     }
 
     public function testItReturnsNullIfInvalidRequestedGroupId()
     {
-        $request = new Codendi_Request(array('group_id' => 'stuff'), $this->project_manager);
+        $request = new Codendi_Request(['group_id' => 'stuff'], $this->project_manager);
         $this->assertNull($request->getProject());
     }
 }

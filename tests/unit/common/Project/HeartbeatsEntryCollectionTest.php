@@ -43,7 +43,7 @@ final class HeartbeatsEntryCollectionTest extends TestCase
         $collection->add($entry2);
 
         $this->assertEquals(
-            array($entry1, $entry2, $entry3),
+            [$entry1, $entry2, $entry3],
             $collection->getLatestEntries()
         );
     }

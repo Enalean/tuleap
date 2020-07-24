@@ -159,7 +159,7 @@ This is an automatic message sent by a robot. Please do not reply to this email.
 
             $mail_notification_builder->buildAndSendEmail(
                 $group,
-                array($owner->getEmail()),
+                [$owner->getEmail()],
                 $subj,
                 '',
                 $body,

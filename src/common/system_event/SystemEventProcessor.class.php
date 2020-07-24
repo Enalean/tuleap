@@ -77,10 +77,10 @@ abstract class SystemEventProcessor implements IRunInAMutex
     {
         $types = $this->system_event_manager->getTypesForQueue($queue);
         if (! $types) {
-            return array();
+            return [];
         }
 
-        $executed_events_ids = array();
+        $executed_events_ids = [];
         while (($dar = $this->dao->checkOutNextEvent($owner, $types)) != null) {
             $sysevent = $this->getSystemEventFromDar($dar);
             if ($sysevent) {

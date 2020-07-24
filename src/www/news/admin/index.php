@@ -50,13 +50,13 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
             homepage.
     */
     if ($request->get('post_changes') && $request->get('approve')) {
-        $validIsPrivate = new Valid_WhiteList('is_private', array(0, 1));
+        $validIsPrivate = new Valid_WhiteList('is_private', [0, 1]);
         if ($request->valid($validIsPrivate)) {
             $is_private = $request->get('is_private');
         } else {
             $is_private = 0;
         }
-        $validStatus = new Valid_WhiteList('status', array(0, 4));
+        $validStatus = new Valid_WhiteList('status', [0, 4]);
         if ($request->valid($validStatus)) {
             $status = $request->get('status');
         } else {
@@ -101,8 +101,8 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
         }
     }
 
-    news_header(array('title' => $Language->getText('news_admin_index', 'title'),
-              'help' => 'collaboration.html#news-service'));
+    news_header(['title' => $Language->getText('news_admin_index', 'title'),
+              'help' => 'collaboration.html#news-service']);
 
     echo '<H3>' . $Language->getText('news_admin_index', 'news_admin') . '</H3>';
     echo '<a href="/news/admin/choose_items.php?project_id=' . $group_id . '">' . $Language->getText('news_admin_index', 'choose_display') . '</a>';
@@ -181,7 +181,7 @@ if ($group_id && $group_id != ForgeConfig::get('sys_news_group') && (user_ismemb
             }
         }
     }
-    news_footer(array());
+    news_footer([]);
 } else {
     exit_error($Language->getText('news_admin_index', 'permission_denied'), $Language->getText('news_admin_index', 'need_to_be_admin'));
 }

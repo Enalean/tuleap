@@ -34,7 +34,7 @@ class Dao extends \DataAccessObject
     {
         $content_id = $this->da->escapeInt($content_id);
 
-        $sql_values = array();
+        $sql_values = [];
         foreach ($labels_id as $label_id) {
             $sql_values[] = "($content_id, " . $this->da->escapeInt($label_id) . ")";
         }

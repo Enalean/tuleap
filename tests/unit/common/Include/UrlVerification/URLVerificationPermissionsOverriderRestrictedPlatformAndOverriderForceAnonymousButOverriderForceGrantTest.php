@@ -61,7 +61,7 @@ final class URLVerificationPermissionsOverriderRestrictedPlatformAndOverriderFor
         $this->fixtures = dirname(__FILE__) . '/_fixtures';
         $GLOBALS['Language']->shouldReceive('getContent')->andReturns($this->fixtures . '/empty.txt');
 
-        $this->server = array('SERVER_NAME' => 'example.com');
+        $this->server = ['SERVER_NAME' => 'example.com'];
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::RESTRICTED);
         $this->overrider_manager->shouldReceive('doesOverriderAllowUserToAccessPlatform')->andReturns(true);
         $this->overrider_manager->shouldReceive('doesOverriderForceUsageOfAnonymous')->andReturns(true);

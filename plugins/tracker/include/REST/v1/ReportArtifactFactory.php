@@ -67,7 +67,7 @@ class ReportArtifactFactory
     {
         if (! isset($matching_ids['id']) || ! $matching_ids['id']) {
             return new ArtifactMatchingReportCollection(
-                array(),
+                [],
                 0
             );
         }

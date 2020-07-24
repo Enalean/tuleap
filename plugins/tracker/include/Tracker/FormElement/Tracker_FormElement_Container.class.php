@@ -52,7 +52,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format = 'text', $ignore_perms = false)
     {
-        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
+        return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', [$recipient, $artifact, $format, $ignore_perms]);
     }
 
     /**
@@ -80,7 +80,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
     public function getRankSelectboxDefinition()
     {
         $def = parent::getRankSelectboxDefinition();
-        $def['subitems'] = array();
+        $def['subitems'] = [];
         foreach ($this->getFormElements() as $field) {
             $def['subitems'][] = $field->getRankSelectboxDefinition();
         }
@@ -297,7 +297,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
         return $html;
     }
 
-    protected function fetchMailRecursiveArtifact($format, $method, $params = array())
+    protected function fetchMailRecursiveArtifact($format, $method, $params = [])
     {
         $output = '';
         $content = $this->getContainerContent($method, $params);
@@ -313,9 +313,9 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     protected function getContainerContent($method, $params)
     {
-        $content = array();
+        $content = [];
         foreach ($this->getFormElements() as $formElement) {
-            if ($c = call_user_func_array(array($formElement, $method), $params)) {
+            if ($c = call_user_func_array([$formElement, $method], $params)) {
                 $content[] = $c;
             }
         }
@@ -515,7 +515,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement
 
     public function getRESTContent()
     {
-        $content_structure = array();
+        $content_structure = [];
 
         foreach ($this->getFormElements() as $field) {
             $structure_element_representation = new Tuleap\Tracker\REST\StructureElementRepresentation();

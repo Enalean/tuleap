@@ -51,8 +51,8 @@ class XMLNode
         $this->_name = '';
         $this->_content = '';
         $this->_mt_elem_flg = false;
-        $this->_attr_arr = array();
-        $this->_child_arr = array();
+        $this->_attr_arr = [];
+        $this->_child_arr = [];
         $this->_nmspc = '';
         $this->_nmspc_alias = '';
         $this->_parent_id = false;
@@ -428,7 +428,7 @@ class ASCIIMathPHP
         $this->_curr_expr = $expr;
         $this->_prev_expr = $expr;
 
-        $this->_node_arr = array();
+        $this->_node_arr = [];
         $this->_node_cntr = 0;
     }
 
@@ -460,7 +460,7 @@ class ASCIIMathPHP
     public function parseExpr()
     {
      // Child/Fragment array
-        $node_arr = array();
+        $node_arr = [];
 
      // Deal whole expressions like 'ax + by + c = 0' etc.
         do {
@@ -571,7 +571,7 @@ class ASCIIMathPHP
                         ($node_8_cntnt == '[' && $node_7_cntnt == ']'))
                     ) {
                                 $is_mtrx_flg = true;
-                                $comma_pos_arr = array();
+                                $comma_pos_arr = [];
 
                                 $i = 0;
 
@@ -627,7 +627,7 @@ class ASCIIMathPHP
 
                          // If the node passes the matrix tests
                         if ($is_mtrx_flg) {
-                            $tab_node_arr = array();
+                            $tab_node_arr = [];
 
                             for ($i = 0; $i < $node_cnt; $i += 2) {
                                     $tmp_key_node_arr = array_keys($node_arr);
@@ -639,8 +639,8 @@ class ASCIIMathPHP
 
                                 $tmp_node->removeFirstChild();
 
-                                $row_node_arr = array();
-                                $row_frag_node_arr = array();
+                                $row_node_arr = [];
+                                $row_frag_node_arr = [];
 
                                 for ($j = 1; $j < ($num_child - 1); $j++) {
                                     if (
@@ -652,7 +652,7 @@ class ASCIIMathPHP
                                         $tmp_c_node = $this->createNode();
                                         $tmp_c_node->setName('mtd');
                                         $tmp_c_node->addChildArr($row_frag_node_arr);
-                                        $row_frag_node_arr = array();
+                                        $row_frag_node_arr = [];
 
                                         $row_node_arr[$tmp_c_node->getId()] = $tmp_c_node;
 
@@ -822,7 +822,7 @@ class ASCIIMathPHP
                 // Font change commands -- to complete
             }
         } elseif (isset($sym['binary'])) {
-            $node_arr = array();
+            $node_arr = [];
 
             $node_0 = $this->parseSmplExpr();
             $node_0->removeBrackets();
@@ -927,10 +927,10 @@ class ASCIIMathPHP
             if (is_numeric($sym_0)) {
                 if (! is_numeric($sym_1)) {
                     $chop_flg ? $this->chopExpr($i) : 0;
-                    return(array('input' => $sym_0, 'tag' => 'mn', 'output' => $sym_0, 'symlen' => $i));
+                    return(['input' => $sym_0, 'tag' => 'mn', 'output' => $sym_0, 'symlen' => $i]);
                 } elseif (is_numeric($sym_1) && $i == ($chr_cnt - 1)) {
                     $chop_flg ? $this->chopExpr($i + 1) : 0;
-                    return(array('input' => $sym_1, 'tag' => 'mn', 'output' => $sym_1, 'symlen' => ($i + 1)));
+                    return(['input' => $sym_1, 'tag' => 'mn', 'output' => $sym_1, 'symlen' => ($i + 1)]);
                 }
             } elseif (isset($this->_symbol_arr[$sym_0]) && ! isset($this->_symbol_arr[$sym_1])) {
                 $chop_flg ? $this->chopExpr($i) : 0;
@@ -956,7 +956,7 @@ class ASCIIMathPHP
             return($sym_arr);
         } else {
             $tag = preg_match('/[a-z]/i', $char) ? 'mi' : 'mo';
-            return(array('input' => $char, 'tag' => $tag, 'output' => $char, 'symlen' => 1));
+            return(['input' => $char, 'tag' => $tag, 'output' => $char, 'symlen' => 1]);
         }
     }
 

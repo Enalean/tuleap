@@ -46,10 +46,10 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $request = new HTTPRequest();
         $request->set(
             'column',
-            array(
-                12 => array('label' => 'Todo'),
-                14 => array('label' => '')
-            )
+            [
+                12 => ['label' => 'Todo'],
+                14 => ['label' => '']
+            ]
         );
         $this->field_dao->shouldReceive('deleteCardwall')->never();
         $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 14)->once();
@@ -62,11 +62,11 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $request = new HTTPRequest();
         $request->set(
             'column',
-            array(
-                12 => array('label' => 'Todo'),
-                13 => array('label' => ''),
-                14 => array('label' => '')
-            )
+            [
+                12 => ['label' => 'Todo'],
+                13 => ['label' => ''],
+                14 => ['label' => '']
+            ]
         );
         $this->field_dao->shouldReceive('deleteCardwall')->never();
         $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 13)->once();
@@ -79,7 +79,7 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
     public function testItDeleteFieldMappingWhenRemoveTheLastColumn(): void
     {
         $request = new HTTPRequest();
-        $request->set('column', array(14 => array('label' => '')));
+        $request->set('column', [14 => ['label' => '']]);
         $this->field_dao->shouldReceive('deleteCardwall')->with($this->tracker_id)->once();
         $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 14)->once();
         $this->dao->shouldReceive('delete')->with($this->tracker_id, 14)->once();
@@ -91,10 +91,10 @@ final class Cardwall_OnTop_Config_Command_DeleteColumnsTest extends \PHPUnit\Fra
         $request = new HTTPRequest();
         $request->set(
             'column',
-            array(
-                12 => array('label' => ''),
-                13 => array('label' => ''),
-            )
+            [
+                12 => ['label' => ''],
+                13 => ['label' => ''],
+            ]
         );
         $this->field_dao->shouldReceive('deleteCardwall')->with($this->tracker_id)->once();
         $this->value_dao->shouldReceive('deleteForColumn')->with($this->tracker_id, 12)->once();

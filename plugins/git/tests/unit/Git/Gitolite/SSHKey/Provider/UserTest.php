@@ -37,23 +37,23 @@ class UserTest extends \PHPUnit\Framework\TestCase
 
         $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getUsername')->andReturns('user1');
-        $user1->shouldReceive('getAuthorizedKeysArray')->andReturns(array($key1_user1->getKey(), $key2_user1->getKey()));
+        $user1->shouldReceive('getAuthorizedKeysArray')->andReturns([$key1_user1->getKey(), $key2_user1->getKey()]);
         $user2 = \Mockery::spy(\PFUser::class);
         $user2->shouldReceive('getUsername')->andReturns('user2');
-        $user2->shouldReceive('getAuthorizedKeysArray')->andReturns(array($key1_user2->getKey()));
+        $user2->shouldReceive('getAuthorizedKeysArray')->andReturns([$key1_user2->getKey()]);
         $user_manager       = \Mockery::spy(\UserManager::class);
-        $users_with_ssh_key = new ArrayIterator(array($user1, $user2));
+        $users_with_ssh_key = new ArrayIterator([$user1, $user2]);
         $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
 
         $user_with_ssh_key_provider = new User($user_manager);
-        $expected_result            = array($key1_user1, $key2_user1, $key1_user2);
+        $expected_result            = [$key1_user1, $key2_user1, $key1_user2];
         $this->assertEquals($expected_result, array_values(iterator_to_array($user_with_ssh_key_provider)));
     }
 
     public function testItDoesNotFindSSHKeyIfNoUsersHaveUploadedOne(): void
     {
         $user_manager       = \Mockery::spy(\UserManager::class);
-        $users_with_ssh_key = new ArrayIterator(array());
+        $users_with_ssh_key = new ArrayIterator([]);
         $user_manager->shouldReceive('getUsersWithSshKey')->andReturns($users_with_ssh_key);
 
         $user_with_ssh_key_provider = new User($user_manager);

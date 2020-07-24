@@ -127,12 +127,12 @@ class PlotLine
 
     public function Min()
     {
-        return array(null,null);
+        return [null, null];
     }
 
     public function Max()
     {
-        return array(null,null);
+        return [null, null];
     }
 
     public function _Stroke($aImg, $aMinX, $aMinY, $aMaxX, $aMaxY, $aXPos, $aYPos)

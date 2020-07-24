@@ -29,7 +29,7 @@ final class ArtifactValuesRepresentionTest extends TestCase
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
 
-        $expected_array = array('field_id' => 1);
+        $expected_array = ['field_id' => 1];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
@@ -38,9 +38,9 @@ final class ArtifactValuesRepresentionTest extends TestCase
     {
         $artifact_value_representation           = new ArtifactValuesRepresentation();
         $artifact_value_representation->field_id = 1;
-        $artifact_value_representation->value    = array();
+        $artifact_value_representation->value    = [];
 
-        $expected_array = array('field_id' => 1, 'value' => array());
+        $expected_array = ['field_id' => 1, 'value' => []];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
@@ -51,7 +51,7 @@ final class ArtifactValuesRepresentionTest extends TestCase
         $artifact_value_representation->field_id = 1;
         $artifact_value_representation->value    = '';
 
-        $expected_array = array('field_id' => 1, 'value' => '');
+        $expected_array = ['field_id' => 1, 'value' => ''];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
@@ -62,7 +62,7 @@ final class ArtifactValuesRepresentionTest extends TestCase
         $artifact_value_representation->field_id = 1;
         $artifact_value_representation->value    = '0';
 
-        $expected_array = array('field_id' => 1, 'value' => '0');
+        $expected_array = ['field_id' => 1, 'value' => '0'];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
@@ -73,7 +73,7 @@ final class ArtifactValuesRepresentionTest extends TestCase
         $artifact_value_representation->field_id = 1;
         $artifact_value_representation->value    = 0;
 
-        $expected_array = array('field_id' => 1, 'value' => 0);
+        $expected_array = ['field_id' => 1, 'value' => 0];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }
@@ -84,7 +84,7 @@ final class ArtifactValuesRepresentionTest extends TestCase
         $artifact_value_representation->field_id = 1;
         $artifact_value_representation->value    = 0.0;
 
-        $expected_array = array('field_id' => 1, 'value' => 0.0);
+        $expected_array = ['field_id' => 1, 'value' => 0.0];
 
         $this->assertEquals($expected_array, $artifact_value_representation->toArray());
     }

@@ -42,20 +42,20 @@ class UserDetailsFormatter
 
     public function getUnixStatus(PFUser $user)
     {
-        $labels = array(
+        $labels = [
             'N' => $GLOBALS['Language']->getText('admin_usergroup', 'no_account'),
             'A' => $GLOBALS['Language']->getText('admin_usergroup', 'active'),
             'S' => $GLOBALS['Language']->getText('admin_usergroup', 'suspended'),
             'D' => $GLOBALS['Language']->getText('admin_usergroup', 'deleted')
-        );
+        ];
 
-        $unix_status = array();
+        $unix_status = [];
         foreach ($labels as $key => $status) {
-            $unix_status[] = array(
+            $unix_status[] = [
                 'key'        => $key,
                 'status'     => $status,
                 'is_current' => $user->getUnixStatus() === $key
-            );
+            ];
         }
 
         return $unix_status;
@@ -63,16 +63,16 @@ class UserDetailsFormatter
 
     public function getShells(PFUser $user)
     {
-        $shells        = array();
+        $shells        = [];
         $current_shell = $user->getShell();
         if (! $current_shell) {
             $current_shell = '/sbin/nologin';
         }
         foreach (PFUser::getAllUnixShells() as $shell) {
-            $shells[] = array(
+            $shells[] = [
                 'shell'      => $shell,
                 'is_current' => $current_shell === $shell
-            );
+            ];
         }
 
         return $shells;
@@ -80,19 +80,19 @@ class UserDetailsFormatter
 
     public function getMore(PFUser $user)
     {
-        $links = array(
-            array(
+        $links = [
+            [
                 'href'  => '/users/' . urlencode($user->getUserName()),
                 'label' => $GLOBALS['Language']->getText('admin_usergroup', 'user_public_profile')
-            )
-        );
+            ]
+        ];
 
         EventManager::instance()->processEvent(
             'usergroup_data',
-            array(
+            [
                 'user'  => $user,
                 'links' => &$links
-            )
+            ]
         );
 
         return $links;

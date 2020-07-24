@@ -303,48 +303,48 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
     }
 
 
-    public function visitFolder(Docman_Folder $item, $params = array())
+    public function visitFolder(Docman_Folder $item, $params = [])
     {
         // do nothing
         return '';
     }
 
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         // do nothing
         return '';
     }
 
-    public function visitWiki(Docman_Wiki $item, $params = array())
+    public function visitWiki(Docman_Wiki $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $version = $item->getCurrentVersion();
         if (file_exists($version->getPath())) {
             $em = EventManager::instance();
-            $em->processEvent('plugin_docman_event_access', array(
+            $em->processEvent('plugin_docman_event_access', [
                 'group_id' => $item->getGroupId(),
                 'item'     => $item,
                 'version'  => $version->getNumber(),
                 'user'     => UserManager::instance()->getCurrentUser()
-            ));
+            ]);
             $mime = explode('/', $version->getFiletype());
-            if (in_array($mime[1], array('plain', 'css', 'javascript'))) {
+            if (in_array($mime[1], ['plain', 'css', 'javascript'])) {
                 $balise = 'pre';
             } else {
                 $balise = 'div';
@@ -358,7 +358,7 @@ class Docman_Widget_Embedded extends Widget implements \Tuleap\Docman\Item\ItemV
         return $html;
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

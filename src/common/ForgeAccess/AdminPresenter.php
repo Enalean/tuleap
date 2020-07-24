@@ -130,8 +130,8 @@ class ForgeAccess_AdminPresenter
         if ($ugroup_registered_users != false) {
             $this->ugroup_registered_users = $ugroup_registered_users;
         }
-        $this->ugroup_authenticated_users_placeholder = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_placeholder', array(ForgeConfig::get('sys_org_name')));
-        $this->ugroup_registered_users_placeholder    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_placeholder', array(ForgeConfig::get('sys_org_name')));
+        $this->ugroup_authenticated_users_placeholder = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_placeholder', [ForgeConfig::get('sys_org_name')]);
+        $this->ugroup_registered_users_placeholder    = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_placeholder', [ForgeConfig::get('sys_org_name')]);
 
         $this->ugroup_authenticated_users_label       = $GLOBALS['Language']->getText('admin_main', 'ugroup_authenticated_users_label');
         $this->ugroup_registered_users_label          = $GLOBALS['Language']->getText('admin_main', 'ugroup_registered_users_label');

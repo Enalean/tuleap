@@ -34,14 +34,14 @@ class Docman_View_Embedded extends Docman_View_Display
         if ($version) {
             if (file_exists($version->getPath())) {
                 $event_manager = EventManager::instance();
-                $event_manager->processEvent('plugin_docman_event_access', array(
+                $event_manager->processEvent('plugin_docman_event_access', [
                     'group_id' => $params['group_id'],
                     'item'     => &$params['item'],
                     'version'  => $version->getNumber(),
                     'user'     => &$params['user']
-                ));
+                ]);
                 $mime = explode('/', $version->getFiletype());
-                if (in_array($mime[1], array('plain', 'css', 'javascript'))) {
+                if (in_array($mime[1], ['plain', 'css', 'javascript'])) {
                     $balise = 'pre';
                 } else {
                     $balise = 'div';

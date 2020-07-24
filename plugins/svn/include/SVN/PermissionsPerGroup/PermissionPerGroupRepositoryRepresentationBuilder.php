@@ -39,7 +39,7 @@ class PermissionPerGroupRepositoryRepresentationBuilder
     public function build(Project $project)
     {
         $repositories = $this->repository_manager->getRepositoriesInProject($project);
-        $permissions   = array();
+        $permissions   = [];
         foreach ($repositories as $repository) {
             $permissions[] = new PermissionPerGroupRepositoryRepresentation(
                 $repository->getName(),
@@ -53,11 +53,11 @@ class PermissionPerGroupRepositoryRepresentationBuilder
     private function getRepositoryAdminUrl(Repository $repository)
     {
         return SVN_BASE_URL . '/?' . http_build_query(
-            array(
+            [
                 'group_id' => $repository->getProject()->getID(),
                 'action'   => 'access-control',
                 'repo_id'  => $repository->getId()
-            )
+            ]
         );
     }
 }

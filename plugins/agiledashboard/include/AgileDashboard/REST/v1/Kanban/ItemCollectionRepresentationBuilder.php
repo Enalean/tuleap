@@ -74,7 +74,7 @@ class ItemCollectionRepresentationBuilder
         }
 
         $total_size = (int) $this->kanban_item_dao->foundRows();
-        $collection = array();
+        $collection = [];
         foreach ($data as $row) {
             $artifact = $this->artifact_factory->getInstanceFromRow($row);
             if (! $artifact->userCanView($user)) {

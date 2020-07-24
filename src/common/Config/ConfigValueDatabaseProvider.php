@@ -34,7 +34,7 @@ class ConfigValueDatabaseProvider implements ConfigValueProvider
      */
     public function getVariables()
     {
-        $variables = array();
+        $variables = [];
 
         foreach ($this->dao->searchAll() as $row) {
             $variables[$row['name']] = $row['value'];

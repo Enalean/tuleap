@@ -55,7 +55,7 @@ class NotificationListBuilder
      */
     public function getNotificationsPresenter(array $notifications)
     {
-        $notifications_presenters = array();
+        $notifications_presenters = [];
         foreach ($notifications as $notification) {
             $emails_to_be_notified = $notification->getNotifiedMails();
             $user_presenters   = $this->user_to_be_notified_builder->getCollectionOfUserToBeNotifiedPresenter($notification);
@@ -79,15 +79,15 @@ class NotificationListBuilder
      */
     private function transformUgroupsData(array $ugroups_to_be_notified)
     {
-        $ugroups_to_be_notified_parsed = array();
+        $ugroups_to_be_notified_parsed = [];
         foreach ($ugroups_to_be_notified as $ugroup_presenter) {
             $ugroup_row    = $this->ugroup_dao->searchByUGroupId($ugroup_presenter->ugroup_id)->getRow();
             $ugroup        = new ProjectUGroup($ugroup_row);
-            $ugroup_parsed = array(
+            $ugroup_parsed = [
                 'type' => 'group',
                 'id'   => '_ugroup:' . $ugroup->getNormalizedName(),
                 'text' => $ugroup->getTranslatedName()
-            );
+            ];
             $ugroups_to_be_notified_parsed[] = $ugroup_parsed;
         }
         return $ugroups_to_be_notified_parsed;
@@ -99,7 +99,7 @@ class NotificationListBuilder
      */
     private function transformUsersData(array $users_to_be_notified)
     {
-        $users_to_be_notified_parsed = array();
+        $users_to_be_notified_parsed = [];
         foreach ($users_to_be_notified as $user_presenter) {
             $user_parsed                   = (array) $user_presenter;
             $user_parsed['type']           = 'user';
@@ -116,13 +116,13 @@ class NotificationListBuilder
      */
     private function transformEmailsData(array $emails_to_be_notified)
     {
-        $emails_to_be_notified_parsed = array();
+        $emails_to_be_notified_parsed = [];
         foreach ($emails_to_be_notified as $email) {
-            $email_parsed = array(
+            $email_parsed = [
                 'type' => 'email',
                 'id'   => $email,
                 'text' => $email
-            );
+            ];
             $emails_to_be_notified_parsed[] = $email_parsed;
         }
         return $emails_to_be_notified_parsed;

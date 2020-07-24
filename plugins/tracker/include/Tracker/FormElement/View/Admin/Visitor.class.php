@@ -39,7 +39,7 @@ class Tracker_FormElement_View_Admin_Visitor implements Tracker_FormElement_Visi
      */
     protected $element = null;
 
-    protected $allUsedElements = array();
+    protected $allUsedElements = [];
 
     /**
      * @param Array $allUsedElements

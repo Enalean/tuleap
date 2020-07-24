@@ -154,7 +154,7 @@ class ViewVCProxy
         $location_found = false;
 
         while ($location_line && ! $location_found && strlen($location_line) > 1) {
-            $matches = array();
+            $matches = [];
 
             if (preg_match('/^Location:(.*)$/', $location_line, $matches)) {
                 return $matches[1];

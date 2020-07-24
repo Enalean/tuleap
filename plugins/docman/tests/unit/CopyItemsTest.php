@@ -90,12 +90,12 @@ class CopyItemsTest extends TestCase
         $dstSettingsBo->shouldReceive('getMetadataUsage')->andReturns(true);
         $cloneItemsVisitor->shouldReceive('_getSettingsBo')->with($dstGroupId)->andReturns($dstSettingsBo);
 
-        $cloneItemsVisitor->visitLink($item_to_clone, array(
+        $cloneItemsVisitor->visitLink($item_to_clone, [
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,
             'user'            => \Mockery::spy(\PFUser::class),
-            'metadataMapping' => array(),
-            'ugroupsMapping'  => array(),
-            'data_root'       => '/tmp'));
+            'metadataMapping' => [],
+            'ugroupsMapping'  => [],
+            'data_root'       => '/tmp']);
     }
 }

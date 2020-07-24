@@ -74,10 +74,10 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNodeUser(): void
     {
         $this->setUpUserTests();
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array(
+        $this->changeset_value->shouldReceive('getValue')->andReturns([
             'o14',
             'b112'
-        ));
+        ]);
 
         $this->exporter->export(
             $this->artifact_xml,
@@ -111,7 +111,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNodeUGroup(): void
     {
         $this->setUpUGroupsTest();
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array('o14', 'b112'));
+        $this->changeset_value->shouldReceive('getValue')->andReturns(['o14', 'b112']);
 
         $this->exporter->export(
             $this->artifact_xml,
@@ -145,7 +145,7 @@ final class Tracker_XML_Exporter_ChangesetValue_ChangesetValueOpenListXMLExporte
     public function testItCreatesFieldChangeNodeWithMultipleValuesInChangesetNode(): void
     {
         $this->setUpStaticTest();
-        $this->changeset_value->shouldReceive('getValue')->andReturns(array('o14', 'b112'));
+        $this->changeset_value->shouldReceive('getValue')->andReturns(['o14', 'b112']);
 
         $this->exporter->export(
             $this->artifact_xml,

@@ -40,7 +40,7 @@ class Docman_XMLExportVisitor implements ItemVisitor
         $this->doc = $doc;
 
         $this->fileCounter = 0;
-        $this->userCache = array();
+        $this->userCache = [];
         $this->logger = $logger;
 
         $this->statistics['nb_items']   = 0;

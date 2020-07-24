@@ -57,8 +57,8 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
         $info->shouldReceive('getId')->andReturns(111);
         $field = \Mockery::mock(\Tracker_FormElement_Field_File::class);
 
-        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
+        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
 
         $this->assertFalse($file_1->diff($file_2));
         $this->assertFalse($file_2->diff($file_1));
@@ -73,8 +73,8 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
 
         $field = \Mockery::mock(\Tracker_FormElement_Field_File::class);
 
-        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array());
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info));
+        $file_1 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, []);
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info]);
 
         $this->changeset->shouldReceive('getValue')->andReturns($file_2);
 
@@ -111,9 +111,9 @@ class TrackerArtifactChangesetValueFileTest extends TestCase
             $this->changeset,
             $field,
             false,
-            array($info1, $info3, $info4)
+            [$info1, $info3, $info4]
         );
-        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, array($info1, $info2));
+        $file_2 = new Tracker_Artifact_ChangesetValue_File(111, $this->changeset, $field, false, [$info1, $info2]);
 
         $this->changeset->shouldReceive('getValue')->andReturns($file_2);
 

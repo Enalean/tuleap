@@ -360,7 +360,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             $this->uploaded_links_updater
         );
 
-        $frs_release_mapping = array();
+        $frs_release_mapping = [];
         $frs->import($configuration, $project, $xml_element, $extraction_path, $frs_release_mapping);
 
         $mappings_registery = new MappingsRegistry();
@@ -369,7 +369,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->logger->info("Ask to plugin to import data from XML");
         $this->event_manager->processEvent(
             Event::IMPORT_XML_PROJECT,
-            array(
+            [
                 'logger'              => $this->logger,
                 'project'             => $project,
                 'xml_content'         => $xml_element,
@@ -377,7 +377,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
                 'user_finder'         => $this->user_finder,
                 'mappings_registery'  => $mappings_registery,
                 'configuration'       => $configuration,
-            )
+            ]
         );
 
         $this->importDashboards($xml_element, $user_creator, $project, $mappings_registery);
@@ -395,13 +395,13 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
         $this->logger->info("Ask plugins to check if errors might be raised from importing the XML");
         $this->event_manager->processEvent(
             Event::COLLECT_ERRORS_WITHOUT_IMPORTING_XML_PROJECT,
-            array(
+            [
                 'logger'      => $this->logger,
                 'project'     => $project,
                 'xml_content' => $xml_element,
                 'user_finder' => $this->user_finder,
                 'errors'      => &$errors
-            )
+            ]
         );
         return $errors;
     }
@@ -491,8 +491,8 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      */
     private function getUgroupsFromXMLToAdd(Project $project, SimpleXMLElement $xml_element_ugroups)
     {
-        $ugroups = array();
-        $project_members = array();
+        $ugroups = [];
+        $project_members = [];
 
         $rng_path = realpath(dirname(__FILE__) . '/../xml/resources/ugroups.rng');
         $this->xml_validator->validate($xml_element_ugroups, $rng_path);
@@ -519,7 +519,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
             }
         }
 
-        return array($ugroups, $project_members);
+        return [$ugroups, $project_members];
     }
 
     /**
@@ -528,7 +528,7 @@ class ProjectXMLImporter //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNam
      */
     private function getListOfUgroupMember(SimpleXMLElement $ugroup)
     {
-        $ugroup_members = array();
+        $ugroup_members = [];
 
         foreach ($ugroup->members->member as $xml_member) {
             $ugroup_members[] = $this->user_finder->getUser($xml_member);

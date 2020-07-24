@@ -150,12 +150,12 @@ class ProjectBacklogResource
         }
 
         if ($limit == 0) {
-            $backlog_items = array();
+            $backlog_items = [];
         } else {
             $backlog_items = $this->getBacklogItems($user, $top_milestone);
         }
 
-        $backlog_item_representations        = array();
+        $backlog_item_representations        = [];
         $backlog_item_representation_factory = new BacklogItemRepresentationFactory();
 
         foreach ($backlog_items as $backlog_item) {
@@ -213,7 +213,7 @@ class ProjectBacklogResource
         try {
             $top_milestone = $this->milestone_factory->getVirtualTopMilestone($user, $project);
         } catch (\Planning_NoPlanningsException $e) {
-            return array();
+            return [];
         }
 
         return $top_milestone->getPlanning()->getBacklogTrackers();

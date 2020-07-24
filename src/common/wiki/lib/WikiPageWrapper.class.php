@@ -79,7 +79,7 @@ class WikiPageWrapper
         $pagehandle = $dbi->getPage($page);
 
         $links = $pagehandle->getPageLinks(true);
-        $allPages = array();
+        $allPages = [];
         while ($link_handle = $links->next()) {
             if (! $dbi->isWikiPage($linkname = $link_handle->getName())) {
                 $allPages[] = $link_handle->getName();
@@ -110,7 +110,7 @@ class WikiPageWrapper
             $text = $GLOBALS['Language']->getText(
                 'wiki_lib_wikipagewrap',
                 'new_page_text',
-                array($projectPageName)
+                [$projectPageName]
             );
         }
 
@@ -121,12 +121,12 @@ class WikiPageWrapper
             $user          = $user_manager->getCurrentUser();
             $event_manager->processEvent(
                 "wiki_page_created",
-                array(
+                [
                 'group_id'         => $this->gid,
                 'wiki_page'        => $pagename,
                 'user'             => $user,
                 'version'          => $version
-                )
+                ]
             );
         }
 
@@ -134,7 +134,7 @@ class WikiPageWrapper
         $meta['summary'] =  $GLOBALS['Language']->getText(
             'wiki_lib_wikipagewrap',
             'page_added',
-            array($pagename)
+            [$pagename]
         );
         $meta['author'] = user_getname();
         $pagehandle->save($text, $version + 1, $meta);

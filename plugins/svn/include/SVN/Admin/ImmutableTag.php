@@ -63,7 +63,7 @@ class ImmutableTag
     private function convertToArray($path)
     {
         if (! $path) {
-            return array();
+            return [];
         }
 
         return explode(PHP_EOL, $path);

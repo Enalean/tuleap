@@ -37,7 +37,7 @@ class PaginatedSystemEventRepresentationsBuilder
      */
     public function getAllMatchingEvents($status, $limit, $offset)
     {
-        $event_representations = array();
+        $event_representations = [];
         $event_rows            = $this->dao->searchAllMatchingEvents($status, $limit, $offset);
         $total_rows            = (int) $this->dao->foundRows();
 

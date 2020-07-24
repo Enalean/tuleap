@@ -32,7 +32,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     private $permission_manager;
 
     /** @var array */
-    private $authorized_ugroups_keyname = array();
+    private $authorized_ugroups_keyname = [];
 
     public function __construct(Transition $transition)
     {

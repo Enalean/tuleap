@@ -113,7 +113,7 @@ class ProjectCrossTrackerSearch extends Widget
         $tracker_factory = $this->getTrackerFactory();
 
         $trackers_existing_widget = $this->getTrackers($id);
-        $trackers_new_widget      = array();
+        $trackers_new_widget      = [];
 
         foreach ($trackers_existing_widget as $tracker) {
             if ($this->owner_id == $tracker->getGroupId()) {
@@ -138,7 +138,7 @@ class ProjectCrossTrackerSearch extends Widget
     {
         $tracker_factory = $this->getTrackerFactory();
         $tracker_rows    = $this->getDao()->searchReportTrackersById($report_id);
-        $trackers        = array();
+        $trackers        = [];
         foreach ($tracker_rows as $row) {
             $tracker = $tracker_factory->getTrackerById($row['tracker_id']);
             if ($tracker !== null) {

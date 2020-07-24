@@ -109,19 +109,19 @@ class Controller
             ]
         );
         $renderer->renderToPage('linker', $presenter);
-        $GLOBALS['HTML']->footer(array('without_content' => true));
+        $GLOBALS['HTML']->footer(['without_content' => true]);
     }
 
     private function generateLinkToRegisterPage(HTTPRequest $request)
     {
-        $openid_connect_to_register_page = array(
+        $openid_connect_to_register_page = [
             'name'     => 'form_realname',
             'nickname' => 'form_loginname',
             'email'    => 'form_email',
             'zoneinfo' => 'timezone'
-        );
+        ];
 
-        $query_parameters = array();
+        $query_parameters = [];
         foreach ($openid_connect_to_register_page as $openid_connect_param => $register_page_param) {
             if ($request->existAndNonEmpty($openid_connect_param)) {
                 $query_parameters[$register_page_param] = $request->get($openid_connect_param);

@@ -149,19 +149,19 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
         $value_03 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(403)->getMock();
         $value_04 = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class)->shouldReceive('getId')->andReturns(404)->getMock();
 
-        $this->mapping = array(
+        $this->mapping = [
             "T101" => 444,
             "T102" => 555,
             "T103" => 666
-        );
+        ];
 
-        $this->field_mapping = array(
+        $this->field_mapping = [
             "F1" => $field,
             "V1" => $value_01,
             "V2" => $value_02,
             "V3" => $value_03,
             "V4" => $value_04
-        );
+        ];
 
         $this->cardwall_ontop_dao         = \Mockery::spy(\Cardwall_OnTop_Dao::class);
         $this->column_dao                 = \Mockery::spy(\Cardwall_OnTop_ColumnDao::class);
@@ -271,13 +271,13 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
     {
         $this->event_manager->shouldReceive('processEvent')->with(
             Event::IMPORT_XML_PROJECT_CARDWALL_DONE,
-            array(
+            [
                 'project_id'          => $this->group_id,
                 'xml_content'         => $this->default_xml_input,
                 'mapping'             => $this->mapping,
                 'logger'              => $this->logger,
                 'artifact_id_mapping' => $this->artifact_id_mapping
-            )
+            ]
         );
 
         $this->cardwall_ontop_dao->shouldReceive('enable')->times(2)->andReturn(true);
@@ -312,7 +312,7 @@ final class CardwallConfigXmlImportTest extends \PHPUnit\Framework\TestCase
     public function testItThrowsAnExceptionIfXmlDoesNotMatchRNG(): void
     {
         $xml_validator  = \Mockery::spy(\XML_RNGValidator::class);
-        $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', array(), array()));
+        $xml_validator->shouldReceive('validate')->andThrows(new XML_ParseException('', [], []));
 
         $cardwall_config_xml_import = new CardwallConfigXmlImport(
             $this->group_id,

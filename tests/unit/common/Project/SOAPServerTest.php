@@ -186,7 +186,7 @@ class SOAPServerTest extends TestCase
         $this->um->shouldReceive('getCurrentUser')->with('789')->andReturns($another_user);
 
         $template = Mockery::mock(Project::class);
-        $template->shouldReceive('getServices')->andReturns(array());
+        $template->shouldReceive('getServices')->andReturns([]);
         $template->shouldReceive('isTemplate')->andReturns(true);
         $template->shouldReceive('isError')->andReturnFalse();
         $template->shouldReceive('isActive')->andReturnTrue();

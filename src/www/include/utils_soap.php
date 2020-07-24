@@ -23,7 +23,7 @@ require_once('user.php');
 
 function groups_to_soap($groups)
 {
-    $return = array();
+    $return = [];
     foreach ($groups as $group_id => $group) {
         if (! $group || $group->isError()) {
             //skip if error
@@ -82,19 +82,19 @@ function checkGroupMemberAccess($group)
 
 function ugroups_to_soap($ugroups)
 {
-    $return = array();
+    $return = [];
 
     foreach ($ugroups as $ugroup) {
         $ugroup_id = $ugroup['ugroup_id'];
         if (! isset($return[$ugroup_id])) {
             $return[$ugroup_id]['ugroup_id'] = $ugroup_id;
             $return[$ugroup_id]['name'] = $ugroup['name'];
-            $return[$ugroup_id]['members'] = array();
+            $return[$ugroup_id]['members'] = [];
         }
 
         if ($ugroup['user_id']) {
-            $return[$ugroup_id]['members'][] = array('user_id' => $ugroup['user_id'],
-                                                     'user_name' => $ugroup['user_name']);
+            $return[$ugroup_id]['members'][] = ['user_id' => $ugroup['user_id'],
+                                                     'user_name' => $ugroup['user_name']];
         }
     }
 
@@ -114,14 +114,14 @@ function user_to_soap($identifier, ?PFUser $user = null, PFUser $current_user)
 {
     if ($user !== null && ($user->isActive() || $user->isRestricted() || $user->isSuspended())) {
         if ($current_user->canSee($user)) {
-            return array(
+            return [
                 'identifier' => $identifier,
                 'username'   => $user->getUserName(),
                 'id'         => $user->getId(),
                 'real_name'  => $user->getRealName(),
                 'email'      => $user->getEmail(),
                 'ldap_id'    => $user->getLdapId()
-            );
+            ];
         }
     }
 }

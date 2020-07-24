@@ -84,7 +84,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $is_used     = 1;
         $is_legacy   = 0;
         $is_advanced = 1;
-        $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
+        $transitions = [$this->transition_null_to_open, $this->transition_open_to_close];
         $this->workflow = Mockery::mock(
             Workflow::class . '[getTracker]',
             [
@@ -152,7 +152,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     public function testEmptyWorkflow(): void
     {
         $workflow = \Mockery::mock(\Workflow::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $workflow->shouldReceive('getTransitions')->andReturns(array());
+        $workflow->shouldReceive('getTransitions')->andReturns([]);
         $this->assertNotNull($workflow->getTransitions());
         $this->assertEquals(count($workflow->getTransitions()), 0);
 
@@ -181,12 +181,12 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $t_fixed_tested      = new Transition(1, 2, $field_value_fixed, $field_value_tested);
         $t_tested_deployed   = new Transition(1, 2, $field_value_tested, $field_value_deployed);
 
-        $transitions = array($t_new_analyzed,
+        $transitions = [$t_new_analyzed,
             $t_analyzed_accepted,
             $t_analyzed_rejected,
             $t_accepted_fixed,
             $t_fixed_tested,
-            $t_tested_deployed);
+            $t_tested_deployed];
 
         $workflow = new Workflow(
             Mockery::spy(Tracker_RulesManager::class),
@@ -249,8 +249,8 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $t3->shouldReceive('getFieldValueTo')->andReturns($ft3);
         $t3->shouldReceive('getTransitionId')->andReturns(3);
 
-        $transitions = array($t1, $t2, $t3);
-        $ugroups_transition = array('ugroup' => 'UGROUP_PROJECT_MEMBERS');
+        $transitions = [$t1, $t2, $t3];
+        $ugroups_transition = ['ugroup' => 'UGROUP_PROJECT_MEMBERS'];
 
         $global_rules_manager  = \Mockery::spy(\Tracker_RulesManager::class);
         $trigger_rules_manager = \Mockery::spy(\Tracker_Workflow_Trigger_RulesManager::class);
@@ -267,11 +267,11 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $xml = simplexml_load_string(file_get_contents(__DIR__ . '/_fixtures/importWorkflow.xml'));
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker />');
 
-        $array_xml_mapping = array('F32' => 103,
-                                   'values' => array(
+        $array_xml_mapping = ['F32' => 103,
+                                   'values' => [
                                        'F32-V0' => 806,
-                                       'F32-V1' => 807)
-                                   );
+                                       'F32-V1' => 807]
+                                   ];
         $workflow->exportToXML($root, $array_xml_mapping);
 
         $this->assertEquals((string) $xml->field_id['REF'], (string) $root->field_id['REF']);
@@ -283,7 +283,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     {
         $workflow = \Mockery::mock(\Workflow::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $workflow->shouldReceive('getTransitions')->never();
-        $field_value = array();
+        $field_value = [];
         $this->assertTrue($workflow->isTransitionExist($field_value, $field_value));
     }
 
@@ -311,16 +311,16 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     public function testBeforeShouldTriggerTransitionActions(): void
     {
         $changeset_value_list = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
-        $changeset_value_list->shouldReceive('getValue')->andReturns(array($this->open_value_id));
+        $changeset_value_list->shouldReceive('getValue')->andReturns([$this->open_value_id]);
 
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $changeset->shouldReceive('getValue')->with($this->status_field)->andReturns($changeset_value_list);
 
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->close_value_id",
-        );
+        ];
         $this->transition_null_to_open->shouldReceive('before')->never();
         $this->transition_open_to_close->shouldReceive('before')->with($fields_data, $this->current_user)->once();
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
@@ -331,9 +331,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset_Null::class);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
         $this->transition_null_to_open->shouldReceive('before')->with($fields_data, $this->current_user)->once();
         $this->transition_open_to_close->shouldReceive('before')->never();
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
@@ -344,9 +344,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset_Null::class);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
 
         $this->transition_null_to_open->shouldReceive('before')->never();
         $this->transition_open_to_close->shouldReceive('before')->never();
@@ -360,9 +360,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $changeset = \Mockery::spy(\Tracker_Artifact_Changeset_Null::class);
         $this->artifact->shouldReceive('getLastChangeset')->andReturns($changeset);
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
 
         $this->transition_null_to_open->shouldReceive('before')->once();
         $this->event_manager->shouldReceive('processEvent')->once();
@@ -373,7 +373,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
     public function testAfterShouldTriggerTransitionActions(): void
     {
         $changeset_value_list = \Mockery::spy(\Tracker_Artifact_ChangesetValue_List::class);
-        $changeset_value_list->shouldReceive('getValue')->andReturns(array($this->open_value_id));
+        $changeset_value_list->shouldReceive('getValue')->andReturns([$this->open_value_id]);
 
         $previous_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $previous_changeset->shouldReceive('getValue')->with($this->status_field)->andReturns($changeset_value_list);
@@ -381,9 +381,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $new_changeset = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->close_value_id",
-        );
+        ];
         $this->transition_null_to_open->shouldReceive('after')->never();
         $this->transition_open_to_close->shouldReceive('after')->with($new_changeset)->once();
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
@@ -395,9 +395,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
         $this->transition_null_to_open->shouldReceive('after')->with($new_changeset)->once();
         $this->transition_open_to_close->shouldReceive('after')->never();
         $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
@@ -408,7 +408,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $previous_changeset = null;
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
-        $fields_data        = array();
+        $fields_data        = [];
 
         $this->trigger_rules_manager->shouldReceive('processTriggers')->with($new_changeset)->once();
 
@@ -421,9 +421,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
 
         $this->transition_null_to_open->shouldReceive('after')->never();
         $this->transition_open_to_close->shouldReceive('after')->never();
@@ -439,9 +439,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
         $new_changeset      = \Mockery::spy(\Tracker_Artifact_Changeset::class);
         $new_changeset->shouldReceive('getArtifact')->andReturns(\Mockery::spy(\Tracker_Artifact::class));
 
-        $fields_data = array(
+        $fields_data = [
             '103' => "$this->open_value_id",
-        );
+        ];
 
         $this->transition_null_to_open->shouldReceive('after')->once();
         $this->trigger_rules_manager->shouldReceive('processTriggers')->once();
@@ -451,7 +451,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItRaisesNoExceptionIfWorkflowIsNotEnabled(): void
     {
-        $fields_data = array();
+        $fields_data = [];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
 
         $this->unused_workflow->validate($fields_data, $artifact, '');
@@ -476,9 +476,9 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
             $is_used,
             false,
             false,
-            array($transition)
+            [$transition]
         );
-        $fields_data = array($field_id => 66);
+        $fields_data = [$field_id => 66];
         $artifact    = \Mockery::spy(\Tracker_Artifact::class);
 
         $transition->shouldReceive('validate')->once()->andReturns(false);
@@ -489,7 +489,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItDelegatesValidationToRulesManager(): void
     {
-        $fields_data = array();
+        $fields_data = [];
 
         $rules_manager = \Mockery::spy(\Tracker_RulesManager::class);
         $rules_manager->shouldReceive('validate')->with(123, $fields_data)->once()->andReturns(true);
@@ -504,7 +504,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
             true,
             false,
             false,
-            array()
+            []
         );
 
         $workflow->checkGlobalRules($fields_data);
@@ -512,7 +512,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItIsNotValidWhenTheWorkflowIsEnabled(): void
     {
-        $fields_data = array(42 => 66);
+        $fields_data = [42 => 66];
 
         $transition  = \Mockery::spy(\Transition::class);
         $transition->shouldReceive('getFieldValueFrom')->andReturns(null);
@@ -528,7 +528,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
             true,
             false,
             false,
-            array($transition)
+            [$transition]
         );
 
         $this->expectExceptionObject(new Tracker_Workflow_Transition_InvalidConditionForTransitionException($transition));
@@ -551,11 +551,11 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
             true,
             false,
             false,
-            array($transition)
+            [$transition]
         );
         $workflow->disable();
 
-        $fields_data = array(42 => 66);
+        $fields_data = [42 => 66];
 
         $transition->shouldReceive('validate')->never();
 
@@ -564,7 +564,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
 
     public function testItDisablesTheGlobalRulesValidation(): void
     {
-        $fields_data = array();
+        $fields_data = [];
 
         $rules_manager = \Mockery::spy(\Tracker_RulesManager::class);
         $rules_manager->shouldReceive('validate')->andReturns(false);
@@ -578,7 +578,7 @@ final class WorkflowTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR
             true,
             false,
             false,
-            array()
+            []
         );
 
         $workflow->disable();

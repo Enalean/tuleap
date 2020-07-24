@@ -53,35 +53,35 @@ class MediawikiGroupPresenter
 
     public function available_groups()
     {
-        $selector = array(
+        $selector = [
             'name'     => 'available_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_available_groups',
-            'options'  => array()
-        );
+            'options'  => []
+        ];
         foreach ($this->available_ugroups as $ugroup) {
-            $selector['options'][] = array(
+            $selector['options'][] = [
                 'value'    => $ugroup->getId(),
                 'label'    => $ugroup->getTranslatedName(),
                 'selected' => false,
-            );
+            ];
         }
         return $selector;
     }
 
     public function selected_groups()
     {
-        $selector = array(
+        $selector = [
             'name'     => 'selected_' . $this->mediawiki_group_id . '[]',
             'class'    => 'forge_mw_selected_groups',
-            'options'  => array()
-        );
+            'options'  => []
+        ];
 
         foreach ($this->current_mapping as $ugroup) {
-            $selector['options'][] = array(
+            $selector['options'][] = [
                 'value'    => $ugroup->getId(),
                 'label'    => $ugroup->getTranslatedName(),
                 'selected' => false,
-            );
+            ];
         }
 
         return $selector;
@@ -94,7 +94,7 @@ class MediawikiGroupPresenter
 
     public function hidden_selected_groups_value()
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->current_mapping as $ugroup) {
             $ids[] = $ugroup->getId();
         }

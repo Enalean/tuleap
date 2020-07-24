@@ -63,12 +63,12 @@ class TimelineEventRepresentation
 
     private function expandType($type_acronym)
     {
-        $status_name = array(
+        $status_name = [
             TimelineGlobalEvent::UPDATE  => self::UPDATE,
             TimelineGlobalEvent::REBASE  => self::REBASE,
             TimelineGlobalEvent::MERGE   => self::MERGE,
             TimelineGlobalEvent::ABANDON => self::ABANDON,
-        );
+        ];
 
         return $status_name[$type_acronym];
     }

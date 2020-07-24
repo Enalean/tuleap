@@ -151,7 +151,7 @@ class Git_Gitolite_ProjectSerializer
 
     public function repoFullName(GitRepository $repo, $unix_name)
     {
-        return PathJoinUtil::unixPathJoin(array($unix_name, $repo->getFullName()));
+        return PathJoinUtil::unixPathJoin([$unix_name, $repo->getFullName()]);
     }
 
     /**

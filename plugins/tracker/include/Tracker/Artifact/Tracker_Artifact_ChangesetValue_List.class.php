@@ -185,7 +185,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function getValue()
     {
         $values = $this->getListValues();
-        $array = array();
+        $array = [];
         foreach ($values as $value) {
             $array[] = $value->getId();
         }
@@ -201,7 +201,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function getJsonValue()
     {
         $values = $this->getListValues();
-        $returned_values = array();
+        $returned_values = [];
         foreach ($values as $value) {
             $json_value = $value->getJsonValue();
             if ($json_value) {
@@ -228,8 +228,8 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
             $this->field->getId(),
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
-            array_values(array_map(array($this, 'getFullRESTBindValue'), $this->getListValues())),
-            array_values(array_map(array($this, 'getRESTBindValue'), $this->getListValues()))
+            array_values(array_map([$this, 'getFullRESTBindValue'], $this->getListValues())),
+            array_values(array_map([$this, 'getRESTBindValue'], $this->getListValues()))
         );
         return $artifact_field_value_list_representation;
     }
@@ -262,7 +262,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     private function getAdded(array $previous, array $next, $format)
     {
         $added_elements = array_diff($next, $previous);
-        $added_arr = array();
+        $added_arr = [];
         foreach ($added_elements as $added_element) {
             /** @var Tracker_FormElement_Field_List_Value $added_element */
             $added_arr[] = $added_element->getLabel();
@@ -274,7 +274,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     private function getRemoved(array $previous, array $next, $format)
     {
         $removed_elements = array_diff($previous, $next);
-        $removed_arr = array();
+        $removed_arr = [];
         foreach ($removed_elements as $removed_element) {
             /** @var Tracker_FormElement_Field_List_Value $removed_element */
             $removed_arr[] = $removed_element->getLabel();
@@ -324,7 +324,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
     public function nodiff($format = 'html')
     {
         $next = $this->getListValues();
-        $added_arr = array();
+        $added_arr = [];
         foreach ($next as $element) {
                 $added_arr[] = $element->getLabel();
         }

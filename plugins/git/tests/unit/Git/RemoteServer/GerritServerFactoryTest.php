@@ -58,7 +58,7 @@ class GerritServerFactoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->dar_1 = array(
+        $this->dar_1 = [
             'id'                   => $this->server_id,
             'host'                 => $this->host,
             'ssh_port'             => $this->ssh_port,
@@ -70,8 +70,8 @@ class GerritServerFactoryTest extends TestCase
             'gerrit_version'       => $this->gerrit_version,
             'http_password'        => $this->http_password,
             'replication_password' => '',
-        );
-        $this->dar_2 = array(
+        ];
+        $this->dar_2 = [
             'id'                => $this->alternate_server_id,
             'host'              => $this->alternate_host,
             'ssh_port'          => $this->ssh_port,
@@ -83,7 +83,7 @@ class GerritServerFactoryTest extends TestCase
             'gerrit_version'    => $this->alternate_gerrit_version,
             'http_password'     => $this->http_password,
             'replication_password' => '',
-        );
+        ];
 
         $git_dao   = Mockery::mock(GitDao::class);
         $this->dao = \Mockery::spy(Git_RemoteServer_Dao::class);
@@ -164,7 +164,7 @@ class GerritServerFactoryTest extends TestCase
 
     public function testItGetsAllServersForAGivenProject(): void
     {
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
         $project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(458)->getMock();
         $this->dao->shouldReceive('searchAllByProjectId')->with(458)->andReturn([$this->dar_1])->once();
         $servers = $this->factory->getServersForProject($project);
@@ -177,8 +177,8 @@ class GerritServerFactoryTest extends TestCase
         $child1      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
         $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child1, $child2));
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);
         $this->dao->shouldReceive('searchAllByProjectId')->with(934)->andReturns([$this->dar_2]);
@@ -199,9 +199,9 @@ class GerritServerFactoryTest extends TestCase
         $child2      = \Mockery::spy(\Project::class, ['getID' => 934, 'getUnixName' => false, 'isPublic' => false]);
         $grandchild  = \Mockery::spy(\Project::class, ['getID' => 96, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child1, $child2));
-        $this->project_manager->shouldReceive('getChildProjects')->with(933)->andReturns(array($grandchild));
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child1, $child2]);
+        $this->project_manager->shouldReceive('getChildProjects')->with(933)->andReturns([$grandchild]);
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->dao->shouldReceive('searchAllByProjectId')->andReturn([])->times(4);
 
@@ -213,8 +213,8 @@ class GerritServerFactoryTest extends TestCase
         $parent     = \Mockery::spy(\Project::class, ['getID' => 369, 'getUnixName' => false, 'isPublic' => false]);
         $child      = \Mockery::spy(\Project::class, ['getID' => 933, 'getUnixName' => false, 'isPublic' => false]);
 
-        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns(array($child));
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->with(369)->andReturns([$child]);
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->dao->shouldReceive('searchAllByProjectId')->with(369)->andReturns([$this->dar_1]);
         $this->dao->shouldReceive('searchAllByProjectId')->with(933)->andReturns([$this->dar_1]);

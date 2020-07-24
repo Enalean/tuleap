@@ -45,7 +45,7 @@ class Docman_Widget_MyDocmanSearch extends Widget
         $um = UserManager::instance();
         $user = $um->getCurrentUser();
 
-        $vFunc = new Valid_WhiteList('docman_func', array('show_docman'));
+        $vFunc = new Valid_WhiteList('docman_func', ['show_docman']);
         $vFunc->required();
         if ($request->valid($vFunc)) {
             $func = $request->get('docman_func');

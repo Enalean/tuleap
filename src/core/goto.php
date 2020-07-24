@@ -63,9 +63,9 @@ if ($keyword === 'wiki') {
     //If wiki page does not exist, we check if there is a version number in the
     //wiki page name to handle 'toto/titi/1' (1 is the version number)
     if ($wiki->retrieveWikiPageId($value, $group_id) != null) {
-        $args = array($value);
+        $args = [$value];
     } elseif (preg_match('%^(.*)/(\d+)$%', $value, $matches)) {
-        $args = array($matches[1], $matches[2]);
+        $args = [$matches[1], $matches[2]];
     }
 }
 
@@ -77,14 +77,14 @@ $ref = null;
 $event_manager = EventManager::instance();
 $event_manager->processEvent(
     Event::GET_REFERENCE,
-    array(
+    [
         'reference_manager' => $reference_manager,
         'project'           => $project,
         'keyword'           => $keyword,
         'value'             => $value,
         'group_id'          => $group_id,
         'reference'         => &$ref,
-    )
+    ]
 );
 if ($ref === null) {
     if ($keyword == ReferenceManager::KEYWORD_ARTIFACT_LONG || $keyword == ReferenceManager::KEYWORD_ARTIFACT_SHORT) {
@@ -92,10 +92,10 @@ if ($ref === null) {
 
         $event_manager->processEvent(
             Event::SET_ARTIFACT_REFERENCE_GROUP_ID,
-            array(
+            [
                 'artifact_id' => $value,
                 'reference'   => &$ref
-            )
+            ]
         );
     } else {
         $ref = $reference_manager->loadReferenceFromKeywordAndNumArgs($keyword, $group_id, count($args), $request->get('val'));
@@ -146,8 +146,8 @@ if ($request->isAjax()) {
                     $ah = new ArtifactHtml($at, $aid);
                     $uh = new UserHelper();
 
-                    $values = array();
-                    foreach (array('summary', 'submitted_by', 'status_id') as $field_name) {
+                    $values = [];
+                    foreach (['summary', 'submitted_by', 'status_id'] as $field_name) {
                         $field = $art_field_fact->getFieldFromName($field_name);
                         if ($field->userCanRead($group_id, $atid)) {
                             if ($field->isMultiSelectBox()) {
@@ -209,7 +209,7 @@ if ($request->isAjax()) {
             $commit_id = $request->get('val');
             $result =  cvs_get_revision_detail($commit_id);
             if (db_numrows($result) < 1) {
-                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', array($commit_id));
+                echo $GLOBALS['Language']->getText('cvs_detail_commit', 'error_notfound', [$commit_id]);
             } else {
                 $date = uniformat_date($GLOBALS['Language']->getText('system', 'datefmt'), db_result($result, 0, 'c_when'));
                 $list_log = util_line_wrap(db_result($result, 0, 'description'), $group_id);

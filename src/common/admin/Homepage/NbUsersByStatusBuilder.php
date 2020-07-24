@@ -62,7 +62,7 @@ class NbUsersByStatusBuilder
      */
     private function getNbUsersByStatus()
     {
-        $count = array();
+        $count = [];
         $dar   = $this->dao->getNbOfUsersByStatus();
         foreach ($dar as $row) {
             $count[$row['status']] = $row['nb'];

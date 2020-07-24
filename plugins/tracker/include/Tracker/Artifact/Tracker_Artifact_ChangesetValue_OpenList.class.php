@@ -43,7 +43,7 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
     public function getValue()
     {
         $values = $this->getListValues();
-        $array = array();
+        $array = [];
         foreach ($values as $value) {
             $array[] = $value->getJsonId();
         }
@@ -57,8 +57,8 @@ class Tracker_Artifact_ChangesetValue_OpenList extends Tracker_Artifact_Changese
 
     public function getFullRESTValue(PFUser $user)
     {
-        $full_values = array();
-        $labels      = array();
+        $full_values = [];
+        $labels      = [];
         foreach ($this->getListValues() as $list_value) {
             $full_values[] = $this->getFullRESTBindValue($list_value);
             $labels[]      = $this->getLabel($list_value);

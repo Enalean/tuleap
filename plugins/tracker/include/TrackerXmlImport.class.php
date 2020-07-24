@@ -91,7 +91,7 @@ class TrackerXmlImport
     /** @var Tracker_Workflow_Trigger_RulesManager */
     private $trigger_rulesmanager;
 
-    private $xml_fields_mapping = array();
+    private $xml_fields_mapping = [];
 
     /**
      * @var array
@@ -247,7 +247,7 @@ class TrackerXmlImport
      */
     protected function getAllXmlTrackers(SimpleXMLElement $xml_input)
     {
-        $tracker_list = array();
+        $tracker_list = [];
         foreach ($xml_input->trackers->tracker as $xml_tracker) {
             $tracker_list[$this->getXmlTrackerAttribute($xml_tracker, 'id')] = $xml_tracker;
         }
@@ -314,7 +314,7 @@ class TrackerXmlImport
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             $tracker_created = $this->instantiateTrackerFromXml($project, $xml_tracker, $configuration);
             $created_trackers_objects[$xml_tracker_id] = $tracker_created;
-            $created_trackers_mapping = array_merge($created_trackers_mapping, array($xml_tracker_id => $tracker_created->getId()));
+            $created_trackers_mapping = array_merge($created_trackers_mapping, [$xml_tracker_id => $tracker_created->getId()]);
         }
 
         foreach ($this->renderers_xml_mapping as $xml_reference => $renderer_xml_mapping) {
@@ -382,15 +382,15 @@ class TrackerXmlImport
 
         $this->event_manager->processEvent(
             Event::IMPORT_COMPAT_REF_XML,
-            array(
+            [
                 'logger'          => $this->logger,
-                'created_refs'    => array('tracker'  => $created_trackers_mapping,
-                                           'artifact' => $artifacts_id_mapping->getMapping()),
+                'created_refs'    => ['tracker'  => $created_trackers_mapping,
+                                           'artifact' => $artifacts_id_mapping->getMapping()],
                 'service_name'    => 'tracker',
                 'xml_content'     => $xml_input->trackers->references,
                 'project'         => $project,
                 'configuration'   => $configuration,
-            )
+            ]
         );
 
         return $created_trackers_mapping;
@@ -446,7 +446,7 @@ class TrackerXmlImport
         $this->rng_validator->validate($partial_element->trackers, __DIR__ . '/../resources/trackers.rng');
 
         $xml_trackers = $this->getAllXmlTrackers($xml_input);
-        $trackers = array();
+        $trackers = [];
 
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             $name = (string) $xml_tracker->name;
@@ -515,7 +515,7 @@ class TrackerXmlImport
         Tracker_XML_Importer_ArtifactImportedMapping $artifacts_id_mapping,
         ImportConfig $configuration
     ) {
-        $created_artifacts = array();
+        $created_artifacts = [];
         foreach ($xml_trackers as $xml_tracker_id => $xml_tracker) {
             if (isset($xml_tracker->artifacts)) {
                 $created_artifacts[$xml_tracker_id] = $this->xml_import->importBareArtifactsFromXML(
@@ -566,7 +566,7 @@ class TrackerXmlImport
 
     private function importHierarchy(SimpleXMLElement $xml_input, array $created_trackers_list)
     {
-        $all_hierarchies = array();
+        $all_hierarchies = [];
         foreach ($this->getAllXmlTrackers($xml_input) as $xml_tracker) {
             $all_hierarchies = $this->buildTrackersHierarchy($all_hierarchies, $xml_tracker, $created_trackers_list);
         }
@@ -792,12 +792,12 @@ class TrackerXmlImport
     {
         $this->event_manager->processEvent(
             self::ADD_PROPERTY_TO_TRACKER,
-            array(
+            [
                 'xml_element' => $xml_element,
                 'tracker_id'  => $tracker_id,
                 'project'     => $project,
                 'logger'      => $this->logger
-            )
+            ]
         );
     }
 
@@ -869,7 +869,7 @@ class TrackerXmlImport
             $tracker_id = $mapper[$this->getXmlTrackerAttribute($xml_tracker, 'id')];
 
             if (! isset($hierarchy[$parent_id])) {
-                $hierarchy[$parent_id] = array();
+                $hierarchy[$parent_id] = [];
             }
 
             array_push($hierarchy[$parent_id], $tracker_id);

@@ -81,7 +81,7 @@ class ForgeAccess_ForgePropertiesManager
         $property_name = ForgeAccess::CONFIG;
         $this->config_dao->save($property_name, $new_value);
 
-        $this->event_manager->processEvent(Event::SITE_ACCESS_CHANGE, array('new_value' => $new_value, 'old_value' => $old_value));
+        $this->event_manager->processEvent(Event::SITE_ACCESS_CHANGE, ['new_value' => $new_value, 'old_value' => $old_value]);
 
         $this->frs_permission_creator->updateSiteAccess($old_value);
 

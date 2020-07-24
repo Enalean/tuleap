@@ -60,10 +60,10 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
         $this->bob_active_user    = $this->buildUser(PFUser::STATUS_ACTIVE, $this->bob_active_user_address, $this->bob_active_user_name);
 
         $user_manager = \Mockery::spy(\UserManager::class);
-        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->active_user_address)->andReturns(array($this->active_user));
-        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->suspended_user_address)->andReturns(array($suspended_user));
-        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->deleted_user_address)->andReturns(array($this->deleted_user));
-        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->bob_active_user_address)->andReturns(array($this->bob_suspended_user, $this->bob_active_user));
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->active_user_address)->andReturns([$this->active_user]);
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->suspended_user_address)->andReturns([$suspended_user]);
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->deleted_user_address)->andReturns([$this->deleted_user]);
+        $user_manager->shouldReceive('getAllUsersByEmail')->with($this->bob_active_user_address)->andReturns([$this->bob_suspended_user, $this->bob_active_user]);
         $user_manager->shouldReceive('findUser')->with($this->bob_identifier)->andReturns($this->bob_active_user);
 
         $this->builder = new Mail_RecipientListBuilder($user_manager);
@@ -71,11 +71,11 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
 
     public function testItReturnsAnExternalAddress(): void
     {
-        $list = $this->builder->getValidRecipientsFromAddresses(array($this->external_address));
+        $list = $this->builder->getValidRecipientsFromAddresses([$this->external_address]);
 
-        $expected = array(
-            array('email' => $this->external_address, 'real_name' => '')
-        );
+        $expected = [
+            ['email' => $this->external_address, 'real_name' => '']
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -83,13 +83,13 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItReturnsAListOfExternalAddresses(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
-            array($this->external_address, $this->external_address2)
+            [$this->external_address, $this->external_address2]
         );
 
-        $expected = array(
-            array('email' => $this->external_address,  'real_name' => ''),
-            array('email' => $this->external_address2, 'real_name' => '')
-        );
+        $expected = [
+            ['email' => $this->external_address,  'real_name' => ''],
+            ['email' => $this->external_address2, 'real_name' => '']
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -97,12 +97,12 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItLooksForAUser(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
-            array($this->active_user_address)
+            [$this->active_user_address]
         );
 
-        $expected = array(
-            array('email' => $this->active_user_address, 'real_name' => $this->active_user_name),
-        );
+        $expected = [
+            ['email' => $this->active_user_address, 'real_name' => $this->active_user_name],
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -110,11 +110,11 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItDoesNotOutputSuspendedNorDeletedUsers(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
-            array($this->suspended_user_address, $this->deleted_user_address)
+            [$this->suspended_user_address, $this->deleted_user_address]
         );
 
-        $expected = array(
-        );
+        $expected = [
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -122,12 +122,12 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItTakesTheFirstUserAccountWithAllowedStatus(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
-            array($this->bob_active_user_address)
+            [$this->bob_active_user_address]
         );
 
-        $expected = array(
-            array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
-        );
+        $expected = [
+            ['email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name],
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -135,12 +135,12 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItFallbacksOnFindUserIfEmailNotFound(): void
     {
         $list = $this->builder->getValidRecipientsFromAddresses(
-            array($this->bob_identifier)
+            [$this->bob_identifier]
         );
 
-        $expected = array(
-            array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
-        );
+        $expected = [
+            ['email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name],
+        ];
 
         $this->assertEquals($expected, $list);
     }
@@ -148,18 +148,18 @@ final class Mail_RecipientListBuilderTest extends \PHPUnit\Framework\TestCase
     public function testItValidatesAListOfUsers(): void
     {
         $list = $this->builder->getValidRecipientsFromUsers(
-            array(
+            [
                 $this->active_user,
                 $this->deleted_user,
                 $this->bob_suspended_user,
                 $this->bob_active_user
-            )
+            ]
         );
 
-        $expected = array(
-            array('email' => $this->active_user_address,     'real_name' => $this->active_user_name),
-            array('email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name),
-        );
+        $expected = [
+            ['email' => $this->active_user_address,     'real_name' => $this->active_user_name],
+            ['email' => $this->bob_active_user_address, 'real_name' => $this->bob_active_user_name],
+        ];
 
         $this->assertEquals($expected, $list);
     }

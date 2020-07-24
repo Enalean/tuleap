@@ -56,51 +56,51 @@ class URLVerificationTest extends TestCase
 
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/login.php', 'SCRIPT_NAME' => '/account/login.php')
+                ['REQUEST_URI' => '/account/login.php', 'SCRIPT_NAME' => '/account/login.php']
             )
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/register.php', 'SCRIPT_NAME' => '/account/register.php')
+                ['REQUEST_URI' => '/account/register.php', 'SCRIPT_NAME' => '/account/register.php']
             )
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/include/check_pw.php', 'SCRIPT_NAME' => '/include/check_pw.php')
+                ['REQUEST_URI' => '/include/check_pw.php', 'SCRIPT_NAME' => '/include/check_pw.php']
             )
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/lostpw.php', 'SCRIPT_NAME' => '/account/lostpw.php')
+                ['REQUEST_URI' => '/account/lostpw.php', 'SCRIPT_NAME' => '/account/lostpw.php']
             )
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/lostlogin.php', 'SCRIPT_NAME' => '/account/lostlogin.php')
+                ['REQUEST_URI' => '/account/lostlogin.php', 'SCRIPT_NAME' => '/account/lostlogin.php']
             )
         );
         $this->assertTrue(
             $urlVerification->isScriptAllowedForAnonymous(
-                array('REQUEST_URI' => '/account/lostpw-confirm.php', 'SCRIPT_NAME' => '/account/lostpw-confirm.php')
+                ['REQUEST_URI' => '/account/lostpw-confirm.php', 'SCRIPT_NAME' => '/account/lostpw-confirm.php']
             )
         );
 
         $this->assertFalse(
-            $urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'))
+            $urlVerification->isScriptAllowedForAnonymous(['REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'])
         );
     }
 
     public function testItDoesNotTreatRegularUrlsAsExceptions(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertFalse((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
+        $this->assertFalse((bool) $urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar']));
     }
 
     public function testItDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions(): void
     {
         $urlVerification = new URLVerification();
         $this->assertFalse(
-            (bool) $urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php'))
+            (bool) $urlVerification->isException(['SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php'])
         );
     }
 
@@ -109,7 +109,7 @@ class URLVerificationTest extends TestCase
         $urlVerification = new URLVerification();
         $this->assertFalse(
             (bool) $urlVerification->isException(
-                array('SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross')
+                ['SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross']
             )
         );
     }
@@ -117,21 +117,21 @@ class URLVerificationTest extends TestCase
     public function testItTreatsSOAPApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertTrue((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
+        $this->assertTrue((bool) $urlVerification->isException(['SCRIPT_NAME' => '/soap/index.php']));
     }
 
     public function testItTreatsSOAPApiOfPluginsAsException(): void
     {
         $urlVerification = new URLVerification();
         $this->assertTrue(
-            (bool) $urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php'))
+            (bool) $urlVerification->isException(['SCRIPT_NAME' => '/plugins/docman/soap/index.php'])
         );
     }
 
     public function testItTreatsExtractionOfCrossReferencesApiAsException(): void
     {
         $urlVerification = new URLVerification();
-        $this->assertTrue((bool) $urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
+        $this->assertTrue((bool) $urlVerification->isException(['SCRIPT_NAME' => '/api/reference/extractCross']));
     }
 
     public function testIsScriptAllowedForAnonymousFromHook(): void
@@ -150,7 +150,7 @@ class URLVerificationTest extends TestCase
         $urlVerification->shouldReceive('getEventManager')->andReturns($em);
 
         $this->assertTrue(
-            $urlVerification->isScriptAllowedForAnonymous(array('REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'))
+            $urlVerification->isScriptAllowedForAnonymous(['REQUEST_URI' => '/foobar', 'SCRIPT_NAME' => '/foobar'])
         );
     }
 

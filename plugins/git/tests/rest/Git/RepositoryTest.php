@@ -72,7 +72,7 @@ class RepositoryTest extends TestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID));
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithReadOnlyAdmin(): void
@@ -81,7 +81,7 @@ class RepositoryTest extends TestBase
             $this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGetGitRepositoryThrows403IfUserCantSeeRepository(): void
@@ -96,12 +96,12 @@ class RepositoryTest extends TestBase
     public function testPATCHGitRepositoryWithReadOnlySiteAdmin(): void
     {
         $patch_payload = json_encode(
-            array(
-                "migrate_to_gerrit" => array(
+            [
+                "migrate_to_gerrit" => [
                     "server" => 1,
                     "permissions" => "default"
-                )
-            )
+                ]
+            ]
         );
 
         $url = 'git/' . GitDataBuilder::REPOSITORY_GIT_ID;
@@ -126,7 +126,7 @@ class RepositoryTest extends TestBase
         ]);
 
         $response = $this->getResponse($this->client->options($url));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSFilesWithReadOnlyAdmin(): void
@@ -141,7 +141,7 @@ class RepositoryTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETFiles(): void
@@ -222,7 +222,7 @@ class RepositoryTest extends TestBase
     public function testOPTIONSBranches(): void
     {
         $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/branches'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSBranchesWithReadOnlyAdmin(): void
@@ -232,7 +232,7 @@ class RepositoryTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETBranches(): void
@@ -323,7 +323,7 @@ class RepositoryTest extends TestBase
     public function testOPTIONSTags(): void
     {
         $response = $this->getResponse($this->client->options('git/' . GitDataBuilder::REPOSITORY_GIT_ID . '/tags'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSTagsWithReadOnlyAdmin(): void
@@ -333,7 +333,7 @@ class RepositoryTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETTags(): void
@@ -359,10 +359,10 @@ class RepositoryTest extends TestBase
     {
         $project_id   = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
         $post_payload = json_encode(
-            array(
+            [
                 'project_id' => $project_id,
                 'name' => 'newTestGitRepository'
-            )
+            ]
         );
         $response = $this->getResponse(
             $this->client->post('git/', null, $post_payload),
@@ -376,10 +376,10 @@ class RepositoryTest extends TestBase
     {
         $project_id   = $this->getProjectId(GitDataBuilder::PROJECT_TEST_GIT_SHORTNAME);
         $post_payload = json_encode(
-            array(
+            [
                 'project_id' => $project_id,
                 'name' => 'newTestGitRepository'
-            )
+            ]
         );
         $response = $this->getResponse(
             $this->client->post('git/', null, $post_payload)
@@ -391,10 +391,10 @@ class RepositoryTest extends TestBase
     public function testPOSTStatusWithReadOnlyAdmin(): void
     {
         $post_payload = json_encode(
-            array(
+            [
                 "state" => "success",
                 "token" => "someToken"
-            )
+            ]
         );
 
         $response = $this->getResponse(

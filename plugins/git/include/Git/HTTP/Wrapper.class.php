@@ -40,16 +40,16 @@ class Git_HTTP_Wrapper
     public function stream(Git_HTTP_Command $command)
     {
         $cwd = '/tmp';
-        $descriptorspec = array(
-           0 => array("pipe", "r"),  // stdin is a pipe that the child will read from
-           1 => array("pipe", "w"),  // stdout is a pipe that the child will write to
-        );
+        $descriptorspec = [
+           0 => ["pipe", "r"],  // stdin is a pipe that the child will read from
+           1 => ["pipe", "w"],  // stdout is a pipe that the child will write to
+        ];
 
         if (ForgeConfig::get('sys_logger_level') == \Psr\Log\LogLevel::DEBUG) {
-            $descriptorspec[2] = array('file', ForgeConfig::get('codendi_log') . '/git_http_error_log', 'a');
+            $descriptorspec[2] = ['file', ForgeConfig::get('codendi_log') . '/git_http_error_log', 'a'];
         }
 
-        $pipes = array();
+        $pipes = [];
         $this->logger->debug('Command: ' . $command->getCommand());
         $this->logger->debug('Environment: ' . print_r($command->getEnvironment(), true));
         $this->process = proc_open($command->getCommand(), $descriptorspec, $pipes, $cwd, $command->getEnvironment());

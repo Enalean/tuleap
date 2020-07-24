@@ -71,7 +71,7 @@ class MembershipManagerTest extends TestCase
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->remote_server_factory->shouldReceive('getServer')->andReturns($this->remote_server);
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
@@ -94,8 +94,8 @@ class MembershipManagerTest extends TestCase
 
     public function testItAsksTheGerritDriverToAddAUserToThreeGroups(): void
     {
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
-        $this->user->shouldReceive('getUgroups')->andReturns(array($this->u_group_id));
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
+        $this->user->shouldReceive('getUgroups')->andReturns([$this->u_group_id]);
 
         $first_group_expected     = $this->project_name . '/' . 'project_members';
         $second_group_expected    = $this->project_name . '/' . 'project_admins';
@@ -119,8 +119,8 @@ class MembershipManagerTest extends TestCase
 
     public function testItAsksTheGerritDriverToRemoveAUserFromThreeGroups(): void
     {
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
-        $this->user->shouldReceive('getUgroups')->andReturns(array());
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
+        $this->user->shouldReceive('getUgroups')->andReturns([]);
 
         $first_group_expected     = $this->project_name . '/' . 'project_members';
         $second_group_expected    = $this->project_name . '/' . 'project_admins';
@@ -144,9 +144,9 @@ class MembershipManagerTest extends TestCase
 
     public function testItDoesntAddNonLDAPUsersToGerrit(): void
     {
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
         $non_ldap_user = \Mockery::spy(\PFUser::class);
-        $non_ldap_user->shouldReceive('getUgroups')->andReturns(array($this->u_group_id));
+        $non_ldap_user->shouldReceive('getUgroups')->andReturns([$this->u_group_id]);
 
         $this->driver->shouldReceive('addUserToGroup')->never();
 
@@ -157,8 +157,8 @@ class MembershipManagerTest extends TestCase
     {
         $this->remote_server2   = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server, $this->remote_server2));
-        $this->user->shouldReceive('getUgroups')->andReturns(array($this->u_group_id));
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server, $this->remote_server2]);
+        $this->user->shouldReceive('getUgroups')->andReturns([$this->u_group_id]);
         $this->u_group->shouldReceive('getNormalizedName')->andReturns('project_members');
 
         $this->driver->shouldReceive('addUserToGroup')->times(2);

@@ -22,13 +22,13 @@
 class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field_Selectbox
 {
 
-    public $default_properties = array(
-        'size' => array(
+    public $default_properties = [
+        'size' => [
             'value' => 7,
             'type'  => 'string',
             'size'  => 3,
-        ),
-    );
+        ],
+    ];
 
     /**
      * @return bool
@@ -88,7 +88,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      */
     public function changeType($type)
     {
-        if (in_array($type, array('sb', 'rb', 'cb'))) {
+        if (in_array($type, ['sb', 'rb', 'cb'])) {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;
@@ -121,7 +121,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
         }
 
         if ((! isset($fields_data[$this->getId()]) || ! is_array($fields_data[$this->getId()])) && ! $this->isRequired() && $this->userCanUpdate()) {
-            $fields_data[$this->getId()] = array('100');
+            $fields_data[$this->getId()] = ['100'];
         }
     }
 
@@ -149,7 +149,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     public function getFieldDataFromCSVValue($csv_value, ?Tracker_Artifact $artifact = null)
     {
         if ($csv_value == null) {
-            return array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID);
+            return [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID];
         }
 
         return parent::getFieldDataFromCSVValue($csv_value, $artifact);
@@ -165,7 +165,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
 
             return array_unique(
                 array_map(
-                    array($this, 'getBindValueIdFromSubmittedBindValueId'),
+                    [$this, 'getBindValueIdFromSubmittedBindValueId'],
                     $value['bind_value_ids']
                 )
             );
@@ -207,7 +207,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
     {
         $default_array = $this->getBind()->getDefaultValues();
         if (! $default_array) {
-            return array(Tracker_FormElement_Field_List_Bind::NONE_VALUE);
+            return [Tracker_FormElement_Field_List_Bind::NONE_VALUE];
         }
         return array_keys($default_array);
     }

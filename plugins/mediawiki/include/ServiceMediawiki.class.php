@@ -47,12 +47,12 @@ class ServiceMediawiki extends Service
     public function displayHeader(string $title, $breadcrumbs = [], array $toolbar = [], array $params = []): void
     {
         if ($this->userIsAdmin(UserManager::instance()->getCurrentUser())) {
-            $toolbar[] = array(
+            $toolbar[] = [
                 'title' => $GLOBALS['Language']->getText('global', 'Administration'),
-                'url'   => MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query(array(
+                'url'   => MEDIAWIKI_BASE_URL . '/forge_admin.php?' . http_build_query([
                     'group_id'   => $this->project->getID(),
-                ))
-            );
+                ])
+            ];
         }
 
         $title       = $title . ' - ' . dgettext('tuleap-mediawiki', 'Mediawiki');

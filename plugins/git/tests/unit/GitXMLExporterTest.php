@@ -91,10 +91,10 @@ class GitXMLExporterTest extends TestCase
         $GLOBALS['Language']->shouldReceive('getText')->andReturns('projects-admins');
 
         $this->permission_manager = \Mockery::spy(\GitPermissionsManager::class);
-        $this->permission_manager->shouldReceive('getCurrentGitAdminUgroups')->andReturns(array(
+        $this->permission_manager->shouldReceive('getCurrentGitAdminUgroups')->andReturns([
             4,
             5
-        ));
+        ]);
 
         $ugroup_manager = \Mockery::spy(\UGroupManager::class);
         $ugroup         = \Mockery::spy(\ProjectUGroup::class);
@@ -121,7 +121,7 @@ class GitXMLExporterTest extends TestCase
         $empty_repository->shouldReceive('getParent')->andReturns(false);
         $empty_repository->shouldReceive('isInitialized')->andReturns(false);
 
-        $repository_factory->shouldReceive('getAllRepositories')->andReturns(array($repository, $forked_repository, $empty_repository));
+        $repository_factory->shouldReceive('getAllRepositories')->andReturns([$repository, $forked_repository, $empty_repository]);
 
         $this->user_manager  = \Mockery::spy(\UserManager::class);
         $this->event_manager = \Mockery::spy(\EventManager::class);
@@ -200,11 +200,11 @@ class GitXMLExporterTest extends TestCase
 
     public function testItExportRepositoryPermissions(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns(array(
-            Git::PERM_READ  => array(3, 5),
-            Git::PERM_WRITE => array(3),
-            Git::PERM_WPLUS => array(5)
-        ));
+        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+            Git::PERM_READ  => [3, 5],
+            Git::PERM_WRITE => [3],
+            Git::PERM_WPLUS => [5]
+        ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
@@ -221,10 +221,10 @@ class GitXMLExporterTest extends TestCase
 
     public function testItDoesNotCreateWritePermissionIfRepositoryDontHaveCustomWritePermission(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns(array(
-            Git::PERM_READ  => array(3, 5),
-            Git::PERM_WPLUS => array(5)
-        ));
+        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+            Git::PERM_READ  => [3, 5],
+            Git::PERM_WPLUS => [5]
+        ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 
@@ -241,10 +241,10 @@ class GitXMLExporterTest extends TestCase
 
     public function testItDoesNotCreateWplusPermissionIfRepositoryDontHaveCustomWplusPermission(): void
     {
-        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns(array(
-            Git::PERM_READ  => array(3, 5),
-            Git::PERM_WRITE => array(3)
-        ));
+        $this->permission_manager->shouldReceive('getRepositoryGlobalPermissions')->andReturns([
+            Git::PERM_READ  => [3, 5],
+            Git::PERM_WRITE => [3]
+        ]);
 
         $this->xml_exporter->exportToXml($this->xml_tree, $this->zip, '');
 

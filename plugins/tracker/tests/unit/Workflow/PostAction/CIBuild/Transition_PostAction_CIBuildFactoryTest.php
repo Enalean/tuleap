@@ -65,10 +65,10 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
     public function testItLoadsCIBuildPostActions(): void
     {
         $post_action_value = 'http://ww.myjenks.com/job';
-        $post_action_rows  = array(
+        $post_action_rows  = [
             'id'         => $this->post_action_id,
             'job_url'    => $post_action_value,
-        );
+        ];
 
         $this->dao->shouldReceive('searchByTransitionId')->with($this->transition_id)
             ->andReturns(\TestHelper::arrayToDar($post_action_rows));
@@ -86,7 +86,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
     public function testItDelegatesTheDuplicationToTheDao(): void
     {
         $to_transition_id   = 2;
-        $field_mapping      = array();
+        $field_mapping      = [];
 
         $this->dao->shouldReceive('duplicate')->with($this->transition_id, $to_transition_id)->once();
         $this->factory->duplicate($this->transition, $to_transition_id, $field_mapping);
@@ -97,7 +97,7 @@ final class Transition_PostAction_CIBuildFactoryTest extends \PHPUnit\Framework\
         $xml = new SimpleXMLElement('
             <postaction_ci_build job_url="http://www"/>
         ');
-        $mapping     = array('F1' => 62334);
+        $mapping     = ['F1' => 62334];
         $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
 
         $this->assertInstanceOf(Transition_PostAction_CIBuild::class, $post_action);

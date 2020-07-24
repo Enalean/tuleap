@@ -32,7 +32,7 @@ class Views
   /* protected string */ public $view;
   /* protected Controler */ public $_controler;
 
-    public function View(&$controler, $view = null, $params = array())
+    public function View(&$controler, $view = null, $params = [])
     {
         $this->_controler =& $controler;
         $this->view = $view;

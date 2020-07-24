@@ -70,7 +70,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
 
     private function getAllPlanningTrackersIds(array $planning_trackers)
     {
-        $trackers_ids      = array();
+        $trackers_ids      = [];
 
         foreach ($planning_trackers as $planning_tracker) {
             $trackers_ids[] = $planning_tracker->getPlanningTrackerId();
@@ -89,7 +89,7 @@ class AgileDashboard_Planning_NearestPlanningTrackerProvider
 
     private function sortPlanningTrackersUsingAReference(array $reference, array $planning_trackers)
     {
-        $ordered_plannings = array();
+        $ordered_plannings = [];
 
         foreach ($planning_trackers as $planning_tracker) {
             $ordered_plannings[array_search($planning_tracker->getPlanningTrackerId(), $reference)] = $planning_tracker;

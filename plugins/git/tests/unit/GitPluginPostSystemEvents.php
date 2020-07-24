@@ -49,10 +49,10 @@ class GitPluginPostSystemEvents extends TestCase
         $this->gitolite_driver->shouldReceive('push')
             ->once();
 
-        $params = array(
-            'executed_events_ids' => array(125),
+        $params = [
+            'executed_events_ids' => [125],
             'queue_name' => 'git'
-        );
+        ];
 
         $this->plugin->post_system_events_actions($params);
     }
@@ -65,10 +65,10 @@ class GitPluginPostSystemEvents extends TestCase
         $this->gitolite_driver->shouldReceive('push')
             ->never();
 
-        $params = array(
-            'executed_events_ids' => array(54156),
+        $params = [
+            'executed_events_ids' => [54156],
             'queue_name'          => 'owner'
-        );
+        ];
 
         $this->plugin->post_system_events_actions($params);
     }

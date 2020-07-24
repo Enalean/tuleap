@@ -107,10 +107,10 @@ class ProjectDetailsPresenter
             $this->getAssignableProjectStatuses($project)
         );
 
-        $this->links = array();
+        $this->links = [];
         EventManager::instance()->processEvent(
             self::GET_MORE_INFO_LINKS,
-            array('project' => $project, 'links' => &$this->links)
+            ['project' => $project, 'links' => &$this->links]
         );
 
         $this->status              = $this->getStatus($project);
@@ -126,10 +126,10 @@ class ProjectDetailsPresenter
             ];
         } else {
             $template                 = ProjectManager::instance()->getProject($project->getTemplate());
-            $this->built_from_project = array(
+            $this->built_from_project = [
                 'href' => '/admin/groupedit.php?group_id=' . $template->getID(),
                 'name' => $template->getPublicname()
-            );
+            ];
         }
 
         $this->custom_fields     = $all_custom_fields;
@@ -163,13 +163,13 @@ class ProjectDetailsPresenter
     {
         $localized_types = TemplateSingleton::instance()->getLocalizedTypes();
 
-        $types = array();
+        $types = [];
         foreach ($localized_types as $id => $type) {
-            $types[] = array(
+            $types[] = [
                 'key'        => $id,
                 'type'       => $type,
                 'is_current' => $id == $project->getType()
-            );
+            ];
         }
 
         return $types;
@@ -179,13 +179,13 @@ class ProjectDetailsPresenter
     {
         $labels = $this->getAssignableProjectStatuses($project);
 
-        $all_status = array();
+        $all_status = [];
         foreach ($labels as $key => $status) {
-            $all_status[] = array(
+            $all_status[] = [
                 'key'        => $key,
                 'status'     => $status,
                 'is_current' => $project->getStatus() === $key
-            );
+            ];
         }
 
         return $all_status;

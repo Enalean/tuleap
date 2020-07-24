@@ -146,7 +146,7 @@ function account_redirect_after_login($return_to)
     global $pv;
 
     $event_manager = EventManager::instance();
-    $event_manager->processEvent('account_redirect_after_login', array('return_to' => &$return_to));
+    $event_manager->processEvent('account_redirect_after_login', ['return_to' => &$return_to]);
 
     if ($return_to) {
         $returnToToken = parse_url($return_to);

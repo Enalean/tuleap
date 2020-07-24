@@ -47,7 +47,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @return object MySQLDataAccessResultInterface
      */
-    public function query($sql, $params = array())
+    public function query($sql, $params = [])
     {
         if (! empty($params)) {
             $args = [];
@@ -159,7 +159,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return string
      */
-    public function quoteSmart($value, $params = array())
+    public function quoteSmart($value, $params = [])
     {
         return $this->db_connection->getDB()->quote((string) $value);
     }
@@ -172,7 +172,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      *
      * @return string
      */
-    public function quoteSmartSchema($value, $params = array())
+    public function quoteSmartSchema($value, $params = [])
     {
         return $this->db_connection->getDB()->escapeIdentifier((string) $value);
     }
@@ -182,7 +182,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      * @deprecated
      * @static
      */
-    public function quoteSmartImplode($glue, $pieces, $params = array())
+    public function quoteSmartImplode($glue, $pieces, $params = [])
     {
         $str         = '';
         $after_first = false;
@@ -238,7 +238,7 @@ final class CompatPDODataAccess implements LegacyDataAccessInterface
      */
     public function escapeIntImplode(array $ints)
     {
-        return implode(',', array_map(array($this, 'escapeInt'), $ints));
+        return implode(',', array_map([$this, 'escapeInt'], $ints));
     }
 
     /**

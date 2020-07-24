@@ -41,7 +41,7 @@ class Docman_View_Move extends Docman_View_Details
                 $params['default_url'],
                 $this->_controller,
                 array_merge(
-                    array('docman_icons' => $this->_getDocmanIcons($params)),
+                    ['docman_icons' => $this->_getDocmanIcons($params)],
                     $params
                 ),
                 $token

@@ -35,7 +35,7 @@ class PermissionPerGroupPaneCollector implements Dispatchable
     /**
      * @var string[]
      */
-    private $panes = array();
+    private $panes = [];
     /**
      * @var Project
      */

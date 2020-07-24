@@ -49,7 +49,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('192.0.2.1'));
+        $this->request->setTrustedProxies(['192.0.2.1']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 
@@ -59,7 +59,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('192.0.2.1/1'));
+        $this->request->setTrustedProxies(['192.0.2.1/1']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 
@@ -69,7 +69,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('192.0.2.1/24'));
+        $this->request->setTrustedProxies(['192.0.2.1/24']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 
@@ -79,7 +79,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('198.51.100.1/24'));
+        $this->request->setTrustedProxies(['198.51.100.1/24']);
         $this->assertEquals('https://example.com', $this->request->getServerUrl());
     }
 
@@ -89,7 +89,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('192.0.2.1/33'));
+        $this->request->setTrustedProxies(['192.0.2.1/33']);
         $this->assertEquals('https://example.com', $this->request->getServerUrl());
     }
 
@@ -99,7 +99,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('198.51.100.1/1', '192.168.1.0/24'));
+        $this->request->setTrustedProxies(['198.51.100.1/1', '192.168.1.0/24']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 
@@ -109,7 +109,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '192.0.2.1';
 
-        $this->request->setTrustedProxies(array('198.51.100.1/24', '203.0.113.1/24'));
+        $this->request->setTrustedProxies(['198.51.100.1/24', '203.0.113.1/24']);
         $this->assertEquals('https://example.com', $this->request->getServerUrl());
     }
 
@@ -119,7 +119,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '198.51.100.1';
 
-        $this->request->setTrustedProxies(array('256.256.256/0'));
+        $this->request->setTrustedProxies(['256.256.256/0']);
         $this->assertEquals('https://example.com', $this->request->getServerUrl());
     }
 
@@ -129,7 +129,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '198.51.100.1';
 
-        $this->request->setTrustedProxies(array('0.0.0.0/0'));
+        $this->request->setTrustedProxies(['0.0.0.0/0']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 
@@ -139,7 +139,7 @@ class HTTPRequestGetServerURLTrustedProxyTests extends HTTPRequestGetServerURLTe
         $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'https';
         $_SERVER['REMOTE_ADDR']            = '198.51.100.1';
 
-        $this->request->setTrustedProxies(array('192.168.1.0/0'));
+        $this->request->setTrustedProxies(['192.168.1.0/0']);
         $this->assertEquals('https://example.org', $this->request->getServerUrl());
     }
 }

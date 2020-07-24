@@ -11,7 +11,7 @@ class OrangeTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#FF9900',
             '#FFCC00',
             '#AA6600',
@@ -30,7 +30,7 @@ class OrangeTheme extends Theme
             '#AADD00',
             '#99CC44',
             '#887711',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

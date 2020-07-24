@@ -57,16 +57,16 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         }
         $dbh->setErrorHandling(
             PEAR_ERROR_CALLBACK,
-            array($this, '_pear_error_callback')
+            [$this, '_pear_error_callback']
         );
         $dbh->setFetchMode(DB_FETCHMODE_ASSOC);
 
         $this->_table_names
-            = array('page_tbl'     => self::DATABASE_TABLE_PREFIX . 'page',
+            = ['page_tbl'     => self::DATABASE_TABLE_PREFIX . 'page',
                     'version_tbl'  => self::DATABASE_TABLE_PREFIX . 'version',
                     'link_tbl'     => self::DATABASE_TABLE_PREFIX . 'link',
                     'recent_tbl'   => self::DATABASE_TABLE_PREFIX . 'recent',
-                    'nonempty_tbl' => self::DATABASE_TABLE_PREFIX . 'nonempty');
+                    'nonempty_tbl' => self::DATABASE_TABLE_PREFIX . 'nonempty'];
         $page_tbl = $this->_table_names['page_tbl'];
         $version_tbl = $this->_table_names['version_tbl'];
         $this->page_tbl_fields = "$page_tbl.id AS id, $page_tbl.pagename AS pagename, $page_tbl.hits AS hits, $page_tbl.group_id AS group_id";
@@ -74,11 +74,11 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             "$version_tbl.minor_edit AS minor_edit, $version_tbl.content AS content, $version_tbl.versiondata AS versiondata";
 
         $this->_expressions
-            = array('maxmajor'     => "MAX(CASE WHEN minor_edit=0 THEN version END)",
+            = ['maxmajor'     => "MAX(CASE WHEN minor_edit=0 THEN version END)",
                     'maxminor'     => "MAX(CASE WHEN minor_edit<>0 THEN version END)",
                     'maxversion'   => "MAX(version)",
                     'notempty'     => "<>''",
-                    'iscontent'    => "content<>''");
+                    'iscontent'    => "content<>''"];
     }
 
     /**
@@ -182,7 +182,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     public function _extract_page_data($data)
     {
         if (empty($data)) {
-            return array();
+            return [];
         } elseif (empty($data['pagedata'])) {
             return $data;
         } else {
@@ -211,10 +211,10 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             return;
         }
 
-        $this->lock(array($page_tbl), true);
+        $this->lock([$page_tbl], true);
         $data = $this->get_pagedata($pagename);
         if (! $data) {
-            $data = array();
+            $data = [];
             $this->_get_pageid($pagename, true); // Creates page record
         }
 
@@ -246,9 +246,9 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                            . " SET hits=?, pagedata=?"
                            . " WHERE pagename=?"
                            . "   AND group_id=?",
-            array($hits, $this->_serialize($data), $pagename, GROUP_ID)
+            [$hits, $this->_serialize($data), $pagename, GROUP_ID]
         );
-        $this->unlock(array($page_tbl));
+        $this->unlock([$page_tbl]);
     }
 
     public function get_cached_html($pagename)
@@ -271,7 +271,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                            . " SET cached_html=?"
                            . " WHERE pagename=?"
                            . "   AND group_id=?",
-            array($data, $pagename, GROUP_ID)
+            [$data, $pagename, GROUP_ID]
         );
     }
 
@@ -301,7 +301,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
 
         $id = $dbh->getOne($query);
         if (empty($id)) {
-            $this->lock(array($page_tbl), true); // write lock
+            $this->lock([$page_tbl], true); // write lock
             $max_id = $dbh->getOne("SELECT MAX(id) FROM $page_tbl");
             $id = $max_id + 1;
             $dbh->query(sprintf(
@@ -312,7 +312,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
                 $dbh->escapeSimple($pagename),
                 GROUP_ID
             ));
-            $this->unlock(array($page_tbl));
+            $this->unlock([$page_tbl]);
         }
         return $id;
     }
@@ -476,8 +476,8 @@ class WikiDB_backend_PearDB extends WikiDB_backend
             "INSERT INTO $version_tbl"
                     . " (id,version,mtime,minor_edit,content,versiondata)"
                     . " VALUES(?, ?, ?, ?, ?, ?)",
-            array($id, $version, $mtime, $minor_edit, $content,
-            $this->_serialize($data))
+            [$id, $version, $mtime, $minor_edit, $content,
+            $this->_serialize($data)]
         );
 
         $this->_update_recent_table($id);
@@ -590,11 +590,11 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         extract($this->_table_names);
 
         if ($reversed) {
-            list($have,$want) = array('linkee', 'linker');
+            list($have,$want) = ['linkee', 'linker'];
         } else {
-            list($have,$want) = array('linker', 'linkee');
+            list($have,$want) = ['linker', 'linkee'];
         }
-        $orderby = $this->sortby($sortby, 'db', array('pagename'));
+        $orderby = $this->sortby($sortby, 'db', ['pagename']);
         if ($orderby) {
             $orderby = ' ORDER BY $want.' . $orderby;
         }
@@ -636,9 +636,9 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         extract($this->_table_names);
 
         if ($reversed) {
-            list($have, $want) = array('linkee', 'linker');
+            list($have, $want) = ['linkee', 'linker'];
         } else {
-            list($have, $want) = array('linker', 'linkee');
+            list($have, $want) = ['linker', 'linkee'];
         }
         $qpagename = $dbh->escapeSimple($pagename);
         $qlink = $dbh->escapeSimple($link);
@@ -857,7 +857,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
         $dbh = &$this->_dbh;
         extract($this->_table_names);
 
-        $pick = array();
+        $pick = [];
         if ($since) {
             $pick[] = "mtime >= $since";
         }
@@ -925,7 +925,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
     {
         $dbh = &$this->_dbh;
         extract($this->_table_names);
-        if ($orderby = $this->sortby($sortby, 'db', array('pagename','wantedfrom'))) {
+        if ($orderby = $this->sortby($sortby, 'db', ['pagename', 'wantedfrom'])) {
             $orderby = 'ORDER BY ' . $orderby;
         }
 
@@ -1110,7 +1110,7 @@ class WikiDB_backend_PearDB extends WikiDB_backend
      */
     public function _unserialize($data)
     {
-        $s = empty($data) ? array() : @unserialize($data);
+        $s = empty($data) ? [] : @unserialize($data);
         if ($s === false) {
             //Fix errors due to utf8 . See http://php.net/unserialize comments
             $s = unserialize(
@@ -1323,8 +1323,8 @@ class WikiDB_backend_PearDB_iter extends WikiDB_backend_PearDB_generic_iter
         }
 
         $pagedata = $backend->_extract_page_data($record);
-        $rec = array('pagename' => $record['pagename'],
-                     'pagedata' => $pagedata);
+        $rec = ['pagename' => $record['pagename'],
+                     'pagedata' => $pagedata];
 
         if (! empty($record['version'])) {
             $rec['versiondata'] = $backend->_extract_version_data($record);

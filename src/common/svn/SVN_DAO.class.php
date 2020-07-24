@@ -43,13 +43,13 @@ class SVN_DAO extends DataAccessObject
                   AND service.is_used = '1'
                   AND groups.status = 'A'";
 
-        $sql_fragments = array($sql);
+        $sql_fragments = [$sql];
 
         $this->event_manager->processEvent(
             Event::GET_SVN_LIST_REPOSITORIES_SQL_FRAGMENTS,
-            array(
+            [
                 'sql_fragments' => &$sql_fragments
-            )
+            ]
         );
 
         return $this->retrieve(implode(' UNION ', $sql_fragments));

@@ -40,13 +40,13 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
     {
         $this->dpm = Docman_PermissionsManager::instance($groupId);
         $this->user = $user;
-        $this->docIdList = array();
-        $this->fldIdList = array();
+        $this->docIdList = [];
+        $this->fldIdList = [];
         $this->docCounter = 0;
         $this->fldCounter = 0;
     }
 
-    public function visitFolder(Docman_Folder $item, array $params = array())
+    public function visitFolder(Docman_Folder $item, array $params = [])
     {
         // Recurse
         $canWrite = true;
@@ -70,7 +70,7 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         return $canWrite;
     }
 
-    public function visitDocument(Docman_Document $item, array $params = array())
+    public function visitDocument(Docman_Document $item, array $params = [])
     {
         $this->docCounter++;
         if ($this->_itemIsWritable($item, $params)) {
@@ -80,27 +80,27 @@ class Docman_SubItemsWritableVisitor implements ItemVisitor
         return false;
     }
 
-    public function visitWiki(Docman_Wiki $item, array $params = array())
+    public function visitWiki(Docman_Wiki $item, array $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitLink(Docman_Link $item, $params = array())
+    public function visitLink(Docman_Link $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitFile(Docman_File $item, $params = array())
+    public function visitFile(Docman_File $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = array())
+    public function visitEmbeddedFile(Docman_EmbeddedFile $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
 
-    public function visitEmpty(Docman_Empty $item, $params = array())
+    public function visitEmpty(Docman_Empty $item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }

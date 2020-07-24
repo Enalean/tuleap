@@ -62,16 +62,16 @@ class TuleapWeb
             $this->common->replacePlaceHolderInto(
                 $this->tuleap_base_dir . '/src/etc/nginx/tuleap.conf.dist',
                 $this->nginx_base_dir . '/conf.d/tuleap.conf',
-                array(
+                [
                     '%ssl_certificate_key_path%',
                     '%ssl_certificate_path%',
                     '%sys_default_domain%',
-                ),
-                array(
+                ],
+                [
                     self::SSL_CERT_KEY_PATH,
                     self::SSL_CERT_CERT_PATH,
                     $this->server_name,
-                )
+                ]
             );
             $should_tls_certificate_be_generated = true;
 

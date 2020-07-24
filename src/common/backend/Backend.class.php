@@ -65,7 +65,7 @@ class Backend
         //umask(002);
     }
 
-    private static $backend_instances = array();
+    private static $backend_instances = [];
     /**
      * Return a Backend instance
      *
@@ -96,10 +96,10 @@ class Backend
 
             //Ask to the whole world if someone wants to provide its own backend
             //for example plugin ldap will override BackendSVN
-            $params   = array(
+            $params   = [
                 'base'  => &$base,
                 'setup' => &$setup
-            );
+            ];
             $event    = Event::BACKEND_FACTORY_GET_PREFIX . strtolower($type);
             EventManager::instance()->processEvent($event, $params);
 
@@ -120,7 +120,7 @@ class Backend
             //SetUp if needed
             if (is_array($setup)) {
                 if (method_exists($backend, 'setUp')) {
-                    call_user_func_array(array($backend, 'setUp'), $setup);
+                    call_user_func_array([$backend, 'setUp'], $setup);
                 } else {
                     throw new Exception($base . ' does not have setUp.');
                 }
@@ -140,7 +140,7 @@ class Backend
      */
     public static function clearInstances()
     {
-        self::$backend_instances = array();
+        self::$backend_instances = [];
     }
 
     public static function setInstance($type, $instance)
@@ -275,7 +275,7 @@ class Backend
         if ($entry !== false) {
             $cmd .= ' ' . escapeshellarg($entry);
         }
-        $output      = array();
+        $output      = [];
         $returnValue = null;
         exec($cmd, $output, $returnValue);
         if ($returnValue === 0) {
@@ -430,7 +430,7 @@ class Backend
     public function recurseDeleteInDir($mypath)
     {
         try {
-            $no_filter_file_extension = array();
+            $no_filter_file_extension = [];
             $iterator = $this->getRecurseDirectoryIterator($mypath, $no_filter_file_extension);
             foreach ($iterator as $filename => $file_information) {
                 if ($file_information->isDir()) {
@@ -491,7 +491,7 @@ class Backend
     public function removeBlock($filename)
     {
         $file_array     = file($filename);
-        $new_file_array = array();
+        $new_file_array = [];
         $inblock        = false;
         while ($line = array_shift($file_array)) {
             if (strcmp($line, $this->block_marker_start) == 0) {
@@ -618,7 +618,7 @@ class Backend
 
     private function exec($command)
     {
-        $output       = array();
+        $output       = [];
         $return_value = 1;
         exec("$command 2>&1", $output, $return_value);
         if ($return_value == 0) {

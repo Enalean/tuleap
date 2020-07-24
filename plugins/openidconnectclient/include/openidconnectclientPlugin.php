@@ -181,7 +181,7 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
         }
         if (ForgeConfig::get(ForgeAccess::CONFIG) !== ForgeAccess::ANONYMOUS) {
             $params['login_url'] = OPENIDCONNECTCLIENT_BASE_URL . '/login.php?' . http_build_query(
-                array('return_to' => $params['return_to'])
+                ['return_to' => $params['return_to']]
             );
             return;
         }
@@ -341,10 +341,10 @@ class openidconnectclientPlugin extends Plugin // phpcs:ignore PSR1.Classes.Clas
 
     public function site_admin_option_hook($params) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     {
-        $params['plugins'][] = array(
+        $params['plugins'][] = [
             'label' => dgettext('tuleap-openidconnectclient', 'OpenID Connect Client'),
             'href'  => $this->getPluginPath() . '/admin'
-        );
+        ];
     }
 
     public function burningParrotCompatiblePage(BurningParrotCompatiblePageEvent $event) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps

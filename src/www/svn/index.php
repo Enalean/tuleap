@@ -5,7 +5,7 @@
 require_once __DIR__ . '/../include/pre.php';
 require_once __DIR__ . '/../svn/svn_data.php';
 
-$vFunc = new Valid_WhiteList('func', array('detailrevision', 'browse','info'));
+$vFunc = new Valid_WhiteList('func', ['detailrevision', 'browse', 'info']);
 
 $vGroupId = new Valid_UInt('group_id');
 $vGroupId->required();

@@ -103,7 +103,7 @@ class BurningParrotTheme extends BaseLayout
     {
         $url_redirect                = new URLRedirect(EventManager::instance());
         $header_presenter_builder    = new HeaderPresenterBuilder();
-        $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : array();
+        $main_classes                = isset($params['main_classes']) ? $params['main_classes'] : [];
         $sidebar                     = $this->getSidebarFromParams($params);
         $current_project_navbar_info = $this->getCurrentProjectNavbarInfo($params);
         $body_classes                = $this->getArrayOfClassnamesForBodyTag($params, $sidebar, $current_project_navbar_info);
@@ -147,9 +147,9 @@ class BurningParrotTheme extends BaseLayout
     {
         $extra_content = '';
 
-        $this->event_manager->processEvent('site_help', array(
+        $this->event_manager->processEvent('site_help', [
             'extra_content' => &$extra_content
-        ));
+        ]);
 
         include($GLOBALS['Language']->getContent('help/site'));
 
@@ -161,7 +161,7 @@ class BurningParrotTheme extends BaseLayout
         $sidebar,
         ?CurrentProjectNavbarInfoPresenter $current_project_navbar_info_presenter
     ): array {
-        $body_classes = array();
+        $body_classes = [];
 
         if (isset($params['body_class'])) {
             $body_classes = $params['body_class'];
@@ -193,12 +193,12 @@ class BurningParrotTheme extends BaseLayout
 
     public function footer(array $params)
     {
-        $javascript_files = array();
+        $javascript_files = [];
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_JAVASCRIPT_FILES,
-            array(
+            [
                 'javascript_files' => &$javascript_files
-            )
+            ]
         );
 
         foreach ($javascript_files as $javascript_file) {

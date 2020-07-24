@@ -114,7 +114,7 @@ class ArtifactCannedHtml extends ArtifactCanned
            */
             echo "\n<H3>" . $Language->getText('tracker_include_canned', 'existing_responses') . "</H3><P>";
 
-            $title_arr = array();
+            $title_arr = [];
             $title_arr[] = $Language->getText('tracker_include_canned', 'title');
             $title_arr[] = $Language->getText('tracker_include_canned', 'body_extract');
             $title_arr[] = $Language->getText('tracker_include_canned', 'delete');

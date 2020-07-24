@@ -92,10 +92,10 @@ class SampleFactory
                 $sample = new SessionSample();
                 EventManager::instance()->processEvent(
                     Statistics_Event::FREQUENCE_STAT_SAMPLE,
-                    array(
+                    [
                         'character' => $character,
                         'sample'    => &$sample
-                    )
+                    ]
                 );
                 $this->sample = $sample;
                 break;

@@ -39,10 +39,10 @@ class AgileDashboardStatisticsAggregator
 
     private function addHit($project_id, $type)
     {
-        $params = array(
+        $params = [
             'project_id'     => $project_id,
             'statistic_name' => $type
-        );
+        ];
         $this->event_manager->processEvent('aggregate_statistics', $params);
     }
 
@@ -84,13 +84,13 @@ class AgileDashboardStatisticsAggregator
 
     public function getStatistics($statistic_name, $date_start, $date_end)
     {
-        $statistics_data = array();
-        $params = array(
+        $statistics_data = [];
+        $params = [
             'statistic_name' => $statistic_name,
             'date_start'     => $date_start,
             'date_end'       => $date_end,
             'result'         => &$statistics_data
-        );
+        ];
         $this->event_manager->processEvent('get_statistics_aggregation', $params);
 
         return $statistics_data;

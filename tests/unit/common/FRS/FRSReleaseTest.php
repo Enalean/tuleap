@@ -104,7 +104,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
 
-        $pkg = new FRSPackage(array('group_id' => 123));
+        $pkg = new FRSPackage(['group_id' => 123]);
 
         $pf = \Mockery::spy(\FRSPackageFactory::class);
         $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);
@@ -123,7 +123,7 @@ class FRSReleaseTest extends \PHPUnit\Framework\TestCase // phpcs:ignore PSR1.Cl
         $r = \Mockery::mock(\FRSRelease::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $r->setPackageId(696);
 
-        $pkg = new FRSPackage(array('group_id' => 123));
+        $pkg = new FRSPackage(['group_id' => 123]);
 
         $pf = \Mockery::spy(\FRSPackageFactory::class);
         $pf->shouldReceive('getFRSPackageFromDb')->with(696, null, FRSPackageDao::INCLUDE_DELETED)->once()->andReturns($pkg);

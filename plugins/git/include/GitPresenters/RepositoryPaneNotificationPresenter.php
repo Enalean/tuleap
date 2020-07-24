@@ -57,12 +57,12 @@ class RepositoryPaneNotificationPresenter
 
     private function buildListOfMailsPresenter(GitRepository $repository)
     {
-        $list_of_mails = array();
+        $list_of_mails = [];
 
         foreach ($repository->getNotifiedMails() as $mail) {
-            $list_of_mails[] = array(
+            $list_of_mails[] = [
                 'mail' => $mail
-            );
+            ];
         }
 
         return $list_of_mails;

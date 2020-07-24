@@ -29,7 +29,7 @@ class System_Command
     public function exec($cmd)
     {
         $return_value = 1;
-        $output       = array();
+        $output       = [];
         exec("$cmd 2>&1", $output, $return_value);
         if ($return_value == 0) {
             return $output;

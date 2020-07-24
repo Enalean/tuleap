@@ -31,12 +31,12 @@ class ProjectRepresentation extends MinimalProjectRepresentation
     /**
      * @var array {@type \Tuleap\Project\REST\ProjectResourceReference}
      */
-    public $resources = array();
+    public $resources = [];
 
     /**
      * @var array
      */
-    public $additional_informations = array();
+    public $additional_informations = [];
     /**
      * @var bool
      */

@@ -28,7 +28,7 @@ use Tuleap\JSONHeader;
 require_once __DIR__ . '/../../include/pre.php';
 require_once __DIR__ . '/../../project/admin/permissions.php';
 
-$vAction = new Valid_WhiteList('action', array('permissions_frs_package','permissions_frs_release','validator_frs_create','validator_frs_update','refresh_file_list'));
+$vAction = new Valid_WhiteList('action', ['permissions_frs_package', 'permissions_frs_release', 'validator_frs_create', 'validator_frs_update', 'refresh_file_list']);
 if ($request->valid($vAction)) {
     $action = $request->get('action');
 } else {
@@ -95,20 +95,20 @@ if ($action == 'permissions_frs_package') {
                 $date       = $request->get('date');
                 $group_id   = $request->get('group_id');
                 $validator = new FRSValidator();
-                $release = array (
+                $release =  [
                     'name' => $name,
                     'package_id' => $package_id,
                     'date' => $date
-                );
+                ];
                 if ($validator->isValidForCreation($release, $group_id)) {
                     //frs valid
-                    $header = array('valid' => true);
+                    $header = ['valid' => true];
                 } else {
                     //frs non valid
                     $errors = $validator->getErrors();
                     $feedback = new Feedback();
                     $feedback->log('error', $errors[0]);
-                    $header = array('valid' => false, 'msg' => $feedback->fetch());
+                    $header = ['valid' => false, 'msg' => $feedback->fetch()];
                 }
                 header(JSONHeader::getHeaderForPrototypeJS($header));
             }
@@ -136,21 +136,21 @@ if ($action == 'permissions_frs_package') {
                     $group_id   = $request->get('group_id');
                     $release_id = $request->get('release_id');
                     $validator = new FRSValidator();
-                    $release = array (
+                    $release =  [
                         'name' => $name,
                         'release_id' => $release_id,
                         'package_id' => $package_id,
                         'date' => $date
-                    );
+                    ];
                     if ($validator->isValidForUpdate($release, $group_id)) {
                         //frs valid
-                        $header = array('valid' => true);
+                        $header = ['valid' => true];
                     } else {
                         //frs non valid
                         $errors = $validator->getErrors();
                         $feedback = new Feedback();
                         $feedback->log('error', $errors[0]);
-                        $header = array('valid' => false, 'msg' => $feedback->fetch());
+                        $header = ['valid' => false, 'msg' => $feedback->fetch()];
                     }
                     header(JSONHeader::getHeaderForPrototypeJS($header));
                 }

@@ -49,7 +49,7 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5
      */
     public function buildData($engine)
     {
-        $engine->data = array();
+        $engine->data = [];
 
         $ff = Tracker_FormElementFactory::instance();
         $field_start      = $this->chart->getField_start()      ? $ff->getFormElementById($this->chart->getField_start())      : null;

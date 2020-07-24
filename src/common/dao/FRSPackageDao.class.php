@@ -57,7 +57,7 @@ class FRSPackageDao extends DataAccessObject
             ' f.file_id =' . $this->da->escapeInt($_file_id) . ' AND f.release_id = r.release_id AND r.package_id = p.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
             'ORDER BY rank DESC LIMIT 1',
-            array('frs_release AS r','frs_file AS f')
+            ['frs_release AS r', 'frs_file AS f']
         );
     }
 
@@ -69,7 +69,7 @@ class FRSPackageDao extends DataAccessObject
             'p.group_id = ' . $this->da->escapeInt($_group_id) . ' AND r.release_id = ' . $this->da->escapeInt($_id) . ' AND p.package_id = r.package_id AND r.status_id!=' . $this->da->escapeInt($this->STATUS_DELETED),
             '',
             'ORDER BY rank DESC LIMIT 1',
-            array('frs_release AS r')
+            ['frs_release AS r']
         );
     }
 
@@ -117,7 +117,7 @@ class FRSPackageDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function _search($where, $group = '', $order = '', $from = array(), $extraFlags = 0)
+    public function _search($where, $group = '', $order = '', $from = [], $extraFlags = 0)
     {
         if ($from === null) {
             $from = [];
@@ -156,8 +156,8 @@ class FRSPackageDao extends DataAccessObject
         $rank = null,
         $approve_license = null
     ) {
-        $arg    = array();
-        $values = array();
+        $arg    = [];
+        $values = [];
 
         if ($group_id !== null) {
             $arg[] = 'group_id';
@@ -166,7 +166,7 @@ class FRSPackageDao extends DataAccessObject
 
         if ($name !== null) {
             $arg[] = 'name';
-            $values[] = $this->da->quoteSmart($name, array('force_string' => true));
+            $values[] = $this->da->quoteSmart($name, ['force_string' => true]);
         }
 
         if ($status_id !== null) {
@@ -192,16 +192,16 @@ class FRSPackageDao extends DataAccessObject
 
     public function createFromArray($data_array)
     {
-        $arg    = array();
-        $values = array();
-        $cols   = array('group_id', 'name', 'status_id', 'rank', 'approve_license');
+        $arg    = [];
+        $values = [];
+        $cols   = ['group_id', 'name', 'status_id', 'rank', 'approve_license'];
         foreach ($data_array as $key => $value) {
             if ($key == 'rank') {
                 $value = $this->prepareRanking('frs_package', 0, $data_array['group_id'], $value, 'package_id', 'group_id');
             }
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
-                $values[] = $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
+                $values[] = $this->da->quoteSmart($value, ['force_string' => ($key == 'name')]);
             }
         }
         if (count($arg)) {
@@ -231,14 +231,14 @@ class FRSPackageDao extends DataAccessObject
         $rank = null,
         $approve_license = null
     ) {
-        $argArray = array();
+        $argArray = [];
 
         if ($group_id !== null) {
             $argArray[] = 'group_id=' . ($this->da->escapeInt($group_id));
         }
 
         if ($name !== null) {
-            $argArray[] = 'name=' . $this->da->quoteSmart($name, array('force_string' => true));
+            $argArray[] = 'name=' . $this->da->quoteSmart($name, ['force_string' => true]);
         }
 
         if ($status_id !== null) {
@@ -272,13 +272,13 @@ class FRSPackageDao extends DataAccessObject
             $dar = $this->searchById($package_id);
             if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
-                $set_array = array();
+                $set_array = [];
                 foreach ($data_array as $key => $value) {
                     if ($key != 'package_id' && $value != $current[$key]) {
                         if ($key == 'rank') {
                             $value = $this->prepareRanking('frs_package', $package_id, $current['group_id'], $value, 'package_id', 'group_id');
                         }
-                        $set_array[] = $key . ' = ' . $this->da->quoteSmart($value, array('force_string' => ($key == 'name')));
+                        $set_array[] = $key . ' = ' . $this->da->quoteSmart($value, ['force_string' => ($key == 'name')]);
                     }
                 }
                 if (count($set_array)) {

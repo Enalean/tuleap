@@ -160,12 +160,12 @@ XML;
         $rule2->addChild('target_field')->addAttribute('REF', 'F30');
         $rule2->addChild('comparator')->addAttribute('type', Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
 
-        $array_xml_mapping = array(
+        $array_xml_mapping = [
             'F25' => $this->f3,
             'F28' => $this->f1,
             'F29' => $this->f2,
             'F30' => $this->f4,
-        );
+        ];
 
         $tracker_rule_dao = Mockery::mock(Tracker_RuleDao::class);
         $rule_factory     = new Tracker_RuleFactory($tracker_rule_dao);

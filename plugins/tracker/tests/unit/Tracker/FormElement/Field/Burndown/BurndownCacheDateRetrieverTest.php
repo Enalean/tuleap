@@ -47,7 +47,7 @@ class BurndownCacheDateRetrieverTest extends TestCase
 
         $period = $this->burndown_cache_retriever->getWorkedDaysToCacheForPeriod($octobre_month_period, $today_time);
 
-        $expected_period = array(
+        $expected_period = [
             mktime(23, 59, 59, 10, 3, 2016),
             mktime(23, 59, 59, 10, 4, 2016),
             mktime(23, 59, 59, 10, 5, 2016),
@@ -69,7 +69,7 @@ class BurndownCacheDateRetrieverTest extends TestCase
             mktime(23, 59, 59, 10, 27, 2016),
             mktime(23, 59, 59, 10, 28, 2016),
             mktime(23, 59, 59, 10, 31, 2016),
-        );
+        ];
 
         $this->assertCount(21, $period);
         $this->assertEquals($expected_period, $period);
@@ -86,7 +86,7 @@ class BurndownCacheDateRetrieverTest extends TestCase
 
         $period = $this->burndown_cache_retriever->getWorkedDaysToCacheForPeriod($octobre_month_period, $today_time);
 
-        $expected_period = array(
+        $expected_period = [
             mktime(23, 59, 59, 10, 3, 2016),
             mktime(23, 59, 59, 10, 4, 2016),
             mktime(23, 59, 59, 10, 5, 2016),
@@ -97,7 +97,7 @@ class BurndownCacheDateRetrieverTest extends TestCase
             mktime(23, 59, 59, 10, 12, 2016),
             mktime(23, 59, 59, 10, 13, 2016),
             mktime(23, 59, 59, 10, 14, 2016)
-        );
+        ];
 
         $this->assertCount(10, $period);
 

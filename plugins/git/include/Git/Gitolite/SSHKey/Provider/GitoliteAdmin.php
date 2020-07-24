@@ -32,7 +32,7 @@ class GitoliteAdmin extends ArrayIterator implements IProvideKey
 
     public function __construct()
     {
-        $keys = array($this->getGitoliteAdminKey());
+        $keys = [$this->getGitoliteAdminKey()];
         parent::__construct($keys);
     }
 

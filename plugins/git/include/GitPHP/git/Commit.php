@@ -45,7 +45,7 @@ class Commit extends GitObject
      *
      * @access protected
      */
-    protected $parents = array();
+    protected $parents = [];
 
     /**
      * tree
@@ -126,7 +126,7 @@ class Commit extends GitObject
      *
      * @access protected
      */
-    protected $comment = array();
+    protected $comment = [];
 
     /**
      * @var null|string
@@ -149,7 +149,7 @@ class Commit extends GitObject
      *
      * @access protected
      */
-    protected $blobPaths = array();
+    protected $blobPaths = [];
 
     /**
      * treePaths
@@ -158,7 +158,7 @@ class Commit extends GitObject
      *
      * @access protected
      */
-    protected $treePaths = array();
+    protected $treePaths = [];
 
     private $commit_paths = [];
 
@@ -711,7 +711,7 @@ class Commit extends GitObject
      */
     public function GetHeads() // @codingStandardsIgnoreLine
     {
-        $heads = array();
+        $heads = [];
 
         $projectRefs = $this->GetProject()->GetRefs('heads');
 
@@ -734,7 +734,7 @@ class Commit extends GitObject
      */
     public function GetTags() // @codingStandardsIgnoreLine
     {
-        $tags = array();
+        $tags = [];
 
         $projectRefs = $this->GetProject()->GetRefs('tags');
 
@@ -778,7 +778,7 @@ class Commit extends GitObject
         $this->containingTagRead = true;
 
         $exe = new GitExe($this->GetProject());
-        $args = array();
+        $args = [];
         $args[] = '--tags';
         $args[] = escapeshellarg($this->hash);
         $revs   = explode("\n", $exe->Execute(GitExe::NAME_REV, $args));
@@ -905,7 +905,7 @@ class Commit extends GitObject
             $this->ReadHashPaths();
         }
 
-        $results = array();
+        $results = [];
 
         foreach ($this->treePaths as $path => $hash) {
             if (preg_match('/' . $pattern . '/i', $path)) {
@@ -945,7 +945,7 @@ class Commit extends GitObject
 
         $exe = new GitExe($this->GetProject());
 
-        $args = array();
+        $args = [];
         $args[] = '-I';
         $args[] = '--full-name';
         $args[] = '--ignore-case';
@@ -956,7 +956,7 @@ class Commit extends GitObject
 
         $lines = explode("\n", $exe->Execute(GitExe::GREP, $args));
 
-        $results = array();
+        $results = [];
 
         foreach ($lines as $line) {
             if (preg_match('/^[^:]+:([^:]+):([0-9]+):(.+)$/', $line, $regs)) {

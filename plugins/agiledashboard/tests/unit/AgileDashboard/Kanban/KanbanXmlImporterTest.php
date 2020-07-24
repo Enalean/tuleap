@@ -122,7 +122,7 @@ class KanbanXmlImporterTest extends TestCase
         $this->agile_dashboard_configuration_manager->shouldReceive('updateConfiguration')->never();
         $this->kanban_xml_importer->import(
             $xml,
-            array(),
+            [],
             $this->project,
             $field_mapping,
             $this->user,
@@ -159,9 +159,9 @@ class KanbanXmlImporterTest extends TestCase
 
         $this->kanban_xml_importer->import(
             $xml,
-            array(
+            [
                 'T22' => 50
-            ),
+            ],
             $this->project,
             $field_mapping,
             $this->user,
@@ -188,9 +188,9 @@ class KanbanXmlImporterTest extends TestCase
 
         $this->kanban_xml_importer->import(
             $xml,
-            array(
+            [
                 'T22' => 50
-            ),
+            ],
             $this->project,
             $field_mapping,
             $this->user,
@@ -228,10 +228,10 @@ class KanbanXmlImporterTest extends TestCase
 
         $this->kanban_xml_importer->import(
             $xml,
-            array(
+            [
                 'T22' => 50,
                 'T21' => 51
-            ),
+            ],
             $this->project,
             $field_mapping,
             $this->user,
@@ -266,10 +266,10 @@ class KanbanXmlImporterTest extends TestCase
 
         $this->kanban_xml_importer->import(
             $xml,
-            array(
+            [
                 'T22' => 50,
                 'T21' => 51
-            ),
+            ],
             $this->project,
             \Mockery::spy(\TrackerXmlFieldsMapping::class),
             $this->user,

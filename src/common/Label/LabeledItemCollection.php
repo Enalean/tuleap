@@ -31,7 +31,7 @@ class LabeledItemCollection implements Dispatchable
     /**
      * @var array LabeledItem[]
      */
-    private $labeled_items = array();
+    private $labeled_items = [];
     /**
      * @var Project
      */

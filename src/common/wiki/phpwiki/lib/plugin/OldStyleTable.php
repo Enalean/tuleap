@@ -64,13 +64,13 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array(
+        return [
                      'caption'     => '',
                      'cellpadding' => '1',
                      'cellspacing' => '1',
                      'border'      => '1',
                      'summary'     => '',
-                     );
+                     ];
     }
 
     public function handle_plugin_args_cruft($argstr, $args)
@@ -85,13 +85,13 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
 
         $args = $this->getArgs($argstr, $request);
         $default = $this->getDefaultArguments();
-        foreach (array('cellpadding','cellspacing','border') as $arg) {
+        foreach (['cellpadding', 'cellspacing', 'border'] as $arg) {
             if (! is_numeric($args[$arg])) {
                 $args[$arg] = $default[$arg];
             }
         }
         $lines = preg_split('/\s*?\n\s*/', $argstr);
-        $table_args = array();
+        $table_args = [];
         $default_args = array_keys($default);
         foreach ($default_args as $arg) {
             if ($args[$arg] == '' and $default[$arg] == '') {
@@ -105,7 +105,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         }
         $table = HTML::table($table_args);
         if (! empty($caption)) {
-            $table->pushContent(HTML::caption(array('valign' => 'top'), $caption));
+            $table->pushContent(HTML::caption(['valign' => 'top'], $caption));
         }
         if (preg_match("/^\s*(cellpadding|cellspacing|border|caption|summary)/", $lines[0])) {
             $lines[0] = '';
@@ -146,7 +146,7 @@ class WikiPlugin_OldStyleTable extends WikiPlugin
         $row = HTML::tr();
 
         foreach ($matches as $m) {
-            $attr = array();
+            $attr = [];
 
             if (strlen($m[1]) > 1) {
                 $attr['colspan'] = strlen($m[1]);

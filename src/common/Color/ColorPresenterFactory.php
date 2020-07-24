@@ -35,7 +35,7 @@ class ColorPresenterFactory
 
     public function getColorsPresenters($current_color)
     {
-        $colors_presenters = array();
+        $colors_presenters = [];
 
         foreach ($this->allowed_colors->getColors() as $color) {
             $is_color_selected = false;

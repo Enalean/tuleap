@@ -21,7 +21,7 @@
 class SystemCheckLogger extends WrapperLogger
 {
 
-    private $warning_messages = array();
+    private $warning_messages = [];
 
     public function warning($message, array $context = [])
     {

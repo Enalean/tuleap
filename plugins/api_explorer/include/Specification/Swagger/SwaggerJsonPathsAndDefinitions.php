@@ -110,7 +110,7 @@ final class SwaggerJsonPathsAndDefinitions
     private function paths(int $version): array
     {
         $map = Routes::findAll([], self::EXCLUDED_HTTP_METHOD, $version);
-        $paths = array();
+        $paths = [];
         foreach ($map as $path => $data) {
             foreach ($data as $item) {
                 $route = $item['route'];
@@ -131,7 +131,7 @@ final class SwaggerJsonPathsAndDefinitions
         if (empty($base)) {
             $base = 'root';
         }
-        $r->tags = array($base);
+        $r->tags = [$base];
         $r->parameters = $this->parameters($route);
 
         $r->summary  = $m['description'] ?? '';
@@ -158,8 +158,8 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function parameters(array $route): array
     {
-        $r = array();
-        $children = array();
+        $r = [];
+        $children = [];
         $required = false;
         foreach ($route['metadata']['param'] as $param) {
             $info = new ValidationInfo($param);
@@ -243,7 +243,7 @@ final class SwaggerJsonPathsAndDefinitions
         //$p->allowMultiple = false;
 
         if (isset($p->{'$ref'})) {
-            $p->schema = (object) array('$ref' => ($p->{'$ref'}));
+            $p->schema = (object) ['$ref' => ($p->{'$ref'})];
             unset($p->{'$ref'});
         }
 
@@ -253,12 +253,12 @@ final class SwaggerJsonPathsAndDefinitions
     private function responses(array $route): array
     {
         $code = '200';
-        $r = array(
-            $code => (object) array(
+        $r = [
+            $code => (object) [
                 'description' => 'Success',
                 'schema'      => new stdClass()
-            )
-        );
+            ]
+        ];
         $return = Util::nestedValue($route, ['metadata', 'return']);
         if (! empty($return)) {
             $this->setType($r[$code]->schema, new ValidationInfo($return));
@@ -266,7 +266,7 @@ final class SwaggerJsonPathsAndDefinitions
 
         if (is_array($throws = Util::nestedValue($route, ['metadata', 'throws']))) {
             foreach ($throws as $message) {
-                $r[$message['code']] = array('description' => $message['message']);
+                $r[$message['code']] = ['description' => $message['message']];
             }
         }
 
@@ -279,8 +279,8 @@ final class SwaggerJsonPathsAndDefinitions
             return $this->models[$type];
         }
         $r = new stdClass();
-        $r->properties = array();
-        $required = array();
+        $r->properties = [];
+        $required = [];
         foreach ($children as $child) {
             $info = new ValidationInfo($child);
             $p = new stdClass();
@@ -321,42 +321,42 @@ final class SwaggerJsonPathsAndDefinitions
             $object->type = 'array';
             if ($info->children) {
                 $contentType = Util::getShortName($info->contentType);
-                $object->items = (object) array(
+                $object->items = (object) [
                     '$ref' => "#/definitions/$contentType"
-                );
+                ];
             } elseif ($info->contentType && $info->contentType == 'associative') {
                 unset($info->contentType);
-                $this->model($info->type = 'Object', array(
-                    array(
+                $this->model($info->type = 'Object', [
+                    [
                         'name'        => 'property',
                         'type'        => 'string',
                         'default'     => '',
                         'required'    => false,
                         'description' => ''
-                    )
-                ));
+                    ]
+                ]);
             } elseif ($info->contentType && $info->contentType != 'indexed') {
                 if (is_string($info->contentType) && $t = Util::nestedValue(self::DATA_TYPE_ALIAS, strtolower($info->contentType))) {
                     if (is_array($t)) {
-                        $object->items = (object) array(
+                        $object->items = (object) [
                             'type'   => $t[0],
                             'format' => $t[1],
-                        );
+                        ];
                     } else {
-                        $object->items = (object) array(
+                        $object->items = (object) [
                             'type' => $t,
-                        );
+                        ];
                     }
                 } else {
                     $contentType = Util::getShortName($info->contentType);
-                    $object->items = (object) array(
+                    $object->items = (object) [
                         '$ref' => "#/definitions/$contentType"
-                    );
+                    ];
                 }
             } else {
-                $object->items = (object) array(
+                $object->items = (object) [
                     'type' => 'string'
-                );
+                ];
             }
         } elseif ($info->children) {
             $this->model($type, $info->children);
@@ -387,7 +387,7 @@ final class SwaggerJsonPathsAndDefinitions
 
     private function operationId(array $route): string
     {
-        static $hash = array();
+        static $hash = [];
         $id = $route['httpMethod'] . ' ' . $route['url'];
         if (isset($hash[$id])) {
             return $hash[$id];

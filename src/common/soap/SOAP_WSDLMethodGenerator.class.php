@@ -28,13 +28,13 @@ class SOAP_WSDLMethodGenerator
     private $method;
 
     private $comment    = '';
-    private $parameters = array();
-    private $returnType = array();
+    private $parameters = [];
+    private $returnType = [];
 
     /**
      * @var array map to know a soap type corresponding to a phpdoc type
      */
-    private $doc2soap_types = array(
+    private $doc2soap_types = [
         'string'                   => 'xsd:string',
         'integer'                  => 'xsd:int',
         'int'                      => 'xsd:int',
@@ -50,7 +50,7 @@ class SOAP_WSDLMethodGenerator
         'arrayofdescfieldsvalues'  => 'tns:ArrayOfDescFieldsValues',
         'arrayofservicesvalues'    => 'tns:ArrayOfServicesValues',
         'userinfo'                 => 'tns:UserInfo',
-    );
+    ];
 
     public function __construct(ReflectionMethod $method)
     {
@@ -63,9 +63,9 @@ class SOAP_WSDLMethodGenerator
     {
         EventManager::instance()->processEvent(
             Event::WSDL_DOC2SOAP_TYPES,
-            array(
+            [
                 'doc2soap_types' => &$this->doc2soap_types
-            )
+            ]
         );
     }
 
@@ -184,7 +184,7 @@ class SOAP_WSDLMethodGenerator
      */
     private function parseParameters($line)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('%@param[ \t]+([^ \t]*)[ \t]+([^ \t]*)[ \t]+.*%', $line, $matches)) {
             $this->parameters[$this->docParamToSoap($matches[2])] = $this->docTypeToSoap($matches[1]);
         }
@@ -198,7 +198,7 @@ class SOAP_WSDLMethodGenerator
     private function parseReturnType($line)
     {
         if (preg_match('%@return[ \t]+([^ \t]*)%', $line, $matches)) {
-            $this->returnType = array($this->method->getName() => $this->docTypeToSoap($matches[1]));
+            $this->returnType = [$this->method->getName() => $this->docTypeToSoap($matches[1])];
         }
     }
 

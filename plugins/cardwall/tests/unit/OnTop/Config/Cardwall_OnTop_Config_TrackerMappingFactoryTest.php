@@ -43,11 +43,11 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->tracker_20   = Mockery::mock(Tracker::class);
         $this->tracker_20->shouldReceive('getId')->andReturn(20);
         $this->tracker_20->shouldReceive('getStatusField')->andReturn(null);
-        $project_trackers = array(
+        $project_trackers = [
             3  => $this->tracker,
             10 => $this->tracker_10,
             20 => $this->tracker_20
-        );
+        ];
 
         $tracker_factory = \Mockery::spy(\TrackerFactory::class)->shouldReceive('getTrackersByGroupId')->with($group_id)->andReturns($project_trackers)->getMock();
         foreach ($project_trackers as $t) {
@@ -57,18 +57,18 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $element_factory = \Mockery::spy(\Tracker_FormElementFactory::class);
         $element_factory->shouldReceive('getFieldById')->with(123)->andReturns($this->field_123);
         $element_factory->shouldReceive('getFieldById')->with(124)->andReturns($this->field_124);
-        $element_factory->shouldReceive('getUsedSbFields')->with($this->tracker_10)->andReturns(array($this->field_122, $this->field_123));
-        $element_factory->shouldReceive('getUsedSbFields')->andReturns(array());
+        $element_factory->shouldReceive('getUsedSbFields')->with($this->tracker_10)->andReturns([$this->field_122, $this->field_123]);
+        $element_factory->shouldReceive('getUsedSbFields')->andReturns([]);
 
         $this->dao                   = \Mockery::spy(\Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_mapping_factory = \Mockery::spy(\Cardwall_OnTop_Config_ValueMappingFactory::class);
 
         $this->columns = new Cardwall_OnTop_Config_ColumnFreestyleCollection(
-            array(
+            [
                 new Cardwall_Column(1, 'Todo', 'white'),
                 new Cardwall_Column(2, 'On Going', 'white'),
                 new Cardwall_Column(3, 'Done', 'white'),
-            )
+            ]
         );
 
         $this->factory = new Cardwall_OnTop_Config_TrackerMappingFactory($tracker_factory, $element_factory, $this->dao, $this->value_mapping_factory);
@@ -84,10 +84,10 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
 
     public function testItRemovesTheCurrentTrackerFromTheProjectTrackers(): void
     {
-        $expected_trackers = array(
+        $expected_trackers = [
             10 => $this->tracker_10,
             20 => $this->tracker_20
-        );
+        ];
 
         $this->assertSame($expected_trackers, $this->factory->getTrackers($this->tracker));
     }
@@ -96,8 +96,8 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     {
         $this->value_mapping_factory->shouldReceive('getMappings')->andReturns([]);
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 10, 'field_id' => 123),
-            array('tracker_id' => 20, 'field_id' => 124)
+            ['tracker_id' => 10, 'field_id' => 123],
+            ['tracker_id' => 20, 'field_id' => 124]
         ));
 
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
@@ -105,7 +105,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
         $this->assertEquals($this->tracker_10, $mappings[10]->getTracker());
         $this->assertEquals($this->field_123, $mappings[10]->getField());
         $this->assertInstanceOf(\Cardwall_OnTop_Config_TrackerMappingFreestyle::class, $mappings[10]);
-        $this->assertEquals(array($this->field_122, $this->field_123), $mappings[10]->getAvailableFields());
+        $this->assertEquals([$this->field_122, $this->field_123], $mappings[10]->getAvailableFields());
         $this->assertEquals($this->tracker_20, $mappings[20]->getTracker());
         $this->assertEquals($this->field_124, $mappings[20]->getField());
     }
@@ -114,7 +114,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     {
         $this->value_mapping_factory->shouldReceive('getStatusMappings')->andReturns([]);
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 10, 'field_id' => null)
+            ['tracker_id' => 10, 'field_id' => null]
         ));
 
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
@@ -126,7 +126,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     public function testItReturnsANoFieldMappingIfNothingInDBAndNoStatus(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 20, 'field_id' => null)
+            ['tracker_id' => 20, 'field_id' => null]
         ));
 
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
@@ -137,7 +137,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     public function testItReturnsEmptyMappingIfNoStatus(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 20, 'field_id' => null)
+            ['tracker_id' => 20, 'field_id' => null]
         ));
 
         $mappings = $this->factory->getMappings($this->tracker, $this->columns);
@@ -148,7 +148,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     public function testItLoadValueMappings(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 20, 'field_id' => 124)
+            ['tracker_id' => 20, 'field_id' => 124]
         ));
         $this->value_mapping_factory->shouldReceive('getMappings')->with($this->tracker, $this->tracker_20, $this->field_124)
             ->once()->andReturns([]);
@@ -159,7 +159,7 @@ final class Cardwall_OnTop_Config_TrackerMappingFactoryTest extends \PHPUnit\Fra
     public function testItLoadValueMappingsEvenForStatusField(): void
     {
         $this->dao->shouldReceive('searchMappingFields')->with($this->tracker->getId())->andReturns(TestHelper::arrayToDar(
-            array('tracker_id' => 10, 'field_id' => null)
+            ['tracker_id' => 10, 'field_id' => null]
         ));
         $this->value_mapping_factory->shouldReceive('getStatusMappings')->with($this->tracker_10, $this->columns)
             ->once()->andReturns([]);

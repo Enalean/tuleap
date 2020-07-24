@@ -8,7 +8,7 @@ require_once __DIR__ . '/../include/bookmarks.php';
 $request = HTTPRequest::instance();
 
 
-$HTML->header(array("title" => $Language->getText('bookmark_delete', 'title')));
+$HTML->header(["title" => $Language->getText('bookmark_delete', 'title')]);
 
 print "<H3>" . $Language->getText('bookmark_delete', 'title') . "</H3>\n";
 $vId = new Valid_UInt('bookmark_id');
@@ -35,4 +35,4 @@ if ($request->valid($vId)) {
     $GLOBALS['Response']->redirect('/my');
 }
 
-$HTML->footer(array());
+$HTML->footer([]);

@@ -63,10 +63,10 @@ class JWTGenerator
     public function getToken(): string
     {
         $current_user = $this->user_manager->getCurrentUser();
-        $data = array(
+        $data = [
             'user_id'     => (int) $current_user->getId(),
             'user_rights' => $this->ugroup_literalizer->getUserGroupsForUserWithArobase($current_user)
-        );
+        ];
 
         $token = $this->builder
             ->withClaim('data', $data)

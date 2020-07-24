@@ -35,7 +35,7 @@ class Tree extends FilesystemObject
      *
      * @access protected
      */
-    protected $contents = array();
+    protected $contents = [];
 
     /**
      * contentsRead

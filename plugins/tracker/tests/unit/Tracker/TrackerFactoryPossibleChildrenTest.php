@@ -44,10 +44,10 @@ class TrackerFactoryPossibleChildrenTest extends TestCase
         $tasks_tracker->shouldReceive('getId')->andReturn(3);
         $tasks_tracker->shouldReceive('getName')->andReturn('Tasks');
 
-        $expected_children = array(
+        $expected_children = [
             '2' => $bugs_tracker,
             '3' => $tasks_tracker,
-        );
+        ];
 
         $all_project_trackers      = $expected_children;
         $all_project_trackers['1'] = $current_tracker;

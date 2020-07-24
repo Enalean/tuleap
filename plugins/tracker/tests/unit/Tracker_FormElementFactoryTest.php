@@ -459,7 +459,7 @@ final class Tracker_FormElementFactoryTest extends PHPUnit\Framework\TestCase //
 
     public function testItReturnsNullIfThereAreNoArtifactLinkFields(): void
     {
-        $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturns(array());
+        $this->factory->shouldReceive('getUsedArtifactLinkFields')->with($this->tracker)->andReturns([]);
         $this->assertNull($this->factory->getAnArtifactLinkField($this->user, $this->tracker));
     }
 

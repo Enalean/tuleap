@@ -117,7 +117,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
     {
         $project = $this->server->tree->getNodeForPath(dirname(dirname($release['href'])));
         $packages = $project->getChildren();
-        $destinations = array();
+        $destinations = [];
         foreach ($packages as $package) {
             $destinationPath = $project->getName() . '/' . $package->getName();
             if ($destinationPath != dirname($release['href'])) {
@@ -138,7 +138,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
     {
         $project = $this->server->tree->getNodeForPath(dirname(dirname(dirname($file['href']))));
         $packages = $project->getChildren();
-        $destinations = array();
+        $destinations = [];
         foreach ($packages as $package) {
             $releases = $package->getChildren();
             foreach ($releases as $release) {
@@ -232,7 +232,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
         $node = $this->server->tree->getNodeForPath($path);
         $class = get_class($node);
 
-        echo $GLOBALS['HTML']->pv_header(array('title' => ' WebDAV : ' . $this->purifier->purify($node->getName())));
+        echo $GLOBALS['HTML']->pv_header(['title' => ' WebDAV : ' . $this->purifier->purify($node->getName())]);
 
         ob_start();
 
@@ -268,12 +268,12 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
         $files = $this->server->getPropertiesForPath(
             $path,
-            array(
+            [
             '{DAV:}resourcetype',
             '{DAV:}getcontenttype',
             '{DAV:}getcontentlength',
             '{DAV:}getlastmodified',
-            ),
+            ],
             1
         );
 
@@ -296,7 +296,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
                 $type = $file[200]['{DAV:}resourcetype']->getValue();
                 // resourcetype can have multiple values
                 if (! is_array($type)) {
-                    $type = array($type);
+                    $type = [$type];
                 }
                 foreach ($type as $k => $v) {
                     // Some name mapping is preferred
@@ -393,7 +393,7 @@ class BrowserPlugin extends Sabre_DAV_Browser_Plugin
 
         echo "</table>";
 
-        echo $GLOBALS['HTML']->pv_footer(array());
+        echo $GLOBALS['HTML']->pv_footer([]);
 
         return ob_get_clean();
     }

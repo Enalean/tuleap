@@ -39,9 +39,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
 
         return new Project_OneStepCreation_OneStepCreationPresenter(
             $creation_request,
-            array(),
+            [],
             $project_manager,
-            array(),
+            [],
             '',
             true
         );
@@ -51,9 +51,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $full_name = 'my_test proj';
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEquals($full_name, $single_step->getFullName());
@@ -63,9 +63,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $unix_name = 'fdgd';
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEquals($unix_name, $single_step->getUnixName());
@@ -75,9 +75,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $description = 'short description';
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEquals($description, $single_step->getShortDescription());
@@ -87,9 +87,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $is_public = true;
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEquals($is_public, $single_step->isPublic());
@@ -99,9 +99,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $id = 5689;
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEquals($id, $single_step->getTemplateId());
@@ -109,7 +109,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
 
     public function testItSetsDefaultTemplateIdIfRequestDataDontHaveOne(): void
     {
-        $request_data          = array();
+        $request_data          = [];
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
         $this->assertEquals(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID, $single_step->getTemplateId());
@@ -119,9 +119,9 @@ class OneStepProjectCreationPresenter_FieldsTest extends TestCase
     {
         $tos = 'approved';
 
-        $request_data = array(
+        $request_data = [
             Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => $tos,
-        );
+        ];
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertTrue($single_step->getTosApproval());

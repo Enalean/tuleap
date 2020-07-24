@@ -82,9 +82,9 @@ class MovedArtifactValueBuilderTest extends TestCase
         $representation->field_id = 101;
         $representation->value    = "title";
 
-        $expected = array(
+        $expected = [
             $representation
-        );
+        ];
 
         $this->assertEquals($expected, $values);
     }

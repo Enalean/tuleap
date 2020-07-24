@@ -36,12 +36,12 @@ class SVNJSONPermissionsRetriever
     {
         if (! $project->usesService(SvnPlugin::SERVICE_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     'error' => dgettext(
                         'tuleap-svn',
                         "SVN service is disabled."
                     )
-                )
+                ]
             );
         }
 

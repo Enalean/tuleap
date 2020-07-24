@@ -32,11 +32,11 @@ final class VerifierTest extends \PHPUnit\Framework\TestCase
     {
         $creation_date = new \DateTime();
         $dao           = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
-        $dao->shouldReceive('getTokenInformationById')->andReturns(array(
+        $dao->shouldReceive('getTokenInformationById')->andReturns([
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,
             'creation_date' => $creation_date->getTimestamp()
-        ));
+        ]);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);
@@ -77,7 +77,7 @@ final class VerifierTest extends \PHPUnit\Framework\TestCase
     public function testItThrowsAnExceptionWhenVerifierPartIsNotValid(): void
     {
         $dao = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
-        $dao->shouldReceive('getTokenInformationById')->andReturns(array('verifier' => 'token_verification_part_password_hashed'));
+        $dao->shouldReceive('getTokenInformationById')->andReturns(['verifier' => 'token_verification_part_password_hashed']);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(false);
@@ -101,11 +101,11 @@ final class VerifierTest extends \PHPUnit\Framework\TestCase
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
         $expired_creation_date->sub(new \DateInterval(Verifier::TOKEN_VALIDITY_PERIOD));
         $dao                   = \Mockery::spy(\Tuleap\User\Password\Reset\LostPasswordDAO::class);
-        $dao->shouldReceive('getTokenInformationById')->andReturns(array(
+        $dao->shouldReceive('getTokenInformationById')->andReturns([
             'verifier'      => 'token_verification_part_password_hashed',
             'user_id'       => 101,
             'creation_date' => $expired_creation_date->getTimestamp()
-        ));
+        ]);
 
         $hasher = \Mockery::mock(SplitTokenVerificationStringHasher::class);
         $hasher->shouldReceive('verifyHash')->andReturns(true);

@@ -102,10 +102,10 @@ class BacklogItemRepresentationFactory
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_GET_CARD_FIELDS,
-            array(
+            [
                 'tracker'              => $artifact->getTracker(),
                 'card_fields_semantic' => &$card_fields_semantic
-            )
+            ]
         );
 
         return $card_fields_semantic;

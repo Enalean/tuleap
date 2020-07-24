@@ -169,16 +169,16 @@ class WikiServiceAdminActions extends WikiActions
         if (! $ret) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', array($feedback))
+                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_perm_err', [$feedback])
             );
         }
 
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
             "wiki_service_permissions_updated",
-            array(
+            [
             'group_id' => $this->gid
-            )
+            ]
         );
     }
 
@@ -200,7 +200,7 @@ class WikiServiceAdminActions extends WikiActions
                 $GLOBALS['Language']->getText(
                     'wiki_actions_wikiserviceadmin',
                     'update_page_perm_err',
-                    array($feedback)
+                    [$feedback]
                 )
             );
         }
@@ -208,10 +208,10 @@ class WikiServiceAdminActions extends WikiActions
         $event_manager = EventManager::instance();
         $event_manager->processEvent(
             "wiki_page_permissions_updated",
-            array(
+            [
             'group_id'         => $wp->getGid(),
             'wiki_page'        => $wp->getPagename(),
-            )
+            ]
         );
     }
 
@@ -233,7 +233,7 @@ class WikiServiceAdminActions extends WikiActions
         if (! $ret) {
             exit_error(
                 $GLOBALS['Language']->getText('global', 'error'),
-                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', array($feedback))
+                $GLOBALS['Language']->getText('wiki_actions_wikiserviceadmin', 'update_attachment_perm_err', [$feedback])
             );
         }
     }

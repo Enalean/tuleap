@@ -61,7 +61,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    'pagename' => '[pagename]', // default: current page
                    //'header'  => '',  // expandable string
                    'quiet'   => false, // print no header
@@ -80,7 +80,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                    'section' => false,     // this named section per page only
                    'sectionhead' => false // when including a named
                                //  section show the heading
-            )
+            ]
         );
     }
 
@@ -88,7 +88,7 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
     {
         static $included_pages = false;
         if (! $included_pages) {
-            $included_pages = array($basepage);
+            $included_pages = [$basepage];
         }
 
         $args = $this->getArgs($argstr, $request);
@@ -174,8 +174,8 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                 array_pop($included_pages);
                 if (! $smalltitle) {
                     $content->pushContent(HTML::p(
-                        array('class' => $quiet ?
-                                                        '' : 'transclusion-title'),
+                        ['class' => $quiet ?
+                                                        '' : 'transclusion-title'],
                         fmt(
                             "Included from %s:",
                             WikiLink($cpagename)
@@ -183,8 +183,8 @@ class WikiPlugin_UnfoldSubpages extends WikiPlugin_IncludePage
                     ));
                 }
                 $content->pushContent(HTML(HTML::div(
-                    array('class' => $quiet ?
-                                                           '' : 'transclusion'),
+                    ['class' => $quiet ?
+                                                           '' : 'transclusion'],
                     false,
                     $ct
                 )));

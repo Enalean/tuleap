@@ -47,7 +47,7 @@ class GitActionsTest extends TestCase
 
         $this->gitAction = \Mockery::mock(
             \GitActions::class,
-            array(
+            [
                 \Mockery::spy(\Git::class),
                 \Mockery::spy(\Git_SystemEventManager::class),
                 \Mockery::spy(\GitRepositoryFactory::class),
@@ -81,7 +81,7 @@ class GitActionsTest extends TestCase
                 Mockery::mock(UsersToNotifyDao::class),
                 Mockery::mock(UgroupsToNotifyDao::class),
                 \Mockery::spy(\UGroupManager::class)
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -129,7 +129,7 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addError')->with('Empty required parameter(s)')->once();
         $git->shouldReceive('addInfo')->never();
 
-        $mails = array('john.doe@acme.com');
+        $mails = ['john.doe@acme.com'];
         $this->assertFalse($this->gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
     }
 
@@ -148,9 +148,9 @@ class GitActionsTest extends TestCase
 
     public function testNotificationAddMailFailAlreadyNotified(): void
     {
-        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('john.doe@acme.com'))->andReturns('mail_existing john.doe@acme.com');
-        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('jane.doe@acme.com'))->andReturns('mail_existing jane.doe@acme.com');
-        $this->gitAction->shouldReceive('getText')->with('mail_existing', array('john.smith@acme.com'))->andReturns('mail_existing john.smith@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', ['john.doe@acme.com'])->andReturns('mail_existing john.doe@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', ['jane.doe@acme.com'])->andReturns('mail_existing jane.doe@acme.com');
+        $this->gitAction->shouldReceive('getText')->with('mail_existing', ['john.smith@acme.com'])->andReturns('mail_existing john.smith@acme.com');
         $git = \Mockery::spy(\Git::class);
         $this->gitAction->setController($git);
         $gitRepository = \Mockery::spy(\GitRepository::class);
@@ -166,9 +166,9 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addInfo')->with('mail_existing jane.doe@acme.com')->ordered();
         $git->shouldReceive('addInfo')->with('mail_existing john.smith@acme.com')->ordered();
 
-        $mails = array('john.doe@acme.com',
+        $mails = ['john.doe@acme.com',
                        'jane.doe@acme.com',
-                       'john.smith@acme.com');
+                       'john.smith@acme.com'];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -188,9 +188,9 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addError')->with('Could not remove mail john.smith@acme.com')->ordered();
         $git->shouldReceive('addInfo')->never();
 
-        $mails = array('john.doe@acme.com',
+        $mails = ['john.doe@acme.com',
                        'jane.doe@acme.com',
-                       'john.smith@acme.com');
+                       'john.smith@acme.com'];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -208,9 +208,9 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addError')->never();
         $git->shouldReceive('addInfo')->with('Mail added')->once();
 
-        $mails = array('john.doe@acme.com',
+        $mails = ['john.doe@acme.com',
                        'jane.doe@acme.com',
-                       'john.smith@acme.com');
+                       'john.smith@acme.com'];
         $this->assertTrue($this->gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
@@ -251,7 +251,7 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addError')->with('Could not remove mail john.doe@acme.com')->once();
         $git->shouldReceive('addInfo')->never();
 
-        $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
+        $this->assertFalse($this->gitAction->notificationRemoveMail(1, 1, ['john.doe@acme.com'], 'a_pane'));
     }
 
     public function testNotificationRemoveMailFailMailPass(): void
@@ -265,7 +265,7 @@ class GitActionsTest extends TestCase
         $git->shouldReceive('addError')->never();
         $git->shouldReceive('addInfo')->with('Mail john.doe@acme.com removed')->once();
 
-        $this->assertTrue($this->gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
+        $this->assertTrue($this->gitAction->notificationRemoveMail(1, 1, ['john.doe@acme.com'], 'a_pane'));
     }
 
     public function testConfirmPrivateFailNoRepoId(): void
@@ -370,7 +370,7 @@ class GitActionsTest extends TestCase
 
         $git->shouldReceive('addError')->never();
         $git->shouldReceive('addWarn')->never();
-        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(array());
+        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns([]);
         $gitRepository->shouldReceive('setDescription')->never();
         $gitRepository->shouldReceive('save')->never();
         $gitAction->shouldReceive('save')->once();
@@ -389,7 +389,7 @@ class GitActionsTest extends TestCase
 
         $git->shouldReceive('addError')->never();
         $git->shouldReceive('addWarn')->with('Making the repository access private will remove notification for all mail addresses that doesn\'t correspond to a user member of this project.')->once();
-        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(array('john.doe@acme.com'));
+        $gitRepository->shouldReceive('getNonMemberMails')->once()->andReturns(['john.doe@acme.com']);
         $gitRepository->shouldReceive('setDescription')->once();
         $gitRepository->shouldReceive('save')->once();
         $gitAction->shouldReceive('save')->never();
@@ -403,33 +403,33 @@ class GitActionsTest extends TestCase
         $projectId = 42;
         $userId    = 24;
 
-        $project_repos = array(
-            array(
+        $project_repos = [
+            [
                 'id'   => '1',
                 'name' => 'a',
-            ),
-            array(
+            ],
+            [
                 'id'   => '2',
                 'name' => 'b',
-            ),
-        );
+            ],
+        ];
 
-        $sandra_repos = array(
-            array(
+        $sandra_repos = [
+            [
                 'id'   => '3',
                 'name' => 'c',
-            )
-        );
+            ]
+        ];
 
         $repo_owners = TestHelper::arrayToDar(
-            array(
-                array(
+            [
+                [
                     'id' => '123',
-                ),
-                array(
+                ],
+                [
                     'id' => '456',
-                ),
-            )
+                ],
+            ]
         );
 
         $dao    = \Mockery::spy(\GitDao::class);
@@ -438,8 +438,8 @@ class GitActionsTest extends TestCase
         $dao->shouldReceive('getProjectRepositoriesOwners')->with($projectId)->andReturns($repo_owners);
 
         $controller = \Mockery::spy(\Git::class);
-        $controller->shouldReceive('addData')->with(array('repository_list' => $project_repos, 'repositories_owners' => $repo_owners))->ordered();
-        $controller->shouldReceive('addData')->with(array('repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners))->ordered();
+        $controller->shouldReceive('addData')->with(['repository_list' => $project_repos, 'repositories_owners' => $repo_owners])->ordered();
+        $controller->shouldReceive('addData')->with(['repository_list' => $sandra_repos, 'repositories_owners' => $repo_owners])->ordered();
 
         $action = \Mockery::mock(\GitActions::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $action->setController($controller);

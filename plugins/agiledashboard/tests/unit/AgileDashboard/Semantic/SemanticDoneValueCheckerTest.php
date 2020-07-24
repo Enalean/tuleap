@@ -53,10 +53,10 @@ class SemanticDoneValueCheckerTest extends TestCase
         $this->xml_hidden_value   = new Tracker_FormElement_Field_List_Bind_StaticValue("F4", 'hidden', '', 4, true);
 
         $this->semantic_status = Mockery::spy(Tracker_Semantic_Status::class);
-        $this->semantic_status->shouldReceive('getOpenValues')->andReturn(array(
+        $this->semantic_status->shouldReceive('getOpenValues')->andReturn([
             1,
             2
-        ));
+        ]);
 
         $this->xml_semantic_status = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
 <semantic type="status">

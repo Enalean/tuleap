@@ -21,7 +21,7 @@ define('PHPWIKI_VERSION', '1.3.12p2');
   * We want to work with those old ones instead of the new superglobals,
   * for easier coding.
   */
-foreach (array('SERVER','REQUEST','GET','POST','SESSION','ENV','COOKIE') as $k) {
+foreach (['SERVER', 'REQUEST', 'GET', 'POST', 'SESSION', 'ENV', 'COOKIE'] as $k) {
     if (! isset($GLOBALS['HTTP_' . $k . '_VARS']) and isset($GLOBALS['_' . $k])) {
         $GLOBALS['HTTP_' . $k . '_VARS'] = $GLOBALS['_' . $k];
     }

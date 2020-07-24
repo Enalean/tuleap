@@ -452,7 +452,7 @@ abstract class SystemEvent
         if (is_null($dao)) {
             $dao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
         }
-        $listeners = array();
+        $listeners = [];
         foreach ($dao->searchByType($this->getStatus()) as $row) {
             $listeners = array_merge($listeners, explode(',', $row['emails']));
         }
@@ -498,7 +498,7 @@ End Date:     {$this->getEndDate()}
      */
     public static function encode($data)
     {
-        return str_replace(self::PARAMETER_SEPARATOR, self::PARAMETER_SEPARATOR_ESCAPE, json_encode(array('data' => $data)));
+        return str_replace(self::PARAMETER_SEPARATOR, self::PARAMETER_SEPARATOR_ESCAPE, json_encode(['data' => $data]));
     }
 
     /**

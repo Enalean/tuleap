@@ -37,8 +37,8 @@ class KanbanRightsPresenter implements MessageRightsPresenter
     ) {
         $this->submitter_id       = null;
         $this->submitter_can_view = false;
-        $this->submitter_only     = array();
-        $this->artifact           = array();
+        $this->submitter_only     = [];
+        $this->artifact           = [];
         $this->tracker            = $permission_serializer->getLiteralizedAllUserGroupsThatCanViewTracker($tracker);
     }
 }

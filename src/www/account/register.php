@@ -40,7 +40,7 @@ if ($page == "admin_creation") {
 
 $is_register_page_accessible = true;
 $event_manager = EventManager::instance();
-$event_manager->processEvent('display_newaccount', array('allow' => &$is_register_page_accessible));
+$event_manager->processEvent('display_newaccount', ['allow' => &$is_register_page_accessible]);
 
 if (! $request->getCurrentUser()->isSuperUser() && ! $is_register_page_accessible) {
     exit_error(
@@ -210,10 +210,10 @@ function display_account_form(bool $is_password_needed, $register_error, array $
     $extra_plugin_field = '';
     EventManager::instance()->processEvent(
         Event::USER_REGISTER_ADDITIONAL_FIELD,
-        array(
+        [
             'request' => $request,
             'field'   => &$extra_plugin_field
-        )
+        ]
     );
 
     if ($page == "admin_creation") {
@@ -258,26 +258,26 @@ if ($page !== 'admin_creation') {
     $em = EventManager::instance();
     $em->processEvent(
         'before_register',
-        array(
+        [
             'request'                      => $request,
             'is_registration_confirmation' => $confirmation_register,
             'is_password_needed'           => &$is_password_needed,
-        )
+        ]
     );
 }
 
 // ###### first check for valid login, if so, congratulate
 $request = HTTPRequest::instance();
 $hp = Codendi_HTMLPurifier::instance();
-$errors = array();
+$errors = [];
 if ($request->isPost() && $request->exist('Register')) {
     $is_registration_valid = true;
     EventManager::instance()->processEvent(
         Event::BEFORE_USER_REGISTRATION,
-        array(
+        [
             'request'               => $request,
             'is_registration_valid' => &$is_registration_valid
-        )
+        ]
     );
     $page                        = $request->get('page');
     $displayed_image             = true;
@@ -292,10 +292,10 @@ if ($request->isPost() && $request->exist('Register')) {
     if ($is_registration_valid && $new_userid = register_valid($is_password_needed, $mail_confirm_code, $errors)) {
         EventManager::instance()->processEvent(
             Event::AFTER_USER_REGISTRATION,
-            array(
+            [
                 'request' => $request,
                 'user_id' => $new_userid
-            )
+            ]
         );
 
         $confirmation_register   = true;
@@ -316,7 +316,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 if (! $is_sent) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
                     );
                 }
             }
@@ -329,7 +329,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 if (! send_new_user_email($request->get('form_email'), $user_name, $mail_confirm_code)) {
                     $GLOBALS['Response']->addFeedback(
                         Feedback::ERROR,
-                        $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin')))
+                        $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')])
                     );
                 }
                 $presenter = new MailPresenterFactory();
@@ -356,7 +356,7 @@ if ($request->isPost() && $request->exist('Register')) {
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect_admin');
                 $displayed_image    = false;
             } else {
-                $content            = $Language->getText('account_register', 'msg_confirm', array(ForgeConfig::get('sys_name'), $user_name));
+                $content            = $Language->getText('account_register', 'msg_confirm', [ForgeConfig::get('sys_name'), $user_name]);
                 $redirect_url       = '/';
                 $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             }
@@ -365,7 +365,7 @@ if ($request->isPost() && $request->exist('Register')) {
             // inform the user that approval is required
             $href_approval      = HTTPRequest::instance()->getServerUrl() . '/admin/approve_pending_users.php?page=pending';
             $title              = $Language->getText('account_register', 'title_approval');
-            $content            = $Language->getText('account_register', 'msg_approval', array(ForgeConfig::get('sys_name'), $user_name, $href_approval));
+            $content            = $Language->getText('account_register', 'msg_approval', [ForgeConfig::get('sys_name'), $user_name, $href_approval]);
             $redirect_url       = '/';
             $redirect_content   = $Language->getText('account_register', 'msg_redirect');
             $presenter          = new MailPresenterFactory();
@@ -386,7 +386,7 @@ if ($request->isPost() && $request->exist('Register')) {
     }
 }
 
-$body_class = array('register-page');
+$body_class = ['register-page'];
 if ($page == 'admin_creation') {
     $body_class[] = 'admin_register';
 }
@@ -395,7 +395,7 @@ if ($page == 'admin_creation') {
 $HTML->includeJavascriptFile('/scripts/check_pw.js');
 $HTML->includeFooterJavascriptFile('/scripts/jstimezonedetect/jstz.min.js');
 $HTML->includeFooterJavascriptFile('/scripts/tuleap/timezone.js');
-$HTML->header(array('title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class));
+$HTML->header(['title' => $Language->getText('account_register', 'title'), 'body_class' => $body_class]);
 
 
 if (! $confirmation_register || ! isset($presenter, $template)) {
@@ -406,4 +406,4 @@ if (! $confirmation_register || ! isset($presenter, $template)) {
     $renderer->renderToPage($template, $presenter);
 }
 
-$HTML->footer(array('without_content' => true));
+$HTML->footer(['without_content' => true]);

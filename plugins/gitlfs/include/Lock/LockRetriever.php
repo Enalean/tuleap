@@ -71,7 +71,7 @@ class LockRetriever
 
     private function instantiateLocksFromRows(array $lock_rows): array
     {
-        $locks = array();
+        $locks = [];
 
         foreach ($lock_rows as $lock_row) {
             $locks[] = $this->instantiateLockFromRow($lock_row);

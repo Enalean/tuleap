@@ -96,7 +96,7 @@ class MailNotification
 
     public function getNotifiedUsersAsString()
     {
-        $users = array();
+        $users = [];
         foreach ($this->notified_users as $user) {
             $users[] = $user->getUserName();
         }
@@ -132,7 +132,7 @@ class MailNotification
 
     public function getNotifiedUserGroupsAsString()
     {
-        $user_groups = array();
+        $user_groups = [];
 
         foreach ($this->notified_ugroups as $ugroup) {
             $user_groups[] = $ugroup->getNormalizedName();

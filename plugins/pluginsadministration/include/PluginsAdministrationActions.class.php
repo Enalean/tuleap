@@ -245,7 +245,7 @@ class PluginsAdministrationActions extends Actions
                 if (strlen(trim($name)) === 0) {
                     $name = get_class($plugin);
                 }
-                $return = array();
+                $return = [];
                 $return['name'] = $name;
                 $return['plugin'] = $plugin;
             }

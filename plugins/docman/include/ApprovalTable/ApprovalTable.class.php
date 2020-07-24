@@ -47,7 +47,7 @@ abstract class Docman_ApprovalTable
 
         $this->approvalState      = null;
         $this->customizable       = true;
-        $this->reviewers          = array();
+        $this->reviewers          = [];
     }
 
     public function setId($v)

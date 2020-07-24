@@ -21,7 +21,7 @@
 class FlamingParrot_NavBarItemPresentersCollection
 {
 
-    private $items = array();
+    private $items = [];
 
     public function addItem(FlamingParrot_NavBarItemPresenter $item)
     {
@@ -38,7 +38,7 @@ class FlamingParrot_NavBarItemPresentersCollection
             }
         }
 
-        array_splice($this->items, $index, 0, array($item));
+        array_splice($this->items, $index, 0, [$item]);
     }
 
     public function getItems()

@@ -197,7 +197,7 @@ class GitForkPermissionsManager
         $branches_permissions = $this->default_fine_grained_factory->getBranchesFineGrainedPermissionsForProject($project);
         $tags_permissions     = $this->default_fine_grained_factory->getTagsFineGrainedPermissionsForProject($project);
 
-        $branches_permissions_representation = array();
+        $branches_permissions_representation = [];
         foreach ($branches_permissions as $permission) {
             $branches_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
                 $permission,
@@ -205,7 +205,7 @@ class GitForkPermissionsManager
             );
         }
 
-        $tags_permissions_representation = array();
+        $tags_permissions_representation = [];
         foreach ($tags_permissions as $permission) {
             $tags_permissions_representation[] = $this->fine_grained_builder->buildDefaultPermission(
                 $permission,
@@ -281,7 +281,7 @@ class GitForkPermissionsManager
         $delete_url = '?action=delete-permissions&pane=perms&repo_id=' . $this->repository->getId() . '&group_id=' . $project->getID();
         $url        = '?action=repo_management&pane=perms&group_id=' . $project->getID();
         $csrf       = new CSRFSynchronizerToken($url);
-        $branches_permissions_representation = array();
+        $branches_permissions_representation = [];
         foreach ($branches_permissions as $permission) {
             $branches_permissions_representation[] = $this->fine_grained_builder->buildRepositoryPermission(
                 $permission,
@@ -289,7 +289,7 @@ class GitForkPermissionsManager
             );
         }
 
-        $tags_permissions_representation = array();
+        $tags_permissions_representation = [];
         foreach ($tags_permissions as $permission) {
             $tags_permissions_representation[] = $this->fine_grained_builder->buildRepositoryPermission(
                 $permission,

@@ -50,7 +50,7 @@ class XmlUgroupRetriever
      */
     public function getUgroupIdsForPermissionNode(Project $project, SimpleXMLElement $permission_xmlnode)
     {
-        $ugroup_ids = array();
+        $ugroup_ids = [];
 
         foreach ($permission_xmlnode->children() as $ugroup_xml) {
             if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {
@@ -76,7 +76,7 @@ class XmlUgroupRetriever
      */
     public function getUgroupsForPermissionNode(Project $project, SimpleXMLElement $permission_xmlnode)
     {
-        $ugroups = array();
+        $ugroups = [];
 
         foreach ($permission_xmlnode->children() as $ugroup_xml) {
             if ($ugroup_xml->getName() === GitXmlImporter::UGROUP_TAG) {

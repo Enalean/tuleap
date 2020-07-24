@@ -46,9 +46,9 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesWhenOnlyIsAutocomputedIsSet(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1'
-        );
+        ];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertEquals('1', $this->field_change->is_autocomputed);
@@ -57,10 +57,10 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesWhenAutocomputedIsSetAndManualValueEmpty(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL          => ''
-        );
+        ];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertEquals('1', $this->field_change->is_autocomputed);
@@ -69,9 +69,9 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesWhenOnlyAManualValueIsSet(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5'
-        );
+        ];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertEquals('0', $this->field_change->is_autocomputed);
@@ -80,10 +80,10 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesWhenAManualValueIsSetAndIsAutocomputedDisabled(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '0',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5'
-        );
+        ];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertEquals('0', $this->field_change->is_autocomputed);
@@ -92,7 +92,7 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItDoesNotUpdateWhenAManualValueOrIsAutocomputedIsNotProvided(): void
     {
-        $submitted_value = array();
+        $submitted_value = [];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertFalse(isset($this->field_change->is_autocomputed));
@@ -101,10 +101,10 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesEverythingIfAManualValueIsSetAndIsAutocomputedIsEnabled(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => '1.5'
-        );
+        ];
         $this->updater->update($this->field_change, $submitted_value);
 
         $this->assertEquals('1', $this->field_change->is_autocomputed);
@@ -113,10 +113,10 @@ final class FieldChangeComputedXMLUpdaterTest extends \PHPUnit\Framework\TestCas
 
     public function testItUpdatesWhenOldValueIsManualAndValuesIsAutocomputed(): void
     {
-        $submitted_value = array(
+        $submitted_value = [
             Tracker_FormElement_Field_Computed::FIELD_VALUE_IS_AUTOCOMPUTED => '1',
             Tracker_FormElement_Field_Computed::FIELD_VALUE_MANUAL => ''
-        );
+        ];
 
         $specific_field_change = new \SimpleXMLElement('<?xml version="1.0"?>
                   <field_change field_name="capacity" type="computed">

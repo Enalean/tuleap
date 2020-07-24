@@ -72,7 +72,7 @@ class AdditionalModalPresenterBuilder
     {
         return $this->renderer->renderToString(
             'modal-button',
-            array('title' => $title)
+            ['title' => $title]
         );
     }
 
@@ -86,7 +86,7 @@ class AdditionalModalPresenterBuilder
     ) {
         return $this->renderer->renderToString(
             'modal-content',
-            array(
+            [
                 'title'                   => $title,
                 'is_linked'               => (bool) $ldap_group,
                 'ugroup_id'               => $ugroup->getId(),
@@ -98,7 +98,7 @@ class AdditionalModalPresenterBuilder
                 'is_synchronized'         => $this->isSynchronized($ugroup, $synchro),
                 'locale'                  => $this->request->getCurrentUser()->getLocale(),
                 'csrf_token'              => $csrf,
-            )
+            ]
         );
     }
 

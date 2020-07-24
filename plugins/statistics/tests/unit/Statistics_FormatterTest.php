@@ -31,7 +31,7 @@ final class Statistics_FormatterTest extends TestCase
 {
     public function testItExportsCsv(): void
     {
-        $data_line            = array('Data1,', 'Data 2', 'Data 3', 'Data 4', 'Data5');
+        $data_line            = ['Data1,', 'Data 2', 'Data 3', 'Data 4', 'Data5'];
         $statistics_formatter = new Statistics_Formatter('', '', ',', ',');
         $statistics_formatter->addHeader('Title');
         $statistics_formatter->addLine($data_line);
@@ -47,7 +47,7 @@ Title
 
     public function testItClearsContent(): void
     {
-        $data_line            = array('Data', 'Data', 'Data');
+        $data_line            = ['Data', 'Data', 'Data'];
         $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addHeader('Title');
         $statistics_formatter->addLine($data_line);
@@ -58,7 +58,7 @@ Title
 
     public function testItExportsMultipleTimes(): void
     {
-        $data_line            = array('Data', 'Data', 'Data');
+        $data_line            = ['Data', 'Data', 'Data'];
         $statistics_formatter = new Statistics_Formatter('', '', ',');
         $statistics_formatter->addLine($data_line);
         $this->assertEquals($statistics_formatter->getCsvContent(), PHP_EOL . 'Data,Data,Data' . PHP_EOL);

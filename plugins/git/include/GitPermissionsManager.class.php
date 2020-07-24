@@ -107,12 +107,12 @@ class GitPermissionsManager
         if ($new_access === Project::ACCESS_PRIVATE || $new_access === Project::ACCESS_PRIVATE_WO_RESTRICTED) {
             $this->git_permission_dao->disableAnonymousRegisteredAuthenticated($project->getID());
             $this->fine_grained_dao->disableAnonymousRegisteredAuthenticated($project->getID());
-            $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
+            $this->git_system_event_manager->queueProjectsConfigurationUpdate([$project->getID()]);
         }
         if ($new_access === Project::ACCESS_PUBLIC && $old_access === Project::ACCESS_PUBLIC_UNRESTRICTED) {
             $this->git_permission_dao->disableAuthenticated($project->getID());
             $this->fine_grained_dao->disableAuthenticated($project->getID());
-            $this->git_system_event_manager->queueProjectsConfigurationUpdate(array($project->getID()));
+            $this->git_system_event_manager->queueProjectsConfigurationUpdate([$project->getID()]);
         }
     }
 
@@ -136,7 +136,7 @@ class GitPermissionsManager
 
     private function queueProjectsConfigurationUpdate(array $dar)
     {
-        $projects_ids = array();
+        $projects_ids = [];
         if (count($dar) > 0) {
             foreach ($dar as $row) {
                 $projects_ids[] = $row['group_id'];
@@ -151,11 +151,11 @@ class GitPermissionsManager
      */
     public function getDefaultPermissions(Project $project)
     {
-        return array(
+        return [
             Git::PERM_READ  => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ),
             Git::PERM_WRITE => $this->getDefaultPermission($project, Git::DEFAULT_PERM_WRITE),
             Git::PERM_WPLUS => $this->getDefaultPermission($project, Git::DEFAULT_PERM_WPLUS),
-        );
+        ];
     }
 
     private function getDefaultPermission(Project $project, $permission_name)
@@ -172,9 +172,9 @@ class GitPermissionsManager
      */
     public function getRepositoryGlobalPermissions(GitRepository $repository)
     {
-        $permissions =  array(
+        $permissions =  [
             Git::PERM_READ => $this->getGlobalPermission($repository, Git::PERM_READ)
-        );
+        ];
 
         if (
             ! $repository->isMigratedToGerrit() &&
@@ -192,9 +192,9 @@ class GitPermissionsManager
      */
     public function getProjectGlobalPermissions(Project $project)
     {
-        $permissions =  array(
+        $permissions =  [
             Git::DEFAULT_PERM_READ => $this->getDefaultPermission($project, Git::DEFAULT_PERM_READ)
-        );
+        ];
 
         if (! $this->fine_grained_retriever->doesProjectUseFineGrainedPermissions($project)) {
             $permissions[Git::DEFAULT_PERM_WRITE] = $this->getDefaultPermission($project, Git::DEFAULT_PERM_WRITE);

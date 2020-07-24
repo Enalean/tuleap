@@ -41,9 +41,9 @@ if ($request->valid(new Valid_Pv())) {
 
 
 $pm = ProjectManager::instance();
-$params = array('title' => $Language->getText('forum_index', 'forums_for', $pm->getProject($group_id)->getPublicName()),
+$params = ['title' => $Language->getText('forum_index', 'forums_for', $pm->getProject($group_id)->getPublicName()),
               'help' => 'collaboration.html#web-forums',
-              'pv'   => isset($pv) ? $pv : false);
+              'pv'   => isset($pv) ? $pv : false];
 forum_header($params);
 
 
@@ -88,7 +88,7 @@ echo '<P>' . $Language->getText('forum_index', 'choose_forum') . '<P>';
 
 for ($j = 0; $j < $rows; $j++) {
     echo '<A HREF="forum.php?forum_id=' . db_result($result, $j, 'group_forum_id') . '">' .
-        html_image("ic/cfolder15.png", array("border" => "0")) .
+        html_image("ic/cfolder15.png", ["border" => "0"]) .
         '&nbsp;' .
         db_result($result, $j, 'forum_name') . '</A> ';
     //message count

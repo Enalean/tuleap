@@ -59,21 +59,21 @@ class LDAPBackendSVNTest extends TestCase
     {
         $backend  = \Mockery::mock(\LDAP_BackendSVN::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $project_array_01 = array(
+        $project_array_01 = [
             'repository_name' => 'gpig',
             'group_name'      => 'Guinea Pig',
             'public_path'     => '/svnroot/gpig',
             'system_path'     => '/svnroot/gpig',
             'group_id'        => 101
-        );
+        ];
 
-        $project_array_02 = array(
+        $project_array_02 = [
             'repository_name' => 'garden',
             'public_path'     => '/svnroot/garden',
             'system_path'     => '/svnroot/garden',
             'group_name'      => 'The Garden Project',
             'group_id'        => 102
-        );
+        ];
 
         $svn_dao = \Mockery::spy(\SVN_DAO::class);
         $svn_dao->shouldReceive('searchSvnRepositories')->andReturns(\TestHelper::arrayToDar($project_array_01, $project_array_02));
@@ -112,7 +112,7 @@ class LDAPBackendSVNTest extends TestCase
 
     private function thenThereAreTwoLocationDefinedGpigAndGarden($conf): void
     {
-        $matches = array();
+        $matches = [];
         preg_match_all('%<Location /svnroot/([^>]*)>%', $conf, $matches);
         $this->assertEquals('gpig', $matches[1][0]);
         $this->assertEquals('garden', $matches[1][1]);

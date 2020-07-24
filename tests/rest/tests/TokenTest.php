@@ -30,10 +30,10 @@ class TokenTest extends RestBase
         $response = $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
-            json_encode(array(
+            json_encode([
                 "username" => 'I don\'t exists',
                 "password" => 'pwd'
-            ))
+            ])
         ));
         $this->assertEquals(401, $response->getStatusCode());
     }
@@ -43,10 +43,10 @@ class TokenTest extends RestBase
         $response = $this->getResponseWithoutAuth($this->client->post(
             'tokens',
             null,
-            json_encode(array(
+            json_encode([
                 "username" => REST_TestDataBuilder::TEST_USER_1_LDAPID,
                 "password" => 'pwd'
-            ))
+            ])
         ));
         $this->assertEquals(401, $response->getStatusCode());
     }

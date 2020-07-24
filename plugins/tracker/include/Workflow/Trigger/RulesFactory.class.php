@@ -92,7 +92,7 @@ class Tracker_Workflow_Trigger_RulesFactory
 
     private function getTriggeringFields(Tracker $target_tracker, array $triggering_fields)
     {
-        $fields = array();
+        $fields = [];
         foreach ($triggering_fields as $triggering_field) {
             $fields[] = $this->getOneTriggeringField($target_tracker, $triggering_field->field_id, $triggering_field->field_value_id);
         }

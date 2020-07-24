@@ -63,10 +63,10 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAnonymousWhenScriptException(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '/account/login.php'
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         $this->urlVerification->verifyRequest($server);
@@ -77,11 +77,11 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAnonymousWhenAllowed(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/'
-        );
+        ];
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::ANONYMOUS);
 
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
@@ -94,10 +94,10 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAuthenticatedWhenAnonymousAllowed(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => ''
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
         $this->urlVerification->verifyRequest($server);
@@ -108,11 +108,11 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAnonymousWhenNotAllowedAtRoot(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/'
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
@@ -126,11 +126,11 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithScript(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/script/'
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
@@ -144,11 +144,11 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAnonymousWhenNotAllowedWithLightView(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => '',
             'REQUEST_URI' => '/script?pv=2'
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(true);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);
@@ -162,10 +162,10 @@ class URLVerificationWithAnonymousTest extends TestCase
 
     public function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed(): void
     {
-        $server = array(
+        $server = [
             'SERVER_NAME' => 'example.com',
             'SCRIPT_NAME' => ''
-        );
+        ];
         $this->user->shouldReceive('isAnonymous')->andReturns(false);
 
         ForgeConfig::set(ForgeAccess::CONFIG, ForgeAccess::REGULAR);

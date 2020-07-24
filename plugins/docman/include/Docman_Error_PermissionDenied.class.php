@@ -39,7 +39,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
     private function buildPermissionDeniedInterface(Project $project)
     {
         $purifier = Codendi_HTMLPurifier::instance();
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
+        site_header(['title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')]);
         echo "<b>" . $purifier->purify(dgettext('tuleap-docman', 'You do not have the permission to access the document')) . "</b>";
         echo '<br>';
         echo "<br>" . $purifier->purify(dgettext('tuleap-docman', 'Permission denied set on documents. You can not view this documents unless administrator grant you access.'));
@@ -63,7 +63,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
               <br><input name="Submit" type="submit" value="' . $purifier->purify($GLOBALS['Language']->getText('include_exit', 'send_mail')) . '"/></br>
           </form>';
 
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
+        $GLOBALS['HTML']->footer(['showfeedback' => false]);
     }
 
     /**
@@ -118,7 +118,7 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
      */
     public function urlQueryToArray($url)
     {
-        $params = array();
+        $params = [];
         $query  = explode('&', parse_url($url, PHP_URL_QUERY));
         foreach ($query as $tok) {
             [$var, $val] = explode('=', $tok);
@@ -166,11 +166,11 @@ class Docman_Error_PermissionDenied extends Error_PermissionDenied
         if (empty($adminList)) {
             $adminList = $pm->getProjectAdminUsers($project);
         }
-        $receivers = array();
+        $receivers = [];
         foreach ($adminList as $mail => $language) {
             $receivers[] = $mail;
         }
-        return array('admins' => $receivers, 'status' => true);
+        return ['admins' => $receivers, 'status' => true];
     }
 
     /**

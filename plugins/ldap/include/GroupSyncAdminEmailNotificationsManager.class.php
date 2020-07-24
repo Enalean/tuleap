@@ -89,7 +89,7 @@ class GroupSyncAdminEmailNotificationsManager implements GroupSyncNotificationsM
      * */
     private function getUsersFromIds(array $user_ids)
     {
-        $users = array();
+        $users = [];
         foreach ($user_ids as $id) {
             $user = $this->getUserFromId($id);
             if ($user !== null) {

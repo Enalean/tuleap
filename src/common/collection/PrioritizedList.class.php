@@ -29,7 +29,7 @@ class PrioritizedList extends LinkedList
     public function __construct($initial_array = '')
     {
         parent::__construct($initial_array);
-        $this->priorities = array();
+        $this->priorities = [];
         if (count($this->elements)) {
             $this->priorities[] = array_keys(array_fill(0, count($this->elements), 0));
         }
@@ -46,7 +46,7 @@ class PrioritizedList extends LinkedList
 
     public function iterator()
     {
-        $tab = array();
+        $tab = [];
         krsort($this->priorities);
         foreach ($this->priorities as $elements) {
             foreach ($elements as $position) {

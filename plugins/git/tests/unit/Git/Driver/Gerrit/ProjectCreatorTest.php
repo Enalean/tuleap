@@ -122,7 +122,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
         $this->server = \Mockery::mock(
             \Git_RemoteServer_GerritServer::class,
-            array(
+            [
                 $id,
                 $host,
                 $ssh_port,
@@ -134,7 +134,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
                 $gerrit_version,
                 $http_password,
                 ''
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -186,7 +186,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->template           = \Mockery::spy(\Git_Driver_Gerrit_Template_Template::class)->shouldReceive('getId')->andReturns(12)->getMock();
         $this->template_processor = new Git_Driver_Gerrit_Template_TemplateProcessor();
         $this->template_factory   = \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class)->shouldReceive('getTemplate')->with(12)->andReturns($this->template)->getMock();
-        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns(array($this->template));
+        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns([$this->template]);
 
         $this->gerrit_tmpdir = $this->tmpdir . '/gerrit_tbd';
 
@@ -228,13 +228,13 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         $this->project_admins->shouldReceive('getNormalizedName')->andReturns('project_admins');
         $this->project_admins->shouldReceive('getId')->andReturns(ProjectUGroup::PROJECT_ADMIN);
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns(array($this->project_members, $this->another_ugroup, $this->project_admins));
+        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns([$this->project_members, $this->another_ugroup, $this->project_admins]);
 
         $this->membership_manager->shouldReceive('getGroupUUIDByNameOnServer')->with($this->server, $this->project_members_gerrit_name)->andReturns($this->project_members_uuid);
         $this->membership_manager->shouldReceive('getGroupUUIDByNameOnServer')->with($this->server, $this->another_ugroup_gerrit_name)->andReturns($this->another_ugroup_uuid);
         $this->membership_manager->shouldReceive('getGroupUUIDByNameOnServer')->with($this->server, $this->project_admins_gerrit_name)->andReturns($this->project_admins_uuid);
 
-        $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->andReturns(array($this->project_members, $this->another_ugroup, $this->project_admins));
+        $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->andReturns([$this->project_members, $this->another_ugroup, $this->project_admins]);
     }
 
     protected function tearDown(): void
@@ -246,9 +246,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItPushesTheUpdatedConfigToTheServer(): void
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::REGISTERED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::PROJECT_MEMBERS, 120));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array(ProjectUGroup::PROJECT_ADMIN));
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::REGISTERED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::PROJECT_MEMBERS, 120]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([ProjectUGroup::PROJECT_ADMIN]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository, $this->template_id);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -264,9 +264,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItThrowsAnExceptionIfProjectAlreadyExists(): void
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::REGISTERED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::PROJECT_MEMBERS, 120));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array(ProjectUGroup::PROJECT_ADMIN));
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::REGISTERED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::PROJECT_MEMBERS, 120]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([ProjectUGroup::PROJECT_ADMIN]);
 
         $driver = \Mockery::spy(\Git_Driver_Gerrit::class);
         $driver->shouldReceive('doesTheProjectExist')->andReturns(true);
@@ -293,7 +293,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     {
         $project_creator = Mockery::mock(
             Git_Driver_Gerrit_ProjectCreator::class,
-            array(
+            [
                 $this->gerrit_tmpdir,
                 $this->gerrit_driver_factory,
                 $this->userfinder,
@@ -303,7 +303,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
                 $this->template_factory,
                 $this->template_processor,
                 $this->getGitExec($this->gerrit_tmpdir),
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -321,7 +321,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
     {
         $project_creator = Mockery::mock(
             Git_Driver_Gerrit_ProjectCreator::class,
-            array(
+            [
                 $this->gerrit_tmpdir,
                 $this->gerrit_driver_factory,
                 $this->userfinder,
@@ -331,16 +331,16 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
                 $this->template_factory,
                 $this->template_processor,
                 $this->getGitExec($this->gerrit_tmpdir),
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
         $project_creator->shouldReceive('exportGitBranches');
 
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::REGISTERED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::REGISTERED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $project_creator->createGerritProject($this->server, $this->repository_in_a_private_project, $this->migrate_access_rights);
         $project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -350,10 +350,10 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItDoesNotSetPermsOnRegisteredUsersIfRepoHasNoPermsForRegisteredOrAnonymous(): void
     {
-        $groups = array(
+        $groups = [
             ProjectUGroup::REGISTERED,
             ProjectUGroup::ANONYMOUS,
-        );
+        ];
         $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns($groups);
         $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns($groups);
         $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns($groups);
@@ -366,9 +366,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsLabelCodeReviewOnceIfUserCanReadANdWrite(): void
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::PROJECT_MEMBERS));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::PROJECT_MEMBERS));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::PROJECT_MEMBERS]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -379,9 +379,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForRegistered()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::REGISTERED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::REGISTERED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -391,9 +391,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForRegistered()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::REGISTERED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::REGISTERED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -403,9 +403,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForRegistered()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array(ProjectUGroup::REGISTERED));
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([ProjectUGroup::REGISTERED]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -415,9 +415,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function isSetsPermsOnRegisteredUsersIfRepoHasReadForAuthenticated()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::AUTHENTICATED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::AUTHENTICATED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -427,9 +427,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAuthenticated()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::AUTHENTICATED));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::AUTHENTICATED]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -439,9 +439,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAuthenticated()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array(ProjectUGroup::AUTHENTICATED));
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([ProjectUGroup::AUTHENTICATED]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -451,9 +451,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasReadForAnonymous()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array(ProjectUGroup::ANONYMOUS));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([ProjectUGroup::ANONYMOUS]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -463,9 +463,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasWriteForAnonymous()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array(ProjectUGroup::ANONYMOUS));
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([ProjectUGroup::ANONYMOUS]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -475,9 +475,9 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
 
     public function testItSetsPermsOnRegisteredUsersIfRepoHasExecuteForAnonymous()
     {
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns(array());
-        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns(array(ProjectUGroup::ANONYMOUS));
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_READ)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WRITE)->andReturns([]);
+        $this->userfinder->shouldReceive('getUgroups')->with($this->repository->getId(), Git::PERM_WPLUS)->andReturns([ProjectUGroup::ANONYMOUS]);
 
         $this->project_creator->createGerritProject($this->server, $this->repository_with_registered, $this->migrate_access_rights);
         $this->project_creator->finalizeGerritProjectCreation($this->server, $this->repository, $this->template_id);
@@ -508,10 +508,10 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         chdir($cwd);
 
         $this->assertEquals(
-            array(
+            [
                 "origin\t$this->gerrit_git_url (fetch)",
                 "origin\t$this->gerrit_git_url (push)",
-            ),
+            ],
             $output
         );
         $this->assertEquals(0, $ret_val);
@@ -524,11 +524,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends TestCase
         exec('git push origin HEAD:refs/meta/config --porcelain', $output, $ret_val);
         chdir($cwd);
         $this->assertEquals(
-            array(
+            [
                 "To $this->gerrit_git_url",
                 "=\tHEAD:refs/meta/config\t[up to date]",
                 "Done"
-            ),
+            ],
             $output
         );
         $this->assertEquals(0, $ret_val);

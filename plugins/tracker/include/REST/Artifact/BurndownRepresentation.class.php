@@ -48,7 +48,7 @@ class BurndownRepresentation
     /**
      * @var array {@type float}
      */
-    public $points = array();
+    public $points = [];
 
     /**
      * @var bool Is cache calcul asked
@@ -63,7 +63,7 @@ class BurndownRepresentation
     /**
      * @var array {@type BurndownPointRepresentation}
      */
-    public $points_with_date = array();
+    public $points_with_date = [];
 
     public function __construct(Tracker_Chart_Data_Burndown $data_burndown)
     {
@@ -71,7 +71,7 @@ class BurndownRepresentation
         $this->duration             = JsonCast::toInt($data_burndown->getTimePeriod()->getDuration());
         $this->capacity             = JsonCast::toFloat($data_burndown->getCapacity());
         $this->points               = array_map(
-            array('\Tuleap\REST\JsonCast', 'toFloat'),
+            ['\Tuleap\REST\JsonCast', 'toFloat'],
             $data_burndown->getRemainingEffortWithoutNullValues()
         );
         $this->is_under_calculation = JsonCast::toBoolean($data_burndown->isUnderCalcul());
@@ -79,6 +79,6 @@ class BurndownRepresentation
             $this->points_with_date[] = new BurndownPointRepresentation($burndown_effort, $timestamp);
         }
 
-        $this->opening_days = array(1, 2, 3, 4, 5);
+        $this->opening_days = [1, 2, 3, 4, 5];
     }
 }

@@ -98,13 +98,13 @@ class Hooks extends Pane
         $description            = dgettext('tuleap-git', 'You can define several generic webhooks.');
         $additional_description = '';
 
-        $create_buttons       = array();
-        $sections             = array();
-        $additional_html_bits = array();
+        $create_buttons       = [];
+        $sections             = [];
+        $additional_html_bits = [];
 
         EventManager::instance()->processEvent(
             self::ADDITIONAL_WEBHOOKS,
-            array(
+            [
                 'request'                => $this->request,
                 'repository'             => $this->repository,
                 'description'            => &$description,
@@ -112,7 +112,7 @@ class Hooks extends Pane
                 'sections'               => &$sections,
                 'additional_html_bits'   => &$additional_html_bits,
                 'additional_description' => &$additional_description,
-            )
+            ]
         );
 
         $csrf = new CSRFSynchronizerToken(self::CSRF_TOKEN_ID);
@@ -140,7 +140,7 @@ class Hooks extends Pane
         $create_buttons[] = new CreateWebhookButtonPresenter();
 
         $label               = dgettext('tuleap-git', 'Generic webhooks');
-        $webhooks_presenters = array();
+        $webhooks_presenters = [];
 
         $webhooks = $this->webhook_factory->getWebhooksForRepository($this->repository);
         if (count($webhooks) === 0) {
@@ -164,7 +164,7 @@ class Hooks extends Pane
 
     private function getLogsForWebhook(Webhook $webhook)
     {
-        $logs = array();
+        $logs = [];
         foreach ($this->webhook_dao->getLogs($webhook->getId()) as $row) {
             $logs[] = new WebhookLogPresenter(
                 format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['created_on']),

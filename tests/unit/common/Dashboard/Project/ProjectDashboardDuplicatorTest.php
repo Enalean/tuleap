@@ -78,9 +78,9 @@ class ProjectDashboardDuplicatorTest extends TestCase
         $dashboard_01 = new ProjectDashboard(1, 101, 'dashboard');
         $dashboard_02 = new ProjectDashboard(2, 101, 'dashboard 2');
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->andReturns(array());
+        $this->widget_retriever->shouldReceive('getAllWidgets')->andReturns([]);
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard_01, $dashboard_02));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard_01, $dashboard_02]);
 
         $this->dao->shouldReceive('duplicateDashboard')->times(2);
 
@@ -91,12 +91,12 @@ class ProjectDashboardDuplicatorTest extends TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
 
-        $line_01 = new DashboardWidgetLine(1, 'one-column', array());
-        $line_02 = new DashboardWidgetLine(2, 'one-column', array());
+        $line_01 = new DashboardWidgetLine(1, 'one-column', []);
+        $line_02 = new DashboardWidgetLine(2, 'one-column', []);
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line_01, $line_02));
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line_01, $line_02]);
 
         $this->widget_dao->shouldReceive('duplicateLine')->times(2);
 
@@ -107,18 +107,18 @@ class ProjectDashboardDuplicatorTest extends TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
 
-        $column_01 = new DashboardWidgetColumn(1, 1, array());
-        $column_02 = new DashboardWidgetColumn(2, 2, array());
+        $column_01 = new DashboardWidgetColumn(1, 1, []);
+        $column_02 = new DashboardWidgetColumn(2, 2, []);
 
         $line = new DashboardWidgetLine(
             1,
             'two-columns',
-            array($column_01, $column_02)
+            [$column_01, $column_02]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
 
         $this->widget_dao->shouldReceive('duplicateColumn')->times(2);
 
@@ -129,19 +129,19 @@ class ProjectDashboardDuplicatorTest extends TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
 
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, array($widget_01, $widget_02));
+        $column = new DashboardWidgetColumn(1, 1, [$widget_01, $widget_02]);
         $line   = new DashboardWidgetLine(
             1,
             'one-column',
-            array($column)
+            [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
 
         $widget_instance_01 = \Mockery::spy(\Widget::class);
         $widget_instance_02 = \Mockery::spy(\Widget::class);
@@ -170,19 +170,19 @@ class ProjectDashboardDuplicatorTest extends TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
 
         $widget_01 = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
         $widget_02 = new DashboardWidget(2, 'projectcontacts', 0, 1, 2, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, array($widget_01, $widget_02));
+        $column = new DashboardWidgetColumn(1, 1, [$widget_01, $widget_02]);
         $line   = new DashboardWidgetLine(
             1,
             'one-column',
-            array($column)
+            [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
 
         $widget_instance_01 = \Mockery::spy(\Widget::class);
         $widget_instance_02 = \Mockery::spy(\Widget::class);
@@ -211,18 +211,18 @@ class ProjectDashboardDuplicatorTest extends TestCase
     {
         $dashboard = new ProjectDashboard(1, 101, 'dashboard');
 
-        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns(array($dashboard));
+        $this->retriever->shouldReceive('getAllProjectDashboards')->with($this->template_project)->andReturns([$dashboard]);
 
         $widget = new DashboardWidget(1, 'projectimageviewer', 1, 1, 1, 0);
 
-        $column = new DashboardWidgetColumn(1, 1, array($widget));
+        $column = new DashboardWidgetColumn(1, 1, [$widget]);
         $line   = new DashboardWidgetLine(
             1,
             'one-column',
-            array($column)
+            [$column]
         );
 
-        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns(array($line));
+        $this->widget_retriever->shouldReceive('getAllWidgets')->with(1, 'project')->andReturns([$line]);
 
         $this->widget_factory->shouldReceive('getInstanceByWidgetName')->with('projectimageviewer')->andReturns(null);
 

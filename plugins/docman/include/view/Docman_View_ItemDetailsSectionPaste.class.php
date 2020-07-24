@@ -84,7 +84,7 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         return $this->item->accept($this);
     }
 
-    public function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = [])
     {
         $content = '';
 
@@ -135,32 +135,32 @@ class Docman_View_ItemDetailsSectionPaste extends Docman_View_ItemDetailsSection
         return $content;
     }
 
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         return '';
     }
 
-    public function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = [])
     {
         return '';
     }
 
-    public function visitLink($item, $params = array())
+    public function visitLink($item, $params = [])
     {
         return '';
     }
 
-    public function visitFile($item, $params = array())
+    public function visitFile($item, $params = [])
     {
         return '';
     }
 
-    public function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = [])
     {
         return '';
     }
 
-    public function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = [])
     {
         return '';
     }

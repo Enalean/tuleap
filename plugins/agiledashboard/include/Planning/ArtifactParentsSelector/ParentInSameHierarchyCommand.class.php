@@ -30,7 +30,7 @@ class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Plan
     {
         $parent_in_same_hierarchy = $this->getParentInSameHierarchy($parent_tracker, $source_artifact, $user);
         if ($parent_in_same_hierarchy) {
-            return array($parent_in_same_hierarchy);
+            return [$parent_in_same_hierarchy];
         }
     }
 

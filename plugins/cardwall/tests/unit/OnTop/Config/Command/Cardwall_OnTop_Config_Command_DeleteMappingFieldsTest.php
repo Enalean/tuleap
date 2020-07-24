@@ -47,11 +47,11 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \PHPUn
         $tracker_factory->shouldReceive('getTrackerById')->with(42)->andReturns($task_tracker);
         $tracker_factory->shouldReceive('getTrackerById')->with(69)->andReturns($story_tracker);
 
-        $existing_mappings = array(
-            13 => new Cardwall_OnTop_Config_TrackerMappingNoField($bug_tracker, array()),
-            42 => new Cardwall_OnTop_Config_TrackerMappingNoField($task_tracker, array()),
-            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, array(), array(), Mockery::mock(Tracker_FormElement_Field_Selectbox::class)),
-        );
+        $existing_mappings = [
+            13 => new Cardwall_OnTop_Config_TrackerMappingNoField($bug_tracker, []),
+            42 => new Cardwall_OnTop_Config_TrackerMappingNoField($task_tracker, []),
+            69 => new Cardwall_OnTop_Config_TrackerMappingFreestyle($story_tracker, [], [], Mockery::mock(Tracker_FormElement_Field_Selectbox::class)),
+        ];
         $this->dao       = \Mockery::mock(\Cardwall_OnTop_ColumnMappingFieldDao::class);
         $this->value_dao = \Mockery::mock(\Cardwall_OnTop_ColumnMappingFieldValueDao::class);
         $this->command   = new Cardwall_OnTop_Config_Command_DeleteMappingFields($tracker, $this->dao, $this->value_dao, $tracker_factory, $existing_mappings);
@@ -60,7 +60,7 @@ final class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends \PHPUn
     public function testItDeletesOnlyCustomMappings(): void
     {
         $request = new HTTPRequest();
-        $request->set('custom_mapping', array('13' => '1', '42' => 0, '69' => 0));
+        $request->set('custom_mapping', ['13' => '1', '42' => 0, '69' => 0]);
         $this->dao->shouldReceive('delete')->with($this->tracker_id, 69)->once()->andReturns(true);
         $this->value_dao->shouldReceive('delete')->with($this->tracker_id, 69)->once();
         $this->command->execute($request);

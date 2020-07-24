@@ -90,7 +90,7 @@ class Cardwall_OnTop_ColumnMappingFieldValueDao extends DataAccessObject
 
         $to_value_when_then = ' WHEN 100 THEN 100 ';
         $to_field_when_then = '';
-        $all_values         = array(100 => 100);
+        $all_values         = [100 => 100];
         foreach ($field_mapping as $mapping) {
             $from                = $this->da->escapeInt($mapping['from']);
             $to                  = $this->da->escapeInt($mapping['to']);

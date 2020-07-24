@@ -33,7 +33,7 @@ class HeartbeatsEntryCollection implements Dispatchable
     /**
      * @var HeartbeatsEntry[]
      */
-    private $entries = array();
+    private $entries = [];
 
     /**
      * @var Project

@@ -50,15 +50,15 @@ class Cardwall_RendererBoardBuilder
 
     private function getSwimlines(array $artifact_ids, Cardwall_OnTop_Config_ColumnCollection $columns)
     {
-        return array(new Cardwall_SwimlineTrackerRenderer($this->swimline_factory->getCells(
+        return [new Cardwall_SwimlineTrackerRenderer($this->swimline_factory->getCells(
             $columns,
             $this->getCardsPresenters($artifact_ids)
-        )));
+        ))];
     }
 
     protected function getCardsPresenters(array $artifact_ids)
     {
-        $cards = array();
+        $cards = [];
         foreach ($artifact_ids as $id) {
             $artifact = $this->artifact_factory->getArtifactById($id);
             $cards[]  = $this->presenter_builder->getCardInCellPresenter($artifact, Cardwall_SwimlineTrackerRenderer::FAKE_SWIMLINE_ID_FOR_TRACKER_RENDERER);

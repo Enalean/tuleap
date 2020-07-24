@@ -27,7 +27,7 @@ class Admin_ProjectListExporter
     /**
      * @var array
      */
-    private $column_list = array('group_id', 'project_name', 'unix_name' ,'status', 'type', 'public', 'members');
+    private $column_list = ['group_id', 'project_name', 'unix_name', 'status', 'type', 'public', 'members'];
 
 
     /**
@@ -54,13 +54,13 @@ class Admin_ProjectListExporter
     private function buildCsvHeader()
     {
         $csv_header = "";
-        $documents_title = array ('group_id'     => $GLOBALS['Language']->getText('admin_grouplist', 'id_group'),
+        $documents_title =  ['group_id'     => $GLOBALS['Language']->getText('admin_grouplist', 'id_group'),
                                   'project_name' => $GLOBALS['Language']->getText('admin_groupedit', 'grp_name'),
                                   'unix_name'    => $GLOBALS['Language']->getText('admin_groupedit', 'unix_grp'),
                                   'status'       => $GLOBALS['Language']->getText('global', 'status'),
                                   'type'         => $GLOBALS['Language']->getText('admin_groupedit', 'group_type'),
                                   'public'       => $GLOBALS['Language']->getText('admin_groupedit', 'public'),
-                                  'members'      => $GLOBALS['Language']->getText('admin_grouplist', 'members'));
+                                  'members'      => $GLOBALS['Language']->getText('admin_grouplist', 'members')];
         $csv_header .= build_csv_header($this->column_list, $documents_title);
         return $csv_header;
     }
@@ -77,13 +77,13 @@ class Admin_ProjectListExporter
         $csv_body = "";
         $daoUsers = new UserGroupDao();
         foreach ($projects as $project) {
-            $documents_body = array ('group_id'     => $project['group_id'],
+            $documents_body =  ['group_id'     => $project['group_id'],
                                      'project_name' => $project['group_name'],
                                      'unix_name'    => $project['unix_group_name'],
                                      'status'       => $this->getProjectStatus($project['status']),
                                      'type'         => $project['type'],
                                      'public'       => $project['access'],
-                                     'members'      => $daoUsers->returnUsersNumberByGroupId($project['group_id']));
+                                     'members'      => $daoUsers->returnUsersNumberByGroupId($project['group_id'])];
 
             $csv_body .= build_csv_record($this->column_list, $documents_body) . "\n";
         }

@@ -28,10 +28,10 @@ use Tuleap\Widget\WidgetFactory;
 
 class DashboardWidgetDao extends DataAccessObject
 {
-    private $legacy_types_to_new_types = array(
+    private $legacy_types_to_new_types = [
         ProjectDashboardController::LEGACY_DASHBOARD_TYPE => 'project',
         UserDashboardController::LEGACY_DASHBOARD_TYPE    => 'user'
-    );
+    ];
 
     /**
      * @var WidgetFactory

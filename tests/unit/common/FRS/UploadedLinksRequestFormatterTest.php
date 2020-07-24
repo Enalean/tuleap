@@ -31,15 +31,15 @@ class UploadedLinksRequestFormatterTest extends TestCase
     public function testItExtractsOneArrayFromLinksProvidedInRequest()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test', ''));
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('http://example.com', 'ftp://example.com'));
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test', '']);
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['http://example.com', 'ftp://example.com']);
         $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
-        $expected_links = array(
-            array('link' => 'http://example.com', 'name' => 'test'),
-            array('link' => 'ftp://example.com', 'name' => '')
-        );
+        $expected_links = [
+            ['link' => 'http://example.com', 'name' => 'test'],
+            ['link' => 'ftp://example.com', 'name' => '']
+        ];
 
         $this->assertSame($expected_links, $formatter->formatFromRequest($request));
     }
@@ -47,8 +47,8 @@ class UploadedLinksRequestFormatterTest extends TestCase
     public function testItThrowsAnExceptionWhenRequestDoesNotProvideCorrectInput()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('test'));
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('http://example.com', 'https://example.com'));
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['test']);
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['http://example.com', 'https://example.com']);
         $request->shouldReceive('validArray')->andReturns(true);
 
         $this->expectException('Tuleap\FRS\UploadedLinksInvalidFormException');
@@ -59,8 +59,8 @@ class UploadedLinksRequestFormatterTest extends TestCase
     public function testItDoesNotAcceptInvalidLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array('invalid'));
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array('example.com'));
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(['invalid']);
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns(['example.com']);
         $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter = new UploadedLinksRequestFormatter();
@@ -72,12 +72,12 @@ class UploadedLinksRequestFormatterTest extends TestCase
     public function testItDoesNotEmptyLinks()
     {
         $request = \Mockery::spy(\HTTPRequest::class);
-        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns(array());
-        $request->shouldReceive('get')->with('uploaded-link')->andReturns(array());
+        $request->shouldReceive('get')->with('uploaded-link-name')->andReturns([]);
+        $request->shouldReceive('get')->with('uploaded-link')->andReturns([]);
         $request->shouldReceive('validArray')->andReturns(true);
 
         $formatter      = new UploadedLinksRequestFormatter();
-        $expected_links = array();
+        $expected_links = [];
 
         $this->assertSame($expected_links, $formatter->formatFromRequest($request));
     }

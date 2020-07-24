@@ -51,11 +51,11 @@ class GraphOnTrackersV5_InSessionChartSorterTest extends TestCase
         $this->pie      = \Mockery::spy(\GraphOnTrackersV5_Chart_Pie::class);
         $this->bar      = \Mockery::spy(\GraphOnTrackersV5_Chart_Bar::class);
         $this->burndown = \Mockery::spy(\GraphOnTrackersV5_Chart_Burndown::class);
-        $this->charts = array(
+        $this->charts = [
             $this->pie,
             $this->bar,
             $this->burndown
-        );
+        ];
 
         $this->pie->shouldReceive('getId')->andReturn('pie');
         $this->pie->shouldReceive('getRank')->andReturn(0);

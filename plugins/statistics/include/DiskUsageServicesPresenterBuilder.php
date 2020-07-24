@@ -164,13 +164,13 @@ class DiskUsageServicesPresenterBuilder
             $color_rgb  = $this->usage_graph->applyColorModifierRGB($color);
             $color_rgba = $this->usage_graph->applyColorModifierRGBA($color);
 
-            $value = array_merge($value, array(
+            $value = array_merge($value, [
                 'color_rgb'  => $color_rgb,
                 'color_rgba' => $color_rgba,
                 'start_size' => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['start_size']),
                 'end_size'   => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['end_size']),
                 'evolution'  => $this->usage_output->sizeReadable($evolution_by_service[$value['key']]['evolution'])
-            ));
+            ]);
 
             $services[$key] = $value;
         }
@@ -179,28 +179,28 @@ class DiskUsageServicesPresenterBuilder
         $total_end_size   = $this->usage_output->sizeReadable($total_end_size);
         $total_evolution  = $this->usage_output->sizeReadable($total_evolution);
 
-        return array(
+        return [
             $services,
             $total_start_size,
             $total_end_size,
             $total_evolution
-        );
+        ];
     }
 
     private function getGroupByDateKeys()
     {
-        return array(
+        return [
             self::GROUP_BY_DAY_KEY   => dgettext('tuleap-statistics', 'Day'),
             self::GROUP_BY_WEEK_KEY  => dgettext('tuleap-statistics', 'Week'),
             self::GROUP_BY_MONTH_KEY => dgettext('tuleap-statistics', 'Month'),
             self::GROUP_BY_YEAR_KEY  => dgettext('tuleap-statistics', 'Year')
-        );
+        ];
     }
 
     private function getGroupByDateValues($selected_group_by_date)
     {
         $options                     = $this->getGroupByDateKeys();
-        $group_by_date_with_selected = array();
+        $group_by_date_with_selected = [];
 
         if (! $selected_group_by_date) {
             $selected_group_by_date = self::GROUP_BY_WEEK_KEY;
@@ -209,11 +209,11 @@ class DiskUsageServicesPresenterBuilder
         foreach ($options as $key => $value) {
             $selected = $key === $selected_group_by_date;
 
-            $group_by_date_with_selected[] = array(
+            $group_by_date_with_selected[] = [
                 'key'         => $key,
                 'value'       => $value,
                 'is_selected' => $selected
-            );
+            ];
         }
 
         return $group_by_date_with_selected;
@@ -221,7 +221,7 @@ class DiskUsageServicesPresenterBuilder
 
     private function getSelectedServices(array $services)
     {
-        $selected_services = array();
+        $selected_services = [];
 
         foreach ($services as $service) {
             if ($service['is_selected']) {
@@ -234,10 +234,10 @@ class DiskUsageServicesPresenterBuilder
 
     public function getServiceValues($selected_services)
     {
-        $services_with_selected = array();
+        $services_with_selected = [];
 
         foreach ($this->usage_manager->getProjectServices() as $key => $value) {
-            $service = array('key' => $key, 'value' => $value);
+            $service = ['key' => $key, 'value' => $value];
 
             if (! $selected_services) {
                 $service['is_selected'] = true;

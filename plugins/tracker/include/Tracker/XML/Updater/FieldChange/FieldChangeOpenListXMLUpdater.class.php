@@ -31,7 +31,7 @@ class Tracker_XML_Updater_FieldChange_FieldChangeOpenListXMLUpdater extends Trac
 
         array_walk(
             $submitted_value,
-            array($this, 'appendValuesToFieldChangeNode'),
+            [$this, 'appendValuesToFieldChangeNode'],
             $field_change_xml
         );
     }

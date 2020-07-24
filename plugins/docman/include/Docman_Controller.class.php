@@ -83,7 +83,7 @@ class Docman_Controller extends Controler
         $this->plugin         = $plugin;
         $this->view           = null;
         $this->reportId       = null;
-        $this->hierarchy      = array();
+        $this->hierarchy      = [];
 
         $this->feedback = new \Tuleap\Docman\ResponseFeedbackWrapper();
 
@@ -143,7 +143,7 @@ class Docman_Controller extends Controler
         }
 
         // Clone Metadata definitions
-        $metadataMapping = array();
+        $metadataMapping = [];
         $mdFactory = new Docman_MetadataFactory($srcGroupId);
         $mdFactory->cloneMetadata($dstGroupId, $metadataMapping);
 
@@ -584,8 +584,8 @@ class Docman_Controller extends Controler
                 break;
             case 'admin_change_view':
                 $this->action = $view;
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_view',
-                                                             'id'      => $item->getParentId());
+                $this->_viewParams['default_url_params'] = ['action'  => 'admin_view',
+                                                             'id'      => $item->getParentId()];
                 $this->view = 'RedirectAfterCrud';
                 break;
             case 'admin':
@@ -615,7 +615,7 @@ class Docman_Controller extends Controler
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'Invalid property'));
                     $this->view = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     $this->view = 'Admin_MetadataDetails';
                     $mdFactory->appendMetadataValueList($md, false);
@@ -628,12 +628,12 @@ class Docman_Controller extends Controler
 
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($_label)) {
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details', 'md' => $_label);
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details', 'md' => $_label];
                     if ($mdFactory->isHardCodedMetadata($_label) || $this->validateUpdateMetadata($_name, $_label)) {
                         $this->action = $view;
                     }
                 } else {
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
@@ -645,7 +645,7 @@ class Docman_Controller extends Controler
                     $this->action = $view;
                 }
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
+                $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
                 $this->view = 'RedirectAfterCrud';
                 break;
             case 'admin_delete_metadata':
@@ -674,7 +674,7 @@ class Docman_Controller extends Controler
                         $this->feedback->log('error', $logmsg);
                     }
                     $this->view = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     $this->action = $view;
                     $this->_actionParams['md'] = $md;
@@ -685,10 +685,10 @@ class Docman_Controller extends Controler
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action = $view;
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
-                                                                 'md' => $this->request->get('md'));
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
+                                                                 'md' => $this->request->get('md')];
                 } else {
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
@@ -696,10 +696,10 @@ class Docman_Controller extends Controler
                 $mdFactory = $this->_getMetadataFactory($this->_viewParams['group_id']);
                 if ($mdFactory->isValidLabel($this->request->get('md'))) {
                     $this->action = $view;
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_md_details',
-                                                                 'md' => $this->request->get('md'));
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_md_details',
+                                                                 'md' => $this->request->get('md')];
                 } else {
-                    $this->_viewParams['default_url_params'] = array('action'  => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action'  => 'admin_metadata'];
                 }
                 $this->view = 'RedirectAfterCrud';
                 break;
@@ -723,7 +723,7 @@ class Docman_Controller extends Controler
 
                 if (! $valid) {
                     $this->view = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     $mdFactory = new Docman_MetadataFactory($this->groupId);
                     $mdFactory->appendMetadataValueList($md, false);
@@ -762,7 +762,7 @@ class Docman_Controller extends Controler
                 if (! $valid) {
                     $this->feedback->log('error', dgettext('tuleap-docman', 'There is an error in parameters. Back to previous screen.'));
                     $this->view = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 } else {
                     // Set parameters
                     $love->setRank($_rank);
@@ -789,7 +789,7 @@ class Docman_Controller extends Controler
                 }
                 if (! $ok) {
                     $this->view = 'RedirectAfterCrud';
-                    $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                    $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 }
                 break;
 
@@ -811,7 +811,7 @@ class Docman_Controller extends Controler
                     $this->feedback->log('info', dgettext('tuleap-docman', 'Operation Canceled'));
                 }
                 $this->view = 'RedirectAfterCrud';
-                $this->_viewParams['default_url_params'] = array('action' => 'admin_metadata');
+                $this->_viewParams['default_url_params'] = ['action' => 'admin_metadata'];
                 break;
 
             case 'admin_obsolete':
@@ -963,8 +963,8 @@ class Docman_Controller extends Controler
 
                 $this->action = $view;
                 if (! $this->request->exist('ajax_copy')) {
-                    $this->_viewParams['default_url_params'] = array('action'  => $_action,
-                                                                 'id'      => $_id);
+                    $this->_viewParams['default_url_params'] = ['action'  => $_action,
+                                                                 'id'      => $_id];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -976,8 +976,8 @@ class Docman_Controller extends Controler
 
                 $this->action = $view;
                 if (! $this->request->exist('ajax_cut')) {
-                    $this->_viewParams['default_url_params'] = array('action'  => $_action,
-                                                                 'id'      => $_id);
+                    $this->_viewParams['default_url_params'] = ['action'  => $_action,
+                                                                 'id'      => $_id];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1003,7 +1003,7 @@ class Docman_Controller extends Controler
 
             case 'paste':
                 if ($this->request->exist('cancel')) {
-                    $this->_viewParams['default_url_params'] = array('action'  => 'show');
+                    $this->_viewParams['default_url_params'] = ['action'  => 'show'];
                     $this->view = 'RedirectAfterCrud';
                 } else {
                     $itemToPaste = null;
@@ -1067,9 +1067,9 @@ class Docman_Controller extends Controler
                         }
                     }
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'details',
+                    $this->_viewParams['default_url_params'] = ['action'  => 'details',
                                                                  'section' => 'approval',
-                                                                 'id'      => $item->getId());
+                                                                 'id'      => $item->getId()];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1101,7 +1101,7 @@ class Docman_Controller extends Controler
                     if (is_array($this->request->get('sel_user'))) {
                         $this->_actionParams['sel_user'] = array_map('intval', $this->request->get('sel_user'));
                     }
-                    $allowedAct = array('100', 'mail', 'del');
+                    $allowedAct = ['100', 'mail', 'del'];
                     $this->_actionParams['sel_user_act'] = null;
                     if (in_array($this->request->get('sel_user_act'), $allowedAct)) {
                         $this->_actionParams['sel_user_act'] = $this->request->get('sel_user_act');
@@ -1123,7 +1123,7 @@ class Docman_Controller extends Controler
                     }
 
                     // Import
-                    $vImport = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+                    $vImport = new Valid_WhiteList('app_table_import', ['copy', 'reset', 'empty']);
                     $vImport->required();
                     $this->_actionParams['import'] = $this->request->getValidated('app_table_import', $vImport, false);
 
@@ -1134,14 +1134,14 @@ class Docman_Controller extends Controler
 
                     // Special handeling of table deletion
                     if ($this->_actionParams['status'] == PLUGIN_DOCMAN_APPROVAL_TABLE_DELETED) {
-                        $this->_viewParams['default_url_params'] = array('action' => 'approval_create',
+                        $this->_viewParams['default_url_params'] = ['action' => 'approval_create',
                                                                      'delete' => 'confirm',
-                                                                     'id'     => $item->getId());
+                                                                     'id'     => $item->getId()];
                     } else {
                         // Action!
                         $this->action = $view;
-                        $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                     'id'      => $item->getId());
+                        $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
+                                                                     'id'      => $item->getId()];
                     }
                     if ($this->_actionParams['version'] !== null) {
                         $this->_viewParams['default_url_params']['version'] = $this->_actionParams['version'];
@@ -1160,8 +1160,8 @@ class Docman_Controller extends Controler
                     $this->_actionParams['rank']    = $this->request->get('rank');
                     $this->action = $view;
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
+                    $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
+                                                                 'id'      => $item->getId()];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1175,8 +1175,8 @@ class Docman_Controller extends Controler
                     $this->_actionParams['user_id'] = (int) $this->request->get('user_id');
                     $this->action = $view;
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
+                    $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
+                                                                 'id'      => $item->getId()];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1225,9 +1225,9 @@ class Docman_Controller extends Controler
 
                     $this->action = $view;
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'details',
+                    $this->_viewParams['default_url_params'] = ['action'  => 'details',
                                                                  'section' => 'approval',
-                                                                 'id'      => $item->getId());
+                                                                 'id'      => $item->getId()];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1240,8 +1240,8 @@ class Docman_Controller extends Controler
                     $this->action = $view;
                     $this->_actionParams['item'] = $item;
 
-                    $this->_viewParams['default_url_params'] = array('action'  => 'approval_create',
-                                                                 'id'      => $item->getId());
+                    $this->_viewParams['default_url_params'] = ['action'  => 'approval_create',
+                                                                 'id'      => $item->getId()];
                     $this->view = 'RedirectAfterCrud';
                 }
                 break;
@@ -1404,7 +1404,7 @@ class Docman_Controller extends Controler
                             $valid = $this->_validateRequest($item->accept(new Docman_View_GetFieldsVisitor()));
                         } elseif ($valid) {
                             $this->updateItemFromUserInput($item);
-                            $valid = (($this->_validateApprovalTable($this->request, $item)) && ($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('request' => &$this->request)))));
+                            $valid = (($this->_validateApprovalTable($this->request, $item)) && ($this->_validateRequest($item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['request' => &$this->request]))));
                         }
                         //Actions
                         if ($valid && $updateConfirmed) {
@@ -1484,7 +1484,7 @@ class Docman_Controller extends Controler
 
                     $this->action = $view;
                 }
-                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
                 $this->view = 'RedirectAfterCrud';
 
                 break;
@@ -1502,7 +1502,7 @@ class Docman_Controller extends Controler
 
                     $this->action = $view;
                 }
-                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
                 $this->view = 'RedirectAfterCrud';
                 break;
 
@@ -1521,7 +1521,7 @@ class Docman_Controller extends Controler
                     }
                 }
 
-                $this->_viewParams['default_url_params'] = array('action'  => 'report_settings');
+                $this->_viewParams['default_url_params'] = ['action'  => 'report_settings'];
                 $this->view = 'RedirectAfterCrud';
                 break;
 
@@ -1578,7 +1578,7 @@ class Docman_Controller extends Controler
     {
         $atf = Docman_ApprovalTableFactoriesFactory::getFromItem($item);
         if ($atf && $atf->tableExistsForItem()) {
-            $vAppTable = new Valid_WhiteList('app_table_import', array('copy', 'reset', 'empty'));
+            $vAppTable = new Valid_WhiteList('app_table_import', ['copy', 'reset', 'empty']);
             $vAppTable->required();
             if (! $request->valid($vAppTable)) {
                 $this->feedback->log('error', dgettext('tuleap-docman', 'Please choose option for creating approval table'));
@@ -1597,7 +1597,7 @@ class Docman_Controller extends Controler
                 $fv = $field->getValidator($this->request);
                 if ($fv !== null) {
                     if (! is_array($fv)) {
-                        $validatorList = array($fv);
+                        $validatorList = [$fv];
                     } else {
                         $validatorList = $fv;
                     }
@@ -1605,7 +1605,7 @@ class Docman_Controller extends Controler
             } else {
                 if (isset($field['validator'])) {
                     if (! is_array($field['validator'])) {
-                        $validatorList = array($field['validator']);
+                        $validatorList = [$field['validator']];
                     } else {
                         $validatorList = $field['validator'];
                     }
@@ -1832,13 +1832,13 @@ class Docman_Controller extends Controler
      */
     private function removeMonitoring($item, $users_to_delete_ids, $ugroups_to_delete_ids)
     {
-        $this->_actionParams['listeners_users_to_delete']   = array();
-        $this->_actionParams['listeners_ugroups_to_delete'] = array();
+        $this->_actionParams['listeners_users_to_delete']   = [];
+        $this->_actionParams['listeners_ugroups_to_delete'] = [];
         if ($this->userCanManage($item->getId())) {
             $user_manager  = UserManager::instance();
             $valid_user_id = new Valid_UInt('listeners_users_to_delete');
             if ($this->request->validArray($valid_user_id)) {
-                $users = array();
+                $users = [];
                 foreach ($users_to_delete_ids as $user_id) {
                     $users[] = $user_manager->getUserById($user_id);
                 }
@@ -1848,7 +1848,7 @@ class Docman_Controller extends Controler
             $ugroup_manager  = new UGroupManager();
             $valid_ugroup_id = new Valid_UInt('listeners_ugroups_to_delete');
             if ($this->request->validArray($valid_ugroup_id)) {
-                $ugroups = array();
+                $ugroups = [];
                 foreach ($ugroups_to_delete_ids as $ugroup_id) {
                     $ugroups[] = $ugroup_manager->getById($ugroup_id);
                 }
@@ -1867,7 +1867,7 @@ class Docman_Controller extends Controler
      */
     private function addMonitoring($item, $listeners_to_add)
     {
-        $this->_actionParams['listeners_to_add'] = array();
+        $this->_actionParams['listeners_to_add'] = [];
         if ($this->userCanManage($item->getId())) {
             $invalid_entries = new InvalidEntryInAutocompleterCollection();
             $autocompleter   = $this->getAutocompleter($listeners_to_add, $invalid_entries);

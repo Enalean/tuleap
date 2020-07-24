@@ -25,7 +25,7 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
     private $dao;
 
     /** @var array */
-    private $cache = array();
+    private $cache = [];
 
     /** @var Tracker_Artifact_Changeset_IncomingMailGoldenRetriever */
     private static $instance;
@@ -73,7 +73,7 @@ class Tracker_Artifact_Changeset_IncomingMailGoldenRetriever
     private function getCachedRawMailByChangesetsForArtifact(Tracker_Artifact $artifact)
     {
         if (! isset($this->cache[$artifact->getId()])) {
-            $this->cache[$artifact->getId()] = array();
+            $this->cache[$artifact->getId()] = [];
             foreach ($this->dao->searchByArtifactId($artifact->getId()) as $row) {
                 $this->cache[$artifact->getId()][$row['changeset_id']] = $row['raw_mail'];
             }

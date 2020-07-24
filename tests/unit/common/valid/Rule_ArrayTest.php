@@ -27,9 +27,9 @@ class Rule_ArrayTest extends TestCase
     public function testTestsWetherTheArgumentIsAnArray(): void
     {
         $r = new Rule_Array();
-        $this->assertTrue($r->isValid(array()));
-        $this->assertTrue($r->isValid(array(1, 2)));
-        $this->assertTrue($r->isValid(array('toto' => 'tata')));
+        $this->assertTrue($r->isValid([]));
+        $this->assertTrue($r->isValid([1, 2]));
+        $this->assertTrue($r->isValid(['toto' => 'tata']));
         $this->assertFalse($r->isValid('toto'));
         $this->assertFalse($r->isValid(new StdClass()));
     }

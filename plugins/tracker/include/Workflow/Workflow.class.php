@@ -276,7 +276,7 @@ class Workflow // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 
     public function hasTransitions()
     {
-        if ($this->getTransitions() === array()) {
+        if ($this->getTransitions() === []) {
             return false;
         } else {
             return true;

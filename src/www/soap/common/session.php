@@ -30,10 +30,10 @@ if (defined('NUSOAP')) {
         'struct',
         'all',
         '',
-        array(
-        'user_id' => array('name' => 'user_id', 'type' => 'xsd:int'),
-        'session_hash' => array('name' => 'session_hash', 'type' => 'xsd:string')
-        )
+        [
+        'user_id' => ['name' => 'user_id', 'type' => 'xsd:int'],
+        'session_hash' => ['name' => 'session_hash', 'type' => 'xsd:string']
+        ]
     );
 
     if (! isset($uri)) {
@@ -43,10 +43,10 @@ if (defined('NUSOAP')) {
 // Functions definition
     $server->register(
         'login', // method name
-        array('loginname' => 'xsd:string', // input parameters
+        ['loginname' => 'xsd:string', // input parameters
         'passwd'    => 'xsd:string'
-        ),
-        array('return'   => 'tns:Session'), // output parameters
+        ],
+        ['return'   => 'tns:Session'], // output parameters
         $uri, // namespace
         $uri . '#login', // soapaction
         'rpc', // style
@@ -57,10 +57,10 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'loginAs', // method name
-        array('admin_session_hash' => 'xsd:string', // input parameters
+        ['admin_session_hash' => 'xsd:string', // input parameters
           'loginname'    => 'xsd:string'
-        ),
-        array('return'   => 'xsd:string'), // output parameters
+        ],
+        ['return'   => 'xsd:string'], // output parameters
         $uri, // namespace
         $uri . '#loginAs', // soapaction
         'rpc', // style
@@ -71,9 +71,9 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'retrieveSession',
-        array('session_hash' => 'xsd:string'
-        ),
-        array('return'   => 'tns:Session'),
+        ['session_hash' => 'xsd:string'
+        ],
+        ['return'   => 'tns:Session'],
         $uri,
         $uri . '#retrieveSession',
         'rpc',
@@ -84,8 +84,8 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'getAPIVersion',
-        array(),
-        array('return' => 'xsd:string'),
+        [],
+        ['return' => 'xsd:string'],
         $uri,
         $uri . '#getAPIVersion',
         'rpc',
@@ -95,8 +95,8 @@ if (defined('NUSOAP')) {
 
     $server->register(
         'logout',
-        array('sessionKey' => 'xsd:string'),
-        array(),
+        ['sessionKey' => 'xsd:string'],
+        [],
         $uri,
         $uri . '#logout',
         'rpc',
@@ -122,10 +122,10 @@ if (defined('NUSOAP')) {
         $user = UserManager::instance()->login($loginname, new \Tuleap\Cryptography\ConcealedString($passwd));
         sodium_memzero($passwd);
         if ($user->isLoggedIn()) {
-            $return = array(
+            $return = [
             'user_id'      => $user->getId(),
             'session_hash' => $user->getSessionHash()
-            );
+            ];
             return $return;
         } else {
             return new SoapFault(LOGIN_FAULT, $loginname . ' : ' . $Language->getText('include_session', 'invalid_pwd'), 'login');
@@ -161,10 +161,10 @@ if (defined('NUSOAP')) {
         global $Language;
         if (session_continue($session_hash)) {
             $user = UserManager::instance()->getCurrentUser();
-            $return = array(
+            $return = [
             'user_id'      => $user->getId(),
             'session_hash' => $user->getSessionHash()
-            );
+            ];
             return $return;
         } else {
             return new SoapFault(INVALID_SESSION_FAULT, 'Invalid Session.', 'retrieveSession');
@@ -199,12 +199,12 @@ if (defined('NUSOAP')) {
     }
 
     $server->addFunction(
-        array(
+        [
             'login',
             'retrieveSession',
             'logout',
             'getAPIVersion',
             'loginAs'
-        )
+        ]
     );
 }

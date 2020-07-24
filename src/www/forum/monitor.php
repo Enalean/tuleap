@@ -68,7 +68,7 @@ if (user_isloggedin()) {
         $group_id = db_result($result, 0, 'group_id');
         $forum_name = db_result($result, 0, 'forum_name');
 
-        forum_header(array('title' => $Language->getText('forum_monitor', 'monitor')));
+        forum_header(['title' => $Language->getText('forum_monitor', 'monitor')]);
 
         echo '
 			<H2>' . $Language->getText('forum_monitor', 'monitor') . '</H2>';
@@ -84,12 +84,12 @@ if (user_isloggedin()) {
         if ($forum_monitor_error) {
             echo "<span class=\"highlight\">" . $Language->getText('forum_forum_utils', 'insert_err') . "</span>";
         }
-        forum_footer(array());
+        forum_footer([]);
     } else {
-        forum_header(array('title' => $Language->getText('forum_monitor', 'choose_forum_first')));
+        forum_header(['title' => $Language->getText('forum_monitor', 'choose_forum_first')]);
         echo '
 			<H1>' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
-        forum_footer(array());
+        forum_footer([]);
     }
 } else {
     exit_not_logged_in();

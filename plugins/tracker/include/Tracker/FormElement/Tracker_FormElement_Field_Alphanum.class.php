@@ -29,7 +29,7 @@ abstract class Tracker_FormElement_Field_Alphanum extends Tracker_FormElement_Fi
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr = '';
-        $matches = array();
+        $matches = [];
         // If it is sourrounded by /.../ then assume a regexp
         if (preg_match('#(!?)/(.*)/#', $criteria_value, $matches)) {
             //if it has a ! at the beginning then assume negation

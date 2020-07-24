@@ -86,8 +86,8 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $driver_factory = \Mockery::spy(\Git_Driver_Gerrit_GerritDriverFactory::class)->shouldReceive('getDriver')->andReturns($this->driver)->getMock();
 
         $this->ugroup_manager = \Mockery::spy(\UGroupManager::class);
-        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->project)->andReturns(array($this->project_admins));
-        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->parent_project)->andReturns(array($this->parent_project_admins));
+        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->project)->andReturns([$this->project_admins]);
+        $this->ugroup_manager->shouldReceive('getUGroups')->with($this->parent_project)->andReturns([$this->parent_project_admins]);
 
         $this->membership_manager = \Mockery::spy(\Git_Driver_Gerrit_MembershipManager::class);
 
@@ -107,7 +107,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->once();
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItOnlyCallsCreateParentProjectTwiceIfTheProjectHasOneParent(): void
@@ -116,7 +116,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->project_manager->shouldReceive('getParentProject')->with($this->parent_project->getID())->andReturns(null);
         $this->driver->shouldReceive('createProjectWithPermissionsOnly')->times(2);
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItCallsCreateParentProjectWithTheCorrectParameters(): void
@@ -127,7 +127,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
         $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->project, $this->project_admins_gerrit_name)->ordered();
         $this->driver->shouldReceive('createProjectWithPermissionsOnly')->with($this->server, $this->parent_project, $this->project_admins_gerrit_parent_name)->ordered();
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItMigratesTheUserGroupsAlsoForParentUmbrellaProjects(): void
@@ -137,7 +137,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->times(2);
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItCallsTheDriverToSetTheParentProjectIfAny(): void
@@ -147,7 +147,7 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         $this->driver->shouldReceive('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->once();
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 
     public function testItDoesntCallTheDriverToSetTheParentProjectIfNone(): void
@@ -156,6 +156,6 @@ class Git_Driver_Gerrit_ProjectCreator_CreateParentUmbrellaProjectsTest extends 
 
         $this->driver->shouldReceive('setProjectInheritance')->with($this->server, $this->project->getUnixName(), $this->parent_project->getUnixName())->never();
 
-        $this->umbrella_manager->recursivelyCreateUmbrellaProjects(array($this->server), $this->project);
+        $this->umbrella_manager->recursivelyCreateUmbrellaProjects([$this->server], $this->project);
     }
 }

@@ -135,7 +135,7 @@ class Chart_GanttMileStone
      */
     public function __call($method, $args)
     {
-        $result = call_user_func_array(array($this->jpgraph_instance, $method), $args);
+        $result = call_user_func_array([$this->jpgraph_instance, $method], $args);
         return $result;
     }
 

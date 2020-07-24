@@ -54,26 +54,26 @@ class DiskUsageTopUsersPresenterBuilder
 
         $users = $this->disk_usage_manager->getTopUsers($end_date, $order);
 
-        $data_top_users = array();
+        $data_top_users = [];
         $rank = 0;
         foreach ($users as $row) {
-            $user_details_query = http_build_query(array(
+            $user_details_query = http_build_query([
                 'user_id' => $row['user_id']
-            ));
+            ]);
 
-            $disk_usage_user_details_query = http_build_query(array(
+            $disk_usage_user_details_query = http_build_query([
                 'menu'     => 'one_user_details',
                 'end_date' => $end_date,
                 'user'     => $row['user_name']
-            ));
+            ]);
 
-            $data_user = array(
+            $data_user = [
                 'rank'                        => $rank + 1,
                 'user_name'                   => $row['user_name'],
                 'user_details_url'            => '/admin/usergroup.php?' . $user_details_query,
                 'disk_usage_user_details_url' => 'disk_usage.php?' . $disk_usage_user_details_query,
                 'end_size'                    => $this->disk_usage_output->sizeReadable($row['end_size'])
-            );
+            ];
 
             $data_top_users[] = $data_user;
             $rank++;

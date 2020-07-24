@@ -65,7 +65,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
     private $html_purifier;
 
     /** @var Tracker_FormElement_Field[] */
-    private $card_fields = array();
+    private $card_fields = [];
 
     /** @var array
      * instances of this semantic
@@ -357,7 +357,7 @@ class Cardwall_Semantic_CardFields extends Tracker_Semantic
         $dao                  = $this->getDao();
         $rows                 = $dao->searchByTrackerId($tracker->getId());
         $form_element_factory = Tracker_FormElementFactory::instance();
-        $this->card_fields    = array();
+        $this->card_fields    = [];
 
         foreach ($rows as $row) {
             $field = $form_element_factory->getFieldById($row['field_id']);

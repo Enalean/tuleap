@@ -27,7 +27,7 @@ use Tuleap\Layout\IncludeAssets;
  */
 function discoverSection(string $basepath): array
 {
-    $discovery = array();
+    $discovery = [];
     $manifest_file = "$basepath/manifest.json";
     if (! is_file($manifest_file)) {
         return $discovery;
@@ -136,7 +136,7 @@ $main_doc_script     = $include_asset_doc->getFileURL('script.js');
         $may_have_header_doc = true;
     } else {
         $basepath            = 'resources/';
-        $content             = array($current_section => $sections[$current_section]);
+        $content             = [$current_section => $sections[$current_section]];
         $may_have_header_doc = false;
     }
 

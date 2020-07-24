@@ -50,7 +50,7 @@ class Parser
         $file_handler = fopen($file, 'r');
         while (($line = fgets($file_handler)) !== false) {
             trim($line);
-            $matches = array();
+            $matches = [];
             if (preg_match($parse_regexp, $line, $matches) === 1) {
                 $this->parsePluginURL($log_cache, $matches);
                 $this->parseCoreURL($log_cache, $matches);

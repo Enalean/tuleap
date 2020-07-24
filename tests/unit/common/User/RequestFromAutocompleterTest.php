@@ -95,7 +95,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
     {
         $request = $this->getRequest('jdoe@example.com,smith@example.com');
 
-        $this->assertEquals(array('jdoe@example.com', 'smith@example.com'), $request->getEmails());
+        $this->assertEquals(['jdoe@example.com', 'smith@example.com'], $request->getEmails());
     }
 
     public function testItIgnoresIfItIsUnknown(): void
@@ -111,7 +111,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
     {
         $request = $this->getRequest('_ugroup:project_members,_ugroup:Developers');
 
-        $this->assertEquals(array($this->project_members, $this->developers), $request->getUgroups());
+        $this->assertEquals([$this->project_members, $this->developers], $request->getUgroups());
     }
 
     public function testItDoesNotLeakSecretUgroups(): void
@@ -125,7 +125,7 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
     {
         $request = $this->getRequest('Smith (asmith),Thomas A. Anderson (neo)');
 
-        $this->assertEquals(array($this->smith, $this->thomas), $request->getUsers());
+        $this->assertEquals([$this->smith, $this->thomas], $request->getUsers());
     }
 
     public function testItIgnoresUnknownPeople(): void
@@ -139,9 +139,9 @@ final class RequestFromAutocompleterTest extends \PHPUnit\Framework\TestCase
     {
         $request = $this->getRequest('jdoe@example.com,Thomas A. Anderson (neo),_ugroup:Developers');
 
-        $this->assertEquals(array('jdoe@example.com'), $request->getEmails());
-        $this->assertEquals(array($this->developers), $request->getUgroups());
-        $this->assertEquals(array($this->thomas), $request->getUsers());
+        $this->assertEquals(['jdoe@example.com'], $request->getEmails());
+        $this->assertEquals([$this->developers], $request->getUgroups());
+        $this->assertEquals([$this->thomas], $request->getUsers());
     }
 
     public function testItCollectsUnknownEntries(): void

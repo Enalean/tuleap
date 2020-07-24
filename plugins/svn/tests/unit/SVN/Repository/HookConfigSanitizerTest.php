@@ -26,31 +26,31 @@ class HookConfigSanitizerTest extends TestCase
 {
     public function testItFilterImproperValuesForHookConfig(): void
     {
-        $hook_config = array(
+        $hook_config = [
             'an_incorrect_key'              => 'value',
             HookConfig::MANDATORY_REFERENCE => true
-        );
+        ];
 
         $hook_config_sanitizer = new HookConfigSanitizer();
         $this->assertEquals(
-            array(HookConfig::MANDATORY_REFERENCE => true),
+            [HookConfig::MANDATORY_REFERENCE => true],
             $hook_config_sanitizer->sanitizeHookConfigArray($hook_config)
         );
     }
 
     public function testItReturnsACorrectHookConfiguration(): void
     {
-        $hook_config = array(
+        $hook_config = [
             HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
             HookConfig::MANDATORY_REFERENCE       => false
-        );
+        ];
 
         $hook_config_sanitizer = new HookConfigSanitizer();
         $this->assertEquals(
-            array(
+            [
                 HookConfig::COMMIT_MESSAGE_CAN_CHANGE => true,
                 HookConfig::MANDATORY_REFERENCE       => false
-            ),
+            ],
             $hook_config_sanitizer->sanitizeHookConfigArray($hook_config)
         );
     }

@@ -40,7 +40,7 @@ abstract class ChartDataBuilderV5
     }
 
     /**
-     * @return string or array (r,g,b) color from $data if exist, else a null triple
+     * @return string|array string or array (r,g,b) color from $data if exist, else a null triple
      */
     protected function getColor(array $data)
     {
@@ -49,10 +49,10 @@ abstract class ChartDataBuilderV5
         }
 
         if (! isset($data['red'])) {
-            return array(null, null, null);
+            return [null, null, null];
         }
 
-        return array($data['red'], $data['green'], $data['blue']);
+        return [$data['red'], $data['green'], $data['blue']];
     }
 
     protected function getTracker()

@@ -59,12 +59,12 @@ class AgileDashboard_PaneRedirectionExtractor
         if (is_array($from_planning) && count($from_planning)) {
             $planning_id          = key($from_planning);
             $planning_artifact_id = current($from_planning);
-            return array(
+            return [
                 self::PANE        => $pane_identifier,
                 self::PLANNING_ID => $planning_id,
                 self::ARTIFACT_ID => $planning_artifact_id,
                 self::ACTION      => 'show'
-            );
+            ];
         }
     }
 }

@@ -39,7 +39,7 @@ class ArtifactRuleFactory
     public function __construct(ArtifactRuleDao $rules_dao)
     {
         $this->rules_dao = $rules_dao;
-        $this->rules = array();
+        $this->rules = [];
 
         $this->RULETYPE_HIDDEN    = 1;
         $this->RULETYPE_DISABLED  = 2;
@@ -77,7 +77,7 @@ class ArtifactRuleFactory
     public function getAllRulesByArtifactTypeWithOrder($artifact_type)
     {
         $dar = $this->rules_dao->searchByGroupArtifactIdWithOrder($artifact_type);
-        $rules = array();
+        $rules = [];
         while ($rule_row = $dar->getRow()) {
             if (! isset($this->rules[$rule_row['id']])) {
                 $rule_row['group_artifact_id'] = $artifact_type;
@@ -118,7 +118,7 @@ class ArtifactRuleFactory
 
     public function _saveRuleState($group_artifact_id, $source, $source_value, $target, $rule_type)
     {
-        $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, array($this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY));
+        $this->rules_dao->deleteRuleState($group_artifact_id, $source, $source_value, $target, [$this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY]);
         $this->rules_dao->create($group_artifact_id, $source, $source_value, $target, $rule_type);
     }
     public function saveRuleHidden($group_artifact_id, $source, $source_value, $target)

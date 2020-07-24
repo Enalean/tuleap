@@ -66,7 +66,7 @@ class MembershipManagerProjectAdminTest extends TestCase
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->remote_server_factory->shouldReceive('getServer')->andReturns($this->remote_server);
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
@@ -90,7 +90,7 @@ class MembershipManagerProjectAdminTest extends TestCase
         $this->admin_ugroup->shouldReceive('getId')->andReturns(ProjectUGroup::PROJECT_ADMIN);
         $this->admin_ugroup->shouldReceive('getProject')->andReturns($this->project);
 
-        $this->user->shouldReceive('getUgroups')->andReturns(array($this->u_group_id, ProjectUGroup::PROJECT_ADMIN));
+        $this->user->shouldReceive('getUgroups')->andReturns([$this->u_group_id, ProjectUGroup::PROJECT_ADMIN]);
     }
 
     public function testItProcessesTheListOfGerritServersWhenWeModifyProjectAdminGroup(): void
@@ -98,14 +98,14 @@ class MembershipManagerProjectAdminTest extends TestCase
         $this->remote_server_factory->shouldReceive('getServersForUGroup')
             ->with($this->admin_ugroup)
             ->once()
-            ->andReturns(array($this->remote_server));
+            ->andReturns([$this->remote_server]);
 
         $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
 
     public function testItUpdatesGerritProjectAdminsGroupsFromTuleapWhenIAddANewProjectAdmin(): void
     {
-        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns(array($this->remote_server));
+        $this->remote_server_factory->shouldReceive('getServersForUGroup')->andReturns([$this->remote_server]);
 
         $this->admin_ugroup->shouldReceive('getNormalizedName')->andReturns('project_admins');
 

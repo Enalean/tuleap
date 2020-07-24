@@ -83,7 +83,7 @@ class GlobalAdminController
 
     private function getSelectedUGroups(Project $project, array $ugroups)
     {
-        $groups          = array();
+        $groups          = [];
         $project_ugroups = $this->ugroup_factory->getAllForProject($project);
 
         foreach ($project_ugroups as $project_ugroup) {
@@ -101,7 +101,7 @@ class GlobalAdminController
 
     private function getOptions(Project $project)
     {
-        $options         = array();
+        $options         = [];
         $project_ugroups = $this->ugroup_factory->getAllForProject($project);
         $svn_ugroups = $this->permissions_manager->getAdminUgroupIds($project);
 
@@ -111,11 +111,11 @@ class GlobalAdminController
             }
 
             $selected  = in_array($project_ugroup->getId(), $svn_ugroups) ? 'selected="selected"' : '';
-            $options[] = array(
+            $options[] = [
                 'id'       => $project_ugroup->getId(),
                 'name'     => $project_ugroup->getName(),
                 'selected' => $selected
-            );
+            ];
         }
 
         return $options;

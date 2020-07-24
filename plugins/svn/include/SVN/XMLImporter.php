@@ -51,7 +51,7 @@ class XMLImporter
         RepositoryCopier $repository_copier,
         XMLUserChecker $xml_user_checker
     ) {
-        $this->repositories_data = array();
+        $this->repositories_data = [];
 
         if (empty($xml->svn)) {
             return;

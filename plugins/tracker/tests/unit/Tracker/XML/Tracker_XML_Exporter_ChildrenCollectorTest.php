@@ -53,7 +53,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framewor
     {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1123);
-        $this->assertEquals(array(1), $this->collector->getAllChildrenIds());
+        $this->assertEquals([1], $this->collector->getAllChildrenIds());
     }
 
     public function testItReturnsAllParents(): void
@@ -62,7 +62,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framewor
         $this->collector->addChild(2, 1123);
         $this->collector->addChild(3, 147);
 
-        $parents_array = array(1123, 147);
+        $parents_array = [1123, 147];
         $this->assertEquals($parents_array, $this->collector->getAllParents());
     }
 
@@ -73,7 +73,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framewor
         $this->collector->addChild(2, $parent_id);
         $this->collector->addChild(3, 147);
 
-        $children_array = array(1, 2);
+        $children_array = [1, 2];
         $this->assertEquals($children_array, $this->collector->getChildrenForParent($parent_id));
     }
 
@@ -84,7 +84,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framewor
         $this->collector->addChild(2, $parent_id);
         $this->collector->addChild(3, 147);
 
-        $children_array = array();
+        $children_array = [];
         $this->assertEquals($children_array, $this->collector->getChildrenForParent(666));
     }
 
@@ -92,7 +92,7 @@ final class Tracker_XML_Exporter_ChildrenCollectorTest extends \PHPUnit\Framewor
     {
         $this->collector->addChild(1, 1123);
         $this->collector->addChild(1, 1124);
-        $this->assertEquals(array(1), $this->collector->getAllChildrenIds());
-        $this->assertEquals(array(1123, 1124), $this->collector->getAllParents());
+        $this->assertEquals([1], $this->collector->getAllChildrenIds());
+        $this->assertEquals([1123, 1124], $this->collector->getAllParents());
     }
 }

@@ -53,8 +53,8 @@ class Docman_Report
         $this->description    = null;
         $this->image          = null;
 
-        $this->filters = array();
-        $this->columns = array();
+        $this->filters = [];
+        $this->columns = [];
     }
 
     public function setId($i)
@@ -226,7 +226,7 @@ class Docman_Report
 
     public function getUrlParameters()
     {
-        $param = array();
+        $param = [];
         // Report Id
         /*if($this->getId() !== null
            && $this->getId() > 0) {

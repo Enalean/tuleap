@@ -72,7 +72,7 @@ class ArtifactReportFactory
     public function copyReports($atid_source, $atid_dest)
     {
         global $Language;
-        $report_mapping = array(100 => 100); //The system report 'Default' (sic)
+        $report_mapping = [100 => 100]; //The system report 'Default' (sic)
      //
      // Copy artifact_report records which are not individual/personal
         $sql = "SELECT report_id,user_id,name,description,scope,is_default " .
@@ -90,7 +90,7 @@ class ArtifactReportFactory
 
             $res_insert = db_query($sql_insert);
             if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-                $this->setError($Language->getText('tracker_common_reportfactory', 'ins_err', array($report_array["report_id"],$atid_dest,db_error())));
+                $this->setError($Language->getText('tracker_common_reportfactory', 'ins_err', [$report_array["report_id"], $atid_dest, db_error()]));
                 return false;
             }
 
@@ -119,7 +119,7 @@ class ArtifactReportFactory
              //echo $sql_insert;
                 $res_insert = db_query($sql_insert);
                 if (! $res_insert || db_affected_rows($res_insert) <= 0) {
-                    $this->setError($Language->getText('tracker_common_reportfactory', 'f_ind_err', array($report_array["report_id"],$field_array["field_name"],db_error())));
+                    $this->setError($Language->getText('tracker_common_reportfactory', 'f_ind_err', [$report_array["report_id"], $field_array["field_name"], db_error()]));
                     return false;
                 }
             } // while
@@ -179,7 +179,7 @@ class ArtifactReportFactory
      */
     public function getReports($group_artifact_id, $user_id)
     {
-        $artifactreports = array();
+        $artifactreports = [];
         $sql = 'SELECT report_id,name,description,scope,is_default FROM artifact_report WHERE ';
         if (! $user_id || ($user_id == 100)) {
             $sql .= "(group_artifact_id=" .  db_ei($group_artifact_id)  . " AND scope='P') OR scope='S' " .

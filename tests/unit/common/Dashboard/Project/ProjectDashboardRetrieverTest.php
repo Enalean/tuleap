@@ -43,11 +43,11 @@ class ProjectDashboardRetrieverTest extends TestCase
 
         $dao = \Mockery::spy(\Tuleap\Dashboard\Project\ProjectDashboardDao::class);
 
-        $dao->shouldReceive('searchAllProjectDashboards')->with(1)->andReturns(\TestHelper::arrayToDar(array(
+        $dao->shouldReceive('searchAllProjectDashboards')->with(1)->andReturns(\TestHelper::arrayToDar([
             'id'         => 1,
             'project_id' => 1,
             'name'       => 'dashboard_one'
-        )));
+        ]));
         $dao->shouldReceive('searchAllProjectDashboards')->with(2)->andReturns(\TestHelper::emptyDar());
 
         $this->project_retriever = new ProjectDashboardRetriever($dao);
@@ -57,9 +57,9 @@ class ProjectDashboardRetrieverTest extends TestCase
     {
         $result = $this->project_retriever->getAllProjectDashboards($this->project_with_a_dashboard);
 
-        $expected_result = array(
+        $expected_result = [
             new ProjectDashboard(1, 1, 'dashboard_one')
-        );
+        ];
 
         $this->assertEquals($expected_result, $result);
     }

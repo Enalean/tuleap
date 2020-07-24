@@ -26,7 +26,7 @@
 class TemplateSingleton
 {
   // simply containing the
-    public $data_array = array();
+    public $data_array = [];
 
     public const PROJECT      = 1;
     public const TEMPLATE     = 2;
@@ -62,7 +62,7 @@ class TemplateSingleton
     public function update()
     {
         $db_res = db_query("SELECT * FROM group_type");
-        $this->data_array = array();
+        $this->data_array = [];
         $rows = db_numrows($db_res);
         for ($i = 0; $i < $rows; $i++) {
             $this->data_array[db_result($db_res, $i, 'type_id')] = db_result($db_res, $i, 'name');
@@ -89,7 +89,7 @@ class TemplateSingleton
 
     public function showTypeBox($name = 'group_type', $checked_val = 'xzxz')
     {
-        $localizedTypes = array();
+        $localizedTypes = [];
         foreach (array_keys($this->data_array) as $type_id) {
             $localizedTypes[] = $this->getLabel($type_id);
         }
@@ -98,7 +98,7 @@ class TemplateSingleton
 
     public function getLocalizedTypes()
     {
-        $localized = array();
+        $localized = [];
         foreach (array_keys($this->data_array) as $type_id) {
             $localized[$type_id] = $this->getLabel($type_id);
         }

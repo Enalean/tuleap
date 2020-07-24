@@ -301,7 +301,7 @@ class ExecutionRepresentationBuilder
     private function getLinkedBugsRepresentationForExecution(PFUser $user, Tracker_Artifact $execution)
     {
         $art_links           = $execution->getLinkedArtifacts($user);
-        $bug_representations = array();
+        $bug_representations = [];
 
         foreach ($art_links as $art_link) {
             if ($this->conformance_validator->isArtifactABug($art_link) && $art_link->userCanView($user)) {

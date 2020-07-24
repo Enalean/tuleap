@@ -34,7 +34,7 @@ $hp = Codendi_HTMLPurifier::instance();
 
 require_once __DIR__ . '/svn_utils.php';
 
-svn_header($request->getProject(), array ('title' => $Language->getText('svn_intro', 'info')));
+svn_header($request->getProject(), ['title' => $Language->getText('svn_intro', 'info')]);
 
 // Table for summary info
 print '<TABLE width="100%"><TR valign="top"><TD width="65%">' . "\n";
@@ -63,12 +63,12 @@ if ($svn_preamble != '') {
     $svn_intro_info      = null;
     $user                = $request->getCurrentUser();
 
-    $svn_params = array(
+    $svn_params = [
         'svn_intro_in_plugin' => &$svn_intro_in_plugin,
         'svn_intro_info'      => &$svn_intro_info,
         'group_id'            => $group_id,
         'user_id'             => $user->getId()
-    );
+    ];
 
     $event_manager->processEvent(Event::SVN_INTRO, $svn_params);
 
@@ -101,4 +101,4 @@ print $HTML->box1_bottom();
 
 print '</TD></TR></TABLE>';
 
-svn_footer(array());
+svn_footer([]);

@@ -78,7 +78,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
                 $this->graph->add($this->getBarPlot($this->data, $colors));
             }
         } else {
-            $this->keys = array();
+            $this->keys = [];
             foreach ($this->data as $group => $data) {
                 foreach ($data as $key => $nb) {
                     $this->keys[$key] = 1;
@@ -92,7 +92,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
                         $this->data[$group][$key] = 0;
                     }
                 }
-                uksort($this->data[$group], array($this, 'sort'));
+                uksort($this->data[$group], [$this, 'sort']);
             }
             $l = 0;
             $b = [];
@@ -145,12 +145,12 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
     public function toArray()
     {
         return $this->getChartData(
-            array(
+            [
                 'title'  => $this->title,
                 'height' => $this->height,
                 'width'  => $this->width,
                 'legend' => array_values($this->legend)
-            )
+            ]
         );
     }
 
@@ -166,30 +166,30 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 
     private function getGroupedBarChartData(array $info)
     {
-        return $info + array(
+        return $info + [
             'type'           => 'groupedbar',
             'grouped_labels' => array_values($this->legend),
             'values'         => $this->buildGroupedBarChartData(),
             'colors'         => $this->getColorPerLegend(),
-        );
+        ];
     }
 
     private function buildGroupedBarChartData()
     {
-        $values = array();
+        $values = [];
         foreach ($this->getGroupedValuesBySource() as $source_key => $source_values) {
-            $grouped_source_values = array();
+            $grouped_source_values = [];
             foreach ($this->legend as $legend_key => $legend_label) {
-                $grouped_source_values[] = array(
+                $grouped_source_values[] = [
                     'label' => $legend_label,
                     'value' => isset($source_values[$legend_key]) ? $source_values[$legend_key] : ''
-                );
+                ];
             }
 
-            $values[] = array(
+            $values[] = [
                 'label'  => $this->xaxis[$source_key],
                 'values' => $grouped_source_values,
-            );
+            ];
         }
 
         return $values;
@@ -197,7 +197,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 
     private function getGroupedValuesBySource()
     {
-        $grouped_values_by_source = array();
+        $grouped_values_by_source = [];
         foreach ($this->data as $group_by => $source_data_values) {
             foreach ($source_data_values as $source_data_key => $value) {
                 $grouped_values_by_source[$source_data_key][$group_by] = $value;
@@ -209,12 +209,12 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 
     private function getColorPerLegend()
     {
-        $colors = array();
+        $colors = [];
         foreach ($this->legend as $index => $name) {
-            $colors[] = array(
+            $colors[] = [
                 'label' => $name,
                 'color' => $this->getColorOrNull($this->colors[$index]),
-            );
+            ];
         }
 
         return $colors;
@@ -222,10 +222,10 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine
 
     private function getBarChartData(array $info)
     {
-        return $info + array(
+        return $info + [
                 'type'   => 'bar',
                 'data'   => array_values($this->data),
                 'colors' => $this->toArrayColors(),
-            );
+            ];
     }
 }

@@ -100,7 +100,7 @@ class Tracker_Workflow_Trigger_RulesManager
     public function createFromXML(SimpleXMLElement $xml_element, array $xmlMapping)
     {
         foreach ($xml_element->trigger_rule as $trigger_rule_xml) {
-            $triggers = array();
+            $triggers = [];
             foreach ($trigger_rule_xml->triggers->trigger as $trigger_xml) {
                 $triggers[] = new Tracker_Workflow_Trigger_FieldValue(
                     $xmlMapping[(string) $trigger_xml->field_id['REF']],
@@ -217,7 +217,7 @@ class Tracker_Workflow_Trigger_RulesManager
 
     private function getTriggers($rule_id)
     {
-        $triggers = array();
+        $triggers = [];
         foreach ($this->dao->searchForTriggeringFieldByRuleId($rule_id) as $row) {
             $triggers[] = $this->getFieldValue($row['field_id'], $row['value_id']);
         }
@@ -340,7 +340,7 @@ class Tracker_Workflow_Trigger_RulesManager
 
     private function buildRuleTriggersFromTemplateTriggerRule(array $template_triggers, array $field_mapping)
     {
-        $new_triggers = array();
+        $new_triggers = [];
 
         foreach ($template_triggers as $template_trigger) {
             $new_triggers[] = $this->buildRuleTargetFromTemplateTriggerRule($template_trigger, $field_mapping);

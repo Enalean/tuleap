@@ -40,7 +40,7 @@ class BurnupCacheDateRetriever
         $start_date = $this->getFirstDayToCache($burnup_period);
         $end_date   = $this->getLastDayToCache($burnup_period);
 
-        $day = array();
+        $day = [];
 
         while ($start_date < $end_date && $start_date < $yesterday) {
             if (TimePeriodWithoutWeekEnd::isNotWeekendDay($start_date->getTimestamp())) {

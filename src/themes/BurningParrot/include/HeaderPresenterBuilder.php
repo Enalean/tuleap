@@ -122,7 +122,7 @@ class HeaderPresenterBuilder
 
     private function getExtraTabs()
     {
-        $additional_tabs = array();
+        $additional_tabs = [];
 
         include $GLOBALS['Language']->getContent('layout/extra_tabs', null, null, '.php');
 
@@ -131,20 +131,20 @@ class HeaderPresenterBuilder
 
     private function getHelpMenuItems()
     {
-        $help_menu_items = array(
-            array(
+        $help_menu_items = [
+            [
                 'link'  => '/help/',
                 'title' => $GLOBALS['Language']->getText('include_menu', 'get_help')
-            ),
-            array(
+            ],
+            [
                 'link'  => '/help/api.php',
                 'title' => $GLOBALS['Language']->getText('include_menu', 'api')
-            ),
-            array(
+            ],
+            [
                 'link'  => '/contact.php',
                 'title' => $GLOBALS['Language']->getText('include_menu', 'contact_us')
-            )
-        );
+            ]
+        ];
 
         return $help_menu_items;
     }
@@ -179,10 +179,10 @@ class HeaderPresenterBuilder
 
         EventManager::instance()->processEvent(
             Event::BURNING_PARROT_GET_STYLESHEETS,
-            array(
+            [
                 'variant'     => $this->getMainColor(),
                 'stylesheets' => &$stylesheets
-            )
+            ]
         );
 
         return $stylesheets;

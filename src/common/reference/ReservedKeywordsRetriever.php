@@ -36,7 +36,7 @@ class ReservedKeywordsRetriever
 
     private function getReservedKeyWords()
     {
-        return array(
+        return [
             "art",
             "artifact",
             "doc",
@@ -63,16 +63,16 @@ class ReservedKeywordsRetriever
             "patch",
             "proj",
             "dossier"
-        );
+        ];
     }
 
     public function loadReservedKeywords()
     {
-        $additional_reserved_keywords = array();
+        $additional_reserved_keywords = [];
 
         $this->event_manager->processEvent(
             Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,
-            array('keywords' => &$additional_reserved_keywords)
+            ['keywords' => &$additional_reserved_keywords]
         );
 
         return array_merge($this->getReservedKeyWords(), $additional_reserved_keywords);

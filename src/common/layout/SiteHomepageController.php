@@ -77,18 +77,18 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
     {
         $event_manager = EventManager::instance();
 
-        $event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, array());
+        $event_manager->processEvent(Event::DISPLAYING_HOMEPAGE, []);
 
         $display_new_account_button  = true;
-        $event_manager->processEvent('display_newaccount', array('allow' => &$display_new_account_button));
+        $event_manager->processEvent('display_newaccount', ['allow' => &$display_new_account_button]);
         $login_url = '';
-        $event_manager->processEvent(\Event::GET_LOGIN_URL, array('return_to' => '', 'login_url' => &$login_url));
+        $event_manager->processEvent(\Event::GET_LOGIN_URL, ['return_to' => '', 'login_url' => &$login_url]);
 
-        $header_params = array(
+        $header_params = [
             'title' => $GLOBALS['Language']->getText('homepage', 'title'),
-        );
+        ];
 
-        $header_params['body_class'] = array('homepage');
+        $header_params['body_class'] = ['homepage'];
 
         $layout->header($header_params);
         $this->displayStandardHomepage(
@@ -96,7 +96,7 @@ class SiteHomepageController implements DispatchableWithRequest, DispatchableWit
             $login_url,
             $request->isSecure()
         );
-        $layout->footer(array());
+        $layout->footer([]);
     }
 
     private function displayStandardHomepage(bool $display_new_account_button, string $login_url, bool $is_secure): void

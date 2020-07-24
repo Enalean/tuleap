@@ -62,7 +62,7 @@ class WikiPlugin_TitleSearch extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(), // paging and more.
-            array('s'             => false,
+            ['s'             => false,
                    'auto_redirect' => false,
                    'noheader'      => false,
                    'exclude'       => false,
@@ -70,7 +70,7 @@ class WikiPlugin_TitleSearch extends WikiPlugin
                    'case_exact'    => false,
                    'regex'            => 'auto',
                    'format'           => false,
-            )
+            ]
         );
     }
     // info arg allows multiple columns

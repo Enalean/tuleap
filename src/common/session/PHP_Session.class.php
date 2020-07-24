@@ -43,7 +43,7 @@ class PHP_Session
 
     public function clean()
     {
-        $_SESSION = array();
+        $_SESSION = [];
     }
 
     protected function &getSession()

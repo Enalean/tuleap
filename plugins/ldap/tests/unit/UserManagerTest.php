@@ -112,7 +112,7 @@ final class UserManagerTest extends TestCase
         $lum->shouldReceive('getDao')->andReturns($dao);
 
         $this->assertTrue($lum->updateLdapUid($user, $ldap_uid));
-        $this->assertEquals($lum->getUsersToRename(), array($user));
+        $this->assertEquals($lum->getUsersToRename(), [$user]);
     }
 
     public function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember(): void

@@ -58,15 +58,15 @@ use Tuleap\Docman\view\DocumentFooterPresenterBuilder;
         $current_item       = $item;
         $current_item_title = $item->getTitle();
         $id                 = $item->getId();
-        $parents            = array();
+        $parents            = [];
         $item_factory       = $this->_getItemFactory($params);
         while ($item->getParentId() != 0) {
             $item = $item_factory->getItemFromDb($item->getParentId());
-            $parents[] = array(
+            $parents[] = [
                 'item'  => $item,
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
-            );
+            ];
         }
         $urlAction = 'show';
         if (isset($params['action'])) {

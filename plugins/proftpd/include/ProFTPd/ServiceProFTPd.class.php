@@ -51,20 +51,20 @@ class ServiceProFTPd extends Service
 
     private function displayServiceHeader(HTTPRequest $request, $title)
     {
-        $toolbar = array();
+        $toolbar = [];
         if ($this->userIsAdmin($request)) {
-            $toolbar[] = array(
+            $toolbar[] = [
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => PROFTPD_BASE_URL . '/?' . http_build_query(array(
+                'url'   => PROFTPD_BASE_URL . '/?' . http_build_query([
                     'group_id'   => $request->get('group_id'),
                     'controller' => 'admin',
                     'action'     => 'index',
-                ))
-            );
+                ])
+            ];
         }
 
         $title       = $title . ' - ' . $GLOBALS['Language']->getText('plugin_proftpd', 'service_lbl_key');
-        $breadcrumbs = array();
+        $breadcrumbs = [];
         parent::displayHeader($title, $breadcrumbs, $toolbar);
     }
 

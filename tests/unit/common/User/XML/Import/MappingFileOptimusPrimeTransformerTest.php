@@ -118,9 +118,9 @@ final class MappingFileOptimusPrimeTransformerTest extends \PHPUnit\Framework\Te
             new ToBeMappedUser(
                 'to.be.mapped',
                 'To Be Mapped',
-                array(
+                [
                     $this->buildUser('cstevens'),
-                ),
+                ],
                 104,
                 'ldap1234'
             )
@@ -155,7 +155,7 @@ EOS;
             new ToBeMappedUser(
                 'to.be.mapped',
                 'To Be Mapped',
-                array($cstevens, $cstevens2),
+                [$cstevens, $cstevens2],
                 104,
                 'ldap1234'
             )

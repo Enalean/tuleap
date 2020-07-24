@@ -66,7 +66,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      */
     public function getUgroupNamesFromPerms()
     {
-        $ugroup_names = array();
+        $ugroup_names = [];
 
         foreach ($this->perms as $ugroup_id) {
             $ugroup_names[] = $this->getUgroupName($ugroup_id);
@@ -92,11 +92,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             $this->field->getId(),
             $this->field->getLabel(),
             array_map(
-                array($this, 'getUserGroupRESTId'),
+                [$this, 'getUserGroupRESTId'],
                 $this->getPerms()
             ),
             array_map(
-                array($this, 'getUgroupRESTRepresentation'),
+                [$this, 'getUgroupRESTRepresentation'],
                 $this->getPerms()
             )
         );
@@ -118,11 +118,11 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
             Tracker_FormElementFactory::instance()->getType($this->field),
             $this->field->getLabel(),
             array_map(
-                array($this, 'getUgroupLabel'),
+                [$this, 'getUgroupLabel'],
                 $this->getPerms()
             ),
             array_map(
-                array($this, 'getUserGroupRESTId'),
+                [$this, 'getUserGroupRESTId'],
                 $this->getPerms()
             )
         );
@@ -151,13 +151,13 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
         $changes = false;
         if ($previous !== $next) {
             $removed_elements = array_diff($previous, $next);
-            $removed_arr = array();
+            $removed_arr = [];
             foreach ($removed_elements as $removed_element) {
                 $removed_arr[] = $this->getUgroupLabel($removed_element);
             }
             $removed = $this->format(implode(', ', $removed_arr), $format);
             $added_elements = array_diff($next, $previous);
-            $added_arr = array();
+            $added_arr = [];
             foreach ($added_elements as $added_element) {
                 $added_arr[] = $this->getUgroupLabel($added_element);
             }
@@ -186,7 +186,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
     public function nodiff($format = 'html')
     {
         $next = $this->getPerms();
-        $added_arr = array();
+        $added_arr = [];
         foreach ($next as $element) {
                 $added_arr[] = $this->getUgroupLabel($element);
         }

@@ -47,14 +47,14 @@ if (is_array($request->get('type_values'))) {
     }
 }
 
-$type_values = array();
+$type_values = [];
 if ($request->exist('type_values')) {
     $type_values = $request->get('type_values');
     if (! is_array($type_values)) {
         $type_values = explode(',', $type_values);
     }
 } else {
-    $type_values = array('session');
+    $type_values = ['session'];
 }
 
 if (

@@ -100,19 +100,19 @@ class BindUgroupConfirmController implements DispatchableWithRequest
             return;
         }
 
-        $to_remove = array();
+        $to_remove = [];
         foreach ($this->ldap_user_group_manager->getUsersToBeRemoved($bind_option) as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
             if ($user) {
-                $to_remove[] = array(
+                $to_remove[] = [
                     'display_name' => $this->user_helper->getDisplayNameFromUser($user),
                     'has_avatar'   => $user->hasAvatar(),
                     'avatar_url'   => $user->getAvatarUrl()
-                );
+                ];
             }
         }
 
-        $to_add = array();
+        $to_add = [];
         foreach ($this->ldap_user_group_manager->getUsersToBeAdded($bind_option) as $user_id) {
             $user = $this->user_manager->getUserById($user_id);
             if ($user) {
@@ -125,11 +125,11 @@ class BindUgroupConfirmController implements DispatchableWithRequest
         }
 
         $layout->sendJSON(
-            array(
+            [
                 'users_to_remove' => $to_remove,
                 'users_to_add'    => $to_add,
                 'nb_not_impacted' => count($this->ldap_user_group_manager->getUsersNotImpacted($bind_option)),
-            )
+            ]
         );
     }
 }

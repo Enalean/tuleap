@@ -33,10 +33,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
 
     public function testNonEmptyTitle()
     {
-        $params = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ' @title != "" '
-        );
+        ];
 
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
@@ -56,10 +56,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
      */
     public function testMultipleTitles()
     {
-        $params = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ' @title = "first" OR @title = "third" '
-        );
+        ];
 
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
@@ -71,10 +71,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             '@title = "first" OR @title = "third"'
         );
 
-        $this->getMatchingEpicArtifactByIds(array(
+        $this->getMatchingEpicArtifactByIds([
             $this->epic_artifact_ids[3],
             $this->epic_artifact_ids[1],
-        ));
+        ]);
     }
 
     /**
@@ -82,10 +82,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
      */
     public function testEmptyDescription()
     {
-        $params = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ' @description = "" '
-        );
+        ];
 
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
@@ -97,9 +97,9 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             '@description = ""'
         );
 
-        $this->getMatchingEpicArtifactByIds(array(
+        $this->getMatchingEpicArtifactByIds([
             $this->epic_artifact_ids[8]
-        ));
+        ]);
     }
 
     /**
@@ -107,10 +107,10 @@ class CrossTrackerTestExpertQueryTest extends RestBase
      */
     public function testEmptyDescriptionWithNotEmptyTitle()
     {
-        $params = array(
-            "trackers_id"  => array($this->epic_tracker_id),
+        $params = [
+            "trackers_id"  => [$this->epic_tracker_id],
             "expert_query" => ' @description = "" AND @title != "" '
-        );
+        ];
 
         $response = $this->getResponse($this->client->put('cross_tracker_reports/1', null, $params));
         $this->assertEquals($response->getStatusCode(), 201);
@@ -122,9 +122,9 @@ class CrossTrackerTestExpertQueryTest extends RestBase
             '@description = "" AND @title != ""'
         );
 
-        $this->getMatchingEpicArtifactByIds(array(
+        $this->getMatchingEpicArtifactByIds([
             $this->epic_artifact_ids[8]
-        ));
+        ]);
     }
 
     public function testSubmittedByEqualsNotEmpty()

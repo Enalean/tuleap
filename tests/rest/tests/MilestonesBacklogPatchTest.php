@@ -81,79 +81,79 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
 
     public function testPatchBacklogAfter()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->story_mul['id'], $this->story_div['id']),
+        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->story_mul['id'], $this->story_div['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->story_add['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->story_add['id'],
                 $this->story_mul['id'],
                 $this->story_div['id'],
                 $this->story_sub['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($this->uri)
         );
     }
 
     public function testPatchBacklogWithoutPermission()
     {
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->story_div['id'], $this->story_mul['id']),
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($this->uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->story_div['id'], $this->story_mul['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->story_add['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 403);
 
         $this->assertEqualsCanonicalizing(
-            array(
+            [
                 $this->story_add['id'],
                 $this->story_sub['id'],
                 $this->story_mul['id'],
                 $this->story_div['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($this->uri)
         );
     }
 
     public function testPatchBacklogBefore()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
+        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->story_mul['id'], $this->story_sub['id']],
                 'direction'   => 'before',
                 'compared_to' => $this->story_add['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->story_mul['id'],
                 $this->story_sub['id'],
                 $this->story_add['id'],
                 $this->story_div['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($this->uri)
         );
     }
 
     public function testPatchBacklogWithItemNotInBacklogRaiseErrors()
     {
-        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->story_mul['id'], $this->story_sub['id']),
+        $response = $this->getResponse($this->client->patch($this->uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->story_mul['id'], $this->story_sub['id']],
                 'direction'   => 'before',
                 'compared_to' => 1
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals(409, $response->getStatusCode());
     }
 
@@ -161,23 +161,23 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->epic_basic['id'], $this->epic_log['id']),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->epic_basic['id'], $this->epic_log['id']],
                 'direction'   => 'before',
                 'compared_to' => $this->epic_fin['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->epic_adv['id'],
                 $this->epic_exp['id'],
                 $this->epic_basic['id'],
                 $this->epic_log['id'],
                 $this->epic_fin['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
     }
@@ -186,23 +186,23 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->epic_exp['id'], $this->epic_adv['id']),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->epic_exp['id'], $this->epic_adv['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->epic_log['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->epic_basic['id'],
                 $this->epic_log['id'],
                 $this->epic_exp['id'],
                 $this->epic_adv['id'],
                 $this->epic_fin['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
     }
@@ -211,23 +211,23 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode(array(
-            'order' => array(
-                'ids'         => array($this->epic_adv['id'], $this->epic_exp['id']),
+        $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_2_NAME, $this->client->patch($uri, null, json_encode([
+            'order' => [
+                'ids'         => [$this->epic_adv['id'], $this->epic_exp['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->epic_log['id']
-            )
-        ))));
+            ]
+        ])));
         $this->assertEquals($response->getStatusCode(), 403);
 
         $this->assertEquals(
-            array(
+            [
                 $this->epic_basic['id'],
                 $this->epic_log['id'],
                 $this->epic_exp['id'],
                 $this->epic_adv['id'],
                 $this->epic_fin['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
     }
@@ -239,26 +239,26 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $another_release_id = $this->releases['Another release'];
         $another_release_uri = 'milestones/' . $another_release_id . '/content';
 
-        $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode(array(
-            'add' => array(
-                array(
+        $response = $this->getResponse($this->client->patch($another_release_uri, null, json_encode([
+            'add' => [
+                [
                     'id'          => $this->epic_log['id'],
                     'remove_from' => $this->release['id'],
-                ),
-                array(
+                ],
+                [
                     'id'          => $this->epic_adv['id'],
                     'remove_from' => $this->release['id'],
-                )
-            ),
-        ))));
+                ]
+            ],
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->epic_basic['id'],
                 $this->epic_exp['id'],
                 $this->epic_fin['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
 
@@ -275,27 +275,27 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     {
         $uri = 'milestones/' . $this->release['id'] . '/content';
 
-        $response = $this->getResponse($this->client->patch($uri, null, json_encode(array(
-            'order'  => array(
-                'ids'         => array($this->epic_fin['id'], $this->epic_sta['id']),
+        $response = $this->getResponse($this->client->patch($uri, null, json_encode([
+            'order'  => [
+                'ids'         => [$this->epic_fin['id'], $this->epic_sta['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->epic_basic['id']
-            ),
-            'add' => array(
-                array(
+            ],
+            'add' => [
+                [
                     'id' => $this->epic_sta['id'],
-                )
-            ),
-        ))));
+                ]
+            ],
+        ])));
         $this->assertEquals($response->getStatusCode(), 200);
 
         $this->assertEquals(
-            array(
+            [
                 $this->epic_basic['id'],
                 $this->epic_fin['id'],
                 $this->epic_sta['id'],
                 $this->epic_exp['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($uri)
         );
     }
@@ -308,31 +308,31 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
         $inconsistent_story['id'] = $this->stories['Created in sprint'];
         $sprint_id = $this->sprints['Sprint 9001'];
 
-        $patch_body = json_encode(array(
-            'order'  => array(
-                'ids'         => array($inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']),
+        $patch_body = json_encode([
+            'order'  => [
+                'ids'         => [$inconsistent_story['id'], $this->story_div['id'], $this->story_sub['id']],
                 'direction'   => 'after',
                 'compared_to' => $this->story_mul['id']
-            ),
-            'add' => array(
-                array(
+            ],
+            'add' => [
+                [
                     'id'          => $inconsistent_story['id'],
                     'remove_from' => $sprint_id,
-                )
-            ),
-        ));
+                ]
+            ],
+        ]);
 
         $response = $this->getResponse($this->client->patch($this->uri, null, $patch_body));
         $this->assertEquals(200, $response->getStatusCode());
 
         $this->assertEquals(
-            array(
+            [
                 $this->story_mul['id'],
                 $inconsistent_story['id'],
                 $this->story_div['id'],
                 $this->story_sub['id'],
                 $this->story_add['id'],
-            ),
+            ],
             $this->getIdsOrderedByPriority($this->uri)
         );
 
@@ -342,7 +342,7 @@ class MilestonesBacklogPatchTest extends MilestoneBase //phpcs:ignore PSR1.Class
     private function getIdsOrderedByPriority($uri)
     {
         $response = $this->getResponse($this->client->get($uri));
-        $actual_order = array();
+        $actual_order = [];
         foreach ($response->json() as $backlog_element) {
             $actual_order[] = $backlog_element['id'];
         }

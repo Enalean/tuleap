@@ -166,10 +166,10 @@ class StartTestManagementController
     {
         $templates_path = join(
             '/',
-            array(
+            [
                 TESTMANAGEMENT_BASE_DIR,
                 'templates'
-            )
+            ]
         );
 
         return \TemplateRendererFactory::build()->getRenderer($templates_path);

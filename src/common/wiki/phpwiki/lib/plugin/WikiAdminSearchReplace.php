@@ -56,11 +56,11 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    's'     => false,
                    /* Columns to include in listing */
                    'info'     => 'some',
-            )
+            ]
         );
     }
 
@@ -147,7 +147,7 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         }
         $post_args = $request->getArg('admin_replace');
         $next_action = 'select';
-        $pages = array();
+        $pages = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }
@@ -188,10 +188,10 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
             $args['exclude'],
             array_merge(
                 $args,
-                array('types' => array
-                                                   (
+                ['types' =>
+                                                   [
                                                     'hi_content' // with highlighted search for SearchReplace
-                => new _PageList_Column_content('rev:hi_content', _("Content"))))
+                => new _PageList_Column_content('rev:hi_content', _("Content"))]]
             )
         );
 
@@ -223,19 +223,19 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
         );
 
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('admin_replace')
+                ['admin_replace']
             ),
-            HiddenInputs(array('admin_replace[action]' => $next_action)),
+            HiddenInputs(['admin_replace[action]' => $next_action]),
             ENABLE_PAGEPERM
                           ? ''
-                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          : HiddenInputs(['require_authority_for_post' => WIKIAUTH_ADMIN]),
             $buttons
         );
     }
@@ -244,28 +244,28 @@ class WikiPlugin_WikiAdminSearchReplace extends WikiPlugin_WikiAdminSelect
     {
         $header->pushContent(
             HTML::div(
-                array('class' => 'hint'),
+                ['class' => 'hint'],
                 _("Replace all occurences of the given string in the content of all pages.")
             ),
             HTML::br()
         );
         $header->pushContent(_("Replace: "));
-        $header->pushContent(HTML::input(array('name' => 'admin_replace[from]',
-                                               'value' => $post_args['from'])));
+        $header->pushContent(HTML::input(['name' => 'admin_replace[from]',
+                                               'value' => $post_args['from']]));
         $header->pushContent(' ' . _("by") . ': ');
-        $header->pushContent(HTML::input(array('name' => 'admin_replace[to]',
-                                               'value' => $post_args['to'])));
-        $checkbox = HTML::input(array('type' => 'checkbox',
+        $header->pushContent(HTML::input(['name' => 'admin_replace[to]',
+                                               'value' => $post_args['to']]));
+        $checkbox = HTML::input(['type' => 'checkbox',
                                       'name' => 'admin_replace[case_exact]',
-                                      'value' => 1));
+                                      'value' => 1]);
         if (! empty($post_args['case_exact'])) {
             $checkbox->setAttr('checked', 'checked');
         }
         $header->pushContent(HTML::br(), $checkbox, " ", _("case-exact"));
-        $checkbox_re = HTML::input(array('type' => 'checkbox',
+        $checkbox_re = HTML::input(['type' => 'checkbox',
                                          'name' => 'admin_replace[regex]',
                                          //'disabled' => 'disabled',
-                                         'value' => 1));
+                                         'value' => 1]);
         if (! empty($post_args['regex'])) {
             $checkbox_re->setAttr('checked', 'checked');
         }

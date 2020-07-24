@@ -28,7 +28,7 @@ class TuleapSOAPServer extends SoapServer
         }
 
         if ($options === null) {
-            $options = array();
+            $options = [];
         }
         $options['soap_version'] = SOAP_1_2;
         $xml_security = new XML_Security();

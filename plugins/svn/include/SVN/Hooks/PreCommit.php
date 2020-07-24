@@ -122,7 +122,7 @@ class PreCommit
     {
         $changed_paths = $this->svnlook->getTransactionPath($this->repository, $this->transaction);
         foreach ($changed_paths as $path) {
-            $matches = array();
+            $matches = [];
             if ($this->extractFilenameFromNonDeletedPath($path, $matches)) {
                 continue;
             }
@@ -212,7 +212,7 @@ class PreCommit
             return false;
         }
 
-        $whitelist_regexp = array();
+        $whitelist_regexp = [];
         foreach ($whitelist as $whitelist_path) {
             $whitelist_regexp[] = $this->getWellFormedRegexImmutablePath($whitelist_path);
         }

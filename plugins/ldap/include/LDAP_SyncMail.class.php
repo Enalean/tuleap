@@ -54,9 +54,9 @@ class LDAP_SyncMail
     public function getNotificationRecipients(PFUser $user)
     {
         $projectList = $this->getProjectsForUser($user);
-        $recipient   = array();
+        $recipient   = [];
         foreach ($projectList as $project) {
-            $projectRecipient = array();
+            $projectRecipient = [];
             $projectAdmins    = $project->getAdmins();
             $unixProjectName      = $project->getUnixName();
             foreach ($projectAdmins as $admin) {

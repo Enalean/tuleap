@@ -89,7 +89,7 @@ class FineGrainedPermissionReplicator
         Project $project,
         GitRepository $repository
     ) {
-        $warnings           = array();
+        $warnings           = [];
         $branch_permissions = $this->default_factory->getBranchesFineGrainedPermissionsForProject($project);
         $tags_permissions   = $this->default_factory->getTagsFineGrainedPermissionsForProject($project);
 
@@ -137,7 +137,7 @@ class FineGrainedPermissionReplicator
         GitRepository $source_repository,
         GitRepository $repository
     ) {
-        $warnings           = array();
+        $warnings           = [];
         $branch_permissions = $this->factory->getBranchesFineGrainedPermissionsForRepository($source_repository);
         $tags_permissions   = $this->factory->getTagsFineGrainedPermissionsForRepository($source_repository);
 

@@ -65,7 +65,7 @@ class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
     {
         $this->repository_factory->shouldReceive('getAllRepositories')
             ->with($this->project)->once()
-            ->andReturns(array());
+            ->andReturns([]);
 
         $this->git_repository_manager->deleteProjectRepositories($this->project);
     }
@@ -90,7 +90,7 @@ class GitRepositoryManagerDeleteAllRepositoriesTest extends TestCase
         $this->git_system_event_manager->shouldReceive('queueRepositoryDeletion')->with($repository_1)->ordered();
         $this->git_system_event_manager->shouldReceive('queueRepositoryDeletion')->with($repository_2)->ordered();
 
-        $this->repository_factory->shouldReceive('getAllRepositories')->andReturns(array($repository_1, $repository_2));
+        $this->repository_factory->shouldReceive('getAllRepositories')->andReturns([$repository_1, $repository_2]);
 
         $this->git_repository_manager->deleteProjectRepositories($this->project);
     }

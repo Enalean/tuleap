@@ -150,7 +150,7 @@ abstract class Docman_ApprovalTableVersionnedFactory extends Docman_ApprovalTabl
      */
     public function getAllApprovalTable()
     {
-        $tableArray = array();
+        $tableArray = [];
         $dao = $this->_getDao();
         $dar = $dao->getApprovalTableItemId($this->item->getId(), 'app.*', '', true);
         if ($dar && ! $dar->isError()) {

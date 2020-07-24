@@ -22,13 +22,13 @@ define('VERT_EDGE', 1);
 class Contour
 {
 
-    private $dataPoints = array();
+    private $dataPoints = [];
     private $nbrCols = 0;
     private $nbrRows = 0;
-    private $isobarValues = array();
-    private $isobarCoord = array();
+    private $isobarValues = [];
+    private $isobarCoord = [];
     private $nbrIsobars = 10;
-    private $isobarColors = array();
+    private $isobarColors = [];
     private $invert = true;
     private $highcontrast = false;
     private $highcontrastbw = false;
@@ -108,7 +108,7 @@ class Contour
                 $max = $ma;
             }
         }
-        return array($min,$max);
+        return [$min, $max];
     }
 
     /**
@@ -237,7 +237,7 @@ class Contour
         if ($this->invert) {
             $ycoord = $this->nbrRows - 1 - $ycoord;
         }
-        return array($xcoord,$ycoord);
+        return [$xcoord, $ycoord];
     }
 
     /**
@@ -288,7 +288,7 @@ class Contour
                 // Use only blue/red scale
                 $step = round(255 / ($this->nbrIsobars - 1));
                 for ($ib = 0; $ib < $this->nbrIsobars; $ib++) {
-                    $this->isobarColors[$ib] = array($ib * $step, 50, 255 - $ib * $step);
+                    $this->isobarColors[$ib] = [$ib * $step, 50, 255 - $ib * $step];
                 }
             }
         } else {
@@ -319,7 +319,7 @@ class Contour
             $ib = $this->isobarValues[$isobar];
             $this->resetEdgeMatrices();
             $this->determineIsobarEdgeCrossings($isobar);
-            $this->isobarCoord[$isobar] = array();
+            $this->isobarCoord[$isobar] = [];
 
             $ncoord = 0;
 
@@ -328,24 +328,24 @@ class Contour
                     // Find out how many crossings around the edges
                     $n = 0;
                     if ($this->edges[HORIZ_EDGE][$row][$col]) {
-                        $neigh[$n++] = array($row,  $col,  HORIZ_EDGE);
+                        $neigh[$n++] = [$row, $col, HORIZ_EDGE];
                     }
                     if ($this->edges[HORIZ_EDGE][$row + 1][$col]) {
-                        $neigh[$n++] = array($row + 1,$col,  HORIZ_EDGE);
+                        $neigh[$n++] = [$row + 1, $col, HORIZ_EDGE];
                     }
                     if ($this->edges[VERT_EDGE][$row][$col]) {
-                        $neigh[$n++] = array($row,  $col,  VERT_EDGE);
+                        $neigh[$n++] = [$row, $col, VERT_EDGE];
                     }
                     if ($this->edges[VERT_EDGE][$row][$col + 1]) {
-                        $neigh[$n++] = array($row,  $col + 1,VERT_EDGE);
+                        $neigh[$n++] = [$row, $col + 1, VERT_EDGE];
                     }
 
                     if ($n == 2) {
                         $n1 = 0;
                         $n2 = 1;
-                        $this->isobarCoord[$isobar][$ncoord++] = array(
+                        $this->isobarCoord[$isobar][$ncoord++] = [
                         $this->getCrossingCoord($neigh[$n1][0], $neigh[$n1][1], $neigh[$n1][2], $ib),
-                        $this->getCrossingCoord($neigh[$n2][0], $neigh[$n2][1], $neigh[$n2][2], $ib) );
+                        $this->getCrossingCoord($neigh[$n2][0], $neigh[$n2][1], $neigh[$n2][2], $ib) ];
                     } elseif ($n == 4) {
                         // We must determine how to connect the edges either northwest->southeast or
                         // northeast->southwest. We do that by calculating the imaginary middle value of
@@ -373,13 +373,13 @@ class Contour
                             $n4 = 1;
                         }
 
-                        $this->isobarCoord[$isobar][$ncoord++] = array(
+                        $this->isobarCoord[$isobar][$ncoord++] = [
                         $this->getCrossingCoord($neigh[$n1][0], $neigh[$n1][1], $neigh[$n1][2], $ib),
-                        $this->getCrossingCoord($neigh[$n2][0], $neigh[$n2][1], $neigh[$n2][2], $ib) );
+                        $this->getCrossingCoord($neigh[$n2][0], $neigh[$n2][1], $neigh[$n2][2], $ib) ];
 
-                        $this->isobarCoord[$isobar][$ncoord++] = array(
+                        $this->isobarCoord[$isobar][$ncoord++] = [
                         $this->getCrossingCoord($neigh[$n3][0], $neigh[$n3][1], $neigh[$n3][2], $ib),
-                        $this->getCrossingCoord($neigh[$n4][0], $neigh[$n4][1], $neigh[$n4][2], $ib) );
+                        $this->getCrossingCoord($neigh[$n4][0], $neigh[$n4][1], $neigh[$n4][2], $ib) ];
                     }
                 }
             }
@@ -389,7 +389,7 @@ class Contour
             // No manually specified colors. Calculate them automatically.
             $this->CalculateColors();
         }
-        return array( $this->isobarCoord, $this->isobarValues, $this->isobarColors );
+        return [$this->isobarCoord, $this->isobarValues, $this->isobarColors];
     }
 }
 
@@ -405,7 +405,7 @@ class ContourPlot extends Plot
     private $contourCoord;
     private $contourVal;
     private $contourColor;
-    private $dataMatrix = array();
+    private $dataMatrix = [];
     private $invertLegend = false;
     private $interpFactor = 1;
     private $flipData = false;
@@ -413,7 +413,7 @@ class ContourPlot extends Plot
     private $showLegend = false;
     private $highcontrast = false;
     private $highcontrastbw = false;
-    private $manualIsobarColors = array();
+    private $manualIsobarColors = [];
 
     /**
      * Construct a contour plotting algorithm. The end result of the algorithm is a sequence of
@@ -430,7 +430,7 @@ class ContourPlot extends Plot
      * @param $aHighContrastBW Use only black colors for contours
      * @return an instance of the contour plot algorithm
      */
-    public function __construct($aDataMatrix, $aIsobar = 10, $aFactor = 1, $aInvert = false, $aIsobarColors = array())
+    public function __construct($aDataMatrix, $aIsobar = 10, $aFactor = 1, $aInvert = false, $aIsobarColors = [])
     {
         $this->dataMatrix = $aDataMatrix;
         $this->flipData = $aInvert;
@@ -504,7 +504,7 @@ class ContourPlot extends Plot
      */
     public function Min()
     {
-        return array(0,0);
+        return [0, 0];
     }
 
     /* Internal method. Give the max value to be used for the scaling
@@ -512,7 +512,7 @@ class ContourPlot extends Plot
      */
     public function Max()
     {
-        return array(count($this->dataMatrix[0]) - 1,count($this->dataMatrix) - 1);
+        return [count($this->dataMatrix[0]) - 1, count($this->dataMatrix) - 1];
     }
 
     /**

@@ -48,11 +48,11 @@ class ProjectDashboardSaverTest extends TestCase
         $this->project = \Mockery::spy(\Project::class, ['getID' => 1, 'getUnixName' => false, 'isPublic' => false]);
 
         $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'new_dashboard')->andReturns(\TestHelper::emptyDar());
-        $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar(array(
+        $this->dao->shouldReceive('searchByProjectIdAndName')->with(1, 'existing_dashboard')->andReturns(\TestHelper::arrayToDar([
             'id'         => 1,
             'project_id' => 1,
             'name'       => 'existing_dashboard'
-        )));
+        ]));
 
         $this->admin_user = \Mockery::spy(\PFUser::class);
         $this->admin_user->shouldReceive('isAdmin')->andReturns(true);

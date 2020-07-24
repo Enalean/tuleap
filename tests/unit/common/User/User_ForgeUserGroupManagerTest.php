@@ -62,11 +62,11 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns(array(
+        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'people',
             'description' => 'to eat'
-        ));
+        ]);
 
         $update = $this->manager->updateUserGroup($ugroup);
         $this->assertTrue($update);
@@ -76,11 +76,11 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
     {
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns(array(
+        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'fish',
             'description' => 'to talk to'
-        ));
+        ]);
 
         $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andReturns(true);
 
@@ -93,11 +93,11 @@ final class User_ForgeUserGroupManagerTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\User_UserGroupNameInvalidException::class);
         $ugroup = new User_ForgeUGroup(45, 'people', 'to eat');
 
-        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns(array(
+        $this->dao->shouldReceive('getForgeUGroup')->with(45)->andReturns([
             'group_id'    => 45,
             'name'        => 'fish',
             'description' => 'to talk to'
-        ));
+        ]);
 
         $this->dao->shouldReceive('updateForgeUGroup')->with(45, 'people', 'to eat')->once()->andThrows(new User_UserGroupNameInvalidException());
 

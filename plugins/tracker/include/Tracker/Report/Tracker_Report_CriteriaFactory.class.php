@@ -73,10 +73,10 @@ class Tracker_Report_CriteriaFactory
         if (! isset($xmlMapping[(string) $fatt['REF']])) {
             return null;
         }
-        $row                = array(
+        $row                = [
             'field' => $xmlMapping[(string) $fatt['REF']],
             'rank' => (int) $att['rank']
-        );
+        ];
         $row['is_advanced'] = isset($att['is_advanced']) ? (int) $att['is_advanced'] : 0;
         $row['id']          = 0;
         $row['report']      = $report;

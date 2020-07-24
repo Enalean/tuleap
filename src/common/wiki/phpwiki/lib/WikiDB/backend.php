@@ -171,9 +171,9 @@ class WikiDB_backend
     {
         $mtime = time();
         $user = $GLOBALS['request']->_user;
-        $vdata = array('author' => $user->getId(),
+        $vdata = ['author' => $user->getId(),
                        'author_id' => $user->getAuthenticatedId(),
-                       'mtime' => $mtime);
+                       'mtime' => $mtime];
 
         $this->lock(); // critical section:
         $version = $this->get_latest_version($pagename);
@@ -364,8 +364,8 @@ class WikiDB_backend
             $pages,
             $search,
             $fulltext,
-            array('limit' => $limit,
-            'exclude' => $exclude)
+            ['limit' => $limit,
+            'exclude' => $exclude]
         );
     }
 
@@ -495,11 +495,11 @@ class WikiDB_backend
     {
         $search = strtolower(trim($search));
         if (! $search) {
-            return array(array(),array());
+            return [[], []];
         }
 
         $words = preg_split('/\s+/', $search);
-        $exclude = array();
+        $exclude = [];
         foreach ($words as $key => $word) {
             if ($word[0] == '-' && $word != '-') {
                 $word = substr($word, 1);
@@ -507,7 +507,7 @@ class WikiDB_backend
                 unset($words[$key]);
             }
         }
-        return array($words, $exclude);
+        return [$words, $exclude];
     }
 
     /**
@@ -521,7 +521,7 @@ class WikiDB_backend
         if (strstr($limit, ',')) {
             return preg_split('/,/D', $limit);
         } else {
-            return array(0, $limit);
+            return [0, $limit];
         }
     }
 
@@ -543,7 +543,7 @@ class WikiDB_backend
         }
         //support multiple comma-delimited sortby args: "+hits,+pagename"
         if (strstr($column, ',')) {
-            $result = array();
+            $result = [];
             foreach (explode(',', $column) as $col) {
                 if (empty($this)) {
                     $result[] = WikiDB_backend::sortby($col, $action);
@@ -562,7 +562,7 @@ class WikiDB_backend
         }
         // default order: +pagename, -mtime, -hits
         if (empty($order)) {
-            if (in_array($column, array('mtime','hits'))) {
+            if (in_array($column, ['mtime', 'hits'])) {
                 $order = '-';
             } else {
                 $order = '+';
@@ -594,7 +594,7 @@ class WikiDB_backend
 
     public function sortable_columns()
     {
-        return array('pagename'/*,'mtime','author_id','author'*/);
+        return ['pagename'/*,'mtime','author_id','author'*/];
     }
 
     // adds surrounding quotes
@@ -610,7 +610,7 @@ class WikiDB_backend
 
     public function isSQL()
     {
-        return in_array(DATABASE_TYPE, array('SQL','ADODB','PDO'));
+        return in_array(DATABASE_TYPE, ['SQL', 'ADODB', 'PDO']);
     }
 }
 
@@ -667,7 +667,7 @@ class WikiDB_backend_search
         $this->_dbh = $dbh;
         $this->_case_exact =  $search->_case_exact;
         $this->_stoplist   = $search->_stoplist;
-        $this->_stoplisted = array();
+        $this->_stoplisted = [];
     }
     public function _quote($word)
     {

@@ -46,13 +46,13 @@ class Tracker
                 $artifact_reference['uri'],
                 null,
                 json_encode(
-                    array(
-                        'values'  => array(),
-                        'comment' => array(
+                    [
+                        'values'  => [],
+                        'comment' => [
                             'format' => 'text',
                             'body'   => $comment,
-                        ),
-                    )
+                        ],
+                    ]
                 )
             )
         );
@@ -70,44 +70,44 @@ class Tracker
 
     public function createArtifact(array $values)
     {
-        $post = json_encode(array(
-            'tracker' => array(
+        $post = json_encode([
+            'tracker' => [
                 'id'  => $this->tracker['id'],
                 'uri' => 'whatever'
-            ),
+            ],
             'values' => $values,
-        ));
+        ]);
         return $this->getResponse($this->client->post('artifacts', null, $post))->json();
     }
 
     public function getSubmitTextValue($field_label, $field_value)
     {
         $field_def = $this->getFieldByLabel($field_label);
-        return array(
+        return [
             'field_id' => $field_def['field_id'],
             'value'    => $field_value,
-        );
+        ];
     }
 
     public function getSubmitListValue($field_label, $field_value_label)
     {
         $field_def = $this->getFieldByLabel($field_label);
-        return array(
+        return [
             'field_id'       => $field_def['field_id'],
-            'bind_value_ids' => array(
+            'bind_value_ids' => [
                 $this->getListValueIdByLabel($field_def, $field_value_label)
-            ),
-        );
+            ],
+        ];
     }
 
     public function getSubmitArtifactLinkValue(array $ids)
     {
-        return array(
+        return [
             'field_id' => $this->getArtifactLinkFieldId(),
             'links' => array_map(function ($id) {
-                return array('id' => $id);
+                return ['id' => $id];
             }, $ids)
-        );
+        ];
     }
 
     private function getArtifactLinkFieldId()

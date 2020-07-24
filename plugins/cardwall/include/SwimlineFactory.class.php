@@ -49,7 +49,7 @@ class Cardwall_SwimlineFactory
      */
     public function getCells(Cardwall_OnTop_Config_ColumnCollection $columns, array $potential_presenters)
     {
-        $cells = array();
+        $cells = [];
         foreach ($columns as $column) {
             $cells[] = $this->getCell($column, $potential_presenters);
         }
@@ -58,16 +58,16 @@ class Cardwall_SwimlineFactory
 
     private function getCell(Cardwall_Column $column, array $potential_presenters)
     {
-        $retained_presenters = array();
+        $retained_presenters = [];
         foreach ($potential_presenters as $p) {
             $this->addNodeToCell($p, $column, $retained_presenters);
         }
 
-        return array(
+        return [
             'column_id' => $column->getId(),
             'column_stacked' => $column->isAutostacked(),
             'cardincell_presenters' => $retained_presenters
-        );
+        ];
     }
 
     private function addNodeToCell(Cardwall_CardInCellPresenter $presenter, Cardwall_Column $column, array &$presenters)

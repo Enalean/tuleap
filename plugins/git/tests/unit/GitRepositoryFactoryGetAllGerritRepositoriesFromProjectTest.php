@@ -49,7 +49,7 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends TestCa
         $this->project_id = 320;
         $this->ugroup_id = 115;
 
-        $this->user_ugroups = array(404, 416);
+        $this->user_ugroups = [404, 416];
         $this->user         = \Mockery::spy(\PFUser::class)->shouldReceive('getUgroups')->with($this->project_id, null)->andReturns($this->user_ugroups)->getMock();
 
         $this->project = \Mockery::spy(\Project::class)->shouldReceive('getID')->andReturns($this->project_id)->getMock();
@@ -64,46 +64,46 @@ class GitRepositoryFactoryGetAllGerritRepositoriesFromProjectTest extends TestCa
 
     public function testItInstanciateGitRepositoriesObjects()
     {
-        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(array('repository_id' => 12), array('repository_id' => 23)));
-        $this->factory->shouldReceive('instanciateFromRow')->with(array('repository_id' => 12))->andReturns(\Mockery::spy(\GitRepository::class));
-        $this->factory->shouldReceive('instanciateFromRow')->with(array('repository_id' => 23))->andReturns(\Mockery::spy(\GitRepository::class));
+        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(['repository_id' => 12], ['repository_id' => 23]));
+        $this->factory->shouldReceive('instanciateFromRow')->with(['repository_id' => 12])->andReturns(\Mockery::spy(\GitRepository::class));
+        $this->factory->shouldReceive('instanciateFromRow')->with(['repository_id' => 23])->andReturns(\Mockery::spy(\GitRepository::class));
 
-        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(array());
+        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns([]);
 
         $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
     }
 
     public function testItMergesPermissions()
     {
-        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(array('repository_id' => 12)));
+        $this->dao->shouldReceive('searchAllGerritRepositoriesOfProject')->andReturns(\TestHelper::arrayToDar(['repository_id' => 12]));
         $this->factory->shouldReceive('instanciateFromRow')->andReturns($this->repository);
 
-        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns(array(
+        $this->factory->shouldReceive('getGerritRepositoriesWithPermissionsForUGroupAndProject')->andReturns([
             12 => new GitRepositoryWithPermissions(
                 $this->repository,
-                array(
-                    Git::PERM_READ          => array(),
-                    Git::PERM_WRITE         => array(ProjectUGroup::PROJECT_ADMIN, 404),
-                    Git::PERM_WPLUS         => array(),
-                    Git::SPECIAL_PERM_ADMIN => array()
-                )
+                [
+                    Git::PERM_READ          => [],
+                    Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
+                    Git::PERM_WPLUS         => [],
+                    Git::SPECIAL_PERM_ADMIN => []
+                ]
             )
-        ));
+        ]);
 
         $repositories_with_permissions = $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
 
         $this->assertEquals(
-            array(
+            [
                 12 => new GitRepositoryWithPermissions(
                     $this->repository,
-                    array(
-                        Git::PERM_READ          => array(),
-                        Git::PERM_WRITE         => array(ProjectUGroup::PROJECT_ADMIN, 404),
-                        Git::PERM_WPLUS         => array(),
-                        Git::SPECIAL_PERM_ADMIN => array(ProjectUGroup::PROJECT_ADMIN)
-                    )
+                    [
+                        Git::PERM_READ          => [],
+                        Git::PERM_WRITE         => [ProjectUGroup::PROJECT_ADMIN, 404],
+                        Git::PERM_WPLUS         => [],
+                        Git::SPECIAL_PERM_ADMIN => [ProjectUGroup::PROJECT_ADMIN]
+                    ]
                 )
-            ),
+            ],
             $repositories_with_permissions
         );
     }

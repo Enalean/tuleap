@@ -50,7 +50,7 @@ function project_admin_footer($params)
 {
     TemplateRendererFactory::build()
         ->getRenderer(ForgeConfig::get('tuleap_dir') . '/src/templates/project')
-        ->renderToPage('end-project-admin-content', array());
+        ->renderToPage('end-project-admin-content', []);
     site_project_footer($params);
 }
 
@@ -115,7 +115,7 @@ function build_grouphistory_filter($event = null, $subEventsBox = null, $value =
  */
 function get_history_entries()
 {
-    $subEvents = array('event_permission' => array('perm_reset_for_field',
+    $subEvents = ['event_permission' => ['perm_reset_for_field',
                                                    'perm_granted_for_field',
                                                    'perm_reset_for_tracker',
                                                    'perm_granted_for_tracker',
@@ -132,8 +132,8 @@ function get_history_entries()
                                                    'perm_reset_for_object',
                                                    'perm_granted_for_object',
                                                    'perm_reset_for_docgroup',
-                                                   'perm_granted_for_docgroup'),
-                       'event_project' =>    array('rename_done',
+                                                   'perm_granted_for_docgroup'],
+                       'event_project' =>    ['rename_done',
                                                    'rename_with_error',
                                                    'add_custom_quota',
                                                    'restore_default_quota',
@@ -152,24 +152,24 @@ function get_history_entries()
                                                    'status',
                                                    'frs_self_add_monitor_package',
                                                    'frs_add_monitor_package',
-                                                   'frs_stop_monitor_package'),
-                       'event_ug' =>         array('upd_ug',
+                                                   'frs_stop_monitor_package'],
+                       'event_ug' =>         ['upd_ug',
                                                    'del_ug',
                                                    'changed_member_perm',
                                                    'ugroup_add_binding',
-                                                   'ugroup_remove_binding'),
-                       'event_user' =>       array('changed_personal_email_notif',
+                                                   'ugroup_remove_binding'],
+                       'event_user' =>       ['changed_personal_email_notif',
                                                    'added_user',
-                                                   'removed_user'),
-                       'event_others' =>     array('changed_bts_form_message',
+                                                   'removed_user'],
+                       'event_others' =>     ['changed_bts_form_message',
                                                    'changed_bts_allow_anon',
                                                    'changed_patch_mgr_settings',
                                                    'changed_task_mgr_other_settings',
-                                                   'changed_sr_settings'),
-                       'choose' =>           array('choose_event'));
+                                                   'changed_sr_settings'],
+                       'choose' =>           ['choose_event']];
 
     //Plugins related events should be filled using the hook
-    $params = array('subEvents' => &$subEvents);
+    $params = ['subEvents' => &$subEvents];
     $em = EventManager::instance();
     $em->processEvent('fill_project_history_sub_events', $params);
     return $subEvents;
@@ -238,12 +238,12 @@ function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1)
         $val = $event->getValue();
 
         if ($export) {
-            $documents_body = array ('event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
+            $documents_body =  ['event' => $hp->purify($msg, CODENDI_PURIFIER_BASIC, $group_id),
                                      'val'   => $hp->purify($val),
                                      'date'  => format_date($GLOBALS['Language']->getText('system', 'datefmt'), $row['date']),
-                                     'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name']));
+                                     'by'    => UserHelper::instance()->getDisplayNameFromUserName($row['user_name'])];
             require_once __DIR__ . '/../export/project_export_utils.php';
-            $html .= build_csv_record(array('event', 'val', 'date', 'by'), $documents_body) . "\n";
+            $html .= build_csv_record(['event', 'val', 'date', 'by'], $documents_body) . "\n";
         } else {
             $html .= $hp->purify($val, CODENDI_PURIFIER_BASIC);
             $user = UserManager::instance()->getUserByUserName($row['user_name']);
@@ -292,20 +292,20 @@ function show_grouphistory($group_id, $offset, $limit, $event = null, $subEvents
     $renderer = TemplateRendererFactory::build()->getRenderer(ForgeConfig::get('codendi_dir') . '/src/templates/project/');
 
     //Event select Box
-    $events = array(
+    $events = [
         'any'              => $GLOBALS["Language"]->getText('global', 'any'),
         'event_permission' => $GLOBALS["Language"]->getText("project_admin_utils", "event_permission"),
         'event_project'    => $GLOBALS["Language"]->getText("project_admin_utils", "event_project"),
         'event_user'       => $GLOBALS["Language"]->getText("project_admin_utils", "event_user"),
         'event_ug'         => $GLOBALS["Language"]->getText("project_admin_utils", "event_ug"),
         'event_others'     => $GLOBALS["Language"]->getText("project_admin_utils", "event_others")
-    );
+    ];
 
     $select = new HTML_Element_Selectbox('', 'events_box', '');
     $select->setId('events_box');
     $select->addMultipleOptions($events, $event);
 
-    $title_arr   = array();
+    $title_arr   = [];
     $title_arr[] = $Language->getText('project_admin_utils', 'event');
     $title_arr[] = $Language->getText('project_admin_utils', 'val');
     $title_arr[] = $Language->getText('project_admin_utils', 'date');
@@ -384,11 +384,11 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
 
     $eol = "\n";
 
-    $col_list = array('event', 'val', 'date', 'by');
-    $documents_title = array ('event' => $Language->getText('project_admin_utils', 'event'),
+    $col_list = ['event', 'val', 'date', 'by'];
+    $documents_title =  ['event' => $Language->getText('project_admin_utils', 'event'),
                               'val'   => $Language->getText('project_admin_utils', 'val'),
                               'date'  => $Language->getText('project_admin_utils', 'date'),
-                              'by'    => $Language->getText('global', 'by'));
+                              'by'    => $Language->getText('global', 'by')];
     echo build_csv_header($col_list, $documents_title) . $eol;
 
     $dao = new ProjectHistoryDao(CodendiDataAccess::instance());
@@ -398,5 +398,5 @@ function export_grouphistory($group_id, $event = null, $subEventsBox = null, $va
     if ($res['numrows'] > 0) {
         echo displayProjectHistoryResults($group_id, $res, true);
     }
-    echo build_csv_header($col_list, array()) . $eol;
+    echo build_csv_header($col_list, []) . $eol;
 }

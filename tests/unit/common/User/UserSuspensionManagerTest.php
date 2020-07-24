@@ -100,10 +100,10 @@ class UserSuspensionManagerTest extends TestCase
         // Disable mail to inactive accounts
         ForgeConfig::set('sys_suspend_send_account_suspension_email', 0);
 
-        $idle_user = new PFUser(array("email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "idle_user", "language_id" => "fr_FR"));
+        $idle_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "idle_user", "language_id" => "fr_FR"]);
 
         $this->dao->shouldReceive('getIdleAccounts')
-            ->andReturn(array(array('user_id' => 111, 'last_access_date' => $last_access_date->getTimestamp())));
+            ->andReturn([['user_id' => 111, 'last_access_date' => $last_access_date->getTimestamp()]]);
         $this->user_manager->shouldReceive('getUserbyId')->with(111)->andReturn($idle_user);
         $this->lang_factory->shouldReceive('getBaseLanguage')->andReturn($this->language);
         $this->user_suspension_logger->shouldReceive('info');
@@ -130,7 +130,7 @@ class UserSuspensionManagerTest extends TestCase
         $last_remove = $test_date->sub(new DateInterval("P4D"));
         $last_valid_access = $test_date->sub(new DateInterval("P10D"));
 
-        $non_project_members = array(array('user_id' => 103), array('user_id' => 104));
+        $non_project_members = [['user_id' => 103], ['user_id' => 104]];
         $non_project_member_1 = 103;
         $non_project_member_2 = 104;
         $this->user_suspension_logger->shouldReceive('info');
@@ -138,12 +138,12 @@ class UserSuspensionManagerTest extends TestCase
         $this->user_suspension_logger->shouldReceive('debug');
 
         $this->dao->shouldReceive('returnNotProjectMembers')->andReturn($non_project_members);
-        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_1)->andReturn(array());
-        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_2)->andReturn(array(array('date' => 1579267252)));
+        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_1)->andReturn([]);
+        $this->dao->shouldReceive('delayForBeingNotProjectMembers')->with($non_project_member_2)->andReturn([['date' => 1579267252]]);
 
         $this->dao->shouldReceive('delayForBeingSubscribed')
             ->with($non_project_member_1, Matchers::equalTo($last_remove))
-            ->andReturn(array(array(null)));
+            ->andReturn([[null]]);
 
         $this->dao->shouldReceive('suspendAccount')->with($non_project_member_1);
         $this->dao->shouldReceive('suspendAccount')->with($non_project_member_2);
@@ -162,10 +162,10 @@ class UserSuspensionManagerTest extends TestCase
         // Disable mailing to idle accounts
         ForgeConfig::set('sys_suspend_inactive_accounts_notification_delay', 0);
 
-        $inactive_user = new PFUser(array("email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "inactive_user", "language_id" => "fr_FR"));
+        $inactive_user = new PFUser(["email" => "valid_mail@domain.com", "user_id" => 111, "user_name" => "inactive_user", "language_id" => "fr_FR"]);
 
         $this->dao->shouldReceive('getUsersWithoutConnectionOrAccessBetweenDates')
-            ->andReturn(array(array('user_id' => 111, 'last_access_date' => 1578752699)));
+            ->andReturn([['user_id' => 111, 'last_access_date' => 1578752699]]);
         $this->user_manager->shouldReceive('getUserbyId')->with(111)->andReturn($inactive_user);
         $this->lang_factory->shouldReceive('getBaseLanguage')->andReturn($this->language);
         $this->user_suspension_logger->shouldReceive('info');

@@ -47,9 +47,9 @@ class Template
         if (is_array($args)) {
             $this->_locals = $args;
         } elseif ($args) {
-            $this->_locals = array('CONTENT' => $args);
+            $this->_locals = ['CONTENT' => $args];
         } else {
-            $this->_locals = array();
+            $this->_locals = [];
         }
     }
 
@@ -127,7 +127,7 @@ class Template
     public function printExpansion($defaults = false)
     {
         if (! is_array($defaults)) { // HTML object or template object
-            $defaults = array('CONTENT' => $defaults);
+            $defaults = ['CONTENT' => $defaults];
         }
         $this->_vars = array_merge($defaults, $this->_locals);
         extract($this->_vars);
@@ -255,7 +255,7 @@ function GeneratePage($content, $title, $page_revision = false, $args = false)
     global $request;
 
     if (! is_array($args)) {
-        $args = array();
+        $args = [];
     }
 
     $args['CONTENT'] = $content;
@@ -278,7 +278,7 @@ function GeneratePageasXML($content, $title, $page_revision = false, $args = fal
     global $request;
 
     if (! is_array($args)) {
-        $args = array();
+        $args = [];
     }
 
     $content->_basepage = $title;

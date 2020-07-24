@@ -47,23 +47,23 @@ class ProjectLabelRequestDataValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenLabelDoesNotBelongToProject()
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array(1, 2));
-        $projects_labels = array(
-            array(
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn([1, 2]);
+        $projects_labels = [
+            [
                 'id'         => '1',
                 'project_id' => '102',
                 'name'       => 'test',
                 'is_outline' => '0',
                 'color'      => 'fiesta-red'
-            ),
-            array(
+            ],
+            [
                 'id'         => '3',
                 'project_id' => '102',
                 'name'       => 'test2',
                 'is_outline' => '0',
                 'color'      => 'acid-green'
-            )
-        );
+            ]
+        ];
         $this->request->shouldReceive('validArray')->andReturn(true);
 
         $this->expectException(\Tuleap\Label\Widget\ProjectLabelDoesNotBelongToProjectException::class);
@@ -74,7 +74,7 @@ class ProjectLabelRequestDataValidatorTest extends TestCase
     public function testItThrowsAnExceptionWhenLabelAreNotSent()
     {
         $this->request->shouldReceive('get')->with('project-labels')->andReturn([]);
-        $projects_labels = array();
+        $projects_labels = [];
 
         $this->expectException(\Tuleap\Label\Widget\ProjectLabelAreMandatoryException::class);
 
@@ -83,10 +83,10 @@ class ProjectLabelRequestDataValidatorTest extends TestCase
 
     public function testItThrowsAnExceptionWhenLabelsAreInvalid()
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array('aa', 'bb'));
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn(['aa', 'bb']);
         $this->request->shouldReceive('validArray')->andReturn(false);
 
-        $projects_labels = array();
+        $projects_labels = [];
 
         $this->expectException(\Tuleap\Label\Widget\ProjectLabelAreNotValidException::class);
 
@@ -95,23 +95,23 @@ class ProjectLabelRequestDataValidatorTest extends TestCase
 
     public function testItDoesNotThrowExceptionWhenLabelsAreValid()
     {
-        $this->request->shouldReceive('get')->with('project-labels')->andReturn(array(1, 2));
-        $projects_labels = array(
-            array(
+        $this->request->shouldReceive('get')->with('project-labels')->andReturn([1, 2]);
+        $projects_labels = [
+            [
                 'id'         => '1',
                 'project_id' => '102',
                 'name'       => 'test',
                 'is_outline' => '0',
                 'color'      => 'fiesta-red'
-            ),
-            array(
+            ],
+            [
                 'id'         => '2',
                 'project_id' => '102',
                 'name'       => 'test2',
                 'is_outline' => '0',
                 'color'      => 'acid-green'
-            )
-        );
+            ]
+        ];
         $this->request->shouldReceive('validArray')->andReturn(true);
 
         $this->validator->validateDataFromRequest($this->request, $projects_labels);

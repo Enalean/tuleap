@@ -49,16 +49,16 @@ if ($request->valid($vFilemodule_id)) {
         $fmmf->processMonitoringActions($request, $current_user, $group_id, $filemodule_id, $um, $userHelper);
 
         file_utils_header(
-            array(
+            [
                 'title' => $GLOBALS['Language']->getText(
                     'file_showfiles',
                     'file_p_for',
                     $pm->getProject($group_id)->getPublicName()
                 )
-            )
+            ]
         );
         echo $fmmf->getMonitoringHTML($current_user, $group_id, $filemodule_id, $um, $userHelper);
-        file_utils_footer(array());
+        file_utils_footer([]);
     } else {
         $GLOBALS['Response']->addFeedback(
             'error',

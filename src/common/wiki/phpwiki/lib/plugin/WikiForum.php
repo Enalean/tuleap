@@ -69,12 +69,12 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 
     public function getDefaultArguments()
     {
-        return array('pagename'   => '[pagename]',
+        return ['pagename'   => '[pagename]',
                      'order'      => 'normal',   // oldest first
                      'mode'       => 'show,add', // 'summary',
                      'info'       => '',
                      'noheader'   => false
-                    );
+                    ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -127,7 +127,7 @@ class WikiPlugin_WikiForum extends WikiPlugin_WikiBlog
 
         $dbi = $request->getDbh();
         $topics = $this->findBlogs($dbi, $args['pagename'], 'wikiforum');
-        $html = HTML::table(array('border' => 0));
+        $html = HTML::table(['border' => 0]);
         $row = HTML::tr(
             HTML::th('title'),
             HTML::th('last post'),

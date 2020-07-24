@@ -139,7 +139,7 @@ class hudson_gitPlugin extends Plugin
      */
     public function getDependencies()
     {
-        return array('git', 'hudson');
+        return ['git', 'hudson'];
     }
 
     /**

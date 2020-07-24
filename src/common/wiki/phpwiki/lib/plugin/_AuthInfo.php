@@ -52,7 +52,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('userid' => '');
+        return ['userid' => ''];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -71,61 +71,61 @@ class WikiPlugin__AuthInfo extends WikiPlugin
         }
 
         $html = HTML(HTML::h3(fmt("General Auth Settings")));
-        $table = HTML::table(array('border' => 1,
+        $table = HTML::table(['border' => 1,
                                   'cellpadding' => 2,
-                                  'cellspacing' => 0));
+                                  'cellspacing' => 0]);
         $table->pushContent($this->_showhash(
             "AUTH DEFINES",
             $this->_buildConstHash(
-                array("ENABLE_USER_NEW","ALLOW_ANON_USER",
+                ["ENABLE_USER_NEW","ALLOW_ANON_USER",
                                           "ALLOW_ANON_EDIT","ALLOW_BOGO_LOGIN",
                                           "REQUIRE_SIGNIN_BEFORE_EDIT","ALLOW_USER_PASSWORDS",
-                "PASSWORD_LENGTH_MINIMUM")
+                "PASSWORD_LENGTH_MINIMUM"]
             )
         ));
         if ((defined('ALLOW_LDAP_LOGIN') && ALLOW_LDAP_LOGIN) or in_array("LDAP", $GLOBALS['USER_AUTH_ORDER'])) {
             $table->pushContent($this->_showhash(
                 "LDAP DEFINES",
-                $this->_buildConstHash(array("LDAP_AUTH_HOST","LDAP_BASE_DN"))
+                $this->_buildConstHash(["LDAP_AUTH_HOST", "LDAP_BASE_DN"])
             ));
         }
         if ((defined('ALLOW_IMAP_LOGIN') && ALLOW_IMAP_LOGIN) or in_array("IMAP", $GLOBALS['USER_AUTH_ORDER'])) {
-            $table->pushContent($this->_showhash("IMAP DEFINES", array("IMAP_AUTH_HOST" => IMAP_AUTH_HOST)));
+            $table->pushContent($this->_showhash("IMAP DEFINES", ["IMAP_AUTH_HOST" => IMAP_AUTH_HOST]));
         }
         if (defined('AUTH_USER_FILE') or in_array("File", $GLOBALS['USER_AUTH_ORDER'])) {
             $table->pushContent($this->_showhash(
                 "AUTH_USER_FILE",
-                $this->_buildConstHash(array("AUTH_USER_FILE",
-                "AUTH_USER_FILE_STORABLE"))
+                $this->_buildConstHash(["AUTH_USER_FILE",
+                "AUTH_USER_FILE_STORABLE"])
             ));
         }
         if (defined('GROUP_METHOD')) {
             $table->pushContent($this->_showhash(
                 "GROUP_METHOD",
-                $this->_buildConstHash(array("GROUP_METHOD","AUTH_GROUP_FILE","GROUP_LDAP_QUERY"))
+                $this->_buildConstHash(["GROUP_METHOD", "AUTH_GROUP_FILE", "GROUP_LDAP_QUERY"])
             ));
         }
         $table->pushContent($this->_showhash("\$USER_AUTH_ORDER[]", $GLOBALS['USER_AUTH_ORDER']));
-        $table->pushContent($this->_showhash("USER_AUTH_POLICY", array("USER_AUTH_POLICY" => USER_AUTH_POLICY)));
+        $table->pushContent($this->_showhash("USER_AUTH_POLICY", ["USER_AUTH_POLICY" => USER_AUTH_POLICY]));
         $html->pushContent($table);
         $html->pushContent(HTML(HTML::h3(fmt("Personal Auth Settings for '%s'", $userid))));
         if (! $user) {
             $html->pushContent(HTML::p(fmt("No userid")));
         } else {
-            $table = HTML::table(array('border' => 1,
+            $table = HTML::table(['border' => 1,
                                        'cellpadding' => 2,
-                                       'cellspacing' => 0));
+                                       'cellspacing' => 0]);
             //$table->pushContent(HTML::tr(HTML::td(array('colspan' => 2))));
-            $userdata = obj2hash($user, array('_dbi','_request', 'password', 'passwd'));
+            $userdata = obj2hash($user, ['_dbi', '_request', 'password', 'passwd']);
             $table->pushContent($this->_showhash("User: Object of " . get_class($user), $userdata));
             if (ENABLE_USER_NEW) {
                 $group = $request->getGroup();
                 $groups = $group->getAllGroupsIn();
-                $groupdata = obj2hash($group, array('_dbi','_request', 'password', 'passwd'));
+                $groupdata = obj2hash($group, ['_dbi', '_request', 'password', 'passwd']);
                 unset($groupdata['request']);
                 $table->pushContent($this->_showhash("Group: Object of " . get_class($group), $groupdata));
                 $groups = $group->getAllGroupsIn();
-                $groupdata = array('getAllGroupsIn' => $groups);
+                $groupdata = ['getAllGroupsIn' => $groups];
                 foreach ($groups as $g) {
                     $groupdata["getMembersOf($g)"] = $group->getMembersOf($g);
                     $groupdata["isMember($g)"] = $group->isMember($g);
@@ -139,9 +139,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
     public function _showhash($heading, $hash, $depth = 0)
     {
-        static $seen = array();
+        static $seen = [];
         static $maxdepth = 0;
-        $rows = array();
+        $rows = [];
         $maxdepth++;
         if ($maxdepth > 35) {
             return $heading;
@@ -149,11 +149,11 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
         if ($heading) {
             $rows[] = HTML::tr(
-                array('bgcolor' => '#ffcccc',
-                                     'style' => 'color:#000000'),
+                ['bgcolor' => '#ffcccc',
+                                     'style' => 'color:#000000'],
                 HTML::td(
-                    array('colspan' => 2,
-                                              'style' => 'color:#000000'),
+                    ['colspan' => 2,
+                                              'style' => 'color:#000000'],
                     $heading
                 )
             );
@@ -175,9 +175,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                     } elseif (! isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
-                            array('border' => 1,
+                            ['border' => 1,
                                                  'cellpadding' => 2,
-                                                 'cellspacing' => 0),
+                                                 'cellspacing' => 0],
                             $this->_showhash($heading, obj2hash($val), $depth + 1)
                         );
                     } else {
@@ -190,9 +190,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                     } elseif (! isset($seen[$heading])) {
                         //if (empty($seen[$heading])) $seen[$heading] = 1;
                         $val = HTML::table(
-                            array('border' => 1,
+                            ['border' => 1,
                                                  'cellpadding' => 2,
-                                                 'cellspacing' => 0),
+                                                 'cellspacing' => 0],
                             $this->_showhash($heading, $val, $depth + 1)
                         );
                     } else {
@@ -201,9 +201,9 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                 }
                 $rows[] = HTML::tr(
                     HTML::td(
-                        array('align' => 'right',
+                        ['align' => 'right',
                                                   'bgcolor' => '#cccccc',
-                                                  'style' => 'color:#000000'),
+                                                  'style' => 'color:#000000'],
                         HTML(
                             HTML::raw('&nbsp;'),
                             $key,
@@ -211,8 +211,8 @@ class WikiPlugin__AuthInfo extends WikiPlugin
                         )
                     ),
                     HTML::td(
-                        array('bgcolor' => '#ffffff',
-                                                  'style' => 'color:#000000'),
+                        ['bgcolor' => '#ffffff',
+                                                  'style' => 'color:#000000'],
                         $val ? $val : HTML::raw('&nbsp;')
                     )
                 );
@@ -224,7 +224,7 @@ class WikiPlugin__AuthInfo extends WikiPlugin
 
     public function _buildConstHash($constants)
     {
-        $hash = array();
+        $hash = [];
         foreach ($constants as $c) {
             $hash[$c] = defined($c) ? constant($c) : '<empty>';
             if ($hash[$c] === false) {

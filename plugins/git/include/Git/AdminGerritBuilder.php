@@ -37,7 +37,7 @@ class AdminGerritBuilder
 
     public function buildFromRequest(array $request)
     {
-        $gerrit_server                         = array();
+        $gerrit_server                         = [];
         $gerrit_server['host']                 = $request['host'];
         $gerrit_server['ssh_port']             = $request['ssh_port'];
         $gerrit_server['http_port']            = $request['http_port'];
@@ -68,7 +68,7 @@ class AdminGerritBuilder
             );
             return '';
         }
-        $validated_key = $this->ssh_key_validator->validateAllKeys(array($ssh_key));
+        $validated_key = $this->ssh_key_validator->validateAllKeys([$ssh_key]);
 
         if (empty($validated_key)) {
             return '';

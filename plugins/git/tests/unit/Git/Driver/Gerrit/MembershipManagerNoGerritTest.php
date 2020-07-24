@@ -61,7 +61,7 @@ class MembershipManagerNoGerritTest extends TestCase
         $this->u_group->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group2->shouldReceive('getProject')->andReturns($this->project);
         $this->u_group3->shouldReceive('getProject')->andReturns($this->project);
-        $this->project_manager->shouldReceive('getChildProjects')->andReturns(array());
+        $this->project_manager->shouldReceive('getChildProjects')->andReturns([]);
 
         $this->project->shouldReceive('getUnixName')->andReturns($this->project_name);
 
@@ -86,14 +86,14 @@ class MembershipManagerNoGerritTest extends TestCase
         $this->remote_server_factory_without_gerrit->shouldReceive('getServersForUGroup')
             ->with($this->u_group)
             ->once()
-            ->andReturns(array());
+            ->andReturns([]);
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 
     public function testItDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit(): void
     {
-        $this->remote_server_factory_without_gerrit->shouldReceive('getServersForUGroup')->andReturns(array());
+        $this->remote_server_factory_without_gerrit->shouldReceive('getServersForUGroup')->andReturns([]);
 
         $this->driver->shouldReceive('addUserToGroup')->never();
         $this->driver->shouldReceive('removeUserFromGroup')->never();

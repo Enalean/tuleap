@@ -48,35 +48,35 @@ final class Statistics_Services_UsageFormatterTest extends TestCase
         $stats_formatter        = Mockery::mock(Statistics_Formatter::class);
         $this->usage_formatter  = new Statistics_Services_UsageFormatter($stats_formatter);
 
-        $this->first_input_datas = array(
-            array(
+        $this->first_input_datas = [
+            [
                 'group_id' => 1,
                 'result'   => 'res1'
-            ),
-            array(
+            ],
+            [
                 'group_id' => 87,
                 'result'   => 'res2'
-            ),
-            array(
+            ],
+            [
                 'group_id' => 104,
                 'result'   => 'res3'
-            )
-        );
+            ]
+        ];
     }
 
     public function testItBuildsData(): void
     {
-        $expected = array(
-            1 => array(
+        $expected = [
+            1 => [
                 "title" => 'res1'
-            ),
-            87 => array(
+            ],
+            87 => [
                 "title" => 'res2'
-            ),
-            104 => array(
+            ],
+            104 => [
                 "title" => 'res3'
-            )
-        );
+            ]
+        ];
 
         $datas = $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $this->assertEquals($datas, $expected);
@@ -84,27 +84,27 @@ final class Statistics_Services_UsageFormatterTest extends TestCase
 
     public function testItOnlyAddTitlesWhithEmptyData(): void
     {
-        $input_datas = array(
-            array(
+        $input_datas = [
+            [
                 'group_id' => 87,
                 'result'   => 'descr2'
-            )
-        );
+            ]
+        ];
 
-        $expected = array(
-            1 => array(
+        $expected = [
+            1 => [
                 "title" => 'res1',
                 "descr" => 0
-            ),
-            87 => array(
+            ],
+            87 => [
                 "title" => 'res2',
                 "descr" => 'descr2'
-            ),
-            104 => array(
+            ],
+            104 => [
                 "title" => 'res3',
                 "descr" => 0
-            )
-        );
+            ]
+        ];
 
         $this->usage_formatter->buildDatas($this->first_input_datas, "title");
         $datas = $this->usage_formatter->buildDatas($input_datas, "descr");

@@ -56,7 +56,7 @@ class ParameterSaver
             throw new ParameterDataAccessException();
         }
 
-        $this->event_manager->processEvent(Event::SVN_AUTH_CACHE_CHANGE, array());
+        $this->event_manager->processEvent(Event::SVN_AUTH_CACHE_CHANGE, []);
     }
 
     /**

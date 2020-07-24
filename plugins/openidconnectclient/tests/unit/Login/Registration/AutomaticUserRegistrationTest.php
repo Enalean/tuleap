@@ -38,7 +38,7 @@ class AutomaticUserRegistrationTest extends TestCase
         $username_generator = \Mockery::spy(\Tuleap\OpenIDConnectClient\Login\Registration\UsernameGenerator::class);
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
-        $automatic_user_registration->register(array('email' => 'user@example.com'));
+        $automatic_user_registration->register(['email' => 'user@example.com']);
     }
 
     public function testItNeedsAnEmail(): void
@@ -48,6 +48,6 @@ class AutomaticUserRegistrationTest extends TestCase
 
         $automatic_user_registration = new AutomaticUserRegistration($user_manager, $username_generator);
         $this->expectException('Tuleap\OpenIDConnectClient\Login\Registration\NotEnoughDataToRegisterUserException');
-        $automatic_user_registration->register(array());
+        $automatic_user_registration->register([]);
     }
 }

@@ -56,12 +56,12 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    's'         => false,
                    'user'     => false,
                    /* Columns to include in listing */
                    'info'     => 'pagename,owner,mtime',
-            )
+            ]
         );
     }
 
@@ -139,7 +139,7 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
             $post_args['user'] = $args['user'];
         }
         $next_action = 'select';
-        $pages = array();
+        $pages = [];
         if ($p && ! $request->isPost()) {
             $pages = $p;
         }
@@ -210,19 +210,19 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
         );
 
         return HTML::form(
-            array('action' => $request->getPostURL(),
-                                'method' => 'post'),
+            ['action' => $request->getPostURL(),
+                                'method' => 'post'],
             $header,
             $pagelist->getContent(),
             HiddenInputs(
                 $request->getArgs(),
                 false,
-                array('admin_chown')
+                ['admin_chown']
             ),
-            HiddenInputs(array('admin_chown[action]' => $next_action)),
+            HiddenInputs(['admin_chown[action]' => $next_action]),
             ENABLE_PAGEPERM
                           ? ''
-                          : HiddenInputs(array('require_authority_for_post' => WIKIAUTH_ADMIN)),
+                          : HiddenInputs(['require_authority_for_post' => WIKIAUTH_ADMIN]),
             $buttons
         );
     }
@@ -231,8 +231,8 @@ class WikiPlugin_WikiAdminChown extends WikiPlugin_WikiAdminSelect
     {
         $header->pushContent(_("Chown") . " ");
         $header->pushContent(' ' . _("to") . ': ');
-        $header->pushContent(HTML::input(array('name' => 'admin_chown[user]',
-                                               'value' => $post_args['user'])));
+        $header->pushContent(HTML::input(['name' => 'admin_chown[user]',
+                                               'value' => $post_args['user']]));
         $header->pushContent(HTML::p());
         return $header;
     }

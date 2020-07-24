@@ -184,15 +184,15 @@ class Docman_MetaMetadataHtml
         if ($this->md->canChangeType()) {
             $sthCanChange = true;
 
-            $vals = array(PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+            $vals = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
                           PLUGIN_DOCMAN_METADATA_TYPE_STRING,
                           PLUGIN_DOCMAN_METADATA_TYPE_DATE,
-                          PLUGIN_DOCMAN_METADATA_TYPE_LIST);
+                          PLUGIN_DOCMAN_METADATA_TYPE_LIST];
 
-            $texts = array(dgettext('tuleap-docman', 'Text'),
+            $texts = [dgettext('tuleap-docman', 'Text'),
                            dgettext('tuleap-docman', 'String'),
                            dgettext('tuleap-docman', 'Date'),
-                           dgettext('tuleap-docman', 'List of values'));
+                           dgettext('tuleap-docman', 'List of values')];
 
             $mdContent .= html_build_select_box_from_arrays($vals, $texts, 'type', '', false, '');
         } else {

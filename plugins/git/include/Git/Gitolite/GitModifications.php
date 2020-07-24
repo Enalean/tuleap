@@ -29,9 +29,9 @@ class Git_Gitolite_GitModifications
 
     public function __construct()
     {
-        $this->files_to_add    = array();
-        $this->files_to_move   = array();
-        $this->files_to_remove = array();
+        $this->files_to_add    = [];
+        $this->files_to_move   = [];
+        $this->files_to_remove = [];
     }
 
     public function add($file)

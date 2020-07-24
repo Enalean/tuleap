@@ -90,7 +90,7 @@ class FileModuleMonitorDao extends DataAccessObject
         return $this->_search(' fm.filemodule_id = ' . $this->da->escapeInt($_package_id) . ' AND fm.user_id =' . $this->da->escapeInt($_user_id) . ' ' . $option, '', ' ORDER BY filemodule_id DESC');
     }
 
-    public function _search($where, $group = '', $order = '', $from = array())
+    public function _search($where, $group = '', $order = '', $from = [])
     {
         $sql = 'SELECT fm.* '
             . ' FROM filemodule_monitor AS fm '
@@ -112,8 +112,8 @@ class FileModuleMonitorDao extends DataAccessObject
      */
     public function create($filemodule_id, PFUser $user, $anonymous = true)
     {
-        $arg      = array();
-        $values   = array();
+        $arg      = [];
+        $values   = [];
 
         $arg[]    = 'filemodule_id';
         $values[] = ($this->da->escapeInt($filemodule_id));

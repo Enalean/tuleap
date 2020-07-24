@@ -57,11 +57,11 @@ class ReportRepresentation
         $this->id        = JsonCast::toInt($report->getId());
         $this->uri       = self::ROUTE . '/' . $this->id;
         $this->label     = $report->getName();
-        $this->resources = array(
-            array(
+        $this->resources = [
+            [
                 'type' => 'artifacts',
                 'uri'  => $this->uri . '/' . ArtifactRepresentation::ROUTE
-            )
-        );
+            ]
+        ];
     }
 }

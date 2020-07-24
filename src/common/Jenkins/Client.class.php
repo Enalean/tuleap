@@ -82,7 +82,7 @@ class Jenkins_Client
     /**
      * @throws Jenkins_ClientUnableToLaunchBuildException
      */
-    public function launchJobBuild($job_url, array $build_parameters = array())
+    public function launchJobBuild($job_url, array $build_parameters = [])
     {
         $server_url        = $this->getServerUrl($job_url);
         $csrf_crumb_header = $this->csrf_crumb_retriever->getCSRFCrumbHeader($server_url);
@@ -147,9 +147,9 @@ class Jenkins_Client
     private function getTokenUrlParameter()
     {
         if ($this->token) {
-            return array('token' => $this->token);
+            return ['token' => $this->token];
         }
-        return array();
+        return [];
     }
 
     /**
@@ -158,12 +158,12 @@ class Jenkins_Client
      */
     private function generateBuildParameters(array $build_parameters)
     {
-        $parameters = array();
+        $parameters = [];
         foreach ($build_parameters as $name => $value) {
-            $parameters['parameter'][] = array(
+            $parameters['parameter'][] = [
                 'name'  => $name,
                 'value' => $value
-            );
+            ];
         }
 
         return 'json=' . json_encode($parameters);

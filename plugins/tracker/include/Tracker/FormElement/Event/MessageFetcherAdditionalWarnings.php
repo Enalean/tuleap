@@ -35,7 +35,7 @@ class MessageFetcherAdditionalWarnings implements Dispatchable
     /**
      * @var array
      */
-    private $warnings = array();
+    private $warnings = [];
 
     public function __construct(Tracker_FormElement_Field $field)
     {

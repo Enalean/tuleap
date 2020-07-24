@@ -105,10 +105,10 @@ class ForgeUpgradeConfig
     public function addPath($path)
     {
         if (! isset($this->config['core'])) {
-            $this->config['core'] = array();
+            $this->config['core'] = [];
         }
         if (! isset($this->config['core']['path'])) {
-            $this->config['core']['path'] = array();
+            $this->config['core']['path'] = [];
         }
         $this->config['core']['path'][] = $path;
         $this->write();

@@ -11,7 +11,7 @@ class AquaTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#183152',
             '#C4D7ED',
             '#375D81',
@@ -46,7 +46,7 @@ class AquaTheme extends Theme
             '#77AAFF',
             '#00FFCC',
 */
-        );
+        ];
     }
 
     public function SetupGraph($graph)

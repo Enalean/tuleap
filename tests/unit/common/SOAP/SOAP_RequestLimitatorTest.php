@@ -29,7 +29,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         $dao                 = \Mockery::spy(\SOAP_RequestLimitatorDao::class);
         $request_time        = $_SERVER['REQUEST_TIME'];
         $time_30_minutes_ago = $request_time - 30 * 60;
-        $dar                 = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time_30_minutes_ago));
+        $dar                 = TestHelper::arrayToDar(['method_name' => 'addProject', 'date' => $time_30_minutes_ago]);
         // Ensure we search into the db stuff ~1 hour agos
         $dao->shouldReceive('searchFirstCallToMethod')->with(
             'addProject',
@@ -89,7 +89,7 @@ final class SOAP_RequestLimitatorTest extends \PHPUnit\Framework\TestCase
         $dao = \Mockery::spy(\SOAP_RequestLimitatorDao::class);
 
         $time30minutesAgo = $_SERVER['REQUEST_TIME'] - 30 * 60;
-        $dar = TestHelper::arrayToDar(array('method_name' => 'addProject', 'date' => $time30minutesAgo));
+        $dar = TestHelper::arrayToDar(['method_name' => 'addProject', 'date' => $time30minutesAgo]);
         $dao->shouldReceive('searchFirstCallToMethod')->andReturns($dar);
         $dao->shouldReceive('foundRows')->andReturns(10);
 

@@ -98,10 +98,10 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItDelegatesDuplicationToTheOtherPostActionFactories(): void
     {
-        $field_mapping = array(
-            1 => array('from' => 2066, 'to' => 3066),
-            2 => array('from' => 2067, 'to' => 3067),
-        );
+        $field_mapping = [
+            1 => ['from' => 2066, 'to' => 3066],
+            2 => ['from' => 2067, 'to' => 3067],
+        ];
 
         $this->field_factory->shouldReceive('duplicate')->with($this->transition, 2, $field_mapping)->once();
         $this->cibuild_factory->shouldReceive('duplicate')->with($this->transition, 2, $field_mapping)->once();
@@ -122,7 +122,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
             </postactions>
         ');
 
-        $mapping = array('F1' => 62334);
+        $mapping = ['F1' => 62334];
 
         $this->field_factory->shouldReceive('getInstanceFromXML')->with(Mockery::on(function (SimpleXMLElement $xml_postaction) {
             return (string) $xml_postaction->field_id['REF'] === 'F1' &&
@@ -143,7 +143,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
             </postactions>
         ');
 
-        $mapping = array('F1' => 62334);
+        $mapping = ['F1' => 62334];
 
         $this->field_factory->shouldReceive('getInstanceFromXML')->with(Mockery::on(function (SimpleXMLElement $xml_postaction) {
             return (string) $xml_postaction->field_id['REF'] === 'F1' &&
@@ -164,7 +164,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
             </postactions>
         ');
 
-        $mapping = array('F1' => 62334);
+        $mapping = ['F1' => 62334];
 
         $this->field_factory->shouldReceive('getInstanceFromXML')->with(Mockery::on(function (SimpleXMLElement $xml_postaction) {
             return (string) $xml_postaction->field_id['REF'] === 'F1' &&
@@ -184,7 +184,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
             </postactions>
         ');
 
-        $mapping = array('F1' => 62334);
+        $mapping = ['F1' => 62334];
 
         $this->cibuild_factory->shouldReceive('getInstanceFromXML')->with(Mockery::on(function (SimpleXMLElement $xml_postaction) {
             return (string) $xml_postaction['job_url'] === 'http://www';
@@ -206,7 +206,7 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
             </postactions>
         ');
 
-        $mapping = array('F1' => 62334);
+        $mapping = ['F1' => 62334];
 
         $this->field_factory->shouldReceive('getInstanceFromXML')->andReturns(\Mockery::spy(\Transition_PostAction_Field_Date::class));
 
@@ -277,8 +277,8 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItLoadsPostActionFromAllSubFactories(): void
     {
-        $this->cibuild_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns(array($this->post_action_1))->once();
-        $this->field_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns(array($this->post_action_2))->once();
+        $this->cibuild_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns([$this->post_action_1])->once();
+        $this->field_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns([$this->post_action_2])->once();
         $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
@@ -288,11 +288,11 @@ final class Transition_PostActionFactoryTest extends \PHPUnit\Framework\TestCase
 
     public function testItInjectsPostActionsIntoTheTransition(): void
     {
-        $this->cibuild_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns(array($this->post_action_1));
-        $this->field_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns(array($this->post_action_2));
+        $this->cibuild_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns([$this->post_action_1]);
+        $this->field_factory->shouldReceive('loadPostActions')->with($this->transition)->andReturns([$this->post_action_2]);
         $this->hidden_fieldset_factory->shouldReceive('loadPostActions')->with($this->transition)->once()->andReturn([$this->post_action_3]);
 
-        $expected     = array($this->post_action_1, $this->post_action_2, $this->post_action_3);
+        $expected     = [$this->post_action_1, $this->post_action_2, $this->post_action_3];
         $this->transition->shouldReceive('setPostActions')->with($expected)->once();
 
         $this->event_manager->shouldReceive('processEvent')->once();

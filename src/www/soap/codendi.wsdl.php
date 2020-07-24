@@ -63,7 +63,7 @@ require_once('./frs/frs.php');
 
 // include the <Plugin> API (only if plugin is available), not tracker v5
 $em = EventManager::instance();
-$em->processEvent('soap', array());
+$em->processEvent('soap', []);
 
 // Call the service method to initiate the transaction and send the response
 $server->service(file_get_contents('php://input'));

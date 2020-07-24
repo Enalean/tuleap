@@ -22,7 +22,7 @@ namespace User\XML\Import;
 class UsersToBeImportedCollection
 {
 
-    private $users = array();
+    private $users = [];
 
     public function add(User $user)
     {
@@ -32,7 +32,7 @@ class UsersToBeImportedCollection
     public function toCSV($filename)
     {
         $file = fopen($filename, 'w');
-        $headers = array('name', 'action', 'comments');
+        $headers = ['name', 'action', 'comments'];
         fputcsv($file, $headers);
         foreach ($this->users as $user) {
             $data = $user->getCSVData();

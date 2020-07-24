@@ -37,6 +37,6 @@ class Cardwall_OnTop_Config_TrackerMappingNoField extends Cardwall_OnTop_Config_
 
     public function getValueMappings()
     {
-        return array();
+        return [];
     }
 }

@@ -308,7 +308,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
      */
     public function getDependencies()
     {
-        return array('tracker', 'cardwall');
+        return ['tracker', 'cardwall'];
     }
 
     public function getServiceShortname()
@@ -682,13 +682,13 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $redirect_to_artifact = $artifact->getId();
         }
         $redirect->base_url = '/plugins/agiledashboard/';
-        $redirect->query_parameters = array(
+        $redirect->query_parameters = [
             'group_id'    => $planning->getGroupId(),
             'planning_id' => $planning->getId(),
             'action'      => 'show',
             'aid'         => $redirect_to_artifact,
             'pane'        => $requested_planning[AgileDashboard_PaneRedirectionExtractor::PANE],
-        );
+        ];
     }
 
     private function redirectToTopPlanning(Tracker_Artifact $artifact, $requested_planning, Tracker_Artifact_Redirect $redirect)
@@ -700,11 +700,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $group_id = $artifact->getTracker()->getProject()->getID();
         }
 
-        $redirect->query_parameters = array(
+        $redirect->query_parameters = [
             'group_id'    => $group_id,
             'action'      => 'show-top',
             'pane'        => $requested_planning['pane'],
-        );
+        ];
     }
 
     public function buildArtifactFormActionEvent(BuildArtifactFormActionEvent $event): void
@@ -889,10 +889,10 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             $remaining_effort = $milestone_with_contextual_info->getRemainingEffort();
 
             header('Content-type: application/json');
-            echo json_encode(array(
+            echo json_encode([
                 'remaining_effort' => $remaining_effort,
                 'is_over_capacity' => $capacity !== null && $remaining_effort !== null && $capacity < $remaining_effort,
-            ));
+            ]);
         }
     }
 
@@ -1266,7 +1266,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $tracker_artifact_dao = new Tracker_ArtifactDao();
 
         $children = $tracker_artifact_dao->getChildren($item->getArtifact()->getId())
-            ->instanciateWith(array($this->getArtifactFactory(), 'getInstanceFromRow'));
+            ->instanciateWith([$this->getArtifactFactory(), 'getInstanceFromRow']);
 
         foreach ($children as $child) {
             if ($child->userCanView($user)) {
@@ -1290,7 +1290,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         $tracker = $field->getTracker();
         $dao     = new SemanticDoneDao();
 
-        $disabled_values = array();
+        $disabled_values = [];
         foreach ($dao->getSelectedValues($tracker->getId()) as $value_row) {
             $disabled_values[] = $value_row['value_id'];
         }
@@ -1459,7 +1459,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
         switch ($params['type']) {
             case SystemEvent_BURNUP_DAILY::class:
                 $params['class']        = SystemEvent_BURNUP_DAILY::class;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     $this->getBurnupDao(),
                     $this->getBurnupCalculator(),
                     $this->getBurnupCountElementsCalculator(),
@@ -1467,11 +1467,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever()
-                );
+                ];
                 break;
             case SystemEvent_BURNUP_GENERATE::class:
                 $params['class']        = SystemEvent_BURNUP_GENERATE::class;
-                $params['dependencies'] = array(
+                $params['dependencies'] = [
                     Tracker_ArtifactFactory::instance(),
                     new SemanticTimeframeBuilder(new SemanticTimeframeDao(), Tracker_FormElementFactory::instance()),
                     new BurnupDao(),
@@ -1481,7 +1481,7 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
                     new CountElementsCacheDao(),
                     $this->getLogger(),
                     new BurnupCacheDateRetriever()
-                );
+                ];
                 break;
             default:
                 break;
@@ -1633,11 +1633,11 @@ class AgileDashboardPlugin extends Plugin  // phpcs:ignore PSR1.Classes.ClassDec
             ->getRenderer(AGILEDASHBOARD_TEMPLATE_DIR)
             ->renderToString(
                 'project-admin-permission-per-group',
-                array(
+                [
                     "ugroup_id"            => $ugroup_id,
                     "project_id"           => $project->getID(),
                     "selected_ugroup_name" => $ugroup_name
-                )
+                ]
             );
 
         $service = $project->getService($this->getServiceShortname());

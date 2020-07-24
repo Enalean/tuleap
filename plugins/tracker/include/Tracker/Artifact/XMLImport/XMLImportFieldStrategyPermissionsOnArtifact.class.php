@@ -33,10 +33,10 @@ class Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact imp
         PFUser $submitted_by,
         Tracker_Artifact $artifact
     ) {
-        $data = array(
+        $data = [
             'use_artifact_permissions' => (int) $field_change['use_perm'],
-            'u_groups' => array()
-        );
+            'u_groups' => []
+        ];
 
         foreach ($field_change->ugroup as $ugroup_xml) {
             if (isset($ugroup_xml['ugroup_id'])) {

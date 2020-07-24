@@ -31,7 +31,7 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $response = $this->getResponse($this->client->options('phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID));
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSIdWithRESTReadOnlyUser()
@@ -81,7 +81,7 @@ class PhpWikiTest extends RestBase //phpcs:ignore PSR1.Classes.ClassDeclaration.
     {
         $response = $this->getResponse($this->client->options('phpwiki/' . REST_TestDataBuilder::PHPWIKI_PAGE_ID . '/versions'));
         $this->assertEquals($response->getStatusCode(), 200);
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSVersionsWithRESTReadOnlyUser()

@@ -77,7 +77,7 @@ class PlanningPermissionsRepresentationBuilder
         Project $project,
         ?ProjectUGroup $user_group = null
     ) {
-        $planning_prioritizers = array();
+        $planning_prioritizers = [];
         $prioritizers          = $this->planning_permissions_manager->getGroupIdsWhoHasPermissionOnPlanning(
             $planning->getId(),
             $planning->getGroupId(),
@@ -107,7 +107,7 @@ class PlanningPermissionsRepresentationBuilder
 
     private function extractDefaultPermissions(LegacyDataAccessResultInterface $default_granted_ugroups)
     {
-        $default_granted_ugroups_list = array();
+        $default_granted_ugroups_list = [];
 
         foreach ($default_granted_ugroups as $ugroup) {
             $default_granted_ugroups_list[] = $ugroup['ugroup_id'];
@@ -119,11 +119,11 @@ class PlanningPermissionsRepresentationBuilder
     private function getPlanningAdminQuickLink(Planning $planning)
     {
         $query_params = http_build_query(
-            array(
+            [
                 "group_id"    => $planning->getGroupId(),
                 "planning_id" => $planning->getId(),
                 "action"      => 'edit'
-            )
+            ]
         );
 
         return "/plugins/agiledashboard/?" . $query_params;

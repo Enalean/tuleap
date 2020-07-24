@@ -29,7 +29,7 @@ class PermissionPerGroupCollection
 
     public function __construct()
     {
-        $this->permissions = array();
+        $this->permissions = [];
     }
 
     /**

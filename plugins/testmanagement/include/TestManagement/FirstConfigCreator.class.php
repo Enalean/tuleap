@@ -77,13 +77,13 @@ class FirstConfigCreator
             return;
         }
 
-        $template_tracker_ids = array(
+        $template_tracker_ids = [
             CAMPAIGN_TRACKER_SHORTNAME   => $this->config->getCampaignTrackerId($template),
             DEFINITION_TRACKER_SHORTNAME => $this->config->getTestDefinitionTrackerId($template),
             EXECUTION_TRACKER_SHORTNAME  => $this->config->getTestExecutionTrackerId($template),
             ISSUE_TRACKER_SHORTNAME      => $this->config->getIssueTrackerId($template)
-        );
-        $project_tracker_ids = array();
+        ];
+        $project_tracker_ids = [];
 
         foreach ($template_tracker_ids as $tracker_itemname => $tracker_id) {
             if (! isset($tracker_mapping[$tracker_id])) {
@@ -108,13 +108,13 @@ class FirstConfigCreator
      */
     public function createConfigForProjectFromXML(Project $project): void
     {
-        $tracker_ids       = array();
-        $tracker_itemnames = array(
+        $tracker_ids       = [];
+        $tracker_itemnames = [
             CAMPAIGN_TRACKER_SHORTNAME,
             DEFINITION_TRACKER_SHORTNAME,
             EXECUTION_TRACKER_SHORTNAME,
             ISSUE_TRACKER_SHORTNAME
-        );
+        ];
 
         if (! $this->config->isConfigNeeded($project)) {
             return;

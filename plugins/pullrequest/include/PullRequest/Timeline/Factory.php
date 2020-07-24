@@ -58,13 +58,13 @@ class Factory
 
     public function getPaginatedTimelineByPullRequestId(PullRequest $pull_request, $limit, $offset)
     {
-        $comments = array();
+        $comments = [];
         foreach ($this->comments_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
             $comments[] = $this->buildComment($row);
         }
         $total_comment_events = $this->comments_dao->foundRows();
 
-        $inline_comments = array();
+        $inline_comments = [];
         foreach ($this->inline_comments_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
             $inline_comments[] = InlineComment::buildFromRow($row);
         }
@@ -72,7 +72,7 @@ class Factory
 
         $reviewer_changes = $this->reviewer_change_retriever->getChangesForPullRequest($pull_request);
 
-        $timeline_events = array();
+        $timeline_events = [];
         foreach ($this->timeline_dao->searchAllByPullRequestId($pull_request->getId()) as $row) {
             $timeline_events[] = TimelineGlobalEvent::buildFromRow($row);
         }

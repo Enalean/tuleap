@@ -95,9 +95,9 @@ class RequestFromAutocompleter
         $this->current_user    = $current_user;
         $this->project         = $project;
 
-        $this->emails  = array();
-        $this->ugroups = array();
-        $this->users   = array();
+        $this->emails  = [];
+        $this->ugroups = [];
+        $this->users   = [];
 
         $list_of_listeners = array_filter(explode(',', $data));
 
@@ -171,7 +171,7 @@ class RequestFromAutocompleter
 
     private function userCanSeeUgroup(PFUser $current_user, ProjectUGroup $ugroup, Project $project)
     {
-        $allowed_static_ugroups = array(ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN);
+        $allowed_static_ugroups = [ProjectUGroup::PROJECT_MEMBERS, ProjectUGroup::PROJECT_ADMIN];
 
         return in_array($ugroup->getId(), $allowed_static_ugroups)
             || $current_user->isMemberOfUGroup($ugroup->getId(), $project->getId())

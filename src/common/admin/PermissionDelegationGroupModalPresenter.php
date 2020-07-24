@@ -62,7 +62,7 @@ class Admin_PermissionDelegationGroupModalPresenter
             return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_create');
         }
 
-        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_edit', array($this->name));
+        return $GLOBALS['Language']->getText('admin_permission_delegation', 'group_title_edit', [$this->name]);
     }
 
     public function name_label()

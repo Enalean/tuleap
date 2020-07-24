@@ -59,7 +59,7 @@ class Tracker_TooltipFactory implements IBuildSemanticFromXML
 
     public function getInstanceFromXML(SimpleXMLElement $xml, array $xml_mapping, Tracker $tracker): Tracker_Semantic
     {
-        $row = array();
+        $row = [];
         foreach ($xml->field as $field) {
             $att = $field->attributes();
             if (! isset($xml_mapping[(string) $att['REF']])) {

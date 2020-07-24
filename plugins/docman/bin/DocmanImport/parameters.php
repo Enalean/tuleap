@@ -41,7 +41,7 @@
 function getParameter(&$parameter_array, $parameter, $require_value = false)
 {
     for ($i = 0; $i < count($parameter_array); $i++) {
-        $res = array();
+        $res = [];
         if (preg_match("/^\\-\\-(.+)/s", $parameter_array[$i], $res)) {    // several-character parameter? (IE, "--username=john")
             $passed_string = $res[1];
             // is it --parameter=value or just --parameter?
@@ -55,7 +55,7 @@ function getParameter(&$parameter_array, $parameter, $require_value = false)
             }
 
             if (! is_array($parameter)) {
-                $search_array = array($parameter);
+                $search_array = [$parameter];
             } else {
                 $search_array = $parameter;
             }
@@ -88,7 +88,7 @@ function getParameter(&$parameter_array, $parameter, $require_value = false)
             }
 
             if (! is_array($parameter)) {
-                $search_array = array($parameter);
+                $search_array = [$parameter];
             } else {
                 $search_array = $parameter;
             }

@@ -107,12 +107,12 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
         $this->artifact->shouldReceive('getTracker')->andReturn($tracker);
         $this->factory->shouldReceive('getUsedArtifactLinkFields')->andReturn([$this->field]);
 
-        $expected_field_data = array(
-            $this->field->getId() => array(
+        $expected_field_data = [
+            $this->field->getId() => [
                 'new_values'     => '',
-                'removed_values' => array(987 => 1),
-            ),
-        );
+                'removed_values' => [987 => 1],
+            ],
+        ];
         $no_comment          = '';
 
         $this->artifact->shouldReceive('createNewChangeset')
@@ -157,7 +157,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TestCase
 
         $changeset_value = Mockery::mock(Tracker_Artifact_ChangesetValue_ArtifactLink::class);
         $changeset->shouldReceive('getValue')->withArgs([$this->field])->andReturn($changeset_value);
-        $changeset_value->shouldReceive('getArtifactIds')->andReturn(array(987));
+        $changeset_value->shouldReceive('getArtifactIds')->andReturn([987]);
 
         $this->artifact->shouldNotReceive('createNewChangeset');
 

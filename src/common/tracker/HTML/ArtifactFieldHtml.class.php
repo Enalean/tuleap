@@ -123,15 +123,15 @@ class ArtifactFieldHtml extends ArtifactField
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
             $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
-            $array_values = array();
+            $array_values = [];
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
             // so we add them everytime by precaution.
             if ($show_any) {
-                $array_values[] = array(0, $text_any);
+                $array_values[] = [0, $text_any];
             }
             if ($show_none) {
-                $array_values[] = array(100, $text_none);
+                $array_values[] = [100, $text_none];
             }
             while ($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
@@ -228,18 +228,18 @@ class ArtifactFieldHtml extends ArtifactField
             return $Language->getText('tracker_include_field', 'error_no_atid');
         } else {
             $result = $this->getFieldPredefinedValues($group_artifact_id, $checked, false, true, false, true);
-                $array_values = array();
+                $array_values = [];
             // $array_values is used to write javascript field dependencies
             // getFieldPredefinedValues doesn't always return the none value and the any value for the binded fields
             // so we add them everytime by precaution.
             if ($show_any) {
-                $array_values[] = array(0, $text_any);
+                $array_values[] = [0, $text_any];
             }
             if ($show_none) {
-                $array_values[] = array(100, $text_none);
+                $array_values[] = [100, $text_none];
             }
             if ($show_unchanged) {
-                $array_values[] = array($text_unchanged, $text_unchanged);
+                $array_values[] = [$text_unchanged, $text_unchanged];
             }
             while ($row = db_fetch_array($result)) {
                 $array_values[]  = $row;
@@ -495,7 +495,7 @@ class ArtifactFieldHtml extends ArtifactField
             case 'SB':
                 if ($ro) {
                       // if multiple selected values return a list of <br> separated values
-                      $arr = ( is_array($value) ? $value : array($value));
+                      $arr = ( is_array($value) ? $value : [$value]);
                     for ($i = 0; $i < count($arr); $i++) {
                         if ($arr[$i] == 0) {
                             $arr[$i] = $text_any;
@@ -567,7 +567,7 @@ class ArtifactFieldHtml extends ArtifactField
                 break;
 
             case 'MB':
-                $arr = ( is_array($value) ? $value : array($value));
+                $arr = ( is_array($value) ? $value : [$value]);
                 $valueArray = $arr;
                 if ($ro) {
                       // if multiple selected values return a list of , separated values

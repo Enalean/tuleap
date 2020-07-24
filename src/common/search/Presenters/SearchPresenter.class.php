@@ -29,7 +29,7 @@ class Search_Presenter_SearchPresenter
 
     public $search_result;
 
-    public $search_panes = array();
+    public $search_panes = [];
 
     public $group_id = false;
 

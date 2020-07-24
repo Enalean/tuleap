@@ -40,10 +40,10 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase
     {
         $tracker  = $this->tracker_test_helper->getTrackerRest('releases');
         $response = $tracker->createArtifact(
-            array(
+            [
                $tracker->getSubmitTextValue('Version Number', '0.1'),
                $tracker->getSubmitListValue('Progress', 'Delivered to customer')
-            )
+            ]
         );
 
         $this->assertEquals($response['error']['code'], 400);
@@ -53,10 +53,10 @@ class ArtifactsCreationWithWrongWorkflowTest extends RestBase
     {
         $tracker       = $this->tracker_test_helper->getTrackerRest('releases');
         $artifact_json = $tracker->createArtifact(
-            array(
+            [
                $tracker->getSubmitTextValue('Version Number', '0.1'),
                $tracker->getSubmitListValue('Progress', 'To be defined')
-            )
+            ]
         );
 
         $this->assertTrue(isset($artifact_json['id']));

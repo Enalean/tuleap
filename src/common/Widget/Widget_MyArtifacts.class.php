@@ -48,7 +48,7 @@ class Widget_MyArtifacts extends Widget
     public function updatePreferences(Codendi_Request $request)
     {
         $request->valid(new Valid_String('cancel'));
-        $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
+        $vShow = new Valid_WhiteList('show', ['A', 'S', 'N', 'AS']);
         $vShow->required();
         if (! $request->exist('cancel')) {
             if ($request->valid($vShow)) {
@@ -155,7 +155,7 @@ class Widget_MyArtifacts extends Widget
             $hide_item_id = null;
         }
 
-        $vArtifact = new Valid_WhiteList('hide_artifact', array(0, 1));
+        $vArtifact = new Valid_WhiteList('hide_artifact', [0, 1]);
         $vArtifact->required();
         if ($request->valid($vArtifact)) {
             $hide_artifact = $request->get('hide_artifact');
@@ -175,7 +175,7 @@ class Widget_MyArtifacts extends Widget
         $group_name = "";
         $tracker_name = "";
 
-        $artifact_types = array();
+        $artifact_types = [];
 
         $pm = ProjectManager::instance();
         $purifier = Codendi_HTMLPurifier::instance();
@@ -191,10 +191,10 @@ class Widget_MyArtifacts extends Widget
             }
             //Create the ArtifactType object
             if (! isset($artifact_types[$group_id])) {
-                $artifact_types[$group_id] = array();
+                $artifact_types[$group_id] = [];
             }
             if (! isset($artifact_types[$group_id][$atid])) {
-                $artifact_types[$group_id][$atid] = array();
+                $artifact_types[$group_id][$atid] = [];
                 $artifact_types[$group_id][$atid]['at'] = new ArtifactType($group, $atid);
                 $artifact_types[$group_id][$atid]['user_can_view_at']             = $artifact_types[$group_id][$atid]['at']->userCanView();
                 $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = null;

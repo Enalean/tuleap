@@ -35,9 +35,9 @@ $em = EventManager::instance();
 
 // Validate input
 // Clean variables
-$_cVar = array();
+$_cVar = [];
 // Raw variables
-$_rVar = array();
+$_rVar = [];
 $request = HTTPRequest::instance();
 
 $_rVar['form_loginname'] = null;
@@ -112,15 +112,15 @@ $presenter = $presenter_builder->build(
 );
 
 if ($pvMode) {
-    $GLOBALS['HTML']->pv_header(array('title' => $presenter->account_login_page_title()));
+    $GLOBALS['HTML']->pv_header(['title' => $presenter->account_login_page_title()]);
 } else {
-    $GLOBALS['HTML']->header(array('title' => $presenter->account_login_page_title(), 'body_class' => array('login-page')));
+    $GLOBALS['HTML']->header(['title' => $presenter->account_login_page_title(), 'body_class' => ['login-page']]);
 }
 
 $login_controller->index($presenter);
 
 if ($pvMode) {
-    $GLOBALS['HTML']->pv_footer(array());
+    $GLOBALS['HTML']->pv_footer([]);
 } else {
-    $GLOBALS['HTML']->footer(array('without_content' => true));
+    $GLOBALS['HTML']->footer(['without_content' => true]);
 }

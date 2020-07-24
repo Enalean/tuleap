@@ -53,7 +53,7 @@ class TrackerPermissionPerGroupRepresentationBuilder
     public function build(Project $project, $ugroup_id = null)
     {
         $trackers_list = $this->tracker_factory->getTrackersByGroupId($project->group_id);
-        $permissions   = array();
+        $permissions   = [];
 
         foreach ($trackers_list as $tracker) {
             $ugroups_permissions = plugin_tracker_permission_get_tracker_ugroups_permissions(

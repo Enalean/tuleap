@@ -44,10 +44,10 @@ class WebhookPresenter
         $this->webhook = $webhook;
         $this->status  = $status;
 
-        $this->show_logs_title = $GLOBALS['Language']->getText('admin_project_configuration', 'show_logs_title_modal', array($webhook->getName()));
-        $this->update_title    = $GLOBALS['Language']->getText('admin_project_configuration', 'update_title_modal', array($webhook->getName()));
-        $this->delete_title    = $GLOBALS['Language']->getText('admin_project_configuration', 'delete_title_modal', array($webhook->getName()));
-        $this->delete_warning  = $GLOBALS['Language']->getText('admin_project_configuration', 'delete_webhook_warning_modal', array($webhook->getName()));
+        $this->show_logs_title = $GLOBALS['Language']->getText('admin_project_configuration', 'show_logs_title_modal', [$webhook->getName()]);
+        $this->update_title    = $GLOBALS['Language']->getText('admin_project_configuration', 'update_title_modal', [$webhook->getName()]);
+        $this->delete_title    = $GLOBALS['Language']->getText('admin_project_configuration', 'delete_title_modal', [$webhook->getName()]);
+        $this->delete_warning  = $GLOBALS['Language']->getText('admin_project_configuration', 'delete_webhook_warning_modal', [$webhook->getName()]);
     }
 
     public function name()

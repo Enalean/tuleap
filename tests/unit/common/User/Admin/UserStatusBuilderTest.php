@@ -64,46 +64,46 @@ class UserStatusBuilderTest extends \PHPUnit\Framework\TestCase
         $this->user_status_checker = new UserStatusChecker();
         $this->user_status_builder = new UserStatusBuilder($this->user_status_checker);
 
-        $this->status = array(
-            array(
+        $this->status = [
+            [
                 'key'        => PFUser::STATUS_ACTIVE,
                 'status'     => null,
                 'is_current' => false
-            ),
-            array(
+            ],
+            [
                 'key'        => PFUser::STATUS_SUSPENDED,
                 'status'     => null,
                 'is_current' => false
-            ),
-            array(
+            ],
+            [
                 'key'        => PFUser::STATUS_DELETED,
                 'status'     => null,
                 'is_current' => false
-            )
-        );
+            ]
+        ];
 
-        $this->status_with_restricted = array(
-            array(
+        $this->status_with_restricted = [
+            [
                 'key'        => PFUser::STATUS_ACTIVE,
                 'status'     => null,
                 'is_current' => false
-            ),
-            array(
+            ],
+            [
                 'key'        => PFUser::STATUS_RESTRICTED,
                 'status'     => null,
                 'is_current' => false
-            ),
-            array(
+            ],
+            [
                 'key'        => PFUser::STATUS_SUSPENDED,
                 'status'     => null,
                 'is_current' => false
-            ),
-            array(
+            ],
+            [
                 'key'        => PFUser::STATUS_DELETED,
                 'status'     => null,
                 'is_current' => false
-            )
-        );
+            ]
+        ];
     }
 
     public function testItRetrievesRestrictedStatusWhenPlatformAllowsRestricted(): void

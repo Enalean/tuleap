@@ -64,7 +64,7 @@ class ArtifactType
      *
      * @var        array
      */
-    public $arr_events = array();
+    public $arr_events = [];
 
     /**
      * number of roles
@@ -78,7 +78,7 @@ class ArtifactType
      *
      * @var        array
      */
-    public $arr_roles = array();
+    public $arr_roles = [];
 
     /**
      * Technicians db resource ID.
@@ -662,7 +662,7 @@ class ArtifactType
                 //echo $sql."<br>";
                 $result2 = db_query($sql);
                 if (! $result2) {
-                    $update_error .= " " . $Language->getText('tracker_common_type', 'perm_err', array($user_id,db_error()));
+                    $update_error .= " " . $Language->getText('tracker_common_type', 'perm_err', [$user_id, db_error()]);
                 }
             }
 
@@ -879,7 +879,7 @@ class ArtifactType
     {
         $art_field_fact = new ArtifactFieldFactory($this);
         $used_fields = $art_field_fact->getAllUsedFields();
-        $field_perm = array();
+        $field_perm = [];
 
         reset($used_fields);
         foreach ($used_fields as $field) {
@@ -1021,7 +1021,7 @@ class ArtifactType
          //echo "watchees";
             $res_watch = true;
             $arr_user_names = preg_split('/[,;]/D', $watchees);
-            $arr_user_ids = array();
+            $arr_user_ids = [];
             foreach ($arr_user_names as $user_name) {
                 $user_ident = util_user_finder($user_name, true);
                 $res = user_get_result_set_from_unix($user_ident);
@@ -1243,7 +1243,7 @@ class ArtifactType
         if ($result && db_numrows($result) > 0) {
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
-                    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+                    $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
                     $names[$j] = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
@@ -1275,7 +1275,7 @@ class ArtifactType
         if ($result && db_numrows($result) > 0) {
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
-                    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+                    $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
                     $names[$j] = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
@@ -1308,7 +1308,7 @@ class ArtifactType
         if ($result && db_numrows($result) > 0) {
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
-                    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+                    $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
                     $names[$j] = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
@@ -1341,7 +1341,7 @@ class ArtifactType
         if ($result && db_numrows($result) > 0) {
             for ($j = 0; $j < db_numrows($result); $j++) {
                 if ($field->isSelectBox() || $field->isMultiSelectBox()) {
-                    $labelValue = $field->getLabelValues($this->getID(), array(db_result($result, $j, 0)));
+                    $labelValue = $field->getLabelValues($this->getID(), [db_result($result, $j, 0)]);
                     $names[$j] = $labelValue[0];
                 } else {
                     $names[$j] = db_result($result, $j, 0);
@@ -1456,7 +1456,7 @@ class ArtifactType
             return true;
         }
 
-        $arr_cc_changes = array();
+        $arr_cc_changes = [];
         if (isset($changes['CC']['add'])) {
             $arr_cc_changes = preg_split('/[,;]/D', $changes['CC']['add']);
         }
@@ -1521,7 +1521,7 @@ class ArtifactType
      */
     public function buildNotificationMatrix($user_id)
     {
-        $arr_notif = array();
+        $arr_notif = [];
         // Build the notif matrix indexed with roles and events labels (not id)
         $res_notif = $this->getNotificationWithLabels($user_id);
         while ($arr = db_fetch_array($res_notif)) {
@@ -1707,10 +1707,10 @@ class ArtifactType
     {
         global $art_field_fact,$art_fieldset_fact;
         $sql = null;
-        $all_queries = array();
+        $all_queries = [];
       // this array will be filled with the fields to export, ordered by fieldset and rank,
          // and send as an output argument of the function
-         $fields = array();
+         $fields = [];
         $fieldsets = $art_fieldset_fact->getAllFieldSetsContainingUsedFields();
          // fetch the fieldsets
         foreach ($fieldsets as $fieldset) {
@@ -1895,7 +1895,7 @@ class ArtifactType
             $sql = "DELETE FROM artifact_dependencies WHERE artifact_depend_id IN (" . db_es($depend) . ")";
             $res = db_query($sql);
             if (! $res) {
-                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_type', 'del_err', array($dependent,db_error($res))));
+                 $GLOBALS['Response']->addFeedback('error', $Language->getText('tracker_common_type', 'del_err', [$dependent, db_error($res)]));
                 $changed = false;
             }
         }

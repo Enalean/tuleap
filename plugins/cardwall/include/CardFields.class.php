@@ -36,7 +36,7 @@ class Cardwall_CardFields
      */
     public function getFields(Tracker_Artifact $artifact)
     {
-        $diplayed_fields = array();
+        $diplayed_fields = [];
         $tracker         = $artifact->getTracker();
 
         foreach ($this->getDisplayedFields($tracker) as $field) {

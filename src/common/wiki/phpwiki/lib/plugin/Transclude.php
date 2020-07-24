@@ -66,9 +66,9 @@ class WikiPlugin_Transclude extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'src'     => false, // the src url to include
+        return [ 'src'     => false, // the src url to include
                       'height'  => 450 // height of the iframe
-                    );
+                    ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -94,20 +94,20 @@ class WikiPlugin_Transclude extends WikiPlugin
         $uri_sanitizer = new \Tuleap\Sanitizer\URISanitizer(new Valid_LocalURI(), new Valid_FTPURI());
         $sanitized_src = $uri_sanitizer->sanitizeForHTMLAttribute($src);
 
-        $params = array('title' => _("Transcluded page"),
+        $params = ['title' => _("Transcluded page"),
                         'src' => $sanitized_src,
                         'width' => "100%",
                         'height' => $height,
                         'marginwidth' => 0,
                         'marginheight' => 0,
                         'class' => 'transclude',
-                        "onload" => "adjust_iframe_height(this);");
+                        "onload" => "adjust_iframe_height(this);"];
 
-        $noframe_msg[] = fmt("See: %s", HTML::a(array('href' => $sanitized_src), $src));
+        $noframe_msg[] = fmt("See: %s", HTML::a(['href' => $sanitized_src], $src));
 
         $noframe_msg = HTML::div(
-            array('class' => 'transclusion'),
-            HTML::p(array(), $noframe_msg)
+            ['class' => 'transclusion'],
+            HTML::p([], $noframe_msg)
         );
 
         $iframe = HTML::div(HTML::iframe($params, $noframe_msg));
@@ -118,7 +118,7 @@ class WikiPlugin_Transclude extends WikiPlugin
 
         return HTML(
             HTML::p(
-                array('class' => 'transclusion-title'),
+                ['class' => 'transclusion-title'],
                 fmt("Transcluded from %s", LinkURL($sanitized_src))
             ),
             $this->_js(),

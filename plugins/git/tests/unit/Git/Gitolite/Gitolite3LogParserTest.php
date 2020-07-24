@@ -95,7 +95,7 @@ class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
-        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(array('end_line' => 2259));
+        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(['end_line' => 2259]);
 
         $this->history_dao->shouldReceive('addGitReadAccess')->never();
         $this->parser->parseLogs(dirname(__FILE__) . '/_fixtures/gitolite-2016-10.log');
@@ -113,7 +113,7 @@ class Gitolite3LogParserTest extends \PHPUnit\Framework\TestCase
     public function testItParseLinesIfTheyAreNew(): void
     {
         $this->factory->shouldReceive('getFromFullPath')->andReturns($this->repository);
-        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(array('end_line' => 1362));
+        $this->file_logs_dao->shouldReceive('getLastReadLine')->andReturns(['end_line' => 1362]);
         $this->user_manager->shouldReceive('getUserByUserName')->andReturns($this->user);
 
         $this->history_dao->shouldReceive('addGitReadAccess')->never();

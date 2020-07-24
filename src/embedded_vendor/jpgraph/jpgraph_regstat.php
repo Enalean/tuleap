@@ -25,7 +25,7 @@ class Spline
 
     public function __construct($xdata, $ydata)
     {
-        $this->y2 = array();
+        $this->y2 = [];
         $this->xdata = $xdata;
         $this->ydata = $ydata;
 
@@ -67,15 +67,15 @@ class Spline
     {
         $n = $this->n;
         $step = ($this->xdata[$n - 1] - $this->xdata[0]) / ($num - 1);
-        $xnew = array();
-        $ynew = array();
+        $xnew = [];
+        $ynew = [];
         $xnew[0] = $this->xdata[0];
         $ynew[0] = $this->ydata[0];
         for ($j = 1; $j < $num; ++$j) {
             $xnew[$j] = $xnew[0] + $j * $step;
             $ynew[$j] = $this->Interpolate($xnew[$j]);
         }
-        return array($xnew,$ynew);
+        return [$xnew, $ynew];
     }
 
     // Return a single interpolated Y-value from an x value
@@ -120,8 +120,8 @@ class Bezier
      * computed from control points data sets, based on Paul Bourke algorithm :
      * http://local.wasp.uwa.edu.au/~pbourke/geometry/bezier/index2.html
      */
-    private $datax = array();
-    private $datay = array();
+    private $datax = [];
+    private $datay = [];
     private $n = 0;
 
     public function __construct($datax, $datay, $attraction_factor = 1)
@@ -154,8 +154,8 @@ class Bezier
      */
     public function Get($steps)
     {
-        $datax = array();
-        $datay = array();
+        $datax = [];
+        $datay = [];
         for ($i = 0; $i < $steps; $i++) {
             list($datumx, $datumy) = $this->GetPoint((double) $i / (double) $steps);
             $datax[$i] = $datumx;
@@ -165,7 +165,7 @@ class Bezier
         $datax[] = end($this->datax);
         $datay[] = end($this->datay);
 
-        return array($datax, $datay);
+        return [$datax, $datay];
     }
 
     /**
@@ -213,7 +213,7 @@ class Bezier
             $newy += $this->datay[$k] * $blend;
         }
 
-        return array($newx, $newy);
+        return [$newx, $newy];
     }
 }
 

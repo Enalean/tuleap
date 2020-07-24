@@ -29,7 +29,7 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
         $this->docman = $docman;
     }
 
-    public function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = [])
     {
         $b = false;
         if ($this->docman->userCanWrite($item->getId())) {
@@ -46,19 +46,19 @@ class DocmanOneFolderIsWriteable /* implements Visitor */
         return $b;
     }
 
-    public function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = [])
     {
         return false;
     }
-    public function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = [])
     {
         return false;
     }
-    public function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = [])
     {
         return false;
     }
-    public function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = [])
     {
         return false;
     }

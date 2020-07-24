@@ -218,7 +218,7 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
     public function testDumpLanguageFile()
     {
         $l = new BaseLanguage('en_US', 'en_US');
-        $l->dumpLanguageFile('my_lang', array('module' => array('key' => 'value')));
+        $l->dumpLanguageFile('my_lang', ['module' => ['key' => 'value']]);
         $stuff = require $this->cache_dir . '/lang/my_lang.php';
         $this->assertEquals('value', $stuff['module']['key']);
     }
@@ -228,11 +228,11 @@ class BaseLanguageTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
         $language = new BaseLanguage('en_US,fr_FR,ja_JP', 'en_US');
 
         $this->assertEquals(
-            array(
+            [
                 'en_US' => 'English',
                 'fr_FR' => 'Français',
                 'ja_JP' => '日本語'
-            ),
+            ],
             $language->getLanguages()
         );
     }

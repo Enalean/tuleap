@@ -79,28 +79,28 @@ class Tracker_ArtifactFactory_GetChildrenTest extends TestCase
         $artifact_02->shouldReceive('getId')->andReturn(12);
         $artifact_02->shouldReceive('getTracker')->andReturn($tracker);
 
-        $artifacts = array(
+        $artifacts = [
             $artifact_01,
             $artifact_02,
-        );
+        ];
 
-        $artiafct_as_dar1 = array(
+        $artiafct_as_dar1 = [
             'id' => 55,
             'tracker_id' => '',
             'submitted_by' => '',
             'submitted_on' => '',
             'use_artifact_permissions' => false,
-        );
+        ];
 
-        $artiafct_as_dar2 = array(
+        $artiafct_as_dar2 = [
             'id' => 56,
             'tracker_id' => '',
             'submitted_by' => '',
             'submitted_on' => '',
             'use_artifact_permissions' => false,
-        );
+        ];
 
-        $this->dao->shouldReceive('getChildrenForArtifacts')->with(array(11, 12))->andReturns(\TestHelper::arrayToDar($artiafct_as_dar1, $artiafct_as_dar2));
+        $this->dao->shouldReceive('getChildrenForArtifacts')->with([11, 12])->andReturns(\TestHelper::arrayToDar($artiafct_as_dar1, $artiafct_as_dar2));
 
         $child_artifact1 = \Mockery::mock(Tracker_Artifact::class);
         $child_artifact1->shouldReceive('userCanView')->andReturn(true);

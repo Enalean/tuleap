@@ -333,7 +333,7 @@ class ArtifactDateReminderFactory
         $art_field_fact = new ArtifactFieldFactory($at);
         $art = new Artifact($at, $this->getArtifactId(), false);
 
-        $notified_people = array();
+        $notified_people = [];
         $sql = sprintf(
             'SELECT notified_people FROM artifact_date_reminder_settings'
                       . ' WHERE reminder_id=%d'
@@ -357,7 +357,7 @@ class ArtifactDateReminderFactory
                 }
             } elseif ($item == 2) {
                 //Assigned To
-                $assignee_array = array();
+                $assignee_array = [];
                 $multi_assigned_to = $art_field_fact->getFieldFromName('multi_assigned_to');
                 if (is_object($multi_assigned_to)) {
                     //Multi-Assigned To field
@@ -369,7 +369,7 @@ class ArtifactDateReminderFactory
                     if (is_object($assigned_to)) {
                         //Assigned To field
                         if ($assigned_to->isUsed()) {
-                            $assignee_array = array($art->getValue('assigned_to'));
+                            $assignee_array = [$art->getValue('assigned_to')];
                         }
                     }
                 }

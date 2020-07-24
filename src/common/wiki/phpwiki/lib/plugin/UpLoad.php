@@ -53,12 +53,12 @@ class WikiPlugin_UpLoad extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('logfile'  => false,
+        return ['logfile'  => false,
                  // add a link of the fresh file automatically to the
                  // end of the page (or current page)
                  'autolink' => false,
                  'page'     => '[pagename]',
-                 );
+                 ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -110,26 +110,26 @@ ws[cfh]"
         $file_dir = getUploadFilePath();
         //$url_prefix = SERVER_NAME . DATA_PATH;
 
-        $form = HTML::form(array('action' => $request->getPostURL(),
+        $form = HTML::form(['action' => $request->getPostURL(),
                                  'enctype' => 'multipart/form-data',
-                                 'method' => 'post'));
-        $contents = HTML::div(array('class' => 'wikiaction'));
-        $contents->pushContent(HTML::input(array('type' => 'hidden',
+                                 'method' => 'post']);
+        $contents = HTML::div(['class' => 'wikiaction']);
+        $contents->pushContent(HTML::input(['type' => 'hidden',
                                                  'name' => 'MAX_FILE_SIZE',
-                                                 'value' => MAX_UPLOAD_SIZE)));
+                                                 'value' => MAX_UPLOAD_SIZE]));
         /// MV add pv
         /// @todo: have a generic method to transmit pv
         if (! empty($_REQUEST['pv'])) {
-            $contents->pushContent(HTML::input(array('type' => 'hidden',
+            $contents->pushContent(HTML::input(['type' => 'hidden',
                                                      'name' => 'pv',
-                                                     'value' => $_REQUEST['pv'])));
+                                                     'value' => $_REQUEST['pv']]));
         }
-        $contents->pushContent(HTML::input(array('name' => 'userfile',
+        $contents->pushContent(HTML::input(['name' => 'userfile',
                                                  'type' => 'file',
-                                                 'size' => '50')));
+                                                 'size' => '50']));
         $contents->pushContent(HTML::raw(" "));
-        $contents->pushContent(HTML::input(array('value' => _("Upload"),
-                                                 'type' => 'submit')));
+        $contents->pushContent(HTML::input(['value' => _("Upload"),
+                                                 'type' => 'submit']));
         $form->pushContent($contents);
 
         $message = HTML();
@@ -213,8 +213,8 @@ ws[cfh]"
             $limit = 10;
         }
 
-        $attchTab = HTML::table(array('border' => '1',
-                                      'width'  => '100%'));
+        $attchTab = HTML::table(['border' => '1',
+                                      'width'  => '100%']);
         $attchTab->pushContent(HTML::tr(
             HTML::th(_("Attachment")),
             HTML::th(_("Number of revision"))
@@ -222,8 +222,8 @@ ws[cfh]"
         $wai = WikiAttachment::getListWithCounter(
             GROUP_ID,
             UserManager::instance()->getCurrentUser()->getId(),
-            array('offset' => $offset,
-            'nb'     => $limit)
+            ['offset' => $offset,
+            'nb'     => $limit]
         );
         $wai->rewind();
         while ($wai->valid()) {
@@ -234,7 +234,7 @@ ws[cfh]"
 
             $line = HTML::tr();
             $line->pushContent(HTML::td(HTML::a(
-                array('href' => $url),
+                ['href' => $url],
                 "Attach:" . $filename
             )));
             $line->pushContent(HTML::td($wa->count()));
@@ -254,12 +254,12 @@ ws[cfh]"
             $url .= '&pv=' . $_REQUEST['pv'];
         }
         $attchList->pushContent(HTML::a(
-            array('href' => $url . '&offset=' . ($offset - $limit)),
+            ['href' => $url . '&offset=' . ($offset - $limit)],
             "<- Previous"
         ));
         $attchList->pushContent(" - ");
         $attchList->pushContent(HTML::a(
-            array('href' => $url . '&offset=' . ($offset + $limit)),
+            ['href' => $url . '&offset=' . ($offset + $limit)],
             "Next ->"
         ));
         /// }}}

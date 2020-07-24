@@ -201,7 +201,7 @@ class SampleGraph
 
         //advanced search display per day
         if ($this->advsrch == 3) {
-            $datagraph = array();
+            $datagraph = [];
 
             // init array of graph values
             for ($y = $this->minyear; $y <= $this->maxyear; $y++) {
@@ -263,7 +263,7 @@ class SampleGraph
 
         // create the bar plots in the advanced search display per month case
         if ($this->advsrch == 2) {
-            $datagraph = array();
+            $datagraph = [];
 
             for ($y = $this->minyear; $y <= $this->maxyear; $y++) {
                 $minm = 1;
@@ -308,8 +308,8 @@ class SampleGraph
 
         $this->graph->Add($gbparray);
 
-        $color1 = array(195, 225, 255);
-        $color2 = array(225,240,255);
+        $color1 = [195, 225, 255];
+        $color2 = [225, 240, 255];
         $this->graph->setBackgroundGradient($color1, $color2, GRAD_HOR, BGRAD_MARGIN);
 
         //manage the Weekend display in the Simple search

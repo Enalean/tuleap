@@ -146,8 +146,8 @@ class SystemEvent_PROJECT_RENAME extends SystemEvent
             // Add Hook for plugins
             $this->getEventManager()->processEvent(
                 self::class,
-                array('project'   => $project,
-                      'new_name'  => $new_name)
+                ['project'   => $project,
+                      'new_name'  => $new_name]
             );
         } else {
             $renameState = false;

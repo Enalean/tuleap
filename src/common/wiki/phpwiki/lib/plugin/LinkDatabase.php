@@ -66,13 +66,13 @@ class WikiPlugin_LinkDatabase extends WikiPluginCached
     {
         return array_merge(
             PageList::supportedArgs(),
-            array(
+            [
                    'format'        => 'html', // 'html', 'text', 'xml'
                    'noheader'      => false,
                    'include_empty' => false,
                    'exclude_from'  => false,
                    'info'          => '',
-            )
+            ]
         );
     }
 

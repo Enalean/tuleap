@@ -11,7 +11,7 @@ class GreenTheme extends Theme
 
     public function GetColorList()
     {
-        return array(
+        return [
             '#66CC00',
             '#009900',
             '#AAFF77',
@@ -28,7 +28,7 @@ class GreenTheme extends Theme
             '#77CCBB',
             '#668833',
             '#BBEE66',
-        );
+        ];
     }
 
     public function SetupGraph($graph)

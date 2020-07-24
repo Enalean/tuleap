@@ -30,7 +30,7 @@ class CreateTestEnvResourceTest extends \RestBase
             'create_test_env/'
         ));
 
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testCreateProject()

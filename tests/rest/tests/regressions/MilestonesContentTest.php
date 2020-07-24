@@ -50,7 +50,7 @@ class Regressions_MilestonesContentTest extends RestBase
 
     private function getIds($route)
     {
-        $ids = array();
+        $ids = [];
         foreach ($this->getResponse($this->client->get($route))->json() as $item) {
             $ids[] = $item['id'];
         }

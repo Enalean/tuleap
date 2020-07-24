@@ -221,22 +221,22 @@ class TrackerPermissionsTest extends TestCase
         $this->tracker2->shouldReceive('getId')->andReturns(112);
 
         $this->tracker->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            array(
-                1   => array('PERM_1'),
-                3   => array('PERM_2'),
-                5   => array('PERM_3'),
-                115 => array('PERM_3'),
-            )
+            [
+                1   => ['PERM_1'],
+                3   => ['PERM_2'],
+                5   => ['PERM_3'],
+                115 => ['PERM_3'],
+            ]
         );
         $this->tracker1->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            array(
-                1001 => array(101 => 'PLUGIN_TRACKER_ADMIN'),
-            )
+            [
+                1001 => [101 => 'PLUGIN_TRACKER_ADMIN'],
+            ]
         );
         $this->tracker2->shouldReceive('getPermissionsByUgroupId')->andReturns(
-            array(
-                1002 => array(102 => 'PLUGIN_TRACKER_ADMIN'),
-            )
+            [
+                1002 => [102 => 'PLUGIN_TRACKER_ADMIN'],
+            ]
         );
 
         $this->site_admin_user = Mockery::mock(PFUser::class);

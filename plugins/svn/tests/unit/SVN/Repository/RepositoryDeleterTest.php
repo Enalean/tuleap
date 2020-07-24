@@ -128,11 +128,11 @@ class RepositoryDeleterTest extends TestCase
     public function testItShouldRemoveAllRepositoryOfAProject(): void
     {
         $this->repository_manager->shouldReceive('getRepositoriesInProject')->andReturn(
-            array(
+            [
                 new Repository(1, 'repo01', '', '', $this->project),
                 new Repository(2, 'repo02', '', '', $this->project),
                 new Repository(3, 'repo03', '', '', $this->project),
-            )
+            ]
         );
 
         $this->system_event_manager->shouldReceive('createEvent')->times(3);

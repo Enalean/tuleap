@@ -131,7 +131,7 @@ class Controller_Commitdiff extends Controller_DiffBase // @codingStandardsIgnor
 
         if (isset($this->params['sidebyside']) && ($this->params['sidebyside'] === true)) {
             $this->tpl->assign('sidebyside', true);
-            $this->tpl->assign('extrascripts', array('commitdiff'));
+            $this->tpl->assign('extrascripts', ['commitdiff']);
         }
 
         $treediff = new TreeDiff(

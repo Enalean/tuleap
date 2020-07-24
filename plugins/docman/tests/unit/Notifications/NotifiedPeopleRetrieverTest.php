@@ -90,13 +90,13 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -114,14 +114,14 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => '65',
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -139,14 +139,14 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => '65',
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE,
 
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -165,13 +165,13 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -193,13 +193,13 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => '65',
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -218,13 +218,13 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $result = $this->retriever->getNotifiedUsers($this->project, $this->item_id);
 
         $expected_result = new \ArrayIterator(
-            array(
-                $this->user_id => array(
+            [
+                $this->user_id => [
                     'item_id' => $this->item_id,
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                )
-            )
+                ]
+            ]
         );
         $this->assertEquals(iterator_to_array($expected_result), iterator_to_array($result));
     }
@@ -252,11 +252,11 @@ class NotifiedPeopleRetrieverTest extends TestCase
             PLUGIN_DOCMAN_NOTIFICATION
         )->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'item_id' => $item_id,
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION
-                )
+                ]
             )
         );
     }
@@ -268,11 +268,11 @@ class NotifiedPeopleRetrieverTest extends TestCase
             PLUGIN_DOCMAN_NOTIFICATION_CASCADE
         )->andReturns(
             \TestHelper::arrayToDar(
-                array(
+                [
                     'item_id' => $item_id,
                     'user_id' => $this->user_id,
                     'type'    => PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-                )
+                ]
             )
         );
     }
@@ -290,7 +290,7 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION
-        )->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 169)));
+        )->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 169]));
     }
 
     private function ugroupDaoReturnsUgroup169ByCascade($item_id): void
@@ -298,7 +298,7 @@ class NotifiedPeopleRetrieverTest extends TestCase
         $this->notified_ugroups_dao->shouldReceive('searchUgroupsByItemIdAndType')->with(
             $item_id,
             PLUGIN_DOCMAN_NOTIFICATION_CASCADE
-        )->andReturns(\TestHelper::arrayToDar(array('ugroup_id' => 169)));
+        )->andReturns(\TestHelper::arrayToDar(['ugroup_id' => 169]));
     }
 
     private function itemExistsinDb(): void

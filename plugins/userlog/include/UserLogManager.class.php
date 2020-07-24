@@ -93,7 +93,7 @@ class UserLogManager
 
     public function initPval(&$pval)
     {
-        $pval = array('time' => -1,
+        $pval = ['time' => -1,
                       'hour' => -1,
                       'group_id' => -1,
                       'user_id' => -1,
@@ -102,7 +102,7 @@ class UserLogManager
                       'http_request_method' => -1,
                       'http_request_uri' => -1,
                       'http_remote_addr' => -1,
-                      'http_referer' => -1);
+                      'http_referer' => -1];
     }
 
     public function displayLogs($offset, $selected_day = null)

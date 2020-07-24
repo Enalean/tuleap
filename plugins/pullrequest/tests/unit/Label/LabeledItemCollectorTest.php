@@ -89,7 +89,7 @@ class LabeledItemCollectorTest extends TestCase
         $glyph = \Mockery::spy(\Tuleap\Glyph\Glyph::class);
         $this->glyph_finder->shouldReceive('get')->andReturns($glyph);
 
-        $this->label_ids = array(19, 27);
+        $this->label_ids = [19, 27];
 
         $this->item_collection = $this->mockLabeledItemCollection();
 
@@ -120,10 +120,10 @@ class LabeledItemCollectorTest extends TestCase
         $this->label_dao->shouldReceive('searchPullRequestsByLabels')
             ->with($this->project_id, $this->label_ids, 50, 0)
             ->once()
-            ->andReturns(\TestHelper::argListToDar(array(
-                array('id' => 75),
-                array('id' => 66)
-            )));
+            ->andReturns(\TestHelper::argListToDar([
+                ['id' => 75],
+                ['id' => 66]
+            ]));
 
         $this->item_collection->shouldReceive('add')->times(2);
         $this->item_collection->shouldReceive('setTotalSize')->with(99)->once();
@@ -134,10 +134,10 @@ class LabeledItemCollectorTest extends TestCase
 
     public function testItDoesNotAddPullRequestsUserCannotSee(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 75),
-            array('id' => 66)
-        )));
+        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+            ['id' => 75],
+            ['id' => 66]
+        ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new UserCannotReadGitRepositoryException());
         $this->item_collection->shouldReceive('add')->never();
@@ -149,10 +149,10 @@ class LabeledItemCollectorTest extends TestCase
 
     public function testItDoesNotAddPullRequestsFromProjectsUserCannotSee(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 75),
-            array('id' => 66)
-        )));
+        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+            ['id' => 75],
+            ['id' => 66]
+        ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessPrivateException());
         $this->item_collection->shouldReceive('add')->never();
@@ -164,10 +164,10 @@ class LabeledItemCollectorTest extends TestCase
 
     public function testItDoesNotAddPullRequestsWhenNotFound(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 75),
-            array('id' => 66)
-        )));
+        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+            ['id' => 75],
+            ['id' => 66]
+        ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \GitRepoNotFoundException());
         $this->item_collection->shouldReceive('add')->never();
@@ -179,10 +179,10 @@ class LabeledItemCollectorTest extends TestCase
 
     public function testItDoesNotAddPullRequestsWhenProjectNotFound(): void
     {
-        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar(array(
-            array('id' => 75),
-            array('id' => 66)
-        )));
+        $this->label_dao->shouldReceive('searchPullRequestsByLabels')->andReturns(\TestHelper::argListToDar([
+            ['id' => 75],
+            ['id' => 66]
+        ]));
 
         $this->pullrequest_permission_checker->shouldReceive('checkPullRequestIsReadableByUser')->andThrows(new \Project_AccessProjectNotFoundException());
         $this->item_collection->shouldReceive('add')->never();

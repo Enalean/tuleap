@@ -32,24 +32,24 @@ class ParserCoreAndPluginTest extends TestCase
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
         $this->assertEquals(
             $log_cache->getProjects(),
-            array(
-                'scrum-08' => array(
-                    'zorglub' => array(
-                        'vaceletm' => array(
-                            '20170321' => array(
+            [
+                'scrum-08' => [
+                    'zorglub' => [
+                        'vaceletm' => [
+                            '20170321' => [
                                 'write' => 0,
                                 'read'  => 1,
-                            )
-                        ),
-                        'alice' => array(
-                            '20161111' => array(
+                            ]
+                        ],
+                        'alice' => [
+                            '20161111' => [
                                 'write' => 1,
                                 'read'  => 0,
-                            )
-                        )
-                    )
-                )
-            )
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         );
         $this->assertEquals(
             $log_cache->getCoreProjects(),
@@ -79,10 +79,10 @@ class ParserCoreAndPluginTest extends TestCase
         $log_cache = $parser->parse(__DIR__ . '/_fixtures/svn.5.log');
         $this->assertEquals(
             $log_cache->getLastAccessTimestamps(),
-            array(
+            [
                 'vaceletm' => 1490094561,
                 'alice'    => 1478863364,
-            )
+            ]
         );
     }
 }

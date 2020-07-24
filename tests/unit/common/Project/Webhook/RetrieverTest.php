@@ -28,8 +28,8 @@ final class RetrieverTest extends \PHPUnit\Framework\TestCase
 
     public function testItRetrievesWebhooks(): void
     {
-        $row_1              = array('id' => 1, 'name' => 'W1', 'url' => 'https://example.com');
-        $row_2              = array('id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com');
+        $row_1              = ['id' => 1, 'name' => 'W1', 'url' => 'https://example.com'];
+        $row_2              = ['id' => 2, 'name' => 'W2', 'url' => 'https://webhook2.example.com'];
         $data_access_result = \TestHelper::arrayToDar($row_1, $row_2);
         $dao                = \Mockery::mock(\Tuleap\Project\Webhook\WebhookDao::class);
         $dao->shouldReceive('searchWebhooks')->andReturns($data_access_result);

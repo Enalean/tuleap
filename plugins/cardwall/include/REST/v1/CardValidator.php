@@ -45,11 +45,11 @@ class CardValidator
     {
         $semantic_title = Tracker_Semantic_Title::load($single_card->getArtifact()->getTracker());
         if ($semantic_title) {
-            return array(
+            return [
                 $semantic_title->getFieldId() => $label
-            );
+            ];
         }
-        return array();
+        return [];
     }
 
     private function getColumnIdFieldData(Cardwall_SingleCard $single_card, $column_id)
@@ -60,17 +60,17 @@ class CardValidator
         }
         foreach ($mapping->getValueMappings() as $value_mapping) {
             if ($value_mapping->getColumnId() == $column_id) {
-                return array(
+                return [
                     $mapping->getField()->getId() => $value_mapping->getValueId()
-                );
+                ];
             }
         }
-        return array();
+        return [];
     }
 
     private function getValuesFieldData(PFUser $user, $values, Cardwall_SingleCard $single_card)
     {
-        $new_values = array();
+        $new_values = [];
         foreach ($values as $value) {
             try {
                 $field                       = $this->getField($user, $single_card, $value);

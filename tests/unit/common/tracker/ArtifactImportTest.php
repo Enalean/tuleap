@@ -124,7 +124,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $orig_subm->shouldReceive('isMultiSelectBox')->andReturns(false);
 
         $atf = \Mockery::spy(\ArtifactFieldFactory::class);
-        $atf->shouldReceive('getAllUsedFields')->andReturns(array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm));
+        $atf->shouldReceive('getAllUsedFields')->andReturns([$submitted_by, $submitted_on, $artifact_id, $comment_type_id, $assigned_to, $orig_subm]);
         $atf->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
         $atf->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
         $atf->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
@@ -137,25 +137,25 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
        */
 
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array('Submitted By','Submitted On','Assigned To','Original Submission'));
+        $test->parseFieldNames(['Submitted By', 'Submitted On', 'Assigned To', 'Original Submission']);
         $this->assertFalse($test->isError());
 
       // need mandatory field assigned_to
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array('Submitted By'));
+        $test->parseFieldNames(['Submitted By']);
         $this->assertTrue($test->isError());
 
       //comment type is not taken into account
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array('Comment Type','Assigned To','Original Submission'));
+        $test->parseFieldNames(['Comment Type', 'Assigned To', 'Original Submission']);
         $this->assertTrue($test->isError());
 
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission'));
+                                   'Assigned To','Original Submission']);
         $this->assertFalse($test->isError());
 
       /***************** test checkValues *****************
@@ -163,19 +163,19 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
 
       // can not check submitted_by values (can not get user_id from here)
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission'));
-        $test->predefined_values = array();
-        $test->predefined_values[4] = array('schneide' => '');
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission');
+                                   'Assigned To','Original Submission']);
+        $test->predefined_values = [];
+        $test->predefined_values[4] = ['schneide' => ''];
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
       // schnuffi not in predefined values of assigned_to
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schnuffi','my original submission');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schnuffi', 'my original submission'];
         $test->checkValues('1', $data, false);
         $this->assertTrue($test->isError());
         $test->clearError();
@@ -200,7 +200,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $sbox_field->shouldReceive('isMultiSelectBox')->andReturns(false);
 
         $atf = \Mockery::spy(\ArtifactFieldFactory::class);
-        $atf->shouldReceive('getAllUsedFields')->andReturns(array($submitted_by,$submitted_on,$artifact_id,$comment_type_id,$assigned_to,$orig_subm,$mbox_field,$sbox_field));
+        $atf->shouldReceive('getAllUsedFields')->andReturns([$submitted_by, $submitted_on, $artifact_id, $comment_type_id, $assigned_to, $orig_subm, $mbox_field, $sbox_field]);
         $atf->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
         $atf->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
         $atf->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
@@ -212,32 +212,32 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $atf->shouldReceive('getFieldFromName')->with('sbox_field')->andReturns($sbox_field);
 
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission','MB Field','SB Field'));
-        $test->predefined_values = array();
-        $test->predefined_values[4] = array('schneide' => '');
-        $test->predefined_values[6] = array('one' => '','two' => '','three' => '');
-        $test->predefined_values[7] = array('blue' => '','yellow' => '','red' => '');
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
-        'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow');
+                                   'Assigned To','Original Submission','MB Field','SB Field']);
+        $test->predefined_values = [];
+        $test->predefined_values[4] = ['schneide' => ''];
+        $test->predefined_values[6] = ['one' => '', 'two' => '', 'three' => ''];
+        $test->predefined_values[7] = ['blue' => '', 'yellow' => '', 'red' => ''];
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission',
+        'one,two,' . $GLOBALS['Language']->getText('global', 'none'),'yellow'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow'];
         $test->checkValues('1', $data, false);
         $this->assertTrue($test->isError());
         $test->clearError();
 
       //check mandatory fields
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','','one,two,four','yellow');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', '', 'one,two,four', 'yellow'];
         $test->checkValues('1', $data, false);
         $this->assertTrue($test->isError());
         $test->clearError();
 
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four',$GLOBALS['Language']->getText('global', 'none'));
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', $GLOBALS['Language']->getText('global', 'none')];
         $test->checkValues('1', $data, false);
         $this->assertTrue($test->isError());
         $test->clearError();
@@ -245,32 +245,32 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
       //test date format
       //submitted on is allowed to be void, we set it to current date on insert into DB
         $test = new ArtifactImport($at, $atf, 'group');
-        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
+        $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'depend_on'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'add_cc_lbl'),
                                    $GLOBALS['Language']->getText('project_export_artifact_export', 'cc_comment_lbl'),
-                                   'Assigned To','Original Submission','MB Field','SB Field','Submitted On'));
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow','');
+                                   'Assigned To','Original Submission','MB Field','SB Field','Submitted On']);
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', ''];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
       //sys_date_fmt
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03 16:13');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', '2004-Feb-03 16:13'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
       //xls date format
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004 16:13');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', '2/3/2004 16:13'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
       //short sys_date_fmt
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2004-Feb-03');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', '2004-Feb-03'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
       //short xls date format
-        $data = array($GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'),'','','','schneide','my original submission','one,two,four','yellow','2/3/2004');
+        $data = [$GLOBALS['Language']->getText('tracker_import_utils', 'no_followups'), '', '', '', 'schneide', 'my original submission', 'one,two,four', 'yellow', '2/3/2004'];
         $test->checkValues('1', $data, false);
         $this->assertFalse($test->isError());
 
@@ -278,14 +278,14 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
        */
 
         $aff = \Mockery::spy(\ArtifactFieldFactory::class);
-        $aff->shouldReceive('getAllUsedFields')->andReturns(array());
+        $aff->shouldReceive('getAllUsedFields')->andReturns([]);
         $aff->shouldReceive('getFieldFromName')->with('submitted_by')->andReturns($submitted_by);
         $aff->shouldReceive('getFieldFromName')->with('open_date')->andReturns($submitted_on);
         $aff->shouldReceive('getFieldFromName')->with('last_update_date')->andReturns($last_update_date);
 
         $test = new ArtifactImport($at, $aff, 'group');
-        $test->parseFieldNames(array($GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')));
-        $parsed_comments = array();
+        $test->parseFieldNames([$GLOBALS['Language']->getText('project_export_artifact_export', 'follow_up_comments')]);
+        $parsed_comments = [];
         $art_id = '1149';
 
         $followup_comments = "Follow-ups
@@ -314,7 +314,7 @@ final class ArtifactImportTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[0]['type']);
         $this->assertEquals('doswald', $parsed_comments[0]['by']);
 
-        $parsed_comments = array();
+        $parsed_comments = [];
         $followup_comments = "Follow-ups
 **********
 
@@ -337,7 +337,7 @@ Excel issue, reassigned to Gene, reduced to Ordinary
         $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[1]['type']);
         $this->assertEquals('doswald', $parsed_comments[1]['by']);
 
-        $parsed_comments = array();
+        $parsed_comments = [];
 
         $followup_comments = "==================================================
 " . $GLOBALS['Language']->getText('tracker_import_utils', 'type') . ": " . $GLOBALS['Language']->getText('global', 'none') . "     " . $GLOBALS['Language']->getText('global', 'by') . ": jstidd      " . $GLOBALS['Language']->getText('global', 'on') . ": 2000-12-09 00:08
@@ -372,7 +372,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
         $this->assertEquals($GLOBALS['Language']->getText('global', 'none'), $parsed_comments[3]['type']);
         $this->assertEquals('2000-12-08 22:27', $parsed_comments[3]['date']);
 
-        $parsed_comments = array();
+        $parsed_comments = [];
         $test->parseFollowUpComments($followup_comments, $parsed_comments, $art_id, true);
         $this->assertFalse($test->isError());
         $this->assertEquals('2000-12-09 00:08', $parsed_comments[0]['date']);
@@ -470,11 +470,11 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
     public function testCheckCommentExistInLegacyFormat(): void
     {
         $this->da->shouldReceive('numRows')->andReturns(1);
-        $this->da->shouldReceive('fetchArray')->andReturns(array ('new_value' => '<pre> testing issue </pre>'));
+        $this->da->shouldReceive('fetchArray')->andReturns(['new_value' => '<pre> testing issue </pre>']);
         $this->dar->shouldReceive('getResult')->andReturns(true);
         $artImp = \Mockery::mock(\ArtifactImport::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $artId = 12237;
-        $parsedFollow = array('comment' => '<pre> testing issue </pre>');
+        $parsedFollow = ['comment' => '<pre> testing issue </pre>'];
         $this->assertTrue($artImp->checkCommentExistInLegacyFormat($parsedFollow, $artId));
     }
 }

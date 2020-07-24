@@ -25,8 +25,8 @@ class MediawikiDao extends DataAccessObject
     public const DEDICATED_DATABASE_PREFIX = 'plugin_mediawiki_';
     public const DEDICATED_DATABASE_TABLE_PREFIX = 'mw';
 
-    private $database_name = array();
-    private $table_prefix = array();
+    private $database_name = [];
+    private $table_prefix = [];
 
     /**
      * @var string
@@ -656,7 +656,7 @@ class MediawikiDao extends DataAccessObject
     {
         return $this->updateAccessControl(
             $project_id,
-            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::PROJECT_MEMBERS
         );
     }
@@ -665,7 +665,7 @@ class MediawikiDao extends DataAccessObject
     {
         return $this->updateAccessControl(
             $project_id,
-            array(ProjectUGroup::AUTHENTICATED),
+            [ProjectUGroup::AUTHENTICATED],
             ProjectUGroup::REGISTERED
         );
     }

@@ -189,7 +189,7 @@ class HistoryValueFormatter
     {
         $project_ugroups = $this->ugroup_manager->getUgroupsById($project);
 
-        $ugroups = array();
+        $ugroups = [];
         foreach ($ugroup_ids as $ugroup_id) {
             $ugroups[] = $project_ugroups[$ugroup_id];
         }

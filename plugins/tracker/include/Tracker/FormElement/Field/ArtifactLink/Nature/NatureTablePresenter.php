@@ -65,7 +65,7 @@ class NatureTablePresenter
         $this->assigned_to_label  = dgettext('tuleap-tracker', 'Assigned to');
 
         $art_factory = \Tracker_ArtifactFactory::instance();
-        $this->artifact_links = array();
+        $this->artifact_links = [];
         $html_classes = '';
         foreach ($artifact_links as $artifact_link) {
             $artifact               = $art_factory->getArtifactById($artifact_link->getArtifactId());
@@ -79,7 +79,7 @@ class NatureTablePresenter
     {
         return new NatureTablePresenter(
             $nature_presenter,
-            array(),
+            [],
             false,
             $field
         );

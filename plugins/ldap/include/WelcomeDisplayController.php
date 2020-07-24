@@ -87,21 +87,21 @@ class WelcomeDisplayController implements DispatchableWithRequest
         $star = '<span class="highlight"><big>*</big></span>';
 
         if ($pv === 2) {
-            $layout->pv_header(array());
+            $layout->pv_header([]);
         } else {
-            $layout->header(array('title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($this->html_purifier->purify($lr->getCommonName()))),
-                                'registeration_process' => true));
+            $layout->header(['title' => $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', [$this->html_purifier->purify($lr->getCommonName())]),
+                                'registeration_process' => true]);
         }
 
         print '<h2>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', array($this->html_purifier->purify($lr->getCommonName())));
+        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_title', [$this->html_purifier->purify($lr->getCommonName())]);
         print '</h2>';
 
         print '<h3>';
-        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', array(\ForgeConfig::get('sys_name')));
+        print $GLOBALS['Language']->getText('plugin_ldap', 'welcome_first_login', [\ForgeConfig::get('sys_name')]);
         print '</h3>';
 
-        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', array(\ForgeConfig::get('sys_name'))) . '</p>';
+        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_fill_form', [\ForgeConfig::get('sys_name')]) . '</p>';
 
         print '<fieldset>';
 
@@ -130,13 +130,13 @@ class WelcomeDisplayController implements DispatchableWithRequest
         print '</p>
 <p><input type="checkbox" name="form_mail_va" value="1" />' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_communitymail') . '</p>';
 
-        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_mandatory', array($star)) . '</p>';
+        print '<p>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_mandatory', [$star]) . '</p>';
 
         print '<p><input type="submit" name="update_reg" value="' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_btn_update') . '"></p>';
         print '</fieldset>';
 
         print '<fieldset>';
-        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', array(\ForgeConfig::get('sys_org_name'))) . '</legend>';
+        print '<legend>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_your_data', [\ForgeConfig::get('sys_org_name')]) . '</legend>';
 
         print '<table>
 <tr>
@@ -148,15 +148,15 @@ class WelcomeDisplayController implements DispatchableWithRequest
 <td><strong>' . $this->html_purifier->purify($currentUser->getEmail()) . '</strong></td>
 </tr>
 <tr>
-<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', array(\ForgeConfig::get('sys_name'))) . '</td>
+<td>' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login', [\ForgeConfig::get('sys_name')]) . '</td>
 <td>' . $this->html_purifier->purify($currentUser->getUserName()) . '<br>
-' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', array(\ForgeConfig::get('sys_name'))) . '
+' . $GLOBALS['Language']->getText('plugin_ldap', 'welcome_codendi_login_j', [\ForgeConfig::get('sys_name')]) . '
 </td>
 </tr>
 </table>';
 
         print '</fieldset>';
 
-        ($pv === 2) ? $layout->pv_footer(array()) : $layout->footer(array());
+        ($pv === 2) ? $layout->pv_footer([]) : $layout->footer([]);
     }
 }

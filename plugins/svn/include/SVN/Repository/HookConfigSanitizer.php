@@ -37,6 +37,6 @@ class HookConfigSanitizer
      */
     private function hookConfigKeys()
     {
-        return array(HookConfig::MANDATORY_REFERENCE, HookConfig::COMMIT_MESSAGE_CAN_CHANGE);
+        return [HookConfig::MANDATORY_REFERENCE, HookConfig::COMMIT_MESSAGE_CAN_CHANGE];
     }
 }

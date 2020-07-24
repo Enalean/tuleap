@@ -218,12 +218,12 @@ class PullRequestUpdater
     {
         $res = $this->inline_comment_dao->searchUpToDateByPullRequestId($pull_request->getid());
 
-        $comments_by_file = array();
+        $comments_by_file = [];
         foreach ($res as $row) {
             $comment   = InlineComment::buildFromRow($row);
             $file_path = $comment->getFilePath();
             if (! isset($comments_by_file[$file_path])) {
-                $comments_by_file[$file_path] = array();
+                $comments_by_file[$file_path] = [];
             }
             $comments_by_file[$file_path][] = $comment;
         }

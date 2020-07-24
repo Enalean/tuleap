@@ -39,9 +39,9 @@ class Git_REST_ResourcesInjector
 
     public function declareProjectPlanningResource(array &$resources, Project $project)
     {
-        $routes = array(
+        $routes = [
             GitRepositoryRepresentation::ROUTE,
-        );
+        ];
 
         foreach ($routes as $route) {
             $resource_reference = new ProjectResourceReference();

@@ -25,10 +25,10 @@ class MediawikiVersionManager
     public const MEDIAWIKI_120_VERSION = "1.20";
     public const MEDIAWIKI_123_VERSION = "1.23";
 
-    public static $AVAILABLE_VERSIONS = array(
+    public static $AVAILABLE_VERSIONS = [
         self::MEDIAWIKI_120_VERSION,
         self::MEDIAWIKI_123_VERSION
-    );
+    ];
 
     /** @var MediawikiVersionDao */
     private $version_dao;
@@ -65,7 +65,7 @@ class MediawikiVersionManager
 
     public function getAllProjectsToMigrateTo123()
     {
-        $project_ids = array();
+        $project_ids = [];
         $dar = $this->version_dao->getAllMediawikiToMigrate(self::MEDIAWIKI_120_VERSION);
         foreach ($dar as $row) {
             $project_ids[] = $row['group_id'];

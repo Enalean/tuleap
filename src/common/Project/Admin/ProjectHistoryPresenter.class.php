@@ -98,8 +98,8 @@ class ProjectHistoryPresenter
             'history-search-start',
             'start',
             $this->start_date,
-            array(),
-            array(),
+            [],
+            [],
             false
         );
     }
@@ -110,8 +110,8 @@ class ProjectHistoryPresenter
             'history-search-end',
             'end',
             $this->end_date,
-            array(),
-            array(),
+            [],
+            [],
             false
         );
     }

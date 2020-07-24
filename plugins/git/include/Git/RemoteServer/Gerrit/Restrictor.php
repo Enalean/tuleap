@@ -179,7 +179,7 @@ class Restrictor
 
     private function revokeProjectsForGerritServer(Git_RemoteServer_GerritServer $gerrit_server, $project_ids)
     {
-        $unset_project_ids = array();
+        $unset_project_ids = [];
         foreach ($project_ids as $key => $project_id) {
             if ($this->gerrit_server_factory->isServerUsedInProject($gerrit_server, $project_id)) {
                 $unset_project_ids[] = $project_id;

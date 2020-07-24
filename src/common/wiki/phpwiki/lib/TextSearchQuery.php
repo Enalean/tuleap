@@ -190,7 +190,7 @@ class TextSearchQuery
                 return "NOT (" . $this->_sql_clause($node->leaves[0]) . ")";
             case 'AND':
             case 'OR':
-                $subclauses = array();
+                $subclauses = [];
                 foreach ($node->leaves as $leaf) {
                     $subclauses[] = "(" . $this->_sql_clause($leaf) . ")";
                 }
@@ -217,7 +217,7 @@ class TextSearchQuery
                 return "NOT (" . $this->_sql_clause_cb->call($node->leaves[0]) . ")";
             case 'AND':
             case 'OR':
-                $subclauses = array();
+                $subclauses = [];
                 foreach ($node->leaves as $leaf) {
                     $subclauses[] = "(" . $this->_sql_clause_obj($leaf) . ")";
                 }
@@ -257,7 +257,7 @@ class TextSearchQuery
             case 'ALL':
                 return $indent . "ALL";
             default:
-                $lines = array($indent . $node->op . ":");
+                $lines = [$indent . $node->op . ":"];
                 $indent .= "  ";
                 foreach ($node->leaves as $leaf) {
                     $lines[] = $this->_as_string($leaf, $indent);
@@ -340,7 +340,7 @@ class TextSearchQuery_node
      */
     public function highlight_words($negated = false)
     {
-        return array();
+        return [];
     }
 
     public function sql()
@@ -366,7 +366,7 @@ class TextSearchQuery_node_word extends TextSearchQuery_node
     }
     public function highlight_words($negated = false)
     {
-        return $negated ? array() : array($this->word);
+        return $negated ? [] : [$this->word];
     }
     public function _sql_quote()
     {
@@ -468,7 +468,7 @@ class TextSearchQuery_node_regex_sql extends TextSearchQuery_node_regex
     public $op = "REGEX_SQL"; // using LIKE
     public function regexp()
     {
-        return str_replace(array("/%/","/_/"), array(".*","."), $this->word);
+        return str_replace(["/%/", "/_/"], [".*", "."], $this->word);
     }
     public function sql()
     {
@@ -485,7 +485,7 @@ class TextSearchQuery_node_not extends TextSearchQuery_node
 
     public function __construct($leaf)
     {
-        $this->leaves = array($leaf);
+        $this->leaves = [$leaf];
     }
 
     public function optimize()
@@ -524,7 +524,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
     {
         // This flattens e.g. (AND (AND a b) (OR c d) e)
         //        to (AND a b e (OR c d))
-        $flat = array();
+        $flat = [];
         foreach ($this->leaves as $leaf) {
             $leaf = $leaf->optimize();
             if ($this->op == $leaf->op) {
@@ -548,7 +548,7 @@ class TextSearchQuery_node_binop extends TextSearchQuery_node
 
     public function highlight_words($negated = false)
     {
-        $words = array();
+        $words = [];
         foreach ($this->leaves as $leaf) {
             array_splice(
                 $words,
@@ -577,7 +577,7 @@ class TextSearchQuery_node_and extends TextSearchQuery_node_binop
         //   (?!.*a)(?!.*b)  vs   (?!.*(?:a|b))
 
         // Suck out the negated leaves.
-        $nots = array();
+        $nots = [];
         foreach ($this->leaves as $key => $leaf) {
             if ($leaf->op == 'NOT') {
                 $nots[] = $leaf->leaves[0];
@@ -625,8 +625,8 @@ class TextSearchQuery_node_or extends TextSearchQuery_node_binop
         // We will combine any of our direct descendents which are WORDs
         // into a single (?=.*(?:word1|word2|...)) regexp.
 
-        $regexps = array();
-        $words = array();
+        $regexps = [];
+        $words = [];
 
         foreach ($this->leaves as $leaf) {
             if ($leaf->op == 'WORD') {
@@ -734,7 +734,7 @@ class TextSearchQuery_Parser
 
     public function get_list($is_toplevel = false)
     {
-        $list = array();
+        $list = [];
 
         // token types we'll accept as words (and thus expr's) for the
         // purpose of error recovery:
@@ -773,10 +773,10 @@ class TextSearchQuery_Parser
             }
 
             if ($op == 'and') {
-                $expr = new TextSearchQuery_node_and(array($expr, $right));
+                $expr = new TextSearchQuery_node_and([$expr, $right]);
             } else {
                 assert($op == 'or');
-                $expr = new TextSearchQuery_node_or(array($expr, $right));
+                $expr = new TextSearchQuery_node_or([$expr, $right]);
             }
 
             $savedpos = $this->lexer->tell();
@@ -810,8 +810,8 @@ class TextSearchQuery_Parser
     public function get_word($accept = TSQ_ALLWORDS)
     {
         foreach (
-            array("WORD","STARTS_WITH","ENDS_WITH","EXACT",
-                       "REGEX","REGEX_GLOB","REGEX_PCRE","ALL") as $tok
+            ["WORD","STARTS_WITH","ENDS_WITH","EXACT",
+                       "REGEX","REGEX_GLOB","REGEX_PCRE","ALL"] as $tok
         ) {
             $const = constant("TSQ_TOK_" . $tok);
             if ($accept & $const and ($word = $this->lexer->get($const))) {
@@ -852,7 +852,7 @@ class TextSearchQuery_Lexer
      */
     public function tokenize($string, $case_exact = false, $regex = TSQ_REGEX_AUTO)
     {
-        $tokens = array();
+        $tokens = [];
         $buf = $case_exact ? ltrim($string) : strtolower(ltrim($string));
         while (! empty($buf)) {
             if (preg_match('/^(and|or)\b\s*/i', $buf, $m)) {
@@ -937,7 +937,7 @@ class TextSearchQuery_Lexer
                     $type = TSQ_TOK_STARTS_WITH;
             }
             */
-            $tokens[] = array($type, $val);
+            $tokens[] = [$type, $val];
         }
         return $tokens;
     }

@@ -77,7 +77,7 @@ class Docman_Folder extends Docman_Item
         $this->_items = $items;
     }
 
-    public function accept($visitor, $params = array())
+    public function accept($visitor, $params = [])
     {
         return $visitor->visitFolder($this, $params);
     }

@@ -47,7 +47,7 @@ if (! user_isloggedin() || ! $permission_manager->isAdmin($project, $user)) {
     exit_permission_denied();
 }
 
-$vMode = new Valid_WhiteList('mode', array('delete'));
+$vMode = new Valid_WhiteList('mode', ['delete']);
 if ($request->valid($vMode) && $request->existAndNonEmpty('mode')) {
     // delete a processor from db
     if ($request->valid(new Valid_UInt('proc_id'))) {
@@ -153,6 +153,6 @@ $return = '<TABLE><FORM ACTION="/file/admin/manageprocessors.php?group_id=' . $g
 
 echo $return;
 
-file_utils_footer(array());
+file_utils_footer([]);
 
 ?>

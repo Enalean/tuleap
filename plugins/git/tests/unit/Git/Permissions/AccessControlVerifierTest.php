@@ -93,7 +93,7 @@ final class AccessControlVerifierTest extends TestCase
     public function testAUserCanNotWriteWhenFineGrainedPermissionsAreEnabledAndHeDoesNotHaveAccess(): void
     {
         $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(true);
-        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', array(), 1));
+        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', [], 1));
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 
@@ -126,7 +126,7 @@ final class AccessControlVerifierTest extends TestCase
     public function testCheckingIfAUserCanWriteToARepositoryMigratedToGerritFallbackToAVerificationHandledByGitolite(): void
     {
         $this->fine_grained_permissions->shouldReceive('doesRepositoryUseFineGrainedPermissions')->andReturns(false);
-        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', array(), 1));
+        $this->system_command->shouldReceive('exec')->andThrow(new \System_Command_CommandException('', [], 1));
 
         $access_control_verifier = new AccessControlVerifier($this->fine_grained_permissions, $this->system_command);
 

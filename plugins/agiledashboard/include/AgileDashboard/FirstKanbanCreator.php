@@ -108,11 +108,11 @@ class AgileDashboard_FirstKanbanCreator
         $GLOBALS['Response']->addFeedback(
             Feedback::INFO,
             sprintf(dgettext('tuleap-agiledashboard', 'We created <a href="%1$s">a first kanban</a> for you. Enjoy!'), '?' . http_build_query(
-                array(
+                [
                     'group_id' => $this->project->getId(),
                     'action'   => 'showKanban',
                     'id'       => $kanban_id
-                )
+                ]
             )),
             CODENDI_PURIFIER_DISABLED
         );
@@ -161,7 +161,7 @@ class AgileDashboard_FirstKanbanCreator
 
         foreach ($reports as $tracker_report) {
             if ($tracker_report->isPublic() && $tracker_report->getName() === self::ASSIGNED_TO_ME_REPORT) {
-                $this->tracker_report_updater->save($kanban, array((int) $tracker_report->getId()));
+                $this->tracker_report_updater->save($kanban, [(int) $tracker_report->getId()]);
 
                 return;
             }

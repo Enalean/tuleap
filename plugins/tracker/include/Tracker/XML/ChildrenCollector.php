@@ -28,13 +28,13 @@ class Tracker_XML_ChildrenCollector
     public const MAX = 30;
 
     /** @var int[] */
-    private $children_stack = array();
+    private $children_stack = [];
 
     /** @var int */
     private $index = 0;
 
      /** @var array */
-    private $parents = array();
+    private $parents = [];
 
     public function addChild($artifact_id, $parent_id)
     {
@@ -49,7 +49,7 @@ class Tracker_XML_ChildrenCollector
     private function stackParent($artifact_id, $parent_id)
     {
         if (! isset($this->parents[$parent_id])) {
-            $this->parents[$parent_id] = array();
+            $this->parents[$parent_id] = [];
         }
 
         if (! in_array($artifact_id, $this->parents[$parent_id])) {
@@ -95,7 +95,7 @@ class Tracker_XML_ChildrenCollector
     public function getChildrenForParent($parent_id)
     {
         if (! isset($this->parents[$parent_id])) {
-            return array();
+            return [];
         }
 
         return $this->parents[$parent_id];

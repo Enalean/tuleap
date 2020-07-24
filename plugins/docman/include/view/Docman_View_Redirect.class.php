@@ -28,11 +28,11 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
             $url = $params['redirect_to'];
         } elseif (isset($params['item'])) {
             $event_manager = EventManager::instance();
-            $event_manager->processEvent('plugin_docman_event_access', array(
+            $event_manager->processEvent('plugin_docman_event_access', [
                 'group_id' => $params['group_id'],
                 'item'     => &$params['item'],
                 'user'     => &$params['user']
-            ));
+            ]);
             $url = $params['item']->accept($this, $params);
         } else {
             $url = '/';
@@ -40,18 +40,18 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
 
         $GLOBALS['Response']->redirect($url);
     }
-    public function visitFolder(&$item, $params = array())
+    public function visitFolder(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Folders');
     }
-    public function visitWiki(&$item, $params = array())
+    public function visitWiki(&$item, $params = [])
     {
         $project_id = urlencode($item->getGroupId());
         $pagename   = urlencode($item->getPagename());
         return '/wiki/?group_id=' . $project_id . '&pagename=' . $pagename;
     }
 
-    public function visitLink(&$item, $params = array())
+    public function visitLink(&$item, $params = [])
     {
         $url = null;
         if (isset($params['version_number'])) {
@@ -81,16 +81,16 @@ class Docman_View_Redirect extends Docman_View_View /* implements Visitor */
         exit();
     }
 
-    public function visitFile(&$item, $params = array())
+    public function visitFile(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Files');
     }
-    public function visitEmbeddedFile(&$item, $params = array())
+    public function visitEmbeddedFile(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Embedded Files');
     }
 
-    public function visitEmpty(&$item, $params = array())
+    public function visitEmpty(&$item, $params = [])
     {
         trigger_error('Redirect view cannot be applied to Empty documents');
     }

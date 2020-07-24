@@ -20,7 +20,7 @@
 
 class Tracker_Permission_PermissionRequest
 {
-    private $permissions = array();
+    private $permissions = [];
 
     public function __construct(array $permissions)
     {

@@ -91,7 +91,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
      */
     private function getMappingFields()
     {
-        $mapping_fields = array();
+        $mapping_fields = [];
         $mapping_fields_rows = $this->dao->searchMappingFields($this->tracker->getId());
         foreach ($mapping_fields_rows as $row) {
             $mapping_fields[$row['tracker_id']] = $row['field_id'];
@@ -154,7 +154,7 @@ class Cardwall_OnTop_Config_Command_UpdateMappingFields extends Cardwall_OnTop_C
 
     private function mappingValuesAddedOrRemoved($column_id, array $value_mappings, array $values)
     {
-        $already_processed = array();
+        $already_processed = [];
         if ($this->areMappingValuesRemoved($column_id, $value_mappings, $values, $already_processed)) {
             return true;
         } else {

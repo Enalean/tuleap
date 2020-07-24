@@ -217,7 +217,7 @@ class GitRepository
                     $this->backend = $git_plugin->getBackendGitolite();
                     break;
                 default:
-                    $this->backend = Backend::instance('Git', 'GitBackend', array($url_manager));
+                    $this->backend = Backend::instance('Git', 'GitBackend', [$url_manager]);
             }
         }
         return $this->backend;
@@ -381,7 +381,7 @@ class GitRepository
      */
     public function getFullName()
     {
-        return PathJoinUtil::unixPathJoin(array($this->getNamespace(), $this->getName()));
+        return PathJoinUtil::unixPathJoin([$this->getNamespace(), $this->getName()]);
     }
 
 
@@ -813,7 +813,7 @@ class GitRepository
     public function getNonMemberMails()
     {
         $mails = $this->getNotifiedMails();
-        $mailsToDelete = array();
+        $mailsToDelete = [];
         $um = UserManager::instance();
         foreach ($mails as $mail) {
             try {

@@ -101,7 +101,7 @@ class GitRepositoryPermissionRepresentation extends GitRepositoryPermissionRepre
      */
     private static function buildUGroupRepresentations(UGroupManager $ugroup_manager, GitRepository $repository, $ugroup_rows): array
     {
-        $ugroup_representations = array();
+        $ugroup_representations = [];
         foreach ($ugroup_rows as $row) {
             $ugroup = $ugroup_manager->getById($row['ugroup_id']);
             $rewind_ugroup_representation = new MinimalUserGroupRepresentation();

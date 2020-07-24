@@ -37,7 +37,7 @@ class MailManager
     public function getMailPreferencesByEmail($addresses)
     {
         $default = Codendi_Mail_Interface::FORMAT_HTML;
-        $res     = array('html' => array(), 'text' => array());
+        $res     = ['html' => [], 'text' => []];
         $um      = $this->getUserManager();
         foreach ($addresses as $address) {
             $users = $um->getAllUsersByEmail($address);
@@ -52,7 +52,7 @@ class MailManager
                     }
                 }
             } else {
-                $user = new PFUser(array('user_id' => 0, 'language_id' => $this->getConfig('sys_lang')));
+                $user = new PFUser(['user_id' => 0, 'language_id' => $this->getConfig('sys_lang')]);
                 $user->setEmail($address);
             }
             $res[$pref][] = $user;
@@ -81,7 +81,7 @@ class MailManager
      */
     public function getAllMailFormats()
     {
-        return array(Codendi_Mail_Interface::FORMAT_TEXT, Codendi_Mail_Interface::FORMAT_HTML);
+        return [Codendi_Mail_Interface::FORMAT_TEXT, Codendi_Mail_Interface::FORMAT_HTML];
     }
 
     /**

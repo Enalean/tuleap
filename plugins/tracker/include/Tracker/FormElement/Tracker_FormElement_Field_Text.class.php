@@ -25,23 +25,23 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 {
-    public $default_properties = array(
-        'rows'      => array(
+    public $default_properties = [
+        'rows'      => [
             'value' => 10,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'cols'          => array(
+        ],
+        'cols'          => [
             'value' => 50,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'default_value' => array(
+        ],
+        'default_value' => [
             'value' => '',
             'type'  => 'text',
             'size'  => 40,
-        ),
-    );
+        ],
+    ];
 
     /**
      * The field is permanently deleted from the db
@@ -98,7 +98,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
     protected function buildMatchExpression($field_name, $criteria_value)
     {
-        $matches = array();
+        $matches = [];
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
         if (! $expr) {
             // else transform into a series of LIKE %word%
@@ -107,7 +107,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
             } else {
                 $split = preg_split('/\s+/', $criteria_value);
             }
-            $words        = array();
+            $words        = [];
             $criterie_dao = $this->getCriteriaDao();
             if ($criterie_dao === null) {
                 return '';
@@ -409,7 +409,7 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $to_value = $this->getValue($to['value_id']);
         $to_value = isset($to_value['value']) ? $to_value['value'] : '';
 
-        $callback = array($this, '_filter_html_callback');
+        $callback = [$this, '_filter_html_callback'];
         $d = new Codendi_Diff(
             array_map($callback, explode("\n", $from_value)),
             array_map($callback, explode("\n", $to_value))
@@ -580,10 +580,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
 
     private function formatValueWithTheByFieldOutput(array $value)
     {
-        return array(
+        return [
             'content' => $value['value'],
             'format'  => $value['format']
-        );
+        ];
     }
 
     private function doesValueUseTheByFieldOutput(array $value)
@@ -664,10 +664,10 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum
         $user           = $this->getCurrentUser();
         $default_format = $this->getDefaultFormatForUser($user);
 
-        return array(
+        return [
             'format'  => $default_format,
             'content' => $this->getProperty('default_value'),
-        );
+        ];
     }
 
     public function isEmpty($value, Tracker_Artifact $artifact)

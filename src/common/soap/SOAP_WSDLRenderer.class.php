@@ -55,13 +55,13 @@ class SOAP_WSDLRenderer
     private function getHTTPContext()
     {
         if (ForgeConfig::get('sys_use_unsecure_ssl_certificate', false)) {
-            return array(
-                'ssl' => array(
+            return [
+                'ssl' => [
                     'verify_peer'       => false,
                     'verify_peer_name'  => false,
-                )
-            );
+                ]
+            ];
         }
-        return array();
+        return [];
     }
 }

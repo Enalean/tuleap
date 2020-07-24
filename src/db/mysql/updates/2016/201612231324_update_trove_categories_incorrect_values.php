@@ -49,12 +49,12 @@ class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrad
             );
 
             $has_been_executed = $update_statement->execute(
-                array(
+                [
                     $root_parent,
                     $fullpath,
                     $fullpath_ids,
                     $trove_category_id
-                )
+                ]
             );
             if ($has_been_executed === false) {
                 $this->rollBackOnError('An error occurred while updating parent trove categories');
@@ -96,7 +96,7 @@ class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrad
                 $root_parent = $parent_trove_cat_id;
             }
 
-            if (! $statement->execute(array($parent_trove_cat_id))) {
+            if (! $statement->execute([$parent_trove_cat_id])) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete(
                     'Could not retrieve information on trove categories hierarchy'
                 );
@@ -111,7 +111,7 @@ class b201612231324_update_trove_categories_incorrect_values extends ForgeUpgrad
         $fullpath     .= $trove_cat_fullname;
         $fullpath_ids .= $trove_cat_id;
 
-        return array($root_parent, $fullpath, $fullpath_ids);
+        return [$root_parent, $fullpath, $fullpath_ids];
     }
 
     private function rollBackOnError($message)

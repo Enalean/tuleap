@@ -80,7 +80,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     public function getUGroupsByBindingSource($ugroupId)
     {
         $dar     = $this->getUGroupManager()->searchUGroupByBindingSource($ugroupId);
-        $ugroups = array();
+        $ugroups = [];
         if ($dar && ! $dar->isError()) {
             foreach ($dar as $row) {
                 $cloneId                        = $row['ugroup_id'];
@@ -162,7 +162,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
      */
     public function getLinkTitle($ugroupId)
     {
-        $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId));
+        $ugroup = new ProjectUGroup(['ugroup_id' => $ugroupId]);
         if ($ugroup->isBound()) {
             $text = $GLOBALS['Language']->getText('project_ugroup_binding', 'update_binding');
         } else {
@@ -223,7 +223,7 @@ class UGroupBinding //phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespac
     {
         $source_ugroup = $this->getUGroupManager()->getUgroupBindingSource($ugroupId);
         if ($source_ugroup && $source_ugroup->getId() == $sourceId) {
-            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_ugroup_binding', 'duplicate_binding_warning', array($sourceId)));
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_ugroup_binding', 'duplicate_binding_warning', [$sourceId]));
             return false;
         }
         try {

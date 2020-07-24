@@ -126,10 +126,10 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
             $this->tracker->getItemName(),
             $this->artifact->getId()
         );
-        $breadcrumbs = array(
-            array('title' => $this->artifact->getXRef(),
-                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId())
-        );
+        $breadcrumbs = [
+            ['title' => $this->artifact->getXRef(),
+                  'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId()]
+        ];
         $toolbar = $this->tracker->getDefaultToolbar();
         $params = [
             'body_class' => ['widgetable'],
@@ -174,12 +174,12 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
 
         EventManager::instance()->processEvent(
             self::EVENT_ADD_VIEW_IN_COLLECTION,
-            array(
+            [
                 'artifact'   => $this->artifact,
                 'collection' => $view_collection,
                 'request'    => $request,
                 'user'       => $user
-            )
+            ]
         );
 
         return $view_collection->fetchRequestedView($request);

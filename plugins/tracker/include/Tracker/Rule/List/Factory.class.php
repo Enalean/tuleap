@@ -91,10 +91,10 @@ class Tracker_Rule_List_Factory
         $rules = $this->dao->searchByTrackerId($tracker_id);
 
         if (! $rules) {
-            return array();
+            return [];
         }
 
-        $rules_array = array();
+        $rules_array = [];
 
         while ($rule = $rules->getRow()) {
             $list_rule = $this->populate(new Tracker_Rule_List(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $rule['source_value_id'], $rule['target_value_id']);

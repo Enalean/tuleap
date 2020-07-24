@@ -127,11 +127,11 @@ class HookController
 
     private function getRedirectUrl(GitRepository $repository)
     {
-        return GIT_BASE_URL . '/?' . http_build_query(array(
+        return GIT_BASE_URL . '/?' . http_build_query([
             'action'      => 'repo_management',
             'group_id'    => $repository->getProjectId(),
             'repo_id'     => $repository->getId(),
             'pane'        => Hooks::ID
-        ));
+        ]);
     }
 }

@@ -116,18 +116,18 @@ class RdfWriter extends RssWriter // in fact it should be rewritten to be other 
     {
         $this->XmlElement(
             'rdf:RDF',
-            array('xmlns' => "http://purl.org/rss/1.0/",
-            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+            ['xmlns' => "http://purl.org/rss/1.0/",
+            'xmlns:rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#']
         );
 
-        $this->_modules = array(
+        $this->_modules = [
             //Standards
         'content'    => "http://purl.org/rss/1.0/modules/content/",
         'dc'    => "http://purl.org/dc/elements/1.1/",
-        );
+        ];
 
-        $this->_uris_seen = array();
-        $this->_items = array();
+        $this->_uris_seen = [];
+        $this->_items = [];
     }
 }
 

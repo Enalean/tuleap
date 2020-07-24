@@ -41,10 +41,10 @@ if (user_isloggedin()) {
 
             $validDetails = new Valid_Text('details');
 
-            $validPrivateNews = new Valid_WhiteList('private_news', array('0', '1'));
+            $validPrivateNews = new Valid_WhiteList('private_news', ['0', '1']);
             $validSummary->required();
 
-            $validPromoteNews = new Valid_WhiteList('promote_news', array('0', '3'));
+            $validPromoteNews = new Valid_WhiteList('promote_news', ['0', '3']);
             $validSummary->required();
 
             if (
@@ -75,8 +75,8 @@ if (user_isloggedin()) {
         /*
              Show the submit form
         */
-        news_header(array('title' => $Language->getText('news_index', 'news'),
-              'help' => 'collaboration.html#news-service'));
+        news_header(['title' => $Language->getText('news_index', 'news'),
+              'help' => 'collaboration.html#news-service']);
 
         $hp = Codendi_HTMLPurifier::instance();
         $pm = ProjectManager::instance();
@@ -140,7 +140,7 @@ if (user_isloggedin()) {
         echo '<br><br><INPUT CLASS="btn btn-primary" TYPE="SUBMIT" VALUE="' . $Language->getText('global', 'btn_submit') . '">
         </FORM>';
 
-        news_footer(array());
+        news_footer([]);
     } else {
         exit_error($Language->getText('news_admin_index', 'permission_denied'), $Language->getText('news_submit', 'only_writer_submits'));
     }

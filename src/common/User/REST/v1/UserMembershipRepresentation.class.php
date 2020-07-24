@@ -32,7 +32,7 @@ class UserMembershipRepresentation
     /**
      * @var array {@type string}
      */
-    public $user_groups = array();
+    public $user_groups = [];
 
     public function build($username, array $groups)
     {

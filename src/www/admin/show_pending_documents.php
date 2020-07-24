@@ -30,7 +30,7 @@ $request->checkUserIsSuperUser();
 $em = EventManager::instance();
 $pm = ProjectManager::instance();
 
-$vFunc = new Valid_WhiteList('func', array('confirm_restore_frs_file', 'confirm_restore_wiki_attachment'));
+$vFunc = new Valid_WhiteList('func', ['confirm_restore_frs_file', 'confirm_restore_wiki_attachment']);
 $vFunc->required();
 if ($request->valid($vFunc)) {
     $func = $request->get('func');
@@ -97,20 +97,20 @@ if (! $focus) {
     $focus = 'frs_file';
 }
 
-$idArray   = array();
-$nomArray  = array();
-$htmlArray = array();
+$idArray   = [];
+$nomArray  = [];
+$htmlArray = [];
 
 frs_file_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
 wiki_attachment_restore_view($group_id, $csrf_token, $idArray, $nomArray, $htmlArray);
 
-$params = array('group_id'   => $group_id,
+$params = ['group_id'   => $group_id,
                 'id'         => &$idArray,
                 'nom'        => &$nomArray,
                 'focus'      => $focus,
                 'html'       => &$htmlArray,
                 'csrf_token' => $csrf_token
-);
+];
 $em->processEvent('show_pending_documents', $params);
 
 $purifier = Codendi_HTMLPurifier::instance();
@@ -139,7 +139,7 @@ $renderer->header($GLOBALS['Language']->getText('admin_groupedit', 'title'), fal
     <main role="main" class="tlp-framed">
     <?php
         $project = $pm->getProject($group_id, false, true);
-        echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', array(ForgeConfig::get('sys_file_deletion_delay'))) . '</div>';
+        echo '<div class="tlp-alert-info">' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'delay_info', [ForgeConfig::get('sys_file_deletion_delay')]) . '</div>';
         echo '<div class="tlp-alert-info"><p>' . $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro') . '<br />';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system') . ' <a href="/admin/system_events/">system event</a> ';
         echo $GLOBALS['Language']->getText('admin_show_pending_documents', 'note_intro_system_end') . '</p>';

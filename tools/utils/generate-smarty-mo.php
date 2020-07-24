@@ -30,11 +30,11 @@ function error($message)
 
 function executeCommandAndExitIfStderrNotEmpty($command)
 {
-    $descriptorspec = array(
+    $descriptorspec = [
         0 => STDIN,
         1 => STDOUT,
-        2 => array('pipe', 'wb')
-    );
+        2 => ['pipe', 'wb']
+    ];
 
     $process = proc_open($command, $descriptorspec, $pipes);
     if (! is_resource($process)) {

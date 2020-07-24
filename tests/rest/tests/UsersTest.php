@@ -177,11 +177,11 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testUserCanUpdateAnotherUserIfSheHasDelegatedPermissions(): void
     {
         $value = json_encode(
-            array(
-            'values' => array(
+            [
+            'values' => [
                     'status' => "R",
-            )
-            )
+            ]
+            ]
         );
 
         $this->tuleap_config->setForgeToRestricted();
@@ -197,11 +197,11 @@ final class UsersTest extends RestBase // phpcs:ignore
         $this->assertEquals("R", $json['status']);
 
         $value = json_encode(
-            array(
-            'values' => array(
+            [
+            'values' => [
                     'status' => "A",
-            )
-            )
+            ]
+            ]
         );
         $response = $this->getResponseByName(REST_TestDataBuilder::ADMIN_USER_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value));
         $this->assertEquals($response->getStatusCode(), 200);
@@ -255,11 +255,11 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPATCHUserWithReadOnlySiteAdmin(): void
     {
         $value    = json_encode(
-            array(
-                'values' => array(
+            [
+                'values' => [
                     'status' => "R",
-                )
-            )
+                ]
+            ]
         );
         $response = $this->getResponse(
             $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME], null, $value),
@@ -621,9 +621,9 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $search = urlencode(
             json_encode(
-                array(
+                [
                     'username' => REST_TestDataBuilder::TEST_USER_1_NAME
-                )
+                ]
             )
         );
 
@@ -639,9 +639,9 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $search = urlencode(
             json_encode(
-                array(
+                [
                     'username' => 'muppet'
-                )
+                ]
             )
         );
 
@@ -664,7 +664,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->options('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences'));
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
@@ -675,17 +675,17 @@ final class UsersTest extends RestBase // phpcs:ignore
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
         $this->assertEquals(200, $response->getStatusCode());
     }
 
     public function testPatchPreferences(): void
     {
         $preference = json_encode(
-            array(
+            [
                 'key'   => 'my_preference',
                 'value' => 'my_preference_value'
-            )
+            ]
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
@@ -695,10 +695,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPatchPreferencesWithReadOnlySiteAdmin(): void
     {
         $preference = json_encode(
-            array(
+            [
                 'key'   => 'my_preference',
                 'value' => 'my_preference_value'
-            )
+            ]
         );
 
         $response = $this->getResponse(
@@ -712,10 +712,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPatchPreferencesAnotherUser()
     {
         $preference = json_encode(
-            array(
+            [
                 'key'   => 'my_preference',
                 'value' => 'my_preference_value'
-            )
+            ]
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/preferences', null, $preference));
@@ -751,10 +751,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testDeletePreferences()
     {
         $preference = json_encode(
-            array(
+            [
                 'key'   => 'preference_to_be_deleted',
                 'value' => 'awesome_value'
-            )
+            ]
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
@@ -774,10 +774,10 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testDeletePreferencesWithReadOnlySiteAdmin(): void
     {
         $preference = json_encode(
-            array(
+            [
                 'key' => 'preference_to_be_deleted',
                 'value' => 'awesome_value'
-            )
+            ]
         );
 
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->patch('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_1_NAME] . '/preferences', null, $preference));
@@ -823,7 +823,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     {
         $response = $this->getResponseByName(
             REST_TestDataBuilder::TEST_USER_1_NAME,
-            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode(array()))
+            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode([]))
         );
         $this->assertEquals(403, $response->getStatusCode());
     }
@@ -831,7 +831,7 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPUTHistoryWithReadOnlySiteAdmin(): void
     {
         $response = $this->getResponse(
-            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode(array())),
+            $this->client->put('users/' . $this->user_ids[REST_TestDataBuilder::TEST_USER_2_NAME] . '/history', null, json_encode([])),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
@@ -841,14 +841,14 @@ final class UsersTest extends RestBase // phpcs:ignore
     public function testPUTHistoryManipulation()
     {
         $history_entries  = json_encode(
-            array (
-                array (
+            [
+                 [
                     'visit_time' => 1496386853,
                     'xref' => 'bugs #845',
                     'link' => '/plugins/tracker/?aid=845',
                     'title' => '',
-                )
-            )
+                 ]
+             ]
         );
 
         $response = $this->getResponseByName(

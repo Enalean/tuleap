@@ -111,48 +111,48 @@ if ($notification_to_update) {
     $GLOBALS['Response']->redirect('/admin/system_events/notifications.php');
 }
 
-$notifications = array();
+$notifications = [];
 foreach ($dao->searchAll() as $row) {
     $status_selected = explode(',', $row['types']);
     $checked = false;
-    $status = array(
-        array(
+    $status = [
+        [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_NEW)),
             'value'            => SystemEvent::STATUS_NEW,
             'checked'          => in_array(SystemEvent::STATUS_NEW, $status_selected),
             'is_first_checked' => in_array(SystemEvent::STATUS_NEW, $status_selected) && ! $checked ? $checked = true : false
-        ),
-        array(
+        ],
+        [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_RUNNING)),
             'value'            => SystemEvent::STATUS_RUNNING,
             'checked'          => in_array(SystemEvent::STATUS_RUNNING, $status_selected),
             'is_first_checked' => in_array(SystemEvent::STATUS_RUNNING, $status_selected) && ! $checked ? $checked = true : false
-        ),
-        array(
+        ],
+        [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_DONE)),
             'value'            => SystemEvent::STATUS_DONE,
             'checked'          => in_array(SystemEvent::STATUS_DONE, $status_selected),
             'is_first_checked' => in_array(SystemEvent::STATUS_DONE, $status_selected) && ! $checked ? $checked = true : false
-        ),
-        array(
+        ],
+        [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_WARNING)),
             'value'            => SystemEvent::STATUS_WARNING,
             'checked'          => in_array(SystemEvent::STATUS_WARNING, $status_selected),
             'is_first_checked' => in_array(SystemEvent::STATUS_WARNING, $status_selected) && ! $checked ? $checked = true : false
-        ),
-        array(
+        ],
+        [
             'label'            => ucfirst(strtolower(SystemEvent::STATUS_ERROR)),
             'value'            => SystemEvent::STATUS_ERROR,
             'checked'          => in_array(SystemEvent::STATUS_ERROR, $status_selected),
             'is_first_checked' => in_array(SystemEvent::STATUS_ERROR, $status_selected) && ! $checked ? $checked = true : false
-        )
-    );
+        ]
+    ];
 
-    $notifications[] = array(
+    $notifications[] = [
         'id'     => $row['id'],
         'emails' => $row['emails'],
         'status' => $status
-    );
+    ];
 }
 
 $include_assets = new IncludeAssets(__DIR__ . '/../../assets/core', '/assets/core');

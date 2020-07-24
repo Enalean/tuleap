@@ -47,7 +47,7 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
         EventManager::setInstance($this->event_manager);
         ProjectManager::setInstance($project_manager);
 
-        $event_params = array(
+        $event_params = [
             '1',
             SystemEvent::TYPE_UGROUP_MODIFY,
             SystemEvent::OWNER_ROOT,
@@ -58,14 +58,14 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
             $_SERVER['REQUEST_TIME'],
             $_SERVER['REQUEST_TIME'],
             ''
-        );
+        ];
 
         $this->system_event = \Mockery::mock(\SystemEvent_UGROUP_MODIFY::class, $event_params)->makePartial()->shouldAllowMockingProtectedMethods();
 
         $ugroup_binding = \Mockery::spy(\UGroupBinding::class);
         $ugroup_binding->shouldReceive('updateBindedUGroups')->andReturns(true);
         $ugroup_binding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
-        $ugroup_binding->shouldReceive('getUGroupsByBindingSource')->andReturns(array());
+        $ugroup_binding->shouldReceive('getUGroupsByBindingSource')->andReturns([]);
 
         $this->system_event->shouldReceive('getUgroupBinding')->andReturns($ugroup_binding);
 
@@ -86,11 +86,11 @@ class SystemEvent_UGROUP_MODIFYRenameTest extends TestCase
         $this->event_manager->shouldReceive('processEvent')
             ->with(
                 Event::UGROUP_RENAME,
-                array(
+                [
                     'project'         => $this->project,
                     'new_ugroup_name' => 'Amleth',
                     'old_ugroup_name' => 'Hamlet'
-                )
+                ]
             )
             ->once();
 

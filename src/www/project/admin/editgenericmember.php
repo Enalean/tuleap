@@ -32,7 +32,7 @@ if (! $request->valid($valid_groupid)) {
 $group_id = $request->get('group_id');
 
 //must be a project admin
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 $user_manager         = UserManager::instance();
 $generic_user_factory = new GenericUserFactory($user_manager, ProjectManager::instance(), new GenericUserDao());
@@ -64,11 +64,11 @@ if ($request->get('update_generic_user')) {
 $hp    = Codendi_HTMLPurifier::instance();
 $title = $Language->getText('project_admin', 'generic_member_settings');
 project_admin_header(
-    array(
+    [
         'title' => $title,
         'group' => $group_id,
         'help'  => 'project-admin.html'
-    ),
+    ],
     'members'
 );
 
@@ -97,4 +97,4 @@ echo '<input type="hidden" name="group_id" value="' . (int) $group_id . '" />
      <input type="submit" name="update_generic_user" value="' . $Language->getText('global', 'btn_submit') . '" />
 </form>';
 
-project_admin_footer(array());
+project_admin_footer([]);

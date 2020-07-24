@@ -32,11 +32,11 @@ function exit_wiki_empty()
     $go = $pm->getProject($group_id);
     $uname = $go->getUnixName();
 
-    $HTML->header(array('title' => $GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')));
+    $HTML->header(['title' => $GLOBALS['Language']->getText('wiki_views_wikiviews', 'title_error')]);
 
-    print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_activate', array($uname));
+    print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_activate', [$uname]);
 
-    $HTML->footer(array());
+    $HTML->footer([]);
     exit;
 }
 
@@ -81,7 +81,7 @@ function hide_url($svc, $db_item_id, $defaultHide = false, $hide = null)
         $hide_now = false;
     }
 
-    return array($hide_now, $hide_url, $hide_img);
+    return [$hide_now, $hide_url, $hide_img];
 }
 
 function wiki_display_header()
@@ -159,16 +159,16 @@ class WikiViews extends Views
 
         $eM = EventManager::instance();
         $referenced = false;
-        $eM->processEvent('isWikiPageReferenced', array(
+        $eM->processEvent('isWikiPageReferenced', [
                           'referenced' => &$referenced,
                           'wiki_page'  => $pagename,
                           'group_id' => $this->gid
-                        ));
+                        ]);
         if ($referenced) {
             $label = '';
-            $eM->processEvent('getPermsLabelForWiki', array(
+            $eM->processEvent('getPermsLabelForWiki', [
                               'label'  => &$label
-                            ));
+                            ]);
             print '<p align="center"><br><b>' . $label . '</b></p>';
         } else {
             print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'set_perm_title');
@@ -176,7 +176,7 @@ class WikiViews extends Views
                 print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'empty_page');
             } else {
                 $purifier = Codendi_HTMLPurifier::instance();
-                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', array($purifier->purify($pagename)));
+                print $GLOBALS['Language']->getText('wiki_views_wikiviews', 'not_empty_page', [$purifier->purify($pagename)]);
                 permission_display_selection_form("WIKIPAGE_READ", $wp->getId(), $this->gid, $postUrl);
             }
         }

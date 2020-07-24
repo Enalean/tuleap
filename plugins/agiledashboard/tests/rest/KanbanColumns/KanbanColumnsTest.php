@@ -31,7 +31,7 @@ class KanbanColumnsTest extends TestBase
     public function testOPTIONSKanbanColumns()
     {
         $response = $this->getResponse($this->client->options('kanban_columns'));
-        $this->assertEquals(array('OPTIONS', 'PATCH', 'DELETE'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'PATCH', 'DELETE'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSKanbanColumnsWithRESTReadOnlyUser()
@@ -51,10 +51,10 @@ class KanbanColumnsTest extends TestBase
         $response = $this->getResponse($this->client->patch(
             $url,
             null,
-            json_encode(array(
+            json_encode([
                 "wip_limit" => 200,
                 "label"     => "yummy"
-            ))
+            ])
         ));
 
         $this->assertEquals($response->getStatusCode(), 200);
@@ -74,10 +74,10 @@ class KanbanColumnsTest extends TestBase
             $this->client->patch(
                 $url,
                 null,
-                json_encode(array(
+                json_encode([
                     "wip_limit" => 200,
                     "label"     => "yummy"
-                ))
+                ])
             ),
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );

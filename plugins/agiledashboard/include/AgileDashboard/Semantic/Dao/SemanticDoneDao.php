@@ -87,7 +87,7 @@ class SemanticDoneDao extends DataAccessObject
     {
         $tracker_id = $this->da->escapeInt($tracker_id);
 
-        $values = array();
+        $values = [];
         foreach ($selected_values as $value_id) {
             $value_id = $this->da->escapeInt($value_id);
             $values[] = "($tracker_id, $value_id)";

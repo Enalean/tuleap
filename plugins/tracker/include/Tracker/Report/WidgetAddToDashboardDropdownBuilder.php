@@ -83,16 +83,16 @@ class WidgetAddToDashboardDropdownBuilder
         $type
     ) {
         return '/widgets/?' . http_build_query(
-            array(
+            [
                 'dashboard-type'      => $type,
                 'action'              => 'add-widget',
-                'renderer'            => array(
+                'renderer'            => [
                     'title'       => $renderer->name . ' for ' . $renderer->report->name,
                     'renderer_id' => $renderer->id
-                ),
+                ],
                 'widget-name'         => $widget_id,
                 $csrf->getTokenName() => $csrf->getToken()
-            )
+            ]
         );
     }
 

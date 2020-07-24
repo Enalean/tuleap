@@ -73,11 +73,11 @@ class Docman_Log
 
     public function logsDaily($params)
     {
-        $params['logs'][] = array(
+        $params['logs'][] = [
             'sql'   => $this->dao->getSqlStatementForLogsDaily($params['group_id'], $params['logs_cond']),
             'field' => dgettext('tuleap-docman', 'Documents'),
             'title' => dgettext('tuleap-docman', 'Document Access')
-        );
+        ];
     }
 
     public $dao;
@@ -105,7 +105,7 @@ class Docman_Log
         $dar = $this->dao->searchByItemIdOrderByTimestamp($item_id);
         if ($dar && ! $dar->isError()) {
             if ($dar->valid()) {
-                $titles = array();
+                $titles = [];
                 $titles[] = dgettext('tuleap-docman', 'When');
                 $titles[] = dgettext('tuleap-docman', 'Who');
                 $titles[] = dgettext('tuleap-docman', 'What');
@@ -113,7 +113,7 @@ class Docman_Log
                 $titles[] = dgettext('tuleap-docman', 'New Value');
                 $html .= html_build_list_table_top($titles, false, false, false, null, "table");
 
-                $odd_even = array('boxitem', 'boxitemalt');
+                $odd_even = ['boxitem', 'boxitemalt'];
                 $i = 0;
                 $_previous_date = -1;
                 $_previous_auth = -1;

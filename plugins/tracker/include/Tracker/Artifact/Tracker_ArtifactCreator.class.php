@@ -276,13 +276,13 @@ class Tracker_ArtifactCreator //phpcs:ignore
     private function getBareArtifact(Tracker $tracker, $submitted_on, $submitted_by, $artifact_id)
     {
         $artifact = $this->artifact_factory->getInstanceFromRow(
-            array(
+            [
                 'id'                       => $artifact_id,
                 'tracker_id'               => $tracker->id,
                 'submitted_by'             => $submitted_by,
                 'submitted_on'             => $submitted_on,
                 'use_artifact_permissions' => 0,
-            )
+            ]
         );
 
         $artifact->setTracker($tracker);

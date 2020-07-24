@@ -29,7 +29,7 @@ class PermissionPerGroupSVNGlobalAdminPermissionCollection
 
     public function __construct()
     {
-        $this->permissions = array();
+        $this->permissions = [];
     }
 
     /**

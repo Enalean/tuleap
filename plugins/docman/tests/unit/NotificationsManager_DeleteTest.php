@@ -37,12 +37,12 @@ class NotificationsManager_DeleteTest extends TestCase
      */
     public function testStoreEventsDoNotOverrideUsers()
     {
-        $listeningUsers = new ArrayIterator(array(array('user_id' => 1,
-                                                        'item_id' => 1),
-                                                  array('user_id' => 2,
-                                                        'item_id' => 1),
-                                                  array('user_id' => 3,
-                                                        'item_id' => 1)));
+        $listeningUsers = new ArrayIterator([['user_id' => 1,
+                                                        'item_id' => 1],
+                                                  ['user_id' => 2,
+                                                        'item_id' => 1],
+                                                  ['user_id' => 3,
+                                                        'item_id' => 1]]);
 
         $user1 = \Mockery::spy(\PFUser::class);
         $user1->shouldReceive('getId')->andReturns(1);
@@ -61,7 +61,7 @@ class NotificationsManager_DeleteTest extends TestCase
 
         $item = \Mockery::spy(\Docman_Item::class);
         $item->shouldReceive('getId')->andReturns(1);
-        $params = array('item' => $item);
+        $params = ['item' => $item];
 
         $project                   = \Mockery::spy(\Project::class, ['getID' => 101, 'getUnixName' => false, 'isPublic' => false]);
         $feedback                  = \Mockery::spy(\Feedback::class);
@@ -89,7 +89,7 @@ class NotificationsManager_DeleteTest extends TestCase
         $notifications_manager->shouldReceive('_getUserManager')->andReturns($um);
         $notifications_manager->shouldReceive('_getPermissionsManager')->andReturns($dpm);
         $notifications_manager->shouldReceive('getUrlProvider')->andReturns($link_url_provider);
-        $notifications_manager->_listeners = array();
+        $notifications_manager->_listeners = [];
 
         $notifications_manager->_storeEvents(1, 'removed', $params);
 

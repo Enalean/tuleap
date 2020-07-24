@@ -56,7 +56,7 @@ class NewsRetriever
     public function getWaitingPublicationNews()
     {
         $result          = $this->dao->getWaitingPublicationNews();
-        $filtered_result = array();
+        $filtered_result = [];
 
         foreach ($result as $row) {
             $forum_id = $row['forum_id'];

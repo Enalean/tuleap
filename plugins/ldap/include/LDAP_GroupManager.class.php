@@ -226,9 +226,9 @@ abstract class LDAP_GroupManager
             $ldapGroupMembers = $this->getLdapGroupMembersIds($this->groupDn);
             $ugroup_members   = $this->getDbGroupMembersIds($this->id);
 
-            $this->usersToAdd       = array();
-            $this->usersToRemove    = array();
-            $this->usersNotImpacted = array();
+            $this->usersToAdd       = [];
+            $this->usersToRemove    = [];
+            $this->usersNotImpacted = [];
 
             foreach ($ugroup_members as $userId) {
                 if (! isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
@@ -299,10 +299,10 @@ abstract class LDAP_GroupManager
      */
     public function getLdapGroupMembers($group_dn)
     {
-        $ldap_ids          = array();
+        $ldap_ids          = [];
         $group_definition = $this->ldap->searchGroupMembers($group_dn);
         if (! $group_definition) {
-            return array();
+            return [];
         }
         if ($this->canUseObjectClassToDistinguishUsersAndGroups()) {
             $this->getUserIdsWithObjectClass($group_definition, $ldap_ids);
@@ -348,12 +348,12 @@ abstract class LDAP_GroupManager
 
     private function getObjectClassesForDn($member_dn)
     {
-        $object_class_results_iterator = $this->ldap->searchDn($member_dn, array('objectClass'));
+        $object_class_results_iterator = $this->ldap->searchDn($member_dn, ['objectClass']);
         if ($object_class_results_iterator) {
             $object_classes = $object_class_results_iterator->get(0)->getAll('objectclass');
             return array_map('strtolower', $object_classes);
         }
-        return array();
+        return [];
     }
 
     private function getUserIdsWithGroupDnPatternMatching(LDAPResultIterator $group_definition, array &$ldap_ids)
@@ -390,12 +390,12 @@ abstract class LDAP_GroupManager
 
     private function getLdapEntryForUser($member_dn)
     {
-        $attributes = array(
+        $attributes = [
             $this->ldap->getLDAPParam('eduid'),
             $this->ldap->getLDAPParam('cn'),
             $this->ldap->getLDAPParam('uid'),
             $this->ldap->getLDAPParam('mail')
-        );
+        ];
         $ldap_user_result_iterator = $this->ldap->searchDn($member_dn, $attributes);
         if ($ldap_user_result_iterator && $ldap_user_result_iterator->count() === 1) {
             return $ldap_user_result_iterator->current();

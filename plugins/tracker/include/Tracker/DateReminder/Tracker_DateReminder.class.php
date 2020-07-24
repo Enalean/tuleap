@@ -245,7 +245,7 @@ class Tracker_DateReminder
      */
     public function getRecipients(Tracker_Artifact $artifact)
     {
-        $recipients    = array();
+        $recipients    = [];
         $ugroups       = $this->getUgroups(true);
         $roles         = $this->getRoles();
         if (! empty($ugroups)) {
@@ -266,7 +266,7 @@ class Tracker_DateReminder
      */
     private function getRecipientsFromUgroups()
     {
-        $recipients = array();
+        $recipients = [];
         $uGroupManager = new UGroupManager();
         $ugroups       = $this->getUgroups(true);
         foreach ($ugroups as $ugroupId) {
@@ -296,7 +296,7 @@ class Tracker_DateReminder
      */
     private function getRecipientsFromRoles(Tracker_Artifact $artifact)
     {
-        $recipients = array();
+        $recipients = [];
         $roles      = $this->getRoles();
         foreach ($roles as $userRole) {
             $recipients = array_merge($recipients, $userRole->getRecipientsFromArtifact($artifact));

@@ -148,14 +148,14 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
         $this->assertEquals(
-            array(
+            [
                 112,
                 112,
                 IMAGETYPE_PNG,
                 'width="112" height="112"',
                 'bits' => 8,
                 'mime' => 'image/png'
-            ),
+            ],
             getimagesize($file_info_1->getThumbnailPath())
         );
     }
@@ -174,7 +174,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
         $this->assertEquals(
-            array(
+            [
                 112,
                 112,
                 IMAGETYPE_GIF,
@@ -182,7 +182,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
                 'bits' => 6,
                 'channels' => 3,
                 'mime' => 'image/gif'
-            ),
+            ],
             getimagesize($file_info_1->getThumbnailPath())
         );
     }
@@ -201,7 +201,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
 
         $this->assertFileExists($file_info_1->getThumbnailPath());
         $this->assertEquals(
-            array(
+            [
                 112,
                 112,
                 IMAGETYPE_JPEG,
@@ -209,7 +209,7 @@ final class Tracker_FileInfoTest extends \PHPUnit\Framework\TestCase
                 'bits' => 8,
                 'channels' => 3,
                 'mime' => 'image/jpeg'
-            ),
+            ],
             getimagesize($file_info_1->getThumbnailPath())
         );
     }

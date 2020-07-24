@@ -50,7 +50,7 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
 
     public function testRendersForkRepositoriesView(): void
     {
-        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $request = new Codendi_Request(['choose_destination' => 'personal']);
 
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setRequest($request);
@@ -75,12 +75,12 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
     {
         $groupId = 101;
         $repo = new GitRepository();
-        $repos = array($repo);
+        $repos = [$repo];
         $user = new PFUser();
         $user->setId(42);
         $user->setUserName('Ben');
         $path = PathJoinUtil::userRepoPath('Ben', 'toto');
-        $forkPermissions = array();
+        $forkPermissions = [];
 
         $project = Mockery::mock(Project::class);
         $project->shouldReceive('getID')->andReturns($groupId);
@@ -95,12 +95,12 @@ final class GitForkRepositoriesTest extends \PHPUnit\Framework\TestCase
         $git = \Mockery::mock(\Git::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $git->setProject($project);
         $git->setProjectManager($projectManager);
-        $git->shouldReceive('addAction')->with('getProjectRepositoryList', array($groupId))->ordered();
-        $git->shouldReceive('addAction')->with('fork', array($repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions))->ordered();
-        $request = new Codendi_Request(array(
+        $git->shouldReceive('addAction')->with('getProjectRepositoryList', [$groupId])->ordered();
+        $git->shouldReceive('addAction')->with('fork', [$repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions])->ordered();
+        $request = new Codendi_Request([
             'repos' => '1001',
             'path'  => 'toto',
-            'repo_access' => $forkPermissions));
+            'repo_access' => $forkPermissions]);
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }

@@ -48,7 +48,7 @@ class Docman_ProjectItemsBatchIterator
      */
     public function current()
     {
-        $offset = max(array(self::ITEMS_PER_BATCH * $this->batches_processed, 0));
+        $offset = max([self::ITEMS_PER_BATCH * $this->batches_processed, 0]);
         $limit  = self::ITEMS_PER_BATCH;
 
         return $this->item_factory->searchPaginatedWithVersionByGroupId($limit, $offset);

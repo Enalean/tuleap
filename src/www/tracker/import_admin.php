@@ -18,7 +18,7 @@ if ($group_id && $mode == "admin") {
     $hp = Codendi_HTMLPurifier::instance();
   //   the welcome screen when entering the import facility from admin page
 
-    session_require(array('group' => $group_id,'admin_flags' => 'A'));
+    session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
   //  get the Group object
     $pm = ProjectManager::instance();
@@ -36,10 +36,10 @@ if ($group_id && $mode == "admin") {
 
 
     project_admin_header(
-        array(
+        [
           'title' => $pg_title,
           'help' => 'tracker.html#tracker-artifact-import',
-        ),
+        ],
         \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
     );
 
@@ -47,7 +47,7 @@ if ($group_id && $mode == "admin") {
     $project = $pm->getProject($group_id);
     if (! $project->usesTracker()) {
         echo '<P> ' . $Language->getText('tracker_import_admin', 'disabled');
-        project_admin_footer(array());
+        project_admin_footer([]);
     } else {
     // Display the welcome screen
         echo $Language->getText('tracker_import_admin', 'welcome');
@@ -84,7 +84,7 @@ if ($group_id && $mode == "admin") {
         }
 
         echo '</TABLE>';
-        project_admin_footer(array());
+        project_admin_footer([]);
     }
 } else {
     exit_missing_param();

@@ -27,7 +27,7 @@ use Psr\Log\LogLevel;
 class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInterface
 {
     /** @var string[] */
-    private $log_stack = array();
+    private $log_stack = [];
 
     public function __construct()
     {
@@ -57,7 +57,7 @@ class Tracker_Migration_MailLogger extends \Psr\Log\AbstractLogger implements \P
     {
         $hp          = Codendi_HTMLPurifier::instance();
         $mail        = new Codendi_Mail();
-        $breadcrumbs = array();
+        $breadcrumbs = [];
 
         $breadcrumbs[] = '<a href="' . HTTPRequest::instance()->getServerUrl() . '/projects/' . $project->getUnixName(true) . '" />' . $hp->purify($project->getPublicName()) . '</a>';
 

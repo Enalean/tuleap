@@ -26,7 +26,7 @@ class Templating_Presenter_ButtonDropdownsOption
     private $selected;
     protected $label;
     protected $id;
-    protected $li_parameters = array();
+    protected $li_parameters = [];
 
     public function __construct($id, $label, $selected, $url)
     {
@@ -38,10 +38,10 @@ class Templating_Presenter_ButtonDropdownsOption
 
     public function addLiParameter($parameter, $value)
     {
-        $this->li_parameters[] = array(
+        $this->li_parameters[] = [
             'parameter' => $parameter,
             'value'     => $value,
-        );
+        ];
         return $this;
     }
 

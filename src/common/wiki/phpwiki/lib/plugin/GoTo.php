@@ -26,7 +26,7 @@ class WikiPlugin_GoTo extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array('size' => 32);
+        return ['size' => 32];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -42,7 +42,7 @@ class WikiPlugin_GoTo extends WikiPlugin
             if ($dbi->isWikiPage($target)) {
                 $url = WikiURL($target, 0, 1);
             } else {
-                $url = WikiURL($target, array('action' => 'edit'), 1);
+                $url = WikiURL($target, ['action' => 'edit'], 1);
             }
 
             $request->redirect($url);
@@ -51,15 +51,15 @@ class WikiPlugin_GoTo extends WikiPlugin
         }
 
         $action = $request->getURLtoSelf();
-        $form = HTML::form(array('action' => $action,
+        $form = HTML::form(['action' => $action,
                                  'method' => 'post'
-                          ));
+                          ]);
 
         $form->pushContent(HiddenInputs($request->getArgs()));
 
-        $textfield = HTML::input(array('type' => 'text',
+        $textfield = HTML::input(['type' => 'text',
                                        'size' => $size,
-                                       'name' => 'goto[target]'));
+                                       'name' => 'goto[target]']);
 
         $button = Button('submit:goto[go]', _("Go"), false);
 

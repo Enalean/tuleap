@@ -80,7 +80,7 @@ if ($request->get('only_displayed_fields') == 'on') {
 //$sql = $export_select." ".$export_from." ".$export_where." AND a.artifact_id IN ($export_aids) group by a.artifact_id";
 
 if ($multiple_queries) {
-    $all_results = array();
+    $all_results = [];
     foreach ($all_queries as $q) {
         $result = db_query($q);
         $all_results[] = $result;
@@ -104,7 +104,7 @@ if ($result && $rows > 0) {
     echo build_csv_header($col_list, $lbl_list) . $eol;
 
     if ($multiple_queries) {
-        $multiarr = array();
+        $multiarr = [];
         for ($i = 0; $i < $rows; $i++) {
             foreach ($all_results as $result) {
                 $multiarr = array_merge($multiarr, db_fetch_array($result));
@@ -141,5 +141,5 @@ if ($result && $rows > 0) {
         echo '<P>' . $Language->getText('project_export_artifact_export', 'db_access_err', ForgeConfig::get('sys_name'));
         echo '<br>' . db_error();
     }
-    site_project_footer(array());
+    site_project_footer([]);
 }

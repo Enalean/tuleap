@@ -85,7 +85,7 @@ class ArtifactsFoldersPlugin extends PluginWithLegacyInternalRouting // phpcs:ig
      */
     public function getDependencies()
     {
-        return array('tracker');
+        return ['tracker'];
     }
 
     /**

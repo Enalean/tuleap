@@ -73,10 +73,10 @@ class ListFieldCheckerWithBindStaticTest extends TestCase
         $value_100 = new Tracker_FormElement_Field_List_Bind_StaticValue(100, 'a', null, null, null);
         $value_101 = new Tracker_FormElement_Field_List_Bind_StaticValue(101, 'b', null, null, null);
 
-        $list_values = array(
+        $list_values = [
             100 => $value_100,
             101 => $value_101
-        );
+        ];
 
         $this->bind->shouldReceive('getAllValues')->andReturns($list_values);
     }

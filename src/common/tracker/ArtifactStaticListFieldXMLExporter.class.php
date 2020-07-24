@@ -38,10 +38,10 @@ class ArtifactStaticListFieldXMLExporter extends ArtifactAlphaNumFieldXMLExporte
     {
         parent::__construct($node_helper);
         $this->dao = $dao;
-        $this->artifact_field_value_not_accurate = array(
+        $this->artifact_field_value_not_accurate = [
             self::SPECIAL_SEVERITY => true,
             self::SPECIAL_STATUS   => true,
-        );
+        ];
     }
 
     public function appendNode(DOMElement $changeset_node, $tracker_id, $artifact_id, array $row)

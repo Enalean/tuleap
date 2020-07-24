@@ -39,25 +39,25 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Fram
         $mapping_ongoing = new Cardwall_OnTop_Config_ValueMapping($value_inprogress, 11);
         $mapping_done    = new Cardwall_OnTop_Config_ValueMapping($value_done, 12);
 
-        $this->value_mappings = array(
+        $this->value_mappings = [
             100 => $mapping_none,
             101 => $mapping_todo,
             102 => $mapping_ongoing,
             103 => $mapping_done,
-        );
+        ];
     }
 
     public function testItReturnsAnEmptyLabelWhenThereIsNoValueMapping(): void
     {
-        $value_mappings = array();
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $value_mappings = [];
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
         $column = new Cardwall_Column(0, 'whatever', 'white');
         $this->assertEquals('', $mapping->getSelectedValueLabel($column));
     }
 
     public function testItReturnsAnEmptyLabelWhenThereIsNoMappingForTheGivenColumn(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
         $column_which_match      = new Cardwall_Column(11, 'Ongoing', 'white');
         $column_which_dont_match = new Cardwall_Column(13, 'Ship It', 'white');
         $this->assertEquals('In Progress', $mapping->getSelectedValueLabel($column_which_match));
@@ -67,7 +67,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Fram
 
     public function testItIsMappedToAColumnWhenTheStatusValueMatchColumnMapping(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column = new Cardwall_Column(11, 'Ongoing', '');
 
@@ -79,7 +79,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Fram
 
     public function testItIsMappedToAColumnWhenStatusIsNullAndNoneIsMappedToColumn(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column = new Cardwall_Column(10, 'Todo', '');
 
@@ -90,7 +90,7 @@ final class Cardwall_OnTop_Config_TrackerMappingStatusTest extends \PHPUnit\Fram
 
     public function testItDoesntMapOnNoneIfItsNotExplicitlyConfigured(): void
     {
-        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), array(), $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
+        $mapping = new Cardwall_OnTop_Config_TrackerMappingStatus(\Mockery::spy(\Tracker::class), [], $this->value_mappings, Mockery::mock(Tracker_FormElement_Field_Selectbox::class));
 
         $column  = new Cardwall_Column(100, 'None', '');
 

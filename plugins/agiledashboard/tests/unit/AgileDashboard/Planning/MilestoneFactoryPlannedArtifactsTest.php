@@ -46,11 +46,11 @@ final class MilestoneFactoryPlannedArtifactsTest extends TestCase
 
         $depth1_artifact  = Mockery::mock(Tracker_Artifact::class);
         $depth1_artifact->shouldReceive('getId')->andReturn(1);
-        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn(array($depth2_artifact));
+        $depth1_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth2_artifact]);
 
         $root_artifact    = Mockery::mock(Tracker_Artifact::class);
         $root_artifact->shouldReceive('getId')->andReturn(100);
-        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn(array($depth1_artifact));
+        $root_artifact->shouldReceive('getUniqueLinkedArtifacts')->andReturn([$depth1_artifact]);
 
         $factory = new Planning_MilestoneFactory(
             Mockery::spy(\PlanningFactory::class),

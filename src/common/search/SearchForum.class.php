@@ -59,7 +59,7 @@ class Search_SearchForum
 
     private function getResultsPresenters(LegacyDataAccessResultInterface $results)
     {
-        $results_presenters = array();
+        $results_presenters = [];
 
         foreach ($results as $result) {
             $results_presenters[] = new Search_SearchForumResultPresenter($result);

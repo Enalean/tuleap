@@ -53,15 +53,15 @@ class WikiPlugin_CreateBib extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array( 'pagename'  => '[pagename]', // The page from which the BibTex file is generated
-                      );
+        return [ 'pagename'  => '[pagename]', // The page from which the BibTex file is generated
+                      ];
     }
 
     public function preg_quote($heading)
     {
         return str_replace(
-            array("/",".","?","*"),
-            array('\/','\.','\?','\*'),
+            ["/", ".", "?", "*"],
+            ['\/', '\.', '\?', '\*'],
             $heading
         );
     }
@@ -70,7 +70,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     // Have to include the $starttag and $endtag to the regexps...
     public function extractBibTeX(&$content, $starttag, $endtag)
     {
-        $bib = array();
+        $bib = [];
 
         $start = false;
         $stop = false;
@@ -95,7 +95,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
     // Assume straight list
     public function extractArticles(&$content)
     {
-        $articles = array();
+        $articles = [];
         for ($i = 0; $i < count($content); $i++) {
             // Should match "* [WikiPageName] whatever"
             //if (preg_match('/^\s*\*\s+(\[.+\])/',$content[$i],$match))
@@ -112,7 +112,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         include_once("lib/loadsave.php");
         $mailified = MailifyPage($thispage);
 
-        $attrib = array('mtime' => $thispage->get('mtime'), 'is_ascii' => 1);
+        $attrib = ['mtime' => $thispage->get('mtime'), 'is_ascii' => 1];
 
         $zip = new ZipWriter("Created by PhpWiki " . PHPWIKI_VERSION, $filename);
         $zip->addRegularFile(
@@ -141,7 +141,7 @@ class WikiPlugin_CreateBib extends WikiPlugin
         $content = $current->getContent();
 
     // Prepare the button to trigger dumping
-        $dump_url = $request->getURLtoSelf(array("file" => "tube.bib"));
+        $dump_url = $request->getURLtoSelf(["file" => "tube.bib"]);
         global $WikiTheme;
         $dump_button = $WikiTheme->makeButton(
             "To File",
@@ -149,10 +149,10 @@ class WikiPlugin_CreateBib extends WikiPlugin
             'foo'
         );
 
-        $html = HTML::div(array('class' => 'bib','align' => 'left'));
+        $html = HTML::div(['class' => 'bib', 'align' => 'left']);
         $html->pushContent($dump_button, ' ');
-        $list = HTML::pre(array('name' => 'biblist','id' => 'biblist',
-        'class' => 'bib'));
+        $list = HTML::pre(['name' => 'biblist','id' => 'biblist',
+        'class' => 'bib']);
 
         // Let's find the subpages
         if ($articles = $this->extractArticles($content)) {

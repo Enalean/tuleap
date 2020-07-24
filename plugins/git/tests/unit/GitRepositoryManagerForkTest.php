@@ -72,7 +72,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->git_system_event_manager = \Mockery::spy(\Git_SystemEventManager::class);
         $this->backup_directory         = vfsStream::setup()->url();
         $this->mirror_updater           = \Mockery::spy(\GitRepositoryMirrorUpdater::class);
-        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class)->shouldReceive('fetchAllRepositoryMirrors')->andReturns(array())->getMock();
+        $this->mirror_data_mapper       = \Mockery::spy(\Git_Mirror_MirrorDataMapper::class)->shouldReceive('fetchAllRepositoryMirrors')->andReturns([])->getMock();
 
         $this->event_manager = \Mockery::spy(EventManager::class);
 
@@ -82,7 +82,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
         $this->manager = \Mockery::mock(
             \GitRepositoryManager::class,
-            array(
+            [
                 Mockery::mock('GitRepositoryFactory'),
                 $this->git_system_event_manager,
                 Mockery::mock(GitDao::class),
@@ -93,12 +93,12 @@ class GitRepositoryManagerForkTest extends TestCase
                 $this->project_history_dao,
                 $this->history_value_formatter,
                 $this->event_manager
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $this->forkPermissions = array();
+        $this->forkPermissions = [];
     }
 
     protected function tearDown(): void
@@ -207,13 +207,13 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
         $this->backend->shouldReceive('fork')->once();
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null, $this->forkPermissions);
+        $this->manager->forkRepositories([$this->repository], $this->project, $this->user, $path, null, $this->forkPermissions);
     }
 
     public function testClonesManyInternalRepositories(): void
     {
         $namespace  = 'toto';
-        $repo_ids = array('1', '2', '3');
+        $repo_ids = ['1', '2', '3'];
 
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
 
@@ -221,7 +221,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->shouldReceive('formatValueForRepository');
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
-        $repos = array();
+        $repos = [];
         foreach ($repo_ids as $id) {
             $repo = Mockery::mock(GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $repo->shouldReceive('getId')->andReturns($id);
@@ -247,8 +247,8 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->shouldReceive('formatValueForRepository');
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
-        $repo_ids = array('1', '2', '3');
-        $repos = array();
+        $repo_ids = ['1', '2', '3'];
+        $repos = [];
         foreach ($repo_ids as $id) {
             $repo = Mockery::mock(GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $repo->shouldReceive('getId')->andReturns($id);
@@ -265,7 +265,7 @@ class GitRepositoryManagerForkTest extends TestCase
     public function testWhenNoRepositorySelectedItAddsWarning(): void
     {
         $this->expectException(Exception::class);
-        $this->manager->forkRepositories(array(), $this->project, $this->user, '', null, $this->forkPermissions);
+        $this->manager->forkRepositories([], $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     public function testClonesOneRepository(): void
@@ -280,12 +280,12 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
         $this->backend->shouldReceive('fork')->once();
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, '', null, $this->forkPermissions);
+        $this->manager->forkRepositories([$this->repository], $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     public function testDoesntCloneUnreadableRepos(): void
     {
-        $repos = $this->getRepoCollectionUnreadableFor(array('1', '2', '3'), $this->user);
+        $repos = $this->getRepoCollectionUnreadableFor(['1', '2', '3'], $this->user);
         $to_project = \Mockery::spy(\Project::class)->shouldReceive('getId')->andReturns(2)->getMock();
 
         $this->manager->shouldReceive('isRepositoryNameAlreadyUsed')->andReturns(false);
@@ -300,7 +300,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
     protected function getRepoCollectionUnreadableFor($repo_ids, $user)
     {
-        $return = array();
+        $return = [];
         foreach ($repo_ids as $id) {
             $repo = Mockery::mock(GitRepository::class)->makePartial()->shouldAllowMockingProtectedMethods();
             $repo->shouldReceive('getId')->andReturns($id);
@@ -329,7 +329,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->repository->setId($repo_id);
         $this->repository->shouldReceive('userCanRead')->with($this->user)->andReturns(true);
 
-        $repos = array($this->repository);
+        $repos = [$this->repository];
 
         $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
@@ -346,7 +346,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->history_value_formatter->shouldReceive('formatValueForRepository');
         $this->project_history_dao->shouldReceive('groupAddHistory');
 
-        $this->manager->forkRepositories(array($repo, null), $this->project, $this->user, null, null, $this->forkPermissions);
+        $this->manager->forkRepositories([$repo, null], $this->project, $this->user, null, null, $this->forkPermissions);
     }
 
     public function testForkShouldIgnoreAlreadyExistingRepository(): void
@@ -361,7 +361,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->backend->shouldReceive('fork')->andThrow(new GitRepositoryAlreadyExistsException(''))->once();
         $this->backend->shouldReceive('fork')->andReturn(667)->once();
 
-        $this->forkRepositories(array($repo1, $repo2));
+        $this->forkRepositories([$repo1, $repo2]);
     }
 
     public function testForkShouldTellTheUserIfTheRepositoryAlreadyExists(): void
@@ -376,7 +376,7 @@ class GitRepositoryManagerForkTest extends TestCase
         $this->backend->shouldReceive('fork')->andReturn(667)->once();
         $this->backend->shouldReceive('fork')->andThrow(new GitRepositoryAlreadyExistsException($repo2->getName()))->once();
 
-        $this->forkRepositories(array($repo1, $repo2));
+        $this->forkRepositories([$repo1, $repo2]);
     }
 
     public function testForkGiveInformationAboutUnexpectedErrors(): void
@@ -394,7 +394,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
         $repo1 = $this->givenARepository(123);
 
-        $this->forkRepositories(array($repo1, $repo2));
+        $this->forkRepositories([$repo1, $repo2]);
     }
 
     public function testForkAssertNamespaceIsValid(): void
@@ -404,7 +404,7 @@ class GitRepositoryManagerForkTest extends TestCase
 
         $this->expectException(Exception::class);
 
-        $this->forkRepositories(array($this->repository), '^toto/pouet');
+        $this->forkRepositories([$this->repository], '^toto/pouet');
     }
 
     private function givenARepository($id)

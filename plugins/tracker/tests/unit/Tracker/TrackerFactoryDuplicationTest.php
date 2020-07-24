@@ -52,12 +52,12 @@ class TrackerFactoryDuplicationTest extends TestCase
         $t1->shouldReceive('getDescription')->andReturns('Bug Tracker');
         $t1->shouldReceive('getItemname')->andReturns('bug');
 
-        $trackers = array($t1);
+        $trackers = [$t1];
         $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
 
         $t_new = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(555)->getMock();
 
-        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
+        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->hierarchy_factory->shouldReceive('duplicate')->once();
 
@@ -106,7 +106,7 @@ class TrackerFactoryDuplicationTest extends TestCase
         $t1 = \Mockery::spy(\Tracker::class);
         $t1->shouldReceive('mustBeInstantiatedForNewProjects')->andReturns(false);
         $t1->shouldReceive('getId')->andReturns(5678);
-        $trackers = array($t1);
+        $trackers = [$t1];
         $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
 
         $this->tracker_factory->shouldReceive('create')->never();
@@ -130,12 +130,12 @@ class TrackerFactoryDuplicationTest extends TestCase
         $t1->shouldReceive('getDescription')->andReturns('Bug Tracker');
         $t1->shouldReceive('getItemname')->andReturns('bug');
 
-        $trackers = array($t1);
+        $trackers = [$t1];
         $this->tracker_factory->shouldReceive('getTrackersByGroupId')->with(100)->andReturns($trackers);
 
         $t_new = \Mockery::spy(\Tracker::class)->shouldReceive('getId')->andReturns(555)->getMock();
 
-        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(array('tracker' => $t_new, 'field_mapping' => array(), 'report_mapping' => array()));
+        $this->tracker_factory->shouldReceive('create')->with(999, 100, 1234, 'Bugs', 'Bug Tracker', 'bug', 'inca-silver', null)->once()->andReturns(['tracker' => $t_new, 'field_mapping' => [], 'report_mapping' => []]);
 
         $this->trigger_rules_manager->shouldReceive('duplicate')->once();
 

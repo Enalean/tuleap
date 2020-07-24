@@ -57,11 +57,11 @@ class MyWelcomeMessage extends Widget
         return $renderer->renderMarkdown(
             $this->user,
             $this->getFileNameForUser($this->user),
-            array(
+            [
                 'site_name'               => ForgeConfig::get('sys_name'),
                 'sys_long_org_name'       => ForgeConfig::get('sys_long_org_name'),
                 'site_name_is_not_tuleap' => ! $this->isSiteNameTuleap(),
-            )
+            ]
         );
     }
 

@@ -55,34 +55,34 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
 
         $this->user_account_manager  = \Mockery::mock(
             \Git_Driver_Gerrit_UserAccountManager::class,
-            array($this->gerrit_driver_factory, $this->remote_gerrit_factory)
+            [$this->gerrit_driver_factory, $this->remote_gerrit_factory]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
         $this->user_account_manager->shouldReceive('getGerritUser')->andReturns($this->gerrit_user);
 
-        $this->original_keys = array(
+        $this->original_keys = [
             'Im a key',
             'Im a key',
             'Im another key',
             'Im an identical key',
             'Im an additional key',
-        );
+        ];
 
-        $this->new_keys = array(
+        $this->new_keys = [
             'Im a new key',
             'Im another new key',
             'Im another new key',
             'Im an identical key',
-        );
+        ];
 
         $this->remote_server1 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
         $this->remote_server2 = \Mockery::spy(\Git_RemoteServer_GerritServer::class);
 
         $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')
             ->with($this->user)
-            ->andReturns(array($this->remote_server1, $this->remote_server2));
+            ->andReturns([$this->remote_server1, $this->remote_server2]);
     }
 
     public function testItCallsRemoteServerFactory(): void
@@ -92,7 +92,7 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
 
     public function testItDoesntSynchroniseIfUserHasNoRemoteServers(): void
     {
-        $remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns(array())->getMock();
+        $remote_gerrit_factory = \Mockery::spy(\Git_RemoteServer_GerritServerFactory::class)->shouldReceive('getRemoteServersForUser')->with($this->user)->andReturns([])->getMock();
 
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->never();
         $this->gerrit_driver->shouldReceive('removeSSHKeyFromAccount')->never();
@@ -104,8 +104,8 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
 
     public function testItDoesntSynchroniseIfKeysAreTheSame(): void
     {
-        $original_keys = array();
-        $new_keys      = array();
+        $original_keys = [];
+        $new_keys      = [];
 
         $this->remote_gerrit_factory->shouldReceive('getRemoteServersForUser')->with($this->user)->never();
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->never();
@@ -116,16 +116,16 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends TestCa
 
     public function testItCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes(): void
     {
-        $added_keys = array(
+        $added_keys = [
             'Im a new key',
             'Im another new key',
-        );
+        ];
 
-        $removed_keys = array(
+        $removed_keys = [
             'Im a key',
             'Im another key',
             'Im an additional key',
-        );
+        ];
 
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server1, $this->user, $added_keys[1]);
         $this->gerrit_driver->shouldReceive('addSSHKeyToAccount')->with($this->remote_server2, $this->user, $added_keys[1]);

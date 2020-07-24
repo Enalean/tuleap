@@ -56,10 +56,10 @@ class ServiceFile extends Service
     {
         $hp   = Codendi_HTMLPurifier::instance();
         $user = UserManager::instance()->getCurrentUser();
-        $ret  = array(
+        $ret  = [
             'title' => $GLOBALS['Language']->getText('include_project_home', 'latest_file_releases'),
             'content' => ''
-        );
+        ];
 
         $packages = $this->_getPackagesForUser($user->getId());
         if (count($packages)) {
@@ -130,7 +130,7 @@ class ServiceFile extends Service
     public function _getPackagesForUser($user_id)
     {
         $frspf = $this->getFRSPackageFactory();
-        $packages = array();
+        $packages = [];
         $sql = "SELECT frs_package.package_id,frs_package.name AS package_name,frs_release.name AS release_name,frs_release.release_id AS release_id,frs_release.release_date AS release_date " .
         "FROM frs_package,frs_release " .
         "WHERE frs_package.package_id=frs_release.package_id " .
@@ -156,12 +156,12 @@ class ServiceFile extends Service
                             $authorized = permission_is_authorized('PACKAGE_READ', $package_id, $user_id, $this->getGroupId());
                         }
                         if ($authorized) {
-                            $packages[] = array(
+                            $packages[] = [
                                 'package_name' => db_result($res_files, $f, 'package_name'),
                                 'release_name' => db_result($res_files, $f, 'release_name'),
                                 'release_id'   => $release_id,
                                 'package_id'   => $package_id,
-                            );
+                            ];
                             $package_displayed[$package_id] = true;
                         }
                     }
@@ -179,21 +179,21 @@ class ServiceFile extends Service
 
         $user = UserManager::instance()->getCurrentUser();
         if ($this->getFrsPermissionManager()->isAdmin($project, $user)) {
-            $toolbar[]   = array(
+            $toolbar[]   = [
                 'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_admin'),
-                'url'   => '/file/admin/?' . http_build_query(array(
+                'url'   => '/file/admin/?' . http_build_query([
                         'group_id' => $project->getID(),
                         'action'   => 'edit-permissions'
-                    ))
-            );
+                    ])
+            ];
         }
 
-        $toolbar[] = array(
+        $toolbar[] = [
             'title' => $GLOBALS['Language']->getText('file_file_utils', 'toolbar_help'),
             'url'   => "javascript:help_window('/doc/" . $user->getShortLocale() . "/user-guide/documents-and-files/frs.html')"
-        );
+        ];
 
-        $breadcrumbs = array();
+        $breadcrumbs = [];
 
         $this->displayHeader($title, $breadcrumbs, $toolbar);
     }

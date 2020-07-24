@@ -62,17 +62,17 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
         return $content;
     }
 
-    public function visitFolder($item, $params = array())
+    public function visitFolder($item, $params = [])
     {
         return "";
     }
-    public function visitDocument($item, $params = array())
+    public function visitDocument($item, $params = [])
     {
         $content = '';
 
         $content .= $this->_updateHeader();
 
-        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), array('force_item' => $this->force, 'request' => $this->_controller->request));
+        $fields = $item->accept(new Docman_View_GetSpecificFieldsVisitor(), ['force_item' => $this->force, 'request' => $this->_controller->request]);
         $content .= '<table>';
         foreach ($fields as $field) {
             $content .= '<tr style="vertical-align:top;"><td><label>' . $field->getLabel() . '</label></td><td>' . $field->getField() . '</td></tr>';
@@ -83,24 +83,24 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         return $content;
     }
-    public function visitWiki($item, $params = array())
+    public function visitWiki($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitLink($item, $params = array())
+    public function visitLink($item, $params = [])
     {
         return $this->visitDocument($item, $params);
     }
-    public function visitFile($item, $params = array())
+    public function visitFile($item, $params = [])
     {
         return '';
     }
-    public function visitEmbeddedFile($item, $params = array())
+    public function visitEmbeddedFile($item, $params = [])
     {
         return $this->visitFile($item, $params);
     }
 
-    public function visitEmpty($item, $params = array())
+    public function visitEmpty($item, $params = [])
     {
         $content = '';
 
@@ -111,7 +111,7 @@ class Docman_View_ItemDetailsSectionUpdate extends Docman_View_ItemDetailsSectio
 
         // Fetch type selector
         $newView = new Docman_View_NewDocument($this->_controller);
-        $vparam = array();
+        $vparam = [];
         $vparam['force_item'] = $item;
         $content .= $newView->_getSpecificProperties($vparam);
 

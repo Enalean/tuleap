@@ -94,7 +94,7 @@ class ProjectResource
      */
     private function getRepresentations(array $svn_repositories)
     {
-        $representations = array();
+        $representations = [];
 
         foreach ($svn_repositories as $repository) {
             $representation = new RepositoryRepresentation();

@@ -221,14 +221,14 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
      */
     private function formatDataAndCreateProject($shortName, $publicName, $privacy, TemplateFromProjectForCreation $template_for_project_creation)
     {
-        $data = array(
-            'project' => array(
+        $data = [
+            'project' => [
                 'form_short_description' => '',
                 'is_test'                => false,
                 'is_public'              => false,
-                'services'               => array(),
-            )
-        );
+                'services'               => [],
+            ]
+        ];
 
         if ($privacy === Project::ACCESS_PUBLIC) {
             $data['project']['is_public'] = true;
@@ -319,7 +319,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(['ugroup_id' => $ugroupId, 'group_id' => $groupId]);
                 $ugroup->addUser($user);
             } catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -352,7 +352,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
         $this->getProjectIfUserIsAdmin($groupId, $sessionKey);
         if ($user = $this->userManager->getUserById($userId)) {
             try {
-                $ugroup = new ProjectUGroup(array('ugroup_id' => $ugroupId, 'group_id' => $groupId));
+                $ugroup = new ProjectUGroup(['ugroup_id' => $ugroupId, 'group_id' => $groupId]);
                 $ugroup->removeUser($user);
             } catch (Exception $e) {
                 throw new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -456,7 +456,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     {
         $this->continueSession($sessionKey);
         $project_desc_fields = $this->description_factory->getCustomDescriptions();
-        $soap_return = array();
+        $soap_return = [];
         if (empty($project_desc_fields)) {
                 throw new SoapFault('3107', "No custom project description fields");
         }
@@ -468,7 +468,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function extractDescFieldSOAPDatas(Project_CustomDescription_CustomDescription $desc_field)
     {
-        $field_datas = array();
+        $field_datas = [];
         $field_datas['id']           = $desc_field->getId();
         $field_datas['name']         = $desc_field->getName();
         $field_datas['is_mandatory'] = $desc_field->isRequired();
@@ -557,7 +557,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
     public function getProjectServicesUsage($session_key, $group_id)
     {
         $project         = $this->getProjectIfUserIsAdmin($group_id, $session_key);
-        $soap_return     = array();
+        $soap_return     = [];
         $services_usages = $this->service_usage_factory->getAllServicesUsage($project);
 
         foreach ($services_usages as $services_usage) {
@@ -568,7 +568,7 @@ class Project_SOAPServer // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNa
 
     private function extractServicesUsageSOAPDatas(Project_Service_ServiceUsage $service_usage)
     {
-        $field_datas = array();
+        $field_datas = [];
         $field_datas['id']         = $service_usage->getId();
         $field_datas['short_name'] = $service_usage->getShortName();
         $field_datas['is_used']    = (int) $service_usage->isUsed();

@@ -322,7 +322,7 @@ class MilestoneResource extends AuthenticatedResource
 
         try {
             if ($add) {
-                $ids_to_add = array();
+                $ids_to_add = [];
                 foreach ($add as $submilestone) {
                     $ids_to_add[] = $submilestone['id'];
                 }
@@ -334,7 +334,7 @@ class MilestoneResource extends AuthenticatedResource
                     $user,
                     $milestone->getArtifact(),
                     $ids_to_add,
-                    array(),
+                    [],
                     Tracker_FormElement_Field_ArtifactLink::NATURE_IS_CHILD
                 );
                 $this->resources_patcher->commit();
@@ -609,7 +609,7 @@ class MilestoneResource extends AuthenticatedResource
             $offset
         );
 
-        $backlog_items_representations       = array();
+        $backlog_items_representations       = [];
         $backlog_item_representation_factory = $this->getBacklogItemRepresentationFactory();
 
         foreach ($backlog_items as $backlog_item) {
@@ -988,7 +988,7 @@ class MilestoneResource extends AuthenticatedResource
 
     private function filterOutAddedElements(OrderRepresentation $order, ?array $to_add = null)
     {
-        $ids_to_validate = array_merge($order->ids, array($order->compared_to));
+        $ids_to_validate = array_merge($order->ids, [$order->compared_to]);
         if (is_array($to_add)) {
             return array_diff($ids_to_validate, $to_add);
         } else {
@@ -1104,11 +1104,11 @@ class MilestoneResource extends AuthenticatedResource
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_CARDWALL,
-            array(
+            [
                 'version'   => 'v1',
                 'milestone' => $milestone,
                 'cardwall'  => &$cardwall
-            )
+            ]
         );
 
         return $cardwall;
@@ -1155,12 +1155,12 @@ class MilestoneResource extends AuthenticatedResource
 
         $this->event_manager->processEvent(
             AGILEDASHBOARD_EVENT_REST_GET_BURNDOWN,
-            array(
+            [
                 'version'   => 'v1',
                 'user'      => $user,
                 'milestone' => $milestone,
                 'burndown'  => &$burndown
-            )
+            ]
         );
         return $burndown;
     }

@@ -25,14 +25,14 @@ class Cache
 {
     private static $instance;
 
-    private $project_ids     = array();
-    private $tracker_ids     = array();
-    private $user_groups_ids = array();
-    private $user_ids        = array();
-    private $tokens          = array();
+    private $project_ids     = [];
+    private $tracker_ids     = [];
+    private $user_groups_ids = [];
+    private $user_ids        = [];
+    private $tokens          = [];
 
     private $trackers  = [];
-    private $artifacts = array();
+    private $artifacts = [];
 
     public static function instance()
     {

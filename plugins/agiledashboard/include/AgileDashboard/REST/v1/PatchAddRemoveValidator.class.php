@@ -45,8 +45,8 @@ class PatchAddRemoveValidator
      */
     public function validate($reference_id, $remove, $add)
     {
-        $remove = $remove != null ? $remove : array();
-        $add    = $add    != null ? $add    : array();
+        $remove = $remove != null ? $remove : [];
+        $add    = $add    != null ? $add    : [];
 
         $to_remove = $this->getIdsToRemoveThatAreNotInAddArray($remove, $add);
         $to_add    = $this->getIdsToAddThatAreNotInRemoveArray($remove, $add);

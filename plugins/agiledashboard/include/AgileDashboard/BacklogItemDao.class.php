@@ -248,15 +248,15 @@ class AgileDashboard_BacklogItemDao extends DataAccessObject
         if ($row && $row['ids'] != null) {
             return explode(',', $row['ids']);
         }
-        return array();
+        return [];
     }
 
     public function getArtifactsSemantics(array $artifact_ids, array $semantics)
     {
         $artifact_ids = $this->da->escapeIntImplode($artifact_ids);
 
-        $select_fields = array('artifact.id');
-        $join_fields   = array();
+        $select_fields = ['artifact.id'];
+        $join_fields   = [];
         if (in_array(Tracker_Semantic_Title::NAME, $semantics)) {
             $select_fields[] = 'CVT.value as ' . Tracker_Semantic_Title::NAME . ', CVT.body_format AS title_format';
             $join_fields[]   = 'LEFT JOIN (

@@ -40,7 +40,7 @@ class Tracker_ArtifactFactory
      */
     protected function __construct()
     {
-        $this->artifacts = array();
+        $this->artifacts = [];
     }
 
     /**
@@ -125,7 +125,7 @@ class Tracker_ArtifactFactory
      */
     public function getArtifactsByTrackerId($tracker_id)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
@@ -141,7 +141,7 @@ class Tracker_ArtifactFactory
      */
     public function getPaginatedArtifactsByTrackerId($tracker_id, $limit, $offset, $reverse_order)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($this->getDao()->searchPaginatedByTrackerId($tracker_id, $limit, $offset, $reverse_order) as $row) {
             $artifacts[$row['id']] = $this->getInstanceFromRow($row);
         }
@@ -161,8 +161,8 @@ class Tracker_ArtifactFactory
     public function getArtifactsByArtifactIdList(array $artifact_ids)
     {
         $artifact_ids            = array_unique($artifact_ids);
-        $artifacts               = array();
-        $not_cached_artifact_ids = array();
+        $artifacts               = [];
+        $not_cached_artifact_ids = [];
 
         foreach ($artifact_ids as $artifact_id) {
             if (isset($this->artifacts[$artifact_id])) {
@@ -196,7 +196,7 @@ class Tracker_ArtifactFactory
      */
     public function getArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
@@ -208,7 +208,7 @@ class Tracker_ArtifactFactory
 
     public function getOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
@@ -227,8 +227,8 @@ class Tracker_ArtifactFactory
      */
     public function getPaginatedPossibleParentArtifactsUserCanView(PFUser $user, $tracker_id, $limit, $offset)
     {
-        $artifacts = array();
-        foreach ($this->getDao()->searchOpenByTrackerIdWithTitle($tracker_id, $limit, $offset)->instanciateWith(array($this, 'getInstanceFromRow')) as $artifact) {
+        $artifacts = [];
+        foreach ($this->getDao()->searchOpenByTrackerIdWithTitle($tracker_id, $limit, $offset)->instanciateWith([$this, 'getInstanceFromRow']) as $artifact) {
             if ($artifact->userCanView($user)) {
                 $artifacts[$artifact->getId()] = $artifact;
             }
@@ -241,7 +241,7 @@ class Tracker_ArtifactFactory
 
     public function getClosedArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id)
     {
-        $artifacts = array();
+        $artifacts = [];
         foreach ($this->getDao()->searchClosedByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
             if ($artifact->userCanView($user)) {
@@ -389,16 +389,16 @@ class Tracker_ArtifactFactory
     }
 
     /**
-     * @return Tracker_Artifact[]
+     * @return Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface
      */
     public function getLinkedArtifacts(Tracker_Artifact $artifact)
     {
-        return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+        return $this->getDao()->getLinkedArtifacts($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
     }
 
     public function getIsChildLinkedArtifactsById(Tracker_Artifact $artifact)
     {
-        return $this->getDao()->searchIsChildLinkedArtifactsById($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+        return $this->getDao()->searchIsChildLinkedArtifactsById($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
     }
 
     /**
@@ -407,9 +407,9 @@ class Tracker_ArtifactFactory
     public function getChildren(Tracker_Artifact $artifact)
     {
         if ($artifact->getTracker()->isProjectAllowedToUseNature()) {
-            return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+            return $this->getDao()->getChildrenNatureMode($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
         } else {
-            return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+            return $this->getDao()->getChildren($artifact->getId())->instanciateWith([$this, 'getInstanceFromRow']);
         }
     }
 
@@ -418,7 +418,7 @@ class Tracker_ArtifactFactory
      */
     public function hasChildren(Tracker_Artifact $artifact)
     {
-        $children_count = $this->getDao()->getChildrenCount(array($artifact->getId()));
+        $children_count = $this->getDao()->getChildrenCount([$artifact->getId()]);
         return $children_count[$artifact->getId()] > 0;
     }
 
@@ -436,9 +436,9 @@ class Tracker_ArtifactFactory
      */
     public function getChildrenForArtifacts(PFUser $user, array $artifacts)
     {
-        $children = array();
+        $children = [];
         if (count($artifacts) > 1) {
-            foreach ($this->getDao()->getChildrenForArtifacts($this->getArtifactIds($artifacts))->instanciateWith(array($this, 'getInstanceFromRow')) as $artifact) {
+            foreach ($this->getDao()->getChildrenForArtifacts($this->getArtifactIds($artifacts))->instanciateWith([$this, 'getInstanceFromRow']) as $artifact) {
                 if ($artifact->userCanView($user)) {
                     $children[] = $artifact;
                 }
@@ -471,7 +471,7 @@ class Tracker_ArtifactFactory
             return $artifacts;
         }
 
-        $sorted_artifacts = array();
+        $sorted_artifacts = [];
         $ids              = $this->getArtifactIds($artifacts);
 
         if ($ids) {
@@ -496,10 +496,10 @@ class Tracker_ArtifactFactory
     public function getParents(array $artifact_ids)
     {
         if (! $artifact_ids) {
-            return array();
+            return [];
         }
 
-        $parents = array();
+        $parents = [];
         foreach ($this->getDao()->getParents($artifact_ids) as $row) {
             $parents[$row['child_id']] = $this->getInstanceFromRow($row);
         }
@@ -513,8 +513,8 @@ class Tracker_ArtifactFactory
      */
     public function setTitles(array $artifacts)
     {
-        $artifact_ids = array();
-        $index_map = array();
+        $artifact_ids = [];
+        $index_map = [];
         foreach ($artifacts as $index_in_source_array => $artifact) {
             $artifact_ids[]                  = $artifact->getId();
             $index_map[$artifact->getId()][] = $index_in_source_array;
@@ -543,7 +543,7 @@ class Tracker_ArtifactFactory
      */
     public function getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids)
     {
-        $filtered_ids = array();
+        $filtered_ids = [];
 
         $result = $this->getDao()->getArtifactIdsLinkedToTrackers($artifact_ids, $tracker_ids);
         if (! $result) {

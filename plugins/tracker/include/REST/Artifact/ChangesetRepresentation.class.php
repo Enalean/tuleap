@@ -68,7 +68,7 @@ class ChangesetRepresentation
     /**
      * @var array Field values
      */
-    public $values = array();
+    public $values = [];
 
     public function build(
         Tracker_Artifact_Changeset $changeset,

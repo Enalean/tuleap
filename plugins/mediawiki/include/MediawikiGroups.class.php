@@ -23,14 +23,14 @@ use Tuleap\DB\Compat\Legacy2018\LegacyDataAccessResultInterface;
 
 class MediawikiGroups
 {
-    private $added_removed = array(
-        'added'   => array(),
-        'removed' => array(),
-    );
+    private $added_removed = [
+        'added'   => [],
+        'removed' => [],
+    ];
 
-    private $added_index = array();
+    private $added_index = [];
 
-    private $original_groups = array();
+    private $original_groups = [];
 
     public function __construct(LegacyDataAccessResultInterface $original_groups)
     {

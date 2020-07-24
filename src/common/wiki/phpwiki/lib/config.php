@@ -125,7 +125,7 @@ function guessing_lang($languages = false)
 {
     if (! $languages) {
         // make this faster
-        $languages = array("en","de","es","fr","it","ja","zh","nl","sv");
+        $languages = ["en", "de", "es", "fr", "it", "ja", "zh", "nl", "sv"];
         // ignore possible "_<territory>" and codeset "ja.utf8"
         /*
         require_once("lib/Theme.php");
@@ -152,7 +152,7 @@ function guessing_lang($languages = false)
     }
 
     if ($accept) {
-        $lang_list = array();
+        $lang_list = [];
         $list = explode(",", $accept);
         for ($i = 0; $i < count($list); $i++) {
             $pos = strchr($list[$i], ";");
@@ -178,7 +178,7 @@ function guessing_lang($languages = false)
             }
             // de_DE.iso8859-1@euro => de_DE.iso8859-1, de_DE, de
             // de-DE => de-DE, de
-            foreach (array('@', '.', '_') as $sep) {
+            foreach (['@', '.', '_'] as $sep) {
                 if (($tail = strchr($lang, $sep))) {
                     $lang_short = substr($lang, 0, -strlen($tail));
                     if (in_array($lang_short, $languages)) {
@@ -209,19 +209,19 @@ function guessing_lang($languages = false)
  */
 function guessing_setlocale($category, $locale)
 {
-    $alt = array('en' => array('C', 'en_US', 'en_GB', 'en_AU', 'en_CA', 'english'),
-                 'de' => array('de_DE', 'de_DE', 'de_DE@euro',
+    $alt = ['en' => ['C', 'en_US', 'en_GB', 'en_AU', 'en_CA', 'english'],
+                 'de' => ['de_DE', 'de_DE', 'de_DE@euro',
                                'de_AT@euro', 'de_AT', 'German_Austria.1252', 'deutsch',
-                               'german', 'ge'),
-                 'es' => array('es_ES', 'es_MX', 'es_AR', 'spanish'),
-                 'nl' => array('nl_NL', 'dutch'),
-                 'fr' => array('fr_FR', 'fran�ais', 'french'),
-                 'it' => array('it_IT'),
-                 'sv' => array('sv_SE'),
-                 'ja.utf-8'  => array('ja_JP','ja_JP.utf-8','japanese'),
-                 'ja.euc-jp' => array('ja_JP','ja_JP.eucJP','japanese.euc'),
-                 'zh' => array('zh_TW', 'zh_CN'),
-                 );
+                               'german', 'ge'],
+                 'es' => ['es_ES', 'es_MX', 'es_AR', 'spanish'],
+                 'nl' => ['nl_NL', 'dutch'],
+                 'fr' => ['fr_FR', 'fran�ais', 'french'],
+                 'it' => ['it_IT'],
+                 'sv' => ['sv_SE'],
+                 'ja.utf-8'  => ['ja_JP','ja_JP.utf-8','japanese'],
+                 'ja.euc-jp' => ['ja_JP','ja_JP.eucJP','japanese.euc'],
+                 'zh' => ['zh_TW', 'zh_CN'],
+                 ];
     if (! $locale or $locale == 'C') {
         // do the reverse: return the detected locale collapsed to our LANG
         $locale = setlocale($category, '');
@@ -257,7 +257,7 @@ function guessing_setlocale($category, $locale)
         if ($res = setlocale($category, $try)) {
             return $res;
         }
-        foreach (array(".", '@', '_') as $sep) {
+        foreach ([".", '@', '_'] as $sep) {
             if ($i = strpos($try, $sep)) {
                 $try = substr($try, 0, $i);
                 if (($res = setlocale($category, $try))) {

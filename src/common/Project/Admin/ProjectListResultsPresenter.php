@@ -50,10 +50,10 @@ class ProjectListResultsPresenter
         $this->matching_projects    = $matching_projects;
 
         $base_url       = '/admin/grouplist.php';
-        $default_params = array(
+        $default_params = [
             'group_name_search' => $group_name_search,
             'status'            => $project_status
-        );
+        ];
 
         $this->pagination = new PaginationPresenter(
             $limit,
@@ -64,7 +64,7 @@ class ProjectListResultsPresenter
             $default_params
         );
 
-        $this->export_url = $base_url . '?' . http_build_query(array('export'   => 1) + $default_params);
+        $this->export_url = $base_url . '?' . http_build_query(['export'   => 1] + $default_params);
 
         $this->project_name_header    = $GLOBALS['Language']->getText('admin_projectlist', 'project_name');
         $this->unix_group_name_header = $GLOBALS['Language']->getText('admin_projectlist', 'unix_group_name');

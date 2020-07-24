@@ -89,10 +89,10 @@ class NavigationPresenterBuilder
             new NavigationDropdownItemPresenter(
                 _('Trackers v3 import'),
                 '/tracker/import_admin.php?' . http_build_query(
-                    array(
+                    [
                         'group_id' => $project->getID(),
                         'mode' => 'admin'
-                    )
+                    ]
                 )
             )
         );
@@ -107,11 +107,11 @@ class NavigationPresenterBuilder
     {
         $project_id = $project->getID();
 
-        $entries = array();
+        $entries = [];
 
         $entries['details'] = new NavigationItemPresenter(
             _('Details'),
-            '/project/admin/editgroupinfo.php?' . http_build_query(array('group_id' => $project_id)),
+            '/project/admin/editgroupinfo.php?' . http_build_query(['group_id' => $project_id]),
             'details',
             $current_pane_shortname
         );
@@ -120,7 +120,7 @@ class NavigationPresenterBuilder
 
         $entries['groups'] = new NavigationItemPresenter(
             _('Groups'),
-            '/project/admin/ugroup.php?' . http_build_query(array('group_id' => $project_id)),
+            '/project/admin/ugroup.php?' . http_build_query(['group_id' => $project_id]),
             'groups',
             $current_pane_shortname
         );
@@ -139,14 +139,14 @@ class NavigationPresenterBuilder
         if ($this->canLabelsBeUsedByProject($project)) {
             $entries['labels'] = new NavigationItemPresenter(
                 _('Labels'),
-                '/project/admin/labels.php?' . http_build_query(array('group_id' => $project_id)),
+                '/project/admin/labels.php?' . http_build_query(['group_id' => $project_id]),
                 'labels',
                 $current_pane_shortname
             );
         }
         $entries['references']               = new NavigationItemPresenter(
             _('References'),
-            '/project/admin/reference.php?' . http_build_query(array('group_id' => $project_id)),
+            '/project/admin/reference.php?' . http_build_query(['group_id' => $project_id]),
             'references',
             $current_pane_shortname
         );
@@ -160,21 +160,21 @@ class NavigationPresenterBuilder
             _('Data'),
             self::DATA_ENTRY_SHORTNAME,
             $current_pane_shortname,
-            array(
+            [
                 new NavigationDropdownItemPresenter(
                     _('Project Data Export'),
-                    '/project/export/index.php?' . http_build_query(array('group_id' => $project_id))
+                    '/project/export/index.php?' . http_build_query(['group_id' => $project_id])
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Project History'),
-                    '/project/admin/history.php?' . http_build_query(array('group_id' => $project_id)),
+                    '/project/admin/history.php?' . http_build_query(['group_id' => $project_id]),
                     'project-history'
                 ),
                 new NavigationDropdownItemPresenter(
                     _('Access Logs'),
-                    '/project/stats/source_code_access.php?' . http_build_query(array('group_id' => $project_id))
+                    '/project/stats/source_code_access.php?' . http_build_query(['group_id' => $project_id])
                 )
-            )
+            ]
         );
         $entries['banner'] = new NavigationItemPresenter(
             _('Banner'),
@@ -188,9 +188,9 @@ class NavigationPresenterBuilder
 
     private function buildEntriesForCastratedAdmin(Project $project, $current_pane_shortname)
     {
-        return array(
+        return [
             'members' => $this->getMembersItemPresenter($project->getID(), $current_pane_shortname)
-        );
+        ];
     }
 
     /**

@@ -34,9 +34,9 @@ final class ToBeMappedUserTest extends \PHPUnit\Framework\TestCase
         $this->user = new ToBeMappedUser(
             'to.be.mapped',
             'To Be Mapped',
-            array(
+            [
                 new \PFUser(['language_id' => 'en'])
-            ),
+            ],
             104,
             'cs1234'
         );

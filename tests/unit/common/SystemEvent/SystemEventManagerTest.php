@@ -33,16 +33,16 @@ class SystemEventManagerTest extends TestCase
     public function testConcatParameters(): void
     {
         $sem = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
-        $params = array(
+        $params = [
             'key1' => 'value1',
             'key2' => 'value2',
             'key3' => 'value3',
-        );
-        $this->assertEquals('', $sem->concatParameters($params, array()));
-        $this->assertEquals('value1', $sem->concatParameters($params, array('key1')));
-        $this->assertEquals('value1::value3', $sem->concatParameters($params, array('key1', 'key3')));
-        $this->assertEquals('value3::value1', $sem->concatParameters($params, array('key3', 'key1')));
-        $this->assertEquals('value1::value2::value3', $sem->concatParameters($params, array('key1', 'key2', 'key3')));
+        ];
+        $this->assertEquals('', $sem->concatParameters($params, []));
+        $this->assertEquals('value1', $sem->concatParameters($params, ['key1']));
+        $this->assertEquals('value1::value3', $sem->concatParameters($params, ['key1', 'key3']));
+        $this->assertEquals('value3::value1', $sem->concatParameters($params, ['key3', 'key1']));
+        $this->assertEquals('value1::value2::value3', $sem->concatParameters($params, ['key1', 'key2', 'key3']));
     }
 
     /**
@@ -57,7 +57,7 @@ class SystemEventManagerTest extends TestCase
 
         $dar = \Mockery::spy(\DataAccessResult::class);
         $dar->shouldReceive('rowCount')->andReturns(0);
-        $seDao->shouldReceive('searchWithParam')->with('head', 102, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING))->once()->andReturns($dar);
+        $seDao->shouldReceive('searchWithParam')->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])->once()->andReturns($dar);
 
         $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
         $se->shouldReceive('_getDao')->andReturns($seDao);
@@ -75,7 +75,7 @@ class SystemEventManagerTest extends TestCase
         $dar = \Mockery::spy(\DataAccessResult::class);
         $dar->shouldReceive('rowCount')->andReturns(1);
         $seDao->shouldReceive('searchWithParam')
-            ->with('head', 102, array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING))
+            ->with('head', 102, [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->once()
             ->andReturns($dar);
 
@@ -98,7 +98,7 @@ class SystemEventManagerTest extends TestCase
         $dar->shouldReceive('isError')->andReturnFalse();
         $seDao->shouldReceive('searchWithParam')
             ->once()
-            ->with('tail', 'titi', array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING))
+            ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->andReturns($dar);
 
         $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();
@@ -115,7 +115,7 @@ class SystemEventManagerTest extends TestCase
         $dar->shouldReceive('rowCount')->andReturns(1);
         $seDao->shouldReceive('searchWithParam')
             ->once()
-            ->with('tail', 'titi', array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING))
+            ->with('tail', 'titi', [SystemEvent::TYPE_USER_RENAME], [SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING])
             ->andReturns($dar);
 
         $se = \Mockery::mock(\SystemEventManager::class)->makePartial()->shouldAllowMockingProtectedMethods();

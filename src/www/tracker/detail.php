@@ -31,11 +31,11 @@ if (! $request->exist('pv')) {
     }
 }
 
-$params = array('title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
+$params = ['title' => $group->getPublicName() . ' ' . $ath->getName() . ' #' . $ah->getID() . ' - \'' . $ah->getSummary() . '\'',
               'pagename' => 'tracker',
               'atid' => $ath->getID(),
               'pv' => $pv,
-              'help' => 'tracker-v3.html#new-artifact-submission' );
+              'help' => 'tracker-v3.html#new-artifact-submission' ];
 
 $ath->header($params);
 

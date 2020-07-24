@@ -24,7 +24,7 @@ class UserXMLExportedCollection
     /**
      * @var PFUser[]
      */
-    private $users = array();
+    private $users = [];
 
     /**
      * @var XML_SimpleXMLCDATAFactory

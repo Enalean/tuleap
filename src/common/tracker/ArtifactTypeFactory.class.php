@@ -83,7 +83,7 @@ class ArtifactTypeFactory
      */
     public function getStatusIdCount($group_artifact_id)
     {
-        $count_array = array();
+        $count_array = [];
         $sql = "select status_id,count(*) from artifact where group_artifact_id = " . db_ei($group_artifact_id) .
         " group by status_id";
         $result = db_query($sql);
@@ -169,7 +169,7 @@ class ArtifactTypeFactory
 
           $result = db_query($sql);
           $rows = db_numrows($result);
-          $myArtifactTypes = array();
+          $myArtifactTypes = [];
 
         if (! $result || $rows < 1) {
             $this->setError($Language->getText('tracker_common_type', 'none_found') . ' ' . db_error());
@@ -307,7 +307,7 @@ class ArtifactTypeFactory
 
         //Generate an event
         $em = EventManager::instance();
-        $pref_params = array('atid'   => $atid);
+        $pref_params = ['atid'   => $atid];
         $em->processEvent('artifactType_deleted', $pref_params);
 
         // Delete the artifact rules
@@ -375,7 +375,7 @@ class ArtifactTypeFactory
         permission_clear_all_tracker($this->Group->getID(), $atid);
 
         $em = EventManager::instance();
-        $em->processEvent("artifact_type_factory_delete_artifact_type", array('tracker_id' => $atid));
+        $em->processEvent("artifact_type_factory_delete_artifact_type", ['tracker_id' => $atid]);
 
         return true;
     }
@@ -542,7 +542,7 @@ class ArtifactTypeFactory
      *    @param    itemname: the itemname of the new tracker
      *    @return id on success, false on failure.
      */
-    public function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = array())
+    public function create($group_id, $group_id_template, $atid_template, $name, $description, $itemname, $ugroup_mapping = false, &$report_mapping = [])
     {
         global $Language;
 
@@ -655,8 +655,8 @@ class ArtifactTypeFactory
                         return false;
                     }
                     $em = EventManager::instance();
-                    $pref_params = array('atid_source'   => $atid_template,
-                                         'atid_dest'     => $id);
+                    $pref_params = ['atid_source'   => $atid_template,
+                                         'atid_dest'     => $id];
                     $em->processEvent('artifactType_created', $pref_params);
 
                     // Copy artifact_notification_event and artifact_notification_role

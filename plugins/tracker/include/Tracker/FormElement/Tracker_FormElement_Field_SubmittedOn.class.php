@@ -24,7 +24,7 @@ use Tuleap\Tracker\FormElement\Field\File\CreatedFileURLMapping;
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly
 {
 
-    public $default_properties = array();
+    public $default_properties = [];
 
     protected function getDao()
     {
@@ -374,7 +374,7 @@ class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Da
      */
     public function getArtifactsByCriterias($date, $trackerId = null)
     {
-        $artifacts = array();
+        $artifacts = [];
         $dao = new Tracker_ArtifactDao();
         $dar = $dao->getArtifactsBySubmittedOnDate($trackerId, $date);
 

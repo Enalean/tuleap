@@ -29,7 +29,7 @@ class Cardwall_CardInCellPresenter
      */
     private $card_presenter;
 
-    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = array())
+    public function __construct(Tracker_CardPresenter $presenter, $card_field_id, $swimline_id = null, array $swimline_field_values = [])
     {
         $this->swimline_id           = $swimline_id;
         $this->swimline_field_values = $swimline_field_values;
@@ -39,7 +39,7 @@ class Cardwall_CardInCellPresenter
 
     public function getDropIntoClasses()
     {
-        $classes = array();
+        $classes = [];
         foreach (array_unique($this->swimline_field_values) as $id) {
             $classes[] = 'drop-into-' . $this->swimline_id . '-' . $id;
         }
@@ -53,7 +53,7 @@ class Cardwall_CardInCellPresenter
 
     public function getDropIntoIds()
     {
-        $ids = array();
+        $ids = [];
         foreach (array_unique($this->swimline_field_values) as $id) {
             $ids[] = $id;
         }

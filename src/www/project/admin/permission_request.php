@@ -32,7 +32,7 @@ if (! $request->valid($vGroupId)) {
 $group_id = $request->get('group_id');
 
 
-session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 //  get the Project
 $pm    = ProjectManager::instance();
@@ -46,7 +46,7 @@ if ($project->getStatus() != 'A') {
     $request->checkUserIsSuperUser();
 }
 
-$vFunc = new Valid_WhiteList('func', array('member_req_notif_group', 'member_req_notif_message'));
+$vFunc = new Valid_WhiteList('func', ['member_req_notif_group', 'member_req_notif_message']);
 $vFunc->required();
 if ($request->isPost() && $request->valid($vFunc)) {
     /*
@@ -64,13 +64,13 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 $validUgroups = $result['ugroups'];
                 if (empty($validUgroups)) {
                     // If no valid ugroups the default one is project admins ugroup
-                    $validUgroups = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+                    $validUgroups = [$GLOBALS['UGROUP_PROJECT_ADMIN']];
                     $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_index', 'member_request_delegation_ugroups_all_invalid'));
                 } else {
                     // If some selected ugroups are not valid display them to the user.
                     $diff = array_diff($ugroups, $validUgroups);
                     if (! empty($diff)) {
-                        $deletedUgroups = array();
+                        $deletedUgroups = [];
                         foreach ($diff as $ugroupId) {
                             $deletedUgroups[] = ugroup_get_name_from_id($ugroupId);
                         }
@@ -85,18 +85,18 @@ if ($request->isPost() && $request->valid($vFunc)) {
                 //to retreive the old marked ugroups
                 $darUgroups = $pm->getMembershipRequestNotificationUGroup($group_id);
                 if ($pm->setMembershipRequestNotificationUGroup($group_id, $validUgroups)) {
-                    $oldUgroups = array();
+                    $oldUgroups = [];
                     if ($darUgroups && ! $darUgroups->isError() && $darUgroups->rowCount() > 0) {
                         foreach ($darUgroups as $row) {
                             $oldUgroups[] = ugroup_get_name_from_id($row['ugroup_id']);
                         }
                     } else {
-                        $oldUgroups = array(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN']));
+                        $oldUgroups = [ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_ADMIN'])];
                     }
                     foreach ($validUgroups as $ugroupId) {
                         $ugroupName   = ugroup_get_name_from_id($ugroupId);
-                        $newUgroups   = array($ugroupName);
-                        $addedUgroups = array();
+                        $newUgroups   = [$ugroupName];
+                        $addedUgroups = [];
                         if ($ugroupId == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
                             $addedUgroups[] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_admin');
                         } else {
@@ -141,10 +141,10 @@ if ($request->isPost() && $request->valid($vFunc)) {
 */
 
 project_admin_header(
-    array(
+    [
         'title' => $Language->getText('project_admin_ugroup', 'permission_request'),
         'group' => $group_id
-    ),
+    ],
     \Tuleap\Project\Admin\Navigation\NavigationPermissionsDropdownPresenterBuilder::PERMISSIONS_ENTRY_SHORTNAME
 );
 
@@ -159,10 +159,10 @@ if (! $project->isPublic()) {
     echo $Language->getOverridableText('project_admin_index', 'member_request_delegation_desc_restricted_user');
 }
 echo '</p>';
-$notices = array();
+$notices = [];
 EventManager::instance()->processEvent(
     'permission_request_information',
-    array('group_id' => $group_id, 'notices' => &$notices)
+    ['group_id' => $group_id, 'notices' => &$notices]
 );
 if ($notices) {
     echo '<div class="alert alert-info">';
@@ -176,20 +176,20 @@ echo '</p></td></tr>';
 //Retrieve the saved ugroups for notification from DB
 $dar = $pm->getMembershipRequestNotificationUGroup($group_id);
 if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
-    $selectedUgroup = array();
+    $selectedUgroup = [];
     foreach ($dar as $row) {
         $selectedUgroup[] = $row['ugroup_id'];
     }
 } else {
-        $selectedUgroup = array($GLOBALS['UGROUP_PROJECT_ADMIN']);
+        $selectedUgroup = [$GLOBALS['UGROUP_PROJECT_ADMIN']];
 }
 
 
-$ugroupList = array(array('value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_admin')));
+$ugroupList = [['value' => $GLOBALS['UGROUP_PROJECT_ADMIN'], 'text' => \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) 'project_admin')]];
 /** @psalm-suppress DeprecatedFunction */
 $res = ugroup_db_get_existing_ugroups($group_id);
 while ($row = db_fetch_array($res)) {
-    $ugroupList[] = array('value' => $row['ugroup_id'], 'text' => $row['name']);
+    $ugroupList[] = ['value' => $row['ugroup_id'], 'text' => $row['name']];
 }
 echo '<tr><td colspan="2">';
 echo '<form method="post" action="permission_request.php">';
@@ -225,4 +225,4 @@ echo '<form method="post" action="permission_request.php">
 echo '</td></tr>';
 echo '</table>';
 
-project_admin_footer(array());
+project_admin_footer([]);

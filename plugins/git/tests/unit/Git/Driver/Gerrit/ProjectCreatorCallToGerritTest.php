@@ -114,7 +114,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $id = $ssh_port = $http_port = $identity_file = $replication_key = $use_ssl = $gerrit_version = $http_password = 0;
         $this->server = \Mockery::mock(
             \Git_RemoteServer_GerritServer::class,
-            array(
+            [
                 $id,
                 $host,
                 $ssh_port,
@@ -126,7 +126,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
                 $gerrit_version,
                 $http_password,
                 ''
-            )
+            ]
         )
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
@@ -177,7 +177,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $this->template           = \Mockery::spy(\Git_Driver_Gerrit_Template_Template::class)->shouldReceive('getId')->andReturns(12)->getMock();
         $this->template_processor = new Git_Driver_Gerrit_Template_TemplateProcessor();
         $this->template_factory   = \Mockery::spy(\Git_Driver_Gerrit_Template_TemplateFactory::class)->shouldReceive('getTemplate')->with(12)->andReturns($this->template)->getMock();
-        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns(array($this->template));
+        $this->template_factory->shouldReceive('getTemplatesAvailableForRepository')->andReturns([$this->template]);
 
         $this->gerrit_tmpdir = $this->tmpdir . '/gerrit_tbd';
 
@@ -205,7 +205,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $this->userfinder->shouldReceive('areRegisteredUsersAllowedTo')->with(Git::PERM_WRITE, $this->repository_with_registered)->andReturns(true);
         $this->userfinder->shouldReceive('areRegisteredUsersAllowedTo')->with(Git::PERM_WPLUS, $this->repository_with_registered)->andReturns(true);
 
-        $this->userfinder->shouldReceive('getUgroups')->andReturns(array());
+        $this->userfinder->shouldReceive('getUgroups')->andReturns([]);
     }
 
     private function getGitExec($dir): Git_Exec
@@ -230,12 +230,12 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $this->project_admins->shouldReceive('getNormalizedName')->andReturns('project_admins');
         $this->project_admins->shouldReceive('getId')->andReturns(ProjectUGroup::PROJECT_ADMIN);
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns(array($this->project_admins));
+        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns([$this->project_admins]);
         $this->driver->shouldReceive('doesTheParentProjectExist')->andReturns(true);
 
-        $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->andReturns(array($this->project_admins));
+        $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')->andReturns([$this->project_admins]);
 
-        $this->umbrella_manager->shouldReceive('recursivelyCreateUmbrellaProjects')->with(array($this->server), $this->project)->once();
+        $this->umbrella_manager->shouldReceive('recursivelyCreateUmbrellaProjects')->with([$this->server], $this->project)->once();
         $this->driver->shouldReceive('createProject')->with($this->server, $this->repository, $this->project_unix_name)
             ->once()
             ->andReturns($this->gerrit_project);
@@ -262,12 +262,12 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $this->ugroup_manager->shouldReceive('getUGroups')
             ->with($this->project)
             ->once()
-            ->andReturns(array($ugroup, $ugroup_project_admins));
+            ->andReturns([$ugroup, $ugroup_project_admins]);
 
         $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')
-            ->with($this->server, array($ugroup, $ugroup_project_admins))
+            ->with($this->server, [$ugroup, $ugroup_project_admins])
             ->once()
-            ->andReturns(array($ugroup, $ugroup_project_admins));
+            ->andReturns([$ugroup, $ugroup_project_admins]);
 
         $this->driver->shouldReceive('createProject')->with($this->server, $this->repository, $this->project_unix_name)
             ->once()
@@ -291,12 +291,12 @@ class ProjectCreatorCallToGerritTest extends TestCase
         $ugroup_another_group->shouldReceive('getNormalizedName')->andReturns('another_group');
         $ugroup_another_group->shouldReceive('getId')->andReturns(120);
 
-        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
+        $this->ugroup_manager->shouldReceive('getUGroups')->andReturns([$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins]);
 
         $this->membership_manager->shouldReceive('createArrayOfGroupsForServer')
-            ->with($this->server, array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins))
+            ->with($this->server, [$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins])
             ->once()
-            ->andReturns(array($ugroup_project_members, $ugroup_another_group, $ugroup_project_admins));
+            ->andReturns([$ugroup_project_members, $ugroup_another_group, $ugroup_project_admins]);
 
         $this->driver->shouldReceive('createProject')->with($this->server, $this->repository, $this->project_unix_name)
             ->once()
@@ -313,7 +313,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
 
         exec("git show-ref --heads", $refs_cmd, $ret_val);
 
-        $expected_result = array("To $this->gerrit_git_url");
+        $expected_result = ["To $this->gerrit_git_url"];
 
         foreach ($refs_cmd as $ref) {
             $ref               = substr($ref, strpos($ref, ' ') + 1);
@@ -335,7 +335,7 @@ class ProjectCreatorCallToGerritTest extends TestCase
         chdir("$this->tmpdir/$this->gitolite_project");
 
         exec("git show-ref --tags", $refs_cmd, $ret_val);
-        $expected_result = array("To $this->gerrit_git_url");
+        $expected_result = ["To $this->gerrit_git_url"];
 
         foreach ($refs_cmd as $ref) {
             $ref               = substr($ref, strpos($ref, ' ') + 1);

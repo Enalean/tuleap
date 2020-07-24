@@ -32,16 +32,16 @@ class mediawikiPluginTest extends TestCase //phpcs:ignore
 
     public function testItReplacesTheTemplateNameInUrlByTheProjectName()
     {
-        $template = array ('name' => 'toto');
+        $template =  ['name' => 'toto'];
         $link     = 'example.com/plugins/mediawiki/wiki/toto';
         $project  = Mockery::spy(\Project::class);
         $project->shouldReceive('getUnixName')->andReturn('yaya');
 
-        $params = array(
+        $params = [
             'template' => $template,
             'project'  => $project,
             'link'     => &$link
-        );
+        ];
 
         $mediawiki_plugin = new MediaWikiPlugin();
         $mediawiki_plugin->service_replace_template_name_in_link($params);

@@ -47,7 +47,7 @@ class ProjectPresentersBuilder
 
     private function getProjectPresenters()
     {
-        $project_presenters = array();
+        $project_presenters = [];
 
         foreach ($this->projects as $project) {
             $project_presenters[] = $this->getProjectPresenter($project);

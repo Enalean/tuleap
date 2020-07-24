@@ -49,14 +49,14 @@ class WikiPlugin_MostPopular extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('pagename' => '[pagename]', // hackish
+            ['pagename' => '[pagename]', // hackish
                    //'exclude'  => '',
                    'limit'    => 20, // limit <0 returns least popular pages
                    'noheader' => 0,
                    'sortby'   => '-hits',
                    'info'     => false,
                    //'paging'   => 'auto'
-            )
+            ]
         );
     }
 
@@ -76,7 +76,7 @@ class WikiPlugin_MostPopular extends WikiPlugin
             );
             $sortby = '';
         }
-        $columns = $info ? explode(",", $info) : array();
+        $columns = $info ? explode(",", $info) : [];
         array_unshift($columns, 'hits');
 
         if (! $request->getArg('count')) {

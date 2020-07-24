@@ -58,7 +58,7 @@ class AgileDashboard_CardRepresentation
      /**
      * @var array Field values
      */
-    public $values = array();
+    public $values = [];
 
     public function build(Cardwall_CardInCellPresenter $card, $column_id, $planning_id, PFUser $user)
     {
@@ -85,7 +85,7 @@ class AgileDashboard_CardRepresentation
                 )
             );
         } else {
-            $this->allowed_column_ids = array();
+            $this->allowed_column_ids = [];
         }
 
         $last_changeset = $artifact->getLastChangeset();

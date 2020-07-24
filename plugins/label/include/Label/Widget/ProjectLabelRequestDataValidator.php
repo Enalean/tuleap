@@ -46,7 +46,7 @@ class ProjectLabelRequestDataValidator
 
     private function extractProjectLabelsIds(array $project_labels)
     {
-        $ids = array();
+        $ids = [];
 
         foreach ($project_labels as $label) {
             $ids[] = $label['id'];

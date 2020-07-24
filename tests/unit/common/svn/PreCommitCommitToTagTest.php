@@ -167,9 +167,9 @@ class PreCommitCommitToTagTest extends TestCase
     {
         $this->handler->shouldReceive('doesProjectUsesImmutableTags')->andReturns(true);
         $this->handler->shouldReceive('getImmutableTagsPathForProject')->andReturns('/tags/');
-        $this->handler->shouldReceive('getAllowedTagsFromWhiteList')->andReturns(array(
+        $this->handler->shouldReceive('getAllowedTagsFromWhiteList')->andReturns([
             '/tags/moduleA'
-        ));
+        ]);
 
         $this->assertCommitIsAllowed('A   moduleA/trunk/toto');
         $this->assertCommitIsAllowed('U   moduleA/trunk/toto');

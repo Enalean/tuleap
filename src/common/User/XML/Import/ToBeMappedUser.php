@@ -50,14 +50,14 @@ class ToBeMappedUser extends ActionToBeTakenForUser
     /** @return array */
     public function getCSVData()
     {
-        $matching = array();
-        $actions  = array();
+        $matching = [];
+        $actions  = [];
         foreach ($this->matching_users as $user) {
             $matching[] = $user->getRealName() . ' (' . $user->getUserName() . ') [' . $user->getStatus() . ']';
             $actions[]  = '"' . self::ACTION . ':' . $user->getUserName() . '"';
         }
 
-        return array(
+        return [
             $this->username,
             self::ACTION . ':',
             sprintf(
@@ -68,7 +68,7 @@ class ToBeMappedUser extends ActionToBeTakenForUser
                 implode(', ', $matching),
                 implode(', ', $actions)
             )
-        );
+        ];
     }
 
     public function isActionAllowed($action)

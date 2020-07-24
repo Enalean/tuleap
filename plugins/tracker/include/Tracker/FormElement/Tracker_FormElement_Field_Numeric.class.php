@@ -27,23 +27,23 @@ use Tuleap\Tracker\Semantic\Timeframe\TimeframeBuilder;
 abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues
 {
 
-    public $default_properties = array(
-        'maxchars'      => array(
+    public $default_properties = [
+        'maxchars'      => [
             'value' => 0,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'size'          => array(
+        ],
+        'size'          => [
             'value' => 5,
             'type'  => 'string',
             'size'  => 3,
-        ),
-        'default_value' => array(
+        ],
+        'default_value' => [
             'value' => '',
             'type'  => 'string',
             'size'  => 40,
-        ),
-    );
+        ],
+    ];
 
     public function getComputedValue(
         PFUser $user,
@@ -123,25 +123,25 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
     {
         $R1  = 'R1_' . $this->id;
         $R2  = 'R2_' . $this->id;
-        $same     = array();
-        $separate = array();
+        $same     = [];
+        $separate = [];
         foreach ($functions as $f) {
             if (in_array($f, $this->getAggregateFunctions())) {
                 if (substr($f, -5) === '_GRBY') {
-                    $separate[] = array(
+                    $separate[] = [
                         'function' => $f,
                         'select'   => "$R2.value AS label, count(*) AS value",
                         'group_by' => "$R2.value",
-                    );
+                    ];
                 } else {
                     $same[] = "$f($R2.value) AS `" . $this->name . "_$f`";
                 }
             }
         }
-        return array(
+        return [
             'same_query'       => implode(', ', $same),
             'separate_queries' => $separate,
-        );
+        ];
     }
 
     /**
@@ -149,14 +149,14 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      */
     public function getAggregateFunctions()
     {
-        return array('AVG', 'COUNT', 'COUNT_GRBY', 'MAX', 'MIN', 'STD', 'SUM');
+        return ['AVG', 'COUNT', 'COUNT_GRBY', 'MAX', 'MIN', 'STD', 'SUM'];
     }
 
     protected function buildMatchExpression($field_name, $criteria_value)
     {
         $expr = parent::buildMatchExpression($field_name, $criteria_value);
         if (! $expr) {
-            $matches = array();
+            $matches = [];
             if (preg_match("/^(<|>|>=|<=)\s*($this->pattern)$/", $criteria_value, $matches)) {
                 // It's < or >,  = and a number then use as is
                 $matches[2] = (string) ($this->cast($matches[2]));

@@ -106,21 +106,21 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
     public function testItReturnsEmailsAsArray(): void
     {
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     1,
                     $this->repository,
                     '/path',
-                    array('jdoe@example.com', 'jsmith@example.com'),
-                    array(),
-                    array()
+                    ['jdoe@example.com', 'jsmith@example.com'],
+                    [],
+                    []
                 )
-            )
+            ]
         );
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $expected = array('jdoe@example.com', 'jsmith@example.com');
+        $expected = ['jdoe@example.com', 'jsmith@example.com'];
 
         $this->assertEquals($emails, $expected);
     }
@@ -128,29 +128,29 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
     public function testItCombinesEmailsFromMultipleMatchingNotifications(): void
     {
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     1,
                     $this->repository,
                     '/path',
-                    array('jsmith@example.com'),
-                    array(),
-                    array()
+                    ['jsmith@example.com'],
+                    [],
+                    []
                 ),
                 new MailNotification(
                     2,
                     $this->repository,
                     '/path',
-                    array('jdoe@example.com'),
-                    array(),
-                    array()
+                    ['jdoe@example.com'],
+                    [],
+                    []
                 )
-            )
+            ]
         );
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $expected = array('jdoe@example.com', 'jsmith@example.com');
+        $expected = ['jdoe@example.com', 'jsmith@example.com'];
 
         $this->assertEquals($emails, $expected);
     }
@@ -158,20 +158,20 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
     public function testItReturnsEmailsOfUsersForNotification(): void
     {
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     1,
                     $this->repository,
                     '/path',
-                    array(),
-                    array($this->user_jsmith),
-                    array()
+                    [],
+                    [$this->user_jsmith],
+                    []
                 )
-            )
+            ]
         );
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
-        $expected = array('jsmith@example.com');
+        $expected = ['jsmith@example.com'];
 
         $this->assertEquals($emails, $expected);
     }
@@ -181,16 +181,16 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
         $user_group = \Mockery::mock(ProjectUGroup::class);
         $user_group->shouldReceive('getMembers')->andReturn([$this->user_charles, $this->user_jdoe]);
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     101,
                     $this->repository,
                     '/path',
-                    array('jsmith@example.com'),
-                    array(),
-                    array($user_group)
+                    ['jsmith@example.com'],
+                    [],
+                    [$user_group]
                 ),
-            )
+            ]
         );
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
@@ -204,16 +204,16 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
         $user_group = \Mockery::mock(ProjectUGroup::class);
         $user_group->shouldReceive('getMembers')->andReturn([$this->user_suspended]);
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     101,
                     $this->repository,
                     '/path',
-                    array('jsmith@example.com'),
-                    array(),
-                    array($user_group)
+                    ['jsmith@example.com'],
+                    [],
+                    [$user_group]
                 ),
-            )
+            ]
         );
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 
@@ -225,18 +225,18 @@ class EmailsToBeNotifiedRetrieverTest extends TestCase
         $user_group = \Mockery::mock(ProjectUGroup::class);
         $user_group->shouldReceive('getMembers')->andReturn([$this->user_jsmith]);
         $this->notification_manager->shouldReceive('getByPath')->andReturn(
-            array(
+            [
                 new MailNotification(
                     1,
                     $this->repository,
                     '/path',
-                    array('jsmith@example.com'),
-                    array($this->user_jsmith),
-                    array($user_group)
+                    ['jsmith@example.com'],
+                    [$this->user_jsmith],
+                    [$user_group]
                 ),
-            )
+            ]
         );
-        $this->user_dao->shouldReceive('searchUsersByNotificationId')->andReturn(array('email' => 'jsmith@example.com'));
+        $this->user_dao->shouldReceive('searchUsersByNotificationId')->andReturn(['email' => 'jsmith@example.com']);
 
         $emails = $this->retriever->getEmailsToBeNotifiedForPath($this->repository, '/path');
 

@@ -43,7 +43,7 @@ class GerritTest extends TestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('gerrit'));
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithReadOnlySiteAdmin(): void
@@ -53,7 +53,7 @@ class GerritTest extends TestBase
             REST_TestDataBuilder::TEST_BOT_USER_NAME
         );
 
-        $this->assertEquals(array('OPTIONS', 'GET'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'GET'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testGETServers(): void

@@ -49,7 +49,7 @@ class Codendi_HTMLPurifier
     public const CONFIG_MINIMAL_FORMATTING_NO_NEWLINE = 35;
     public const CONFIG_DISABLED                      = 100;
 
-    private static $allowed_schemes = array(
+    private static $allowed_schemes = [
         'http'   => true,
         'https'  => true,
         'mailto' => true,
@@ -57,13 +57,13 @@ class Codendi_HTMLPurifier
         'nntp'   => true,
         'news'   => true,
         'tel'    => true
-    );
+    ];
 
     /**
      * Hold an instance of the class
      */
     private static $Codendi_HTMLPurifier_instance;
-    private $config = array();
+    private $config = [];
 
     /**
      * Constructor
@@ -339,7 +339,7 @@ class Codendi_HTMLPurifier
 
     public function purifyMap($array, $level = 0, $groupId = 0)
     {
-        return array_map(array(&$this, "purify"), $array, array($level), array($groupId));
+        return array_map([&$this, "purify"], $array, [$level], [$groupId]);
     }
 
     /**

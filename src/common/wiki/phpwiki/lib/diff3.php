@@ -13,9 +13,9 @@ class _Diff3_Block
 
     public function __construct($orig = false, $final1 = false, $final2 = false)
     {
-        $this->orig = $orig ? $orig : array();
-        $this->final1 = $final1 ? $final1 : array();
-        $this->final2 = $final2 ? $final2 : array();
+        $this->orig = $orig ? $orig : [];
+        $this->final1 = $final1 ? $final1 : [];
+        $this->final2 = $final2 ? $final2 : [];
     }
 
     public function merged()
@@ -47,7 +47,7 @@ class _Diff3_CopyBlock extends _Diff3_Block
 
     public function __construct($lines = false)
     {
-        $this->orig = $lines ? $lines : array();
+        $this->orig = $lines ? $lines : [];
         $this->final1 = &$this->orig;
         $this->final2 = &$this->orig;
     }
@@ -72,7 +72,7 @@ class _Diff3_BlockBuilder
 
     public function _init()
     {
-        $this->orig = $this->final1 = $this->final2 = array();
+        $this->orig = $this->final1 = $this->final2 = [];
     }
 
 
@@ -134,7 +134,7 @@ class Diff3
 
     private function diff3($edits1, $edits2)
     {
-        $blocks = array();
+        $blocks = [];
         $bb = new _Diff3_BlockBuilder();
 
         $e1 = current($edits1);
@@ -208,17 +208,17 @@ class Diff3
 
     public function merged_output($label1 = false, $label2 = false)
     {
-        $lines = array();
+        $lines = [];
         foreach ($this->blocks as $block) {
             if ($block->is_conflict()) {
                 // FIXME: this should probably be moved somewhere else...
                 $lines = array_merge(
                     $lines,
-                    array("<<<<<<<" . ($label1 ? " $label1" : '')),
+                    ["<<<<<<<" . ($label1 ? " $label1" : '')],
                     $block->final1,
-                    array("======="),
+                    ["======="],
                     $block->final2,
-                    array(">>>>>>>" . ($label2 ? " $label2" : ''))
+                    [">>>>>>>" . ($label2 ? " $label2" : '')]
                 );
                 $this->ConflictingBlocks++;
             } else {

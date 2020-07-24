@@ -28,7 +28,7 @@ class TestBase extends RestBase
     private const EXPLICIT_BACKLOG_STORY_TRACKER_SHORTNAME   = 'story';
     private const EXPLICIT_BACKLOG_RELEASE_TRACKER_SHORTNAME = 'rel';
 
-    protected $kanban_artifact_ids = array();
+    protected $kanban_artifact_ids = [];
     protected $tracker_report_id   = null;
 
     protected $explicit_backlog_project_id;
@@ -78,7 +78,7 @@ class TestBase extends RestBase
         $offset = 0;
         $limit  = 1;
         $query  = http_build_query(
-            array('limit' => $limit, 'offset' => $offset)
+            ['limit' => $limit, 'offset' => $offset]
         );
 
         $response = $this->getResponseByName(

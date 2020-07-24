@@ -53,7 +53,7 @@ class NotificationsForProjectMemberCleanerTest extends \PHPUnit\Framework\TestCa
         $this->unreadable_repository->shouldReceive('userCanRead')->with($this->user)->andReturns(false);
         $this->readable_repository->shouldReceive('userCanRead')->with($this->user)->andReturns(true);
 
-        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns(array($this->unreadable_repository, $this->readable_repository));
+        $this->factory->shouldReceive('getAllRepositories')->with($this->project)->andReturns([$this->unreadable_repository, $this->readable_repository]);
 
         $this->users_to_notify_dao = \Mockery::mock(UsersToNotifyDao::class);
 

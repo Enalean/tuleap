@@ -37,12 +37,12 @@ class GitJSONPermissionsRetriever
     {
         if (! $project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             $GLOBALS['Response']->send400JSONErrors(
-                array(
+                [
                     Feedback::ERROR => dgettext(
                         'tuleap-git',
                         "Git service is disabled."
                     )
-                )
+                ]
             );
         }
 

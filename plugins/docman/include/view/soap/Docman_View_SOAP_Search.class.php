@@ -30,14 +30,14 @@ class Docman_View_SOAP_Search
         $itemIterator = $itemFactory->getItemList(
             $params['item']->getId(),
             $nbItemsFound,
-            array('user' => $params['user'],
+            ['user' => $params['user'],
                                                         'ignore_collapse' => true,
                                                         'ignore_obsolete' => true,
                                                         'filter' => $params['filter'],
-            'getall' => true)
+            'getall' => true]
         );
 
-        $result = array();
+        $result = [];
         foreach ($itemIterator as $item) {
             $result[] = $item->toRow();
         }

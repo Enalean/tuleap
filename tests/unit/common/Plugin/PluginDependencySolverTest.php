@@ -60,7 +60,7 @@ final class PluginDependencySolverTest extends TestCase
 
     public function testItReturnsTheInstalledDependencies(): void
     {
-        $installed_plugin = array($this->mediawiki_plugin, $this->tracker_plugin, $this->fusionforge_compat_plugin);
+        $installed_plugin = [$this->mediawiki_plugin, $this->tracker_plugin, $this->fusionforge_compat_plugin];
         $this->plugin_manager->shouldReceive('getAllPlugins')->andReturns($installed_plugin);
         $solver = new PluginDependencySolver($this->plugin_manager);
 
@@ -72,7 +72,7 @@ final class PluginDependencySolverTest extends TestCase
 
     public function testItReturnsTheUnmetDependencies(): void
     {
-        $installed_plugin = array($this->tracker_plugin);
+        $installed_plugin = [$this->tracker_plugin];
         $this->plugin_manager->shouldReceive('getPluginByName')->with('tracker')->andReturns($this->tracker_plugin);
         $this->plugin_manager->shouldReceive('getAllPlugins')->andReturns($installed_plugin);
         $solver = new PluginDependencySolver($this->plugin_manager);
@@ -85,7 +85,7 @@ final class PluginDependencySolverTest extends TestCase
 
     public function testItReturnsEmptyArrayWhenDependenciesAreMet(): void
     {
-        $installed_plugin = array($this->tracker_plugin, $this->fusionforge_compat_plugin);
+        $installed_plugin = [$this->tracker_plugin, $this->fusionforge_compat_plugin];
         $this->plugin_manager->shouldReceive('getPluginByName')->with('tracker')->andReturns($this->tracker_plugin);
         $this->plugin_manager->shouldReceive('getPluginByName')->with('fusionforge_compat')->andReturns($this->fusionforge_compat_plugin);
         $this->plugin_manager->shouldReceive('getAllPlugins')->andReturns($installed_plugin);

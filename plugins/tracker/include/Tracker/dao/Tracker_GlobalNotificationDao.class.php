@@ -142,7 +142,7 @@ class Tracker_GlobalNotificationDao extends DataAccessObject
 
     public function modify($id, $values)
     {
-        $updates = array();
+        $updates = [];
         foreach ($values as $field => $value) {
             $updates[] = $field . ' = ' . $this->da->quoteSmart($value);
         }

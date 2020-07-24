@@ -77,7 +77,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
         $this->extraction_path      = $extraction_path;
         $this->logger               = $logger;
         $alphanum_strategy = new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAlphanumeric();
-        $this->strategies  = array(
+        $this->strategies  = [
             self::FIELDTYPE_PERMS_ON_ARTIFACT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyPermissionsOnArtifact(),
             self::FIELDTYPE_ATTACHEMENT => new Tracker_Artifact_XMLImport_XMLImportFieldStrategyAttachment(
                 $this->extraction_path,
@@ -105,7 +105,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
                 $nature_dao,
             ),
             self::FIELDTYPE_COMPUTED => new XMLImportFieldStrategyComputed()
-        );
+        ];
 
         $this->getExternalStrategies();
     }
@@ -123,7 +123,7 @@ class Tracker_Artifact_XMLImport_ArtifactFieldsDataBuilder
      */
     public function getFieldsData(SimpleXMLElement $xml_field_change, PFUser $submitted_by, Tracker_Artifact $artifact)
     {
-        $data = array();
+        $data = [];
 
         if (! $xml_field_change->field_change && ! $xml_field_change->external_field_change) {
             return $data;

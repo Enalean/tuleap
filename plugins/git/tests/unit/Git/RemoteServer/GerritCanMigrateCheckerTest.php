@@ -64,7 +64,7 @@ class GerritCanMigrateCheckerTest extends TestCase
             false
         );
 
-        $gerrit_servers = array();
+        $gerrit_servers = [];
         $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
@@ -80,7 +80,7 @@ class GerritCanMigrateCheckerTest extends TestCase
             false
         );
 
-        $gerrit_servers = array(\Mockery::spy(\Git_RemoteServer_GerritServer::class));
+        $gerrit_servers = [\Mockery::spy(\Git_RemoteServer_GerritServer::class)];
         $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
@@ -96,7 +96,7 @@ class GerritCanMigrateCheckerTest extends TestCase
             false
         );
 
-        $gerrit_servers = array();
+        $gerrit_servers = [];
         $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertFalse($this->can_migrate_checker->canMigrate($this->project));
@@ -112,7 +112,7 @@ class GerritCanMigrateCheckerTest extends TestCase
             false
         );
 
-        $gerrit_servers = array('IAmAServer');
+        $gerrit_servers = ['IAmAServer'];
         $this->gerrit_server_factory->shouldReceive('getAvailableServersForProject')->andReturns($gerrit_servers);
 
         $this->assertTrue($this->can_migrate_checker->canMigrate($this->project));

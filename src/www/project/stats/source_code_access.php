@@ -25,14 +25,14 @@ require __DIR__ . '/source_code_access_utils.php';
 require __DIR__ . '/../export/access_logs_export.php';
 
 // Only for project administrators
-session_require(array('group' => $group_id,'admin_flags' => 'A'));
+session_require(['group' => $group_id, 'admin_flags' => 'A']);
 
 if (! $group_id) {
     exit_error($Language->getText('project_admin_userperms', 'invalid_g'), $Language->getText('project_admin_userperms', 'group_not_exist'));
 }
 $project = ProjectManager::instance()->getProject($group_id);
 
-$who_whitelist = new Valid_WhiteList('who', array('nonmembers', 'members', 'allusers'));
+$who_whitelist = new Valid_WhiteList('who', ['nonmembers', 'members', 'allusers']);
 $who_whitelist->required();
 $who  = $request->getValidated('who', $who_whitelist, 'allusers');
 
@@ -40,7 +40,7 @@ $unsigned_int_validator = new Valid_UInt('span');
 $unsigned_int_validator->required();
 $span = $request->getValidated('span', $unsigned_int_validator, 14);
 
-$view_whitelist = new Valid_WhiteList('view', array('daily', 'weekly', 'monthly'));
+$view_whitelist = new Valid_WhiteList('view', ['daily', 'weekly', 'monthly']);
 $view_whitelist->required();
 $view = $request->getValidated('view', $view_whitelist, 'daily');
 
@@ -81,11 +81,11 @@ if (isset($_REQUEST['SUBMIT'])) {
 
 $pm = ProjectManager::instance();
 project_admin_header(
-    array(
+    [
         'title' => $Language->getText('project_admin_index', 'p_admin', $pm->getProject($group_id)->getPublicName()),
         'group' => $group_id,
         'help' => 'project-admin.html#access-logs'
-    ),
+    ],
     \Tuleap\Project\Admin\Navigation\NavigationPresenterBuilder::DATA_ENTRY_SHORTNAME
 );
 
@@ -170,4 +170,4 @@ echo '<BR><FORM METHOD="POST" NAME="access_logs_export_form">
 print '<BR><P>';
 
 // END PAGE CONTENT CODE
-site_project_footer(array());
+site_project_footer([]);

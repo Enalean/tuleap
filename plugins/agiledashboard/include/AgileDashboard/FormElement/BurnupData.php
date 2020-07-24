@@ -37,12 +37,12 @@ class BurnupData
     /**
      * @var BurnupEffort[]
      */
-    private $efforts = array();
+    private $efforts = [];
 
     /**
      * @var CountElementsInfo[]
      */
-    private $count_elements = array();
+    private $count_elements = [];
 
     public function __construct(\TimePeriodWithoutWeekEnd $time_period, $is_under_calculation)
     {

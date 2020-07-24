@@ -33,10 +33,10 @@ $hp = Codendi_HTMLPurifier::instance();
 $vPv = new Valid_Pv();
 if ($request->valid($vPv) && $request->get('pv') == 2) {
     $pv = 2;
-    $HTML->pv_header(array());
+    $HTML->pv_header([]);
 } else {
     $pv = 0;
-    site_header(array('title' => $Language->getText('my_redirect', 'page_title')));
+    site_header(['title' => $Language->getText('my_redirect', 'page_title')]);
 }
 
 $vReturnTo = new Valid_String('return_to');
@@ -51,7 +51,7 @@ if ($request->valid($vReturnTo)) {
         $return_url = $request->get('return_to');
     }
 
-    $redirect = $Language->getText('my_redirect', 'return_to', array($hp->purify($return_url, CODENDI_PURIFIER_CONVERT_HTML)));
+    $redirect = $Language->getText('my_redirect', 'return_to', [$hp->purify($return_url, CODENDI_PURIFIER_CONVERT_HTML)]);
 
     print '
 <script type="text/javascript">
@@ -70,5 +70,5 @@ setTimeout("return_to_url()",1000);
 <p><big><?php echo $redirect; ?></big></p>
 
 <?php
-($pv == 2) ? $HTML->pv_footer(array()) : site_footer(array());
+($pv == 2) ? $HTML->pv_footer([]) : site_footer([]);
 ?>

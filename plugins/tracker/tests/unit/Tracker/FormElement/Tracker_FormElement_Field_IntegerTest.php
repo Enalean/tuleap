@@ -51,7 +51,7 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
     {
         $value_dao = Mockery::mock(Tracker_FormElement_Field_Value_IntegerDao::class);
 
-        $result = array('id' => 123, 'field_id' => 1, 'value' => '42');
+        $result = ['id' => 123, 'field_id' => 1, 'value' => '42'];
         $value_dao->shouldReceive('searchById')->andReturn(TestHelper::arrayToDar($result));
 
         $integer_field = $this->getIntegerField();
@@ -87,8 +87,8 @@ class Tracker_FormElement_Field_IntegerTest extends \PHPUnit\Framework\TestCase 
         $this->assertFalse($f->isValid($a, 'toto'));
         $this->assertFalse($f->isValid($a, '12toto'));
         $this->assertFalse($f->isValid($a, 1.23));
-        $this->assertFalse($f->isValid($a, array()));
-        $this->assertFalse($f->isValid($a, array(1)));
+        $this->assertFalse($f->isValid($a, []));
+        $this->assertFalse($f->isValid($a, [1]));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, ''));
         $this->assertFalse($f->isValidRegardingRequiredProperty($a, null));
     }

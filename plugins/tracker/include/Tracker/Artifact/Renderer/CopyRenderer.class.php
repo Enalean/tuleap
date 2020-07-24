@@ -38,10 +38,10 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
         HiddenFieldsetsDetector $hidden_fieldsets_detector
     ) {
         parent::__construct($event_manager, $artifact, $layout, $retriever, $visit_recorder, $hidden_fieldsets_detector);
-        $this->redirect->query_parameters = array(
+        $this->redirect->query_parameters = [
             'tracker' => (string) $artifact->getTrackerId(),
             'func'    => 'submit-copy-artifact',
-        );
+        ];
     }
 
     public function fetchFormContent(Codendi_Request $request, PFUser $current_user)
@@ -58,19 +58,19 @@ class Tracker_Artifact_CopyRenderer extends Tracker_Artifact_ReadOnlyRenderer
     protected function displayHeader()
     {
         $title       = sprintf(dgettext('tuleap-tracker', 'Copy of %1$s'), $this->artifact->getXRef());
-        $breadcrumbs = array(
-            array(
+        $breadcrumbs = [
+            [
                 'title' => $title,
                 'url'   => TRACKER_BASE_URL . '/?aid=' . $this->artifact->getId() . '&func=copy-artifact'
-            )
-        );
+            ]
+        ];
 
         $this->tracker->displayHeader(
             $this->layout,
             $title,
             $breadcrumbs,
             $this->tracker->getDefaultToolbar(),
-            array('body_class' => array('widgetable'))
+            ['body_class' => ['widgetable']]
         );
     }
 

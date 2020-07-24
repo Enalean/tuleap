@@ -229,7 +229,7 @@ class Tracker_Artifact_XMLImport
         ImportConfig $configuration
     ) {
         $tracker->getWorkflow()->disable();
-        $artifacts = array();
+        $artifacts = [];
 
         $this->source_platform              = $this->xml_artifact_source_platform_extractor->getSourcePlatform($xml_element, $configuration);
         $this->existing_sources_artifact_ids = $this->existing_artifact_source_id_extractor->getSourceArtifactIds($tracker, $this->source_platform);
@@ -449,11 +449,11 @@ class Tracker_Artifact_XMLImport
      */
     private function getSortedBySubmittedOn(SimpleXMLElement $changesets)
     {
-        $changeset_array = array();
+        $changeset_array = [];
         foreach ($changesets as $changeset) {
             $timestamp = $this->getSubmittedOn($changeset);
             if (! isset($changeset_array[$timestamp])) {
-                $changeset_array[$timestamp] = array($changeset);
+                $changeset_array[$timestamp] = [$changeset];
             } else {
                 $changeset_array[$timestamp][] = $changeset;
             }
@@ -464,7 +464,7 @@ class Tracker_Artifact_XMLImport
 
     private function flattenChangesetArray(array $changesets_per_timestamp)
     {
-        $changesets = array();
+        $changesets = [];
         foreach ($changesets_per_timestamp as $changeset_per_timestamp) {
             foreach ($changeset_per_timestamp as $changeset) {
                 $changesets[] = $changeset;

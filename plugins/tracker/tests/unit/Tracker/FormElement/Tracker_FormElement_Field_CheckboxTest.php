@@ -26,27 +26,27 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
     public function testItIsNoneWhenArrayIsFullOfZero(): void
     {
         $field = $this->getCheckboxField();
-        $this->assertTrue($field->isNone(array('0', '0', '0')));
+        $this->assertTrue($field->isNone(['0', '0', '0']));
     }
 
     public function testItIsNotNoneWhenArrayContainsAValue(): void
     {
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->isNone(array('1' => '0', '2' => '53')));
+        $this->assertFalse($field->isNone(['1' => '0', '2' => '53']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesAreTheSameAsStored(): void
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, array('5123', '5125')));
+        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '5125']));
     }
 
     public function testItHasNoChangesWhenSubmittedValuesContainsZero(): void
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, array('5123', '0', '5125')));
+        $this->assertFalse($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '0', '5125']));
     }
 
     public function testItDetectsChangesEvenWhenCSVImportValueIsNull(): void
@@ -60,7 +60,7 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
     {
         $previous = $this->getPreviousCHangesetValue();
         $field = $this->getCheckboxField();
-        $this->assertTrue($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, array('5123', '0', '5122')));
+        $this->assertTrue($field->hasChanges(Mockery::mock(Tracker_Artifact::class), $previous, ['5123', '0', '5122']));
     }
 
     public function testItHasAnHiddenFieldForEachCheckbox(): void
@@ -87,7 +87,7 @@ final class Tracker_FormElement_Field_CheckboxTest extends \PHPUnit\Framework\Te
     {
         $field = $this->getCheckboxField();
         $this->assertEquals(
-            array(Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID),
+            [Tracker_FormElement_Field_List_Bind_StaticValue_None::VALUE_ID],
             $field->getFieldDataFromCSVValue(null, null)
         );
     }

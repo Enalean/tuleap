@@ -77,9 +77,9 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
             M::spy(LoggerInterface::class)
         );
 
-        $this->options = array(
+        $this->options = [
             'tracker_id' => 10
-        );
+        ];
         $this->export_dir = "__fixtures";
 
         $this->archive = M::spy(\Tuleap\Project\XML\Export\ArchiveInterface::class);
@@ -113,7 +113,7 @@ class ProjectXMLExporterWithSynchronizedUGroupsTest extends TestCase
 
         $this->ugroup_manager->shouldReceive('getStaticUGroups')->andReturns([]);
 
-        $this->project->shouldReceive('getServices')->andReturns(array());
+        $this->project->shouldReceive('getServices')->andReturns([]);
 
         $this->event_manager->shouldReceive('processEvent')->once();
 

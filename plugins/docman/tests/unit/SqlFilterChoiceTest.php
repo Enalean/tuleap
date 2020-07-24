@@ -53,12 +53,12 @@ class SqlFilterChoiceTest extends TestCase
     {
         $docmanSf = \Mockery::mock(Docman_SqlFilter::class)->makePartial()->shouldAllowMockingProtectedMethods();
 
-        $this->assertEquals($docmanSf->getSearchType('*codex*'), array('like' => true, 'pattern' => '"%codex%"'));
-        $this->assertEquals($docmanSf->getSearchType('*c*od*ex*'), array('like' => true, 'pattern' => '"%c*od*ex%"'));
-        $this->assertEquals($docmanSf->getSearchType('*codex'), array('like' => true, 'pattern' => '"%codex"'));
-        $this->assertEquals($docmanSf->getSearchType('**codex'), array('like' => true, 'pattern' => '"%*codex"'));
-        $this->assertEquals($docmanSf->getSearchType('codex*'), array('like' => false));
-        $this->assertEquals($docmanSf->getSearchType('cod*ex*'), array('like' => false));
-        $this->assertEquals($docmanSf->getSearchType('codex'), array('like' => false));
+        $this->assertEquals($docmanSf->getSearchType('*codex*'), ['like' => true, 'pattern' => '"%codex%"']);
+        $this->assertEquals($docmanSf->getSearchType('*c*od*ex*'), ['like' => true, 'pattern' => '"%c*od*ex%"']);
+        $this->assertEquals($docmanSf->getSearchType('*codex'), ['like' => true, 'pattern' => '"%codex"']);
+        $this->assertEquals($docmanSf->getSearchType('**codex'), ['like' => true, 'pattern' => '"%*codex"']);
+        $this->assertEquals($docmanSf->getSearchType('codex*'), ['like' => false]);
+        $this->assertEquals($docmanSf->getSearchType('cod*ex*'), ['like' => false]);
+        $this->assertEquals($docmanSf->getSearchType('codex'), ['like' => false]);
     }
 }

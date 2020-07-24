@@ -136,7 +136,7 @@ class Tracker_Artifact_ChangesetFactory
      */
     public function getChangesetsForArtifact(Tracker_Artifact $artifact)
     {
-        $changesets = array();
+        $changesets = [];
         foreach ($this->dao->searchByArtifactId($artifact->getId()) as $row) {
             $changesets[$row['id']] = $this->getChangesetFromRow($artifact, $row);
         }
@@ -211,7 +211,7 @@ class Tracker_Artifact_ChangesetFactory
      */
     public function getNewChangesetsFormattedForJson(Tracker_Artifact $artifact, $changeset_id, PFUser $current_user)
     {
-        $changesets = array();
+        $changesets = [];
         foreach ($this->dao->searchChangesetNewerThan($artifact->getId(), $changeset_id) as $row) {
             $changesets[] = $this->json_formatter->format($this->getChangesetFromRow($artifact, $row), $current_user);
         }

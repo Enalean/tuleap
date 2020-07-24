@@ -104,7 +104,7 @@ class Project_OneStepCreation_OneStepCreationPresenter //phpcs:ignore PSR1.Class
      */
     private function getCustomDescriptionPresenters(array $required_custom_descriptions)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($required_custom_descriptions as $custom_description) {
             $presenters[] = new Project_CustomDescription_CustomDescriptionPresenter(
                 $custom_description,
@@ -391,7 +391,7 @@ class Project_OneStepCreation_OneStepCreationPresenter //phpcs:ignore PSR1.Class
      */
     private function generateTemplatesFromParsedDbData(array $projects)
     {
-        $templates = array();
+        $templates = [];
         foreach ($projects as $project) {
             /** @var Project $project */
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());

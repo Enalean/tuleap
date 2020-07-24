@@ -70,7 +70,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
      */
     function extractReceiver($project, $urlData)  // phpcs:ignore Squiz.Scope.MethodScope.Missing
     {
-        $admins = array();
+        $admins = [];
         $status  = true;
         $pm = ProjectManager::instance();
         $res = $pm->getMembershipRequestNotificationUGroup($project->getId());
@@ -88,8 +88,8 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
                  * 2 - UGROUP_PROJECT_ADMIN, UGROUP_1, UGROUP_2,.., UGROUP_n
                  * 3 - UGROUP_1, UGROUP_2,.., UGROUP_n
                  */
-                $ugroups = array();
-                $dars = array();
+                $ugroups = [];
+                $dars = [];
                 foreach ($res as $row) {
                     if ($row['ugroup_id'] == $GLOBALS['UGROUP_PROJECT_ADMIN']) {
                         $dar = $pm->returnProjectAdminsByGroupId($project->getId());
@@ -124,7 +124,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
                 }
             }
         }
-        return array('admins' => $admins, 'status' => $status);
+        return ['admins' => $admins, 'status' => $status];
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
 
         $messageToAdmin = trim($messageToAdmin);
         $messageToAdmin = '>' . $messageToAdmin;
-        $messageToAdmin = str_replace(array("\r\n"), "\n>", $messageToAdmin);
+        $messageToAdmin = str_replace(["\r\n"], "\n>", $messageToAdmin);
 
         $hrefApproval = $request->getServerUrl() . '/project/admin/?group_id=' . $request->get('groupId');
         $urlData      = $request->getServerUrl() . $request->get('url_data');
@@ -178,12 +178,12 @@ abstract class Error_PermissionDenied // phpcs:ignore PSR1.Classes.ClassDeclarat
         $link = $this->getRedirectLink($urlData, $GLOBALS['Language']);
         $body = $this->getPermissionDeniedMailBody($project, $user, $hrefApproval, $messageToAdmin, $link);
         if ($adminList['status'] == false) {
-            $body .= "\n\n" . $GLOBALS['Language']->getText('include_exit', 'mail_content_unvalid_ugroup', array($project->getPublicName()));
+            $body .= "\n\n" . $GLOBALS['Language']->getText('include_exit', 'mail_content_unvalid_ugroup', [$project->getPublicName()]);
         }
         $mail->setBodyText($body);
 
         if (! $mail->send()) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', array(ForgeConfig::get('sys_email_admin'))));
+            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('global', 'mail_failed', [ForgeConfig::get('sys_email_admin')]));
         }
 
         $GLOBALS['Response']->addFeedback(Feedback::INFO, $GLOBALS['Language']->getText('include_exit', 'request_sent'));

@@ -66,7 +66,7 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
         $tracker->shouldReceive('getId')->andReturn($this->tracker_id);
         $tracker->shouldReceive('getName')->andReturn('Stories');
 
-        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($tracker, array());
+        $this->hierarchical_tracker = new Tracker_Hierarchy_HierarchicalTracker($tracker, []);
         $this->request              = Mockery::mock(Codendi_Request::class);
         $this->dao                  = \Mockery::spy(HierarchyDAO::class);
         $this->type_dao             = \Mockery::spy(\Tuleap\Tracker\Admin\ArtifactLinksUsageDao::class);
@@ -197,7 +197,7 @@ final class Tracker_Hierarchy_ControllerTest extends \PHPUnit\Framework\TestCase
 
     public function testUpdateWithNastyRequestShouldThrowErrors(): void
     {
-        $children_ids = array('DROP DATABASE http://xkcd.com/327/');
+        $children_ids = ['DROP DATABASE http://xkcd.com/327/'];
         $this->request->shouldReceive('get')->with('children')->andReturn($children_ids);
         $this->request->shouldReceive('validArray')->andReturnFalse();
         $this->request->shouldReceive('exist')->andReturnTrue();

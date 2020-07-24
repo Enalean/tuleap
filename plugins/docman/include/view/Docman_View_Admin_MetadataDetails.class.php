@@ -57,7 +57,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
         $mdContent .= '</table>';
 
         if ($sthCanChange) {
-            $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], array());
+            $act_url = DocmanViewURLBuilder::buildUrl($params['default_url'], []);
             echo '<form name="md_details_update" method="POST" action="' . $act_url . '" class="docman_form">';
             echo '<input type="hidden" name="label" value="' . $md->getLabel() . '" />';
             echo '<input type="hidden" name="action" value="admin_md_details_update" />';
@@ -74,10 +74,10 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
             echo '<div class="docman_admin_list_values">' . "\n";
 
-            echo html_build_list_table_top(array(dgettext('tuleap-docman', 'Name'),
+            echo html_build_list_table_top([dgettext('tuleap-docman', 'Name'),
                                                  dgettext('tuleap-docman', 'Description'),
                                                  dgettext('tuleap-docman', 'Status'),
-                                                 dgettext('tuleap-docman', 'Delete')));
+                                                 dgettext('tuleap-docman', 'Delete')]);
             $vIter = $md->getListOfValueIterator();
             $vIter->rewind();
             $rowColorIdx = 0;
@@ -109,9 +109,9 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
                     // Name
                     $name = Docman_MetadataHtmlList::_getElementName($e);
                     if ($e->getId() > 100) {
-                        $url = DocmanViewURLBuilder::buildUrl($params['default_url'], array('action' => 'admin_display_love',
+                        $url = DocmanViewURLBuilder::buildUrl($params['default_url'], ['action' => 'admin_display_love',
                                                                              'md' => $md->getLabel(),
-                                                                             'loveid' => $e->getId()));
+                                                                             'loveid' => $e->getId()]);
                         $href = '<a href="' . $url . '">' . $name . '</a>';
                     } else {
                         $href = $name;
@@ -165,7 +165,7 @@ class Docman_View_Admin_MetadataDetails extends Docman_View_Extra
 
         $backUrl  = DocmanViewURLBuilder::buildUrl(
             $params['default_url'],
-            array('action' => 'admin_metadata')
+            ['action' => 'admin_metadata']
         );
         echo '<p><a href="' . $backUrl . '">' . dgettext('tuleap-docman', 'Back to Properties menu') . '</a></p>';
     }

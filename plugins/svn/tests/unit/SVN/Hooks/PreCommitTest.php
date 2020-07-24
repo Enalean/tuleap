@@ -313,7 +313,7 @@ class PreCommitTest extends TestCase
         ForgeConfig::set('sys_allow_empty_svn_commit_message', false);
 
         $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(array(""));
+        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn([""]);
 
         $hook_config = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
         $hook_config->shouldReceive('getHookConfig')->withArgs([HookConfig::MANDATORY_REFERENCE])->andReturn(false);
@@ -339,7 +339,7 @@ class PreCommitTest extends TestCase
         ForgeConfig::set('sys_allow_empty_svn_commit_message', true);
 
         $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(array(""));
+        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn([""]);
 
         $hook_config_retriever = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
 
@@ -370,7 +370,7 @@ class PreCommitTest extends TestCase
         $project = Mockery::mock('Project');
 
         $svn_look = Mockery::mock(Svnlook::class);
-        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(array("Commit message witout reference"));
+        $svn_look->shouldReceive('getMessageFromTransaction')->andReturn(["Commit message witout reference"]);
 
         $hook_config_retriever = \Mockery::spy(\Tuleap\SVN\Repository\HookConfigRetriever::class);
 

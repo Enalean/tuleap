@@ -38,14 +38,14 @@ class Project_CustomDescription_CustomDescriptionValueFactory
     public function getDescriptionFieldsValue(Project $project)
     {
         $project_id                = $project->getID();
-        $description_fields_values = array();
+        $description_fields_values = [];
         $results                   = $this->dao->getDescriptionFieldsValue($project_id);
 
         while ($row = $results->getRow()) {
-            $description_fields_values[] = array(
+            $description_fields_values[] = [
                 'id'    => $row['group_desc_id'],
                 'value' => $row['value']
-            );
+            ];
         }
         return $description_fields_values;
     }

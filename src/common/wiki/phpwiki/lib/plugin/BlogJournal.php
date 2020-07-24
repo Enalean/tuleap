@@ -39,12 +39,12 @@ class WikiPlugin_BlogJournal extends WikiPlugin_WikiBlog
 
     public function getDefaultArguments()
     {
-        return array('count'    => 7,
+        return ['count'    => 7,
                      'user'     => '',
                      'order'    => 'reverse',        // latest first
                      'month'    => false,
                      'noheader' => 0
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)

@@ -72,7 +72,7 @@ final class PackagesTest extends RestBase
     public function testOPTIONS(): void
     {
         $response = $this->getResponse($this->client->options('frs_packages'));
-        $this->assertEquals(array('OPTIONS', 'POST'), $response->getHeader('Allow')->normalize()->toArray());
+        $this->assertEquals(['OPTIONS', 'POST'], $response->getHeader('Allow')->normalize()->toArray());
     }
 
     public function testOPTIONSWithUserRESTReadOnlyAdmin(): void
@@ -149,10 +149,10 @@ final class PackagesTest extends RestBase
 
     public function testPOSTPackages(): void
     {
-        $post_resource = json_encode(array(
+        $post_resource = json_encode([
             'project_id' => $this->project_id,
             'label' => 'New package'
-        ));
+        ]);
 
         $response = $this->getResponse($this->client->post('frs_packages', null, $post_resource));
         $package  = $response->json();
@@ -163,10 +163,10 @@ final class PackagesTest extends RestBase
 
     public function testPOSTPackagesWithUserRESTReadOnlyAdmin(): void
     {
-        $post_resource = json_encode(array(
+        $post_resource = json_encode([
             'project_id' => $this->project_id,
             'label' => 'New package'
-        ));
+        ]);
 
         $response = $this->getResponse(
             $this->client->post('frs_packages', null, $post_resource),

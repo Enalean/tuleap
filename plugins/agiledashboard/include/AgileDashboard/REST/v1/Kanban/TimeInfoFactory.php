@@ -39,7 +39,7 @@ class TimeInfoFactory
     /** @return array */
     public function getTimeInfo(Tracker_Artifact $artifact)
     {
-        $timeinfo = array();
+        $timeinfo = [];
         foreach ($this->dao->searchTimeInfoForItem($artifact->getTrackerId(), $artifact->getId()) as $row) {
             $timeinfo[$row['column_id']] = JsonCast::toDate($row['submitted_on']);
         }

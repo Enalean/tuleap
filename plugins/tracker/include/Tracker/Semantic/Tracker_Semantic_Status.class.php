@@ -47,7 +47,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      * @param Tracker_FormElement_Field_List $list_field  The field
      * @param array                          $open_values The values with the meaning "Open"
      */
-    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = array())
+    public function __construct(Tracker $tracker, ?Tracker_FormElement_Field_List $list_field = null, $open_values = [])
     {
         parent::__construct($tracker);
         $this->list_field  = $list_field;
@@ -190,7 +190,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     private function getOpenLabels()
     {
-        $labels = array();
+        $labels = [];
 
         if (! $this->list_field instanceof Tracker_FormElement_Field_List) {
             return $labels;
@@ -368,7 +368,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
      */
     private function getFilteredOpenValues(Codendi_Request $request)
     {
-        $filtered_values = array();
+        $filtered_values = [];
         $open_values     = $request->get('open_values');
 
         if (
@@ -419,7 +419,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
         }
 
         $this->list_field  = null;
-        $this->open_values = array();
+        $this->open_values = [];
         $dao = new Tracker_Semantic_StatusDao();
         $dao->delete($this->tracker->getId());
     }
@@ -437,7 +437,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     public function save()
     {
         $dao = new Tracker_Semantic_StatusDao();
-        $open_values = array();
+        $open_values = [];
         foreach ($this->open_values as $v) {
             if (is_scalar($v)) {
                 $open_values[] = $v;
@@ -467,7 +467,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
 
     public function removeOpenValue($value)
     {
-        $this->open_values = array_diff($this->open_values, array($value));
+        $this->open_values = array_diff($this->open_values, [$value]);
         return $this->save();
     }
 
@@ -491,7 +491,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic
     public static function forceLoad(Tracker $tracker)
     {
         $field_id    = null;
-        $open_values = array();
+        $open_values = [];
         $dao         = new Tracker_Semantic_StatusDao();
 
         foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {

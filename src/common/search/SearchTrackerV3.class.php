@@ -69,9 +69,9 @@ class Search_SearchTrackerV3
             // Create field factory
             $art_field_fact = new ArtifactFieldFactory($ath);
 
-            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned)) . "</H3><P>\n";
+            echo '<H3>' . $GLOBALS['Language']->getText('search_index', 'search_res', [htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned]) . "</H3><P>\n";
 
-            $title_arr = array();
+            $title_arr = [];
 
             $summary_field = $art_field_fact->getFieldFromName("summary");
             if ($summary_field->userCanRead($group_id, $atid)) {
@@ -141,16 +141,16 @@ class Search_SearchTrackerV3
     public function getFacets(Project $project)
     {
         $trackers_v3 = $this->getTrackersV3ForProject($project);
-        $facets      = array();
+        $facets      = [];
 
         foreach ($trackers_v3 as $tracker_v3) {
-            $facets[] = array(
+            $facets[] = [
                 'title'                => $tracker_v3->getName(),
-                'extra-parameters'     => array(
+                'extra-parameters'     => [
                     'key'   => 'data-atid',
                     'value' => $tracker_v3->getID()
-                )
-            );
+                ]
+            ];
         }
 
         return new Search_SearchTypePresenter(

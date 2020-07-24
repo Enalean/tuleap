@@ -62,7 +62,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory
      */
     public function getChildren()
     {
-        $children = array();
+        $children = [];
 
         // Generate file list of the given release
         $files = $this->getFileList($this->getRelease());

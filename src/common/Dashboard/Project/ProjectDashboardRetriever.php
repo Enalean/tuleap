@@ -39,7 +39,7 @@ class ProjectDashboardRetriever
      */
     public function getAllProjectDashboards(Project $project)
     {
-        $project_dashboards = array();
+        $project_dashboards = [];
 
         foreach ($this->dao->searchAllProjectDashboards($project->getID()) as $row) {
             $project_dashboards[] = $this->instantiateFromRow($row);

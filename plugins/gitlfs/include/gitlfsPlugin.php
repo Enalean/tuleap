@@ -428,10 +428,10 @@ class gitlfsPlugin extends \Plugin // phpcs:ignore
     {
         $config_should_be_displayed = \ForgeConfig::get(\gitlfsPlugin::DISPLAY_CONFIG_KEY, true);
         if ($config_should_be_displayed) {
-            $params['plugins'][] = array(
+            $params['plugins'][] = [
                 'label' => dgettext('tuleap-gitlfs', 'Git LFS'),
                 'href'  => '/plugins/git-lfs/config'
-            );
+            ];
         }
     }
 

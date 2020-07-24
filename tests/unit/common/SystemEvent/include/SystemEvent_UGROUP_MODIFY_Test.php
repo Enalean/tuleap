@@ -59,7 +59,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns(array(1, 2));
+        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
 
         $evt->shouldReceive('processUgroupBinding')->andReturns(false);
 
@@ -100,7 +100,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns(array(1, 2));
+        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
 
         $evt->shouldReceive('processUgroupBinding')->andReturns(true);
 
@@ -141,7 +141,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
 
-        $evt->shouldReceive('getParametersAsArray')->andReturns(array(1, 2));
+        $evt->shouldReceive('getParametersAsArray')->andReturns([1, 2]);
 
         $project = \Mockery::spy(\Project::class);
         $project->shouldReceive('usesSVN')->andReturns(true);
@@ -150,10 +150,10 @@ class SystemEvent_UGROUP_MODIFY_Test extends TestCase
         $ugroupbinding = \Mockery::spy(\UGroupBinding::class);
         $ugroupbinding->shouldReceive('updateBindedUGroups')->andReturns(true);
         $ugroupbinding->shouldReceive('removeAllUGroupsBinding')->andReturns(true);
-        $projects     = array(
-            1 => array('group_id' => 101),
-            2 => array('group_id' => 102)
-        );
+        $projects     = [
+            1 => ['group_id' => 101],
+            2 => ['group_id' => 102]
+        ];
         $ugroupbinding->shouldReceive('getUGroupsByBindingSource')->andReturns($projects);
         $evt->shouldReceive('getUgroupBinding')->andReturns($ugroupbinding);
 

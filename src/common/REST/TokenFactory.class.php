@@ -34,7 +34,7 @@ class Rest_TokenFactory
     public function getTokensForUser(PFUser $user)
     {
         $tokens_dar = $this->token_dao->getTokensForUserId($user->getId());
-        $tokens     = $tokens_dar->instanciateWith(array($this, 'instantiateFromRow'));
+        $tokens     = $tokens_dar->instanciateWith([$this, 'instantiateFromRow']);
 
         return $tokens;
     }

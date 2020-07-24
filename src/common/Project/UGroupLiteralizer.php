@@ -56,7 +56,7 @@ class UGroupLiteralizer
     {
         $user = UserManager::instance()->getUserByUserName($user_name);
         if (! $user) {
-            return array();
+            return [];
         }
         return $this->getUserGroupsForUser($user);
     }
@@ -70,10 +70,10 @@ class UGroupLiteralizer
     public function getUserGroupsForUser(PFUser $user)
     {
         if (! $this->isValidUser($user)) {
-            return array();
+            return [];
         }
         return array_merge(
-            array(self::USER_STATUS[$user->getStatus()]),
+            [self::USER_STATUS[$user->getStatus()]],
             $this->getProjectUserGroupsForUser($user)
         );
     }
@@ -81,7 +81,7 @@ class UGroupLiteralizer
     public function getProjectUserGroupsForUser(PFUser $user): array
     {
         if (! $this->isValidUser($user)) {
-            return array();
+            return [];
         }
 
         return array_merge(
@@ -93,7 +93,7 @@ class UGroupLiteralizer
     public function getProjectUserGroupsIdsForUser(PFUser $user): array
     {
         if (! $this->isValidUser($user)) {
-            return array();
+            return [];
         }
 
         return array_merge(
@@ -104,7 +104,7 @@ class UGroupLiteralizer
 
     private function getDynamicUGroupsIds(PFUser $user): array
     {
-        $groups_ids = array();
+        $groups_ids = [];
         foreach ($user->getProjects(true) as $project) {
             $group_id = $project['group_id'];
             $groups_ids[] = $group_id . '_' . ProjectUGroup::PROJECT_MEMBERS;
@@ -119,7 +119,7 @@ class UGroupLiteralizer
 
     private function getStaticUGroupsIds(PFUser $user): array
     {
-        $groups_ids = array();
+        $groups_ids = [];
         foreach ($user->getAllUgroups() as $ugroup) {
             $groups_ids[] = (string) $ugroup['ugroup_id'];
         }
@@ -152,7 +152,7 @@ class UGroupLiteralizer
      */
     private function getDynamicUGroups(PFUser $user): array
     {
-        $user_ugroups   = array();
+        $user_ugroups   = [];
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -172,7 +172,7 @@ class UGroupLiteralizer
      */
     private function getStaticUGroups(PFUser $user)
     {
-        $user_ugroups = array();
+        $user_ugroups = [];
         $ugroups      = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $user_ugroups[] = 'ug_' . $row['ugroup_id'];
@@ -242,7 +242,7 @@ class UGroupLiteralizer
     public function ugroupIdsToString(array $ugroup_ids, Project $project): array
     {
         $project_name = $project->getUnixName();
-        $strings      = array();
+        $strings      = [];
         foreach ($ugroup_ids as $key => $ugroup_id) {
             foreach (explode(' ', $this->ugroupIdToString($ugroup_id, $project_name) ?? '') as $string) {
                 $strings[] = $string;

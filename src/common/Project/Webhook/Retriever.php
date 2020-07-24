@@ -44,7 +44,7 @@ class Retriever
             throw new WebhookDataAccessException();
         }
 
-        $webhooks = array();
+        $webhooks = [];
         foreach ($data_access_result as $row) {
             $webhooks[] = $this->instantiateFromRow($row);
         }

@@ -66,7 +66,7 @@ class ChartConfigurationValueRetriever
             return null;
         }
 
-        $artifact_list = array($artifact->getId());
+        $artifact_list = [$artifact->getId()];
 
         return $field->getComputedValue($user, $artifact, null, $artifact_list, true);
     }

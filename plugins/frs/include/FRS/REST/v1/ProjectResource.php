@@ -121,7 +121,7 @@ class ProjectResource extends AuthenticatedResource
             throw new RestException(404, 'File Release System service is not used by the project');
         }
 
-        $packages = array();
+        $packages = [];
         $paginated_packages = $this->package_factory->getPaginatedActivePackagesForUser(
             $project,
             $user,

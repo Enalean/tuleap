@@ -38,7 +38,7 @@ class StatisticsRefreshDiskUsage implements Dispatchable
 
     public function __construct(int $project_id)
     {
-        $this->services_usage = array();
+        $this->services_usage = [];
         $this->project_id     = $project_id;
     }
 

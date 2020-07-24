@@ -72,7 +72,7 @@ class ResourcesPatcher
 
     public function removeArtifactFromSource(PFUser $user, array $add)
     {
-        $to_add = array();
+        $to_add = [];
         foreach ($add as $move) {
             $added_id = $move->id;
             $to_add[] = $added_id;
@@ -82,8 +82,8 @@ class ResourcesPatcher
                 $this->artifactlink_updater->updateArtifactLinks(
                     $user,
                     $from_artifact,
-                    array(),
-                    array($added_id),
+                    [],
+                    [$added_id],
                     \Tracker_FormElement_Field_ArtifactLink::NO_NATURE
                 );
             }

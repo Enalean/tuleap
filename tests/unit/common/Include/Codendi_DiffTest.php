@@ -24,13 +24,13 @@ class Codendi_DiffTest extends \PHPUnit\Framework\TestCase // phpcs:ignore
 
     public function setUp(): void
     {
-        $this->a = array('Line 1', 'Line 2');
-        $this->b = array('Line 1', 'Line 2');
-        $this->c = array('Line 1', 'Line 2 modified');
-        $this->d = array('Line 1');
-        $this->e = array();
-        $this->f = array('Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5');
-        $this->g = array('Line 10', 'Line 2', 'Line 3', 'Line 4', 'Line 50');
+        $this->a = ['Line 1', 'Line 2'];
+        $this->b = ['Line 1', 'Line 2'];
+        $this->c = ['Line 1', 'Line 2 modified'];
+        $this->d = ['Line 1'];
+        $this->e = [];
+        $this->f = ['Line 1', 'Line 2', 'Line 3', 'Line 4', 'Line 5'];
+        $this->g = ['Line 10', 'Line 2', 'Line 3', 'Line 4', 'Line 50'];
     }
 
     public function testHtmlUnifiedDiffFormatterNoChanges()

@@ -148,9 +148,9 @@ final class PluginManagerTest extends \PHPUnit\Framework\TestCase
         $plugin_factory = \Mockery::spy(\PluginFactory::class);
         $plugin_factory->shouldReceive('createPlugin')->with('New_Plugin')->once()->andReturns($plugin);
 
-        $plugin_factory->shouldReceive('getAllPossiblePluginsDir')->andReturns(array(
+        $plugin_factory->shouldReceive('getAllPossiblePluginsDir')->andReturns([
             __DIR__ . '/test'
-        ));
+        ]);
 
         $forgeupgrade_config = \Mockery::spy(\ForgeUpgradeConfig::class);
         $forgeupgrade_config->shouldReceive('addPath')->with(ForgeConfig::get('sys_pluginsroot') . 'New_Plugin')->once();

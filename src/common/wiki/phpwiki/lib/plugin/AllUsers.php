@@ -56,10 +56,10 @@ class WikiPlugin_AllUsers extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(),
-            array('noheader'      => false,
+            ['noheader'      => false,
                    'include_empty' => true,
                    'debug'         => false
-            )
+            ]
         );
     }
     // info arg allows multiple columns
@@ -83,7 +83,7 @@ class WikiPlugin_AllUsers extends WikiPlugin
         if (method_exists($group, '_allUsers')) {
             $allusers = $group->_allUsers();
         } else {
-            $allusers = array();
+            $allusers = [];
         }
         $args['count'] = count($allusers);
         // deleted pages show up as version 0.

@@ -159,9 +159,9 @@ class PreferencesController
 
         $GLOBALS['Response']->redirect(
             $url . '?' . http_build_query(
-                array(
+                [
                     'dashboard_id' => $row['dashboard_id']
-                )
+                ]
             )
         );
     }

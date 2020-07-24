@@ -68,7 +68,7 @@ class hudsonActions extends Actions
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_hudson', 'add_job_error'));
             } else {
                 $em       = EventManager::instance();
-                $params   = array('job_id' => $jobId, 'request' => $request);
+                $params   = ['job_id' => $jobId, 'request' => $request];
                 $em->processEvent('save_ci_triggers', $params);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_added'));
                 $GLOBALS['Response']->redirect('/plugins/hudson/?group_id=' . intval($group_id));
@@ -111,7 +111,7 @@ class hudsonActions extends Actions
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_updated'));
             $em       = EventManager::instance();
-            $params   = array('request' => $request);
+            $params   = ['request' => $request];
             $em->processEvent('update_ci_triggers', $params);
         }
     }
@@ -126,7 +126,7 @@ class hudsonActions extends Actions
         } else {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_hudson', 'job_deleted'));
             $em       = EventManager::instance();
-            $params   = array('job_id' => $job_id);
+            $params   = ['job_id' => $job_id];
             $em->processEvent('delete_ci_triggers', $params);
         }
     }

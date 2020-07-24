@@ -38,7 +38,7 @@ class CollectionOfUgroupToBeNotifiedPresenterBuilder
 
     public function getCollectionOfUgroupToBeNotifiedPresenter(GitRepository $repository)
     {
-        $presenters = array();
+        $presenters = [];
         foreach ($this->dao->searchUgroupsByRepositoryId($repository->getId()) as $row) {
             $presenters[] = new UgroupToBeNotifiedPresenter(new ProjectUGroup($row));
         }

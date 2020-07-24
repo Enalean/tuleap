@@ -23,7 +23,7 @@ class BrokerLogger extends \Psr\Log\AbstractLogger implements \Psr\Log\LoggerInt
     /**
      * @var \Psr\Log\LoggerInterface[]
      */
-    private $loggers = array();
+    private $loggers = [];
 
     /**
      * @param \Psr\Log\LoggerInterface[] $loggers

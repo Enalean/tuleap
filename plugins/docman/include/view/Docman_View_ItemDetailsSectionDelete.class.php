@@ -110,7 +110,7 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
     private function getWikiDocumentPath($item)
     {
-        $parents = array();
+        $parents = [];
         $html = '';
 
         $purifier = Codendi_HTMLPurifier::instance();
@@ -119,10 +119,10 @@ class Docman_View_ItemDetailsSectionDelete extends Docman_View_ItemDetailsSectio
 
         while ($item && $item->getParentId() != 0) {
             $item = $this->_controller->getItemFactory()->getItemFromDb($item->getParentId());
-            $parents[] = array(
+            $parents[] = [
                 'id'    => $item->getId(),
                 'title' => $item->getTitle()
-            );
+            ];
         }
         $parents = array_reverse($parents);
         $item_url = '/plugins/docman/?group_id=' . urlencode($item->getGroupId()) . '&sort_update_date=0&action=show&id=';

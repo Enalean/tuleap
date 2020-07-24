@@ -35,7 +35,7 @@ class Tracker_Report_ResultJoiner
     {
         return call_user_func_array(
             'array_intersect_key',
-            array_merge(array($matching_ids), $other_results)
+            array_merge([$matching_ids], $other_results)
         );
     }
 }

@@ -37,24 +37,24 @@ class Tracker_CannedResponseManager
             if ($request->existAndNonEmpty('title') && $request->existAndNonEmpty('body')) {
                 if (Tracker_CannedResponseFactory::instance()->create($this->tracker, $request->get('title'), $request->get('body'))) {
                     $GLOBALS['Response']->addFeedback('info', 'Created');
-                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array(
+                    $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
                                                         'tracker' => (int) $this->tracker->id,
-                                                        'func'    => 'admin-canned')));
+                                                        'func'    => 'admin-canned']));
                 }
             }
         } elseif ($canned_id = (int) $request->get('delete')) {
             if (Tracker_CannedResponseFactory::instance()->delete($canned_id)) {
                 $GLOBALS['Response']->addFeedback('info', 'Deleted');
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
                                                     'tracker' => (int) $this->tracker->id,
-                                                    'func'    => 'admin-canned')));
+                                                    'func'    => 'admin-canned']));
             }
         } elseif ($canned_id = (int) $request->get('update')) {
             if (Tracker_CannedResponseFactory::instance()->update($canned_id, $this->tracker, trim($request->get('title')), $request->get('body'))) {
                 $GLOBALS['Response']->addFeedback('info', 'Updated');
-                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query(array(
+                $GLOBALS['Response']->redirect(TRACKER_BASE_URL . '/?' . http_build_query([
                                                     'tracker' => (int) $this->tracker->id,
-                                                    'func'    => 'admin-canned')));
+                                                    'func'    => 'admin-canned']));
             }
         } elseif ($canned_id = (int) $request->get('edit')) {
             $this->displayAdminResponse($tracker_manager, $request, $current_user);
@@ -81,10 +81,10 @@ class Tracker_CannedResponseManager
             foreach ($responses as $response) {
                 echo '<tr class="' . util_get_alt_row_color($i++) . '" valign="top">';
                 //title
-                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
                                                         'tracker' => (int) $this->tracker->id,
                                                         'func'    => 'admin-canned',
-                                                        'edit'    => (int) $response->id)) . '">';
+                                                        'edit'    => (int) $response->id]) . '">';
                 echo '<strong>' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '</strong></a>';
                 //excerpt
                 echo '<pre>' . $hp->purify(mb_substr($response->body, 0, 160), CODENDI_PURIFIER_CONVERT_HTML);
@@ -94,10 +94,10 @@ class Tracker_CannedResponseManager
                 echo '</td>';
 
                 //delete
-                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+                echo '<td><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
                                                         'tracker' => (int) $this->tracker->id,
                                                         'func'    => 'admin-canned',
-                                                        'delete'  => (int) $response->id)) . '" 
+                                                        'delete'  => (int) $response->id]) . '" 
                              onClick="return confirm(\'' . addslashes(sprintf(dgettext('tuleap-tracker', 'Delete this Canned Response : %1$s ?'), $response->title)) . '\')">';
                 echo $GLOBALS['HTML']->getImage('ic/cross.png');
                 echo '</a></td></tr>';
@@ -112,9 +112,9 @@ class Tracker_CannedResponseManager
         echo '<p>';
         echo dgettext('tuleap-tracker', 'Creating canned responses can save a lot of time if you frequently give the same answers to your users.');
         echo '<p>';
-        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+        echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query([
                                                         'tracker' => (int) $this->tracker->id,
-                                                        'func'    => 'admin-canned')) . '" 
+                                                        'func'    => 'admin-canned']) . '" 
                     method="POST">';
         echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
         echo '<input type="text" name="title" value="" size="50">';
@@ -143,10 +143,10 @@ class Tracker_CannedResponseManager
             echo '<p>';
             echo dgettext('tuleap-tracker', 'Creating canned responses can save a lot of time if you frequently give the same answers to your users.');
             echo '<p>';
-            echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+            echo '<form action="' . TRACKER_BASE_URL . '/?' . http_build_query([
                                                             'tracker' => (int) $this->tracker->id,
                                                             'func'    => 'admin-canned',
-                                                            'update'  => (int) $response->id)) . '" 
+                                                            'update'  => (int) $response->id]) . '" 
                         method="POST">';
             echo '<b>' . dgettext('tuleap-tracker', 'Title') . ':</b><br />';
             echo '<input type="text" name="title" value="' . $hp->purify($response->title, CODENDI_PURIFIER_CONVERT_HTML) . '" size="50">';
@@ -156,9 +156,9 @@ class Tracker_CannedResponseManager
             echo '<p>';
             echo '<input type="submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" />';
             echo '</form>';
-            echo '<p><a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array(
+            echo '<p><a href="' . TRACKER_BASE_URL . '/?' . http_build_query([
                                                             'tracker' => (int) $this->tracker->id,
-                                                            'func'    => 'admin-canned')) . '">&laquo; Go back to canned responses</a></p>';
+                                                            'func'    => 'admin-canned']) . '">&laquo; Go back to canned responses</a></p>';
             $this->tracker->displayFooter($tracker_manager);
             exit;
         }

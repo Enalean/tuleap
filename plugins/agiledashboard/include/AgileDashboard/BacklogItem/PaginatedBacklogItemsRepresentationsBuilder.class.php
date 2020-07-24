@@ -79,7 +79,7 @@ class AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentationsBuilder
         int $offset
     ): AgileDashboard_BacklogItem_PaginatedBacklogItemsRepresentations {
         $backlog_items                 = $this->getMilestoneBacklogItems($user, $milestone, $backlog, $limit, $offset);
-        $backlog_items_representations = array();
+        $backlog_items_representations = [];
 
         foreach ($backlog_items as $backlog_item) {
             $backlog_items_representations[] = $this->backlog_item_representation_factory->createBacklogItemRepresentation($backlog_item);

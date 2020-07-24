@@ -51,7 +51,7 @@ class Actions
         return true;
     }
 
-    public function process($action, $params = array())
+    public function process($action, $params = [])
     {
         if ($this->check()) {
             $this->$action($params);

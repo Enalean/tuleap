@@ -38,7 +38,7 @@ class BurndownCacheDateRetriever
         $start_date = $this->getFirstDayToCache($burndown_period);
         $end_date   = $this->getLastDayToCache($burndown_period);
 
-        $day = array();
+        $day = [];
 
         while ($start_date <= $end_date && $start_date <= $yesterday) {
             if (TimePeriodWithoutWeekEnd::isNotWeekendDay($this->removeLastSecondOfCachedDayForJPGraph($start_date))) {

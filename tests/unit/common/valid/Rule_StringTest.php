@@ -50,7 +50,7 @@ class Rule_StringTest extends TestCase
         $this->assertFalse($r->isValid("\rabcdfg"));
         $this->assertFalse($r->isValid("abcdfg\r"));
 
-        $array = array("abcdfg");
+        $array = ["abcdfg"];
         $this->assertFalse($r->isValid($array));
     }
 

@@ -116,7 +116,7 @@ class UserMappingManager
      */
     public function getUsageByUser(PFUser $user)
     {
-        $user_mappings_usage = array();
+        $user_mappings_usage = [];
         $rows                = $this->dao->searchUsageByUserId($user->getId());
 
         if ($rows === false) {

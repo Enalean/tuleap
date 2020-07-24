@@ -63,8 +63,8 @@ class Valid
     public function __construct($key = null)
     {
         $this->key = $key;
-        $this->errors = array();
-        $this->rules = array();
+        $this->errors = [];
+        $this->rules = [];
         $this->isRequired = false;
         $this->useFeedback = true;
         $this->globalErrorMessage = null;

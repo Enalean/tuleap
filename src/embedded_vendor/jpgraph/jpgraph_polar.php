@@ -35,7 +35,7 @@ class PolarPlot
     public $legendcsimtarget = '';
     public $legendcsimalt = '';
     public $legend = "";
-    public $csimtargets = array(); // Array of targets for CSIM
+    public $csimtargets = []; // Array of targets for CSIM
     public $csimareas = "";   // Resultant CSIM area tags
     public $csimalts = null;   // ALT:s for corresponding target
     public $scale = null;
@@ -134,7 +134,7 @@ class PolarPlot
     public function Stroke($img, $scale)
     {
         $i = 0;
-        $p = array();
+        $p = [];
         $this->csimareas = '';
         while ($i < $this->numpoints) {
             list($x1,$y1) = $scale->PTranslate($this->coord[2 * $i], $this->coord[2 * $i + 1]);
@@ -264,7 +264,7 @@ class PolarAxis extends Axis
         $this->scale->ticks->Stroke($this->img, $this->scale, $pos);
 
         // Stroke the minor arcs
-        $pmin = array();
+        $pmin = [];
         $p = $this->scale->ticks->ticks_pos;
         $n = count($p);
         $i = 0;
@@ -671,7 +671,7 @@ class PolarScale extends LinearScale
         } else {
             $y = ($this->graph->img->top_margin + $this->graph->img->plotheight) - $y;
         }
-        return array($x,$y);
+        return [$x, $y];
     }
 }
 
@@ -717,7 +717,7 @@ class PolarLogScale extends LogScale
         } else {
             $y = ($this->graph->img->top_margin + $this->graph->img->plotheight) - $y;
         }
-        return array($x,$y);
+        return [$x, $y];
     }
 }
 

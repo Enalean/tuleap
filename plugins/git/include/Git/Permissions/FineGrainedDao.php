@@ -417,7 +417,7 @@ class FineGrainedDao extends DataAccessObject
         $this->updatePermissions(
             $project_id,
             ProjectUGroup::PROJECT_MEMBERS,
-            array(ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED)
+            [ProjectUGroup::ANONYMOUS, ProjectUGroup::REGISTERED, ProjectUGroup::AUTHENTICATED]
         );
     }
 
@@ -426,7 +426,7 @@ class FineGrainedDao extends DataAccessObject
         $this->updatePermissions(
             $project_id,
             ProjectUGroup::REGISTERED,
-            array(ProjectUGroup::AUTHENTICATED)
+            [ProjectUGroup::AUTHENTICATED]
         );
     }
 

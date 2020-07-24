@@ -188,7 +188,7 @@ class UserGroupResource extends AuthenticatedResource
         $project_id = $user_group->getProjectId();
         $this->userCanSeeUserGroupMembers($user_group);
 
-        $member_representations = array();
+        $member_representations = [];
 
         try {
             $identifier = $this->query_parser->getString($query, 'identifier');
@@ -208,7 +208,7 @@ class UserGroupResource extends AuthenticatedResource
 
             $nb_member = 0;
             if ($member !== null) {
-                $member_representations   = array_slice(array($member), $offset, $limit);
+                $member_representations   = array_slice([$member], $offset, $limit);
                 $nb_member                = 1;
             }
             $this->sendPaginationHeaders($limit, $offset, $nb_member);

@@ -93,22 +93,22 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
         $type
     ) {
         return '/widgets/?' . http_build_query(
-            array(
+            [
                 'dashboard-type'      => $type,
                 'action'              => 'add-widget',
-                'kanban'              => array(
+                'kanban'              => [
                     'title' => $kanban->getName(),
                     'id'    => $kanban->getId()
-                ),
+                ],
                 'widget-name'         => $widget_id,
                 $csrf->getTokenName() => $csrf->getToken()
-            )
+            ]
         );
     }
 
     private function getAvailableDashboardsForUser(PFUser $user)
     {
-        $user_dashboards_representation = array();
+        $user_dashboards_representation = [];
         $user_dashboards                = $this->user_dashboard_retriever->getAllUserDashboards($user);
         foreach ($user_dashboards as $user_dashboard) {
             $user_dashboards_representation[] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());
@@ -119,7 +119,7 @@ class WidgetAddToDashboardDropdownRepresentationBuilder
 
     private function getAvailableDashboardsForProject(Project $project)
     {
-        $project_dashboards_representation = array();
+        $project_dashboards_representation = [];
         $project_dashboards                = $this->project_dashboard_retriever->getAllProjectDashboards($project);
         foreach ($project_dashboards as $user_dashboard) {
             $project_dashboards_representation[] = new DashboardRepresentation($user_dashboard->getId(), $user_dashboard->getName());

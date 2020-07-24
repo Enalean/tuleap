@@ -131,11 +131,11 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         exit_error($Language->getText('global', 'error'), $Language->getText('news_admin_index', 'permission_denied'));
     }
 
-    $vPostMsg = new Valid_WhiteList('post_message', array('y'));
+    $vPostMsg = new Valid_WhiteList('post_message', ['y']);
     $vPostMsg->required();
     if ($request->isPost() && $request->valid($vPostMsg)) {
         // MV: add management on "on post monitoring"
-        $vMonitor = new Valid_WhiteList('enable_monitoring', array('1'));
+        $vMonitor = new Valid_WhiteList('enable_monitoring', ['1']);
         $vMonitor->required();
         $vThreadId = new Valid_UInt('thread_id');
         $vThreadId->required();
@@ -217,7 +217,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     }
 
     // Set
-    if ($request->valid(new Valid_WhiteList('set', array('custom')))) {
+    if ($request->valid(new Valid_WhiteList('set', ['custom']))) {
         $set = $request->get('set');
     } else {
         $set = false;
@@ -273,8 +273,8 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
     }
 
         $pm = ProjectManager::instance();
-        $params = array('title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
-                      'pv'   => isset($pv) ? $pv : false);
+        $params = ['title' => $pm->getProject($group_id)->getPublicName() . ' forum: ' . $forum_name,
+                      'pv'   => isset($pv) ? $pv : false];
         forum_header($params);
 
     //private forum check
@@ -341,13 +341,13 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
         //create a pop-up select box showing options for viewing threads
 
             $vals = forum_utils_get_styles();
-            $texts = array($Language->getText('forum_forum', 'nested'),$Language->getText('forum_forum', 'flat'),$Language->getText('forum_forum', 'threaded'),$Language->getText('forum_forum', 'no_comments'));
+            $texts = [$Language->getText('forum_forum', 'nested'), $Language->getText('forum_forum', 'flat'), $Language->getText('forum_forum', 'threaded'), $Language->getText('forum_forum', 'no_comments')];
 
             $options_popup = html_build_select_box_from_arrays($vals, $texts, 'style', $style, false);
 
         //create a pop-up select box showing options for max_row count
-            $vals = array(25,50,75,100);
-            $texts = array($Language->getText('forum_forum', 'show', '25'),$Language->getText('forum_forum', 'show', '50'),$Language->getText('forum_forum', 'show', '75'),$Language->getText('forum_forum', 'show', '100'));
+            $vals = [25, 50, 75, 100];
+            $texts = [$Language->getText('forum_forum', 'show', '25'), $Language->getText('forum_forum', 'show', '50'), $Language->getText('forum_forum', 'show', '75'), $Language->getText('forum_forum', 'show', '100')];
 
             $max_row_popup = html_build_select_box_from_arrays($vals, $texts, 'max_rows', $max_rows, false);
 
@@ -374,7 +374,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
               different header for default threading
              */
 
-                $title_arr = array();
+                $title_arr = [];
                 $title_arr[] = $Language->getText('forum_forum', 'thread');
                 $title_arr[] = $Language->getText('forum_forum', 'author');
                 $title_arr[] = $Language->getText('forum_forum', 'date');
@@ -504,7 +504,7 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         forum_footer($params);
 } else {
-    forum_header(array('title' => $Language->getText('global', 'error')));
+    forum_header(['title' => $Language->getText('global', 'error')]);
     echo '<H1' . $Language->getText('forum_forum', 'choose_forum_first') . '</H1>';
-    forum_footer(array());
+    forum_footer([]);
 }

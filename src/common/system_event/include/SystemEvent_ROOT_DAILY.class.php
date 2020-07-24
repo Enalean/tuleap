@@ -63,7 +63,7 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
         // Purge system_event table: we only keep one year history in db
         $this->purgeSystemEventsDataOlderThanOneYear();
 
-        $warnings = array();
+        $warnings = [];
 
         $this->runComputeAllDailyStats($logger, $warnings);
 
@@ -98,8 +98,8 @@ class SystemEvent_ROOT_DAILY extends SystemEvent // phpcs:ignore
     {
         $dao   = new UserDao();
         $users = $dao
-            ->searchByStatus(array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED))
-            ->instanciateWith(array(UserManager::instance(), 'getUserInstanceFromRow'));
+            ->searchByStatus([PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED])
+            ->instanciateWith([UserManager::instance(), 'getUserInstanceFromRow']);
 
         foreach ($users as $user) {
             $backend_system->userHomeSanityCheck($user);

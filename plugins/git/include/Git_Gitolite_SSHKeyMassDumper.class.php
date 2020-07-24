@@ -47,7 +47,7 @@ class Git_Gitolite_SSHKeyMassDumper implements MassDumper
 
     private function dumpAllKeys()
     {
-        $dumped_users = array();
+        $dumped_users = [];
         foreach ($this->user_manager->getUsersWithSshKey() as $user) {
             $dumped_users[$user->getUserName()] = true;
             $this->dumper->dumpSSHKeysWithoutCommit($user);

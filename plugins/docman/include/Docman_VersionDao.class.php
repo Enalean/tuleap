@@ -216,7 +216,7 @@ class Docman_VersionDao extends DataAccessObject
             $this->da->quoteSmart($item_id),
             $this->da->quoteSmart($number),
             $this->da->quoteSmart($user_id),
-            $this->da->quoteSmart($label, array('force_string' => true)),
+            $this->da->quoteSmart($label, ['force_string' => true]),
             $this->da->quoteSmart($changelog),
             $this->da->quoteSmart($date),
             $this->da->quoteSmart($filename),
@@ -231,10 +231,10 @@ class Docman_VersionDao extends DataAccessObject
         if (! isset($row['date']) || $row['date'] == '') {
             $row['date'] = time();
         }
-        $arg    = array();
-        $values = array();
-        $params = array('force_string' => false);
-        $cols   = array('item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path');
+        $arg    = [];
+        $values = [];
+        $params = ['force_string' => false];
+        $cols   = ['item_id', 'number', 'user_id', 'label', 'changelog', 'date', 'filename', 'filesize', 'filetype', 'path'];
         foreach ($row as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -355,7 +355,7 @@ class Docman_VersionDao extends DataAccessObject
 
         $dar = $this->retrieve($sql);
         if ($dar && ! $dar->isError() && $dar->rowCount() > 0) {
-            $pendings = array();
+            $pendings = [];
             foreach ($dar as $row) {
                 $pendings[] = $row;
             }
@@ -366,9 +366,9 @@ class Docman_VersionDao extends DataAccessObject
                 return [];
             }
             $row = $resNumrows->getRow();
-            return array('versions' => $pendings, 'nbVersions' => $row['nb']);
+            return ['versions' => $pendings, 'nbVersions' => $row['nb']];
         }
-        return array();
+        return [];
     }
 
     /**

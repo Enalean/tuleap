@@ -55,11 +55,11 @@ class Docman_MetadataFactory
     {
         // Metadata hard coded as table columns but with some user-defined
         // states such as 'useIt' in a dedicated table
-        $this->modifiableMetadata = array('obsolescence_date', 'status');
+        $this->modifiableMetadata = ['obsolescence_date', 'status'];
 
-        $this->scalarMetadata     = array(PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
+        $this->scalarMetadata     = [PLUGIN_DOCMAN_METADATA_TYPE_TEXT,
                                           PLUGIN_DOCMAN_METADATA_TYPE_STRING,
-                                          PLUGIN_DOCMAN_METADATA_TYPE_DATE);
+                                          PLUGIN_DOCMAN_METADATA_TYPE_DATE];
 
         $this->groupId = $groupId;
     }
@@ -130,9 +130,9 @@ class Docman_MetadataFactory
      *
      * @param bool $onlyUsed Return only metadata enabled by the project.
      */
-    public function getRealMetadataList($onlyUsed = false, $type = array())
+    public function getRealMetadataList($onlyUsed = false, $type = [])
     {
-        $mda = array();
+        $mda = [];
 
         $dao = $this->getDao();
         $dar = $dao->searchByGroupId($this->groupId, $onlyUsed, $type);
@@ -147,7 +147,7 @@ class Docman_MetadataFactory
         return $mda;
     }
 
-    private function getRealMetadataIterator($onlyUsed = false, $type = array())
+    private function getRealMetadataIterator($onlyUsed = false, $type = [])
     {
         $mda = $this->getRealMetadataList($onlyUsed, $type);
         $mdi = new ArrayIterator($mda);
@@ -172,7 +172,7 @@ class Docman_MetadataFactory
      */
     public function getHardCodedMetadataList($onlyUsed = false)
     {
-        $mda = array();
+        $mda = [];
         foreach (self::HARDCODED_METADATA_LABELS as $mdLabel) {
             $md = $this->getHardCodedMetadataFromLabel($mdLabel);
             if (in_array($md->getLabel(), $this->modifiableMetadata)) {
@@ -198,7 +198,7 @@ class Docman_MetadataFactory
      */
     public function getInheritableMdLabelArray()
     {
-        $mdla = array();
+        $mdla = [];
 
         // Status
         $md = $this->getHardCodedMetadataFromLabel('status');
@@ -209,7 +209,7 @@ class Docman_MetadataFactory
 
         // Real metadata
         $dao = $this->getDao();
-        $dar = $dao->searchByGroupId($this->groupId, true, array());
+        $dar = $dao->searchByGroupId($this->groupId, true, []);
         while ($dar->valid()) {
             $row = $dar->current();
             $mdla[$row['label']] = $row['label'];
@@ -705,9 +705,9 @@ class Docman_MetadataFactory
     {
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
 
-        $metadataMapping = array();
-        $metadataMapping['md'] = array();
-        $metadataMapping['love'] = array();
+        $metadataMapping = [];
+        $metadataMapping['md'] = [];
+        $metadataMapping['love'] = [];
 
         $mda = $this->getRealMetadataList(false);
         $mdIter = new ArrayIterator($mda);
@@ -760,7 +760,7 @@ class Docman_MetadataFactory
 
     public function findByName($name)
     {
-        $mda = array();
+        $mda = [];
 
         // Hardcoded
         $hcmda = $this->getHardCodedMetadataList(true);
@@ -806,7 +806,7 @@ class Docman_MetadataFactory
     public function _exportMetadata($dstGroupId)
     {
         // Get the properties mapping between the 2 projects
-        $mdMap = array();
+        $mdMap = [];
         $this->getMetadataMapping($dstGroupId, $mdMap);
 
         $dstMdFactory = $this->_getMetadataFactory($dstGroupId);
@@ -823,7 +823,7 @@ class Docman_MetadataFactory
                     $srcLoveFactory->exportValues($srcMd, $dstMd, $mdMap['love']);
                 }
             } else {
-                $_dummyMap = array();
+                $_dummyMap = [];
                 $this->_cloneOneMetadata($dstGroupId, $srcMd, $_dummyMap);
             }
         }

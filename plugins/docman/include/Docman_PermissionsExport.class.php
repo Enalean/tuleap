@@ -29,7 +29,7 @@ class Docman_PermissionsExport
 {
     protected $group;
     protected $ugroups;
-    protected $parentTitles = array();
+    protected $parentTitles = [];
 
     public function __construct(Project $group)
     {
@@ -53,7 +53,7 @@ class Docman_PermissionsExport
 
         $result = db_query($sql);
         $title = '';
-        $newParentIds = array();
+        $newParentIds = [];
         while (($row = db_fetch_array($result))) {
             $this->parentTitles[$row['item_id']] = $this->parentTitles[$row['parent_id']] . '/' . $row['title'];
             $output[$row['item_id']]['title'] = $this->parentTitles[$row['item_id']];
@@ -74,7 +74,7 @@ class Docman_PermissionsExport
     {
         if ($this->ugroups === null) {
             /** @psalm-suppress DeprecatedFunction */
-            $result = ugroup_db_get_existing_ugroups($this->group->getId(), array($GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']));
+            $result = ugroup_db_get_existing_ugroups($this->group->getId(), [$GLOBALS['UGROUP_ANONYMOUS'], $GLOBALS['UGROUP_REGISTERED'], $GLOBALS['UGROUP_PROJECT_MEMBERS'], $GLOBALS['UGROUP_PROJECT_ADMIN']]);
             while (($row = db_fetch_array($result))) {
                 $this->ugroups[$row['ugroup_id']] = \Tuleap\User\UserGroup\NameTranslator::getUserGroupDisplayKey((string) $row['name']);
             }
@@ -87,10 +87,10 @@ class Docman_PermissionsExport
         // Collect data
         $itemFactory    = new Docman_ItemFactory($this->group->getId());
         $rootItem       = $itemFactory->getRoot($this->group->getId());
-        $output         = array();
+        $output         = [];
         if ($rootItem !== null) {
             $this->parentTitles[$rootItem->getId()] = '';
-            $this->fetchPerms(array($rootItem->getId()), $output);
+            $this->fetchPerms([$rootItem->getId()], $output);
         }
         return $output;
     }
@@ -175,17 +175,17 @@ class Docman_PermissionsExport
     public function renderDefinitionFormat()
     {
         project_admin_header(
-            array('title' => dgettext('tuleap-docman', 'Project data export')),
+            ['title' => dgettext('tuleap-docman', 'Project data export')],
             'data'
         );
 
         echo '<h3>' . dgettext('tuleap-docman', 'Docman permission export format') . '</h3>';
         echo '<p>' . dgettext('tuleap-docman', 'Docman permission export format') . '</p>';
-        $title_arr = array(
+        $title_arr = [
             dgettext('tuleap-docman', 'Label'),
             dgettext('tuleap-docman', 'Sample value'),
             dgettext('tuleap-docman', 'Description')
-        );
+        ];
         echo html_build_list_table_top($title_arr);
         $i = 0;
 
@@ -214,6 +214,6 @@ class Docman_PermissionsExport
         echo "</tr>";
 
         echo "</table>";
-        site_project_footer(array());
+        site_project_footer([]);
     }
 }

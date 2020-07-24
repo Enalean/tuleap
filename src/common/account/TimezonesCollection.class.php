@@ -20,7 +20,7 @@
 class Account_TimezonesCollection
 {
 
-    private $timezones = array(
+    private $timezones = [
         'US/Alaska',
         'US/Aleutian',
         'US/Arizona',
@@ -478,7 +478,7 @@ class Account_TimezonesCollection
         'WET',
         'W-SU',
         'Zulu',
-    );
+    ];
 
     public function getTimezones()
     {
@@ -492,7 +492,7 @@ class Account_TimezonesCollection
 
     public function getTimezonePresenters($current_timezone)
     {
-        $list_of_presenters = array();
+        $list_of_presenters = [];
         foreach ($this->timezones as $timezone) {
             $presenter = new stdClass();
             $presenter->value = $timezone;

@@ -46,19 +46,19 @@ class Docman_PermissionsManager
      * @var ProjectAccessChecker
      */
     private $project_access_checker;
-    protected $cache_access = array();
-    protected $cache_read   = array();
-    protected $cache_write  = array();
-    protected $cache_manage = array();
+    protected $cache_access = [];
+    protected $cache_read   = [];
+    protected $cache_write  = [];
+    protected $cache_manage = [];
 
-    protected $cache_admin  = array();
+    protected $cache_admin  = [];
     protected $dao          = null;
 
     // No cache, just convenient accessor.
     protected $subItemsWritableVisitor = null;
 
     private $lockFactory = null;
-    private static $instance = array();
+    private static $instance = [];
     private $plugin;
 
     private function __construct(Project $project, ProjectAccessChecker $project_access_checker)
@@ -209,7 +209,7 @@ class Docman_PermissionsManager
             $pm = $this->_getPermissionManagerInstance();
             $canRead = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_READ, $user->getUgroups($this->getProject()->getID(), array()))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_READ, $user->getUgroups($this->getProject()->getID(), []))
                 || $this->_userHasWritePermission($user, $item_id);
 
             $this->_setCanRead($user->getId(), $item_id, $canRead);
@@ -287,7 +287,7 @@ class Docman_PermissionsManager
         $pm = $this->_getPermissionManagerInstance();
         $canWrite = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_WRITE, $user->getUgroups($this->getProject()->getID(), array()))
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_WRITE, $user->getUgroups($this->getProject()->getID(), []))
                 || $this->userCanManage($user, $item_id);
         if ($canWrite) {
             $this->_setCanRead($user->getId(), $item_id, true);
@@ -343,7 +343,7 @@ class Docman_PermissionsManager
             $pm = $this->_getPermissionManagerInstance();
             $canManage = $user->isSuperUser()
                 || $this->userCanAdmin($user) //There are default perms for admin
-                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), array()));
+                || $pm->userHasPermission($item_id, self::ITEM_PERMISSION_TYPE_MANAGE, $user->getUgroups($this->getProject()->getID(), []));
             $this->_setCanManage($user->getId(), $item_id, $canManage);
         }
         return $this->cache_manage[$user->getId()][$item_id];
@@ -459,7 +459,7 @@ class Docman_PermissionsManager
 
     public function cloneDocmanPermissions($srcGroupId, $dstGroupId)
     {
-        $perms = array(self::PLUGIN_DOCMAN_ADMIN);
+        $perms = [self::PLUGIN_DOCMAN_ADMIN];
         $pm = $this->_getPermissionManagerInstance();
         $pm->clonePermissions($srcGroupId, $dstGroupId, $perms, $dstGroupId);
     }
@@ -497,7 +497,7 @@ class Docman_PermissionsManager
         $userId = $user->getId();
 
         // Collect the item ids we need to check
-        $objIds = array();
+        $objIds = [];
         foreach ($itemsIds as $itemid) {
             if ($this->userCanAdmin($user)) {
                 // Docman admin has all rights
@@ -516,7 +516,7 @@ class Docman_PermissionsManager
         }
 
         if (count($objIds) > 0) {
-            $dar = $dao->retrievePermissionsForItems($objIds, self::ITEM_PERMISSION_TYPES, $user->getUgroups($this->getProject()->getID(), array()));
+            $dar = $dao->retrievePermissionsForItems($objIds, self::ITEM_PERMISSION_TYPES, $user->getUgroups($this->getProject()->getID(), []));
             foreach ($dar as $row) {
                 switch ($row['permission_type']) {
                     case self::ITEM_PERMISSION_TYPE_MANAGE:
@@ -628,7 +628,7 @@ class Docman_PermissionsManager
         if ($this->userCanAdmin($user)) {
             $oneWritable = true;
         } else {
-            $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID(), array()));
+            $oneWritable = $dao->oneFolderIsWritable($this->getProject()->getID(), $user->getUgroups($this->getProject()->getID(), []));
         }
 
         return $oneWritable;
@@ -669,7 +669,7 @@ class Docman_PermissionsManager
      */
     public function getDocmanManagerUsers($objectId, $project)
     {
-        $userArray = array();
+        $userArray = [];
         $dao = $this->getDao();
         $dar = $this->_getPermissionManagerInstance()->getUgroupIdByObjectIdAndPermissionType($objectId, self::ITEM_PERMISSION_TYPE_MANAGE);
         if ($dar) {
@@ -694,7 +694,7 @@ class Docman_PermissionsManager
      */
     public function getDocmanAdminUsers($project)
     {
-        $userArray = array();
+        $userArray = [];
         $dao = $this->getDao();
         $dar = $dao->getDocmanAdminUgroups($project);
         if ($dar) {
@@ -719,7 +719,7 @@ class Docman_PermissionsManager
      */
     public function getProjectAdminUsers($project)
     {
-        $userArray = array();
+        $userArray = [];
         $dao = $this->getDao();
         $darDu = $dao->getProjectAdminMembers($project);
         if ($darDu) {

@@ -46,7 +46,7 @@ class Search_SearchResultsIntroPresenter
 
     public function search_result_title()
     {
-        return $GLOBALS['Language']->getText('search_index', 'search_res', array($this->words, $this->getNumberRowsReturned()));
+        return $GLOBALS['Language']->getText('search_index', 'search_res', [$this->words, $this->getNumberRowsReturned()]);
     }
 
     private function getNumberRowsReturned()

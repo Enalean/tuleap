@@ -20,7 +20,7 @@
  */
 
 
-$G_SESSION = array();
+$G_SESSION = [];
 
 function session_make_url($loc)
 {

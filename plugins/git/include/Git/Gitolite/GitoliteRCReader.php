@@ -44,7 +44,7 @@ class Git_Gitolite_GitoliteRCReader
     {
         $file_path    = $this->getGitoliteRCPath();
         $file_content = file_get_contents($file_path);
-        $match        = array();
+        $match        = [];
 
         $hostname_found = preg_match('/^\s*HOSTNAME\s*=>\s*\"(.+)\".*/m', $file_content, $match);
 

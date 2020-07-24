@@ -87,22 +87,22 @@ class Theme_Sidebar extends Theme
             );
             $this->addMoreHeaders(JavaScript(
                 '',
-                array('src' => $this->_findData('jscalendar/calendar' . (DEBUG ? '' : '_stripped') . '.js'))
+                ['src' => $this->_findData('jscalendar/calendar' . (DEBUG ? '' : '_stripped') . '.js')]
             ));
             if (! ($langfile = $this->_findData("jscalendar/lang/calendar-$jslang.js"))) {
                 $langfile = $this->_findData("jscalendar/lang/calendar-en.js");
             }
-            $this->addMoreHeaders(JavaScript('', array('src' => $langfile)));
+            $this->addMoreHeaders(JavaScript('', ['src' => $langfile]));
             $this->addMoreHeaders(JavaScript(
                 '',
-                array('src' =>
-                $this->_findData('jscalendar/calendar-setup' . (DEBUG ? '' : '_stripped') . '.js'))
+                ['src' =>
+                $this->_findData('jscalendar/calendar-setup' . (DEBUG ? '' : '_stripped') . '.js')]
             ));
 
             // Get existing date entries for the current user
             require_once("lib/TextSearchQuery.php");
             $iter = $dbi->titleSearch(new TextSearchQuery("^" . $this->calendarBase() . SUBPAGE_SEPARATOR, true, "auto"));
-            $existing = array();
+            $existing = [];
             while ($page = $iter->next()) {
                 if ($page->exists()) {
                     $existing[] = basename($page->_pagename);

@@ -36,9 +36,9 @@ class DocmanTestExecutionHelper extends DocmanBase
     {
         $search = urlencode(
             json_encode(
-                array(
+                [
                     'username' => DocmanDataBuilder::DOCMAN_REGULAR_USER_NAME
-                )
+                ]
             )
         );
         $response = $this->getResponseByName(REST_TestDataBuilder::TEST_USER_1_NAME, $this->client->get("users?query=$search&limit=10"));

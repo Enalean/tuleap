@@ -139,7 +139,7 @@ class Wiki_PermissionsManager
 
     private function getNonProjectMembersGroups()
     {
-        return array(ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS);
+        return [ProjectUGroup::REGISTERED, ProjectUGroup::ANONYMOUS];
     }
 
     /**
@@ -147,7 +147,7 @@ class Wiki_PermissionsManager
      */
     public function getWikiAdminsGroups()
     {
-        return array(ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN);
+        return [ProjectUGroup::PROJECT_ADMIN, ProjectUGroup::WIKI_ADMIN];
     }
 
     /**

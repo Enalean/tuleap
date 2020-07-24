@@ -41,7 +41,7 @@ class FRSFileDao extends DataAccessObject
                               ' AND r.package_id = p.package_id AND f.file_id =' . $this->da->escapeInt($_id),
             '',
             'ORDER BY post_date DESC LIMIT 1',
-            array('frs_package AS p', 'frs_release AS r')
+            ['frs_package AS p', 'frs_release AS r']
         );
     }
 
@@ -118,7 +118,7 @@ class FRSFileDao extends DataAccessObject
         return $this->retrieve($sql);
     }
 
-    public function _search($where, $group = '', $order = '', $from = array())
+    public function _search($where, $group = '', $order = '', $from = [])
     {
         $sql = 'SELECT f.* '
             . ' FROM frs_file AS f '
@@ -137,7 +137,7 @@ class FRSFileDao extends DataAccessObject
                               ' AND r.package_id = p.package_id AND filename=' . $this->da->quoteSmart($file_name) . ' AND f.status=\'A\'',
             '',
             '',
-            array('frs_package AS p', 'frs_release AS r')
+            ['frs_package AS p', 'frs_release AS r']
         );
     }
 
@@ -171,8 +171,8 @@ class FRSFileDao extends DataAccessObject
         $post_date = null,
         $status = 'A'
     ) {
-        $arg    = array();
-        $values = array();
+        $arg    = [];
+        $values = [];
 
         if ($file_name !== null) {
             $arg[] = 'filename';
@@ -230,9 +230,9 @@ class FRSFileDao extends DataAccessObject
 
     public function createFromArray($data_array)
     {
-        $arg    = array();
-        $values = array();
-        $cols   = array('filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment', 'release_time', 'post_date');
+        $arg    = [];
+        $values = [];
+        $cols   = ['filename', 'filepath', 'release_id', 'type_id', 'processor_id', 'file_size', 'status', 'computed_md5', 'reference_md5', 'user_id', 'comment', 'release_time', 'post_date'];
         foreach ($data_array as $key => $value) {
             if (in_array($key, $cols)) {
                 $arg[]    = $key;
@@ -269,7 +269,7 @@ class FRSFileDao extends DataAccessObject
         $file_size = null,
         $status = null
     ) {
-        $argArray = array();
+        $argArray = [];
 
         if ($file_name !== null) {
             $argArray[] = 'file_name=' . $this->da->quoteSmart($file_name);
@@ -318,7 +318,7 @@ class FRSFileDao extends DataAccessObject
             $dar = $this->searchById($file_id);
             if (! $dar->isError() && $dar->valid()) {
                 $current = $dar->current();
-                $set_array = array();
+                $set_array = [];
                 foreach ($data_array as $key => $value) {
                     if ($key != 'id' && $key != 'post_date' && $value != $current[$key]) {
                         $set_array[] = $key . ' = ' . $this->da->quoteSmart($value);

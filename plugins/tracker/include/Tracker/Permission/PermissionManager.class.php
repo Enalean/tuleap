@@ -30,9 +30,9 @@ class Tracker_Permission_PermissionManager
 
             EventManager::instance()->processEvent(
                 TRACKER_EVENT_TRACKER_PERMISSIONS_CHANGE,
-                array(
+                [
                     'tracker' => $tracker,
-                )
+                ]
             );
         }
     }
@@ -54,7 +54,7 @@ class Tracker_Permission_PermissionManager
         if ($request->containsPermissionType(Tracker_Permission_Command::PERMISSION_ASSIGNEE) != null && $tracker->getContributorField() === null) {
             $GLOBALS['Response']->addFeedback(
                 Feedback::ERROR,
-                sprintf(dgettext('tuleap-tracker', 'You should set a <a href="%1$s">%2$s semantic</a> before defining \'assigned to group\' permission'), TRACKER_BASE_URL . '/?' .  http_build_query(array('func' => 'admin-semantic', 'tracker' => $tracker->getId())), dgettext('tuleap-tracker', 'Contributor/assignee')),
+                sprintf(dgettext('tuleap-tracker', 'You should set a <a href="%1$s">%2$s semantic</a> before defining \'assigned to group\' permission'), TRACKER_BASE_URL . '/?' .  http_build_query(['func' => 'admin-semantic', 'tracker' => $tracker->getId()]), dgettext('tuleap-tracker', 'Contributor/assignee')),
                 CODENDI_PURIFIER_DISABLED
             );
             return false;

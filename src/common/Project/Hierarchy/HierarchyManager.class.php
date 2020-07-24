@@ -113,7 +113,7 @@ class Project_HierarchyManager
      */
     public function getChildProjects($project_id)
     {
-        $children = array();
+        $children = [];
         foreach ($this->getDao()->getChildProjects($project_id) as $child) {
             $children[] = $this->project_manager->getProjectFromDbRow($child);
         }
@@ -147,7 +147,7 @@ class Project_HierarchyManager
      */
     public function getAllParents($project_id)
     {
-        $parent_ids = array();
+        $parent_ids = [];
 
         while ($parent_project = $this->getParentProject($project_id)) {
             $parent_ids[] = $parent_project->getID();

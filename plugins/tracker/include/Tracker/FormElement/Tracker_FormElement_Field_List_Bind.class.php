@@ -74,13 +74,13 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         $bind_values = $this->getBindValues(array_keys($this->getDefaultValues()));
 
-        $rest_array = array();
+        $rest_array = [];
         foreach ($bind_values as $value) {
             $representation = new FieldValueRepresentation();
-            $representation->build(array(
+            $representation->build([
                 Tracker_FormElement_Field_List_Bind::REST_ID_KEY    => $value->getId(),
                 Tracker_FormElement_Field_List_Bind::REST_LABEL_KEY => $value->getAPIValue()
-            ));
+            ]);
             $rest_array[] = $representation;
         }
         return $rest_array;
@@ -129,7 +129,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
 
     public function fetchFormattedForJson()
     {
-        $values = array();
+        $values = [];
         foreach ($this->getAllValues() as $value) {
             $values[] = $value->fetchFormattedForJson();
         }
@@ -140,10 +140,10 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     {
         $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
         $bind_type = $bind_factory->getType($this);
-        return array(
+        return [
             self::REST_TYPE_KEY => $bind_type,
             self::REST_LIST_KEY => $this->getRESTBindingList()
-        );
+        ];
     }
 
     /**
@@ -316,7 +316,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
         return array_intersect(
             array_values($criteria_value),
             array_merge(
-                array(100),
+                [100],
                 array_keys($this->getAllValues())
             )
         );
@@ -471,17 +471,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements
                 $GLOBALS['Response']->redirect('/');
                 return true;
             }
-            $GLOBALS['Response']->redirect('?' . http_build_query(array(
+            $GLOBALS['Response']->redirect('?' . http_build_query([
                     'tracker'            => $tracker->getId(),
                     'func'               => 'admin-formElements',
-            )));
+            ]));
         }
         return true;
     }
 
     private function extractDefaultValues(array $params)
     {
-        $default = array();
+        $default = [];
         if (isset($params['default'])) {
             if (isset($params['default'][0])) {
                 $bind_default = str_replace('b', '', $params['default'][0]);
@@ -654,7 +654,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value)
     {
-        return array();
+        return [];
     }
 
     /**
@@ -677,7 +677,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements
      */
     public function getValuesByKeyword($keyword, $limit = 10)
     {
-        $values = array();
+        $values = [];
         //pretty slow, but we do not have a better way to filter a value function
         foreach ($this->getAllValues($keyword) as $v) {
             if (false !== stripos($v->getLabel(), $keyword)) {
@@ -703,17 +703,17 @@ abstract class Tracker_FormElement_Field_List_Bind implements
     protected function getRESTBindValue(Tracker_FormElement_Field_List_Value $value)
     {
         $representation = new FieldValueRepresentation();
-        $values = array(
+        $values = [
             self::REST_ID_KEY    => $value->getId(),
             self::REST_LABEL_KEY => $value->getAPIValue()
-        );
+        ];
         $representation->build($values);
         return $representation;
     }
 
     public function getRESTAvailableValues()
     {
-        $rest_values = array();
+        $rest_values = [];
         foreach ($this->getAllValues() as $value) {
             $rest_values[] = $this->getRESTBindValue($value);
         }

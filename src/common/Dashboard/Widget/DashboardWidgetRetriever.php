@@ -39,13 +39,13 @@ class DashboardWidgetRetriever
      */
     public function getAllWidgets($dashboard_id, $dashboard_type)
     {
-        $widgets_by_line = array();
+        $widgets_by_line = [];
 
         foreach ($this->dao->searchAllLinesByDashboardIdOrderedByRank($dashboard_id, $dashboard_type) as $line) {
             $widget_line = new DashboardWidgetLine(
                 $line['id'],
                 $line['layout'],
-                array()
+                []
             );
             $widgets_by_line[] = $widget_line;
             $this->addColumnWidgetsByLine($widget_line);
@@ -74,13 +74,13 @@ class DashboardWidgetRetriever
      */
     public function getColumnsByLineById($line_id)
     {
-        $columns = array();
+        $columns = [];
 
         foreach ($this->dao->searchAllColumnsByLineIdOrderedByRank($line_id) as $column) {
             $columns[] = new DashboardWidgetColumn(
                 $column['id'],
                 $column['line_id'],
-                array()
+                []
             );
         }
 
@@ -110,7 +110,7 @@ class DashboardWidgetRetriever
             $widget_column = new DashboardWidgetColumn(
                 $column['id'],
                 $column['line_id'],
-                array()
+                []
             );
             $widget_line->addWidgetColumn($widget_column);
             $this->addWidgetsByColumn($widget_column);

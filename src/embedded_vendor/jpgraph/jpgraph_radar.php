@@ -38,8 +38,8 @@ class RadarLogTicks extends Ticks
         $dx_min = round(sin($aAxisAngle) * $ticklen_min);
         $dy_min = round(cos($aAxisAngle) * $ticklen_min);
 
-        $aMajPos = array();
-        $aMajLabel = array();
+        $aMajPos = [];
+        $aMajLabel = [];
 
         if ($this->supress_first) {
             $aMajLabel[] = '';
@@ -162,8 +162,8 @@ class RadarLinearTicks extends Ticks
 
         $aImg->SetLineWeight($this->weight);
 
-        $aMajPos = array();
-        $aMajLabel = array();
+        $aMajPos = [];
+        $aMajLabel = [];
 
         for ($i = 1; $i <= $nbrmaj; ++$i) {
             $xt = round($i * $maj_step_abs * cos($aAxisAngle)) + $aScale->scale_abs[0];
@@ -225,12 +225,12 @@ class RadarAxis extends AxisPrototype
 {
     public $title = null;
 
-    public function __construct($img, $aScale, $color = array(0,0,0))
+    public function __construct($img, $aScale, $color = [0, 0, 0])
     {
         parent::__construct($img, $aScale, $color);
         $this->title = new Text();
         $this->title->SetFont(FF_FONT1, FS_BOLD);
-        $this->color = array(0,0,0);
+        $this->color = [0, 0, 0];
     }
 
     // Stroke the axis
@@ -421,7 +421,7 @@ class RadarGrid
                     $img->DashedLine($pnts[$k * 2], $pnts[$k * 2 + 1], $pnts[$l * 2], $pnts[$l * 2 + 1], 8, 6);
                 }
             }
-            $pnts = array();
+            $pnts = [];
         }
     }
 }
@@ -437,13 +437,13 @@ class RadarPlot
     public $legend = '';
     public $legendcsimtarget = '';
     public $legendcsimalt = '';
-    public $csimtargets = array(); // Array of targets for CSIM
+    public $csimtargets = []; // Array of targets for CSIM
     public $csimareas = "";   // Resultant CSIM area tags
     public $csimalts = null;   // ALT:s for corresponding target
-    private $data = array();
+    private $data = [];
     private $fill = false;
-    private $fill_color = array(200,170,180);
-    private $color = array(0,0,0);
+    private $fill_color = [200, 170, 180];
+    private $color = [0, 0, 0];
     private $weight = 1;
     private $linestyle = 'solid';
 
@@ -613,7 +613,7 @@ class RadarGraph extends Graph
         $this->posx = $width / 2;
         $this->posy = $height / 2;
         $this->len = min($width, $height) * 0.35;
-        $this->SetColor(array(255,255,255));
+        $this->SetColor([255, 255, 255]);
         $this->SetTickDensity(TICKD_NORMAL);
         $this->SetScale('lin');
         $this->SetGridDepth(DEPTH_FRONT);
@@ -745,7 +745,7 @@ class RadarGraph extends Graph
             JpGraphError::RaiseL(18006, $min);
             //("Minimum data $min (Radar plots should only be used when all data points > 0)");
         }
-        return array($min,$max);
+        return [$min, $max];
     }
 
     public function StrokeIcons()

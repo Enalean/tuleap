@@ -78,8 +78,8 @@ class DocmanTest extends SOAPBase
             'end',
             null,
             null,
-            array(),
-            array(),
+            [],
+            [],
             strlen($this->content),
             'file.txt',
             'text/plain',
@@ -168,8 +168,8 @@ class DocmanTest extends SOAPBase
             'end',
             null,
             null,
-            array(),
-            array(),
+            [],
+            [],
             strlen($this->content) + 10,
             'filefail.txt',
             'text/plain',
@@ -221,8 +221,8 @@ class DocmanTest extends SOAPBase
         $description = 'My Folder';
         $ordering    = 'begin';
         $status      = 'approved';
-        $permissions = array();
-        $metadata    = array();
+        $permissions = [];
+        $metadata    = [];
         $owner       = SOAP_TestDataBuilder::TEST_USER_1_NAME;
         $create_date = '1438953065';
         $update_date = '';
@@ -259,8 +259,8 @@ class DocmanTest extends SOAPBase
         $description = 'My Folder';
         $ordering    = 'begin';
         $status      = 'approved';
-        $permissions = array();
-        $metadata    = array();
+        $permissions = [];
+        $metadata    = [];
         $owner       = SOAP_TestDataBuilder::TEST_USER_1_NAME;
         $create_date = '1438953065';
         $update_date = '';

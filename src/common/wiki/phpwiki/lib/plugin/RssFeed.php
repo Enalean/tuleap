@@ -50,12 +50,12 @@ class WikiPlugin_RssFeed extends WikiPlugin
     // Establish default values for each of this plugin's arguments.
     public function getDefaultArguments()
     {
-        return array('feed'         => "",
+        return ['feed'         => "",
                      'description'     => "",
                      'url'         => "", //"http://phpwiki.org/RecentChanges?format=rss",
                      'maxitem'         => 0,
                      'debug'         => false,
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
@@ -80,16 +80,16 @@ class WikiPlugin_RssFeed extends WikiPlugin
         if (! empty($feed)) {
             if (! empty($url)) {
                 $titre = HTML::span(HTML::a(
-                    array('href' => $rss_parser->channel['link']),
+                    ['href' => $rss_parser->channel['link']],
                     $rss_parser->channel['title']
                 ));
             } else {
                 $titre = HTML::span($rss_parser->channel['title']);
             }
-            $th = HTML::div(array('class' => 'feed'), $titre);
+            $th = HTML::div(['class' => 'feed'], $titre);
             if (! empty($description)) {
                 $th->pushContent(HTML::p(
-                    array('class' => 'chandesc'),
+                    ['class' => 'chandesc'],
                     HTML::raw($description)
                 ));
             }
@@ -100,35 +100,35 @@ class WikiPlugin_RssFeed extends WikiPlugin
         if (! empty($rss_parser->channel['date'])) {
             $th->pushContent(HTML::raw("<!--" . $rss_parser->channel['date'] . "-->"));
         }
-        $html = HTML::div(array('class' => 'rss'), $th);
+        $html = HTML::div(['class' => 'rss'], $th);
         if ($rss_parser->items) {
             // only maxitem's
             if ($maxitem > 0) {
                 $rss_parser->items = array_slice($rss_parser->items, 0, $maxitem);
             }
             foreach ($rss_parser->items as $item) {
-                $cell = HTML::div(array('class' => 'rssitem'));
+                $cell = HTML::div(['class' => 'rssitem']);
                 if ($item['link'] and empty($item['title'])) {
                     $item['title'] = $item['link'];
                 }
                 $cell_title = HTML::div(
-                    array('class' => 'itemname'),
+                    ['class' => 'itemname'],
                     HTML::a(
-                        array('href' => $item['link']),
+                        ['href' => $item['link']],
                         HTML::raw($item['title'])
                     )
                 );
                 $cell->pushContent($cell_title);
                 if (! empty($item['description'])) {
                     $cell->pushContent(HTML::div(
-                        array('class' => 'itemdesc'),
+                        ['class' => 'itemdesc'],
                         HTML::raw($item['description'])
                     ));
                 }
                 $html->pushContent($cell);
             }
         } else {
-            $html = HTML::div(array('class' => 'rss'), HTML::em(_("no RSS items")));
+            $html = HTML::div(['class' => 'rss'], HTML::em(_("no RSS items")));
         }
         return $html;
     }

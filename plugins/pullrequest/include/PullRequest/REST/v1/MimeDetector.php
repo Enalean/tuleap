@@ -25,7 +25,7 @@ use Tuleap\Git\BinaryDetector;
 class MimeDetector
 {
 
-    public static $EXTENSION_TO_MIME_TYPES = array(
+    public static $EXTENSION_TO_MIME_TYPES = [
         'c'             => 'text/x-c',
         'cpp'           => 'text/x-c++src',
         'mm'            => 'text/x-c++src',
@@ -97,7 +97,7 @@ class MimeDetector
         'xml'           => 'application/xml',
         'yml'           => 'text/x-yaml',
         'yaml'          => 'text/x-yaml'
-    );
+    ];
 
     public static function getMimeInfo($file_path, $dest_content, $src_content)
     {
@@ -129,6 +129,6 @@ class MimeDetector
             $charset = 'binary';
         }
 
-        return array($mime_type, $charset);
+        return [$mime_type, $charset];
     }
 }

@@ -85,13 +85,13 @@ class ConfigPermissionsSerializerMirrorsTest extends TestCase
     public function testItGrantsReadPermissionToOneMirror()
     {
         $this->mirror_mapper->shouldReceive('fetchAllRepositoryMirrors')->with($this->repository)->andReturn(
-            array(
+            [
                 $this->mirror_1
-            )
+            ]
         );
 
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->andReturn(array(ProjectUGroup::REGISTERED));
+            ->andReturn([ProjectUGroup::REGISTERED]);
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertMatchesRegularExpression('/^ R   = git_mirror_1$/m', $result);
@@ -100,14 +100,14 @@ class ConfigPermissionsSerializerMirrorsTest extends TestCase
     public function testItGrantsReadPermissionToTwoMirrors()
     {
         $this->mirror_mapper->shouldReceive('fetchAllRepositoryMirrors')->with($this->repository)->andReturn(
-            array(
+            [
                 $this->mirror_1,
                 $this->mirror_2,
-            )
+            ]
         );
 
         $this->permissions_manager->shouldReceive('getAuthorizedUGroupIdsForProject')
-            ->andReturn(array(ProjectUGroup::REGISTERED));
+            ->andReturn([ProjectUGroup::REGISTERED]);
 
         $result = $this->serializer->getForRepository($this->repository);
         $this->assertMatchesRegularExpression('/^ R   = git_mirror_1 git_mirror_2$/m', $result);

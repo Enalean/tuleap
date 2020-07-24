@@ -65,7 +65,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
     {
         $title = '';
         if ($this->job) {
-            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()));
+            $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()]);
         } else {
              $title .= $GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend');
         }
@@ -120,7 +120,7 @@ class hudson_Widget_JobTestTrend extends HudsonJobWidget
 
             $html .= '<div style="padding: 20px;">';
             $html .= '<a href="/plugins/hudson/?action=view_test_trend&group_id=' . urlencode($this->group_id) . '&job_id=' . urlencode($this->job_id) . '">';
-            $html .= '<img src="' . $purifier->purify($job->getUrl()) . '/test/trend?width=320&height=240" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', array($this->job->getName()))) . '" />';
+            $html .= '<img src="' . $purifier->purify($job->getUrl()) . '/test/trend?width=320&height=240" alt="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()])) . '" title="' . $purifier->purify($GLOBALS['Language']->getText('plugin_hudson', 'project_job_testtrend', [$this->job->getName()])) . '" />';
             $html .= '</a>';
             $html .= '</div>';
         } else {

@@ -220,14 +220,14 @@ class MyProjects extends \Widget
     {
         $hp = Codendi_HTMLPurifier::instance();
         $server_url = HTTPRequest::instance()->getServerUrl();
-        $rss        = new RSS(array(
+        $rss        = new RSS([
             'title'       => 'Codendi - MyProjects',
             'description' => 'My projects',
             'link'        => $server_url,
             'language'    => 'en-us',
             'copyright'   => 'Copyright Xerox',
             'pubDate'     => gmdate('D, d M Y G:i:s', time()) . ' GMT',
-        ));
+        ]);
         $result = db_query("SELECT groups.group_name,"
             . "groups.group_id,"
             . "groups.unix_group_name,"
@@ -240,11 +240,11 @@ class MyProjects extends \Widget
             . "AND groups.status='A' ORDER BY group_name");
         $rows = db_numrows($result);
         if (! $result || $rows < 1) {
-            $rss->addItem(array(
+            $rss->addItem([
                 'title'       => 'Error',
                 'description' => $GLOBALS['Language']->getText('my_index', 'not_member') . db_error(),
                 'link'        => $server_url
-            ));
+            ]);
         } else {
             for ($i = 0; $i < $rows; $i++) {
                 $title = db_result($result, $i, 'group_name');
@@ -257,11 +257,11 @@ class MyProjects extends \Widget
                     $desc .= 'Admin: ' . $server_url . '/project/admin/?group_id=' . db_result($result, $i, 'group_id');
                 }
 
-                $rss->addItem(array(
+                $rss->addItem([
                     'title'       => $hp->purify($title),
                     'description' => $desc,
                     'link'        => $server_url . '/projects/' . db_result($result, $i, 'unix_group_name')
-                ));
+                ]);
             }
         }
         $rss->display();

@@ -40,8 +40,8 @@ class ProjectMembersAdditionalModalCollectionPresenter implements Dispatchable
     private $project;
     private $csrf_token;
 
-    public $modals_buttons = array();
-    public $modals_content = array();
+    public $modals_buttons = [];
+    public $modals_content = [];
     /**
      * @var
      */

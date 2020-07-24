@@ -80,34 +80,34 @@ class UGroupListPresenterBuilder
     private function getUGroupsThatCanBeUsedAsTemplate(Project $project, array $static_ugroups)
     {
         $ugroups   = [];
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'       => 'cx_empty',
             'name'     => _('Empty group'),
             'selected' => 'selected="selected"'
-        );
+        ];
 
         if ($project->isLegacyDefaultTemplate()) {
             return $ugroups;
         }
 
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'       => 'cx_members',
             'name'     => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_MEMBERS),
             'selected' => ''
-        );
+        ];
 
-        $ugroups[] = array(
+        $ugroups[] = [
             'id'       => 'cx_admins',
             'name'     => NameTranslator::getUserGroupDisplayName(NameTranslator::PROJECT_ADMINS),
             'selected' => ''
-        );
+        ];
 
         foreach ($static_ugroups as $ugroup) {
-            $ugroups[] = array(
+            $ugroups[] = [
                 'id'       => $ugroup->getId(),
                 'name'     => NameTranslator::getUserGroupDisplayName($ugroup->getName()),
                 'selected' => ''
-            );
+            ];
         }
 
         return $ugroups;
@@ -131,7 +131,7 @@ class UGroupListPresenterBuilder
             return [];
         }
 
-        $ugroups = array();
+        $ugroups = [];
         $this->injectDynamicUGroup($project, ProjectUGroup::PROJECT_ADMIN, $ugroups);
         if ($project->usesWiki()) {
             $this->injectDynamicUGroup($project, ProjectUGroup::WIKI_ADMIN, $ugroups);

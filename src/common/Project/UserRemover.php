@@ -97,10 +97,10 @@ class UserRemover
             return false;
         }
 
-        $this->event_manager->processEvent('project_admin_remove_user', array(
+        $this->event_manager->processEvent('project_admin_remove_user', [
             'group_id' => $project_id,
             'user_id'  => $user_id
-        ));
+        ]);
 
         $this->removeUserFromTrackerV3($project_id, $user_id);
 
@@ -179,7 +179,7 @@ class UserRemover
     private function removeUserFromProjectUgroups(Project $project, $user_id)
     {
         $project_id = $project->getID();
-        $ugroup_ids = array();
+        $ugroup_ids = [];
 
         foreach ($this->ugroup_manager->getStaticUGroups($project) as $ugroup) {
             $ugroup_ids[] = $ugroup->getId();
@@ -189,11 +189,11 @@ class UserRemover
             return false;
         }
 
-        $this->event_manager->processEvent('project_admin_remove_user_from_project_ugroups', array(
+        $this->event_manager->processEvent('project_admin_remove_user_from_project_ugroups', [
             'group_id' => $project_id,
             'user_id'  => $user_id,
             'ugroups'  => $ugroup_ids
-        ));
+        ]);
 
         return true;
     }

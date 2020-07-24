@@ -55,7 +55,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
             $from_aid_content = "&from_aid=$from_aid";
         }
 
-        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $artifact_id )) . '" $from_aid_content>' . $value . '</a>';
+        return '<a class="direct-link-to-artifact" href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact_id]) . '" $from_aid_content>' . $value . '</a>';
     }
 
     public function getFullRESTValue(PFUser $user, Tracker_Artifact_Changeset $changeset)
@@ -80,7 +80,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, ?Tracker_Artifact_ChangesetValue $value = null)
     {
-        return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $artifact->id )) . '">' . (int) $artifact->getPerTrackerArtifactId() . '</a>';
+        return '<a href="' . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . (int) $artifact->getPerTrackerArtifactId() . '</a>';
     }
 
     /**
@@ -101,7 +101,7 @@ class Tracker_FormElement_Field_PerTrackerArtifactId extends Tracker_FormElement
         switch ($format) {
             case 'html':
                 $proto   = ForgeConfig::get('sys_https_host') ? 'https' : 'http';
-                $output .= '<a href= "' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?' . http_build_query(array('aid' => (int) $artifact->id )) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
+                $output .= '<a href= "' . $proto . '://' . ForgeConfig::get('sys_default_domain') . TRACKER_BASE_URL . '/?' . http_build_query(['aid' => (int) $artifact->id]) . '">' . $artifact->getPerTrackerArtifactId() . '</a>';
                 break;
             default:
                 $output .= $artifact->getPerTrackerArtifactId();

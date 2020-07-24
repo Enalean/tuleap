@@ -71,7 +71,7 @@ class ArtifactFactory
     {
         global $Language;
 
-        $artifacts = array();
+        $artifacts = [];
 
      // List of trackers - Check on assigned_to or multi_assigned_to or submitted by
         $sql = "SELECT a.*,afv.valueInt as assigned_to FROM artifact_group_list agl, artifact a, artifact_field af, artifact_field_value afv WHERE " .
@@ -130,9 +130,9 @@ class ArtifactFactory
     {
         global $Language, $art_field_fact;
 
-        $ACCEPTED_OPERATORS = array('=', '<', '>', '<>', '<=', '>=');
+        $ACCEPTED_OPERATORS = ['=', '<', '>', '<>', '<=', '>='];
 
-        $artifacts = array();
+        $artifacts = [];
         if (is_array($criteria) && count($criteria) > 0) {
             $sql_select = "SELECT a.* ";
             $sql_from = " FROM artifact_group_list agl, artifact a ";
@@ -235,7 +235,7 @@ class ArtifactFactory
 
         $chunksz = $max_rows;
         $advsrch = 0;   // ?
-        $prefs = array();
+        $prefs = [];
 
         $report = new ArtifactReport($report_id, $group_artifact_id);
         if (! $report || ! is_object($report)) {
@@ -269,7 +269,7 @@ class ArtifactFactory
                 if ($af->isSelectBox() || $af->isMultiSelectBox()) {
                     $prefs[$cr->field_name] = explode(",", $cr->field_value);
                 } else {
-                    $prefs[$cr->field_name] = array($cr->field_value);
+                    $prefs[$cr->field_name] = [$cr->field_value];
                     if (isset($cr->operator)) {
                         $prefs[$cr->field_name][] = $cr->operator;
                     }
@@ -279,7 +279,7 @@ class ArtifactFactory
 
         // Sort part
         $morder = '';
-        $array_morder = array();
+        $array_morder = [];
         if (is_array($sort_criteria)) {
             foreach ($sort_criteria as $sort_cr) {
                 $field_name = $sort_cr->field_name;
@@ -325,14 +325,14 @@ class ArtifactFactory
         $result_fields = $artifact_report->getResultFields();
 
         //we get from result only fields that we need to display in the report (we add at the begining id and severity only to identify the artifact and for the severity color)
-        $artifacts = array();
+        $artifacts = [];
         $i = 0;
         foreach ($result as $art) {
             $artifact_id = $art['artifact_id'];
             $severity_id = $art['severity_id'];
             $artifact = new Artifact($this->ArtifactType, $art['artifact_id'], true);
             if ($artifact->userCanView()) {
-                $fields = array();
+                $fields = [];
                 reset($result_fields);
                 $fields['severity_id'] = $severity_id;
                 $fields['id'] = $artifact_id;

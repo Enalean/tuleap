@@ -64,7 +64,7 @@ class UserWidget extends Widget
     {
         $renderer = TemplateRendererFactory::build()->getRenderer(TIMETRACKING_TEMPLATE_DIR);
 
-        return $renderer->renderToString('widget', array());
+        return $renderer->renderToString('widget', []);
     }
 
     public function getIcon()

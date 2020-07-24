@@ -34,7 +34,7 @@ class PermissionsOnArtifactUGroupRetriever
         Tracker_FormElement_Field_PermissionsOnArtifact $field
     ) {
         if ($field->isRequired() === false) {
-            $value['u_groups'] = array();
+            $value['u_groups'] = [];
         }
 
         return $value;

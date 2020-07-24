@@ -76,7 +76,7 @@ class SVN_Apache_Auth_FactoryTest extends TestCase
             $this->cache_parameters
         );
 
-        $this->project_info = array();
+        $this->project_info = [];
     }
 
     public function testItReturnsModPerlByDefault(): void

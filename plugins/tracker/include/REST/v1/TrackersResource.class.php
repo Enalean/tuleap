@@ -547,7 +547,7 @@ class TrackersResource extends AuthenticatedResource
         if ($display_selector) {
             $nb_matching = $pagination->getTotalSize();
             Header::sendPaginationHeaders($limit, $offset, $nb_matching, self::MAX_LIMIT);
-            $collection = array();
+            $collection = [];
             foreach ($pagination->getArtifacts() as $artifact) {
                 $reference    = ParentArtifactReference::build($artifact);
                 $collection[] = $reference;

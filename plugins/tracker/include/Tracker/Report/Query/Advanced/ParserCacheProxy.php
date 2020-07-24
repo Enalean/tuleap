@@ -37,7 +37,7 @@ class ParserCacheProxy
     public function __construct(Parser $parser)
     {
         $this->parser = $parser;
-        $this->cache  = array();
+        $this->cache  = [];
     }
 
     /**

@@ -73,14 +73,14 @@ final class OIDCProvidersPresenter
 
         foreach ($user_mappings_usage as $user_mapping_usage) {
             $last_usage = (new DateTimeImmutable())->setTimestamp($user_mapping_usage->getLastUsage());
-            $this->user_mappings[] = array(
+            $this->user_mappings[] = [
                 'user_mapping_id'                         => $user_mapping_usage->getUserMappingId(),
                 'provider_name'                           => $user_mapping_usage->getProviderName(),
                 'provider_icon'                           => $user_mapping_usage->getProviderIcon(),
                 'last_usage'                              => $last_usage->format(
                     $GLOBALS['Language']->getText('system', 'datefmt')
                 )
-            );
+            ];
         }
         $this->no_mappings = count($this->user_mappings) === 0;
         $this->unique_authentication_endpoint = $unique_authentication_endpoint;

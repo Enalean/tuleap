@@ -51,13 +51,13 @@ final class ReferenceManagerTest extends TestCase
         UserManager::setInstance($this->user_manager);
 
         $this->rm = \Mockery::spy(
-            ReferenceManager::class . '[' . implode(',', array(
+            ReferenceManager::class . '[' . implode(',', [
                 '_getReferenceDao',
                 '_getCrossReferenceDao',
                 'loadReservedKeywords',
                 'getGroupIdFromArtifactIdForCallbackFunction',
                 'getGroupIdFromArtifactId'
-            )) . ']',
+            ]) . ']',
             []
         )->shouldAllowMockingProtectedMethods();
     }

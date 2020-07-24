@@ -50,7 +50,7 @@ class WidgetDeletorTest extends TestCase
         $this->widget_one = new DashboardWidget(1, 'image', 10, 1, 0, 0);
         $this->widget_two = new DashboardWidget(2, 'image', 11, 2, 0, 0);
 
-        $this->widgets = array($this->widget_one, $this->widget_two);
+        $this->widgets = [$this->widget_one, $this->widget_two];
 
         $this->column = new DashboardWidgetColumn(1, 0, $this->widgets);
     }

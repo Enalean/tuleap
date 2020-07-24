@@ -45,14 +45,14 @@ class Transition_PostActionFactory
         $this->event_manager = $event_manager;
     }
 
-    private $shortnames_by_xml_tag_name = array(
+    private $shortnames_by_xml_tag_name = [
         Transition_PostAction_Field_Float::XML_TAG_NAME => Transition_PostAction_Field_Float::SHORT_NAME,
         Transition_PostAction_Field_Int::XML_TAG_NAME   => Transition_PostAction_Field_Int::SHORT_NAME,
         Transition_PostAction_Field_Date::XML_TAG_NAME  => Transition_PostAction_Field_Date::SHORT_NAME,
         Transition_PostAction_CIBuild::XML_TAG_NAME     => Transition_PostAction_CIBuild::SHORT_NAME,
         FrozenFields::XML_TAG_NAME                      => FrozenFields::SHORT_NAME,
         HiddenFieldsets::XML_TAG_NAME                   => HiddenFieldsets::SHORT_NAME
-    );
+    ];
 
     /** @var Transition_PostAction_FieldFactory */
     private $postaction_field_factory;
@@ -136,7 +136,7 @@ class Transition_PostActionFactory
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition)
     {
-        $post_actions  = array();
+        $post_actions  = [];
         foreach ($xml->children() as $child) {
             $short_name = $this->deductPostActionShortNameFromXmlTagName($child->getName());
             $subfactory = $this->getSubFactory($short_name);
@@ -176,14 +176,14 @@ class Transition_PostActionFactory
     private function getSubFactory($post_action_short_name)
     {
         $field_factory = $this->getFieldFactory();
-        $factories     = array(
+        $factories     = [
             Transition_PostAction_Field_Float::SHORT_NAME => $field_factory,
             Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
             Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
             Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
             FrozenFields::SHORT_NAME                      => $this->getFrozenFieldsFactory(),
             HiddenFieldsets::SHORT_NAME                   => $this->getHiddenFieldsetsFactory()
-        );
+        ];
 
         if (isset($factories[$post_action_short_name])) {
             return $factories[$post_action_short_name];

@@ -111,7 +111,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function getCriteriaValue($criteria)
     {
         if (! isset($this->criteria_value)) {
-            $this->criteria_value = array();
+            $this->criteria_value = [];
         }
 
         if (! isset($this->criteria_value[$criteria->getReport()->getId()])) {
@@ -260,7 +260,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage(
                 'ic/toggle_' . ($criteria->is_advanced ? 'minus' : 'plus' ) . '.png',
-                array('class' => 'tracker_report_criteria_advanced_toggle')
+                ['class' => 'tracker_report_criteria_advanced_toggle']
             );
             $html .= '</td><td>';
         }
@@ -403,7 +403,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function getAggregateFunctions()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -454,7 +454,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $value       = $last_changeset->getValue($this);
             $html_value  = $this->fetchArtifactValueForWebDisplay($artifact, $value, $submitted_values);
             $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            return $this->fetchArtifactField($artifact, $html_value, array());
+            return $this->fetchArtifactField($artifact, $html_value, []);
         }
         return '';
     }
@@ -574,11 +574,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html = '';
         if ($this->userCanUpdate()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
-            $html .= '<div class="field-masschange ' . $this->getClassNames(array(), false) . '">';
+            $html .= '<div class="field-masschange ' . $this->getClassNames([], false) . '">';
             $html .= '<label for="tracker_artifact_' . $this->id . '" title="' . $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) . '"  class="tracker_formelement_label">' .  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required . '</label>';
 
             $html .= $this->fetchSubmitValueMasschange();
-            $html .= $this->fetchSubmitAdditionnalInfo(array());
+            $html .= $this->fetchSubmitAdditionnalInfo([]);
             $html .= '</div>';
         }
         return $html;
@@ -836,17 +836,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
 
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_' . $this->id . '">';
         $html .= '<div class="tracker-admin-field-controls">';
-                $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) . '</a> ';
+                $html .= '<a class="edit-field" href="' . $this->getAdminEditUrl() . '">' . $GLOBALS['HTML']->getImage('ic/edit.png', ['alt' => 'edit']) . '</a> ';
         if ($this->canBeRemovedFromUsage()) {
-            $html .= '<a href="?' . http_build_query(array(
+            $html .= '<a href="?' . http_build_query([
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
-            )) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) . '</a>';
+            ]) . '">' . $GLOBALS['HTML']->getImage('ic/cross.png', ['alt' => 'remove']) . '</a>';
         } else {
             $cannot_remove_message = $this->getCannotRemoveMessage();
             $html .= '<span style="color:gray;" title="' . $cannot_remove_message . '">';
-            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
+            $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', ['alt' => 'remove']);
             $html .= '</span>';
         }
         $html .= '</div>';
@@ -1478,7 +1478,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function getPermissionsByUgroupId()
     {
         if (! $this->cache_permissions) {
-            $this->cache_permissions = array();
+            $this->cache_permissions = [];
             //berk... legacy permission code... legacy db functions... berk!
             $sql = "SELECT ugroup_id, permission_type
                   FROM permissions

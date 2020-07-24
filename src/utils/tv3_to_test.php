@@ -36,17 +36,17 @@ class ArtifactDebug
     public $artifact_file;
     public $artifact_field_value;
     public $permissions;
-    public $artifact_field_value_list = array();
+    public $artifact_field_value_list = [];
 
     public function __construct($artifact_id)
     {
         $this->artifact_id = $artifact_id;
-        $this->artifact_history[$artifact_id] = array();
+        $this->artifact_history[$artifact_id] = [];
     }
 
     public function setArtifact(array $artifact_row)
     {
-        $this->artifact[self::TRACKER_ID][] = array(
+        $this->artifact[self::TRACKER_ID][] = [
             'artifact_id'   => $artifact_row['artifact_id'],
             'summary'       => $artifact_row['summary'],
             'details'       => $artifact_row['details'],
@@ -54,13 +54,13 @@ class ArtifactDebug
             'status_id'     => $artifact_row['status_id'],
             'open_date'     => $artifact_row['open_date'],
             'submitted_by'  => $artifact_row['submitted_by'],
-        );
+        ];
     }
 
     public function setHistory($histories)
     {
         foreach ($histories as $history) {
-            $this->artifact_history[$this->artifact_id][] = array(
+            $this->artifact_history[$this->artifact_id][] = [
                 "id"             => $history['id'],
                 "data_type"      => $history['data_type'],
                 "display_type"   => $history['display_type'],
@@ -74,27 +74,27 @@ class ArtifactDebug
                 "is_anonymous"   => $history['is_anonymous'],
                 "comment"        => $history['comment'],
                 "format"         => $history['format'],
-            );
+            ];
         }
     }
 
     public function setFiles($files)
     {
         foreach ($files as $file) {
-            $this->artifact_file[$this->artifact_id][] = array(
+            $this->artifact_file[$this->artifact_id][] = [
                 "id"          => $file['id'],
                 "description" => $file['description'],
                 "filename"    => $file['filename'],
                 "filesize"    => $file['filesize'],
                 "filetype"    => $file['filetype'],
-            );
+            ];
         }
     }
 
     public function setFieldValues($field_values)
     {
         foreach ($field_values as $values) {
-            $this->artifact_field_value[$this->artifact_id][] = array(
+            $this->artifact_field_value[$this->artifact_id][] = [
                 "data_type"      => $values['data_type'],
                 "display_type"   => $values['display_type'],
                 "field_name"     => $values['field_name'],
@@ -103,16 +103,16 @@ class ArtifactDebug
                 "valueText"      => $values['valueText'],
                 "valueFloat"     => $values['valueFloat'],
                 "valueDate"      => $values['valueDate'],
-            );
+            ];
         }
     }
 
     public function setPermissions($permissions)
     {
         foreach ($permissions as $perms) {
-            $this->permissions[$this->artifact_id][] = array(
+            $this->permissions[$this->artifact_id][] = [
                 "ugroup_id"       => $perms['ugroup_id'],
-            );
+            ];
         }
     }
 
@@ -122,10 +122,10 @@ class ArtifactDebug
             $artifact_field_value_list['parameters']['group_artifact_id'] = self::TRACKER_ID;
             $artifact_field_value_list['parameters']['field_name'] = $field_name;
             foreach ($field_values_list as $value) {
-                $artifact_field_value_list['rows'][] = array(
+                $artifact_field_value_list['rows'][] = [
                     "value_id" => $value['value_id'],
                     "value"    => $value['value'],
-                );
+                ];
             }
             $this->artifact_field_value_list[] = $artifact_field_value_list;
         }

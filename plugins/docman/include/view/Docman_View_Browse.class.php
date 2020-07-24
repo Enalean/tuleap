@@ -114,15 +114,15 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     public function _getDefaultUrlParams($params)
     {
         if ($this->dfltParams === null) {
-            $this->dfltParams = array('action' => 'search',
-                                      'id'     => $params['item']->getId());
+            $this->dfltParams = ['action' => 'search',
+                                      'id'     => $params['item']->getId()];
 
             $this->_initSearchAndSortParams($params);
         }
         return array_merge($this->dfltParams, $this->dfltSearchParams, $this->dfltSortParams);
     }
 
-    public function _buildSearchUrl($params, $extraParams = array())
+    public function _buildSearchUrl($params, $extraParams = [])
     {
         $parameters = array_merge($this->_getDefaultUrlParams($params), $extraParams);
         return DocmanViewURLBuilder::buildActionUrl($params['item'], $params, $parameters);
@@ -160,7 +160,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
         return '';
     }
 
-    /* static */ public function getItemClasses($params)
+    public static function getItemClasses($params)
     {
         $li_classes = 'docman_item';
         if (isset($params['is_last']) && $params['is_last']) {
@@ -172,7 +172,7 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
     public static function isViewAllowed($view)
     {
         //List is part of SOAP api
-        return in_array($view, array_merge(array_keys(Docman_View_Browse::getDefaultViews()), array('List')));
+        return in_array($view, array_merge(array_keys(Docman_View_Browse::getDefaultViews()), ['List']));
     }
     /* static */ public function getViewForCurrentUser($group_id, $report = '')
     {
@@ -193,9 +193,9 @@ use Tuleap\Docman\View\DocmanViewURLBuilder;
 
     public static function getDefaultViews()
     {
-        return array('Tree'   => 'Tree',
+        return ['Tree'   => 'Tree',
                      'Icons'  => 'Icons',
                      'Table'  => 'Table',
-        );
+        ];
     }
 }

@@ -38,7 +38,7 @@ class TroveCatFactory
     public function getMandatoryParentCategoriesUnderRoot()
     {
         $results    = $this->dao->getMandatoryParentCategoriesUnderRoot();
-        $trove_cats = array();
+        $trove_cats = [];
 
         foreach ($results as $row) {
             $trove_cat = $this->getTroveCatWithChildrens($row);
@@ -54,7 +54,7 @@ class TroveCatFactory
     public function getMandatoryParentCategoriesUnderRootOnlyWhenCategoryHasChildren()
     {
         $results    = $this->dao->getMandatoryParentCategoriesUnderRoot();
-        $trove_cats = array();
+        $trove_cats = [];
 
         foreach ($results as $row) {
             $trove_cat = $this->getTroveCatWithChildrens($row);

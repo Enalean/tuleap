@@ -219,7 +219,7 @@ class NotificationsManager_MoveTest extends TestCase
 
         if ($ld) {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($d->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(array('user_id' => $listener->getId(), 'item_id' => $d->getId()))
+                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $d->getId()])
             );
         } else {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($d->getId(), 'plugin_docman')->andReturns(
@@ -229,7 +229,7 @@ class NotificationsManager_MoveTest extends TestCase
 
         if ($lc) {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($c->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(array('user_id' => $listener->getId(), 'item_id' => $c->getId()))
+                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $c->getId()])
             );
         } else {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($c->getId(), 'plugin_docman')->andReturns(
@@ -239,7 +239,7 @@ class NotificationsManager_MoveTest extends TestCase
 
         if ($lb) {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($b->getId(), 'plugin_docman')->andReturns(
-                \TestHelper::arrayToDar(array('user_id' => $listener->getId(), 'item_id' => $b->getId()))
+                \TestHelper::arrayToDar(['user_id' => $listener->getId(), 'item_id' => $b->getId()])
             );
         } else {
             $dao->shouldReceive('searchUserIdByObjectIdAndType')->with($b->getId(), 'plugin_docman')->andReturns(
@@ -310,10 +310,10 @@ class NotificationsManager_MoveTest extends TestCase
             $users_updater,
             $ugroups_updater
         );
-        $dnmm->somethingHappen('plugin_docman_event_move', array(
+        $dnmm->somethingHappen('plugin_docman_event_move', [
             'group_id' => $group_id,
             'item'    => &$d,
             'parent'  => &$c,
-            'user'    => &$user));
+            'user'    => &$user]);
     }
 }

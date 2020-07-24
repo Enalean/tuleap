@@ -75,8 +75,8 @@ final class PlanningFactoryTestGetVirtualTopPlanningTest extends TestCase
         $backlog_tracker->shouldReceive('getId')->andReturn(78);
         $planning_tracker->shouldReceive('getId')->andReturn(45);
 
-        $my_planning = new Planning(null, null, null, null, null, array(78), 45);
-        $my_planning->setBacklogTrackers(array($backlog_tracker))
+        $my_planning = new Planning(null, null, null, null, null, [78], 45);
+        $my_planning->setBacklogTrackers([$backlog_tracker])
             ->setPlanningTracker($planning_tracker);
 
         $this->partial_factory->shouldReceive('getRootPlanning')->andReturn($my_planning);

@@ -49,7 +49,7 @@ class WikiPlugin_PrevNext extends WikiPlugin
 
     public function getDefaultArguments()
     {
-        return array(
+        return [
                      'prev'    => '',
                      'next'    => '',
                      'up'      => '',
@@ -61,23 +61,23 @@ class WikiPlugin_PrevNext extends WikiPlugin
                      'order'   => '',
                      'style'   => 'button', // or 'text'
                      'class'   => 'wikiaction'
-                     );
+                     ];
     }
 
     public function run($dbi, $argstr, &$request, $basepage)
     {
         $args = $this->getArgs($argstr, $request);
         extract($args);
-        $directions = array ('first'    => _("First"),
+        $directions =  ['first'    => _("First"),
                              'prev'     => _("Previous"),
                              'next'     => _("Next"),
                              'last'     => _("Last"),
                              'up'       => _("Up"),
                              'contents'  => _("Contents"),
                              'index'    => _("Index")
-                             );
+                             ];
         if ($order) { // reorder the buttons: comma-delimited
-            $new_directions = array();
+            $new_directions = [];
             foreach (explode(',', $order) as $o) {
                 $new_directions[$o] = $directions[$o];
             }

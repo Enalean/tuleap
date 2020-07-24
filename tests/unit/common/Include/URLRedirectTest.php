@@ -36,22 +36,22 @@ class URLRedirectTest extends \PHPUnit\Framework\TestCase //phpcs:ignore
 
     public function testItCreatesALoginURLReturningToTheCurrentPage()
     {
-        $login_url = $this->url_redirect->buildReturnToLogin(array('REQUEST_URI' => '/some_tuleap_page'));
+        $login_url = $this->url_redirect->buildReturnToLogin(['REQUEST_URI' => '/some_tuleap_page']);
         $this->assertEquals('/account/login.php?return_to=%2Fsome_tuleap_page', $login_url);
     }
 
     public function testItCreatesALoginURLToTheUserProfileIfHomepageOrLoginOrRegisterPage()
     {
-        $login_url_from_homepage = $this->url_redirect->buildReturnToLogin(array('REQUEST_URI' => '/'));
+        $login_url_from_homepage = $this->url_redirect->buildReturnToLogin(['REQUEST_URI' => '/']);
         $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_homepage);
 
         $login_url_from_login_page = $this->url_redirect->buildReturnToLogin(
-            array('REQUEST_URI' => '/account/login.php?return_to=some_page')
+            ['REQUEST_URI' => '/account/login.php?return_to=some_page']
         );
         $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_login_page);
 
         $login_url_from_register_page = $this->url_redirect->buildReturnToLogin(
-            array('REQUEST_URI' => '/account/register.php')
+            ['REQUEST_URI' => '/account/register.php']
         );
         $this->assertEquals('/account/login.php?return_to=%2Fmy%2F', $login_url_from_register_page);
     }

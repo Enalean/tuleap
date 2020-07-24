@@ -72,10 +72,10 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
                 $totalRead[]          = intval($row['count']);
             }
         }
-        $result = array('read_index'           => $readIndex,
+        $result = ['read_index'           => $readIndex,
                         'total_read'           => $totalRead,
                         'read_projects_number' => $readProjectsNumber,
-                        'read_users_number'    => $readUsersNumber);
+                        'read_users_number'    => $readUsersNumber];
         return $result;
     }
 
@@ -108,10 +108,10 @@ class Statistics_Formatter_Scm extends Statistics_Formatter
                 $totalCommits[]         = intval($row['count']);
             }
         }
-        $result = array('commits_index'          => $commitsIndex,
+        $result = ['commits_index'          => $commitsIndex,
                         'total_commits'          => $totalCommits,
                         'commit_projects_number' => $commitProjectsNumber,
-                        'commit_users_number'    => $commitUsersNumber);
+                        'commit_users_number'    => $commitUsersNumber];
         return $result;
     }
 

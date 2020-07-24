@@ -58,14 +58,14 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
     {
         return array_merge(
             PageList::supportedArgs(), // paging and more.
-            array('s'        => false,
+            ['s'        => false,
                    'hilight'  => true,
                    'case_exact' => false,
                    'regex'    => 'auto',
                    'noheader' => false,
                    'exclude'  => false,   //comma-seperated list of glob
                    'limit'    => false,
-            'quiet'    => false)
+            'quiet'    => false]
         );  // be less verbose
     }
 
@@ -79,7 +79,7 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
 
         $query = new TextSearchQuery($s, $case_exact, $regex);
         $pages = $dbi->fullSearch($query, $sortby, $limit, $exclude);
-        $lines = array();
+        $lines = [];
         $hilight_re = $hilight ? $query->getHighlightRegexp() : false;
         $count = 0;
         $found = 0;
@@ -144,11 +144,11 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
     {
         $current = $page->getCurrentRevision();
         $matches = preg_grep("/$hilight_re/i", $current->getContent());
-        $html = array();
+        $html = [];
         foreach ($matches as $line) {
             $line = $this->highlight_line($line, $hilight_re);
             $html[] = HTML::dd(HTML::small(
-                array('class' => 'search-context'),
+                ['class' => 'search-context'],
                 $line
             ));
         }
@@ -160,7 +160,7 @@ class WikiPlugin_FullTextSearch extends WikiPlugin
         while (preg_match("/^(.*?)($hilight_re)/i", $line, $m)) {
             $line = substr($line, strlen($m[0]));
             $html[] = $m[1];    // prematch
-            $html[] = HTML::strong(array('class' => 'search-term'), $m[2]); // match
+            $html[] = HTML::strong(['class' => 'search-term'], $m[2]); // match
         }
         $html[] = $line;        // postmatch
         return $html;

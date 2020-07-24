@@ -114,7 +114,7 @@ foreach ($rii as $r) {
             $fileSize = filesize($r->getPathname());
             $fileType = shell_exec('file -bi "' . escapeshellcmd($r->getPathname()) . '"');
             try {
-                $itemId = $soap->createDocmanFile($hash, $project_id, $folderhash[$folderpath], $name, '', 'end', 100, 0, array(), array(), $fileSize, $fileName, $fileType, '', 0, $chunkSize);
+                $itemId = $soap->createDocmanFile($hash, $project_id, $folderhash[$folderpath], $name, '', 'end', 100, 0, [], [], $fileSize, $fileName, $fileType, '', 0, $chunkSize);
                 if ($itemId) {
                     $offset = 0;
                     while (($chunk = getChunk($r->getPathname(), $offset, $chunkSize))) {

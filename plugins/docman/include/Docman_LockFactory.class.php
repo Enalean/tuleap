@@ -151,7 +151,7 @@ class Docman_LockFactory
     public function _cacheLocksForProject($itemId)
     {
         if ($this->_cachedItem === null) {
-            $this->_cachedItem = array();
+            $this->_cachedItem = [];
             $dar               = $this->dao->searchLocksForProjectByItemId($itemId);
             foreach ($dar as $row) {
                 $this->_cachedItem[$row['item_id']] = $row;

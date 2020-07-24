@@ -58,7 +58,7 @@ class TimetrackingReportFactory
             throw new TimetrackingReportNotFoundException();
         }
 
-        $report_trackers = array();
+        $report_trackers = [];
         $tracker_rows    = $this->report_dao->searchReportTrackersById($id);
 
         foreach ($tracker_rows as $row) {

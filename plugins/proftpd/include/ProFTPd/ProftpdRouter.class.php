@@ -28,7 +28,7 @@ class ProftpdRouter
     public const DEFAULT_CONTROLLER = 'explorer';
     public const DEFAULT_ACTION     = 'index';
 
-    private $controllers = array();
+    private $controllers = [];
 
     public function __construct(array $controllers)
     {

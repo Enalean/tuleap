@@ -48,7 +48,7 @@ class ProjectTemplatesController implements DispatchableWithRequest
             throw new ForbiddenException();
         }
 
-        $templates_presenters = array();
+        $templates_presenters = [];
         foreach (ProjectManager::instance()->getSiteTemplates() as $template) {
             $templates_presenters[] = new TemplatePresenter($template);
         }

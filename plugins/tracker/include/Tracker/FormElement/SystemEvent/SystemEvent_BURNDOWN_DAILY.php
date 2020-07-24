@@ -111,7 +111,7 @@ class SystemEvent_BURNDOWN_DAILY extends SystemEvent //phpcs:ignore Squiz.Classe
                 );
 
                 $value = $this->field_calculator->calculate(
-                    array($burndown['id']),
+                    [$burndown['id']],
                     $yesterday,
                     true,
                     'remaining_effort',

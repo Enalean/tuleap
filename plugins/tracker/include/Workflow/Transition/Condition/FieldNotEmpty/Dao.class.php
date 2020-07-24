@@ -40,7 +40,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
     {
         $transition_id = $this->da->escapeInt($transition_id);
 
-        $fields = array();
+        $fields = [];
         foreach ($list_field_id as $field_id) {
             if ($field_id != 0) {
                 $field_id = $this->da->escapeInt($field_id);
@@ -94,8 +94,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject
         $from_transition_id = $this->da->escapeInt($from_transition_id);
         $to_transition_id   = $this->da->escapeInt($to_transition_id);
 
-        $case           = array();
-        $from_field_ids = array();
+        $case           = [];
+        $from_field_ids = [];
         foreach ($field_mapping as $mapping) {
             $from = $this->da->escapeInt($mapping['from']);
             $to   = $this->da->escapeInt($mapping['to']);

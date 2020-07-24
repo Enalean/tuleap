@@ -28,8 +28,8 @@ class RSSWriter091 extends RssWriter
 {
     public function __construct()
     {
-        $this->XmlElement('rss', array('version' => "0.91"));
-        $this->_items = array();
+        $this->XmlElement('rss', ['version' => "0.91"]);
+        $this->_items = [];
     }
   /**
    * Finish construction of RSS.
@@ -116,10 +116,10 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
 
         $rc_url = WikiURL($request->getArg('pagename'), false, 'absurl');
 
-        return array('title' => WIKI_NAME,
+        return ['title' => WIKI_NAME,
                      'description' => _("RecentChanges"),
                      'link' => $rc_url,
-                     'language' => 'en-US');
+                     'language' => 'en-US'];
 
         /* FIXME: language should come from $LANG (or other config variable). */
 
@@ -137,10 +137,10 @@ class _RecentChanges_RssFormatter091 extends _RecentChanges_RssFormatter
         $page = $rev->getPage();
         $pagename = $page->getName();
 
-        return array( 'title'        => SplitPagename($pagename),
+        return [ 'title'        => SplitPagename($pagename),
                       'description'    => $this->summary($rev),
                       'link'        => $this->pageURL($rev)
-                      );
+                      ];
     }
 }
 

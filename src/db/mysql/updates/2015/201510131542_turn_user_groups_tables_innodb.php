@@ -33,10 +33,10 @@ class b201510131542_turn_user_groups_tables_innodb extends ForgeUpgrade_Bucket
 
     public function up()
     {
-        $tables = array(
+        $tables = [
             'ugroup_user',
             'user_group '
-        );
+        ];
 
         foreach ($tables as $table) {
             if (! $this->isTableInnoDB($table)) {

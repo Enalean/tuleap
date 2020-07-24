@@ -32,7 +32,7 @@ final class Tracker_ArtifactNodeTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->artifact = new Tracker_Artifact(9787, 123, null, 10, null);
-        $this->data     = array('somekey' => 'somevalue');
+        $this->data     = ['somekey' => 'somevalue'];
         $this->node     = new ArtifactNode($this->artifact, $this->data);
     }
 

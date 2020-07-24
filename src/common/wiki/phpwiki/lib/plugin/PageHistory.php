@@ -95,12 +95,12 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
     public function title()
     {
-        return array(fmt(
+        return [fmt(
             "PageHistory for %s",
             WikiLink($this->_args['page'])
         ),
                      "\n",
-                     $this->rss_icon());
+                     $this->rss_icon()];
     }
 
     public function empty_message()
@@ -110,9 +110,9 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
     public function description()
     {
-        $button = HTML::input(array('type'  => 'submit',
+        $button = HTML::input(['type'  => 'submit',
                                     'value' => _("compare revisions"),
-                                    'class' => 'wikiaction'));
+                                    'class' => 'wikiaction']);
 
         $js_desc = $no_js_desc = _RecentChanges_HtmlFormatter::description();
 
@@ -131,26 +131,26 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
         $html[] = _RecentChanges_HtmlFormatter::format($changes);
 
-        $html[] = HTML::input(array('type'  => 'hidden',
+        $html[] = HTML::input(['type'  => 'hidden',
                                     'name'  => 'action',
-                                    'value' => 'diff'));
-        $html[] = HTML::input(array('type'  => 'hidden',
+                                    'value' => 'diff']);
+        $html[] = HTML::input(['type'  => 'hidden',
                                     'name'  => 'group_id',
-                                    'value' => GROUP_ID));
+                                    'value' => GROUP_ID]);
         if (USE_PATH_INFO) {
             $action = WikiURL($pagename);
         } else {
             $action = SCRIPT_NAME;
-            $html[] = HTML::input(array('type'  => 'hidden',
+            $html[] = HTML::input(['type'  => 'hidden',
                                         'name'  => 'pagename',
-                                        'value' => $pagename));
+                                        'value' => $pagename]);
         }
 
         return HTML(
             HTML::form(
-                array('method' => 'get',
+                ['method' => 'get',
                                      'action' => $action,
-                                     'name'   => 'diff-select'),
+                                     'name'   => 'diff-select'],
                 $html
             ),
             "\n",
@@ -176,9 +176,9 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
 
     public function diffLink($rev)
     {
-        return HTML::input(array('type'  => 'checkbox',
+        return HTML::input(['type'  => 'checkbox',
                                  'name'  => 'versions[]',
-                                 'value' => $rev->getVersion()));
+                                 'value' => $rev->getVersion()]);
     }
 
     public function pageLink($rev, $text_link = false)
@@ -196,17 +196,17 @@ class _PageHistory_HtmlFormatter extends _RecentChanges_HtmlFormatter
             $minor_flag = HTML(
                 " ",
                 HTML::span(
-                    array('class' => 'pageinfo-minoredit'),
+                    ['class' => 'pageinfo-minoredit'],
                     "(" . _("minor edit") . ")"
                 )
             );
         } else {
-            $time = HTML::strong(array('class' => 'pageinfo-majoredit'), $time);
+            $time = HTML::strong(['class' => 'pageinfo-majoredit'], $time);
             $minor_flag = '';
         }
 
         return HTML::li(
-            array('class' => $class),
+            ['class' => $class],
             $this->diffLink($rev),
             ' ',
             $this->pageLink($rev),
@@ -251,10 +251,10 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
             SplitPagename($this->_args['page'])
         );
 
-        return array('title'          => $title,
+        return ['title'          => $title,
                      'dc:description' => _("History of changes."),
                      'link'           => $rc_url,
-                     'dc:date'        => Iso8601DateTime(time()));
+                     'dc:date'        => Iso8601DateTime(time())];
     }
 
 
@@ -264,7 +264,7 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
             $title = sprintf(_("Version %d"), $rev->getVersion());
         }
 
-        return array( 'title'           => $title,
+        return [ 'title'           => $title,
                       'link'            => $this->pageURL($rev),
                       'dc:date'         => $this->time($rev),
                       'dc:contributor'  => $rev->get('author'),
@@ -272,7 +272,7 @@ class _PageHistory_RssFormatter extends _RecentChanges_RssFormatter
                       'wiki:importance' => $this->importance($rev),
                       'wiki:status'     => $this->status($rev),
                       'wiki:diff'       => $this->diffURL($rev),
-                      );
+                      ];
     }
 }
 
@@ -299,12 +299,12 @@ class WikiPlugin_PageHistory extends WikiPlugin_RecentChanges
 
     public function getDefaultArguments()
     {
-        return array('days'         => false,
+        return ['days'         => false,
                      'show_minor'   => true,
                      'show_major'   => true,
                      'limit'        => false,
                      'page'         => '[pagename]',
-                     'format'       => false);
+                     'format'       => false];
     }
 
     public function getDefaultFormArguments()
