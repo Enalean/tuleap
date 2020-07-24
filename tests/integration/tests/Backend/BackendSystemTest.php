@@ -371,4 +371,21 @@ final class BackendSystemTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($backend->cleanupFRS());
     }
+
+    public function testRenameFRSFolders(): void
+    {
+        $backend = \Mockery::mock(\BackendSystem::class)->makePartial();
+
+        $project = Mockery::mock(\Project::class);
+        $project->shouldReceive('getUnixName')->andReturn('nameBeforeRename');
+
+        $ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
+        mkdir($ftp_frs_dir_prefix . '/nameBeforeRename', 0777, true);
+        mkdir($ftp_frs_dir_prefix . '/DELETED/nameBeforeRename', 0777, true);
+
+        $backend->renameFileReleasedDirectory($project, 'nameAfterRename');
+
+        $this->assertDirectoryExists($ftp_frs_dir_prefix . '/nameAfterRename');
+        $this->assertDirectoryExists($ftp_frs_dir_prefix . '/DELETED/nameAfterRename');
+    }
 }

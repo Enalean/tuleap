@@ -689,11 +689,24 @@ class BackendSystem extends Backend
      */
     public function renameFileReleasedDirectory($project, $newName)
     {
-        if (is_dir(ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $project->getUnixName(false))) {
-            return rename(ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $project->getUnixName(false), ForgeConfig::get('ftp_frs_dir_prefix') . '/' . $newName);
-        } else {
-            return true;
+        $ftp_frs_dir_prefix = ForgeConfig::get('ftp_frs_dir_prefix');
+        $project_old_name   = $project->getUnixName(false);
+
+        if (
+            is_dir($ftp_frs_dir_prefix . '/' . $project_old_name) &&
+            ! rename($ftp_frs_dir_prefix . '/' . $project_old_name, $ftp_frs_dir_prefix . '/' . $newName)
+        ) {
+            return false;
         }
+
+        if (
+            is_dir($ftp_frs_dir_prefix . '/DELETED/' . $project_old_name) &&
+            ! rename($ftp_frs_dir_prefix . '/DELETED/' . $project_old_name, $ftp_frs_dir_prefix . '/DELETED/' . $newName)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
