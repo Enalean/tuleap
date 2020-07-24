@@ -48,7 +48,7 @@ class BotMattermostPlugin extends Plugin
      */
     public function getPluginInfo()
     {
-        if (!$this->pluginInfo) {
+        if (! $this->pluginInfo) {
             $this->pluginInfo = new Tuleap\BotMattermost\Plugin\PluginInfo($this);
         }
         return $this->pluginInfo;

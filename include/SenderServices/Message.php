@@ -55,7 +55,7 @@ class Message
 
     public function hasAttachments()
     {
-        return !empty($this->attachments);
+        return ! empty($this->attachments);
     }
 
     public function hasContent()

@@ -21,9 +21,7 @@
 namespace Tuleap\BotMattermost;
 
 use BackendLogger;
-use ForgeConfig;
 use Psr\Log\LoggerInterface;
-use TruncateLevelLogger;
 use Tuleap\Log\LogForwarderTrait;
 
 class BotMattermostLogger implements LoggerInterface
