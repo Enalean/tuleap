@@ -47,7 +47,7 @@ yarn-error.log
 node_modules/
 src/www/assets/*
 test_results/*
-test_results_e2e/*
+test_results_e2e_full/*
 test_results_distlp/*
 tests/soap/vendor
 tests/rest/vendor
