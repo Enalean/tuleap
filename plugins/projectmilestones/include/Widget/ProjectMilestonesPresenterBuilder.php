@@ -49,6 +49,7 @@ use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneChecker;
 use Tuleap\AgileDashboard\MonoMilestone\ScrumForMonoMilestoneDao;
 use Tuleap\AgileDashboard\Planning\MilestoneBurndownFieldChecker;
 use Tuleap\AgileDashboard\RemainingEffortValueRetriever;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeBuilder;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframeDao;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
@@ -224,7 +225,7 @@ class ProjectMilestonesPresenterBuilder
      */
     public function getProjectMilestonePresenter(?Project $project, ?Planning $root_planning): ProjectMilestonesPresenter
     {
-        if ($this->request->getBrowser()->isIE11()) {
+        if (DetectedBrowser::detectFromTuleapHTTPRequest($this->request)->isIE11()) {
             throw ProjectMilestonesException::buildBrowserIsIE11();
         }
 

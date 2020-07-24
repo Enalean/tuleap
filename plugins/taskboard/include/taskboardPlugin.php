@@ -26,6 +26,7 @@ use Tuleap\AgileDashboard\Milestone\Pane\Planning\PlanningV2PaneInfo;
 use Tuleap\AgileDashboard\Planning\AllowedAdditionalPanesToDisplayCollector;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkEvent;
 use Tuleap\AgileDashboard\Planning\Presenters\AlternativeBoardLinkPresenter;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Cardwall\CardwallIsAllowedEvent;
 use Tuleap\Layout\IncludeAssets;
@@ -249,6 +250,6 @@ class taskboardPlugin extends Plugin
 
     private function isIE11(): bool
     {
-        return (new Browser())->isIE11();
+        return DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance())->isIE11();
     }
 }

@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tuleap\TestPlan;
 
-use Browser;
 use HTTPRequest;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -30,6 +29,7 @@ use PHPUnit\Framework\TestCase;
 use Project;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Request\NotFoundException;
@@ -67,10 +67,6 @@ class TestPlanControllerTest extends TestCase
      * @var Mockery\LegacyMockInterface|Mockery\MockInterface|TemplateRenderer
      */
     private $renderer;
-    /**
-     * @var Browser|Mockery\LegacyMockInterface|Mockery\MockInterface
-     */
-    private $browser;
 
     protected function setUp(): void
     {
@@ -78,7 +74,6 @@ class TestPlanControllerTest extends TestCase
         $this->testplan_pane_displayable = Mockery::mock(TestPlanPaneDisplayable::class);
         $this->visit_recorder            = Mockery::mock(VisitRecorder::class);
         $this->renderer                  = Mockery::mock(TemplateRenderer::class);
-        $this->browser                   = Mockery::mock(Browser::class);
 
         $this->user    = Mockery::mock(\PFUser::class);
         $this->request = Mockery::mock(HTTPRequest::class);
@@ -93,7 +88,6 @@ class TestPlanControllerTest extends TestCase
             $this->visit_recorder,
             $this->milestone_factory,
             Mockery::spy(TestPlanPresenterBuilder::class),
-            $this->browser,
         );
     }
 
@@ -240,7 +234,7 @@ class TestPlanControllerTest extends TestCase
 
         $this->visit_recorder->shouldReceive('record')->once();
 
-        $this->browser->shouldReceive('isIE11')->once()->andReturnFalse();
+        $this->request->shouldReceive('getFromServer')->andReturn('Some user agent string that is not IE11');
 
         $this->renderer->shouldReceive('renderToPage')->with('test-plan', Mockery::type(TestPlanPresenter::class));
 
@@ -275,7 +269,7 @@ class TestPlanControllerTest extends TestCase
 
         $this->visit_recorder->shouldReceive('record')->once();
 
-        $this->browser->shouldReceive('isIE11')->once()->andReturnTrue();
+        $this->request->shouldReceive('getFromServer')->andReturn(DetectedBrowserTest::IE11_USER_AGENT_STRING);
 
         $this->renderer->shouldReceive('renderToPage')->with('test-plan-unsupported-browser', Mockery::type(TestPlanPresenter::class));
 

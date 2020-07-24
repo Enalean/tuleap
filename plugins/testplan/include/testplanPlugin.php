@@ -167,7 +167,6 @@ final class testplanPlugin extends Plugin
                 $tracker_factory,
                 new TestPlanTestDefinitionTrackerRetriever($testmanagement_config, $tracker_factory)
             ),
-            new Browser()
         );
     }
 

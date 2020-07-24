@@ -40,6 +40,7 @@ use Tracker;
 use Tuleap\AgileDashboard\ExplicitBacklog\ArtifactsInExplicitBacklogDao;
 use Tuleap\AgileDashboard\ExplicitBacklog\ExplicitBacklogDao;
 use Tuleap\AgileDashboard\FormElement\Burnup\CountElementsModeChecker;
+use Tuleap\BrowserDetection\DetectedBrowserTest;
 use Tuleap\Tracker\Semantic\Timeframe\SemanticTimeframe;
 use Tuleap\Tracker\Semantic\Timeframe\TimeframeBrokenConfigurationException;
 use Tuleap\Tracker\TrackerColor;
@@ -193,7 +194,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -228,7 +229,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -263,7 +264,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -302,7 +303,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -346,7 +347,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -380,7 +381,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -417,7 +418,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -455,7 +456,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -492,7 +493,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
         $this->tracker->shouldReceive('getChildren')->andReturn([$this->tracker]);
         $this->tracker->shouldReceive('userCanView')->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -526,7 +527,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -561,7 +562,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -595,7 +596,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -629,7 +630,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(false);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -663,7 +664,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
         $this->count_elements_mode_checker->shouldReceive("burnupMustUseCountElementsMode")->once()->andReturn(true);
 
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
 
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
 
@@ -676,7 +677,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenIsIE11(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => true]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn(DetectedBrowserTest::IE11_USER_AGENT_STRING);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildBrowserIsIE11()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter($this->project, $this->root_planning);
@@ -684,7 +685,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenUserCantAccessToProject(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once()->andThrow(Project_AccessProjectNotFoundException::class);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToProject()->getTranslatedMessage());
@@ -693,7 +694,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenUserCantAccessToAPrivateProject(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once()->andThrow(\Project_AccessPrivateException::class);
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildUserNotAccessToPrivateProject()->getTranslatedMessage());
@@ -702,7 +703,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenNoProject(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->expectException(ProjectMilestonesException::class);
         $this->expectExceptionMessage(ProjectMilestonesException::buildProjectDontExist()->getTranslatedMessage());
         $this->builder->getProjectMilestonePresenter(null, $this->root_planning);
@@ -710,7 +711,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenNoRootPlanning(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
         $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(true);
         $this->expectException(ProjectMilestonesException::class);
@@ -722,7 +723,7 @@ class ProjectMilestonesPresenterBuilderTest extends TestCase
 
     public function testThrowExceptionWhenNoServiceAgileDashboard(): void
     {
-        $this->http_request->shouldReceive("getBrowser")->andReturn(Mockery::mock(\Browser::class, ["isIE11" => false]));
+        $this->http_request->shouldReceive('getFromServer')->andReturn('Some user-agent string');
         $this->project_access_checker->shouldReceive("checkUserCanAccessProject")->once();
         $this->project->shouldReceive('usesService')->withArgs([AgileDashboardPlugin::PLUGIN_SHORTNAME])->once()->andReturn(false);
         $this->expectException(ProjectMilestonesException::class);

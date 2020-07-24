@@ -69,27 +69,6 @@ class HTTPRequest extends Codendi_Request
         }
     }
 
-    public function getBrowser()
-    {
-        if ($this->hasUserAgent() && $this->isBrowserInternetExplorerBefore11()) {
-            return new BrowserIEDeprecated($this->getCurrentUser());
-        }
-
-        return new Browser();
-    }
-
-    private function isBrowserInternetExplorerBefore11()
-    {
-        // MSIE string has been removed in IE11
-        // see https://msdn.microsoft.com/en-us/library/bg182625(v=vs.85).aspx
-        return strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false;
-    }
-
-    private function hasUserAgent()
-    {
-        return isset($_SERVER['HTTP_USER_AGENT']);
-    }
-
     /**
      * Hold an instance of the class
      */

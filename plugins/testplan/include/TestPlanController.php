@@ -26,6 +26,7 @@ use AgileDashboardPlugin;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
 use Tuleap\Layout\IncludeAssets;
@@ -68,10 +69,6 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
      * @var IncludeAssets
      */
     private $testplan_assets;
-    /**
-     * @var \Browser
-     */
-    private $browser;
 
     public function __construct(
         TemplateRenderer $renderer,
@@ -81,8 +78,7 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         TestPlanPaneDisplayable $testplan_pane_displayable,
         VisitRecorder $visit_recorder,
         \Planning_MilestoneFactory $milestone_factory,
-        TestPlanPresenterBuilder $presenter_builder,
-        \Browser $browser
+        TestPlanPresenterBuilder $presenter_builder
     ) {
         $this->renderer                  = $renderer;
         $this->bread_crumbs_builder      = $bread_crumbs_builder;
@@ -92,7 +88,6 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $this->visit_recorder            = $visit_recorder;
         $this->milestone_factory         = $milestone_factory;
         $this->presenter_builder         = $presenter_builder;
-        $this->browser                   = $browser;
     }
 
     public function process(HTTPRequest $request, BaseLayout $layout, array $variables): void
@@ -141,7 +136,8 @@ final class TestPlanController implements DispatchableWithRequestNoAuthz, Dispat
         $expand_backlog_item_id = (int) ($variables['backlog_item_id'] ?? 0);
         $highlight_test_definition_id = (int) ($variables['test_definition_id'] ?? 0);
 
-        if ($this->browser->isIE11()) {
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($request);
+        if ($detected_browser->isIE11()) {
             $this->renderer->renderToPage(
                 'test-plan-unsupported-browser',
                 $this->presenter_builder->getPresenter(

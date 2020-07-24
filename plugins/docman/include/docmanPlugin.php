@@ -26,6 +26,7 @@
 
 use Laminas\HttpHandlerRunner\Emitter\SapiStreamEmitter;
 use Tuleap\Admin\AdminPageRenderer;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\CLI\Events\GetWhitelistedKeys;
 use Tuleap\DB\DBFactory;
 use Tuleap\DB\DBTransactionExecutorWithConnection;
@@ -362,8 +363,8 @@ class DocmanPlugin extends Plugin //phpcs:ignore PSR1.Classes.ClassDeclaration.M
                 __DIR__ . '/../../../src/www/assets/core',
                 '/assets/core'
             );
-            $browser = new Browser();
-            if ($browser->isEdgeLegacy() || $browser->isIE11()) {
+            $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+            if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
                 echo $core_assets->getHTMLSnippet('tlp-relative-date-polyfills.js');
             }
             echo $core_assets->getHTMLSnippet('tlp-relative-date.js');

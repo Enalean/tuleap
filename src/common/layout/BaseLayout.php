@@ -21,6 +21,7 @@
 namespace Tuleap\Layout;
 
 use Codendi_HTMLPurifier;
+use CSRFSynchronizerToken;
 use EventManager;
 use ForgeConfig;
 use HTTPRequest;
@@ -29,6 +30,7 @@ use PFUser;
 use Project;
 use ProjectManager;
 use Response;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumb;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbCollection;
 use Tuleap\Layout\BreadCrumbDropdown\BreadCrumbLink;
@@ -179,9 +181,40 @@ abstract class BaseLayout extends Response
         }
     }
 
-    private function getBrowserDeprecatedMessage()
+    private function getBrowserDeprecatedMessage(): string
     {
-        return HTTPRequest::instance()->getBrowser()->getDeprecatedMessage();
+        $http_request     = HTTPRequest::instance();
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest($http_request);
+
+        if (! $detected_browser->isIEBefore11()) {
+            return '';
+        }
+
+        $current_user = $http_request->getCurrentUser();
+
+        if ($current_user->getPreference(PFUser::PREFERENCE_DISABLE_IE7_WARNING)) {
+            return '';
+        }
+
+        $warning_message = $GLOBALS['Language']->getText('include_browser', 'ie_deprecated');
+        if ($current_user->isAnonymous()) {
+            return $warning_message;
+        }
+
+        $url   = '/account/disable_legacy_browser_warning';
+        $csrf  = new CSRFSynchronizerToken($url);
+        $form  = '<form action="' . $url . '" method="POST" style="margin: 0">';
+        $form .= $csrf->fetchHTMLInput();
+        $form .= $warning_message;
+        $form .= ' <button
+                    type="submit"
+                    class="btn btn-small btn-inverse"
+                  >
+                    ' . $GLOBALS['Language']->getText('include_browser', 'ie_deprecated_button') . '
+                  </button>
+                  </form>';
+
+        return $form;
     }
 
     public function getImagePath($src)

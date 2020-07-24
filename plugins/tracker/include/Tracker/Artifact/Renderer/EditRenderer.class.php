@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Layout\IncludeAssets;
 use Tuleap\Tracker\Artifact\Renderer\GetAdditionalJavascriptFilesForArtifactDisplay;
 use Tuleap\Tracker\FormElement\Field\ArtifactLink\Nature\NatureIsChildLinkRetriever;
@@ -141,8 +142,8 @@ class Tracker_Artifact_EditRenderer extends Tracker_Artifact_EditAbstractRendere
         ];
 
         $include_assets = new IncludeAssets(__DIR__ . '/../../../../../../src/www/assets/core', '/assets/core');
-        $browser = new Browser();
-        if ($browser->isEdgeLegacy() || $browser->isIE11()) {
+        $detected_browser = DetectedBrowser::detectFromTuleapHTTPRequest(HTTPRequest::instance());
+        if ($detected_browser->isEdgeLegacy() || $detected_browser->isIE11()) {
             $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date-polyfills.js'));
         }
         $GLOBALS['HTML']->includeFooterJavascriptFile($include_assets->getFileURL('tlp-relative-date.js'));

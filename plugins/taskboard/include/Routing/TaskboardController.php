@@ -25,6 +25,7 @@ namespace Tuleap\Taskboard\Routing;
 use HTTPRequest;
 use TemplateRenderer;
 use Tuleap\AgileDashboard\Milestone\AllBreadCrumbsForMilestoneBuilder;
+use Tuleap\BrowserDetection\DetectedBrowser;
 use Tuleap\Cardwall\Agiledashboard\CardwallPaneInfo;
 use Tuleap\Layout\BaseLayout;
 use Tuleap\Layout\CssAsset;
@@ -102,7 +103,7 @@ class TaskboardController implements DispatchableWithRequestNoAuthz, Dispatchabl
                 )
             );
         }
-        if ($request->getBrowser()->isIE11()) {
+        if (DetectedBrowser::detectFromTuleapHTTPRequest($request)->isIE11()) {
             $layout->redirect(
                 '/plugins/agiledashboard/?' . http_build_query(
                     [
