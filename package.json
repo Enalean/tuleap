@@ -14,7 +14,7 @@
     "vue-dompurify-html": "^2.2.1",
     "vue-gettext": "^2.1.10",
     "vue-router": "^3.1.6",
-    "vuex": "^3.4.0"
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.3",
